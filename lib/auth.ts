@@ -5,7 +5,13 @@ import type { JWTPayload } from '@/lib/types'
  * JWT Secret for signing/verifying tokens
  */
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'default-dev-secret-change-in-production'
+  process.env.JWT_SECRET ||
+    (() => {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error('JWT_SECRET environment variable is required in production')
+      }
+      return 'default-dev-secret-change-in-production'
+    })()
 )
 
 const JWT_EXPIRATION = 3600 // 1 hour in seconds
@@ -34,7 +40,7 @@ export async function generateJWT(payload: Omit<JWTPayload, 'iat' | 'exp'>): Pro
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     const verified = await jwtVerify(token, JWT_SECRET)
-    return verified.payload as JWTPayload
+    return verified.payload as unknown as JWTPayload
   } catch {
     return null
   }

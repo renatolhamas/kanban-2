@@ -1,0 +1,95 @@
+schema: 1
+story: '1.2'
+gate: FAIL
+status_reason: 'TypeScript compilation error blocks build. Critical type safety issue in JWT verification prevents story completion.'
+reviewer: Quinn
+updated: '2026-04-02T13:25:00Z'
+top_issues:
+  - id: 'BUILD-001'
+    severity: high
+    finding: 'TypeScript compilation error in lib/auth.ts:37 - Type mismatch in JWT verification return. jose library JWTPayload type incompatible with custom JWTPayload interface.'
+    suggested_action: 'Fix type casting: Change `return verified.payload as JWTPayload` to `return verified.payload as unknown as JWTPayload` to properly cast from jose generic type to custom type.'
+    impact: 'Build fails (npm run build exits with code 1) - cannot proceed to production'
+    reference: 'Error: Type ''JWTPayload'' is missing tenant_id, email, role properties'
+
+  - id: 'SEC-001'
+    severity: medium
+    finding: 'JWT Secret default value in production. lib/auth.ts:7-9 contains default-dev-secret that will be used if JWT_SECRET env var not set.'
+    suggested_action: 'Ensure JWT_SECRET environment variable is ALWAYS set in production. Consider throwing error if env var missing in production mode (NODE_ENV=production).'
+    impact: 'If ENV var not configured, default secret exposes JWT tokens to compromise'
+
+  - id: 'TEST-001'
+    severity: medium
+    finding: 'Register and login endpoint tests are placeholders only. app/api/auth/register/register.test.ts and login/login.test.ts files exist but contain no actual test implementations (marked as placeholders in story notes).'
+    suggested_action: 'Add comprehensive integration tests for register/login endpoints: test happy path, validation errors, duplicate email handling, tenant creation, JWT payload structure, cookie flags.'
+    impact: 'No integration test coverage for critical auth flows - gaps in validation, error handling, and tenant isolation testing'
+
+  - id: 'REL-001'
+    severity: low
+    finding: 'Profile endpoint GET assumes user exists in database after JWT validation. No explicit check that user.row exists before using user fields.'
+    suggested_action: 'Current error handling is adequate (returns 404 if user not found) but consider log-and-alert for orphaned JWT scenarios.'
+    impact: 'Low - error handling is present, but suspicious state could indicate JWT/DB consistency issues'
+
+coverage_summary:
+  unit_tests: '18/18 password validation tests PASS ✅'
+  integration_tests: 'MISSING - endpoint tests are placeholders'
+  linting: '✅ ESLint: 0 warnings/errors'
+  security_scan: 'INCOMPLETE - CodeRabbit unavailable (WSL not installed)'
+
+acceptance_criteria_status:
+  - ac_1_register_endpoint: 'IMPLEMENTED ✅ (validation working, story shows complete)'
+  - ac_2_jwt_generation: 'IMPLEMENTED ✅ (payload structure correct per story)'
+  - ac_3_tenant_creation: 'IMPLEMENTED ✅ (with rollback on errors)'
+  - ac_4_register_redirect: 'IMPLEMENTED ✅ (X-Redirect-To header set)'
+  - ac_5_login_endpoint: 'IMPLEMENTED ✅ (with Supabase Auth integration)'
+  - ac_6_jwt_expiration: 'IMPLEMENTED ✅ (3600s / 1 hour)'
+  - ac_7_profile_page: 'IMPLEMENTED ✅ (read-only display, password form)'
+  - ac_8_password_validation_rttime: 'IMPLEMENTED ✅ (PasswordInput component with strength indicator)'
+  - ac_9_profile_password_update: 'IMPLEMENTED ✅ (PUT endpoint, Supabase Auth integration)'
+  - ac_10_logout_endpoint: 'IMPLEMENTED ✅ (cookie cleared, redirect set)'
+  - ac_11_jwt_payload_structure: 'IMPLEMENTED ✅ (sub, tenant_id, email, role, iat, exp only)'
+  - ac_12_httponly_cookie: 'IMPLEMENTED ✅ (Secure flag, SameSite=Lax configured)'
+  - ac_13_error_messages: 'IMPLEMENTED ✅ (generic messages, no stack traces returned)'
+  - ac_14_form_validation: 'IMPLEMENTED ✅ (email format, password strength, required fields)'
+  - ac_15_session_persistence: 'IMPLEMENTED ✅ (cookie-based, middleware validates on protected routes)'
+  - ac_16_unauth_redirect: 'IMPLEMENTED ✅ (middleware redirects to /login)'
+
+code_quality:
+  patterns: 'Good - consistent error handling, clear separation of concerns'
+  readability: 'Good - well-commented, clear function purposes'
+  maintainability: 'Good - auth utilities centralized, reusable components'
+  test_coverage: 'MEDIUM - password validation 100%, endpoints lack integration tests'
+  security_practices: 'GOOD - password validation solid, JWT handling secure, error messages safe'
+
+blockers:
+  - status: 'BLOCKING'
+    issue: 'TypeScript compilation error prevents build'
+    consequence: 'Cannot deploy, test, or verify any functionality'
+
+waiver:
+  active: false
+
+decision_notes: |
+  **BLOCKING ISSUES:**
+  This story cannot pass QA in current state due to TypeScript compilation error. The build fails with type mismatch in JWT verification.
+
+  **STRENGTH AREAS:**
+  - Password validation comprehensive and well-tested (18/18 tests passing)
+  - Secure auth patterns: httpOnly cookies, JWT with proper expiration, safe error messages
+  - Error handling and rollback logic solid (tenant cleanup on failure)
+  - ESLint compliance clean, no warnings
+
+  **GAPS TO ADDRESS:**
+  1. **CRITICAL (Block story):** Fix TypeScript type error in lib/auth.ts:37
+  2. **HIGH (Before merge):** Add integration tests for register/login endpoints
+  3. **MEDIUM:** Ensure JWT_SECRET env var configured in production
+
+  **RECOMMENDATION:**
+  Return to @dev for:
+  1. Fix TypeScript compilation error (line 37, jose type casting)
+  2. Add integration tests for auth endpoints (register, login, session flow)
+  3. Document/enforce JWT_SECRET environment variable requirement
+
+  Once these are fixed, story should pass QA gate. Current implementation shows good security practices and comprehensive password validation.
+
+next_action: Return to @dev for TypeScript fix and integration test coverage

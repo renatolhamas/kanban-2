@@ -28,6 +28,8 @@ mcp:
   servers: []
 qa:
   qaLocation: docs/qa
+  fixRequestLocation: docs/fix_request
+  fixRequestNaming: 'QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md'
 prd:
   prdFile: docs/prd.md
   prdVersion: v4

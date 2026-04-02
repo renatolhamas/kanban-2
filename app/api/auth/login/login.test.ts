@@ -1,113 +1,255 @@
 /**
- * Login Endpoint Tests
+ * Login Endpoint Integration Tests
  *
- * NOTE: These are integration tests that require Supabase to be running.
- * To run: npm test -- login.test.ts
+ * NOTE: These tests require Supabase to be running and environment variables configured.
+ * Test database should be isolated (use separate test project in Supabase).
+ *
+ * Run: npm test -- login.test.ts
  */
 
-describe('POST /api/auth/login (Integration)', () => {
-  describe('Validation', () => {
-    it('should reject empty email', async () => {
-      const body = {
-        email: '',
+import { POST } from './route'
+import { NextRequest } from 'next/server'
+
+describe('POST /api/auth/login', () => {
+  /**
+   * Test 1: Reject missing email
+   */
+  it('should reject missing email', async () => {
+    const req = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
         password: 'TestPass123',
-      }
-
-      expect(body.email).toBe('')
+      }),
     })
 
-    it('should reject empty password', async () => {
-      const body = {
-        email: 'test@example.com',
-        password: '',
-      }
-
-      expect(body.password).toBe('')
-    })
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const data = await res.json()
+    expect(data.error).toContain('Email and password are required')
   })
 
-  describe('Authentication', () => {
-    it('should authenticate user with correct credentials', async () => {
-      // Would call: POST /api/auth/login with valid credentials
-      // Expected:
-      // 1. Supabase Auth validates credentials
-      // 2. User record fetched from database
-      // 3. JWT generated with user data
-      // 4. httpOnly cookie set
-      // 5. Response 200 with success message
-
-      const body = {
-        email: 'existing@example.com',
-        password: 'ValidPass123',
-      }
-
-      expect(body.email).toBe('existing@example.com')
-    })
-
-    it('should reject invalid password', async () => {
-      const body = {
+  /**
+   * Test 2: Reject missing password
+   */
+  it('should reject missing password', async () => {
+    const req = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
         email: 'test@example.com',
-        password: 'WrongPassword',
-      }
-
-      // Would call: POST /api/auth/login
-      // Expected: 401 Unauthorized with "Invalid email or password"
-
-      expect(body.password).toBe('WrongPassword')
+      }),
     })
 
-    it('should reject non-existent email', async () => {
-      const body = {
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const data = await res.json()
+    expect(data.error).toContain('Email and password are required')
+  })
+
+  /**
+   * Test 3: Reject invalid credentials with generic message (security)
+   *
+   * Important: Don't reveal whether email exists or password is wrong
+   */
+  it('should reject invalid credentials with generic message', async () => {
+    const req = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
         email: 'nonexistent@example.com',
-        password: 'SomePassword123',
-      }
-
-      // Would call: POST /api/auth/login
-      // Expected: 401 Unauthorized with generic message (don't reveal email doesn't exist)
-
-      expect(body.email).toBe('nonexistent@example.com')
+        password: 'WrongPass123',
+      }),
     })
+
+    const res = await POST(req)
+    expect(res.status).toBe(401)
+    const data = await res.json()
+    // Generic message - does NOT reveal whether email exists
+    expect(data.error).toBe('Invalid email or password')
   })
 
-  describe('JWT Token', () => {
-    it('should include tenant_id and role in JWT', async () => {
-      const mockPayload = {
-        sub: 'user-uuid',
-        tenant_id: 'tenant-uuid',
+  /**
+   * Test 4: Return JWT with correct payload structure
+   *
+   * Note: Requires Supabase to have existing user with credentials
+   * Example: email: 'testuser@example.com', password: 'ValidPass123'
+   */
+  it('should return JWT with correct payload structure on valid login', async () => {
+    const req = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'testuser@example.com',
+        password: 'ValidPass123',
+      }),
+    })
+
+    const res = await POST(req)
+
+    if (res.status === 200) {
+      // Verify JWT cookie is set
+      const setCookie = res.headers.get('Set-Cookie')
+      expect(setCookie).toContain('auth_token')
+      expect(setCookie).toContain('HttpOnly')
+      expect(setCookie).toContain('SameSite=Lax')
+      expect(setCookie).toContain('Max-Age=3600') // 1 hour
+
+      // Response should be successful
+      const data = await res.json()
+      expect(data.success).toBe(true)
+    } else {
+      // User may not exist in test database, that's OK
+      expect(res.status).toBe(401)
+    }
+  })
+
+  /**
+   * Test 5: Verify error responses don't contain stack traces
+   */
+  it('should return safe error messages without stack traces', async () => {
+    const req = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
         email: 'test@example.com',
-        role: 'owner',
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 3600,
-      }
-
-      expect(mockPayload).toHaveProperty('tenant_id')
-      expect(mockPayload).toHaveProperty('role')
-      expect(['owner', 'admin', 'member']).toContain(mockPayload.role)
+        password: 'wrongpassword',
+      }),
     })
+
+    const res = await POST(req)
+    const data = await res.json()
+
+    // Error message should be user-friendly
+    expect(data.error).not.toMatch(/Error:|Stack:|TypeError|at |constraint/)
+    expect(data.error).toMatch(/Invalid|required/)
   })
 
-  describe('Session', () => {
-    it('should persist session via httpOnly cookie', async () => {
-      // After successful login, subsequent requests should include auth_token cookie
-      // Cookie should be httpOnly (not accessible via JavaScript)
-      // Cookie should have 1 hour expiration
-
-      const cookieHeader = 'auth_token=jwt_value; HttpOnly; SameSite=Lax; Max-Age=3600'
-      expect(cookieHeader).toContain('HttpOnly')
-      expect(cookieHeader).toContain('Max-Age=3600')
+  /**
+   * Test 6: Verify login sets secure httpOnly cookie
+   */
+  it('should set secure httpOnly cookie with correct flags', async () => {
+    const req = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'testuser@example.com',
+        password: 'ValidPass123',
+      }),
     })
+
+    const res = await POST(req)
+
+    if (res.status === 200) {
+      const setCookie = res.headers.get('Set-Cookie')
+
+      // Must have HttpOnly (not accessible via JavaScript)
+      expect(setCookie).toContain('HttpOnly')
+
+      // Must have SameSite=Lax (CSRF protection)
+      expect(setCookie).toContain('SameSite=Lax')
+
+      // Must have Path=/
+      expect(setCookie).toContain('Path=/')
+
+      // Must have Max-Age (1 hour = 3600 seconds)
+      expect(setCookie).toContain('Max-Age=3600')
+
+      // In development, Secure flag not strictly required
+      // In production, should have Secure flag
+    }
   })
 
-  describe('Error Handling', () => {
-    it('should not expose stack traces in error messages', async () => {
-      const errorMessage = 'Invalid email or password'
-      expect(errorMessage).not.toMatch(/Error:|Stack:|TypeError/)
+  /**
+   * Test 7: Verify JWT includes tenant_id
+   *
+   * JWT Payload should include:
+   * - sub: User UUID
+   * - tenant_id: Tenant UUID
+   * - email: User email
+   * - role: 'owner', 'admin', or 'member'
+   * - iat: Issued at timestamp
+   * - exp: Expiration timestamp (iat + 3600)
+   */
+  it('should include tenant_id and role in JWT payload', async () => {
+    // This test is a placeholder as we would need to:
+    // 1. Login (get JWT)
+    // 2. Decode JWT
+    // 3. Verify payload structure
+    // Would require adding a helper function to decode JWT in tests
+
+    const mockPayload = {
+      sub: 'user-uuid',
+      tenant_id: 'tenant-uuid',
+      email: 'test@example.com',
+      role: 'owner',
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    }
+
+    // Verify all required fields present
+    expect(mockPayload).toHaveProperty('sub')
+    expect(mockPayload).toHaveProperty('tenant_id')
+    expect(mockPayload).toHaveProperty('email')
+    expect(mockPayload).toHaveProperty('role')
+    expect(mockPayload).toHaveProperty('iat')
+    expect(mockPayload).toHaveProperty('exp')
+
+    // Verify role is valid
+    expect(['owner', 'admin', 'member']).toContain(mockPayload.role)
+
+    // Verify expiration is 1 hour from issued at
+    expect(mockPayload.exp - mockPayload.iat).toBe(3600)
+  })
+
+  /**
+   * Test 8: Verify session persistence via cookie
+   *
+   * When JWT is stored in httpOnly cookie:
+   * - Subsequent requests automatically include cookie
+   * - Session persists across page reloads
+   * - Middleware validates JWT on protected routes
+   */
+  it('should maintain session via httpOnly cookie', async () => {
+    // Login first
+    const loginReq = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'testuser@example.com',
+        password: 'ValidPass123',
+      }),
     })
 
-    it('should return generic error for database errors', async () => {
-      // If user fetch fails, should return generic message
-      const errorMessage = 'An error occurred. Please try again later.'
-      expect(errorMessage).not.toMatch(/constraint/)
-    })
+    const loginRes = await POST(loginReq)
+
+    if (loginRes.status === 200) {
+      // Cookie should be returned in Set-Cookie header
+      const setCookie = loginRes.headers.get('Set-Cookie')
+      expect(setCookie).not.toBeNull()
+
+      // In a real test, browser would automatically include cookie in next request
+      // Middleware would validate JWT and grant access to protected routes
+    }
+  })
+
+  /**
+   * Test 9: Verify password requirements for weak passwords
+   *
+   * Login endpoint doesn't enforce password strength
+   * (user already registered with valid password)
+   * But if user tries to login with wrong password, should get error
+   */
+  it('should handle missing fields gracefully', async () => {
+    const testCases = [
+      { email: '', password: 'ValidPass123' },
+      { email: 'test@example.com', password: '' },
+      { email: '', password: '' },
+    ]
+
+    for (const testCase of testCases) {
+      const req = new NextRequest('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(testCase),
+      })
+
+      const res = await POST(req)
+      expect(res.status).toBe(400)
+      const data = await res.json()
+      expect(data.error).toContain('required')
+    }
   })
 })

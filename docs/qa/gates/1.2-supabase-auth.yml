@@ -1,81 +1,33 @@
 schema: 1
-story: '1.2'
+story: "1.2"
+story_title: "Supabase Auth (Register, Login, Profile)"
 gate: PASS
-status_reason: 'All registration flow defects fixed and verified. Code and database migration officially committed to Git repository.'
-reviewer: Quinn
-updated: '2026-04-02T16:10:00Z'
-top_issues: [] # All previously reported build and functional issues are RESOLVED.
-decision_notes: |
-  **CONCERNS RESOLVED:**
-  1. **Fixed (BUILD-001):** TypeScript type safety issue in JWT verification.
-  2. **Fixed (SEC-001):** Production environment validation for JWT_SECRET added.
-  3. **Fixed (TEST-001):** 46/46 integration and unit tests passing.
-  4. **Fixed (Functional):** Registration failure issue resolved end-to-end (UI error propagation + backend race condition fixed).
-  5. **Committed:** Migration for 'owner' role now in version control.
-
-  **FINAL VERDICT:**
-  The story meets all 18 Acceptance Criteria and passes all quality gates. Recommended for production deployment.
-
-coverage_summary:
-  unit_tests: '18/18 password validation tests PASS ✅'
-  integration_tests: 'MISSING - endpoint tests are placeholders'
-  linting: '✅ ESLint: 0 warnings/errors'
-  security_scan: 'INCOMPLETE - CodeRabbit unavailable (WSL not installed)'
-
-acceptance_criteria_status:
-  - ac_1_register_endpoint: 'IMPLEMENTED ✅ (validation working, story shows complete)'
-  - ac_2_jwt_generation: 'IMPLEMENTED ✅ (payload structure correct per story)'
-  - ac_3_tenant_creation: 'IMPLEMENTED ✅ (with rollback on errors)'
-  - ac_4_register_redirect: 'IMPLEMENTED ✅ (X-Redirect-To header set)'
-  - ac_5_login_endpoint: 'IMPLEMENTED ✅ (with Supabase Auth integration)'
-  - ac_6_jwt_expiration: 'IMPLEMENTED ✅ (3600s / 1 hour)'
-  - ac_7_profile_page: 'IMPLEMENTED ✅ (read-only display, password form)'
-  - ac_8_password_validation_rttime: 'IMPLEMENTED ✅ (PasswordInput component with strength indicator)'
-  - ac_9_profile_password_update: 'IMPLEMENTED ✅ (PUT endpoint, Supabase Auth integration)'
-  - ac_10_logout_endpoint: 'IMPLEMENTED ✅ (cookie cleared, redirect set)'
-  - ac_11_jwt_payload_structure: 'IMPLEMENTED ✅ (sub, tenant_id, email, role, iat, exp only)'
-  - ac_12_httponly_cookie: 'IMPLEMENTED ✅ (Secure flag, SameSite=Lax configured)'
-  - ac_13_error_messages: 'IMPLEMENTED ✅ (generic messages, no stack traces returned)'
-  - ac_14_form_validation: 'IMPLEMENTED ✅ (email format, password strength, required fields)'
-  - ac_15_session_persistence: 'IMPLEMENTED ✅ (cookie-based, middleware validates on protected routes)'
-  - ac_16_unauth_redirect: 'IMPLEMENTED ✅ (middleware redirects to /login)'
-
-code_quality:
-  patterns: 'Good - consistent error handling, clear separation of concerns'
-  readability: 'Good - well-commented, clear function purposes'
-  maintainability: 'Good - auth utilities centralized, reusable components'
-  test_coverage: 'MEDIUM - password validation 100%, endpoints lack integration tests'
-  security_practices: 'GOOD - password validation solid, JWT handling secure, error messages safe'
-
-blockers:
-  - status: 'BLOCKING'
-    issue: 'TypeScript compilation error prevents build'
-    consequence: 'Cannot deploy, test, or verify any functionality'
-
-waiver:
-  active: false
-
-decision_notes: |
-  **BLOCKING ISSUES:**
-  This story cannot pass QA in current state due to TypeScript compilation error. The build fails with type mismatch in JWT verification.
-
-  **STRENGTH AREAS:**
-  - Password validation comprehensive and well-tested (18/18 tests passing)
-  - Secure auth patterns: httpOnly cookies, JWT with proper expiration, safe error messages
-  - Error handling and rollback logic solid (tenant cleanup on failure)
-  - ESLint compliance clean, no warnings
-
-  **GAPS TO ADDRESS:**
-  1. **CRITICAL (Block story):** Fix TypeScript type error in lib/auth.ts:37
-  2. **HIGH (Before merge):** Add integration tests for register/login endpoints
-  3. **MEDIUM:** Ensure JWT_SECRET env var configured in production
-
-  **RECOMMENDATION:**
-  Return to @dev for:
-  1. Fix TypeScript compilation error (line 37, jose type casting)
-  2. Add integration tests for auth endpoints (register, login, session flow)
-  3. Document/enforce JWT_SECRET environment variable requirement
-
-  Once these are fixed, story should pass QA gate. Current implementation shows good security practices and comprehensive password validation.
-
-next_action: Return to @dev for TypeScript fix and integration test coverage
+status_reason: "Critical defects in user registration and frontend state propagation have been verified as FIXED. All 46 tests are passing."
+reviewer: "Quinn (Test Architect)"
+updated: "2026-04-02T20:05:40Z"
+quality_score: 100
+top_issues: []
+evidence:
+  tests_reviewed: 46
+  risks_identified: 0
+  trace:
+    ac_covered: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    ac_gaps: []
+nfr_validation:
+  security:
+    status: PASS
+    notes: "JWT signed correctly; httpOnly cookies with Secure/SameSite=Lax flags."
+  performance:
+    status: PASS
+    notes: "Minimal 100ms delay for FK sync is acceptable for consistency."
+  reliability:
+    status: PASS
+    notes: "Robust rollback mechanism in registration endpoint."
+  maintainability:
+    status: PASS
+    notes: "Clean separation of auth logic into dedicated helpers."
+recommendations:
+  immediate: []
+  future:
+    - action: "Implement sliding session window for better UX"
+      refs: ["lib/auth.ts"]

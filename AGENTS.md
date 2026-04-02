@@ -9,7 +9,8 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 1. Siga a Constitution em `.aiox-core/constitution.md`
 2. Priorize `CLI First -> Observability Second -> UI Third`
 3. Trabalhe por stories em `docs/stories/`
-4. Nao invente requisitos fora dos artefatos existentes
+4. Considere o `docs/dev/COMMAND_PLAYBOOK.md` antes de rodar comandos de shell.
+5. Nao invente requisitos fora dos artefatos existentes
 <!-- AIOX-MANAGED-END: core -->
 
 <!-- AIOX-MANAGED-START: quality -->
@@ -19,6 +20,7 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 - Rode `npm run lint`
 - Rode `npm run typecheck`
 - Rode `npm test`
+- Atualize o `docs/dev/COMMAND_PLAYBOOK.md` se um comando falhar e depois der certo.
 - Atualize checklist e file list da story antes de concluir
 <!-- AIOX-MANAGED-END: quality -->
 

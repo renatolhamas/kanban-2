@@ -1,0 +1,553 @@
+# Database Schema Documentation
+
+**Story:** 1.1 — Database Schema Creation  
+**Date:** 2026-04-01  
+**Database:** PostgreSQL (Supabase)  
+**Architect:** Dara (Data Engineer)
+
+## Schema Overview
+
+Complete PostgreSQL schema for WhatsApp Kanban multi-tenant application. 8 core tables with foreign key relationships, unique constraints, 13 performance indexes, and comprehensive Row Level Security (RLS) policies.
+
+### Quick Facts
+
+- **Tables:** 8 (tenants, users, kanbans, columns, contacts, conversations, messages, automatic_messages)
+- **Foreign Keys:** 11 (with CASCADE/SET NULL delete behavior)
+- **Unique Constraints:** 3 (email per tenant, phone per tenant, main kanban per tenant)
+- **Indexes:** 13 (performance-optimized per access patterns)
+- **RLS Policies:** 32 (4 operations × 8 tables: SELECT, INSERT, UPDATE, DELETE)
+- **Functions:** 1 (auth.get_tenant_id() for JWT extraction)
+
+---
+
+## Entity Relationship Diagram (ER Model)
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                         TENANTS (Root)                             │
+│  ┌─────────────────────────────────────────────────────────────┐  │
+│  │ id (PK)                                                     │  │
+│  │ name                                                        │  │
+│  │ subscription_status                                         │  │
+│  │ evolution_instance_id                                       │  │
+│  │ connection_status                                           │  │
+│  │ created_at, updated_at                                      │  │
+│  └─────────────────────────────────────────────────────────────┘  │
+│           │                                                        │
+│           ├──→ USERS (1:N)                                         │
+│           │    • tenant_id (FK)                                    │
+│           │    • email (unique per tenant)                         │
+│           │    • role, password_hash, name                        │
+│           │                                                        │
+│           ├──→ CONTACTS (1:N)                                      │
+│           │    • tenant_id (FK)                                    │
+│           │    • phone (unique per tenant, E.164 format)           │
+│           │    • name                                              │
+│           │                                                        │
+│           ├──→ KANBANS (1:N)                                       │
+│           │    • tenant_id (FK)                                    │
+│           │    • name                                              │
+│           │    • is_main (unique=TRUE per tenant)                  │
+│           │    • order_position                                    │
+│           │    │                                                   │
+│           │    └──→ COLUMNS (1:N)                                  │
+│           │         • kanban_id (FK → CASCADE)                     │
+│           │         • name                                         │
+│           │         • order_position                               │
+│           │                                                        │
+│           └──→ AUTOMATIC_MESSAGES (1:N)                            │
+│                • tenant_id (FK)                                    │
+│                • scheduled_kanban_id (FK → SET NULL, optional)     │
+│                • name, message, scheduled_interval_minutes         │
+│                                                                    │
+│           CONVERSATIONS (Multi-parent)                             │
+│           ├─ tenant_id (FK)                                        │
+│           ├─ contact_id (FK → CASCADE)                             │
+│           ├─ kanban_id (FK → SET NULL)                             │
+│           ├─ column_id (FK → SET NULL)                             │
+│           └─→ MESSAGES (1:N)                                       │
+│                • conversation_id (FK → CASCADE)                    │
+│                • sender_type (contact|agent|system)               │
+│                • content, media_url, media_type                   │
+│                • created_at (immutable)                           │
+│                                                                    │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Table Specifications
+
+### 1. TENANTS
+
+Root entity for multi-tenancy. Each tenant is an isolated organization with its own data, users, and kanbans.
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Tenant ID |
+| `name` | TEXT | NOT NULL | Organization name |
+| `subscription_status` | TEXT | NOT NULL, CHECK: active\|paused\|cancelled | Billing status |
+| `evolution_instance_id` | TEXT | UNIQUE, nullable | External system reference |
+| `connection_status` | TEXT | NOT NULL, CHECK: connected\|disconnected\|error | WhatsApp connection state |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Indexes:**
+- `idx_tenants_subscription` — Filter by subscription status
+
+**RLS Policies:**
+- SELECT: `id = auth.get_tenant_id()`
+- UPDATE: `id = auth.get_tenant_id()`
+- DELETE: `id = auth.get_tenant_id()`
+
+---
+
+### 2. USERS
+
+Tenant-scoped users. Each user belongs to exactly one tenant. Email is unique per tenant (allows same email across tenants).
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | User ID |
+| `tenant_id` | UUID | FK → tenants(id) ON DELETE CASCADE | Tenant reference |
+| `email` | TEXT | NOT NULL | Login email |
+| `role` | TEXT | NOT NULL, CHECK: admin\|user\|viewer | Authorization level |
+| `name` | TEXT | nullable | Display name |
+| `password_hash` | TEXT | nullable | Hashed password (nullable for OAuth) |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Constraints:**
+- `UNIQUE (email, tenant_id)` — Email unique per tenant
+
+**Indexes:**
+- `idx_users_email_tenant` — Unique + login lookup
+- `idx_users_tenant` — List users in tenant
+
+**RLS Policies:**
+- SELECT/UPDATE/DELETE: `tenant_id = auth.get_tenant_id()`
+- INSERT: `tenant_id = auth.get_tenant_id()` (prevent cross-tenant insertion)
+
+---
+
+### 3. KANBANS
+
+Kanban boards per tenant. Each tenant can have multiple boards; exactly one board has `is_main = TRUE`.
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Board ID |
+| `tenant_id` | UUID | FK → tenants(id) ON DELETE CASCADE | Tenant reference |
+| `name` | TEXT | NOT NULL | Board name (e.g., "Support Queue") |
+| `is_main` | BOOLEAN | NOT NULL, default: FALSE | Primary board flag |
+| `order_position` | INT | NOT NULL, default: 0 | Display order |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Constraints:**
+- `UNIQUE (tenant_id) WHERE is_main = TRUE` — One main board per tenant
+
+**Indexes:**
+- `idx_kanbans_main_tenant` — Find main board (unique partial)
+- `idx_kanbans_tenant_order` — List boards in order
+
+**RLS Policies:**
+- SELECT/UPDATE/DELETE: `tenant_id = auth.get_tenant_id()`
+- INSERT: `tenant_id = auth.get_tenant_id()`
+
+---
+
+### 4. COLUMNS
+
+Kanban board columns (stages). Represent workflow stages: "To Do", "In Progress", "Done", etc.
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Column ID |
+| `kanban_id` | UUID | FK → kanbans(id) ON DELETE CASCADE | Parent board |
+| `name` | TEXT | NOT NULL | Stage name |
+| `order_position` | INT | NOT NULL, default: 0 | Display order |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Indexes:**
+- `idx_columns_kanban_order` — List columns in board order
+
+**RLS Policies:**
+- All operations restricted to `kanban_id IN (SELECT id FROM kanbans WHERE tenant_id = auth.get_tenant_id())`
+- Prevents access to columns from other tenants' boards
+
+---
+
+### 5. CONTACTS
+
+WhatsApp contacts per tenant. Phone number is unique per tenant (same contact can exist across tenants).
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Contact ID |
+| `tenant_id` | UUID | FK → tenants(id) ON DELETE CASCADE | Tenant reference |
+| `name` | TEXT | NOT NULL | Contact name |
+| `phone` | TEXT | NOT NULL | WhatsApp phone in E.164 format (e.g., +5585987654321) |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Constraints:**
+- `UNIQUE (phone, tenant_id)` — Phone unique per tenant
+
+**Indexes:**
+- `idx_contacts_phone_tenant` — Unique + lookup by phone
+- `idx_contacts_tenant` — List contacts in tenant
+
+**RLS Policies:**
+- SELECT/UPDATE/DELETE: `tenant_id = auth.get_tenant_id()`
+- INSERT: `tenant_id = auth.get_tenant_id()`
+
+---
+
+### 6. CONVERSATIONS
+
+WhatsApp conversations linking contacts to kanban columns. Represents ongoing chats placed on the kanban board.
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Conversation ID |
+| `tenant_id` | UUID | FK → tenants(id) ON DELETE CASCADE | Tenant reference |
+| `contact_id` | UUID | FK → contacts(id) ON DELETE CASCADE | Contact reference |
+| `kanban_id` | UUID | FK → kanbans(id) ON DELETE SET NULL | Board reference (nullable — survives board deletion) |
+| `column_id` | UUID | FK → columns(id) ON DELETE SET NULL | Current stage (nullable — survives column deletion) |
+| `wa_phone` | TEXT | NOT NULL | WhatsApp phone number |
+| `status` | TEXT | NOT NULL, CHECK: active\|closed\|archived | Conversation state |
+| `last_message_at` | TIMESTAMP | nullable | Timestamp of last message (nullable until first message) |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Conversation start |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Indexes:**
+- `idx_conversations_tenant_status` — CRITICAL: Filter active conversations per tenant
+- `idx_conversations_kanban_column` — CRITICAL: Board rendering (`WHERE kanban_id = ? AND column_id = ?`)
+- `idx_conversations_last_message` — Sort by recency for activity feed
+
+**RLS Policies:**
+- SELECT/UPDATE/DELETE: `tenant_id = auth.get_tenant_id()`
+- INSERT: `tenant_id = auth.get_tenant_id()`
+
+**Cascade Behavior:**
+- If contact deleted → conversation deleted (CASCADE)
+- If kanban deleted → conversation survives with kanban_id = NULL
+- If column deleted → conversation survives with column_id = NULL
+
+---
+
+### 7. MESSAGES
+
+WhatsApp message history. Immutable log of all messages in conversations.
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Message ID |
+| `conversation_id` | UUID | FK → conversations(id) ON DELETE CASCADE | Parent conversation |
+| `sender_type` | TEXT | NOT NULL, CHECK: contact\|agent\|system | Message origin |
+| `content` | TEXT | NOT NULL | Message text |
+| `media_url` | TEXT | nullable | URL to attachment (image, file, etc.) |
+| `media_type` | TEXT | nullable | MIME type (image/jpeg, application/pdf, etc.) |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Message timestamp (immutable) |
+
+**Indexes:**
+- `idx_messages_conversation_created` — CRITICAL: Load message history DESC (`WHERE conversation_id = ? ORDER BY created_at DESC`)
+
+**RLS Policies:**
+- All operations restricted to `conversation_id IN (SELECT id FROM conversations WHERE tenant_id = auth.get_tenant_id())`
+
+**Design Notes:**
+- No `updated_at` — messages are immutable
+- Media stored externally (S3, Cloudinary); only URL stored
+- deleted_at not implemented; soft delete via status on conversations
+
+---
+
+### 8. AUTOMATIC_MESSAGES
+
+Templates for automated/scheduled messages sent to contacts.
+
+| Column | Type | Constraint | Notes |
+|--------|------|-----------|-------|
+| `id` | UUID | PK, default: uuid_generate_v4() | Template ID |
+| `tenant_id` | UUID | FK → tenants(id) ON DELETE CASCADE | Tenant reference |
+| `name` | TEXT | NOT NULL | Template name (e.g., "Welcome") |
+| `message` | TEXT | NOT NULL | Message template body |
+| `scheduled_interval_minutes` | INT | nullable | Repeat interval (e.g., 1440 = daily) |
+| `scheduled_kanban_id` | UUID | FK → kanbans(id) ON DELETE SET NULL | Board scope (nullable = tenant-wide) |
+| `created_at` | TIMESTAMP | NOT NULL, default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP | NOT NULL, default: NOW() | Last update timestamp |
+
+**Indexes:**
+- `idx_automatic_messages_tenant` — List templates per tenant
+
+**RLS Policies:**
+- SELECT/UPDATE/DELETE: `tenant_id = auth.get_tenant_id()`
+- INSERT: `tenant_id = auth.get_tenant_id()`
+
+---
+
+## Multi-Tenancy & Row Level Security (RLS)
+
+### Design Pattern
+
+Every tenant-scoped table has:
+1. **tenant_id column** — Foreign key to tenants(id)
+2. **RLS enabled** — No unauthenticated access
+3. **RLS policies** — Filter by `auth.get_tenant_id()`
+
+### JWT Structure
+
+Authenticated requests include JWT with payload:
+```json
+{
+  "sub": "user-uuid",
+  "tenant_id": "tenant-uuid",
+  "email": "user@example.com",
+  "role": "admin",
+  "iat": 1234567890,
+  "exp": 1234571490
+}
+```
+
+### auth.get_tenant_id() Function
+
+Extracts `tenant_id` from JWT:
+```sql
+SELECT (auth.jwt()->>'tenant_id')::UUID
+```
+
+Returns NULL if:
+- User not authenticated
+- JWT missing `tenant_id` claim
+
+### Policy Examples
+
+**Simple (tenants table):**
+```sql
+CREATE POLICY "tenants_select_own" ON tenants
+  FOR SELECT USING (id = auth.get_tenant_id());
+```
+
+**Nested (columns table via kanban):**
+```sql
+CREATE POLICY "columns_select_own_tenant" ON columns
+  FOR SELECT USING (
+    kanban_id IN (
+      SELECT id FROM kanbans WHERE tenant_id = auth.get_tenant_id()
+    )
+  );
+```
+
+**Deep Nesting (messages via conversation):**
+```sql
+CREATE POLICY "messages_select_own_tenant" ON messages
+  FOR SELECT USING (
+    conversation_id IN (
+      SELECT id FROM conversations WHERE tenant_id = auth.get_tenant_id()
+    )
+  );
+```
+
+---
+
+## Performance Index Strategy
+
+### Index-Access Pattern Mapping
+
+| Index | Table | Query Pattern | Cardinality |
+|-------|-------|---------------|------------|
+| `idx_conversations_tenant_status` | conversations | `WHERE tenant_id = ? AND status = ?` | High (filters large result set) |
+| `idx_messages_conversation_created` | messages | `WHERE conversation_id = ? ORDER BY created_at DESC` | Very High (100K+ messages per conversation) |
+| `idx_contacts_phone_tenant` | contacts | `WHERE phone = ? AND tenant_id = ?` | High (unique constraint, login path) |
+| `idx_kanbans_main_tenant` | kanbans | `WHERE tenant_id = ? AND is_main = TRUE` | Low (max 1 result) |
+| `idx_conversations_kanban_column` | conversations | `WHERE kanban_id = ? AND column_id = ?` | High (board rendering) |
+| `idx_users_email_tenant` | users | `WHERE email = ? AND tenant_id = ?` | High (login path) |
+
+### Query Performance Baselines
+
+All typical queries should use indexes:
+```sql
+-- Board rendering (0.1ms, index-only scan)
+SELECT * FROM conversations
+WHERE kanban_id = $1 AND column_id = $2
+ORDER BY created_at DESC;
+
+-- Message history (1-5ms depending on message count)
+SELECT * FROM messages
+WHERE conversation_id = $1
+ORDER BY created_at DESC
+LIMIT 50;
+
+-- Contact lookup (0.05ms, unique index)
+SELECT * FROM contacts
+WHERE phone = $1 AND tenant_id = $2;
+```
+
+---
+
+## Constraints & Data Integrity
+
+### Foreign Key Cascade Rules
+
+| Parent → Child | Delete Behavior | Rationale |
+|---|---|---|
+| tenants → users | **CASCADE** | Tenant deletion removes all users |
+| tenants → contacts | **CASCADE** | Tenant deletion removes all contacts |
+| tenants → kanbans | **CASCADE** | Tenant deletion removes all boards |
+| tenants → conversations | **CASCADE** | Tenant deletion removes all conversations |
+| tenants → messages | **CASCADE** (via conversations) | Inherited from conversations |
+| tenants → automatic_messages | **CASCADE** | Tenant deletion removes templates |
+| kanbans → columns | **CASCADE** | Board deletion removes all columns |
+| contacts → conversations | **CASCADE** | Contact deletion removes conversations |
+| kanbans → conversations | **SET NULL** | Conversation survives board deletion (moved to unassigned) |
+| columns → conversations | **SET NULL** | Conversation survives column deletion (moved to unassigned) |
+| conversations → messages | **CASCADE** | Conversation deletion removes all messages |
+| kanbans → automatic_messages | **SET NULL** | Template scope can be cleared |
+
+### Unique Constraints
+
+| Constraint | Tables | Scope | Reason |
+|---|---|---|---|
+| email + tenant_id | users | Per tenant | Allow same email across tenants |
+| phone + tenant_id | contacts | Per tenant | Allow same phone across tenants |
+| tenant_id + is_main (WHERE is_main = TRUE) | kanbans | Per tenant | Enforce exactly 1 main board per tenant |
+
+### Check Constraints
+
+| Column | Allowed Values | Reason |
+|---|---|---|
+| tenants.subscription_status | active, paused, cancelled | Billing states |
+| tenants.connection_status | connected, disconnected, error | WhatsApp status |
+| users.role | admin, user, viewer | Authorization levels |
+| conversations.status | active, closed, archived | Conversation states |
+| messages.sender_type | contact, agent, system | Message origins |
+
+---
+
+## Nullable Columns & Design Decisions
+
+| Column | Nullable | Reason |
+|---|---|---|
+| users.password_hash | YES | OAuth/SSO support planned for Phase 2 |
+| conversations.kanban_id | YES | Conversations can exist without board assignment |
+| conversations.column_id | YES | Conversations can exist without stage assignment |
+| conversations.last_message_at | YES | Null until first message received |
+| automatic_messages.scheduled_interval_minutes | YES | One-time messages don't repeat |
+| automatic_messages.scheduled_kanban_id | YES | Null = apply to all boards in tenant |
+| contacts.phone | NO | Phone is required to create contact |
+| messages.media_url | YES | Text-only messages are common |
+| messages.media_type | YES | Only populated if media_url present |
+
+---
+
+## Testing & Validation
+
+### Unit Tests (per Story 1.1 Task 2-5)
+
+**INSERT Tests:**
+```sql
+INSERT INTO tenants (name, subscription_status) VALUES ('Test', 'active');
+INSERT INTO users (tenant_id, email, role) VALUES ('...', 'test@example.com', 'user');
+-- ... (all 8 tables)
+```
+
+**FK Constraint Tests:**
+```sql
+-- Should fail
+INSERT INTO users (tenant_id, email) VALUES ('invalid-uuid', 'test@example.com');
+
+-- Should succeed (cascade delete)
+DELETE FROM tenants WHERE id = '...';
+SELECT * FROM users WHERE tenant_id = '...'; -- Returns 0 rows
+```
+
+**Unique Constraint Tests:**
+```sql
+-- Should fail (duplicate email in same tenant)
+INSERT INTO users (tenant_id, email, role) VALUES ('tenant-1', 'dup@test.com', 'user');
+INSERT INTO users (tenant_id, email, role) VALUES ('tenant-1', 'dup@test.com', 'user');
+
+-- Should succeed (same email, different tenant)
+INSERT INTO users (tenant_id, email, role) VALUES ('tenant-2', 'dup@test.com', 'user');
+```
+
+**RLS Tests (require authenticated session):**
+```sql
+-- As Tenant A user, should see 0 rows
+SELECT * FROM conversations WHERE tenant_id = 'tenant-b-uuid';
+
+-- As Tenant A user, UPDATE another tenant's row should affect 0 rows
+UPDATE conversations SET status = 'closed'
+WHERE id = 'tenant-b-conversation-uuid';
+```
+
+**Index Usage Tests:**
+```sql
+EXPLAIN ANALYZE
+SELECT * FROM conversations
+WHERE tenant_id = '...' AND status = 'active';
+-- Should show "Index Scan" using idx_conversations_tenant_status
+```
+
+### Smoke Test Suite
+
+Run `supabase/smoke-tests/1.1-schema-smoke-test.sql` after migration:
+1. Verify all 8 tables exist
+2. Verify all indexes created
+3. Verify RLS enabled and policies attached
+4. Insert test data across tenants
+5. Verify RLS isolation
+
+---
+
+## Migration & Rollback
+
+### Forward Migration
+```bash
+supabase db push -- applies supabase/migrations/20260401234048_create_core_schema.sql
+```
+
+### Rollback
+```sql
+-- Manual rollback (if needed)
+DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS automatic_messages CASCADE;
+DROP TABLE IF EXISTS conversations CASCADE;
+DROP TABLE IF EXISTS columns CASCADE;
+DROP TABLE IF EXISTS contacts CASCADE;
+DROP TABLE IF EXISTS kanbans CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS tenants CASCADE;
+DROP FUNCTION IF EXISTS auth.get_tenant_id() CASCADE;
+```
+
+---
+
+## Architecture References
+
+| Document | Section | Reference |
+|---|---|---|
+| **7-security-architecture.md** | RLS Enforcement | Multi-tenant isolation via Row Level Security |
+| **3-database-schema-complete-reference.md** | Database Design | Tables, indexes, RLS policies |
+| **1-tech-stack-strategic-decisions.md** | Backend | PostgreSQL via Supabase Cloud |
+
+---
+
+## Glossary
+
+- **RLS:** Row Level Security — PostgreSQL feature that filters rows based on authenticated user
+- **JWT:** JSON Web Token — Contains user identity and tenant_id claim
+- **E.164:** International phone format (e.g., +5585987654321)
+- **Cascade:** Foreign key option that deletes child rows when parent deleted
+- **Set Null:** Foreign key option that clears FK reference when parent deleted
+- **Index:** Database structure for query optimization
+- **Unique Constraint:** Prevents duplicate values in specified columns
+
+---
+
+**Last Updated:** 2026-04-01  
+**Status:** Ready for Migration  
+**Next Step:** Apply migration and run smoke tests

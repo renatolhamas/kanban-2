@@ -352,5 +352,20 @@ npm run trace -- workflow-name
 - Keep README synchronized with actual behavior
 - Document breaking changes prominently
 
+## Response Format
+
+### Non-Agent Actions
+When executing actions **without an agent context** (i.e., when working directly without @agent-name):
+- Complete your response with the signature:
+```
+Att,
+Claude
+```
+
+### Agent Actions
+When working within an agent context (@agent-name):
+- Follow the agent's designated communication patterns
+- The signature rule above does NOT apply
+
 ---
 *Synkra AIOX Claude Code Configuration v2.0*

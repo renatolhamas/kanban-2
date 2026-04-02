@@ -523,3 +523,30 @@ Status: ✅ APPROVED
 **Status:** ✅ READY FOR EPIC BREAKDOWN
 
 ---
+
+## 🔄 POST-VALIDATION ALIGNMENT (Morgan - PM Agent)
+
+**Data:** 2026-04-01 14:45 UTC  
+**Atividade:** PRD Alignment com PO Validation Checklist  
+**Resultado:** ✅ 8 divergências resolvidas, PRD atualizado
+
+### Documento de Referência
+- **ALIGNMENT-CHANGES.md** — Diffs detalhados de todas as 8 mudanças aplicadas
+
+### Status de Alinhamento
+
+| Item | Status | Validação |
+|------|--------|-----------|
+| Sprint 0-2 — `/app na raiz` | ✅ ALIGNED | Supabase MCP + Vercel padrão |
+| Tech Stack — Next.js API Routes | ✅ ALIGNED | Webhooks em `/app/api/` |
+| DnD Library — dnd-kit v8.0.0 | ✅ ALIGNED | Moderno, mantido, acessível |
+| Reordenação — Settings com setas | ✅ ALIGNED | Botões ↑↓, não drag-drop |
+| Design System — Architectural Ledger | ✅ ALIGNED | Cores/typo específicas |
+| Email Service — Mailgun Fase 2+ | ✅ ALIGNED | Removido do MVP |
+| Rate Limiting — Redis local VPS | ✅ ALIGNED | Zero custo, controle total |
+| Webhook Timeout — 5s + <500ms UX | ✅ ALIGNED | Arquitetura async clarificada |
+
+**PRD Status:** ✅ ALIGNED WITH VALIDATION (v1.1)  
+**Ready for:** Epic Creation (@pm *create-epic)
+
+---

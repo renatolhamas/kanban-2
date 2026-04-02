@@ -13,7 +13,11 @@
       "Bash([ -f .gitignore ])",
       "Bash([ -f .aiox/environment-report.yaml ])",
       "Bash(gh auth:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run:*)",
+      "Bash(wsl bash:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
@@ -27,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\\\git\\\\rent\\\\.claude\\\\hooks\\\\code-intel-pretool.cjs\"",
+            "command": "node \"C:\\\\git\\\\kanban.2\\\\.claude\\\\hooks\\\\code-intel-pretool.cjs\"",
             "timeout": 10
           }
         ]
@@ -38,7 +42,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\\\git\\\\rent\\\\.claude\\\\hooks\\\\precompact-session-digest.cjs\"",
+            "command": "node \"C:\\\\git\\\\kanban.2\\\\.claude\\\\hooks\\\\precompact-session-digest.cjs\"",
             "timeout": 10
           }
         ]
@@ -49,7 +53,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"C:\\\\git\\\\rent\\\\.claude\\\\hooks\\\\synapse-engine.cjs\"",
+            "command": "node \"C:\\\\git\\\\kanban.2\\\\.claude\\\\hooks\\\\synapse-engine.cjs\"",
             "timeout": 10
           }
         ]

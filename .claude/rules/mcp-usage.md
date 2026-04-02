@@ -137,32 +137,6 @@ mcp__docker-gateway__fetch-apify-docs              # Fetch documentation page
 | Social media data extraction | Apify (use specialized Actors) |
 | Library documentation | Context7 |
 
-## Supabase MCP Usage
-
-### Use Supabase MCP for:
-1. Database queries and operations
-2. Managing Supabase projects and resources
-3. Accessing authentication and user data
-4. Real-time database subscriptions
-5. File storage operations
-
-### Access pattern:
-```
-mcp__supabase__{tool-name}
-```
-
-**Available Tools:**
-- Database operations (query, insert, update, delete)
-- User and auth management
-- File storage access
-- Project configuration
-- Real-time features
-
-### Configuration:
-- **Project Ref:** ujcjucgylwkjrdpsqffs
-- **Type:** HTTP
-- **URL:** https://mcp.supabase.com/mcp?project_ref=ujcjucgylwkjrdpsqffs
-
 ---
 
 ## Rationale

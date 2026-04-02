@@ -1,7 +1,7 @@
 {
     "version": "1.0",
-    "project": "rent",
-    "workspace": "C:/git/rent",
+    "project": "kanban.2",
+    "workspace": "C:/git/kanban.2",
     "agents": {
         "enabled": true,
         "directory": ".antigravity\\agents",

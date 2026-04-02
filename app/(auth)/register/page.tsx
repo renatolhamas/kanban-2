@@ -24,18 +24,22 @@ export default function RegisterPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Registration failed')
+        const errorMessage = data.error || 'Registration failed'
+        setError(errorMessage)
+        throw new Error(errorMessage)
       }
 
-      // Get redirect URL from response header
+      // Success - get redirect URL from response header
       const redirectTo = response.headers.get('X-Redirect-To') || '/settings/connection'
 
       // Redirect after successful registration
       setTimeout(() => {
         router.push(redirectTo)
-      }, 1000)
+      }, 1500)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed')
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed'
+      setError(errorMessage)
+      throw err // Re-throw so RegisterForm knows it failed
     }
   }
 

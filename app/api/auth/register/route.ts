@@ -102,27 +102,47 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
 
     const tenantId = tenantData.id
 
-    // Create owner user record
-    const { error: userError } = await supabase.from('users').insert([
-      {
-        id: userId,
-        email,
-        name,
-        tenant_id: tenantId,
-        role: 'owner',
-      },
-    ])
+    // Small delay to allow FK constraints to sync (fixes race condition)
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    // Create owner user record with enhanced error handling
+    console.log(`Creating user record: userId=${userId}, tenantId=${tenantId}, email=${email}`)
+
+    const { error: userError, data: userData } = await supabase
+      .from('users')
+      .insert([
+        {
+          id: userId,
+          email,
+          name,
+          tenant_id: tenantId,
+          role: 'owner',
+        },
+      ])
+      .select('id')
 
     if (userError) {
-      console.error('User record creation error:', userError)
+      console.error('User record creation error details:', {
+        message: userError.message,
+        code: userError.code,
+        details: userError.details,
+        hint: userError.hint,
+        status: userError.status,
+      })
       // Cleanup: delete auth user and tenant if user record creation fails
       await supabase.auth.admin.deleteUser(userId)
       await supabase.from('tenants').delete().eq('id', tenantId)
       return NextResponse.json(
-        { success: false, error: 'Failed to create user record. Please try again.' },
+        {
+          success: false,
+          error: 'Failed to create user record. Please try again.',
+          details: process.env.NODE_ENV === 'development' ? userError.message : undefined,
+        },
         { status: 500 }
       )
     }
+
+    console.log('User record created successfully:', userData)
 
     // Generate JWT
     const token = await generateJWT({

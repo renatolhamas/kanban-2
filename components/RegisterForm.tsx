@@ -63,6 +63,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
     try {
       if (onSubmit) {
         await onSubmit(email, name, password)
+        // Only set success if no error was thrown
         setSuccess(true)
         setEmail('')
         setName('')
@@ -70,7 +71,10 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         setConfirmPassword('')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed')
+      const errorMsg = err instanceof Error ? err.message : 'Registration failed'
+      setError(errorMsg)
+      // Ensure success is false if any error occurred
+      setSuccess(false)
     } finally {
       setLoading(false)
     }

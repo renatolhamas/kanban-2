@@ -106,14 +106,6 @@ tasks:
   - f2-qa-base-components
   - f3-derive-components
   - f3-qa-derived-components
-  - sb-install
-  - sb-configure
-  - sb-expand-shadcn
-  - sb-generate-all-stories
-  - sb-verify
-  - sb-brownfield-scan
-  - sb-brownfield-migrate
-  - sb-sync-workspace
   - a11y-audit
   - aria-audit
   - contrast-matrix
@@ -181,8 +173,6 @@ workflows:
   - dtcg-tokens-governance
   - motion-quality
   - foundations-pipeline
-  - storybook-full-setup
-  - storybook-brownfield-migration
   - critical-eye
 tags:
   - design-system
@@ -196,9 +186,3 @@ tags:
   - machine-readable
   - mcp
   - designops
-  - storybook
-  - csf3
-  - interaction-testing
-  - visual-regression
-  - brownfield-migration
-  - component-stories

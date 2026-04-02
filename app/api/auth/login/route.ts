@@ -52,9 +52,28 @@ export async function POST(
     }
 
     const userId = authData.user.id;
+    const accessToken = authData.session?.access_token;
 
-    // Fetch user record to get tenant_id and role
-    const { data: userData, error: userError } = await supabase
+    if (!accessToken) {
+      return NextResponse.json(
+        { success: false, error: "Session token missing" },
+        { status: 401 },
+      );
+    }
+
+    // Create Supabase client with user's JWT in Authorization header
+    // This allows RLS policies to evaluate auth.jwt() correctly
+    const userSupabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    });
+
+    // Fetch user record to get tenant_id and role using user's JWT
+    // RLS policy now evaluates: auth.jwt()['tenant_id'] == user.tenant_id ✅
+    const { data: userData, error: userError } = await userSupabase
       .from("users")
       .select("tenant_id, role")
       .eq("id", userId)

@@ -127,7 +127,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
         code: userError.code,
         details: userError.details,
         hint: userError.hint,
-        status: userError.status,
       })
       // Cleanup: delete auth user and tenant if user record creation fails
       await supabase.auth.admin.deleteUser(userId)

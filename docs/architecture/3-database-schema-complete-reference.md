@@ -1,0 +1,172 @@
+# 3. Database Schema — Complete Reference
+
+## 3.1 Core Tables
+
+### `tenants` — Multi-tenancy root
+```sql
+CREATE TABLE tenants (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  subscription_status TEXT CHECK (subscription_status IN ('active', 'paused', 'cancelled')) DEFAULT 'active',
+  evolution_instance_id TEXT,  -- Evolution API instance for this tenant
+  connection_status TEXT CHECK (connection_status IN ('disconnected', 'connecting', 'active', 'error')) DEFAULT 'disconnected',
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_tenants_subscription ON tenants(subscription_status);
+```
+
+### `users` — Owners and attendants
+```sql
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  email TEXT NOT NULL,
+  role TEXT CHECK (role IN ('owner', 'attendant')) DEFAULT 'owner',
+  name TEXT NOT NULL,
+  password_hash TEXT,  -- NULL if using OAuth
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE UNIQUE INDEX idx_users_email_tenant ON users(email, tenant_id);
+CREATE INDEX idx_users_tenant ON users(tenant_id);
+```
+
+### `kanbans` — Pipelines/funnels
+```sql
+CREATE TABLE kanbans (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  is_main BOOLEAN DEFAULT FALSE,  -- Only one per tenant
+  order_position INT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE UNIQUE INDEX idx_kanbans_main_tenant ON kanbans(tenant_id, is_main) WHERE is_main = TRUE;
+CREATE INDEX idx_kanbans_tenant_order ON kanbans(tenant_id, order_position);
+```
+
+### `columns` — Kanban stages
+```sql
+CREATE TABLE columns (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  kanban_id UUID NOT NULL REFERENCES kanbans(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  order_position INT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_columns_kanban_order ON columns(kanban_id, order_position);
+```
+
+### `contacts` — Contact directory
+```sql
+CREATE TABLE contacts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  phone TEXT NOT NULL,  -- E.164 format: +5511987654321
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE UNIQUE INDEX idx_contacts_phone_tenant ON contacts(phone, tenant_id);
+CREATE INDEX idx_contacts_tenant ON contacts(tenant_id);
+```
+
+### `conversations` — Contact-to-kanban links
+```sql
+CREATE TABLE conversations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  contact_id UUID NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+  kanban_id UUID NOT NULL REFERENCES kanbans(id) ON DELETE SET NULL,
+  column_id UUID NOT NULL REFERENCES columns(id) ON DELETE SET NULL,
+  wa_phone TEXT NOT NULL,  -- WhatsApp phone (may differ from contact.phone)
+  status TEXT CHECK (status IN ('active', 'archived')) DEFAULT 'active',
+  last_message_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_conversations_tenant_status ON conversations(tenant_id, status);
+CREATE INDEX idx_conversations_kanban_column ON conversations(kanban_id, column_id);
+CREATE INDEX idx_conversations_last_message ON conversations(last_message_at DESC);
+```
+
+### `messages` — Message history
+```sql
+CREATE TABLE messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  conversation_id UUID NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  sender_type TEXT CHECK (sender_type IN ('user', 'contact')) NOT NULL,
+  content TEXT NOT NULL,
+  media_url TEXT,  -- S3 URL if file attached
+  media_type TEXT CHECK (media_type IN ('image', 'video', 'audio')),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_messages_conversation_created ON messages(conversation_id, created_at DESC);
+```
+
+### `automatic_messages` — Message templates
+```sql
+CREATE TABLE automatic_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  message TEXT NOT NULL,
+  scheduled_interval_minutes INT,  -- NULL = manual only; >0 = auto-send interval
+  scheduled_kanban_id UUID REFERENCES kanbans(id) ON DELETE SET NULL,  -- Optional: only for this kanban
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_automatic_messages_tenant ON automatic_messages(tenant_id);
+```
+
+## 3.2 Row Level Security (RLS) Policies
+
+```sql
+-- Enable RLS on all tenant-scoped tables
+ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE kanbans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE columns ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE automatic_messages ENABLE ROW LEVEL SECURITY;
+
+-- Extract tenant_id from JWT
+CREATE OR REPLACE FUNCTION auth.get_tenant_id() RETURNS UUID AS $$
+  SELECT (auth.jwt()->>'tenant_id')::UUID;
+$$ LANGUAGE SQL;
+
+-- Policy: Users see only their tenant's data
+CREATE POLICY "users_see_own_tenant"
+  ON tenants FOR SELECT USING (
+    id = auth.get_tenant_id()
+  );
+
+CREATE POLICY "conversations_isolation"
+  ON conversations FOR SELECT USING (
+    tenant_id = auth.get_tenant_id()
+  );
+
+CREATE POLICY "conversations_update"
+  ON conversations FOR UPDATE USING (
+    tenant_id = auth.get_tenant_id()
+  );
+
+-- Similar policies for other tables...
+```
+
+## 3.3 Indexes & Query Optimization
+
+| Index | Purpose | Query Pattern |
+|-------|---------|---------------|
+| `idx_conversations_tenant_status` | Filter active conversations per tenant | `SELECT * FROM conversations WHERE tenant_id = ? AND status = 'active'` |
+| `idx_messages_conversation_created` | Load message history, newest first | `SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at DESC` |
+| `idx_contacts_phone_tenant` | Prevent duplicate phone per tenant | `SELECT * FROM contacts WHERE phone = ? AND tenant_id = ?` |
+| `idx_kanbans_main_tenant` | Find "Main" kanban for auto-routing | `SELECT * FROM kanbans WHERE tenant_id = ? AND is_main = TRUE` |
+| `idx_conversations_kanban_column` | Load conversations for board render | `SELECT * FROM conversations WHERE kanban_id = ? AND column_id = ?` |
+
+---

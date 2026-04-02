@@ -1,3 +1,14 @@
+---
+> 📋 **DOCUMENTO SHARDADO**
+>
+> Este PRD foi shardado em **2026-04-01** por **Aria (@architect)** para facilitar navegação modular.
+>
+> **Versão shardada disponível em:** [`docs/prd/`](./prd/) (19 seções em arquivos separados)
+>
+> **Consulte os shards para leitura — este arquivo é mantido como referência histórica e fonte de verdade.**
+
+---
+
 # Product Requirements Document (PRD)
 ## WhatsApp Kanban System - Collaborative Conversation Management Platform
 

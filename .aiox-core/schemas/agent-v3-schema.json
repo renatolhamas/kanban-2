@@ -69,7 +69,13 @@
           "properties": {
             "tone": {
               "type": "string",
-              "enum": ["pragmatic", "conceptual", "analytical", "supportive", "precise"]
+              "enum": [
+                "pragmatic",
+                "conceptual",
+                "analytical",
+                "supportive",
+                "precise"
+              ]
             },
             "emoji_frequency": {
               "type": "string",

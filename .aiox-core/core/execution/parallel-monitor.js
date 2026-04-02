@@ -6,7 +6,7 @@
  * with CLI commands and dashboard integration.
  */
 
-const EventEmitter = require('events');
+const EventEmitter = require("events");
 
 class ParallelMonitor extends EventEmitter {
   constructor(config = {}) {
@@ -45,15 +45,18 @@ class ParallelMonitor extends EventEmitter {
       tasks: waveData.tasks.map((t) => ({
         id: t.id,
         description: t.description,
-        agent: t.agent || 'unknown',
-        status: 'pending',
+        agent: t.agent || "unknown",
+        status: "pending",
       })),
       startedAt: new Date().toISOString(),
-      status: 'running',
+      status: "running",
     });
 
-    this.emit('wave_registered', { waveId, taskCount: waveData.tasks.length });
-    this.broadcast('wave_registered', { waveId, wave: this.activeWaves.get(waveId) });
+    this.emit("wave_registered", { waveId, taskCount: waveData.tasks.length });
+    this.broadcast("wave_registered", {
+      waveId,
+      wave: this.activeWaves.get(waveId),
+    });
   }
 
   /**
@@ -68,7 +71,7 @@ class ParallelMonitor extends EventEmitter {
       agent: taskData.agent || taskData.agentId,
       description: taskData.description,
       startedAt: new Date().toISOString(),
-      status: 'running',
+      status: "running",
       output: [],
     };
 
@@ -80,13 +83,13 @@ class ParallelMonitor extends EventEmitter {
     if (wave) {
       const waveTask = wave.tasks.find((t) => t.id === taskId);
       if (waveTask) {
-        waveTask.status = 'running';
+        waveTask.status = "running";
         waveTask.startedAt = task.startedAt;
       }
     }
 
-    this.emit('task_started', { taskId, task });
-    this.broadcast('task_started', { taskId, task });
+    this.emit("task_started", { taskId, task });
+    this.broadcast("task_started", { taskId, task });
   }
 
   /**
@@ -116,7 +119,7 @@ class ParallelMonitor extends EventEmitter {
       }
     }
 
-    this.broadcast('task_output', { taskId, line });
+    this.broadcast("task_output", { taskId, line });
   }
 
   /**
@@ -128,7 +131,7 @@ class ParallelMonitor extends EventEmitter {
     const task = this.activeTasks.get(taskId);
     if (task) {
       task.completedAt = new Date().toISOString();
-      task.status = result.success ? 'completed' : 'failed';
+      task.status = result.success ? "completed" : "failed";
       task.duration = Date.now() - new Date(task.startedAt).getTime();
       task.error = result.error;
       task.filesModified = result.filesModified || [];
@@ -159,11 +162,11 @@ class ParallelMonitor extends EventEmitter {
 
       // Notify
       if (this.notifyOnFailure && !result.success) {
-        this.emit('task_failed', { taskId, error: result.error });
+        this.emit("task_failed", { taskId, error: result.error });
       }
 
-      this.emit('task_completed', { taskId, result: task });
-      this.broadcast('task_completed', { taskId, task });
+      this.emit("task_completed", { taskId, result: task });
+      this.broadcast("task_completed", { taskId, task });
 
       // Remove from active after delay
       setTimeout(() => {
@@ -181,16 +184,16 @@ class ParallelMonitor extends EventEmitter {
     const wave = this.activeWaves.get(waveId);
     if (wave) {
       wave.completedAt = new Date().toISOString();
-      wave.status = result.success ? 'completed' : 'failed';
+      wave.status = result.success ? "completed" : "failed";
       wave.duration = Date.now() - new Date(wave.startedAt).getTime();
       wave.metrics = result.metrics;
 
       // Notify
       if (this.notifyOnComplete) {
-        this.emit('wave_completed', { waveId, success: result.success });
+        this.emit("wave_completed", { waveId, success: result.success });
       }
 
-      this.broadcast('wave_completed', { waveId, wave });
+      this.broadcast("wave_completed", { waveId, wave });
 
       // Move to history after delay
       setTimeout(() => {
@@ -207,10 +210,12 @@ class ParallelMonitor extends EventEmitter {
     const waves = [];
 
     for (const [waveId, wave] of this.activeWaves) {
-      const completed = wave.tasks.filter((t) => t.status === 'completed').length;
-      const failed = wave.tasks.filter((t) => t.status === 'failed').length;
-      const running = wave.tasks.filter((t) => t.status === 'running').length;
-      const pending = wave.tasks.filter((t) => t.status === 'pending').length;
+      const completed = wave.tasks.filter(
+        (t) => t.status === "completed",
+      ).length;
+      const failed = wave.tasks.filter((t) => t.status === "failed").length;
+      const running = wave.tasks.filter((t) => t.status === "running").length;
+      const pending = wave.tasks.filter((t) => t.status === "pending").length;
 
       waves.push({
         waveId,
@@ -226,7 +231,8 @@ class ParallelMonitor extends EventEmitter {
         },
         tasks: wave.tasks,
         startedAt: wave.startedAt,
-        duration: wave.duration || Date.now() - new Date(wave.startedAt).getTime(),
+        duration:
+          wave.duration || Date.now() - new Date(wave.startedAt).getTime(),
       });
     }
 
@@ -256,19 +262,19 @@ class ParallelMonitor extends EventEmitter {
    */
   cancelWave(waveId) {
     const wave = this.activeWaves.get(waveId);
-    if (wave && wave.status === 'running') {
-      wave.status = 'cancelled';
+    if (wave && wave.status === "running") {
+      wave.status = "cancelled";
       wave.completedAt = new Date().toISOString();
 
       // Mark pending tasks as cancelled
       for (const task of wave.tasks) {
-        if (task.status === 'pending' || task.status === 'running') {
-          task.status = 'cancelled';
+        if (task.status === "pending" || task.status === "running") {
+          task.status = "cancelled";
         }
       }
 
-      this.emit('wave_cancelled', { waveId });
-      this.broadcast('wave_cancelled', { waveId });
+      this.emit("wave_cancelled", { waveId });
+      this.broadcast("wave_cancelled", { waveId });
     }
   }
 
@@ -282,7 +288,7 @@ class ParallelMonitor extends EventEmitter {
    */
   formatProgressBar(completed, failed, running, pending) {
     const total = completed + failed + running + pending;
-    if (total === 0) return '[          ] 0/0';
+    if (total === 0) return "[          ] 0/0";
 
     const width = 20;
     const completedChars = Math.floor((completed / total) * width);
@@ -291,10 +297,10 @@ class ParallelMonitor extends EventEmitter {
     const pendingChars = width - completedChars - failedChars - runningChars;
 
     const bar =
-      '▓'.repeat(completedChars) +
-      '░'.repeat(failedChars) +
-      '▒'.repeat(runningChars) +
-      '·'.repeat(Math.max(0, pendingChars));
+      "▓".repeat(completedChars) +
+      "░".repeat(failedChars) +
+      "▒".repeat(runningChars) +
+      "·".repeat(Math.max(0, pendingChars));
 
     return `[${bar}] ${completed + failed}/${total}`;
   }
@@ -306,44 +312,56 @@ class ParallelMonitor extends EventEmitter {
   formatStatus() {
     const status = this.getStatus();
 
-    let output = '📊 Parallel Execution Status\n';
-    output += '━'.repeat(50) + '\n\n';
+    let output = "📊 Parallel Execution Status\n";
+    output += "━".repeat(50) + "\n\n";
 
     if (status.waves.length === 0) {
-      output += '  No active executions\n';
+      output += "  No active executions\n";
     } else {
       for (const wave of status.waves) {
-        const { completed, failed, running, pending, total: _total } = wave.progress;
-        const progressBar = this.formatProgressBar(completed, failed, running, pending);
+        const {
+          completed,
+          failed,
+          running,
+          pending,
+          total: _total,
+        } = wave.progress;
+        const progressBar = this.formatProgressBar(
+          completed,
+          failed,
+          running,
+          pending,
+        );
         const duration = Math.round(wave.duration / 1000);
 
-        output += `Wave ${wave.index} (${wave.workflowId || 'unknown'})\n`;
+        output += `Wave ${wave.index} (${wave.workflowId || "unknown"})\n`;
         output += `  ${progressBar} (${duration}s)\n`;
 
         for (const task of wave.tasks) {
           const icon = {
-            completed: '✅',
-            failed: '❌',
-            running: '🔄',
-            pending: '⏳',
-            cancelled: '🚫',
+            completed: "✅",
+            failed: "❌",
+            running: "🔄",
+            pending: "⏳",
+            cancelled: "🚫",
           }[task.status];
 
           output += `  ${icon} ${task.id}`;
           if (task.agent) output += ` (${task.agent})`;
-          if (task.duration) output += ` - ${Math.round(task.duration / 1000)}s`;
-          output += '\n';
+          if (task.duration)
+            output += ` - ${Math.round(task.duration / 1000)}s`;
+          output += "\n";
         }
 
-        output += '\n';
+        output += "\n";
       }
     }
 
     if (status.recentHistory.length > 0) {
-      output += 'Recent Activity:\n';
+      output += "Recent Activity:\n";
       for (const entry of status.recentHistory.slice(-5)) {
-        const icon = entry.status === 'completed' ? '✅' : '❌';
-        const time = entry.completedAt.split('T')[1].split('.')[0];
+        const icon = entry.status === "completed" ? "✅" : "❌";
+        const time = entry.completedAt.split("T")[1].split(".")[0];
         output += `  [${time}] ${icon} ${entry.taskId}\n`;
       }
     }
@@ -358,14 +376,14 @@ class ParallelMonitor extends EventEmitter {
   registerConnection(ws) {
     this.wsConnections.add(ws);
 
-    ws.on('close', () => {
+    ws.on("close", () => {
       this.wsConnections.delete(ws);
     });
 
     // Send current status
     ws.send(
       JSON.stringify({
-        type: 'status',
+        type: "status",
         data: this.getStatus(),
       }),
     );
@@ -377,7 +395,11 @@ class ParallelMonitor extends EventEmitter {
    * @param {Object} data - Message data
    */
   broadcast(type, data) {
-    const message = JSON.stringify({ type, data, timestamp: new Date().toISOString() });
+    const message = JSON.stringify({
+      type,
+      data,
+      timestamp: new Date().toISOString(),
+    });
 
     for (const ws of this.wsConnections) {
       try {

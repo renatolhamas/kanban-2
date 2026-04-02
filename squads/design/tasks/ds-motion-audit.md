@@ -48,7 +48,7 @@ Extract all CSS transition/animation values and JS animation calls from the code
    - Check coverage: every animated element should have reduced-motion handling
    - Flag animations without reduced-motion fallback
    - Categorize: which animations are reduced vs. removed
-   - Check: coverage = (elements with reduced-motion / total animated elements) * 100 — log "prefers-reduced-motion coverage: {pct}% ({covered}/{total})"
+   - Check: coverage = (elements with reduced-motion / total animated elements) \* 100 — log "prefers-reduced-motion coverage: {pct}% ({covered}/{total})"
 
 4. **Extract Motion Token Candidates**
    - Cluster similar duration values (e.g., 180ms, 200ms, 220ms → normalize to 200ms)
@@ -75,6 +75,7 @@ Extract all CSS transition/animation values and JS animation calls from the code
 ## Val Head 5-Purpose Evaluation (v4.1)
 
 For every animation found, evaluate against:
+
 1. **Orient** — Does it help users understand spatial relationships?
 2. **Direct Attention** — Does it guide focus to important changes?
 3. **Show Causality** — Does it show cause-and-effect?
@@ -84,11 +85,13 @@ For every animation found, evaluate against:
 Animations failing ALL 5 purposes should be flagged for removal.
 
 ### Easing Audit
+
 - Flag use of CSS defaults (ease, ease-in-out, linear) — recommend custom curves
 - Check if custom easing curves reflect brand personality
 - Evaluate if easing matches interaction type (ease-out for enters, ease-in for exits)
 
 ### UI Choreography Check
+
 - Do animations feel like "siblings" (coherent family)?
 - Or like "strangers" (disconnected, random)?
 - Flag inconsistent motion character across components
@@ -109,10 +112,10 @@ Animations failing ALL 5 purposes should be flagged for removal.
 - Every animation has at least one of 5 purposes identified
 - CSS default easings flagged for replacement with custom curves
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

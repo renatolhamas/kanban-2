@@ -14,18 +14,20 @@
 Create realistic 4-phase migration plan to gradually adopt design system without blocking sprints. Prioritizes high-impact patterns first, includes rollback procedures, tracks progress.
 
 ## Input Schema
+
 - **requires:** Output from `ds-extract-tokens`
 - **format:** YAML data (tokens.yaml with all design tokens)
 - **location:** `outputs/design-system/{project}/tokens/tokens.yaml`
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/migration/migration-strategy.md`
 - **format:** Markdown report
 - **consumed_by:** ds-calculate-roi
 
 ## Prerequisites
 
-- Tokenization completed (*tokenize command run successfully)
+- Tokenization completed (\*tokenize command run successfully)
 - .state.yaml contains consolidation and token data
 - Token files exist (tokens.yaml, exports)
 
@@ -58,7 +60,7 @@ This task uses interactive elicitation to customize migration strategy.
    - Read .state.yaml for consolidation metrics
    - Load token locations
    - Identify pattern counts and reduction percentages
-   - Check: .state.yaml contains `phase: "tokenize_complete"` AND token file paths resolve — abort with "Tokenization not completed: run *tokenize first"
+   - Check: .state.yaml contains `phase: "tokenize_complete"` AND token file paths resolve — abort with "Tokenization not completed: run \*tokenize first"
 
 2. **Analyze Pattern Impact**
    - Calculate usage frequency for each pattern type
@@ -161,6 +163,7 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Deploy tokens, zero visual changes
 
 **Tasks**:
+
 - [ ] Add token files to project (tokens.yaml, exports)
 - [ ] Configure build pipeline to process tokens
 - [ ] Update existing CSS to use CSS custom properties
@@ -175,6 +178,7 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Replace most-used components for immediate ROI
 
 **Priorities**:
+
 1. Button (327 instances → 3 variants) - 93% reduction
 2. Input (189 instances → 5 variants) - 87% reduction
 3. Card (145 instances → 2 variants) - 85% reduction
@@ -188,6 +192,7 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Consolidate remaining patterns
 
 **Tasks**:
+
 - [ ] Forms (23 variations → 5)
 - [ ] Modals (12 variations → 2)
 - [ ] Navigation (8 variations → 3)
@@ -199,6 +204,7 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Prevent regression
 
 **Tasks**:
+
 - [ ] Add CI/CD pattern validation
 - [ ] Deprecate old components
 - [ ] Block non-system patterns
@@ -209,7 +215,7 @@ This task uses interactive elicitation to customize migration strategy.
 
 ## Failure Handling
 
-- **No token data available:** BLOCK — re-run *tokenize first. Migration without tokens produces unusable strategy
+- **No token data available:** BLOCK — re-run \*tokenize first. Migration without tokens produces unusable strategy
 - **Risk assessment HIGH for >50% of components:** Recommend phased migration starting with lowest-risk components. Add Phase 0 (pilot)
 - **Estimated migration >6 months:** Split into quarterly milestones with independent go/no-go gates per milestone
 - **Conflicting frameworks detected:** Document each framework's migration path separately before creating unified strategy
@@ -228,18 +234,18 @@ This task uses interactive elicitation to customize migration strategy.
 
 > **GATE: Migration Strategy Review** — Human approval required before any migration begins
 
-| Metric | Threshold | Action if FAIL |
-|--------|-----------|----------------|
-| Token data available | All tokens generated | BLOCK — return to *tokenize. Never plan migration without tokens |
-| Risk assessment | No CRITICAL risks unmitigated | Add mitigation plan for each CRITICAL risk before proceeding |
-| Estimated duration | Approved by stakeholder | If > 6 months, split into quarterly milestones with independent go/no-go |
-| Rollback plan | Defined for each phase | Add rollback steps — migration without rollback is not production-ready |
+| Metric               | Threshold                     | Action if FAIL                                                           |
+| -------------------- | ----------------------------- | ------------------------------------------------------------------------ |
+| Token data available | All tokens generated          | BLOCK — return to \*tokenize. Never plan migration without tokens        |
+| Risk assessment      | No CRITICAL risks unmitigated | Add mitigation plan for each CRITICAL risk before proceeding             |
+| Estimated duration   | Approved by stakeholder       | If > 6 months, split into quarterly milestones with independent go/no-go |
+| Rollback plan        | Defined for each phase        | Add rollback steps — migration without rollback is not production-ready  |
 
 **Rework rule:** If > 50% of components are HIGH risk, add Phase 0 (pilot) with 2-3 lowest-risk components to validate approach before full migration.
 
 ## Error Handling
 
-- **No tokenization data**: Exit with message to run *tokenize first
+- **No tokenization data**: Exit with message to run \*tokenize first
 - **Cannot estimate timeline**: Use defaults, warn user to adjust
 - **Insufficient pattern data**: Recommend re-running audit
 - **Team context missing**: Use conservative defaults
@@ -260,6 +266,7 @@ This task uses interactive elicitation to customize migration strategy.
 ```
 
 Output:
+
 ```
 🔍 Brad: Generating phased migration strategy...
 
@@ -324,8 +331,8 @@ Phase 4: Enforcement (1 sprint)
 - CI/CD enforcement prevents regression (Phase 4 critical)
 - Timeline assumes team works on migration alongside features
 - Brad says: "Phased rollout = safe rollout. No big-bang rewrites."
-- After this, hand off to Merovingian: *agent atlas for component building
+- After this, hand off to Merovingian: \*agent atlas for component building
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-migration-readiness-checklist.md`
-

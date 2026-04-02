@@ -9,25 +9,25 @@
  * @created Story SYN-1 - Domain Loader + Manifest Parser
  */
 
-const fs = require('fs');
+const fs = require("fs");
 
 /**
  * Known domain attribute suffixes (order matters — longest first to avoid partial matches)
  */
 const KNOWN_SUFFIXES = [
-  '_WORKFLOW_TRIGGER',
-  '_AGENT_TRIGGER',
-  '_NON_NEGOTIABLE',
-  '_ALWAYS_ON',
-  '_EXCLUDE',
-  '_RECALL',
-  '_STATE',
+  "_WORKFLOW_TRIGGER",
+  "_AGENT_TRIGGER",
+  "_NON_NEGOTIABLE",
+  "_ALWAYS_ON",
+  "_EXCLUDE",
+  "_RECALL",
+  "_STATE",
 ];
 
 /**
  * Global-level keys that are NOT domain attributes
  */
-const GLOBAL_KEYS = ['DEVMODE', 'GLOBAL_EXCLUDE'];
+const GLOBAL_KEYS = ["DEVMODE", "GLOBAL_EXCLUDE"];
 
 /**
  * Parse the .synapse/manifest file (KEY=VALUE format)
@@ -49,7 +49,7 @@ const GLOBAL_KEYS = ['DEVMODE', 'GLOBAL_EXCLUDE'];
 function parseManifest(manifestPath) {
   let content;
   try {
-    content = fs.readFileSync(manifestPath, 'utf8');
+    content = fs.readFileSync(manifestPath, "utf8");
   } catch (_error) {
     // Graceful degradation: missing manifest = empty config
     return {
@@ -71,12 +71,12 @@ function parseManifest(manifestPath) {
     const trimmed = line.trim();
 
     // Skip empty lines and comments
-    if (!trimmed || trimmed.startsWith('#')) {
+    if (!trimmed || trimmed.startsWith("#")) {
       continue;
     }
 
     // Split on first '=' only
-    const eqIndex = trimmed.indexOf('=');
+    const eqIndex = trimmed.indexOf("=");
     if (eqIndex === -1) {
       continue; // Malformed line — skip silently
     }
@@ -89,12 +89,12 @@ function parseManifest(manifestPath) {
     }
 
     // Handle global keys
-    if (key === 'DEVMODE') {
-      result.devmode = value.toLowerCase() === 'true';
+    if (key === "DEVMODE") {
+      result.devmode = value.toLowerCase() === "true";
       continue;
     }
 
-    if (key === 'GLOBAL_EXCLUDE') {
+    if (key === "GLOBAL_EXCLUDE") {
       result.globalExclude = parseCommaSeparated(value);
       continue;
     }
@@ -117,25 +117,25 @@ function parseManifest(manifestPath) {
 
     // Apply attribute based on suffix
     switch (suffix) {
-      case '_STATE':
+      case "_STATE":
         domain.state = value.toLowerCase();
         break;
-      case '_ALWAYS_ON':
-        domain.alwaysOn = value.toLowerCase() === 'true';
+      case "_ALWAYS_ON":
+        domain.alwaysOn = value.toLowerCase() === "true";
         break;
-      case '_NON_NEGOTIABLE':
-        domain.nonNegotiable = value.toLowerCase() === 'true';
+      case "_NON_NEGOTIABLE":
+        domain.nonNegotiable = value.toLowerCase() === "true";
         break;
-      case '_AGENT_TRIGGER':
+      case "_AGENT_TRIGGER":
         domain.agentTrigger = value;
         break;
-      case '_WORKFLOW_TRIGGER':
+      case "_WORKFLOW_TRIGGER":
         domain.workflowTrigger = value;
         break;
-      case '_RECALL':
+      case "_RECALL":
         domain.recall = parseCommaSeparated(value);
         break;
-      case '_EXCLUDE':
+      case "_EXCLUDE":
         domain.exclude = parseCommaSeparated(value);
         break;
     }
@@ -157,7 +157,7 @@ function parseManifest(manifestPath) {
 function loadDomainFile(domainPath) {
   let content;
   try {
-    content = fs.readFileSync(domainPath, 'utf8');
+    content = fs.readFileSync(domainPath, "utf8");
   } catch (_error) {
     return []; // Graceful: missing file = empty rules
   }
@@ -169,7 +169,11 @@ function loadDomainFile(domainPath) {
   // First pass: detect if file uses KEY=VALUE format
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed && !trimmed.startsWith('#') && /^[A-Z][A-Z0-9_]*=/.test(trimmed)) {
+    if (
+      trimmed &&
+      !trimmed.startsWith("#") &&
+      /^[A-Z][A-Z0-9_]*=/.test(trimmed)
+    ) {
       hasKeyValueFormat = true;
       break;
     }
@@ -179,7 +183,7 @@ function loadDomainFile(domainPath) {
     const trimmed = line.trim();
 
     // Skip empty lines and comments
-    if (!trimmed || trimmed.startsWith('#')) {
+    if (!trimmed || trimmed.startsWith("#")) {
       continue;
     }
 
@@ -219,8 +223,8 @@ function isExcluded(prompt, globalExcludes = [], domainExcludes = []) {
       continue;
     }
     // Escape regex special characters in keyword
-    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(escaped, 'i');
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "i");
     if (regex.test(promptLower)) {
       return true;
     }
@@ -248,8 +252,8 @@ function matchKeywords(prompt, recallKeywords = []) {
       continue;
     }
     // Escape regex special characters in keyword
-    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(escaped, 'i');
+    const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(escaped, "i");
     if (regex.test(promptLower)) {
       return true;
     }
@@ -292,7 +296,7 @@ function extractDomainInfo(key) {
  * @returns {string} File name in lowercase-kebab
  */
 function domainNameToFile(domainName) {
-  return domainName.toLowerCase().replace(/_/g, '-');
+  return domainName.toLowerCase().replace(/_/g, "-");
 }
 
 /**
@@ -305,9 +309,10 @@ function parseCommaSeparated(value) {
   if (!value) {
     return [];
   }
-  return value.split(',')
-    .map(item => item.trim())
-    .filter(item => item.length > 0);
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
 }
 
 module.exports = {

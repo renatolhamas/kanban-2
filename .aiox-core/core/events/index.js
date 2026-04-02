@@ -6,8 +6,11 @@
  * @module core/events
  */
 
-const { DashboardEventType } = require('./types');
-const { DashboardEmitter, getDashboardEmitter } = require('./dashboard-emitter');
+const { DashboardEventType } = require("./types");
+const {
+  DashboardEmitter,
+  getDashboardEmitter,
+} = require("./dashboard-emitter");
 
 module.exports = {
   DashboardEventType,

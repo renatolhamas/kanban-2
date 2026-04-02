@@ -14,6 +14,7 @@
 Esta decision tree determina **QUEM ou O QUE executa uma task**: código determinístico (Worker), LLM probabilístico (Agent), combinação AI+Human (Hybrid), ou decisão humana pura (Human).
 
 A escolha correta de executor impacta diretamente:
+
 - **Custo**: Worker ($) vs Agent ($$$$)
 - **Velocidade**: Worker (ms) vs Human (horas)
 - **Consistência**: Worker (100%) vs Human (variável)
@@ -30,6 +31,7 @@ A escolha correta de executor impacta diretamente:
 **Definition:** Execução por script, função, API call, ou automação sem julgamento.
 
 **When to use:**
+
 - Input e output são 100% previsíveis
 - Regras podem ser codificadas completamente
 - Não há ambiguidade na interpretação
@@ -37,6 +39,7 @@ A escolha correta de executor impacta diretamente:
 - Mesma entrada SEMPRE produz mesma saída
 
 **Examples:**
+
 - Formatar JSON para YAML
 - Validar schema de arquivo
 - Fazer API call e transformar response
@@ -46,16 +49,17 @@ A escolha correta de executor impacta diretamente:
 
 **Characteristics:**
 
-| Attribute | Value |
-|-----------|-------|
-| Custo | $ (mais barato) |
-| Velocidade | Milissegundos a segundos |
-| Consistência | 100% (determinístico) |
-| Escalabilidade | Infinita |
-| Julgamento | Zero |
-| Fallback requerido | Sim (para erros) |
+| Attribute          | Value                    |
+| ------------------ | ------------------------ |
+| Custo              | $ (mais barato)          |
+| Velocidade         | Milissegundos a segundos |
+| Consistência       | 100% (determinístico)    |
+| Escalabilidade     | Infinita                 |
+| Julgamento         | Zero                     |
+| Fallback requerido | Sim (para erros)         |
 
 **Implementation:**
+
 ```yaml
 executor:
   type: Worker
@@ -74,6 +78,7 @@ executor:
 **Definition:** Execução por modelo de linguagem que interpreta, analisa, ou gera conteúdo.
 
 **When to use:**
+
 - Task requer interpretação de linguagem natural
 - Output varia baseado em contexto/nuance
 - Análise de padrões em texto não-estruturado
@@ -81,6 +86,7 @@ executor:
 - Síntese de múltiplas fontes de informação
 
 **Examples:**
+
 - Analisar sentimento de feedback de clientes
 - Gerar primeiro rascunho de copy
 - Extrair entidades de texto livre
@@ -90,23 +96,24 @@ executor:
 
 **Characteristics:**
 
-| Attribute | Value |
-|-----------|-------|
-| Custo | $$$$ (tokens) |
-| Velocidade | Segundos a minutos |
-| Consistência | ~85-95% (probabilístico) |
-| Escalabilidade | Alta (paralelo) |
-| Julgamento | Médio (baseado em training) |
-| Fallback requerido | Sim (para Hybrid) |
+| Attribute          | Value                       |
+| ------------------ | --------------------------- |
+| Custo              | $$$$ (tokens)               |
+| Velocidade         | Segundos a minutos          |
+| Consistência       | ~85-95% (probabilístico)    |
+| Escalabilidade     | Alta (paralelo)             |
+| Julgamento         | Médio (baseado em training) |
+| Fallback requerido | Sim (para Hybrid)           |
 
 **Implementation:**
+
 ```yaml
 executor:
   type: Agent
   pattern: EXEC-A-001
   implementation:
     model: "claude-sonnet | gpt-4 | gemini-pro"
-    temperature: 0.3  # Lower = more deterministic
+    temperature: 0.3 # Lower = more deterministic
     max_tokens: 4096
     validation: "automated"
     confidence_threshold: 0.7
@@ -120,6 +127,7 @@ executor:
 **Definition:** LLM executa, humano valida/aprova antes de prosseguir.
 
 **When to use:**
+
 - Output do LLM precisa de revisão antes de uso
 - Task tem impacto médio-alto se errada
 - Humano pode melhorar/corrigir output do AI
@@ -127,6 +135,7 @@ executor:
 - Decisões que afetam clientes/usuários externos
 
 **Examples:**
+
 - Gerar email de resposta → humano revisa antes de enviar
 - Criar PR description → humano aprova antes de merge
 - Sugerir classificação de lead → humano confirma
@@ -135,16 +144,17 @@ executor:
 
 **Characteristics:**
 
-| Attribute | Value |
-|-----------|-------|
-| Custo | $$ (AI + tempo humano parcial) |
-| Velocidade | Minutos a horas |
-| Consistência | 95%+ (AI + human check) |
-| Escalabilidade | Limitada pelo humano |
-| Julgamento | Alto (combinado) |
-| Fallback requerido | Opcional (para Human) |
+| Attribute          | Value                          |
+| ------------------ | ------------------------------ |
+| Custo              | $$ (AI + tempo humano parcial) |
+| Velocidade         | Minutos a horas                |
+| Consistência       | 95%+ (AI + human check)        |
+| Escalabilidade     | Limitada pelo humano           |
+| Julgamento         | Alto (combinado)               |
+| Fallback requerido | Opcional (para Human)          |
 
 **Implementation:**
+
 ```yaml
 executor:
   type: Hybrid
@@ -157,7 +167,7 @@ executor:
       action: "review | approve | edit"
       timeout: "4h"
       escalation: "manager"
-    feedback_loop: true  # AI learns from corrections
+    feedback_loop: true # AI learns from corrections
 ```
 
 ---
@@ -167,6 +177,7 @@ executor:
 **Definition:** Humano executa a task do início ao fim, sem assistência de AI.
 
 **When to use:**
+
 - Decisão estratégica de alto impacto
 - Requer contexto que AI não tem acesso
 - Envolve relacionamentos interpessoais
@@ -175,6 +186,7 @@ executor:
 - Criatividade genuína (não derivativa)
 
 **Examples:**
+
 - Aprovar orçamento acima de $10k
 - Demitir ou promover funcionário
 - Negociar contrato com cliente enterprise
@@ -184,16 +196,17 @@ executor:
 
 **Characteristics:**
 
-| Attribute | Value |
-|-----------|-------|
-| Custo | $$$ (tempo humano integral) |
-| Velocidade | Horas a dias |
-| Consistência | Variável (depende da pessoa) |
-| Escalabilidade | Muito limitada |
-| Julgamento | Máximo |
-| Fallback requerido | Não |
+| Attribute          | Value                        |
+| ------------------ | ---------------------------- |
+| Custo              | $$$ (tempo humano integral)  |
+| Velocidade         | Horas a dias                 |
+| Consistência       | Variável (depende da pessoa) |
+| Escalabilidade     | Muito limitada               |
+| Julgamento         | Máximo                       |
+| Fallback requerido | Não                          |
 
 **Implementation:**
+
 ```yaml
 executor:
   type: Human
@@ -261,14 +274,14 @@ graph TD
 
 **Examples:**
 
-| Scenario | Answer | Why? | Path |
-|----------|--------|------|------|
-| Converter JSON para YAML | ✅ SIM | Transformação determinística | → Worker |
-| Extrair campos de formulário estruturado | ✅ SIM | Parsing com regras fixas | → Worker |
-| Resumir artigo de blog | ❌ NÃO | Resumo varia por interpretação | → Pergunta 3 |
-| Classificar email como spam/não-spam | ❌ NÃO | Depende de contexto e nuance | → Pergunta 3 |
-| Calcular total de fatura | ✅ SIM | Matemática pura | → Worker |
-| Sugerir próxima ação para lead | ❌ NÃO | Depende de análise contextual | → Pergunta 3 |
+| Scenario                                 | Answer | Why?                           | Path         |
+| ---------------------------------------- | ------ | ------------------------------ | ------------ |
+| Converter JSON para YAML                 | ✅ SIM | Transformação determinística   | → Worker     |
+| Extrair campos de formulário estruturado | ✅ SIM | Parsing com regras fixas       | → Worker     |
+| Resumir artigo de blog                   | ❌ NÃO | Resumo varia por interpretação | → Pergunta 3 |
+| Classificar email como spam/não-spam     | ❌ NÃO | Depende de contexto e nuance   | → Pergunta 3 |
+| Calcular total de fatura                 | ✅ SIM | Matemática pura                | → Worker     |
+| Sugerir próxima ação para lead           | ❌ NÃO | Depende de análise contextual  | → Pergunta 3 |
 
 **If SIM → Pergunta 2**
 **If NÃO → Pergunta 3**
@@ -281,13 +294,13 @@ graph TD
 
 **Examples:**
 
-| Scenario | Answer | Why? | Path |
-|----------|--------|------|------|
-| Validar CPF | ✅ SIM | Algoritmo fixo de validação | → 2a |
-| Gerar slug a partir de título | ✅ SIM | Regras de transformação claras | → 2a |
-| Decidir melhor horário para reunião | ❌ NÃO | Depende de preferências implícitas | → Pergunta 3 |
-| Formatar data para padrão ISO | ✅ SIM | Transformação determinística | → 2a |
-| Escolher melhor imagem para thumbnail | ❌ NÃO | Julgamento estético | → Pergunta 3 |
+| Scenario                              | Answer | Why?                               | Path         |
+| ------------------------------------- | ------ | ---------------------------------- | ------------ |
+| Validar CPF                           | ✅ SIM | Algoritmo fixo de validação        | → 2a         |
+| Gerar slug a partir de título         | ✅ SIM | Regras de transformação claras     | → 2a         |
+| Decidir melhor horário para reunião   | ❌ NÃO | Depende de preferências implícitas | → Pergunta 3 |
+| Formatar data para padrão ISO         | ✅ SIM | Transformação determinística       | → 2a         |
+| Escolher melhor imagem para thumbnail | ❌ NÃO | Julgamento estético                | → Pergunta 3 |
 
 **If SIM → Pergunta 2a (existe lib/API?)**
 **If NÃO → Pergunta 3**
@@ -300,13 +313,13 @@ graph TD
 
 **Examples:**
 
-| Scenario | Answer | Implementation | Path |
-|----------|--------|----------------|------|
-| Validar email | ✅ SIM | `email-validator` lib | → Worker |
-| Parse de PDF | ✅ SIM | `pdf-parse`, `PyPDF2` | → Worker |
-| OCR de imagem | ✅ SIM | Tesseract, Google Vision API | → Worker |
-| Traduzir texto | ⚠️ PARCIAL | APIs existem mas são probabilísticas | → Agent |
-| Formatar markdown | ✅ SIM | `remark`, `markdown-it` | → Worker |
+| Scenario          | Answer     | Implementation                       | Path     |
+| ----------------- | ---------- | ------------------------------------ | -------- |
+| Validar email     | ✅ SIM     | `email-validator` lib                | → Worker |
+| Parse de PDF      | ✅ SIM     | `pdf-parse`, `PyPDF2`                | → Worker |
+| OCR de imagem     | ✅ SIM     | Tesseract, Google Vision API         | → Worker |
+| Traduzir texto    | ⚠️ PARCIAL | APIs existem mas são probabilísticas | → Agent  |
+| Formatar markdown | ✅ SIM     | `remark`, `markdown-it`              | → Worker |
 
 **If SIM → Worker**
 **If NÃO → Pergunta 2b**
@@ -318,6 +331,7 @@ graph TD
 **Question:** A task será executada 3+ vezes? O esforço de codificar compensa?
 
 **Rule of thumb:**
+
 - < 3 execuções → Agent (mais rápido implementar)
 - 3-10 execuções → Avaliar complexidade
 - > 10 execuções → Worker (investimento se paga)
@@ -333,13 +347,13 @@ graph TD
 
 **Examples:**
 
-| Scenario | Answer | Why? | Path |
-|----------|--------|------|------|
-| Analisar sentimento de review | ✅ SIM | Linguagem natural, nuances | → Pergunta 4 |
-| Extrair nome de campo JSON | ❌ NÃO | Estrutura fixa, parsing | → Worker |
-| Gerar descrição de produto | ✅ SIM | Criação de texto | → Pergunta 4 |
-| Classificar intenção de mensagem | ✅ SIM | Interpretação semântica | → Pergunta 4 |
-| Somar valores de array | ❌ NÃO | Operação matemática | → Worker |
+| Scenario                         | Answer | Why?                       | Path         |
+| -------------------------------- | ------ | -------------------------- | ------------ |
+| Analisar sentimento de review    | ✅ SIM | Linguagem natural, nuances | → Pergunta 4 |
+| Extrair nome de campo JSON       | ❌ NÃO | Estrutura fixa, parsing    | → Worker     |
+| Gerar descrição de produto       | ✅ SIM | Criação de texto           | → Pergunta 4 |
+| Classificar intenção de mensagem | ✅ SIM | Interpretação semântica    | → Pergunta 4 |
+| Somar valores de array           | ❌ NÃO | Operação matemática        | → Worker     |
 
 **If SIM → Pergunta 4**
 **If NÃO → Pergunta 5**
@@ -352,12 +366,12 @@ graph TD
 
 **Impact Levels:**
 
-| Level | Description | Examples | Path |
-|-------|-------------|----------|------|
-| **Baixo** | Facilmente corrigível, sem consequências | Typo em draft interno, classificação errada que será revisada | → Agent |
-| **Médio** | Retrabalho necessário, mas reversível | Email enviado com erro, relatório impreciso | → Hybrid |
-| **Alto** | Dano financeiro, reputacional, ou legal | Proposta com valor errado, comunicação a cliente, decisão de compliance | → Hybrid ou Human |
-| **Crítico** | Irreversível ou catastrófico | Dados deletados, violação legal, demissão injusta | → Human |
+| Level       | Description                              | Examples                                                                | Path              |
+| ----------- | ---------------------------------------- | ----------------------------------------------------------------------- | ----------------- |
+| **Baixo**   | Facilmente corrigível, sem consequências | Typo em draft interno, classificação errada que será revisada           | → Agent           |
+| **Médio**   | Retrabalho necessário, mas reversível    | Email enviado com erro, relatório impreciso                             | → Hybrid          |
+| **Alto**    | Dano financeiro, reputacional, ou legal  | Proposta com valor errado, comunicação a cliente, decisão de compliance | → Hybrid ou Human |
+| **Crítico** | Irreversível ou catastrófico             | Dados deletados, violação legal, demissão injusta                       | → Human           |
 
 **If Baixo → Agent**
 **If Médio/Alto → Hybrid**
@@ -371,13 +385,13 @@ graph TD
 
 **Examples:**
 
-| Scenario | Answer | Why? | Path |
-|----------|--------|------|------|
-| Decidir prioridade de roadmap | ✅ SIM | Estratégia de produto | → Pergunta 6 |
-| Negociar desconto com fornecedor | ✅ SIM | Relacionamento comercial | → Pergunta 6 |
-| Escolher stack tecnológico | ✅ SIM | Decisão arquitetural de longo prazo | → Pergunta 6 |
-| Gerar relatório de vendas | ❌ NÃO | Dados objetivos | → Pergunta 4 |
-| Aprovar férias de funcionário | ⚠️ DEPENDE | Se rotina → Worker; se conflito → Human | → Avaliar |
+| Scenario                         | Answer     | Why?                                    | Path         |
+| -------------------------------- | ---------- | --------------------------------------- | ------------ |
+| Decidir prioridade de roadmap    | ✅ SIM     | Estratégia de produto                   | → Pergunta 6 |
+| Negociar desconto com fornecedor | ✅ SIM     | Relacionamento comercial                | → Pergunta 6 |
+| Escolher stack tecnológico       | ✅ SIM     | Decisão arquitetural de longo prazo     | → Pergunta 6 |
+| Gerar relatório de vendas        | ❌ NÃO     | Dados objetivos                         | → Pergunta 4 |
+| Aprovar férias de funcionário    | ⚠️ DEPENDE | Se rotina → Worker; se conflito → Human | → Avaliar    |
 
 **If SIM → Pergunta 6**
 **If NÃO → Pergunta 4**
@@ -390,13 +404,13 @@ graph TD
 
 **Examples:**
 
-| Scenario | AI Assist | Human Decision | Path |
-|----------|-----------|----------------|------|
-| Contratar candidato | AI faz triagem inicial | Human entrevista e decide | → Hybrid |
-| Aprovar grande investimento | AI prepara análise de ROI | Human aprova | → Hybrid |
-| Resolver conflito de equipe | ❌ Não aplicável | Human media | → Human |
-| Definir preço de produto | AI analisa mercado/concorrência | Human define estratégia | → Hybrid |
-| Demitir funcionário | ❌ Não aplicável | Human executa | → Human |
+| Scenario                    | AI Assist                       | Human Decision            | Path     |
+| --------------------------- | ------------------------------- | ------------------------- | -------- |
+| Contratar candidato         | AI faz triagem inicial          | Human entrevista e decide | → Hybrid |
+| Aprovar grande investimento | AI prepara análise de ROI       | Human aprova              | → Hybrid |
+| Resolver conflito de equipe | ❌ Não aplicável                | Human media               | → Human  |
+| Definir preço de produto    | AI analisa mercado/concorrência | Human define estratégia   | → Hybrid |
+| Demitir funcionário         | ❌ Não aplicável                | Human executa             | → Human  |
 
 **If SIM → Hybrid**
 **If NÃO → Human**
@@ -405,19 +419,19 @@ graph TD
 
 ## Comparison Matrix
 
-| Attribute | Worker | Agent | Hybrid | Human |
-|-----------|--------|-------|--------|-------|
-| **Custo por execução** | $ | $$$$ | $$ | $$$ |
-| **Velocidade** | ms-s | s-min | min-h | h-dias |
-| **Consistência** | 100% | 85-95% | 95%+ | Variável |
-| **Escalabilidade** | ∞ | Alta | Média | Baixa |
-| **Julgamento** | Zero | Médio | Alto | Máximo |
-| **Setup inicial** | Alto | Baixo | Médio | Zero |
-| **Manutenção** | Média | Baixa | Média | Zero |
-| **Fallback** | Hybrid | Hybrid | Human | N/A |
-| **Auditabilidade** | Total | Alta | Alta | Média |
-| **Adaptabilidade** | Nenhuma | Alta | Alta | Máxima |
-| **Best For** | Transformações, validações, integrações | Análise, geração, classificação | Conteúdo crítico, decisões médias | Estratégia, relacionamentos, crítico |
+| Attribute              | Worker                                  | Agent                           | Hybrid                            | Human                                |
+| ---------------------- | --------------------------------------- | ------------------------------- | --------------------------------- | ------------------------------------ |
+| **Custo por execução** | $                                       | $$$$                            | $$                                | $$$                                  |
+| **Velocidade**         | ms-s                                    | s-min                           | min-h                             | h-dias                               |
+| **Consistência**       | 100%                                    | 85-95%                          | 95%+                              | Variável                             |
+| **Escalabilidade**     | ∞                                       | Alta                            | Média                             | Baixa                                |
+| **Julgamento**         | Zero                                    | Médio                           | Alto                              | Máximo                               |
+| **Setup inicial**      | Alto                                    | Baixo                           | Médio                             | Zero                                 |
+| **Manutenção**         | Média                                   | Baixa                           | Média                             | Zero                                 |
+| **Fallback**           | Hybrid                                  | Hybrid                          | Human                             | N/A                                  |
+| **Auditabilidade**     | Total                                   | Alta                            | Alta                              | Média                                |
+| **Adaptabilidade**     | Nenhuma                                 | Alta                            | Alta                              | Máxima                               |
+| **Best For**           | Transformações, validações, integrações | Análise, geração, classificação | Conteúdo crítico, decisões médias | Estratégia, relacionamentos, crítico |
 
 ---
 
@@ -425,12 +439,12 @@ graph TD
 
 ### Custo por 1000 Execuções
 
-| Type | Custo Direto | Custo Indireto | Total Estimado |
-|------|--------------|----------------|----------------|
-| Worker | ~$0.10 (compute) | $0 | **$0.10** |
-| Agent | ~$5-50 (tokens) | $0 | **$5-50** |
-| Hybrid | ~$5-50 (tokens) + ~$100 (15min human × $40/h × 0.25) | $0 | **$15-60** |
-| Human | ~$500 (30min × $40/h × 25 tasks) | Opportunity cost | **$500+** |
+| Type   | Custo Direto                                         | Custo Indireto   | Total Estimado |
+| ------ | ---------------------------------------------------- | ---------------- | -------------- |
+| Worker | ~$0.10 (compute)                                     | $0               | **$0.10**      |
+| Agent  | ~$5-50 (tokens)                                      | $0               | **$5-50**      |
+| Hybrid | ~$5-50 (tokens) + ~$100 (15min human × $40/h × 0.25) | $0               | **$15-60**     |
+| Human  | ~$500 (30min × $40/h × 25 tasks)                     | Opportunity cost | **$500+**      |
 
 ### ROI Decision Framework
 
@@ -452,6 +466,7 @@ N ≥ 1000:     → Worker OBRIGATÓRIO (Agent seria $5k-50k)
 **Trigger:** Task executada 50+ vezes com output consistente
 
 **Process:**
+
 1. Analisar outputs do Agent dos últimos 30 dias
 2. Identificar padrões/regras que emergem
 3. Codificar regras como função
@@ -459,6 +474,7 @@ N ≥ 1000:     → Worker OBRIGATÓRIO (Agent seria $5k-50k)
 5. Se accuracy > 98% → Migrar para Worker
 
 **Example:**
+
 ```yaml
 migration:
   from: Agent
@@ -489,6 +505,7 @@ migration:
 **Trigger:** Human approval rate > 95% por 30 dias
 
 **Process:**
+
 1. Analisar taxa de aprovação humana
 2. Identificar padrões de rejeição
 3. Adicionar guardrails para casos de rejeição
@@ -500,6 +517,7 @@ migration:
 **Trigger:** Task repetitiva onde AI pode preparar contexto
 
 **Process:**
+
 1. Mapear informações que humano precisa para decidir
 2. Criar prompt que coleta/analisa essas informações
 3. AI prepara "briefing" para humano
@@ -514,6 +532,7 @@ migration:
 **Context:** Usuário faz upload de arquivo, sistema precisa processar.
 
 **Decision Process:**
+
 1. Output previsível? → Depende do tipo de arquivo
 2. Função pura? → SIM para parsing básico
 3. Existe lib? → SIM (mime-type, file-parser)
@@ -542,6 +561,7 @@ task:
 **Context:** Cliente abre ticket, sistema sugere resposta.
 
 **Decision Process:**
+
 1. Output previsível? → NÃO (cada ticket é único)
 2. Linguagem natural? → SIM
 3. Impacto de erro? → MÉDIO (cliente pode ficar insatisfeito)
@@ -576,6 +596,7 @@ task:
 **Context:** Funcionário solicita reembolso de despesa alta.
 
 **Decision Process:**
+
 1. Output previsível? → NÃO (depende de contexto)
 2. Julgamento estratégico? → SIM (política e budget)
 3. AI pode assistir? → SIM (verificar política, histórico)
@@ -609,6 +630,7 @@ task:
 **Context:** Liderança define objetivos estratégicos.
 
 **Decision Process:**
+
 1. Output previsível? → NÃO
 2. Julgamento estratégico? → SIM (direção da empresa)
 3. AI pode assistir? → NÃO efetivamente (contexto político interno)
@@ -639,26 +661,31 @@ task:
 Use esta checklist para decisão rápida:
 
 ### Step 1: Teste de Determinismo
+
 - [ ] Mesmo input SEMPRE gera mesmo output?
   - ✅ SIM → Provavelmente **Worker**
   - ❌ NÃO → Continue
 
 ### Step 2: Teste de Linguagem Natural
+
 - [ ] Task envolve entender/gerar texto livre?
   - ✅ SIM → Provavelmente **Agent** ou **Hybrid**
   - ❌ NÃO → Provavelmente **Worker**
 
 ### Step 3: Teste de Impacto
+
 - [ ] Erro causa dano significativo?
   - ✅ SIM → **Hybrid** ou **Human**
   - ❌ NÃO → **Agent** ou **Worker**
 
 ### Step 4: Teste de Julgamento
+
 - [ ] Requer decisão estratégica/política/interpessoal?
   - ✅ SIM → **Human** (possivelmente **Hybrid**)
   - ❌ NÃO → **Agent** ou **Worker**
 
 ### Step 5: Validação Final
+
 - [ ] Escolha final:
   - **Worker** → Existe código que faz? Se não, vale codificar?
   - **Agent** → Prompt está claro? Fallback definido?
@@ -721,9 +748,9 @@ Use esta checklist para decisão rápida:
 
 ## Version History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0.0 | 2026-02-03 | Squad Architect | Initial decision tree with 6 criteria |
+| Version | Date       | Author          | Changes                               |
+| ------- | ---------- | --------------- | ------------------------------------- |
+| 1.0.0   | 2026-02-03 | Squad Architect | Initial decision tree with 6 criteria |
 
 ---
 

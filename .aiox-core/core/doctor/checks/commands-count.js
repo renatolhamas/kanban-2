@@ -8,10 +8,10 @@
  * @story INS-4.8
  */
 
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
-const name = 'commands-count';
+const name = "commands-count";
 
 /**
  * Recursively count .md files in a directory.
@@ -30,7 +30,7 @@ function countMdFiles(dir) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       count += countMdFiles(fullPath);
-    } else if (entry.isFile() && entry.name.endsWith('.md')) {
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
       count++;
     }
   }
@@ -39,14 +39,14 @@ function countMdFiles(dir) {
 }
 
 async function run(context) {
-  const commandsDir = path.join(context.projectRoot, '.claude', 'commands');
+  const commandsDir = path.join(context.projectRoot, ".claude", "commands");
 
   if (!fs.existsSync(commandsDir)) {
     return {
       check: name,
-      status: 'FAIL',
-      message: 'Commands directory not found (.claude/commands/)',
-      fixCommand: 'npx aiox-core install --force',
+      status: "FAIL",
+      message: "Commands directory not found (.claude/commands/)",
+      fixCommand: "npx aiox-core install --force",
     };
   }
 
@@ -55,7 +55,7 @@ async function run(context) {
   if (count >= 20) {
     return {
       check: name,
-      status: 'PASS',
+      status: "PASS",
       message: `${count} command files found`,
       fixCommand: null,
     };
@@ -64,17 +64,17 @@ async function run(context) {
   if (count >= 12) {
     return {
       check: name,
-      status: 'WARN',
+      status: "WARN",
       message: `${count}/20 command files found (agents only, no extras)`,
-      fixCommand: 'npx aiox-core install --force',
+      fixCommand: "npx aiox-core install --force",
     };
   }
 
   return {
     check: name,
-    status: 'FAIL',
+    status: "FAIL",
     message: `Only ${count} command files found (expected >=12)`,
-    fixCommand: 'npx aiox-core install --force',
+    fixCommand: "npx aiox-core install --force",
   };
 }
 

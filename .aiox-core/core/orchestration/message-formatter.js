@@ -12,7 +12,7 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
 /**
  * Message Formatter class
@@ -70,15 +70,15 @@ class MessageFormatter {
 
     if (!this.educationalMode) {
       // OFF mode: Concise message
-      let fileInfo = '';
+      let fileInfo = "";
       if (filesCreated > 0 && filesModified > 0) {
-        fileInfo = `${filesCreated} arquivo${filesCreated > 1 ? 's' : ''} criado${filesCreated > 1 ? 's' : ''}, ${filesModified} modificado${filesModified > 1 ? 's' : ''}.`;
+        fileInfo = `${filesCreated} arquivo${filesCreated > 1 ? "s" : ""} criado${filesCreated > 1 ? "s" : ""}, ${filesModified} modificado${filesModified > 1 ? "s" : ""}.`;
       } else if (filesCreated > 0) {
-        fileInfo = `${filesCreated} arquivo${filesCreated > 1 ? 's' : ''} criado${filesCreated > 1 ? 's' : ''}.`;
+        fileInfo = `${filesCreated} arquivo${filesCreated > 1 ? "s" : ""} criado${filesCreated > 1 ? "s" : ""}.`;
       } else if (filesModified > 0) {
-        fileInfo = `${filesModified} arquivo${filesModified > 1 ? 's' : ''} modificado${filesModified > 1 ? 's' : ''}.`;
+        fileInfo = `${filesModified} arquivo${filesModified > 1 ? "s" : ""} modificado${filesModified > 1 ? "s" : ""}.`;
       } else if (totalFiles === 0) {
-        fileInfo = 'Concluído.';
+        fileInfo = "Concluído.";
       }
 
       return `✅ ${action} implementada. ${fileInfo}`;
@@ -89,13 +89,13 @@ class MessageFormatter {
 
     // Add reason (📚 Por quê?)
     if (reason) {
-      message += '\n📚 Por quê?\n';
+      message += "\n📚 Por quê?\n";
       message += `   ${reason}\n`;
     }
 
     // Add trade-offs if provided
     if (tradeoffs && tradeoffs.length > 0) {
-      message += '\n   Trade-offs:\n';
+      message += "\n   Trade-offs:\n";
       for (const tradeoff of tradeoffs) {
         message += `   - ${tradeoff.choice}: ${tradeoff.selected}\n`;
         if (tradeoff.reason) {
@@ -106,7 +106,7 @@ class MessageFormatter {
 
     // Add steps (🔧 O que vou fazer)
     if (steps && steps.length > 0) {
-      message += '\n🔧 O que vou fazer:\n';
+      message += "\n🔧 O que vou fazer:\n";
       steps.forEach((step, index) => {
         message += `   ${index + 1}. ${step}\n`;
       });
@@ -114,7 +114,7 @@ class MessageFormatter {
 
     // Add agents involved
     if (agents && agents.length > 0) {
-      message += '\n👥 Agentes envolvidos:\n';
+      message += "\n👥 Agentes envolvidos:\n";
       for (const agent of agents) {
         message += `   - ${agent.id} (${agent.name}): ${agent.task}\n`;
       }
@@ -122,7 +122,7 @@ class MessageFormatter {
 
     // Add file summary
     if (totalFiles > 0) {
-      message += `\n📁 Arquivos: ${filesCreated} criado${filesCreated !== 1 ? 's' : ''}, ${filesModified} modificado${filesModified !== 1 ? 's' : ''}\n`;
+      message += `\n📁 Arquivos: ${filesCreated} criado${filesCreated !== 1 ? "s" : ""}, ${filesModified} modificado${filesModified !== 1 ? "s" : ""}\n`;
     }
 
     return message;
@@ -141,14 +141,14 @@ class MessageFormatter {
   formatDecisionExplanation(decision, tradeoffs = []) {
     if (!this.educationalMode) {
       // OFF mode: Silence (no output)
-      return '';
+      return "";
     }
 
     // ON mode: Detailed explanation
     let message = `\n💡 Decisão: ${decision}\n`;
 
     if (tradeoffs && tradeoffs.length > 0) {
-      message += '\n📊 Trade-offs considerados:\n';
+      message += "\n📊 Trade-offs considerados:\n";
       for (const tradeoff of tradeoffs) {
         message += `   • ${tradeoff.choice}\n`;
         message += `     → Escolhido: ${tradeoff.selected}\n`;
@@ -173,7 +173,7 @@ class MessageFormatter {
   formatAgentAssignment(agentId, agentName, task, reason = null) {
     if (!this.educationalMode) {
       // OFF mode: No output for agent assignments
-      return '';
+      return "";
     }
 
     // ON mode: Explain agent assignment
@@ -194,9 +194,9 @@ class MessageFormatter {
    */
   formatToggleFeedback(enabled) {
     if (enabled) {
-      return '🎓 Modo educativo ativado! Agora você verá explicações detalhadas sobre cada decisão.';
+      return "🎓 Modo educativo ativado! Agora você verá explicações detalhadas sobre cada decisão.";
     }
-    return '📋 Modo educativo desativado. Mensagens voltarão a ser concisas.';
+    return "📋 Modo educativo desativado. Mensagens voltarão a ser concisas.";
   }
 
   /**
@@ -221,7 +221,7 @@ class MessageFormatter {
    */
   formatPhaseTransition(phase, storyId, executor = null) {
     if (!this.educationalMode) {
-      return '';
+      return "";
     }
 
     let message = `\n📍 Fase: ${phase} → Story ${storyId}\n`;

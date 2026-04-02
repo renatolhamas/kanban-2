@@ -7,23 +7,25 @@ Generate a comprehensive deep research prompt and execute research to establish 
 ## Why This Task Exists
 
 **Problem:** Agents created without research are weak and generic.
+
 - CopywriterOS tasks were created by LLM without researching actual copywriter methodologies
 - Result: 200-line generic tasks instead of 900-line research-backed tasks
 - Fix: Research FIRST, then create agent based on real frameworks
 
 **Gold Standard Reference:**
+
 - Research: `docs/research/david-ogilvy-research-engineering-meta-framework.md` (1,179 lines)
 - Task: `squads/{squad-name}/tasks/{task-name}.md` (921 lines) - Example task
 
 ## Inputs
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `agent_purpose` | string | Yes | What the agent should do |
-| `domain` | string | Yes | Area of expertise |
-| `specialist_slug` | string | No | If based on human expert |
-| `specialist_name` | string | No | Human-readable name |
-| `activity` | string | Yes | Specific activity (e.g., "sales-page") |
+| Parameter         | Type   | Required | Description                            |
+| ----------------- | ------ | -------- | -------------------------------------- |
+| `agent_purpose`   | string | Yes      | What the agent should do               |
+| `domain`          | string | Yes      | Area of expertise                      |
+| `specialist_slug` | string | No       | If based on human expert               |
+| `specialist_name` | string | No       | Human-readable name                    |
+| `activity`        | string | Yes      | Specific activity (e.g., "sales-page") |
 
 ## Key Activities & Instructions
 
@@ -32,6 +34,7 @@ Generate a comprehensive deep research prompt and execute research to establish 
 **Condition:** Only if `specialist_slug` is provided
 
 **1.1 Search MMOS Resources:**
+
 ```yaml
 search_paths:
   - outputs/minds/{specialist_slug}/sources/
@@ -41,6 +44,7 @@ search_paths:
 ```
 
 **1.2 Catalog Found Resources:**
+
 ```yaml
 for each file found:
   - Record: path, type, line count
@@ -56,6 +60,7 @@ output:
 ```
 
 **1.3 Determine Research Mode:**
+
 ```python
 if total_lines > 1000:
     research_mode = "complementary"  # Focus on gaps
@@ -72,6 +77,7 @@ else:
 **Use the 7-component meta-framework:**
 
 #### Component 1: REFINED TOPIC
+
 ```yaml
 instruction: |
   Transform the agent purpose into a strategic research title.
@@ -88,6 +94,7 @@ example: |
 ```
 
 #### Component 2: CONTEXT
+
 ```yaml
 instruction: |
   Brief paragraph establishing:
@@ -103,6 +110,7 @@ template: |
 ```
 
 #### Component 3: SCOPE (4-6 items)
+
 ```yaml
 instruction: |
   Develop specific angles to investigate:
@@ -124,6 +132,7 @@ format: |
 ```
 
 #### Component 4: REQUIREMENTS (3-4 items)
+
 ```yaml
 instruction: |
   Parameters for the research:
@@ -140,6 +149,7 @@ examples:
 ```
 
 #### Component 5: RECOMMENDED SOURCES (3-4 types)
+
 ```yaml
 instruction: |
   Specific source types to prioritize:
@@ -156,6 +166,7 @@ format: |
 ```
 
 #### Component 6: EXPECTED RESULTS (3-5 deliverables)
+
 ```yaml
 instruction: |
   Concrete, actionable outputs:
@@ -171,6 +182,7 @@ format: |
 ```
 
 #### Component 7: CLARIFYING QUESTIONS (2-3)
+
 ```yaml
 instruction: |
   Questions to refine the research focus.
@@ -187,6 +199,7 @@ examples:
 ### Phase 3: Execute Research
 
 **3.1 Process Local Knowledge:**
+
 ```yaml
 if local_files exist:
   for each file:
@@ -199,6 +212,7 @@ if local_files exist:
 ```
 
 **3.2 Execute Web Research:**
+
 ```yaml
 research_queries:
   - "{specialist_name} {activity} methodology framework"
@@ -218,6 +232,7 @@ for each query:
 ```
 
 **3.3 Consolidate Research:**
+
 ```yaml
 consolidation:
   - Merge: local_synthesis + web_findings
@@ -234,15 +249,16 @@ output: docs/research/{specialist_slug}-{activity}-research.md
 ### Phase 4: Validate Research
 
 **Validation Criteria:**
+
 ```yaml
 minimum_requirements:
   total_lines: 500
   primary_sources: 3
   scope_coverage: 4/6 sections
-  actionable_content: true  # Has processes, not just theory
+  actionable_content: true # Has processes, not just theory
 
 quality_score:
-  primary_evidence: 30%  # Quotes, real examples
+  primary_evidence: 30% # Quotes, real examples
   scope_coverage: 25%
   actionable_processes: 25%
   source_credibility: 20%
@@ -254,6 +270,7 @@ thresholds:
 ```
 
 **On Fail:**
+
 ```yaml
 if quality_score < 60:
   retry_count += 1
@@ -315,33 +332,35 @@ if quality_score < 60:
 
 1. {Principle with citation}
 2. {Principle with citation}
-...
+   ...
 
 ### Process
 
 1. {Step}
 2. {Step}
-...
+   ...
 
 ### Structure/Anatomy
 
 | Section | Purpose | Expert Rule |
-|---------|---------|-------------|
-| ... | ... | ... |
+| ------- | ------- | ----------- |
+| ...     | ...     | ...         |
 
 ### Quality Criteria
 
 **Excellent:**
+
 - {Criterion}
 
 **Weak:**
+
 - {Anti-pattern}
 
 ### Checklist
 
 - [ ] {Check derived from expert}
 - [ ] {Check derived from expert}
-...
+      ...
 
 ---
 
@@ -349,7 +368,7 @@ if quality_score < 60:
 
 1. {Source with URL if available}
 2. {Source with URL if available}
-...
+   ...
 
 ---
 
@@ -382,6 +401,7 @@ if quality_score < 60:
 ### Example 1: Gary Halbert Sales Page Research
 
 **Input:**
+
 ```yaml
 agent_purpose: "Create high-converting sales pages"
 domain: "copywriting"
@@ -391,6 +411,7 @@ activity: "sales-page"
 ```
 
 **Generated Prompt:**
+
 ```
 REFINED TOPIC:
 "The Sales Page Engineering of Gary Halbert: Complete Anatomy of Direct Mail
@@ -457,7 +478,8 @@ EXPECTED RESULTS:
 ```
 
 **Output:**
-- `docs/research/{expert-slug}-{topic}-research.md` (2,100+ lines)  <!-- Example: gary-halbert-sales-page-research.md -->
+
+- `docs/research/{expert-slug}-{topic}-research.md` (2,100+ lines) <!-- Example: gary-halbert-sales-page-research.md -->
 - Quality Score: 92%
 
 ---
@@ -465,6 +487,7 @@ EXPECTED RESULTS:
 ### Example 2: Generic Domain Research (No Specialist)
 
 **Input:**
+
 ```yaml
 agent_purpose: "Conduct effective user interviews"
 domain: "product-management"
@@ -474,6 +497,7 @@ activity: "user-interviews"
 ```
 
 **Generated Prompt:**
+
 ```
 REFINED TOPIC:
 "The Art and Science of User Interviews for Product Discovery: Frameworks,
@@ -540,9 +564,11 @@ EXPECTED RESULTS:
 ## Integration Notes
 
 This task is called by:
+
 - `workflows/research-then-create-agent.md` (Steps 2-5)
 
 This task calls:
+
 - WebSearch tool (for external research)
 - WebFetch tool (for content extraction)
 - Read tool (for local knowledge)
@@ -552,12 +578,12 @@ This task calls:
 
 ## Error Handling
 
-| Scenario | Action |
-|----------|--------|
-| No local knowledge found | Continue with web-only research |
-| WebSearch returns few results | Try alternative query formulations |
+| Scenario                             | Action                              |
+| ------------------------------------ | ----------------------------------- |
+| No local knowledge found             | Continue with web-only research     |
+| WebSearch returns few results        | Try alternative query formulations  |
 | Research < 500 lines after 2 retries | Accept partial, flag for enrichment |
-| Specialist not in MMOS | Treat as comprehensive research |
+| Specialist not in MMOS               | Treat as comprehensive research     |
 
 ---
 

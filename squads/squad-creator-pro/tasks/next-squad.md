@@ -9,6 +9,7 @@
 **Model:** `Sonnet` (analysis + synthesis over structured data)
 
 **Frameworks Used:**
+
 - `data/squad-registry.yaml` → Ecosystem state, gaps, extension candidates (Phase 1)
 - `data/quality-dimensions-framework.md` → Scoring criteria (Phase 3)
 - `data/tier-system-framework.md` → Squad maturity classification (Phase 2)
@@ -51,11 +52,11 @@ OUTPUT: Ranked recommendation + execution command
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `business_context` | string | No | Optional business priority or constraint | "launching SaaS product Q2" |
-| `priority_domain` | string | No | Optional domain to bias scoring toward | "sales", "finance" |
-| `mode` | enum | No | `quick` (registry only) or `deep` (full workspace scan) | Default: `quick` |
+| Parameter          | Type   | Required | Description                                             | Example                     |
+| ------------------ | ------ | -------- | ------------------------------------------------------- | --------------------------- |
+| `business_context` | string | No       | Optional business priority or constraint                | "launching SaaS product Q2" |
+| `priority_domain`  | string | No       | Optional domain to bias scoring toward                  | "sales", "finance"          |
+| `mode`             | enum   | No       | `quick` (registry only) or `deep` (full workspace scan) | Default: `quick`            |
 
 ---
 
@@ -73,16 +74,17 @@ OUTPUT: Ranked recommendation + execution command
 ### Step 1.1: Load Registry State
 
 **Action:**
+
 ```yaml
 action: read
 file: squads/squad-creator-pro/data/squad-registry.yaml
 extract:
   - metadata.total_squads
-  - gaps.extension_candidates      # Squads that exist but are incomplete
-  - gaps.potential_domains          # Domains not yet covered
-  - gaps.removed_since_last_scan   # Squads that were removed (possible re-creation)
+  - gaps.extension_candidates # Squads that exist but are incomplete
+  - gaps.potential_domains # Domains not yet covered
+  - gaps.removed_since_last_scan # Squads that were removed (possible re-creation)
   - ecosystem_health.config_issues # Squads with structural problems
-  - summary.*                      # Totals for context
+  - summary.* # Totals for context
 ```
 
 ### Step 1.2: Build Candidate Lists
@@ -177,6 +179,7 @@ git log --oneline -20 --name-only | grep "squads/"
 ```
 
 **Interpretation:**
+
 - Squads with recent commits → Active development, may need supporting squads
 - Squads with NO recent commits → Stale, may need revival or removal
 - Non-squad commits mentioning domain keywords → Implicit demand
@@ -210,7 +213,7 @@ removed_squads_triage:
 scoring_dimensions:
   D1_business_impact:
     question: "How much does this squad accelerate business goals?"
-    weight: 1.5  # Most important
+    weight: 1.5 # Most important
     scoring:
       5: "Directly unblocks revenue or core product"
       4: "Supports active business initiative"
@@ -262,6 +265,7 @@ scoring_dimensions:
 ### Step 3.2: Calculate Composite Score
 
 **Formula:**
+
 ```
 composite = (D1 × 1.5) + (D2 × 1.2) + (D3 × 1.0) + (D4 × 1.3) + (D5 × 1.0)
 max_possible = 25 × avg_weight = 30.0
@@ -296,6 +300,7 @@ action_type:
 ## 🎯 Next Squad Recommendation
 
 ### Analysis Summary
+
 - **Ecosystem:** {total_squads} squads | {total_agents} agents | {total_tasks} tasks
 - **Domain Coverage:** {covered}/{total_domains} domains covered
 - **Health Issues:** {config_issues_count} squads with config problems
@@ -304,15 +309,16 @@ action_type:
 ---
 
 ### #1: {CANDIDATE_NAME} — {ACTION_TYPE}
+
 **Score:** {normalized}/10 | **Effort:** {S|M|L} | **Type:** {CREATE|IMPROVE|FIX}
 
-| Dimension | Score | Rationale |
-|-----------|-------|-----------|
-| Business Impact | {D1}/5 | {reason} |
-| Ecosystem Synergy | {D2}/5 | {reason} |
-| Effort vs Reward | {D3}/5 | {reason} |
-| Demand Signals | {D4}/5 | {reason} |
-| Foundation Ready | {D5}/5 | {reason} |
+| Dimension         | Score  | Rationale |
+| ----------------- | ------ | --------- |
+| Business Impact   | {D1}/5 | {reason}  |
+| Ecosystem Synergy | {D2}/5 | {reason}  |
+| Effort vs Reward  | {D3}/5 | {reason}  |
+| Demand Signals    | {D4}/5 | {reason}  |
+| Foundation Ready  | {D5}/5 | {reason}  |
 
 **Why this is #1:** {2-3 sentence explanation}
 **Execute:** `*{command} {args}`
@@ -320,14 +326,17 @@ action_type:
 ---
 
 ### #2: {CANDIDATE_NAME} — {ACTION_TYPE}
+
 ...
 
 ### #3: {CANDIDATE_NAME} — {ACTION_TYPE}
+
 ...
 
 ---
 
 ### Quick Wins (FIX — do anytime)
+
 - [ ] {squad}: {issue} → {fix command}
 - [ ] {squad}: {issue} → {fix command}
 ```
@@ -358,10 +367,10 @@ execution_path:
 
 ## Outputs
 
-| Output | Format | Location |
-|--------|--------|----------|
-| Recommendation report | Markdown | Displayed in terminal |
-| Candidate scores | YAML (optional) | `outputs/next-squad/scores-{date}.yaml` |
+| Output                | Format          | Location                                |
+| --------------------- | --------------- | --------------------------------------- |
+| Recommendation report | Markdown        | Displayed in terminal                   |
+| Candidate scores      | YAML (optional) | `outputs/next-squad/scores-{date}.yaml` |
 
 **Primary output:** Terminal display with actionable recommendation.
 **Optional:** Save scores to file with `--save` flag.

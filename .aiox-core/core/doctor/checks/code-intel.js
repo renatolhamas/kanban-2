@@ -8,32 +8,37 @@
  * @story INS-4.1, CODEINTEL-RP-001
  */
 
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
-const name = 'code-intel';
+const name = "code-intel";
 
 async function run(context) {
-  const codeIntelDir = path.join(context.projectRoot, '.aiox-core', 'core', 'code-intel');
+  const codeIntelDir = path.join(
+    context.projectRoot,
+    ".aiox-core",
+    "core",
+    "code-intel",
+  );
 
   // Check 1: Module exists
   if (!fs.existsSync(codeIntelDir)) {
     return {
       check: name,
-      status: 'INFO',
-      message: 'Code-intel module not found (optional)',
+      status: "INFO",
+      message: "Code-intel module not found (optional)",
       fixCommand: null,
     };
   }
 
   // Check 2: Try to load and detect provider
   try {
-    const indexPath = path.join(codeIntelDir, 'index.js');
+    const indexPath = path.join(codeIntelDir, "index.js");
     if (!fs.existsSync(indexPath)) {
       return {
         check: name,
-        status: 'WARN',
-        message: 'Code-intel index.js not found',
+        status: "WARN",
+        message: "Code-intel index.js not found",
         fixCommand: null,
       };
     }
@@ -42,7 +47,9 @@ async function run(context) {
     const resolvedIndex = require.resolve(indexPath);
     delete require.cache[resolvedIndex];
 
-    const { getClient, isCodeIntelAvailable, _resetForTesting } = require(indexPath);
+    const { getClient, isCodeIntelAvailable, _resetForTesting } = require(
+      indexPath,
+    );
 
     // Reset singleton to test fresh detection
     _resetForTesting();
@@ -57,23 +64,31 @@ async function run(context) {
 
     if (!available) {
       // Check if entity-registry.yaml exists but provider still failed
-      const registryPath = path.join(context.projectRoot, '.aiox-core', 'data', 'entity-registry.yaml');
+      const registryPath = path.join(
+        context.projectRoot,
+        ".aiox-core",
+        "data",
+        "entity-registry.yaml",
+      );
       if (fs.existsSync(registryPath)) {
         const stat = fs.statSync(registryPath);
         const sizeKB = Math.round(stat.size / 1024);
         return {
           check: name,
-          status: 'WARN',
+          status: "WARN",
           message: `Registry exists (${sizeKB}KB) but provider detection failed — may be empty or malformed`,
-          fixCommand: 'node .aiox-core/development/scripts/populate-entity-registry.js',
+          fixCommand:
+            "node .aiox-core/development/scripts/populate-entity-registry.js",
         };
       }
 
       return {
         check: name,
-        status: 'INFO',
-        message: 'No provider available (no registry, no MCP) — graceful fallback active',
-        fixCommand: 'node .aiox-core/development/scripts/populate-entity-registry.js',
+        status: "INFO",
+        message:
+          "No provider available (no registry, no MCP) — graceful fallback active",
+        fixCommand:
+          "node .aiox-core/development/scripts/populate-entity-registry.js",
       };
     }
 
@@ -81,31 +96,36 @@ async function run(context) {
     const provider = metrics.activeProvider;
     const cbState = metrics.circuitBreakerState;
 
-    if (provider === 'registry') {
+    if (provider === "registry") {
       // Read entity count from registry metadata
-      const registryPath = path.join(context.projectRoot, '.aiox-core', 'data', 'entity-registry.yaml');
-      let entityInfo = '';
+      const registryPath = path.join(
+        context.projectRoot,
+        ".aiox-core",
+        "data",
+        "entity-registry.yaml",
+      );
+      let entityInfo = "";
       if (fs.existsSync(registryPath)) {
-        const content = fs.readFileSync(registryPath, 'utf8');
+        const content = fs.readFileSync(registryPath, "utf8");
         const sizeKB = Math.round(fs.statSync(registryPath).size / 1024);
         // Extract entityCount from metadata header (avoids full YAML parse)
         const countMatch = content.match(/entityCount:\s*(\d+)/);
-        const entityCount = countMatch ? countMatch[1] : '?';
+        const entityCount = countMatch ? countMatch[1] : "?";
         entityInfo = `, ${entityCount} entities, ${sizeKB}KB`;
       }
 
       return {
         check: name,
-        status: 'PASS',
+        status: "PASS",
         message: `RegistryProvider (T1) active, 5/8 primitives${entityInfo}, CB: ${cbState}`,
         fixCommand: null,
       };
     }
 
-    if (provider === 'code-graph') {
+    if (provider === "code-graph") {
       return {
         check: name,
-        status: 'PASS',
+        status: "PASS",
         message: `CodeGraphProvider (T3/MCP) active, 8/8 primitives, CB: ${cbState}`,
         fixCommand: null,
       };
@@ -114,14 +134,14 @@ async function run(context) {
     // Unknown provider (custom)
     return {
       check: name,
-      status: 'PASS',
+      status: "PASS",
       message: `Provider '${provider}' active, CB: ${cbState}`,
       fixCommand: null,
     };
   } catch (error) {
     return {
       check: name,
-      status: 'WARN',
+      status: "WARN",
       message: `Provider detection error: ${error.message}`,
       fixCommand: null,
     };

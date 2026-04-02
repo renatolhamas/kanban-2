@@ -17,18 +17,18 @@
  * @see core/doctor/ for the primary diagnostic system (15 checks)
  */
 
-const HealthCheckEngine = require('./engine');
-const { BaseCheck, CheckSeverity, CheckStatus } = require('./base-check');
-const CheckRegistry = require('./check-registry');
-const HealerManager = require('./healers');
-const ReporterManager = require('./reporters');
+const HealthCheckEngine = require("./engine");
+const { BaseCheck, CheckSeverity, CheckStatus } = require("./base-check");
+const CheckRegistry = require("./check-registry");
+const HealerManager = require("./healers");
+const ReporterManager = require("./reporters");
 
 /**
  * Default configuration for health checks
  */
 const DEFAULT_CONFIG = {
-  mode: 'quick',
-  domains: ['project', 'local', 'repository', 'deployment', 'services'],
+  mode: "quick",
+  domains: ["project", "local", "repository", "deployment", "services"],
   autoFix: true,
   autoFixTier: 1,
   parallel: true,
@@ -41,7 +41,7 @@ const DEFAULT_CONFIG = {
     fullModeTimeout: 60000, // 60s
   },
   output: {
-    format: 'console',
+    format: "console",
     verbose: false,
     colors: true,
   },
@@ -104,24 +104,35 @@ class HealthCheck {
       const selectedChecks = this.selectChecks(runConfig);
 
       // Run all checks
-      const checkResults = await this.engine.runChecks(selectedChecks, runConfig);
+      const checkResults = await this.engine.runChecks(
+        selectedChecks,
+        runConfig,
+      );
 
       // Apply auto-fixes if enabled
       let healingResults = [];
       if (runConfig.autoFix) {
-        healingResults = await this.healers.applyFixes(checkResults, runConfig.autoFixTier);
+        healingResults = await this.healers.applyFixes(
+          checkResults,
+          runConfig.autoFixTier,
+        );
       }
 
       // Calculate scores
       const scores = this.calculateScores(checkResults);
 
       // Generate report
-      const report = await this.reporters.generate(checkResults, scores, healingResults, runConfig);
+      const report = await this.reporters.generate(
+        checkResults,
+        scores,
+        healingResults,
+        runConfig,
+      );
 
       // Store results
       this.results = {
         timestamp: new Date().toISOString(),
-        version: '1.0.0',
+        version: "1.0.0",
         mode: runConfig.mode,
         duration: `${Date.now() - startTime}ms`,
         overall: scores.overall,
@@ -153,17 +164,19 @@ class HealthCheck {
     let checks = this.registry.getAllChecks();
 
     // Filter by domain
-    if (domain && domain !== 'all') {
+    if (domain && domain !== "all") {
       checks = checks.filter((c) => c.domain === domain);
     } else if (domains && domains.length > 0) {
       checks = checks.filter((c) => domains.includes(c.domain));
     }
 
     // Filter by mode
-    if (mode === 'quick') {
+    if (mode === "quick") {
       // Quick mode: only CRITICAL and HIGH severity
       checks = checks.filter(
-        (c) => c.severity === CheckSeverity.CRITICAL || c.severity === CheckSeverity.HIGH,
+        (c) =>
+          c.severity === CheckSeverity.CRITICAL ||
+          c.severity === CheckSeverity.HIGH,
       );
     }
 
@@ -211,7 +224,9 @@ class HealthCheck {
     }
 
     const overallScore =
-      maxPenalty > 0 ? Math.round(100 - (actualPenalty / maxPenalty) * 100) : 100;
+      maxPenalty > 0
+        ? Math.round(100 - (actualPenalty / maxPenalty) * 100)
+        : 100;
 
     // Calculate per-domain scores
     const domains = {};
@@ -235,11 +250,15 @@ class HealthCheck {
           ? Math.round(100 - (domainActualPenalty / domainMaxPenalty) * 100)
           : 100;
 
-      const passedCount = results.filter((r) => r.status === CheckStatus.PASS).length;
+      const passedCount = results.filter(
+        (r) => r.status === CheckStatus.PASS,
+      ).length;
       const failedCount = results.filter(
         (r) => r.status === CheckStatus.FAIL || r.status === CheckStatus.ERROR,
       ).length;
-      const warningCount = results.filter((r) => r.status === CheckStatus.WARNING).length;
+      const warningCount = results.filter(
+        (r) => r.status === CheckStatus.WARNING,
+      ).length;
 
       domains[domain] = {
         score: domainScore,
@@ -263,7 +282,8 @@ class HealthCheck {
       overall: {
         score: overallScore,
         status: this.scoreToStatus(overallScore),
-        issuesCount: checkResults.filter((r) => r.status !== CheckStatus.PASS).length,
+        issuesCount: checkResults.filter((r) => r.status !== CheckStatus.PASS)
+          .length,
         autoFixedCount: 0, // Will be updated after healing
       },
       domains,
@@ -277,10 +297,10 @@ class HealthCheck {
    * @returns {string} Status string
    */
   scoreToStatus(score) {
-    if (score >= 90) return 'healthy';
-    if (score >= 70) return 'degraded';
-    if (score >= 50) return 'warning';
-    return 'critical';
+    if (score >= 90) return "healthy";
+    if (score >= 70) return "degraded";
+    if (score >= 50) return "warning";
+    return "critical";
   }
 
   /**
@@ -291,7 +311,7 @@ class HealthCheck {
    */
   groupByDomain(checkResults) {
     return checkResults.reduce((acc, result) => {
-      const domain = result.domain || 'unknown';
+      const domain = result.domain || "unknown";
       if (!acc[domain]) {
         acc[domain] = [];
       }
@@ -319,7 +339,7 @@ class HealthCheck {
         domain: r.domain,
         severity: r.severity,
         description: r.message,
-        recommendation: r.recommendation || 'Address when possible',
+        recommendation: r.recommendation || "Address when possible",
         firstDetected: new Date().toISOString(),
       }));
   }
@@ -329,7 +349,7 @@ class HealthCheck {
    * @returns {string[]} Array of domain names
    */
   getDomains() {
-    return ['project', 'local', 'repository', 'deployment', 'services'];
+    return ["project", "local", "repository", "deployment", "services"];
   }
 
   /**

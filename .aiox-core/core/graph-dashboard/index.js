@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const { CodeIntelSource } = require('./data-sources/code-intel-source');
-const { renderTree } = require('./renderers/tree-renderer');
-const { run } = require('./cli');
+const { CodeIntelSource } = require("./data-sources/code-intel-source");
+const { renderTree } = require("./renderers/tree-renderer");
+const { run } = require("./cli");
 
 /**
  * Get graph data from code-intel or registry fallback.

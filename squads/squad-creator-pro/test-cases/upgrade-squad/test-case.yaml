@@ -16,7 +16,7 @@ input:
   # Use a real squad to analyze for upgrades
   target: "squads/squad-creator"
   params:
-    mode: "audit"  # audit only, no changes
+    mode: "audit" # audit only, no changes
     focus: "agents"
   context_files:
     - "squads/squad-creator-pro/checklists/agent-quality-gate.md"

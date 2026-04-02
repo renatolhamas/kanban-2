@@ -9,14 +9,14 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const EnvironmentVarsCheck = require('./environment-vars');
-const GitInstallCheck = require('./git-install');
-const NpmInstallCheck = require('./npm-install');
-const IdeDetectionCheck = require('./ide-detection');
-const ShellEnvironmentCheck = require('./shell-environment');
-const DiskSpaceCheck = require('./disk-space');
-const MemoryCheck = require('./memory');
-const NetworkCheck = require('./network');
+const EnvironmentVarsCheck = require("./environment-vars");
+const GitInstallCheck = require("./git-install");
+const NpmInstallCheck = require("./npm-install");
+const IdeDetectionCheck = require("./ide-detection");
+const ShellEnvironmentCheck = require("./shell-environment");
+const DiskSpaceCheck = require("./disk-space");
+const MemoryCheck = require("./memory");
+const NetworkCheck = require("./network");
 
 /**
  * All local environment domain checks

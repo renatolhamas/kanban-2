@@ -19,9 +19,9 @@
  * @version 1.0.0
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const EventEmitter = require('events');
+const fs = require("fs-extra");
+const path = require("path");
+const EventEmitter = require("events");
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              RECOVERY STRATEGIES (AC2)
@@ -32,25 +32,25 @@ const EventEmitter = require('events');
  */
 const RecoveryStrategy = {
   /** Retry the same epic with same approach */
-  RETRY_SAME_APPROACH: 'retry_same_approach',
+  RETRY_SAME_APPROACH: "retry_same_approach",
   /** Rollback and retry with different approach */
-  ROLLBACK_AND_RETRY: 'rollback_and_retry',
+  ROLLBACK_AND_RETRY: "rollback_and_retry",
   /** Skip the failed phase and continue */
-  SKIP_PHASE: 'skip_phase',
+  SKIP_PHASE: "skip_phase",
   /** Escalate to human for manual intervention */
-  ESCALATE_TO_HUMAN: 'escalate_to_human',
+  ESCALATE_TO_HUMAN: "escalate_to_human",
   /** Trigger recovery workflow (Epic 5) */
-  TRIGGER_RECOVERY_WORKFLOW: 'trigger_recovery_workflow',
+  TRIGGER_RECOVERY_WORKFLOW: "trigger_recovery_workflow",
 };
 
 /**
  * Recovery result enum
  */
 const RecoveryResult = {
-  SUCCESS: 'success',
-  FAILED: 'failed',
-  ESCALATED: 'escalated',
-  SKIPPED: 'skipped',
+  SUCCESS: "success",
+  FAILED: "failed",
+  ESCALATED: "escalated",
+  SKIPPED: "skipped",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -101,14 +101,16 @@ class RecoveryHandler extends EventEmitter {
   _getStuckDetector() {
     if (!this._stuckDetector) {
       try {
-        const { StuckDetector } = require('../../infrastructure/scripts/stuck-detector');
+        const {
+          StuckDetector,
+        } = require("../../infrastructure/scripts/stuck-detector");
         this._stuckDetector = new StuckDetector({
           maxAttempts: this.maxRetries,
           circularDetection: this.circularDetection,
           verbose: false,
         });
       } catch (error) {
-        this._log(`StuckDetector not available: ${error.message}`, 'warn');
+        this._log(`StuckDetector not available: ${error.message}`, "warn");
       }
     }
     return this._stuckDetector;
@@ -121,13 +123,15 @@ class RecoveryHandler extends EventEmitter {
   _getRollbackManager() {
     if (!this._rollbackManager) {
       try {
-        const { RollbackManager } = require('../../infrastructure/scripts/rollback-manager');
+        const {
+          RollbackManager,
+        } = require("../../infrastructure/scripts/rollback-manager");
         this._rollbackManager = new RollbackManager({
           storyId: this.storyId,
           rootPath: this.projectRoot,
         });
       } catch (error) {
-        this._log(`RollbackManager not available: ${error.message}`, 'warn');
+        this._log(`RollbackManager not available: ${error.message}`, "warn");
       }
     }
     return this._rollbackManager;
@@ -140,13 +144,15 @@ class RecoveryHandler extends EventEmitter {
   _getRecoveryTracker() {
     if (!this._recoveryTracker) {
       try {
-        const { RecoveryTracker } = require('../../infrastructure/scripts/recovery-tracker');
+        const {
+          RecoveryTracker,
+        } = require("../../infrastructure/scripts/recovery-tracker");
         this._recoveryTracker = new RecoveryTracker({
           storyId: this.storyId,
           rootPath: this.projectRoot,
         });
       } catch (error) {
-        this._log(`RecoveryTracker not available: ${error.message}`, 'warn');
+        this._log(`RecoveryTracker not available: ${error.message}`, "warn");
       }
     }
     return this._recoveryTracker;
@@ -168,7 +174,7 @@ class RecoveryHandler extends EventEmitter {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const timestamp = new Date().toISOString();
 
-    this._log(`Handling failure for Epic ${epicNum}: ${errorMessage}`, 'error');
+    this._log(`Handling failure for Epic ${epicNum}: ${errorMessage}`, "error");
 
     // Initialize attempts tracking for this epic
     if (!this.attempts[epicNum]) {
@@ -181,7 +187,7 @@ class RecoveryHandler extends EventEmitter {
       number: attemptNum,
       timestamp,
       error: errorMessage,
-      approach: context.approach || 'default',
+      approach: context.approach || "default",
       epicNum,
       context,
     };
@@ -191,20 +197,32 @@ class RecoveryHandler extends EventEmitter {
     const stuckResult = this._checkIfStuck(epicNum);
 
     // Select recovery strategy (AC2)
-    const strategy = this._selectRecoveryStrategy(epicNum, error, stuckResult, context);
+    const strategy = this._selectRecoveryStrategy(
+      epicNum,
+      error,
+      stuckResult,
+      context,
+    );
 
-    this._log(`Selected strategy: ${strategy}`, 'info');
+    this._log(`Selected strategy: ${strategy}`, "info");
 
     // Execute recovery based on strategy
-    const result = await this._executeRecoveryStrategy(epicNum, strategy, error, context);
+    const result = await this._executeRecoveryStrategy(
+      epicNum,
+      strategy,
+      error,
+      context,
+    );
 
     // Record recovery result (AC7)
     attempt.recoveryStrategy = strategy;
-    attempt.recoveryResult = result.success ? RecoveryResult.SUCCESS : RecoveryResult.FAILED;
+    attempt.recoveryResult = result.success
+      ? RecoveryResult.SUCCESS
+      : RecoveryResult.FAILED;
     attempt.recoveryDetails = result;
 
     // Emit event
-    this.emit('recoveryAttempt', {
+    this.emit("recoveryAttempt", {
       epicNum,
       attempt: attemptNum,
       strategy,
@@ -245,13 +263,16 @@ class RecoveryHandler extends EventEmitter {
 
     // AC6: Escalate after max retries
     if (attemptCount >= this.maxRetries && this.autoEscalate) {
-      this._log(`Max retries (${this.maxRetries}) reached, escalating...`, 'warn');
+      this._log(
+        `Max retries (${this.maxRetries}) reached, escalating...`,
+        "warn",
+      );
       return RecoveryStrategy.ESCALATE_TO_HUMAN;
     }
 
     // Circular approach detected - need different approach (AC3)
-    if (stuckResult.stuck && stuckResult.reason?.includes('circular')) {
-      this._log('Circular approach detected, triggering rollback...', 'warn');
+    if (stuckResult.stuck && stuckResult.reason?.includes("circular")) {
+      this._log("Circular approach detected, triggering rollback...", "warn");
       return RecoveryStrategy.ROLLBACK_AND_RETRY;
     }
 
@@ -261,7 +282,7 @@ class RecoveryHandler extends EventEmitter {
       stuckResult.context?.consecutiveFailures >= this.maxRetries &&
       this.autoEscalate
     ) {
-      this._log('Too many consecutive failures, escalating...', 'warn');
+      this._log("Too many consecutive failures, escalating...", "warn");
       return RecoveryStrategy.ESCALATE_TO_HUMAN;
     }
 
@@ -269,15 +290,15 @@ class RecoveryHandler extends EventEmitter {
     const errorType = this._classifyError(errorMessage);
 
     switch (errorType) {
-      case 'transient':
+      case "transient":
         // Network, timeout errors - retry same approach
         return RecoveryStrategy.RETRY_SAME_APPROACH;
 
-      case 'state':
+      case "state":
         // State corruption, inconsistent data - rollback and retry
         return RecoveryStrategy.ROLLBACK_AND_RETRY;
 
-      case 'configuration':
+      case "configuration":
         // Missing config, env vars - skip if non-critical
         if (!this._isEpicCritical(epicNum)) {
           return RecoveryStrategy.SKIP_PHASE;
@@ -287,11 +308,11 @@ class RecoveryHandler extends EventEmitter {
           ? RecoveryStrategy.ESCALATE_TO_HUMAN
           : RecoveryStrategy.ROLLBACK_AND_RETRY;
 
-      case 'dependency':
+      case "dependency":
         // Missing deps, incompatible versions - trigger recovery workflow
         return RecoveryStrategy.TRIGGER_RECOVERY_WORKFLOW;
 
-      case 'fatal':
+      case "fatal":
         // Unrecoverable errors - escalate only if autoEscalate enabled
         return this.autoEscalate
           ? RecoveryStrategy.ESCALATE_TO_HUMAN
@@ -322,34 +343,50 @@ class RecoveryHandler extends EventEmitter {
 
     // Transient errors (network, timeout)
     if (
-      /timeout|econnrefused|etimedout|network|fetch.*failed|connection.*refused/.test(lowerMessage)
+      /timeout|econnrefused|etimedout|network|fetch.*failed|connection.*refused/.test(
+        lowerMessage,
+      )
     ) {
-      return 'transient';
+      return "transient";
     }
 
     // State errors
-    if (/state.*corrupt|inconsistent|invalid.*state|out.*of.*sync/.test(lowerMessage)) {
-      return 'state';
+    if (
+      /state.*corrupt|inconsistent|invalid.*state|out.*of.*sync/.test(
+        lowerMessage,
+      )
+    ) {
+      return "state";
     }
 
     // Configuration errors
-    if (/config.*missing|env.*not.*set|environment.*undefined|missing.*config/.test(lowerMessage)) {
-      return 'configuration';
+    if (
+      /config.*missing|env.*not.*set|environment.*undefined|missing.*config/.test(
+        lowerMessage,
+      )
+    ) {
+      return "configuration";
     }
 
     // Dependency errors
     if (
-      /cannot.*find.*module|module.*not.*found|dependency|package.*not.*found/.test(lowerMessage)
+      /cannot.*find.*module|module.*not.*found|dependency|package.*not.*found/.test(
+        lowerMessage,
+      )
     ) {
-      return 'dependency';
+      return "dependency";
     }
 
     // Fatal errors
-    if (/fatal|critical|unrecoverable|out.*of.*memory|heap.*overflow/.test(lowerMessage)) {
-      return 'fatal';
+    if (
+      /fatal|critical|unrecoverable|out.*of.*memory|heap.*overflow/.test(
+        lowerMessage,
+      )
+    ) {
+      return "fatal";
     }
 
-    return 'unknown';
+    return "unknown";
   }
 
   /**
@@ -386,8 +423,8 @@ class RecoveryHandler extends EventEmitter {
         case RecoveryStrategy.RETRY_SAME_APPROACH:
           result.shouldRetry = true;
           result.success = true;
-          result.details.message = 'Retry with same approach';
-          this._log(`Will retry Epic ${epicNum} with same approach`, 'info');
+          result.details.message = "Retry with same approach";
+          this._log(`Will retry Epic ${epicNum} with same approach`, "info");
           break;
 
         case RecoveryStrategy.ROLLBACK_AND_RETRY:
@@ -395,27 +432,35 @@ class RecoveryHandler extends EventEmitter {
           result.shouldRetry = true;
           result.newApproach = true;
           result.success = true;
-          result.details.message = 'Rollback completed, retry with new approach';
-          this._log(`Rollback completed for Epic ${epicNum}, will retry with new approach`, 'info');
+          result.details.message =
+            "Rollback completed, retry with new approach";
+          this._log(
+            `Rollback completed for Epic ${epicNum}, will retry with new approach`,
+            "info",
+          );
           break;
 
         case RecoveryStrategy.SKIP_PHASE:
           result.skipped = true;
           result.success = true;
           result.details.message = `Epic ${epicNum} skipped due to non-critical failure`;
-          this._log(`Skipping Epic ${epicNum}`, 'warn');
+          this._log(`Skipping Epic ${epicNum}`, "warn");
           break;
 
         case RecoveryStrategy.ESCALATE_TO_HUMAN:
           await this._escalateToHuman(epicNum, error, context);
           result.escalated = true;
           result.success = false;
-          result.details.message = 'Escalated to human for manual intervention';
-          this._log(`Escalated Epic ${epicNum} to human`, 'warn');
+          result.details.message = "Escalated to human for manual intervention";
+          this._log(`Escalated Epic ${epicNum} to human`, "warn");
           break;
 
         case RecoveryStrategy.TRIGGER_RECOVERY_WORKFLOW: {
-          const recoveryResult = await this._triggerRecoveryWorkflow(epicNum, error, context);
+          const recoveryResult = await this._triggerRecoveryWorkflow(
+            epicNum,
+            error,
+            context,
+          );
           result.success = recoveryResult.success;
           result.shouldRetry = recoveryResult.shouldRetry;
           result.details = recoveryResult;
@@ -424,12 +469,12 @@ class RecoveryHandler extends EventEmitter {
 
         default:
           result.details.message = `Unknown strategy: ${strategy}`;
-          this._log(`Unknown recovery strategy: ${strategy}`, 'error');
+          this._log(`Unknown recovery strategy: ${strategy}`, "error");
       }
     } catch (recoveryError) {
       result.success = false;
       result.details.error = recoveryError.message;
-      this._log(`Recovery failed: ${recoveryError.message}`, 'error');
+      this._log(`Recovery failed: ${recoveryError.message}`, "error");
     }
 
     return result;
@@ -442,8 +487,8 @@ class RecoveryHandler extends EventEmitter {
   async _executeRollback(epicNum, context) {
     const manager = this._getRollbackManager();
     if (!manager) {
-      this._log('RollbackManager not available, skipping rollback', 'warn');
-      return { success: false, reason: 'manager_unavailable' };
+      this._log("RollbackManager not available, skipping rollback", "warn");
+      return { success: false, reason: "manager_unavailable" };
     }
 
     try {
@@ -453,7 +498,10 @@ class RecoveryHandler extends EventEmitter {
       // Check if checkpoint exists
       const checkpoint = await manager.getCheckpoint(subtaskId);
       if (!checkpoint) {
-        this._log(`No checkpoint found for ${subtaskId}, creating one now`, 'info');
+        this._log(
+          `No checkpoint found for ${subtaskId}, creating one now`,
+          "info",
+        );
         await manager.saveCheckpoint(subtaskId, {
           files: context.affectedFiles || [],
         });
@@ -468,7 +516,7 @@ class RecoveryHandler extends EventEmitter {
 
       return result;
     } catch (error) {
-      this._log(`Rollback failed: ${error.message}`, 'error');
+      this._log(`Rollback failed: ${error.message}`, "error");
       return { success: false, error: error.message };
     }
   }
@@ -502,7 +550,10 @@ class RecoveryHandler extends EventEmitter {
         approach: a.approach,
         error: a.error,
       }));
-      const fullReport = detector.generateEscalationReport(`epic-${epicNum}`, attempts);
+      const fullReport = detector.generateEscalationReport(
+        `epic-${epicNum}`,
+        attempts,
+      );
       report.stuckDetectorReport = fullReport;
     }
 
@@ -511,9 +562,9 @@ class RecoveryHandler extends EventEmitter {
     report.reportPath = reportPath;
 
     // Emit escalation event
-    this.emit('escalation', report);
+    this.emit("escalation", report);
 
-    this._log(`Escalation report saved to: ${reportPath}`, 'info');
+    this._log(`Escalation report saved to: ${reportPath}`, "info");
 
     return report;
   }
@@ -528,34 +579,36 @@ class RecoveryHandler extends EventEmitter {
     const errorType = this._classifyError(errorMessage);
 
     switch (errorType) {
-      case 'transient':
-        suggestions.push('Check network connectivity');
-        suggestions.push('Verify external services are available');
-        suggestions.push('Wait and retry after a few minutes');
+      case "transient":
+        suggestions.push("Check network connectivity");
+        suggestions.push("Verify external services are available");
+        suggestions.push("Wait and retry after a few minutes");
         break;
 
-      case 'state':
-        suggestions.push('Check for conflicting changes');
-        suggestions.push('Verify state files are not corrupted');
-        suggestions.push('Consider starting fresh from last known good state');
+      case "state":
+        suggestions.push("Check for conflicting changes");
+        suggestions.push("Verify state files are not corrupted");
+        suggestions.push("Consider starting fresh from last known good state");
         break;
 
-      case 'configuration':
-        suggestions.push('Verify all required environment variables are set');
-        suggestions.push('Check configuration files for errors');
-        suggestions.push('Ensure .env file exists and is properly formatted');
+      case "configuration":
+        suggestions.push("Verify all required environment variables are set");
+        suggestions.push("Check configuration files for errors");
+        suggestions.push("Ensure .env file exists and is properly formatted");
         break;
 
-      case 'dependency':
-        suggestions.push('Run npm install to ensure all dependencies are installed');
-        suggestions.push('Check package.json for correct versions');
-        suggestions.push('Try npm cache clean --force and reinstall');
+      case "dependency":
+        suggestions.push(
+          "Run npm install to ensure all dependencies are installed",
+        );
+        suggestions.push("Check package.json for correct versions");
+        suggestions.push("Try npm cache clean --force and reinstall");
         break;
 
       default:
-        suggestions.push('Review error logs for more details');
-        suggestions.push('Check recent code changes');
-        suggestions.push('Consider breaking the task into smaller steps');
+        suggestions.push("Review error logs for more details");
+        suggestions.push("Check recent code changes");
+        suggestions.push("Consider breaking the task into smaller steps");
     }
 
     return suggestions;
@@ -566,10 +619,13 @@ class RecoveryHandler extends EventEmitter {
    * @private
    */
   async _triggerRecoveryWorkflow(epicNum, error, context) {
-    this._log(`Triggering recovery workflow for Epic ${epicNum}`, 'info');
+    this._log(`Triggering recovery workflow for Epic ${epicNum}`, "info");
 
     // If orchestrator is available, use it to execute Epic 5
-    if (this.orchestrator && typeof this.orchestrator.executeEpic === 'function') {
+    if (
+      this.orchestrator &&
+      typeof this.orchestrator.executeEpic === "function"
+    ) {
       try {
         const result = await this.orchestrator.executeEpic(5, {
           failedEpic: epicNum,
@@ -583,7 +639,7 @@ class RecoveryHandler extends EventEmitter {
           recoveryResult: result,
         };
       } catch (error) {
-        this._log(`Recovery workflow failed: ${error.message}`, 'error');
+        this._log(`Recovery workflow failed: ${error.message}`, "error");
         return {
           success: false,
           shouldRetry: false,
@@ -596,7 +652,7 @@ class RecoveryHandler extends EventEmitter {
     return {
       success: false,
       shouldRetry: false,
-      message: 'Orchestrator not available for recovery workflow',
+      message: "Orchestrator not available for recovery workflow",
     };
   }
 
@@ -605,7 +661,7 @@ class RecoveryHandler extends EventEmitter {
    * @private
    */
   async _saveEscalationReport(report) {
-    const reportsDir = path.join(this.projectRoot, '.aiox', 'escalations');
+    const reportsDir = path.join(this.projectRoot, ".aiox", "escalations");
     await fs.ensureDir(reportsDir);
 
     const filename = `escalation-${this.storyId}-epic${report.epicNum}-${Date.now()}.json`;
@@ -622,11 +678,11 @@ class RecoveryHandler extends EventEmitter {
    */
   _getEpicName(epicNum) {
     const names = {
-      3: 'Spec Pipeline',
-      4: 'Execution Engine',
-      5: 'Recovery System',
-      6: 'QA Loop',
-      7: 'Memory Layer',
+      3: "Spec Pipeline",
+      4: "Execution Engine",
+      5: "Recovery System",
+      6: "QA Loop",
+      7: "Memory Layer",
     };
     return names[epicNum] || `Epic ${epicNum}`;
   }
@@ -639,7 +695,7 @@ class RecoveryHandler extends EventEmitter {
    * Log message with timestamp (AC7)
    * @private
    */
-  _log(message, level = 'info') {
+  _log(message, level = "info") {
     const timestamp = new Date().toISOString();
     const logEntry = {
       timestamp,
@@ -650,7 +706,7 @@ class RecoveryHandler extends EventEmitter {
     this.logs.push(logEntry);
 
     // Also log to orchestrator if available
-    if (this.orchestrator && typeof this.orchestrator._log === 'function') {
+    if (this.orchestrator && typeof this.orchestrator._log === "function") {
       this.orchestrator._log(`[Recovery] ${message}`, { level });
     }
   }
@@ -667,7 +723,9 @@ class RecoveryHandler extends EventEmitter {
    */
   getEpicLogs(epicNum) {
     return this.logs.filter(
-      (log) => log.message.includes(`Epic ${epicNum}`) || log.message.includes(`epic-${epicNum}`),
+      (log) =>
+        log.message.includes(`Epic ${epicNum}`) ||
+        log.message.includes(`epic-${epicNum}`),
     );
   }
 
@@ -697,7 +755,7 @@ class RecoveryHandler extends EventEmitter {
    */
   resetAttempts(epicNum) {
     this.attempts[epicNum] = [];
-    this._log(`Reset attempts for Epic ${epicNum}`, 'info');
+    this._log(`Reset attempts for Epic ${epicNum}`, "info");
   }
 
   /**

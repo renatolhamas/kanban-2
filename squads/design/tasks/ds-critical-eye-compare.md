@@ -12,6 +12,7 @@
 Within each category, rank all scored variants from highest to lowest total score. Apply the tiebreaker rule: when two variants are within a 10% margin, the one with higher breadth wins (network effect favors broader adoption — Nathan Curtis). Identify the top candidate per category for potential CANONICAL promotion.
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/critical-eye/cycle-{N}/rankings.json`
 - **format:** JSON — ranked variants per category with comparison matrix
 - **consumed_by:** ds-critical-eye-decide

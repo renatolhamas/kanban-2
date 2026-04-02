@@ -44,7 +44,7 @@ expected_output:
     - "Cada dimensão deve ter score, weight, e evidence"
 
 baseline:
-  opus_output: "opus-baseline.yaml"  # Relative to this folder
+  opus_output: "opus-baseline.yaml" # Relative to this folder
   opus_score: 10.0
   opus_tokens:
     input: 15000
@@ -62,11 +62,11 @@ evaluation:
       - "veto_triggered: boolean"
 
   accuracy:
-    numeric_tolerance: 0.10  # 10% tolerance
+    numeric_tolerance: 0.10 # 10% tolerance
     enum_exact_match: true
 
   reasoning:
-    minimum_justifications: 10  # Uma por dimensão
+    minimum_justifications: 10 # Uma por dimensão
     requires_evidence: true
 
   format:
@@ -83,7 +83,7 @@ compensation_history:
 results:
   haiku:
     score: 7.71
-    percentage: 98.2  # vs opus baseline
+    percentage: 98.2 # vs opus baseline
     qualified: true
     output_file: "haiku-output.yaml"
     tokens_input: 55000
@@ -117,7 +117,7 @@ results:
     haiku_cost_per_run: 0.018
     savings_per_run: 0.267
     savings_percentage: 93.7
-    break_even_quality: 90.0  # threshold
+    break_even_quality: 90.0 # threshold
     actual_quality: 98.2
 
   recommendation: |

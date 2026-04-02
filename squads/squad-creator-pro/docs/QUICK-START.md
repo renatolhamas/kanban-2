@@ -32,6 +32,7 @@ Quero um squad de copywriting
 ```
 
 **O que acontece:**
+
 1. Squad Architect inicia automaticamente a pesquisa
 2. NÃO pergunta "quer pesquisar?" - já vai direto
 3. Executa 3-5 iterações de pesquisa com devil's advocate
@@ -57,6 +58,7 @@ O sistema pergunta sobre o modo de execução:
 ```
 
 **Escolha:**
+
 - **YOLO** se quer rapidez e não tem materiais
 - **QUALITY** se tem livros/PDFs dos experts
 - **HYBRID** se tem materiais de alguns, não de todos
@@ -162,13 +164,13 @@ Aguardar criação automática
 
 ## Comandos Úteis
 
-| Comando | O que faz |
-|---------|-----------|
-| `*create-squad` | Criar novo squad (com workflow guiado) |
-| `*clone-mind {name}` | Clonar um expert específico |
-| `*validate-squad {name}` | Validar squad existente |
-| `*quality-dashboard {name}` | Gerar dashboard de qualidade |
-| `*help` | Ver todos os comandos |
+| Comando                     | O que faz                              |
+| --------------------------- | -------------------------------------- |
+| `*create-squad`             | Criar novo squad (com workflow guiado) |
+| `*clone-mind {name}`        | Clonar um expert específico            |
+| `*validate-squad {name}`    | Validar squad existente                |
+| `*quality-dashboard {name}` | Gerar dashboard de qualidade           |
+| `*help`                     | Ver todos os comandos                  |
 
 ---
 
@@ -202,4 +204,4 @@ Bot:  [cria automaticamente]
 ---
 
 **Squad Architect | Quick Start v1.0**
-*"De zero a squad em 5 minutos."*
+_"De zero a squad em 5 minutos."_

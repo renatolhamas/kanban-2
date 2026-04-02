@@ -23,15 +23,16 @@
 ## Individual Source Rankings
 
 ### 1. **Livro $100M Ofertas - Capítulo 6 (A Equação de Valor)** ⭐ CROWN JEWEL
+
 **Overall Score: 5.0/5.0**
 
-| Dimension | Score | Justification |
-|-----------|-------|---------------|
-| **Autenticidade** | 5/5 | Real examples (San Diego gym, photography), admits past mistakes, no teleprompter feel |
-| **Profundidade** | 5/5 | Complete 4-pillar framework with trade-offs and cross-domain connections |
-| **Atualidade** | 5/5 | Published 2022, timelessly applicable in 2026 |
-| **Unicidade** | 5/5 | Original "Equation of Value" framework not seen elsewhere; counter-mainstream thinking |
-| **Completude** | 5/5 | 40 pages, visual formula, 3+ real examples, edge cases covered |
+| Dimension         | Score | Justification                                                                          |
+| ----------------- | ----- | -------------------------------------------------------------------------------------- |
+| **Autenticidade** | 5/5   | Real examples (San Diego gym, photography), admits past mistakes, no teleprompter feel |
+| **Profundidade**  | 5/5   | Complete 4-pillar framework with trade-offs and cross-domain connections               |
+| **Atualidade**    | 5/5   | Published 2022, timelessly applicable in 2026                                          |
+| **Unicidade**     | 5/5   | Original "Equation of Value" framework not seen elsewhere; counter-mainstream thinking |
+| **Completude**    | 5/5   | 40 pages, visual formula, 3+ real examples, edge cases covered                         |
 
 **Why Crown Jewel?**
 This chapter is the **intellectual foundation** of Alex's entire system. Without understanding how to quantify value (Dream Outcome + Perceived Probability - Time Delay - Effort), nothing else works. This is 80% of his strategic thinking.
@@ -39,6 +40,7 @@ This chapter is the **intellectual foundation** of Alex's entire system. Without
 **Extraction Priority: #1 (URGENT)**
 
 **Key Frameworks to Capture:**
+
 - The 4-pillar Value Equation formula
 - Dream Outcome concept (status-driven desires)
 - Psychological vs Logical solutions mental model
@@ -47,15 +49,16 @@ This chapter is the **intellectual foundation** of Alex's entire system. Without
 ---
 
 ### 2. **Livro $100M Ofertas - Capítulo 8 (O Processo de Pensamento)** 🥇 OURO
+
 **Overall Score: 4.8/5.0**
 
-| Dimension | Score | Justification |
-|-----------|-------|---------------|
-| **Autenticidade** | 5/5 | Personal, conversational, interactive (asks reader to do Brick Exercise NOW) |
-| **Profundidade** | 5/5 | Convergent vs Divergent thinking framework with specific examples |
-| **Atualidade** | 5/5 | Timeless - creative thinking never goes out of style |
-| **Unicidade** | 4/5 | Framework not original (Edward de Bono), but application to offers is unique |
-| **Completude** | 5/5 | Practical exercise (120 seconds), 20 brick use cases, 25 pages |
+| Dimension         | Score | Justification                                                                |
+| ----------------- | ----- | ---------------------------------------------------------------------------- |
+| **Autenticidade** | 5/5   | Personal, conversational, interactive (asks reader to do Brick Exercise NOW) |
+| **Profundidade**  | 5/5   | Convergent vs Divergent thinking framework with specific examples            |
+| **Atualidade**    | 5/5   | Timeless - creative thinking never goes out of style                         |
+| **Unicidade**     | 4/5   | Framework not original (Edward de Bono), but application to offers is unique |
+| **Completude**    | 5/5   | Practical exercise (120 seconds), 20 brick use cases, 25 pages               |
 
 **Why Ouro?**
 This chapter explains **how Alex generates multiple offer variations**. Theory (Ch 6) tells you WHAT value is; this chapter tells you HOW to create 10 variations of the same product.
@@ -63,6 +66,7 @@ This chapter explains **how Alex generates multiple offer variations**. Theory (
 **Extraction Priority: #2 (HIGH)**
 
 **Key Frameworks to Capture:**
+
 - Convergent (mathematics) vs Divergent (creativity) thinking
 - The Brick Exercise methodology
 - How to generate 10+ variations of one product
@@ -71,15 +75,16 @@ This chapter explains **how Alex generates multiple offer variations**. Theory (
 ---
 
 ### 3. **Livro $100M Leads - Seção I & II** 🥇 OURO
+
 **Overall Score: 4.8/5.0**
 
-| Dimension | Score | Justification |
-|-----------|-------|---------------|
-| **Autenticidade** | 5/5 | Raw personal stories ($150k refunds, bankruptcy, honest failures) |
-| **Profundidade** | 5/5 | Core Four framework, 7-step Lead Magnet methodology, psychological connections |
-| **Atualidade** | 5/5 | 2022 publication, strategies 100% applicable in 2026 |
-| **Unicidade** | 4/5 | Core Four is simplification of 2×2 matrix (not novel), but Lead Magnet concept is original |
-| **Completude** | 5/5 | 100 pages, real numbers ($6k first sale, $60k single day, $215k monthly profit) |
+| Dimension         | Score | Justification                                                                              |
+| ----------------- | ----- | ------------------------------------------------------------------------------------------ |
+| **Autenticidade** | 5/5   | Raw personal stories ($150k refunds, bankruptcy, honest failures)                          |
+| **Profundidade**  | 5/5   | Core Four framework, 7-step Lead Magnet methodology, psychological connections             |
+| **Atualidade**    | 5/5   | 2022 publication, strategies 100% applicable in 2026                                       |
+| **Unicidade**     | 4/5   | Core Four is simplification of 2×2 matrix (not novel), but Lead Magnet concept is original |
+| **Completude**    | 5/5   | 100 pages, real numbers ($6k first sale, $60k single day, $215k monthly profit)            |
 
 **Why Ouro?**
 This section is **how Alex created infinite demand**. Without demand, perfect offers die. The Core Four (Warm Outreach, Content, Cold Outreach, Paid Ads) are the ONLY 4 ways to generate leads.
@@ -87,6 +92,7 @@ This section is **how Alex created infinite demand**. Without demand, perfect of
 **Extraction Priority: #3 (HIGH)**
 
 **Key Frameworks to Capture:**
+
 - Core Four lead generation channels
 - Lead vs Engaged Lead distinction
 - 7-step Lead Magnet creation process
@@ -96,15 +102,16 @@ This section is **how Alex created infinite demand**. Without demand, perfect of
 ---
 
 ### 4. **Livro $100m Modelos - Framework Completo + Insights** 🥇 OURO
+
 **Overall Score: 4.4/5.0**
 
-| Dimension | Score | Justification |
-|-----------|-------|---------------|
-| **Autenticidade** | 3/5 | More didactic/structured than narrative; less personal storytelling |
-| **Profundidade** | 5/5 | 3-stage framework (Get/More/Max Money), decision trees, multiple sub-frameworks |
-| **Atualidade** | 5/5 | 2022 publication, timeless business model architecture |
-| **Unicidade** | 4/5 | 3-stages is original; counter-mainstream (first sale doesn't need profit) |
-| **Completude** | 5/5 | 80 pages, 5 templates, checklists, McDonald's/rental car/gym examples, 30-60-90 plan |
+| Dimension         | Score | Justification                                                                        |
+| ----------------- | ----- | ------------------------------------------------------------------------------------ |
+| **Autenticidade** | 3/5   | More didactic/structured than narrative; less personal storytelling                  |
+| **Profundidade**  | 5/5   | 3-stage framework (Get/More/Max Money), decision trees, multiple sub-frameworks      |
+| **Atualidade**    | 5/5   | 2022 publication, timeless business model architecture                               |
+| **Unicidade**     | 4/5   | 3-stages is original; counter-mainstream (first sale doesn't need profit)            |
+| **Completude**    | 5/5   | 80 pages, 5 templates, checklists, McDonald's/rental car/gym examples, 30-60-90 plan |
 
 **Why Ouro?**
 This section is **operationalization**. It takes Value Equation (What) + Divergent Thinking (How) + Lead Generation (Demand) and creates the actual business machine. 3-Stages tell you WHEN to sell what.
@@ -112,6 +119,7 @@ This section is **operationalization**. It takes Value Equation (What) + Diverge
 **Extraction Priority: #4 (HIGH)**
 
 **Key Frameworks to Capture:**
+
 - 3-Stage GMMM model (Get Money / More Money / Max Money)
 - Upsell types: Classic, Menu, Anchor, Rollover
 - Downsell progression: Payment Plans → Trial with Penalty → Reduced Features
@@ -121,15 +129,16 @@ This section is **operationalization**. It takes Value Equation (What) + Diverge
 ---
 
 ### 5. **Entrevista Tom Bilyeu (YouTube)** 🔴 BRONZE
+
 **Overall Score: 0.2/5.0**
 
-| Dimension | Score | Justification |
-|-----------|-------|---------------|
-| **Autenticidade** | 1/5 | File contains only URL, no content accessible |
-| **Profundidade** | 0/5 | No transcript - impossible to assess |
-| **Atualidade** | 0/5 | Unknown publication date |
-| **Unicidade** | 0/5 | No content to evaluate |
-| **Completude** | 0/5 | Empty file - zero actionable content |
+| Dimension         | Score | Justification                                 |
+| ----------------- | ----- | --------------------------------------------- |
+| **Autenticidade** | 1/5   | File contains only URL, no content accessible |
+| **Profundidade**  | 0/5   | No transcript - impossible to assess          |
+| **Atualidade**    | 0/5   | Unknown publication date                      |
+| **Unicidade**     | 0/5   | No content to evaluate                        |
+| **Completude**    | 0/5   | Empty file - zero actionable content          |
 
 **Why Bronze?**
 The file contains **only a YouTube link** with no transcribed content. While Tom Bilyeu interviews are typically high-quality (conversational, non-scripted), there's no data to assess.
@@ -137,6 +146,7 @@ The file contains **only a YouTube link** with no transcribed content. While Tom
 **Extraction Priority: DEFERRED (MEDIUM)**
 
 **Action Required:**
+
 - Transcribe YouTube video (auto-captions available)
 - Estimated effort: 30 minutes
 - Potential outcome: Could be Ouro or Crown Jewel (1-hour deep conversations are rich)
@@ -180,6 +190,7 @@ Bronze        🔴  1 source    25%*   (Tier: 0.2) *deferred
 ## Scoring Methodology Notes
 
 **Binary Checkpoint Framework (v2.0):**
+
 - Each source evaluated on **25 checkpoints** (5 dimensions × 5 each)
 - PASS = evidence EXISTS (not perfect)
 - FAIL = evidence MISSING
@@ -195,6 +206,7 @@ Bronze        🔴  1 source    25%*   (Tier: 0.2) *deferred
 | **Bronze** | < 3.0 | < 10 | Skip; risk of noise |
 
 **Special Rules Applied:**
+
 - ✅ IF Profundidade = 5 AND Autenticidade ≥ 4 → Crown Jewel (Capítulo 6)
 - ✅ IF todas dimensões ≥ 4.0 → Crown Jewel (Capítulo 6)
 
@@ -203,20 +215,24 @@ Bronze        🔴  1 source    25%*   (Tier: 0.2) *deferred
 ## Recommended Extraction Sequence
 
 ### Phase 1: IMMEDIATE (This Week)
+
 1. **Capítulo 6 - Value Equation** (40 pages)
    - Extract: 4-pillar formula, examples, psychological principles
    - Effort: High | ROI: Exponential
 
 ### Phase 2: HIGH PRIORITY (Next 2 Weeks)
+
 2. **Capítulo 8 - Divergent Thinking** (25 pages)
 3. **Leads Sections I-II** (100 pages)
 4. **Money Models Framework** (80 pages)
 
 ### Phase 3: MEDIUM PRIORITY (Month 2)
+
 5. **Remaining Leads Sections (III-V)** (150 pages)
 6. **Remaining Offers Chapters** (100 pages)
 
 ### Phase 4: DEFERRED (Month 2-3)
+
 7. **Tom Bilyeu Interview Transcript** (requires transcription)
 8. **Additional interviews** (Tim Ferriss, Lex Fridman, etc. if available)
 
@@ -225,18 +241,21 @@ Bronze        🔴  1 source    25%*   (Tier: 0.2) *deferred
 ## Key Extraction Targets
 
 ### Most Valuable Frameworks
+
 1. **Value Equation** (Ch 6) - 4 pillars, infinite pricing power
 2. **Divergent Thinking** (Ch 8) - infinite offer generation
 3. **Core Four** (Leads I-II) - infinite lead channels
 4. **3-Stages GMMM** (Models) - infinite profit sequencing
 
 ### Most Memorable Stories
+
 - $150k refund crisis → $215k recovery
 - Gym Launch: $0 → $4.4M/month
 - Boot Factory: 5x volume with reframing
 - First supplement sale: "chocolate or vanilla"
 
 ### Most Counter-Intuitive Insights
+
 - Grátis often converts better than paid (trial penalty effect)
 - Mais ofertas = mais vendas (not fewer; remove option to say no)
 - Primeira venda não precisa lucro (upsells compensam)
@@ -272,4 +291,3 @@ Bronze        🔴  1 source    25%*   (Tier: 0.2) *deferred
 **Status:** READY FOR EXTRACTION
 
 **Next Step:** Route to DNA extraction phase. Priority: Crown Jewel (Capítulo 6) first.
-

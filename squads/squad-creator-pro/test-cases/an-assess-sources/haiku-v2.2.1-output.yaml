@@ -265,7 +265,8 @@ source_assessment:
   tier_classification_method: "MECHANICAL (NO SUBJECTIVE OVERRIDE)"
   special_rules_applied:
     - rule: "SE Profundidade = 5 AND Autenticidade >= 4 → CROWN_JEWEL"
-      books_matching: ["Livro $100M Ofertas", "Livro $100M Leads", "Livro $100M Money Models"]
+      books_matching:
+        ["Livro $100M Ofertas", "Livro $100M Leads", "Livro $100M Money Models"]
     - rule: "SE todas dimensões >= 4 → CROWN_JEWEL"
       books_matching: ["Livro $100M Ofertas", "Livro $100M Money Models"]
     - rule: "SE Autenticidade < 3 → BRONZE (forced)"

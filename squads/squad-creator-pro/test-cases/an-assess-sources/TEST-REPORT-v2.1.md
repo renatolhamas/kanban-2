@@ -22,7 +22,9 @@
 ## CRITICAL FIX VALIDATION: SCOPE DEFINITION v2.1
 
 ### The Issue Being Fixed
+
 Previous version (v2.0) would count chapters separately:
+
 ```
 ❌ WRONG (v2.0):
 - Livro 100M Ofertas Capítulo 1
@@ -33,6 +35,7 @@ Total: 23+ "sources"
 ```
 
 ### The Fix Applied (v2.1)
+
 ```
 ✅ CORRECT (v2.1):
 - Livro $100M Ofertas (entire book as 1 source)
@@ -43,7 +46,9 @@ Total: 4 sources
 ```
 
 ### Verification
+
 Each book directory contains 8-25 individual markdown files (chapters), but they are treated as:
+
 - **1 LIVRO = 1 FONTE** ← This is the scope definition
 - Never divided into separate sources
 - Evaluated as complete units
@@ -55,6 +60,7 @@ Each book directory contains 8-25 individual markdown files (chapters), but they
 ## SOURCES ASSESSED
 
 ### 1. $100M Offers (Crown Jewel)
+
 - **Type:** Livro (Book)
 - **Status:** Tier = Crown Jewel (all dimensions = 5.0)
 - **File count:** 23 markdown files
@@ -64,6 +70,7 @@ Each book directory contains 8-25 individual markdown files (chapters), but they
   - Todas dimensões ≥ 4.0 → Crown Jewel rule ✓
 
 **Key Strengths:**
+
 - Equação de Valor: Mathematical framework (numerator/denominator structure)
 - Cross-domain connections (medicina, psicologia, tecnologia)
 - Specific examples with numbers (photography $300→$1500, 38x multiplier)
@@ -71,6 +78,7 @@ Each book directory contains 8-25 individual markdown files (chapters), but they
 - Templates and frameworks provided
 
 **Sample Checkpoints:**
+
 ```
 Autenticidade:
   ✓ espontaneidade (beisebol metaphor, personal tone)
@@ -84,6 +92,7 @@ Autenticidade:
 ---
 
 ### 2. $100M Leads (Crown Jewel)
+
 - **Type:** Livro (Book)
 - **Status:** Tier = Crown Jewel (all dimensions = 5.0)
 - **File count:** 9 markdown files (+ introduction)
@@ -93,6 +102,7 @@ Autenticidade:
   - Todas dimensões ≥ 4.0 → Crown Jewel rule ✓
 
 **Key Strengths:**
+
 - Personal narrative: $150k crisis → solution pivot
 - Core Four framework (Warm Outreach, Content, Cold, Ads)
 - Specific numbers: $3300/day spending → $215k profit in 30 days
@@ -100,6 +110,7 @@ Autenticidade:
 - Operational sequencing (Boise phone call shows decision-making pattern)
 
 **Sample Checkpoints:**
+
 ```
 Profundidade:
   ✓ porque_explicado (why leads matter: product→leads→conversion→profit chain)
@@ -113,6 +124,7 @@ Profundidade:
 ---
 
 ### 3. $100M Money Models (Ouro/Gold)
+
 - **Type:** Livro (Book)
 - **Status:** Tier = Ouro (all dimensions = 5.0, but marked as "next to Crown Jewel")
 - **File count:** Multiple files including framework
@@ -124,6 +136,7 @@ Profundidade:
   - Recommendation: Extract third, after first two
 
 **Key Strengths:**
+
 - GMMM framework (Get Money, More Money, Max Money)
 - 4-offer sequence model (attraction, upsell, downsell, continuity)
 - Scripts: upsell, downsell gangorra, trial with penalty
@@ -131,6 +144,7 @@ Profundidade:
 - Checklists: daily, weekly, monthly, troubleshooting
 
 **Sample Checkpoints:**
+
 ```
 Completude:
   ✓ playbook (templates for offers, step-by-step GMMM)
@@ -144,6 +158,7 @@ Completude:
 ---
 
 ### 4. Entrevista Tom Bilyeu (Bronze - Source Issue)
+
 - **Type:** Entrevista (Interview)
 - **Status:** Tier = Bronze (file contains only URL, no content)
 - **File path:** `/Users/oalanicolas/Code/mmos/outputs/minds/alex_hormozi/sources/interviews/Entrevista Tom Biley.md`
@@ -155,6 +170,7 @@ Completude:
 
 **The Problem:**
 File is a URL-only reference, not actual content. Cannot assess:
+
 - Autenticidade: 2/5 (cannot evaluate tone)
 - Profundidade: 0/5 (cannot confirm frameworks)
 - Atualidade: 1/5 (no publish date)
@@ -164,6 +180,7 @@ File is a URL-only reference, not actual content. Cannot assess:
 **Median Score:** 0.8/5.0 → **Bronze**
 
 **Recommendation:**
+
 1. Fetch YouTube transcript or use `fetch-page.js` to extract content
 2. Re-assess after 48 hours when transcript available
 3. **Prognosis:** Likely Ouro (if long-form, Tom Bilyeu is rigorous) or Mixed (if clip)
@@ -173,7 +190,9 @@ File is a URL-only reference, not actual content. Cannot assess:
 ## CHECKPOINT METHODOLOGY VERIFICATION
 
 ### Scoring Calibration (v2.1 Standard)
+
 Per task instructions:
+
 - **PASS = evidence EXISTS (not perfect)**
 - **FAIL = evidence MISSING (not weak)**
 - **Partial = PASS (generous interpretation)**
@@ -184,11 +203,13 @@ Applied consistently across all 100 checkpoints.
 ### Example: How Checkpoints Were Scored
 
 **Autenticidade.espontaneidade for $100M Offers**
+
 - Evidence: Beisebol metaphor throughout, conversational tone, personal anecdotes
 - Conclusion: ✓ TRUE (evidence exists of natural voice)
 - Note: Explains reasoning
 
 **Atualidade.recencia for Tom Bilyeu**
+
 - Evidence: URL contains no date
 - Conclusion: ✗ FALSE (evidence missing of publication date)
 - Note: Cannot confirm if recent
@@ -198,6 +219,7 @@ Applied consistently across all 100 checkpoints.
 ## TIER CLASSIFICATION VERIFICATION
 
 ### Crown Jewel Rules Applied
+
 ```yaml
 special_rules:
   - "SE Autenticidade < 3 → BRONZE (regardless)"
@@ -206,16 +228,19 @@ special_rules:
 ```
 
 **$100M Offers:**
+
 - Profundidade = 5 ✓
 - Autenticidade = 5 ✓ (≥4)
 - **Result: Crown Jewel ✓**
 
 **$100M Leads:**
+
 - Profundidade = 5 ✓
 - Autenticidade = 5 ✓ (≥4)
 - **Result: Crown Jewel ✓**
 
 **$100M Money Models:**
+
 - Profundidade = 5 ✓
 - Autenticidade = 5 ✓ (≥4)
 - All dimensions = 5
@@ -223,6 +248,7 @@ special_rules:
 - **Reasoning:** Is synthesis layer (Offers + Leads applied), not foundational
 
 **Tom Bilyeu:**
+
 - Average = 0.8
 - **Result: Bronze ✓**
 
@@ -257,13 +283,16 @@ Priority 4: Tom Bilyeu Interview (Pending)
 ## GAPS IDENTIFIED
 
 ### Source Coverage Gaps
+
 - ❌ No complete video interview (Tom Bilyeu URL only, no transcript)
 - ❌ No podcast episodes (audio format content)
 - ❌ No social media content (stories, threads)
 - ❌ No conference/talk transcripts (live interaction content)
 
 ### Recommendation
+
 When sourcing additional content, prioritize:
+
 1. Long-form interview transcripts (>45 min)
 2. Podcast episodes (Lex Fridman style)
 3. Social media threads (Twitter/LinkedIn)
@@ -273,22 +302,23 @@ When sourcing additional content, prioritize:
 
 ## VALIDATION CHECKLIST
 
-| Criteria | Expected | Actual | Status |
-|----------|----------|--------|--------|
-| Total sources | 4 | 4 ✓ | PASS |
-| Each source complete | No chapters divided | 100% ✓ | PASS |
-| Checkpoints per source | 25 | 25 ✓ | PASS |
-| Total checkpoints | 100 | 100 ✓ | PASS |
-| Tier calculations | Correct formula | All correct ✓ | PASS |
-| Scope Definition v2.1 | Applied fully | Applied ✓ | PASS |
-| Output format | Valid YAML | Valid ✓ | PASS |
-| Crown Jewel rules | Applied | 2 sources identified ✓ | PASS |
+| Criteria               | Expected            | Actual                 | Status |
+| ---------------------- | ------------------- | ---------------------- | ------ |
+| Total sources          | 4                   | 4 ✓                    | PASS   |
+| Each source complete   | No chapters divided | 100% ✓                 | PASS   |
+| Checkpoints per source | 25                  | 25 ✓                   | PASS   |
+| Total checkpoints      | 100                 | 100 ✓                  | PASS   |
+| Tier calculations      | Correct formula     | All correct ✓          | PASS   |
+| Scope Definition v2.1  | Applied fully       | Applied ✓              | PASS   |
+| Output format          | Valid YAML          | Valid ✓                | PASS   |
+| Crown Jewel rules      | Applied             | 2 sources identified ✓ | PASS   |
 
 ---
 
 ## QUALITY METRICS
 
 ### Average Scores by Tier
+
 ```
 Crown Jewel (n=2):     5.0 average
 Ouro (n=1):           5.0 average
@@ -298,6 +328,7 @@ Overall Average:      4.3
 ```
 
 ### Distribution
+
 - **Premium quality (≥4.0):** 3/4 sources (75%)
 - **Usable (3.0-3.9):** 0/4 sources
 - **Low quality (<3.0):** 1/4 sources (due to missing content)
@@ -316,11 +347,13 @@ Overall Average:      4.3
 ### Alex Hormozi Source Quality Assessment
 
 **Observation:** Hormozi has 3 premium sources (all Ouro+) that form a trilogy:
+
 1. **Offers** (how to structure value)
 2. **Leads** (how to acquire customers)
 3. **Money Models** (how to monetize systematically)
 
 These three books create a **complete system** for building a business. The progression is:
+
 - Book 1: What to sell
 - Book 2: Who to sell to
 - Book 3: How to make money with both

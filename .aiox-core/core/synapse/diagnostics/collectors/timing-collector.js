@@ -9,10 +9,10 @@
  * @created Story SYN-12
  */
 
-'use strict';
+"use strict";
 
-const path = require('path');
-const { safeReadJson } = require('./safe-read-json');
+const path = require("path");
+const { safeReadJson } = require("./safe-read-json");
 
 /**
  * Loader tier mapping for UAP loaders.
@@ -22,13 +22,13 @@ const { safeReadJson } = require('./safe-read-json');
 const MAX_STALENESS_MS = 5 * 60 * 1000;
 
 const LOADER_TIER_MAP = {
-  agentConfig: 'Critical',
-  permissionMode: 'High',
-  gitConfig: 'High',
-  sessionContext: 'Best-effort',
-  projectStatus: 'Best-effort',
-  memories: 'Pro',
-  synapseSession: 'Bridge',
+  agentConfig: "Critical",
+  permissionMode: "High",
+  gitConfig: "High",
+  sessionContext: "Best-effort",
+  projectStatus: "Best-effort",
+  memories: "Pro",
+  synapseSession: "Bridge",
 };
 
 /**
@@ -42,22 +42,24 @@ const LOADER_TIER_MAP = {
  * }}
  */
 function collectTimingMetrics(projectRoot) {
-  const metricsDir = path.join(projectRoot, '.synapse', 'metrics');
+  const metricsDir = path.join(projectRoot, ".synapse", "metrics");
   const now = Date.now();
 
   // --- UAP Metrics ---
-  const uapData = safeReadJson(path.join(metricsDir, 'uap-metrics.json'));
+  const uapData = safeReadJson(path.join(metricsDir, "uap-metrics.json"));
   const uap = _buildUapTiming(uapData, now);
 
   // --- Hook Metrics ---
-  const hookData = safeReadJson(path.join(metricsDir, 'hook-metrics.json'));
+  const hookData = safeReadJson(path.join(metricsDir, "hook-metrics.json"));
   const hook = _buildHookTiming(hookData, now);
 
   return {
     uap,
     hook,
     combined: {
-      totalMs: (uap.available ? uap.totalDuration : 0) + (hook.available ? hook.totalDuration : 0),
+      totalMs:
+        (uap.available ? uap.totalDuration : 0) +
+        (hook.available ? hook.totalDuration : 0),
     },
   };
 }
@@ -69,7 +71,14 @@ function collectTimingMetrics(projectRoot) {
  */
 function _buildUapTiming(data, now) {
   if (!data || !data.loaders) {
-    return { available: false, totalDuration: 0, quality: 'unknown', loaders: [], stale: false, ageMs: 0 };
+    return {
+      available: false,
+      totalDuration: 0,
+      quality: "unknown",
+      loaders: [],
+      stale: false,
+      ageMs: 0,
+    };
   }
 
   const ageMs = data.timestamp ? now - new Date(data.timestamp).getTime() : 0;
@@ -78,14 +87,14 @@ function _buildUapTiming(data, now) {
   const loaders = Object.entries(data.loaders).map(([name, info]) => ({
     name,
     duration: info.duration || 0,
-    status: info.status || 'unknown',
-    tier: LOADER_TIER_MAP[name] || 'Unknown',
+    status: info.status || "unknown",
+    tier: LOADER_TIER_MAP[name] || "Unknown",
   }));
 
   return {
     available: true,
     totalDuration: data.totalDuration || 0,
-    quality: data.quality || 'unknown',
+    quality: data.quality || "unknown",
     loaders,
     stale,
     ageMs,
@@ -99,7 +108,14 @@ function _buildUapTiming(data, now) {
  */
 function _buildHookTiming(data, now) {
   if (!data || !data.perLayer) {
-    return { available: false, totalDuration: 0, bracket: 'unknown', layers: [], stale: false, ageMs: 0 };
+    return {
+      available: false,
+      totalDuration: 0,
+      bracket: "unknown",
+      layers: [],
+      stale: false,
+      ageMs: 0,
+    };
   }
 
   const ageMs = data.timestamp ? now - new Date(data.timestamp).getTime() : 0;
@@ -108,7 +124,7 @@ function _buildHookTiming(data, now) {
   const layers = Object.entries(data.perLayer).map(([name, info]) => ({
     name,
     duration: info.duration || 0,
-    status: info.status || 'unknown',
+    status: info.status || "unknown",
     rules: info.rules || 0,
   }));
 
@@ -116,7 +132,7 @@ function _buildHookTiming(data, now) {
     available: true,
     totalDuration: data.totalDuration || 0,
     hookBootMs: data.hookBootMs || 0,
-    bracket: data.bracket || 'unknown',
+    bracket: data.bracket || "unknown",
     layers,
     stale,
     ageMs,

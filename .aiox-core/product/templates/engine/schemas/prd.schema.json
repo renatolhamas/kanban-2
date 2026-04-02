@@ -3,7 +3,14 @@
   "title": "PRD Template Variables",
   "description": "Schema for Product Requirements Document template variables",
   "type": "object",
-  "required": ["title", "version", "status", "owner", "problem_statement", "goals"],
+  "required": [
+    "title",
+    "version",
+    "status",
+    "owner",
+    "problem_statement",
+    "goals"
+  ],
   "properties": {
     "title": {
       "type": "string",
@@ -89,7 +96,15 @@
         "properties": {
           "category": {
             "type": "string",
-            "enum": ["Performance", "Security", "Scalability", "Reliability", "Usability", "Accessibility", "Compliance"]
+            "enum": [
+              "Performance",
+              "Security",
+              "Scalability",
+              "Reliability",
+              "Usability",
+              "Accessibility",
+              "Compliance"
+            ]
           },
           "requirement": { "type": "string" },
           "metric": { "type": "string" }

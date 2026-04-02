@@ -173,7 +173,8 @@ workflow:
         - Return to QA for final approval
 
     - meta: repeat
-      target_steps: [sm-create-story, dev-implement-story, qa-review-implementation]
+      target_steps:
+        [sm-create-story, dev-implement-story, qa-review-implementation]
       condition: stories_remaining
       notes: |
         Repeat story cycle (SM → Dev → QA) for all epic stories

@@ -81,12 +81,16 @@ Setup visual regression testing for your design system component library. Compar
 ## Steve Kinney Testing Philosophy (v4.1)
 
 ### Sustainability Filter
+
 For every visual test, ask: "Would a busy developer maintain this test?"
+
 - If test breaks on every refactor → scope too broad
 - If nobody reviews diffs → test is noise, not signal
 
 ### Storybook-as-Testing-Platform
+
 Each Storybook story serves 5 purposes simultaneously:
+
 1. **Documentation** — Shows component state
 2. **Development** — Isolated dev environment
 3. **Visual Testing** — Chromatic screenshot baseline
@@ -94,11 +98,13 @@ Each Storybook story serves 5 purposes simultaneously:
 5. **Accessibility Testing** — a11y addon runs axe-core
 
 ### Tool Recommendation Priority (Steve Kinney)
+
 1. **Chromatic** (recommended) — Built by Storybook maintainers, best integration, human review UI
 2. **Playwright Screenshots** — Free, good for non-Storybook or cross-page testing
 3. **Percy/BackstopJS** — Alternatives with different trade-offs
 
 ### Visual Diff Review Process
+
 - **NEVER auto-approve visual changes** — humans must review
 - Intentional change → approve new baseline
 - Unintentional change → fix the regression
@@ -121,10 +127,10 @@ Each Storybook story serves 5 purposes simultaneously:
 - Play functions added for interactive components
 - Sustainability filter applied: no tests a busy developer wouldn't maintain
 
-
 ## Related Checklists
 
 - `squads/design/checklists/design-fidelity-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { getEnricher, getClient, isCodeIntelAvailable } = require('../index');
+const { getEnricher, getClient, isCodeIntelAvailable } = require("../index");
 
 /**
  * StoryHelper — Code intelligence helper for @sm/@po agent tasks.
@@ -27,7 +27,7 @@ async function detectDuplicateStory(description) {
 
   try {
     const enricher = getEnricher();
-    const result = await enricher.detectDuplicates(description, { path: '.' });
+    const result = await enricher.detectDuplicates(description, { path: "." });
 
     if (!result || !result.matches || result.matches.length === 0) return null;
 
@@ -64,14 +64,18 @@ async function suggestRelevantFiles(description) {
       if (refs) {
         files = refs;
       }
-    } catch { /* skip — partial result ok */ }
+    } catch {
+      /* skip — partial result ok */
+    }
 
     try {
-      const analysis = await client.analyzeCodebase('.');
+      const analysis = await client.analyzeCodebase(".");
       if (analysis) {
         codebaseContext = analysis;
       }
-    } catch { /* skip — partial result ok */ }
+    } catch {
+      /* skip — partial result ok */
+    }
 
     // Return null only if we got nothing at all
     if (!files && !codebaseContext) return null;
@@ -98,7 +102,7 @@ async function validateNoDuplicates(description) {
 
   try {
     const enricher = getEnricher();
-    const result = await enricher.detectDuplicates(description, { path: '.' });
+    const result = await enricher.detectDuplicates(description, { path: "." });
 
     if (!result) {
       return {
@@ -113,7 +117,9 @@ async function validateNoDuplicates(description) {
     return {
       hasDuplicates,
       matches: result.matches || [],
-      suggestion: hasDuplicates ? 'Consider ADAPT instead of CREATE — similar functionality exists' : null,
+      suggestion: hasDuplicates
+        ? "Consider ADAPT instead of CREATE — similar functionality exists"
+        : null,
     };
   } catch {
     return null;
@@ -127,12 +133,12 @@ async function validateNoDuplicates(description) {
  * @private
  */
 function _formatDuplicateWarning(matches) {
-  if (!matches || matches.length === 0) return '';
+  if (!matches || matches.length === 0) return "";
 
   const fileList = matches
-    .map((m) => m.file || m.path || 'unknown')
+    .map((m) => m.file || m.path || "unknown")
     .slice(0, 5)
-    .join(', ');
+    .join(", ");
 
   return `Similar functionality already exists in: ${fileList}. Consider ADAPT instead of CREATE.`;
 }

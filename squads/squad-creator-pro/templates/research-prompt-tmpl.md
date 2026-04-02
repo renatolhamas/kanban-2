@@ -8,20 +8,20 @@
 
 ## Template Variables
 
-| Variable | Type | Description | Example |
-|----------|------|-------------|---------|
-| `{{specialist_name}}` | string | Human expert name | "Gary Halbert" |
-| `{{specialist_slug}}` | string | Slug format | "gary_halbert" |
-| `{{activity}}` | string | Specific activity | "sales-page" |
-| `{{activity_expanded}}` | string | Expanded description | "Sales Page Creation" |
-| `{{domain}}` | string | Domain area | "copywriting" |
-| `{{time_period}}` | string | Relevant years | "1970-2007" |
-| `{{agent_purpose}}` | string | What agent does | "Create high-converting sales pages" |
-| `{{local_knowledge_note}}` | string | What's already available | "Already have 3,520 lines..." |
-| `{{scope_items}}` | array | 4-6 research angles | [...] |
-| `{{requirements}}` | array | 3-4 research parameters | [...] |
-| `{{sources}}` | array | 3-4 source types | [...] |
-| `{{deliverables}}` | array | 3-5 expected outputs | [...] |
+| Variable                   | Type   | Description              | Example                              |
+| -------------------------- | ------ | ------------------------ | ------------------------------------ |
+| `{{specialist_name}}`      | string | Human expert name        | "Gary Halbert"                       |
+| `{{specialist_slug}}`      | string | Slug format              | "gary_halbert"                       |
+| `{{activity}}`             | string | Specific activity        | "sales-page"                         |
+| `{{activity_expanded}}`    | string | Expanded description     | "Sales Page Creation"                |
+| `{{domain}}`               | string | Domain area              | "copywriting"                        |
+| `{{time_period}}`          | string | Relevant years           | "1970-2007"                          |
+| `{{agent_purpose}}`        | string | What agent does          | "Create high-converting sales pages" |
+| `{{local_knowledge_note}}` | string | What's already available | "Already have 3,520 lines..."        |
+| `{{scope_items}}`          | array  | 4-6 research angles      | [...]                                |
+| `{{requirements}}`         | array  | 3-4 research parameters  | [...]                                |
+| `{{sources}}`              | array  | 3-4 source types         | [...]                                |
+| `{{deliverables}}`         | array  | 3-5 expected outputs     | [...]                                |
 
 ---
 
@@ -47,10 +47,13 @@
 ## SCOPE
 
 {{#each scope_items}}
+
 ### {{this.number}}. {{this.title}}
+
 {{#each this.sub_points}}
-   - {{this}}
-{{/each}}
+
+- {{this}}
+  {{/each}}
 
 {{/each}}
 
@@ -67,8 +70,9 @@
 ## RECOMMENDED SOURCES
 
 {{#each sources}}
+
 - {{this}}
-{{/each}}
+  {{/each}}
 
 ---
 
@@ -356,12 +360,12 @@ deliverables_extended:
 ### Input Variables
 
 ```yaml
-specialist_name: "{expert-name}"  # e.g., "Eugene Schwartz"
-specialist_slug: "{expert_slug}"  # e.g., "eugene_schwartz"
-activity: "{activity}"  # e.g., "headlines"
-activity_expanded: "{Activity Name}"  # e.g., "Headline Creation"
-domain: "{domain}"  # e.g., "copywriting"
-time_period: "{time-period}"  # e.g., "1950-1995"
+specialist_name: "{expert-name}" # e.g., "Eugene Schwartz"
+specialist_slug: "{expert_slug}" # e.g., "eugene_schwartz"
+activity: "{activity}" # e.g., "headlines"
+activity_expanded: "{Activity Name}" # e.g., "Headline Creation"
+domain: "{domain}" # e.g., "copywriting"
+time_period: "{time-period}" # e.g., "1950-1995"
 agent_purpose: "{agent-purpose-description}"
 local_knowledge_note: "{existing-material-note}"
 ```
@@ -393,36 +397,41 @@ testing methodology.
 ## SCOPE
 
 ### 1. THE 5 AWARENESS LEVELS IN PRACTICE (Not Theory)
-   - Unaware: headlines that worked, common structure
-   - Problem Aware: headlines that worked, common structure
-   - Solution Aware: headlines that worked, common structure
-   - Product Aware: headlines that worked, common structure
-   - Most Aware: headlines that worked, common structure
-   - How to DIAGNOSE which level the market is at
+
+- Unaware: headlines that worked, common structure
+- Problem Aware: headlines that worked, common structure
+- Solution Aware: headlines that worked, common structure
+- Product Aware: headlines that worked, common structure
+- Most Aware: headlines that worked, common structure
+- How to DIAGNOSE which level the market is at
 
 ### 2. HEADLINE CREATION MECHANISM
-   - Schwartz's 33-minute work block process
-   - How many headlines he created before choosing
-   - Selection criteria: what made a headline "winner"
-   - Swipe file usage: how he used references
+
+- Schwartz's 33-minute work block process
+- How many headlines he created before choosing
+- Selection criteria: what made a headline "winner"
+- Swipe file usage: how he used references
 
 ### 3. RECURRING STRUCTURES
-   - Identifiable patterns in Schwartz headlines
-   - "Power words" he used repeatedly
-   - Mathematical headline formulas (if they existed)
-   - Ideal length by context
+
+- Identifiable patterns in Schwartz headlines
+- "Power words" he used repeatedly
+- Mathematical headline formulas (if they existed)
+- Ideal length by context
 
 ### 4. MARKET SOPHISTICATION (Different from Awareness)
-   - The 5 levels of sophistication
-   - How this affected the headline
-   - When to use "new" vs "improved" vs "different"
-   - Saturated markets vs virgin markets
+
+- The 5 levels of sophistication
+- How this affected the headline
+- When to use "new" vs "improved" vs "different"
+- Saturated markets vs virgin markets
 
 ### 5. DOCUMENTED CASES
-   - Headlines from "Breakthrough Advertising"
-   - Mail order headlines he wrote
-   - Documented A/B test results
-   - Headlines rejected vs approved (if documented)
+
+- Headlines from "Breakthrough Advertising"
+- Mail order headlines he wrote
+- Documented A/B test results
+- Headlines rejected vs approved (if documented)
 
 ---
 

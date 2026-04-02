@@ -11,6 +11,7 @@
 Configure your design system infrastructure for AI agent consumption. Ensures tokens are in W3C DTCG format, components have structured metadata, Storybook MCP addon is configured, and AI constraint rules are defined.
 
 ## Input Schema
+
 - **requires:** Output from `ds-agentic-audit`
 - **format:** JSON data
 - **location:** `outputs/design-system/{project}/agentic/agentic-readiness-report.json`
@@ -19,7 +20,7 @@ Configure your design system infrastructure for AI agent consumption. Ensures to
 
 - Design system with existing components
 - Node.js environment for Storybook
-- Completed *agentic-audit recommended (to know gaps)
+- Completed \*agentic-audit recommended (to know gaps)
 
 ## Workflow
 
@@ -31,7 +32,7 @@ Configure your design system infrastructure for AI agent consumption. Ensures to
    - Target: which AI tools will consume the DS (Claude Code, Cursor, Copilot)
 
 2. **Confirm Scope**
-   - Show current state from *agentic-audit (if available)
+   - Show current state from \*agentic-audit (if available)
    - Confirm which gaps to address
    - Prioritize: tokens first, then component metadata, then MCP
 
@@ -93,11 +94,11 @@ Configure your design system infrastructure for AI agent consumption. Ensures to
 - MCP endpoint returns valid component data
 - AI constraint rules cover entire component library
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

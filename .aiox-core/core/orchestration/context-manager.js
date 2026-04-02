@@ -14,8 +14,8 @@
  * @version 1.0.0
  */
 
-const fs = require('fs-extra');
-const path = require('path');
+const fs = require("fs-extra");
+const path = require("path");
 
 /**
  * Manages workflow execution context and state persistence
@@ -30,10 +30,10 @@ class ContextManager {
     this.projectRoot = projectRoot;
 
     // State file path
-    this.stateDir = path.join(projectRoot, '.aiox', 'workflow-state');
+    this.stateDir = path.join(projectRoot, ".aiox", "workflow-state");
     this.statePath = path.join(this.stateDir, `${workflowId}.json`);
-    this.handoffDir = path.join(this.stateDir, 'handoffs');
-    this.confidenceDir = path.join(this.stateDir, 'confidence');
+    this.handoffDir = path.join(this.stateDir, "handoffs");
+    this.confidenceDir = path.join(this.stateDir, "confidence");
 
     // In-memory cache
     this._stateCache = null;
@@ -73,7 +73,7 @@ class ContextManager {
   _createInitialState() {
     return {
       workflowId: this.workflowId,
-      status: 'initialized',
+      status: "initialized",
       startedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       currentPhase: 0,
@@ -122,8 +122,14 @@ class ContextManager {
     const state = await this.loadState();
     const completedAt = new Date().toISOString();
     state.currentPhase = phaseNum;
-    state.status = 'in_progress';
-    const handoff = this._buildHandoffPackage(phaseNum, output, state, options, completedAt);
+    state.status = "in_progress";
+    const handoff = this._buildHandoffPackage(
+      phaseNum,
+      output,
+      state,
+      options,
+      completedAt,
+    );
 
     state.phases[phaseNum] = {
       ...output,
@@ -131,7 +137,8 @@ class ContextManager {
       handoff,
     };
     state.metadata = state.metadata || {};
-    state.metadata.delivery_confidence = this._calculateDeliveryConfidence(state);
+    state.metadata.delivery_confidence =
+      this._calculateDeliveryConfidence(state);
 
     this._stateCache = state;
     await this._saveState();
@@ -198,7 +205,7 @@ class ContextManager {
    */
   async markCompleted() {
     const state = await this.loadState();
-    state.status = 'completed';
+    state.status = "completed";
     state.completedAt = new Date().toISOString();
     this._stateCache = state;
     await this._saveState();
@@ -211,7 +218,7 @@ class ContextManager {
    */
   async markFailed(error, failedPhase) {
     const state = await this.loadState();
-    state.status = 'failed';
+    state.status = "failed";
     state.error = error;
     state.failedPhase = failedPhase;
     state.failedAt = new Date().toISOString();
@@ -289,7 +296,7 @@ class ContextManager {
     const risks = this._extractOpenRisks(output);
 
     return {
-      version: '1.0.0',
+      version: "1.0.0",
       workflow_id: this.workflowId,
       generated_at: completedAt,
       from: {
@@ -318,8 +325,11 @@ class ContextManager {
    * @private
    */
   async _saveHandoffFile(handoff) {
-    const phase = handoff?.from?.phase || 'unknown';
-    const filePath = path.join(this.handoffDir, `${this.workflowId}-phase-${phase}.handoff.json`);
+    const phase = handoff?.from?.phase || "unknown";
+    const filePath = path.join(
+      this.handoffDir,
+      `${this.workflowId}-phase-${phase}.handoff.json`,
+    );
     await fs.ensureDir(this.handoffDir);
     await fs.writeJson(filePath, handoff, { spaces: 2 });
   }
@@ -330,7 +340,10 @@ class ContextManager {
    */
   async _saveConfidenceFile(confidence) {
     if (!confidence) return;
-    const filePath = path.join(this.confidenceDir, `${this.workflowId}.delivery-confidence.json`);
+    const filePath = path.join(
+      this.confidenceDir,
+      `${this.workflowId}.delivery-confidence.json`,
+    );
     await fs.ensureDir(this.confidenceDir);
     await fs.writeJson(filePath, confidence, { spaces: 2 });
   }
@@ -407,10 +420,10 @@ class ContextManager {
     const phases = Object.values(state.phases || {});
     const weights = {
       test_coverage: 0.25,
-      ac_completion: 0.30,
-      risk_score_inv: 0.20,
+      ac_completion: 0.3,
+      risk_score_inv: 0.2,
       debt_score_inv: 0.15,
-      regression_clear: 0.10,
+      regression_clear: 0.1,
     };
     const components = {
       test_coverage: this._calculateTestCoverage(phases),
@@ -428,14 +441,14 @@ class ContextManager {
     const threshold = this._resolveConfidenceThreshold();
 
     return {
-      version: '1.0.0',
+      version: "1.0.0",
       calculated_at: new Date().toISOString(),
       score,
       threshold,
       gate_passed: score >= threshold,
       formula: {
         expression:
-          'confidence = (test_coverage*0.25 + ac_completion*0.30 + risk_score_inv*0.20 + debt_score_inv*0.15 + regression_clear*0.10) * 100',
+          "confidence = (test_coverage*0.25 + ac_completion*0.30 + risk_score_inv*0.20 + debt_score_inv*0.15 + regression_clear*0.10) * 100",
         weights,
       },
       components,
@@ -485,14 +498,22 @@ class ContextManager {
 
     for (const phase of phases) {
       const result = phase?.result || {};
-      if (Number.isFinite(result.ac_total) && Number.isFinite(result.ac_completed)) {
+      if (
+        Number.isFinite(result.ac_total) &&
+        Number.isFinite(result.ac_completed)
+      ) {
         hasExplicitData = true;
         total += Math.max(0, result.ac_total);
-        done += Math.min(Math.max(0, result.ac_completed), Math.max(0, result.ac_total));
+        done += Math.min(
+          Math.max(0, result.ac_completed),
+          Math.max(0, result.ac_total),
+        );
       } else if (Array.isArray(result.acceptance_criteria)) {
         hasExplicitData = true;
         total += result.acceptance_criteria.length;
-        done += result.acceptance_criteria.filter((item) => item?.done || item?.status === 'done').length;
+        done += result.acceptance_criteria.filter(
+          (item) => item?.done || item?.status === "done",
+        ).length;
       }
     }
 
@@ -504,7 +525,9 @@ class ContextManager {
       return 0;
     }
 
-    const successful = phases.filter((phase) => phase?.result?.status !== 'failed').length;
+    const successful = phases.filter(
+      (phase) => phase?.result?.status !== "failed",
+    ).length;
     return successful / phases.length;
   }
 
@@ -513,7 +536,9 @@ class ContextManager {
    */
   _calculateRiskInverseScore(phases) {
     const totalRisks = phases.reduce((sum, phase) => {
-      const handoffRisks = Array.isArray(phase?.handoff?.open_risks) ? phase.handoff.open_risks.length : 0;
+      const handoffRisks = Array.isArray(phase?.handoff?.open_risks)
+        ? phase.handoff.open_risks.length
+        : 0;
       const resultRisks = this._extractOpenRisks(phase).length;
       return sum + Math.max(handoffRisks, resultRisks);
     }, 0);
@@ -537,7 +562,10 @@ class ContextManager {
         result.debt_items,
         result.todos,
         result.hacks,
-      ].reduce((listSum, list) => listSum + (Array.isArray(list) ? list.length : 0), 0);
+      ].reduce(
+        (listSum, list) => listSum + (Array.isArray(list) ? list.length : 0),
+        0,
+      );
       return sum + explicitCount + listCount;
     }, 0);
 
@@ -556,12 +584,13 @@ class ContextManager {
       if (!Array.isArray(checks)) continue;
 
       for (const check of checks) {
-        const type = String(check?.type || '').toLowerCase();
-        const pathValue = String(check?.path || '').toLowerCase();
-        const checklist = String(check?.checklist || '').toLowerCase();
-        const isRegression = type.includes('regression')
-          || pathValue.includes('regression')
-          || checklist.includes('regression');
+        const type = String(check?.type || "").toLowerCase();
+        const pathValue = String(check?.path || "").toLowerCase();
+        const checklist = String(check?.checklist || "").toLowerCase();
+        const isRegression =
+          type.includes("regression") ||
+          pathValue.includes("regression") ||
+          checklist.includes("regression");
 
         if (!isRegression) continue;
         totalRegressionChecks += 1;
@@ -584,7 +613,9 @@ class ContextManager {
    */
   async reset(keepMetadata = true) {
     // Preserve metadata if requested, defaulting to empty object if cache is null
-    const savedMetadata = keepMetadata ? (this._stateCache?.metadata ?? {}) : {};
+    const savedMetadata = keepMetadata
+      ? (this._stateCache?.metadata ?? {})
+      : {};
     this._stateCache = this._createInitialState();
     // Merge saved metadata with default metadata from _createInitialState
     this._stateCache.metadata = {

@@ -17,7 +17,7 @@ input:
   target: "Alex Hormozi"
   params:
     domain: "business"
-    user_materials_path: null  # No user materials, web search only
+    user_materials_path: null # No user materials, web search only
   context_files: []
 
 expected_output:

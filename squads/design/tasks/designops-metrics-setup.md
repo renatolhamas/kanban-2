@@ -16,6 +16,7 @@ This task guides the establishment of a comprehensive DesignOps measurement syst
 ## Malouf Framework Reference
 
 ### The Metrics Stack
+
 ```
                IMPACT METRICS
               (Business Value)
@@ -28,14 +29,16 @@ This task guides the establishment of a comprehensive DesignOps measurement syst
 ```
 
 ### Core Principle
+
 > "You can't improve what you don't measure - but also, not everything needs measuring."
 
 ### Metrics by Three Lenses
-| Lens | Output Examples | Outcome Examples | Impact Examples |
-|------|-----------------|------------------|-----------------|
-| How We Work | Throughput, cycle time | Quality, handoff success | Time to market |
-| How We Grow | Hiring velocity, training hours | Retention, time to productivity | Talent attraction |
-| How We Thrive | Community participation | Satisfaction scores | Design influence |
+
+| Lens          | Output Examples                 | Outcome Examples                | Impact Examples   |
+| ------------- | ------------------------------- | ------------------------------- | ----------------- |
+| How We Work   | Throughput, cycle time          | Quality, handoff success        | Time to market    |
+| How We Grow   | Hiring velocity, training hours | Retention, time to productivity | Talent attraction |
+| How We Thrive | Community participation         | Satisfaction scores             | Design influence  |
 
 ## Task Steps
 
@@ -419,23 +422,23 @@ dashboard_template: |
 
 ## Common Mistakes to Avoid
 
-| Mistake | Why Bad | Instead |
-|---------|---------|---------|
-| Only output metrics | Incentivizes activity over value | Add outcome and impact |
-| Too many metrics | Analysis paralysis | Start with 5-10 key metrics |
-| No baseline | Can't show improvement | Measure before changing |
-| Data without story | Numbers don't drive action | Add narrative context |
-| Static metrics | Needs evolve | Review quarterly |
+| Mistake             | Why Bad                          | Instead                     |
+| ------------------- | -------------------------------- | --------------------------- |
+| Only output metrics | Incentivizes activity over value | Add outcome and impact      |
+| Too many metrics    | Analysis paralysis               | Start with 5-10 key metrics |
+| No baseline         | Can't show improvement           | Measure before changing     |
+| Data without story  | Numbers don't drive action       | Add narrative context       |
+| Static metrics      | Needs evolve                     | Review quarterly            |
 
 ## Metrics Maturity Journey
 
-| Level | Characteristics | Focus |
-|-------|-----------------|-------|
-| 1. Ad Hoc | No formal metrics | Establish any baseline |
-| 2. Basic | Output metrics tracked | Add consistency |
-| 3. Developing | Output + some outcome | Add outcome metrics |
-| 4. Mature | Full stack tracked | Connect to business |
-| 5. Optimized | Predictive, automated | Continuous improvement |
+| Level         | Characteristics        | Focus                  |
+| ------------- | ---------------------- | ---------------------- |
+| 1. Ad Hoc     | No formal metrics      | Establish any baseline |
+| 2. Basic      | Output metrics tracked | Add consistency        |
+| 3. Developing | Output + some outcome  | Add outcome metrics    |
+| 4. Mature     | Full stack tracked     | Connect to business    |
+| 5. Optimized  | Predictive, automated  | Continuous improvement |
 
 ## Related Tasks
 
@@ -453,13 +456,14 @@ dashboard_template: |
 
 > "The purpose of metrics is not to have dashboards. The purpose is to make better decisions. If your metrics aren't driving decisions, you're measuring the wrong things."
 
-
 ## Process Guards
+
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
+
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

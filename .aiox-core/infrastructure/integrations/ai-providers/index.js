@@ -7,9 +7,9 @@
  * @see Epic GEMINI-INT - Story 2: AI Provider Factory Pattern
  */
 
-const { AIProvider } = require('./ai-provider');
-const { ClaudeProvider } = require('./claude-provider');
-const { GeminiProvider } = require('./gemini-provider');
+const { AIProvider } = require("./ai-provider");
+const { ClaudeProvider } = require("./claude-provider");
+const { GeminiProvider } = require("./gemini-provider");
 const {
   getProvider,
   getPrimaryProvider,
@@ -20,7 +20,7 @@ const {
   getProvidersStatus,
   clearProviderCache,
   getConfig,
-} = require('./ai-provider-factory');
+} = require("./ai-provider-factory");
 
 module.exports = {
   // Base class

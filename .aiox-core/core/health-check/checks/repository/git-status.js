@@ -8,8 +8,8 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { execSync } = require('child_process');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const { execSync } = require("child_process");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Git status check
@@ -20,15 +20,16 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 class GitStatusCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'repository.git-status',
-      name: 'Git Status',
-      description: 'Checks for uncommitted changes and working directory status',
+      id: "repository.git-status",
+      name: "Git Status",
+      description:
+        "Checks for uncommitted changes and working directory status",
       domain: CheckDomain.REPOSITORY,
       severity: CheckSeverity.LOW,
       timeout: 5000,
       cacheable: false, // Status changes frequently
       healingTier: 0,
-      tags: ['git', 'status'],
+      tags: ["git", "status"],
     });
   }
 
@@ -42,15 +43,15 @@ class GitStatusCheck extends BaseCheck {
 
     try {
       // Get status
-      const status = execSync('git status --porcelain', {
+      const status = execSync("git status --porcelain", {
         cwd: projectRoot,
-        encoding: 'utf8',
+        encoding: "utf8",
         windowsHide: true,
       });
 
       const lines = status
         .trim()
-        .split('\n')
+        .split("\n")
         .filter((l) => l);
       const staged = [];
       const modified = [];
@@ -61,13 +62,13 @@ class GitStatusCheck extends BaseCheck {
         const workTreeStatus = line[1];
         const file = line.substring(3);
 
-        if (indexStatus === '?') {
+        if (indexStatus === "?") {
           untracked.push(file);
-        } else if (indexStatus !== ' ') {
+        } else if (indexStatus !== " ") {
           staged.push(file);
         }
 
-        if (workTreeStatus === 'M' || workTreeStatus === 'D') {
+        if (workTreeStatus === "M" || workTreeStatus === "D") {
           modified.push(file);
         }
       }
@@ -82,13 +83,16 @@ class GitStatusCheck extends BaseCheck {
       // Check if ahead/behind remote
       let aheadBehind = { ahead: 0, behind: 0 };
       try {
-        const revList = execSync('git rev-list --left-right --count HEAD...@{u}', {
-          cwd: projectRoot,
-          encoding: 'utf8',
-          windowsHide: true,
-        }).trim();
+        const revList = execSync(
+          "git rev-list --left-right --count HEAD...@{u}",
+          {
+            cwd: projectRoot,
+            encoding: "utf8",
+            windowsHide: true,
+          },
+        ).trim();
 
-        const [ahead, behind] = revList.split('\t').map(Number);
+        const [ahead, behind] = revList.split("\t").map(Number);
         aheadBehind = { ahead, behind };
         details.ahead = ahead;
         details.behind = behind;
@@ -102,7 +106,7 @@ class GitStatusCheck extends BaseCheck {
           return this.warning(
             `Working directory clean, ${aheadBehind.ahead} commit(s) ahead of remote`,
             {
-              recommendation: 'Consider pushing your commits',
+              recommendation: "Consider pushing your commits",
               details,
             },
           );
@@ -112,13 +116,13 @@ class GitStatusCheck extends BaseCheck {
           return this.warning(
             `Working directory clean, ${aheadBehind.behind} commit(s) behind remote`,
             {
-              recommendation: 'Consider pulling latest changes',
+              recommendation: "Consider pulling latest changes",
               details,
             },
           );
         }
 
-        return this.pass('Working directory clean and in sync', { details });
+        return this.pass("Working directory clean and in sync", { details });
       }
 
       // Has changes
@@ -127,17 +131,20 @@ class GitStatusCheck extends BaseCheck {
       if (modified.length > 0) parts.push(`${modified.length} modified`);
       if (untracked.length > 0) parts.push(`${untracked.length} untracked`);
 
-      return this.warning(`Working directory has changes: ${parts.join(', ')}`, {
-        recommendation: 'Commit or stash changes before major operations',
-        details: {
-          ...details,
-          files: {
-            staged: staged.slice(0, 5),
-            modified: modified.slice(0, 5),
-            untracked: untracked.slice(0, 5),
+      return this.warning(
+        `Working directory has changes: ${parts.join(", ")}`,
+        {
+          recommendation: "Commit or stash changes before major operations",
+          details: {
+            ...details,
+            files: {
+              staged: staged.slice(0, 5),
+              modified: modified.slice(0, 5),
+              untracked: untracked.slice(0, 5),
+            },
           },
         },
-      });
+      );
     } catch (error) {
       return this.error(`Git status check failed: ${error.message}`, error);
     }

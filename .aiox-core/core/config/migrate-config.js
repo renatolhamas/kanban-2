@@ -15,21 +15,21 @@
  * @created 2026-02-05 (Story 12.2)
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+const yaml = require("js-yaml");
 
 /**
  * Fields that belong in L5 User config (~/.aiox/user-config.yaml).
  * These are user-specific, cross-project preferences.
  */
 const USER_FIELDS = [
-  'user_profile',
-  'default_model',
-  'default_language',
-  'coderabbit_integration',
-  'educational_mode',
+  "user_profile",
+  "default_model",
+  "default_language",
+  "coderabbit_integration",
+  "educational_mode",
 ];
 
 /**
@@ -37,10 +37,10 @@ const USER_FIELDS = [
  * These are project-specific, team-shared settings.
  */
 const PROJECT_FIELDS = [
-  'project_name',
-  'project_type',
-  'environments',
-  'deploy_target',
+  "project_name",
+  "project_type",
+  "environments",
+  "deploy_target",
 ];
 
 /**
@@ -50,8 +50,12 @@ const PROJECT_FIELDS = [
  * @returns {boolean} True if in legacy mode
  */
 function isLegacyMode(projectRoot) {
-  const legacyPath = path.join(projectRoot, '.aiox-core', 'core-config.yaml');
-  const frameworkPath = path.join(projectRoot, '.aiox-core', 'framework-config.yaml');
+  const legacyPath = path.join(projectRoot, ".aiox-core", "core-config.yaml");
+  const frameworkPath = path.join(
+    projectRoot,
+    ".aiox-core",
+    "framework-config.yaml",
+  );
   return fs.existsSync(legacyPath) && !fs.existsSync(frameworkPath);
 }
 
@@ -62,8 +66,12 @@ function isLegacyMode(projectRoot) {
  * @returns {string|null} Backup file path, or null if already backed up
  */
 function createBackup(projectRoot) {
-  const legacyPath = path.join(projectRoot, '.aiox-core', 'core-config.yaml');
-  const backupPath = path.join(projectRoot, '.aiox-core', 'core-config.backup.yaml');
+  const legacyPath = path.join(projectRoot, ".aiox-core", "core-config.yaml");
+  const backupPath = path.join(
+    projectRoot,
+    ".aiox-core",
+    "core-config.backup.yaml",
+  );
 
   if (!fs.existsSync(legacyPath)) {
     return null;
@@ -95,7 +103,7 @@ function extractUserFields(legacyConfig) {
 
   // Default user_profile if not present
   if (!userConfig.user_profile) {
-    userConfig.user_profile = 'advanced';
+    userConfig.user_profile = "advanced";
   }
 
   return userConfig;
@@ -117,7 +125,7 @@ function extractProjectFields(legacyConfig) {
   }
 
   // Extract from nested 'project' key if present
-  if (legacyConfig.project && typeof legacyConfig.project === 'object') {
+  if (legacyConfig.project && typeof legacyConfig.project === "object") {
     if (legacyConfig.project.type && !projectConfig.project_type) {
       projectConfig.project_type = legacyConfig.project.type;
     }
@@ -132,7 +140,7 @@ function extractProjectFields(legacyConfig) {
  * @returns {string} Path to ~/.aiox/ directory
  */
 function ensureUserConfigDir() {
-  const dir = path.join(os.homedir(), '.aiox');
+  const dir = path.join(os.homedir(), ".aiox");
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
   }
@@ -148,12 +156,12 @@ function ensureUserConfigDir() {
  */
 function writeUserConfig(userFields) {
   ensureUserConfigDir();
-  const userConfigPath = path.join(os.homedir(), '.aiox', 'user-config.yaml');
+  const userConfigPath = path.join(os.homedir(), ".aiox", "user-config.yaml");
 
   let existing = {};
   try {
     if (fs.existsSync(userConfigPath)) {
-      const content = fs.readFileSync(userConfigPath, 'utf8');
+      const content = fs.readFileSync(userConfigPath, "utf8");
       existing = yaml.load(content) || {};
     }
   } catch {
@@ -164,7 +172,7 @@ function writeUserConfig(userFields) {
   const merged = { ...userFields, ...existing };
 
   const content = yaml.dump(merged, { lineWidth: -1 });
-  fs.writeFileSync(userConfigPath, content, 'utf8');
+  fs.writeFileSync(userConfigPath, content, "utf8");
 
   return userConfigPath;
 }
@@ -178,12 +186,16 @@ function writeUserConfig(userFields) {
  * @returns {string} Path to project config file
  */
 function writeProjectConfig(projectRoot, projectFields) {
-  const projectConfigPath = path.join(projectRoot, '.aiox-core', 'project-config.yaml');
+  const projectConfigPath = path.join(
+    projectRoot,
+    ".aiox-core",
+    "project-config.yaml",
+  );
 
   let existing = {};
   try {
     if (fs.existsSync(projectConfigPath)) {
-      const content = fs.readFileSync(projectConfigPath, 'utf8');
+      const content = fs.readFileSync(projectConfigPath, "utf8");
       existing = yaml.load(content) || {};
     }
   } catch {
@@ -199,7 +211,7 @@ function writeProjectConfig(projectRoot, projectFields) {
   }
 
   const content = yaml.dump(merged, { lineWidth: -1 });
-  fs.writeFileSync(projectConfigPath, content, 'utf8');
+  fs.writeFileSync(projectConfigPath, content, "utf8");
 
   return projectConfigPath;
 }
@@ -230,18 +242,20 @@ function migrateConfig(projectRoot, options = {}) {
     projectFields: null,
   };
 
-  const legacyPath = path.join(projectRoot, '.aiox-core', 'core-config.yaml');
+  const legacyPath = path.join(projectRoot, ".aiox-core", "core-config.yaml");
 
   // Check if legacy config exists
   if (!fs.existsSync(legacyPath)) {
-    result.warnings.push('No legacy core-config.yaml found. Nothing to migrate.');
+    result.warnings.push(
+      "No legacy core-config.yaml found. Nothing to migrate.",
+    );
     return result;
   }
 
   // Parse legacy config
   let legacyConfig;
   try {
-    const content = fs.readFileSync(legacyPath, 'utf8');
+    const content = fs.readFileSync(legacyPath, "utf8");
     legacyConfig = yaml.load(content) || {};
   } catch (error) {
     result.warnings.push(`Failed to parse core-config.yaml: ${error.message}`);
@@ -256,7 +270,7 @@ function migrateConfig(projectRoot, options = {}) {
   result.projectFields = projectFields;
 
   if (options.dryRun) {
-    result.warnings.push('Dry run — no files written.');
+    result.warnings.push("Dry run — no files written.");
     return result;
   }
 

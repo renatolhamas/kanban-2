@@ -64,7 +64,6 @@ inputs:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 phases:
-
   # ─────────────────────────────────────────────────────────────────────────────
   # PHASE -1: BROWNFIELD CHECK (if mode == brownfield)
   # ─────────────────────────────────────────────────────────────────────────────
@@ -114,7 +113,7 @@ phases:
     name: Source Collection & Validation
     duration: 30-60 min
     task: collect-sources.md
-    blocking: true  # NÃO prosseguir sem passar
+    blocking: true # NÃO prosseguir sem passar
 
     purpose: |
       "Single source = hypothesis; three sources = pattern"
@@ -472,7 +471,7 @@ output_template: |
 
 execution:
   mode: sequential
-  parallel_phases: [1, 2]  # Voice e Thinking podem rodar em paralelo
+  parallel_phases: [1, 2] # Voice e Thinking podem rodar em paralelo
 
   commands:
     full: "*clone-mind {name} --domain {domain}"

@@ -11,30 +11,34 @@
  */
 
 // Config subsystem
-const { ConfigCache, globalConfigCache } = require('./config/config-cache');
-const configLoader = require('./config/config-loader');
+const { ConfigCache, globalConfigCache } = require("./config/config-cache");
+const configLoader = require("./config/config-loader");
 
 // Session management
-const ContextDetector = require('./session/context-detector');
-const SessionContextLoader = require('./session/context-loader');
+const ContextDetector = require("./session/context-detector");
+const SessionContextLoader = require("./session/context-loader");
 
 // Elicitation system
-const ElicitationEngine = require('./elicitation/elicitation-engine');
-const ElicitationSessionManager = require('./elicitation/session-manager');
-const agentElicitationSteps = require('./elicitation/agent-elicitation');
-const taskElicitationSteps = require('./elicitation/task-elicitation');
-const workflowElicitationSteps = require('./elicitation/workflow-elicitation');
+const ElicitationEngine = require("./elicitation/elicitation-engine");
+const ElicitationSessionManager = require("./elicitation/session-manager");
+const agentElicitationSteps = require("./elicitation/agent-elicitation");
+const taskElicitationSteps = require("./elicitation/task-elicitation");
+const workflowElicitationSteps = require("./elicitation/workflow-elicitation");
 
 // Utilities
-const PersonalizedOutputFormatter = require('./utils/output-formatter');
-const YAMLValidator = require('./utils/yaml-validator');
-const { validateYAML } = require('./utils/yaml-validator');
+const PersonalizedOutputFormatter = require("./utils/output-formatter");
+const YAMLValidator = require("./utils/yaml-validator");
+const { validateYAML } = require("./utils/yaml-validator");
 
 // Service Registry
-const { ServiceRegistry, getRegistry, loadRegistry } = require('./registry/registry-loader');
+const {
+  ServiceRegistry,
+  getRegistry,
+  loadRegistry,
+} = require("./registry/registry-loader");
 
 // Health Check System
-const healthCheck = require('./health-check');
+const healthCheck = require("./health-check");
 
 /**
  * Core module exports
@@ -83,6 +87,6 @@ module.exports = {
   healthCheck,
 
   // Version info
-  version: '2.0.0',
-  moduleName: 'core',
+  version: "2.0.0",
+  moduleName: "core",
 };

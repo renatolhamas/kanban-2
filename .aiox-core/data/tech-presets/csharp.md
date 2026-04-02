@@ -9,9 +9,9 @@
 ```yaml
 preset:
   id: csharp
-  name: 'C# ASP.NET Core Preset'
+  name: "C# ASP.NET Core Preset"
   version: 1.0.0
-  description: 'Arquitetura para APIs em .NET 9+ com camadas claras, EF Core e testes automatizados'
+  description: "Arquitetura para APIs em .NET 9+ com camadas claras, EF Core e testes automatizados"
   technologies:
     - C# 13
     - .NET 9
@@ -21,12 +21,12 @@ preset:
     - xUnit
     - Testcontainers
   suitable_for:
-    - 'APIs enterprise'
-    - 'Sistemas internos corporativos'
-    - 'Backends com integracao Microsoft stack'
+    - "APIs enterprise"
+    - "Sistemas internos corporativos"
+    - "Backends com integracao Microsoft stack"
   not_suitable_for:
-    - 'Aplicacoes front-end puras'
-    - 'Projetos scripts de baixa complexidade'
+    - "Aplicacoes front-end puras"
+    - "Projetos scripts de baixa complexidade"
 ```
 
 ---
@@ -227,17 +227,17 @@ public sealed class PlaceOrderCommandBuilder
 
 ## Tech Stack
 
-| Category | Technology | Version | Purpose |
-| -------- | ---------- | ------- | ------- |
-| Runtime | .NET | 9+ | Plataforma principal |
-| Language | C# | 13 | Linguagem base |
-| API | ASP.NET Core | 9+ | Endpoints HTTP |
-| Persistence | EF Core | 9+ | ORM e migrations |
-| Validation | FluentValidation | latest | Validacao de comandos |
-| Mapping | Mapster | latest | Mapping controlado |
-| Unit Test | xUnit | latest | Testes unitarios |
-| Assertion | FluentAssertions | latest | Assertivas legiveis |
-| Integration | Testcontainers | latest | Infra real em testes |
+| Category    | Technology       | Version | Purpose               |
+| ----------- | ---------------- | ------- | --------------------- |
+| Runtime     | .NET             | 9+      | Plataforma principal  |
+| Language    | C#               | 13      | Linguagem base        |
+| API         | ASP.NET Core     | 9+      | Endpoints HTTP        |
+| Persistence | EF Core          | 9+      | ORM e migrations      |
+| Validation  | FluentValidation | latest  | Validacao de comandos |
+| Mapping     | Mapster          | latest  | Mapping controlado    |
+| Unit Test   | xUnit            | latest  | Testes unitarios      |
+| Assertion   | FluentAssertions | latest  | Assertivas legiveis   |
+| Integration | Testcontainers   | latest  | Infra real em testes  |
 
 ### Required Dependencies
 
@@ -258,14 +258,14 @@ dotnet add tests/App.IntegrationTests package DotNet.Testcontainers
 
 ### Naming Conventions
 
-| Element | Convention | Example |
-| ------- | ---------- | ------- |
-| Projects | `App.<Layer>` | `App.Application` |
-| Classes | PascalCase | `PlaceOrderHandler` |
-| Interfaces | Prefix `I` | `IOrderRepository` |
-| Methods | PascalCase + Async | `HandleAsync` |
-| Files | Match class name | `PlaceOrderHandler.cs` |
-| Constants | UPPER_SNAKE_CASE | `MAX_BATCH_SIZE` |
+| Element    | Convention         | Example                |
+| ---------- | ------------------ | ---------------------- |
+| Projects   | `App.<Layer>`      | `App.Application`      |
+| Classes    | PascalCase         | `PlaceOrderHandler`    |
+| Interfaces | Prefix `I`         | `IOrderRepository`     |
+| Methods    | PascalCase + Async | `HandleAsync`          |
+| Files      | Match class name   | `PlaceOrderHandler.cs` |
+| Constants  | UPPER_SNAKE_CASE   | `MAX_BATCH_SIZE`       |
 
 ### Critical Rules
 
@@ -367,12 +367,12 @@ Primeiro dominio/aplicacao, depois adapter EF/HTTP.
 
 ## Bug Prevention Stack
 
-| Layer | Catches | Implementation |
-| ----- | ------- | -------------- |
-| Compiler + nullable refs | 35% | NRT habilitado |
-| Validation + handlers | 35% | FluentValidation + use case boundaries |
-| Integration tests | 25% | EF + Testcontainers |
-| E2E smoke | 5% | Endpoints criticos |
+| Layer                    | Catches | Implementation                         |
+| ------------------------ | ------- | -------------------------------------- |
+| Compiler + nullable refs | 35%     | NRT habilitado                         |
+| Validation + handlers    | 35%     | FluentValidation + use case boundaries |
+| Integration tests        | 25%     | EF + Testcontainers                    |
+| E2E smoke                | 5%      | Endpoints criticos                     |
 
 ---
 
@@ -459,8 +459,8 @@ app.MapPost("/orders", async (PlaceOrderRequest request, PlaceOrderHandler handl
 
 ## Changelog
 
-| Date       | Version | Changes |
-| ---------- | ------- | ------- |
+| Date       | Version | Changes           |
+| ---------- | ------- | ----------------- |
 | 2026-02-19 | 1.0.0   | Initial C# preset |
 
 ---

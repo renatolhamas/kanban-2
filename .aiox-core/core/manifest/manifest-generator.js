@@ -9,9 +9,9 @@
  * @story 2.13 - Manifest System
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * CSV escape helper - escapes special characters in CSV values
@@ -19,9 +19,9 @@ const yaml = require('js-yaml');
  * @returns {string} Escaped value
  */
 function escapeCSV(value) {
-  if (value === null || value === undefined) return '';
+  if (value === null || value === undefined) return "";
   const str = String(value);
-  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+  if (str.includes(",") || str.includes('"') || str.includes("\n")) {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;
@@ -79,7 +79,9 @@ function extractAgentSection(yamlContent) {
     const whenToUseMatch = agentLines.match(/whenToUse:\s*(.+)/);
 
     // Find persona_profile section
-    const personaMatch = yamlContent.match(/persona_profile:\s*\n(?: {2}.+\n)*/m);
+    const personaMatch = yamlContent.match(
+      /persona_profile:\s*\n(?: {2}.+\n)*/m,
+    );
     let archetype = null;
     if (personaMatch) {
       const archetypeMatch = personaMatch[0].match(/archetype:\s*(.+)/);
@@ -111,9 +113,9 @@ function extractAgentSection(yamlContent) {
 class ManifestGenerator {
   constructor(options = {}) {
     this.basePath = options.basePath || process.cwd();
-    this.aioxCoreDir = path.join(this.basePath, '.aiox-core');
-    this.manifestDir = path.join(this.aioxCoreDir, 'manifests');
-    this.version = '2.1.0';
+    this.aioxCoreDir = path.join(this.basePath, ".aiox-core");
+    this.manifestDir = path.join(this.aioxCoreDir, "manifests");
+    this.version = "2.1.0";
   }
 
   /**
@@ -144,7 +146,6 @@ class ManifestGenerator {
       results.agents = agents;
       results.workers = workers;
       results.tasks = tasks;
-
     } catch (error) {
       results.errors.push(error.message);
     }
@@ -158,20 +159,20 @@ class ManifestGenerator {
    * @returns {Promise<object>} Generation result
    */
   async generateAgentsManifest() {
-    const agentsDir = path.join(this.aioxCoreDir, 'development', 'agents');
-    const outputPath = path.join(this.manifestDir, 'agents.csv');
+    const agentsDir = path.join(this.aioxCoreDir, "development", "agents");
+    const outputPath = path.join(this.manifestDir, "agents.csv");
 
     const agents = [];
     const errors = [];
 
     try {
       const files = await fs.readdir(agentsDir);
-      const mdFiles = files.filter(f => f.endsWith('.md'));
+      const mdFiles = files.filter((f) => f.endsWith(".md"));
 
       for (const file of mdFiles) {
         try {
           const filePath = path.join(agentsDir, file);
-          const content = await fs.readFile(filePath, 'utf8');
+          const content = await fs.readFile(filePath, "utf8");
           const parsed = parseYAMLFromMarkdown(content);
 
           if (parsed && parsed.agent) {
@@ -179,14 +180,14 @@ class ManifestGenerator {
             const persona = parsed.persona_profile || parsed.persona || {};
 
             agents.push({
-              id: agent.id || file.replace('.md', ''),
-              name: agent.name || 'Unknown',
-              archetype: persona.archetype || agent.title || 'Agent',
-              icon: agent.icon || '🤖',
+              id: agent.id || file.replace(".md", ""),
+              name: agent.name || "Unknown",
+              archetype: persona.archetype || agent.title || "Agent",
+              icon: agent.icon || "🤖",
               version: this.version,
-              status: 'active',
+              status: "active",
               file_path: `.aiox-core/development/agents/${file}`,
-              when_to_use: agent.whenToUse || '',
+              when_to_use: agent.whenToUse || "",
             });
           }
         } catch (e) {
@@ -195,15 +196,25 @@ class ManifestGenerator {
       }
 
       // Generate CSV content
-      const header = 'id,name,archetype,icon,version,status,file_path,when_to_use';
-      const rows = agents.map(a =>
-        [a.id, a.name, a.archetype, a.icon, a.version, a.status, a.file_path, a.when_to_use]
+      const header =
+        "id,name,archetype,icon,version,status,file_path,when_to_use";
+      const rows = agents.map((a) =>
+        [
+          a.id,
+          a.name,
+          a.archetype,
+          a.icon,
+          a.version,
+          a.status,
+          a.file_path,
+          a.when_to_use,
+        ]
           .map(escapeCSV)
-          .join(','),
+          .join(","),
       );
 
-      const csvContent = [header, ...rows].join('\n');
-      await fs.writeFile(outputPath, csvContent, 'utf8');
+      const csvContent = [header, ...rows].join("\n");
+      await fs.writeFile(outputPath, csvContent, "utf8");
 
       return {
         success: true,
@@ -211,7 +222,6 @@ class ManifestGenerator {
         path: outputPath,
         errors,
       };
-
     } catch (error) {
       return {
         success: false,
@@ -227,34 +237,49 @@ class ManifestGenerator {
    * @returns {Promise<object>} Generation result
    */
   async generateWorkersManifest() {
-    const registryPath = path.join(this.aioxCoreDir, 'core', 'registry', 'service-registry.json');
-    const outputPath = path.join(this.manifestDir, 'workers.csv');
+    const registryPath = path.join(
+      this.aioxCoreDir,
+      "core",
+      "registry",
+      "service-registry.json",
+    );
+    const outputPath = path.join(this.manifestDir, "workers.csv");
 
     try {
-      const registryContent = await fs.readFile(registryPath, 'utf8');
+      const registryContent = await fs.readFile(registryPath, "utf8");
       const registry = JSON.parse(registryContent);
 
-      const workers = registry.workers.map(w => ({
+      const workers = registry.workers.map((w) => ({
         id: w.id,
         name: w.name,
         category: w.category,
-        subcategory: w.subcategory || '',
-        executor_types: (w.executorTypes || []).join(';'),
-        tags: (w.tags || []).join(';'),
+        subcategory: w.subcategory || "",
+        executor_types: (w.executorTypes || []).join(";"),
+        tags: (w.tags || []).join(";"),
         file_path: w.path,
-        status: 'active',
+        status: "active",
       }));
 
       // Generate CSV content
-      const header = 'id,name,category,subcategory,executor_types,tags,file_path,status';
-      const rows = workers.map(w =>
-        [w.id, w.name, w.category, w.subcategory, w.executor_types, w.tags, w.file_path, w.status]
+      const header =
+        "id,name,category,subcategory,executor_types,tags,file_path,status";
+      const rows = workers.map((w) =>
+        [
+          w.id,
+          w.name,
+          w.category,
+          w.subcategory,
+          w.executor_types,
+          w.tags,
+          w.file_path,
+          w.status,
+        ]
           .map(escapeCSV)
-          .join(','),
+          .join(","),
       );
 
-      const csvContent = [header, ...rows].join('\n');
-      await fs.writeFile(outputPath, csvContent, 'utf8');
+      const csvContent = [header, ...rows].join("\n");
+      await fs.writeFile(outputPath, csvContent, "utf8");
 
       return {
         success: true,
@@ -262,7 +287,6 @@ class ManifestGenerator {
         path: outputPath,
         errors: [],
       };
-
     } catch (error) {
       return {
         success: false,
@@ -278,29 +302,30 @@ class ManifestGenerator {
    * @returns {Promise<object>} Generation result
    */
   async generateTasksManifest() {
-    const tasksDir = path.join(this.aioxCoreDir, 'development', 'tasks');
-    const outputPath = path.join(this.manifestDir, 'tasks.csv');
+    const tasksDir = path.join(this.aioxCoreDir, "development", "tasks");
+    const outputPath = path.join(this.manifestDir, "tasks.csv");
 
     const tasks = [];
     const errors = [];
 
     try {
       const files = await fs.readdir(tasksDir);
-      const mdFiles = files.filter(f => f.endsWith('.md'));
+      const mdFiles = files.filter((f) => f.endsWith(".md"));
 
       for (const file of mdFiles) {
         try {
           const filePath = path.join(tasksDir, file);
-          const content = await fs.readFile(filePath, 'utf8');
+          const content = await fs.readFile(filePath, "utf8");
           const parsed = parseYAMLFromMarkdown(content);
 
-          const taskId = file.replace('.md', '');
-          let taskName = taskId.split('-').map(w =>
-            w.charAt(0).toUpperCase() + w.slice(1),
-          ).join(' ');
+          const taskId = file.replace(".md", "");
+          let taskName = taskId
+            .split("-")
+            .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(" ");
 
-          let category = 'general';
-          let format = 'TASK-FORMAT-V1';
+          let category = "general";
+          let format = "TASK-FORMAT-V1";
           let hasElicitation = false;
 
           if (parsed) {
@@ -308,7 +333,8 @@ class ManifestGenerator {
               taskName = parsed.task.name || taskName;
               category = parsed.task.category || category;
               format = parsed.task.format || format;
-              hasElicitation = parsed.task.elicit === true || parsed.elicit === true;
+              hasElicitation =
+                parsed.task.elicit === true || parsed.elicit === true;
             }
             if (parsed.name) taskName = parsed.name;
             if (parsed.category) category = parsed.category;
@@ -317,14 +343,17 @@ class ManifestGenerator {
           }
 
           // Detect category from filename prefix
-          if (taskId.startsWith('db-')) category = 'database';
-          else if (taskId.startsWith('qa-')) category = 'quality';
-          else if (taskId.startsWith('dev-')) category = 'development';
-          else if (taskId.startsWith('po-')) category = 'product';
-          else if (taskId.startsWith('github-')) category = 'devops';
+          if (taskId.startsWith("db-")) category = "database";
+          else if (taskId.startsWith("qa-")) category = "quality";
+          else if (taskId.startsWith("dev-")) category = "development";
+          else if (taskId.startsWith("po-")) category = "product";
+          else if (taskId.startsWith("github-")) category = "devops";
 
           // Detect elicitation from content
-          if (content.includes('elicit: true') || content.includes('elicit=true')) {
+          if (
+            content.includes("elicit: true") ||
+            content.includes("elicit=true")
+          ) {
             hasElicitation = true;
           }
 
@@ -335,24 +364,31 @@ class ManifestGenerator {
             format,
             has_elicitation: hasElicitation,
             file_path: `.aiox-core/development/tasks/${file}`,
-            status: 'active',
+            status: "active",
           });
-
         } catch (e) {
           errors.push(`Error parsing ${file}: ${e.message}`);
         }
       }
 
       // Generate CSV content
-      const header = 'id,name,category,format,has_elicitation,file_path,status';
-      const rows = tasks.map(t =>
-        [t.id, t.name, t.category, t.format, t.has_elicitation, t.file_path, t.status]
+      const header = "id,name,category,format,has_elicitation,file_path,status";
+      const rows = tasks.map((t) =>
+        [
+          t.id,
+          t.name,
+          t.category,
+          t.format,
+          t.has_elicitation,
+          t.file_path,
+          t.status,
+        ]
           .map(escapeCSV)
-          .join(','),
+          .join(","),
       );
 
-      const csvContent = [header, ...rows].join('\n');
-      await fs.writeFile(outputPath, csvContent, 'utf8');
+      const csvContent = [header, ...rows].join("\n");
+      await fs.writeFile(outputPath, csvContent, "utf8");
 
       return {
         success: true,
@@ -360,7 +396,6 @@ class ManifestGenerator {
         path: outputPath,
         errors,
       };
-
     } catch (error) {
       return {
         success: false,

@@ -13,6 +13,7 @@
 Scan codebase to detect UI pattern redundancies (buttons, colors, spacing, typography, forms) and quantify technical debt with hard metrics. Brad's specialty: showing you the horror show you've created. **v4.0: Also evaluates machine-readability for agentic DS workflows and motion token coverage.**
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/audit/pattern-inventory.json`
 - **format:** JSON data
 - **consumed_by:** ds-consolidate-patterns
@@ -55,10 +56,10 @@ This task uses interactive elicitation to gather scan parameters.
    - Check: `test -d $path && test -r $path` — abort with "Path not found or not readable: $path"
 
 2. **Detect Frameworks**
-   - Count React/JSX files (*.jsx, *.tsx)
-   - Count Vue files (*.vue)
-   - Count HTML files (*.html)
-   - Count CSS files (*.css, *.scss, *.sass)
+   - Count React/JSX files (_.jsx, _.tsx)
+   - Count Vue files (\*.vue)
+   - Count HTML files (\*.html)
+   - Count CSS files (_.css, _.scss, \*.sass)
    - Check: file count > 0 for at least one of (.jsx, .tsx, .vue, .html, .css) — abort with "No UI files found in $path"
 
 3. **Scan Button Patterns**
@@ -114,12 +115,12 @@ This task uses interactive elicitation to gather scan parameters.
      last_command: audit
      audit_complete: true
      inventory_file: pattern-inventory.json
-     scan_path: {path}
-     timestamp: {ISO-8601}
+     scan_path: { path }
+     timestamp: { ISO-8601 }
      summary:
-       total_files: {count}
-       patterns_found: {count}
-       redundancy_score: {score}
+       total_files: { count }
+       patterns_found: { count }
+       redundancy_score: { score }
      ```
    - Check: `test -f .state.yaml` AND YAML parses without error — abort with "State file missing or invalid YAML"
 
@@ -223,6 +224,7 @@ This task uses interactive elicitation to gather scan parameters.
 ```
 
 Output:
+
 ```
 🔍 Brad: Scanning ./src for UI chaos...
 
@@ -261,13 +263,13 @@ Output shows Vue-specific patterns (v-btn, el-button, etc.)
 - Colors >50 unique values = major consolidation opportunity
 - Buttons >20 variations = serious pattern explosion
 - Run this audit periodically to prevent pattern regression
-- Brad recommends: If redundancy factors are high, run *consolidate next
-- For cost analysis of this waste, run *calculate-roi after audit
+- Brad recommends: If redundancy factors are high, run \*consolidate next
+- For cost analysis of this waste, run \*calculate-roi after audit
 - v4.0: Also scan for animation/transition values as motion token candidates
 - v4.0: Check machine-readability score (Storybook, structured tokens, docs) per agentic-ds-principles.md
 - v4.0: Use *motion-audit for deep animation analysis, *agentic-audit for full agentic readiness
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
-

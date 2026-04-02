@@ -26,9 +26,9 @@ task_anatomy:
           - "Validate Agent Coherence"
           - "Generate Workflow YAML"
         invalid:
-          - "Mind DNA extraction"  # noun phrase
-          - "The extraction task"  # article
-          - "DNA"  # too vague
+          - "Mind DNA extraction" # noun phrase
+          - "The extraction task" # article
+          - "DNA" # too vague
 
     - field: "status"
       type: "enum"
@@ -54,9 +54,9 @@ task_anatomy:
           - "Human"
           - "System"
         invalid:
-          - "someone"  # vague
-          - "TBD"  # undefined
-          - ""  # empty
+          - "someone" # vague
+          - "TBD" # undefined
+          - "" # empty
 
     - field: "execution_type"
       type: "enum"
@@ -96,9 +96,9 @@ task_anatomy:
           - "1-2h"
           - "3 days"
         invalid:
-          - "30"  # no unit
-          - "quick"  # vague
-          - "ASAP"  # not a time
+          - "30" # no unit
+          - "quick" # vague
+          - "ASAP" # not a time
 
     - field: "input"
       type: "array"

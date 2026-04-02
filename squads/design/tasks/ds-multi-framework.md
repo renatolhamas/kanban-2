@@ -86,11 +86,11 @@ Design a strategy to make your design system work across multiple frameworks (Re
 - No functionality loss compared to framework-native implementation
 - Clear migration path with prioritized component list
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

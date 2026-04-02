@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const process = require('process');
+const fs = require("fs");
+const path = require("path");
+const process = require("process");
 const {
   buildGeneratedConfig,
   getCanonicalProjection,
   getDesignPaths,
   readYaml,
-  stableJson
-} = require('./design_manifest_lib.cjs');
+  stableJson,
+} = require("./design_manifest_lib.cjs");
 
 function fail(message) {
   console.error(`ERROR: ${message}`);
@@ -17,13 +17,13 @@ function fail(message) {
 }
 
 function validateSquadReferences(rootDir, squad) {
-  const base = path.join(rootDir, 'squads/design');
+  const base = path.join(rootDir, "squads/design");
   const checks = [
-    ['agents', '.md'],
-    ['tasks', '.md'],
-    ['checklists', '.md'],
-    ['templates', null],
-    ['workflows', null]
+    ["agents", ".md"],
+    ["tasks", ".md"],
+    ["checklists", ".md"],
+    ["templates", null],
+    ["workflows", null],
   ];
 
   for (const [section, extension] of checks) {
@@ -31,7 +31,9 @@ function validateSquadReferences(rootDir, squad) {
     for (const item of items) {
       const file = item.file;
       if (!file) {
-        fail(`Missing file field in squad.${section} item: ${item.id || 'unknown-id'}`);
+        fail(
+          `Missing file field in squad.${section} item: ${item.id || "unknown-id"}`,
+        );
       }
 
       const fullPath = path.join(base, file);
@@ -40,7 +42,9 @@ function validateSquadReferences(rootDir, squad) {
       }
 
       if (extension && !file.endsWith(extension)) {
-        fail(`Invalid extension in squad.${section}: ${file} (expected ${extension})`);
+        fail(
+          `Invalid extension in squad.${section}: ${file} (expected ${extension})`,
+        );
       }
     }
   }
@@ -63,10 +67,10 @@ function main() {
   const expectedJson = stableJson(expectedCanonical);
 
   if (actualJson !== expectedJson) {
-    fail('Design manifest drift detected. Run: npm run design:manifest:sync');
+    fail("Design manifest drift detected. Run: npm run design:manifest:sync");
   }
 
-  console.log('PASS: design manifest is synchronized with squad.yaml');
+  console.log("PASS: design manifest is synchronized with squad.yaml");
 }
 
 main();

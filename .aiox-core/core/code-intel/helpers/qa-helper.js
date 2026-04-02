@@ -1,20 +1,20 @@
-'use strict';
+"use strict";
 
-const { getEnricher, getClient, isCodeIntelAvailable } = require('../index');
+const { getEnricher, getClient, isCodeIntelAvailable } = require("../index");
 
 // Risk level thresholds based on blast radius (reference count)
 // Consistent with dev-helper.js
 const RISK_THRESHOLDS = {
-  LOW_MAX: 4,       // 0-4 refs = LOW
-  MEDIUM_MAX: 15,   // 5-15 refs = MEDIUM
-                     // >15 refs = HIGH
+  LOW_MAX: 4, // 0-4 refs = LOW
+  MEDIUM_MAX: 15, // 5-15 refs = MEDIUM
+  // >15 refs = HIGH
 };
 
 // Coverage status thresholds based on test reference count
 const COVERAGE_THRESHOLDS = {
-  INDIRECT_MAX: 2,  // 1-2 test refs = INDIRECT
-  MINIMAL_MAX: 5,   // 3-5 test refs = MINIMAL
-                     // >5 test refs = GOOD
+  INDIRECT_MAX: 2, // 1-2 test refs = INDIRECT
+  MINIMAL_MAX: 5, // 3-5 test refs = MINIMAL
+  // >5 test refs = GOOD
 };
 
 /**
@@ -78,7 +78,7 @@ async function getTestCoverage(symbols) {
         } catch {
           return {
             symbol,
-            status: 'NO_TESTS',
+            status: "NO_TESTS",
             testCount: 0,
             tests: [],
           };
@@ -138,10 +138,11 @@ async function getReferenceImpact(files) {
 function suggestGateInfluence(riskLevel) {
   if (!riskLevel) return null;
 
-  if (riskLevel === 'HIGH') {
+  if (riskLevel === "HIGH") {
     return {
-      advisory: 'HIGH blast radius detected. Consider CONCERNS gate with additional review recommended.',
-      suggestedGate: 'CONCERNS',
+      advisory:
+        "HIGH blast radius detected. Consider CONCERNS gate with additional review recommended.",
+      suggestedGate: "CONCERNS",
     };
   }
 
@@ -156,9 +157,9 @@ function suggestGateInfluence(riskLevel) {
  * @private
  */
 function _calculateRiskLevel(blastRadius) {
-  if (blastRadius <= RISK_THRESHOLDS.LOW_MAX) return 'LOW';
-  if (blastRadius <= RISK_THRESHOLDS.MEDIUM_MAX) return 'MEDIUM';
-  return 'HIGH';
+  if (blastRadius <= RISK_THRESHOLDS.LOW_MAX) return "LOW";
+  if (blastRadius <= RISK_THRESHOLDS.MEDIUM_MAX) return "MEDIUM";
+  return "HIGH";
 }
 
 /**
@@ -168,10 +169,10 @@ function _calculateRiskLevel(blastRadius) {
  * @private
  */
 function _calculateCoverageStatus(testCount) {
-  if (testCount === 0) return 'NO_TESTS';
-  if (testCount <= COVERAGE_THRESHOLDS.INDIRECT_MAX) return 'INDIRECT';
-  if (testCount <= COVERAGE_THRESHOLDS.MINIMAL_MAX) return 'MINIMAL';
-  return 'GOOD';
+  if (testCount === 0) return "NO_TESTS";
+  if (testCount <= COVERAGE_THRESHOLDS.INDIRECT_MAX) return "INDIRECT";
+  if (testCount <= COVERAGE_THRESHOLDS.MINIMAL_MAX) return "MINIMAL";
+  return "GOOD";
 }
 
 module.exports = {

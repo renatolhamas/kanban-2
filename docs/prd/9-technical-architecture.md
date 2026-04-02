@@ -2,19 +2,19 @@
 
 ## 9.1 Stack Tecnológico
 
-| Camada | Tecnologia | Justificativa |
-|--------|-----------|--------------|
-| **Frontend** | Next.js 14+ | SSR, Vercel deployment, Tailwind CSS nativo |
-| **Design System** | "Architectural Ledger" (Tailwind + shadcn/ui) | Emerald/Navy/Surface colors, Manrope typography, WCAG AA |
-| **Backend & DB** | Supabase Cloud (PostgreSQL) | RLS nativo, Auth integrada, Real-time, SaaS sem ops |
-| **Auth** | Supabase Cloud Auth | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+) |
-| **Real-time** | Supabase Real-time Subscriptions | WebSocket para sync instantâneo |
-| **File Storage** | Supabase Cloud Storage | Mídias de conversa (fotos, vídeos, áudios) |
-| **WhatsApp Gateway** | Evolution API v2 | Pairing via QR, webhooks bidirecional, v2 stable |
-| **API Framework** | Next.js API Routes (/app/api/) | Auth middleware, CORS, RateLimit, Webhook validation |
-| **Rate Limiting** | Redis local (VPS) | 100 req/min per tenant, zero cost |
-| **Deployment** | Vercel (Frontend) + Supabase Cloud | Global CDN, auto-scaling, managed DB |
-| **Monitoring** | Sentry + Supabase Logs | Error tracking, performance APM |
+| Camada               | Tecnologia                                    | Justificativa                                            |
+| -------------------- | --------------------------------------------- | -------------------------------------------------------- |
+| **Frontend**         | Next.js 14+                                   | SSR, Vercel deployment, Tailwind CSS nativo              |
+| **Design System**    | "Architectural Ledger" (Tailwind + shadcn/ui) | Emerald/Navy/Surface colors, Manrope typography, WCAG AA |
+| **Backend & DB**     | Supabase Cloud (PostgreSQL)                   | RLS nativo, Auth integrada, Real-time, SaaS sem ops      |
+| **Auth**             | Supabase Cloud Auth                           | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+)                |
+| **Real-time**        | Supabase Real-time Subscriptions              | WebSocket para sync instantâneo                          |
+| **File Storage**     | Supabase Cloud Storage                        | Mídias de conversa (fotos, vídeos, áudios)               |
+| **WhatsApp Gateway** | Evolution API v2                              | Pairing via QR, webhooks bidirecional, v2 stable         |
+| **API Framework**    | Next.js API Routes (/app/api/)                | Auth middleware, CORS, RateLimit, Webhook validation     |
+| **Rate Limiting**    | Redis local (VPS)                             | 100 req/min per tenant, zero cost                        |
+| **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
+| **Monitoring**       | Sentry + Supabase Logs                        | Error tracking, performance APM                          |
 
 ## 9.2 Database Schema (Resumido)
 
@@ -111,6 +111,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 ## 9.3 Evolution API v2 Integration
 
 **Fluxo de Pairing:**
+
 1. Owner clica "Connect WhatsApp" em Settings/Connection
 2. Backend gera novo QR via Evolution API `/qr-code` endpoint
 3. Frontend mostra QR code em modal (tempo limitado, ex 60s)
@@ -120,6 +121,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 7. Webhooks começam a chegar em `/webhooks/messages`
 
 **Fluxo de Mensagens Recebidas:**
+
 ```
 Evolution API webhook → Backend /webhooks/messages
   ├─ Validar assinatura (HMAC-SHA256)
@@ -132,6 +134,7 @@ Evolution API webhook → Backend /webhooks/messages
 ```
 
 **Fluxo de Mensagens Enviadas:**
+
 ```
 Frontend (Chat modal) → POST /api/send-message
   ├─ Validar JWT + tenant_id
@@ -143,15 +146,15 @@ Frontend (Chat modal) → POST /api/send-message
 
 ## 9.4 Validações & Constraints
 
-| Validação | Local | Nível |
-|-----------|-------|-------|
-| Telefone E.164 | Frontend regex + Backend constraint | STRICT |
-| Email unique | Backend constraint + Frontend check | STRICT |
-| RLS tenant_id | Database policy | CRITICAL |
-| JWT validity | Backend middleware | CRITICAL |
-| Webhook signature | Backend HMAC validation | CRITICAL |
+| Validação          | Local                                            | Nível    |
+| ------------------ | ------------------------------------------------ | -------- |
+| Telefone E.164     | Frontend regex + Backend constraint              | STRICT   |
+| Email unique       | Backend constraint + Frontend check              | STRICT   |
+| RLS tenant_id      | Database policy                                  | CRITICAL |
+| JWT validity       | Backend middleware                               | CRITICAL |
+| Webhook signature  | Backend HMAC validation                          | CRITICAL |
 | Webhook processing | Backend async (return 200 OK <200ms, timeout 5s) | CRITICAL |
-| File size (mídia) | Frontend + Backend (max 50MB) | MEDIUM |
-| Rate limiting | Redis local (VPS) — 100 req/min per tenant | MEDIUM |
+| File size (mídia)  | Frontend + Backend (max 50MB)                    | MEDIUM   |
+| Rate limiting      | Redis local (VPS) — 100 req/min per tenant       | MEDIUM   |
 
 ---

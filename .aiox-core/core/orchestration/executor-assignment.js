@@ -39,133 +39,145 @@ const EXECUTOR_ASSIGNMENT_TABLE = {
   // General code: features, logic, handlers, services
   code_general: {
     keywords: [
-      'feature',
-      'logic',
-      'handler',
-      'service',
-      'controller',
-      'function',
-      'class',
-      'module',
-      'implement',
-      'api',
-      'endpoint',
-      'crud',
-      'business',
+      "feature",
+      "logic",
+      "handler",
+      "service",
+      "controller",
+      "function",
+      "class",
+      "module",
+      "implement",
+      "api",
+      "endpoint",
+      "crud",
+      "business",
     ],
-    executor: '@dev',
-    quality_gate: '@architect',
-    quality_gate_tools: ['architecture_review', 'code_review', 'pattern_validation'],
+    executor: "@dev",
+    quality_gate: "@architect",
+    quality_gate_tools: [
+      "architecture_review",
+      "code_review",
+      "pattern_validation",
+    ],
   },
 
   // Database: schemas, RLS, migrations, queries
   database: {
     keywords: [
-      'schema',
-      'table',
-      'migration',
-      'rls',
-      'query',
-      'index',
-      'constraint',
-      'foreign_key',
-      'database',
-      'sql',
-      'supabase',
-      'postgres',
-      'column',
-      'relation',
+      "schema",
+      "table",
+      "migration",
+      "rls",
+      "query",
+      "index",
+      "constraint",
+      "foreign_key",
+      "database",
+      "sql",
+      "supabase",
+      "postgres",
+      "column",
+      "relation",
     ],
-    executor: '@data-engineer',
-    quality_gate: '@dev',
-    quality_gate_tools: ['schema_validation', 'migration_review', 'rls_test'],
+    executor: "@data-engineer",
+    quality_gate: "@dev",
+    quality_gate_tools: ["schema_validation", "migration_review", "rls_test"],
   },
 
   // Infrastructure: CI/CD, deploy, environments
   infrastructure: {
     keywords: [
-      'ci/cd',
-      'cicd',
-      'deploy',
-      'environment',
-      'docker',
-      'kubernetes',
-      'terraform',
-      'pipeline',
-      'infrastructure',
-      'aws',
-      'gcp',
-      'azure',
-      'nginx',
-      'devops',
+      "ci/cd",
+      "cicd",
+      "deploy",
+      "environment",
+      "docker",
+      "kubernetes",
+      "terraform",
+      "pipeline",
+      "infrastructure",
+      "aws",
+      "gcp",
+      "azure",
+      "nginx",
+      "devops",
     ],
-    executor: '@devops',
-    quality_gate: '@architect',
-    quality_gate_tools: ['infrastructure_review', 'security_scan', 'config_validation'],
+    executor: "@devops",
+    quality_gate: "@architect",
+    quality_gate_tools: [
+      "infrastructure_review",
+      "security_scan",
+      "config_validation",
+    ],
   },
 
   // UI/UX: components, design, interface
   ui_ux: {
     keywords: [
-      'component',
-      'ui',
-      'ux',
-      'design',
-      'interface',
-      'layout',
-      'styling',
-      'responsive',
-      'accessibility',
-      'a11y',
-      'css',
-      'tailwind',
-      'figma',
-      'wireframe',
+      "component",
+      "ui",
+      "ux",
+      "design",
+      "interface",
+      "layout",
+      "styling",
+      "responsive",
+      "accessibility",
+      "a11y",
+      "css",
+      "tailwind",
+      "figma",
+      "wireframe",
     ],
-    executor: '@ux-design-expert',
-    quality_gate: '@dev',
-    quality_gate_tools: ['accessibility_check', 'design_review', 'component_validation'],
+    executor: "@ux-design-expert",
+    quality_gate: "@dev",
+    quality_gate_tools: [
+      "accessibility_check",
+      "design_review",
+      "component_validation",
+    ],
   },
 
   // Research: investigation, analysis, POC
   research: {
     keywords: [
-      'research',
-      'investigate',
-      'analyze',
-      'study',
-      'compare',
-      'evaluate',
-      'poc',
-      'proof',
-      'concept',
-      'benchmark',
-      'assessment',
-      'exploration',
+      "research",
+      "investigate",
+      "analyze",
+      "study",
+      "compare",
+      "evaluate",
+      "poc",
+      "proof",
+      "concept",
+      "benchmark",
+      "assessment",
+      "exploration",
     ],
-    executor: '@analyst',
-    quality_gate: '@pm',
-    quality_gate_tools: ['research_validation', 'findings_review'],
+    executor: "@analyst",
+    quality_gate: "@pm",
+    quality_gate_tools: ["research_validation", "findings_review"],
   },
 
   // Architecture: design decisions, patterns, scalability
   architecture: {
     keywords: [
-      'architecture',
-      'design_decision',
-      'pattern',
-      'scalability',
-      'refactor_major',
-      'system_design',
-      'adr',
-      'rfc',
-      'technical_decision',
-      'microservice',
-      'monolith',
+      "architecture",
+      "design_decision",
+      "pattern",
+      "scalability",
+      "refactor_major",
+      "system_design",
+      "adr",
+      "rfc",
+      "technical_decision",
+      "microservice",
+      "monolith",
     ],
-    executor: '@architect',
-    quality_gate: '@pm',
-    quality_gate_tools: ['architecture_review', 'impact_analysis'],
+    executor: "@architect",
+    quality_gate: "@pm",
+    quality_gate_tools: ["architecture_review", "impact_analysis"],
   },
 };
 
@@ -174,9 +186,9 @@ const EXECUTOR_ASSIGNMENT_TABLE = {
  * @constant {ExecutorAssignment}
  */
 const DEFAULT_ASSIGNMENT = {
-  executor: '@dev',
-  quality_gate: '@architect',
-  quality_gate_tools: ['code_review', 'pattern_validation'],
+  executor: "@dev",
+  quality_gate: "@architect",
+  quality_gate_tools: ["code_review", "pattern_validation"],
 };
 
 /**
@@ -194,8 +206,8 @@ const DEFAULT_ASSIGNMENT = {
  * // Returns: 'database'
  */
 function detectStoryType(storyContent) {
-  if (!storyContent || typeof storyContent !== 'string') {
-    return 'code_general'; // Default type
+  if (!storyContent || typeof storyContent !== "string") {
+    return "code_general"; // Default type
   }
 
   const normalizedContent = storyContent.toLowerCase();
@@ -208,7 +220,10 @@ function detectStoryType(storyContent) {
     for (const keyword of config.keywords) {
       const keywordLower = keyword.toLowerCase();
       // Count occurrences of keyword
-      const regex = new RegExp(`\\b${keywordLower.replace(/[/\\-]/g, '[/\\\\-]?')}\\b`, 'gi');
+      const regex = new RegExp(
+        `\\b${keywordLower.replace(/[/\\-]/g, "[/\\\\-]?")}\\b`,
+        "gi",
+      );
       const matches = normalizedContent.match(regex);
       if (matches) {
         score += matches.length;
@@ -220,7 +235,7 @@ function detectStoryType(storyContent) {
 
   // Find the type with highest score
   let maxScore = 0;
-  let detectedType = 'code_general';
+  let detectedType = "code_general";
 
   for (const [typeKey, score] of Object.entries(scores)) {
     if (score > maxScore) {
@@ -251,7 +266,9 @@ function assignExecutor(storyType) {
   const config = EXECUTOR_ASSIGNMENT_TABLE[storyType];
 
   if (!config) {
-    console.warn(`[ExecutorAssignment] Unknown story type: ${storyType}, using default`);
+    console.warn(
+      `[ExecutorAssignment] Unknown story type: ${storyType}, using default`,
+    );
     return { ...DEFAULT_ASSIGNMENT };
   }
 
@@ -312,22 +329,28 @@ function validateExecutorAssignment(story) {
 
   // Check required fields
   if (!story.executor) {
-    errors.push('Missing required field: executor');
+    errors.push("Missing required field: executor");
   }
 
   if (!story.quality_gate) {
-    errors.push('Missing required field: quality_gate');
+    errors.push("Missing required field: quality_gate");
   }
 
   if (!story.quality_gate_tools || !Array.isArray(story.quality_gate_tools)) {
-    errors.push('Missing or invalid field: quality_gate_tools (must be array)');
+    errors.push("Missing or invalid field: quality_gate_tools (must be array)");
   } else if (story.quality_gate_tools.length === 0) {
-    errors.push('quality_gate_tools cannot be empty');
+    errors.push("quality_gate_tools cannot be empty");
   }
 
   // Check executor != quality_gate
-  if (story.executor && story.quality_gate && story.executor === story.quality_gate) {
-    errors.push(`Executor (${story.executor}) cannot be the same as quality_gate (${story.quality_gate})`);
+  if (
+    story.executor &&
+    story.quality_gate &&
+    story.executor === story.quality_gate
+  ) {
+    errors.push(
+      `Executor (${story.executor}) cannot be the same as quality_gate (${story.quality_gate})`,
+    );
   }
 
   // Validate executor is known
@@ -335,7 +358,9 @@ function validateExecutorAssignment(story) {
     Object.values(EXECUTOR_ASSIGNMENT_TABLE).map((c) => c.executor),
   );
   if (story.executor && !knownExecutors.has(story.executor)) {
-    errors.push(`Unknown executor: ${story.executor}. Known executors: ${[...knownExecutors].join(', ')}`);
+    errors.push(
+      `Unknown executor: ${story.executor}. Known executors: ${[...knownExecutors].join(", ")}`,
+    );
   }
 
   // Validate quality gate is known
@@ -343,11 +368,11 @@ function validateExecutorAssignment(story) {
     Object.values(EXECUTOR_ASSIGNMENT_TABLE).map((c) => c.quality_gate),
   );
   // Add @pm as it can be a quality gate
-  knownQualityGates.add('@pm');
+  knownQualityGates.add("@pm");
 
   if (story.quality_gate && !knownQualityGates.has(story.quality_gate)) {
     errors.push(
-      `Unknown quality_gate: ${story.quality_gate}. Known quality gates: ${[...knownQualityGates].join(', ')}`,
+      `Unknown quality_gate: ${story.quality_gate}. Known quality gates: ${[...knownQualityGates].join(", ")}`,
     );
   }
 

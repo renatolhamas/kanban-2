@@ -22,7 +22,7 @@ description: |
   Quality Standard: AIOS Level (800+ lines, full semantic depth)
 
 orchestrator: "@squad-chief"
-mode: YOLO  # 100% autonomous, no human intervention
+mode: YOLO # 100% autonomous, no human intervention
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # QUALITY STANDARDS

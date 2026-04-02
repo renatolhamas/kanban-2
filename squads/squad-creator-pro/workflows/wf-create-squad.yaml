@@ -13,7 +13,7 @@ workflow:
   version: "2.6"
   purpose: "Orchestrate the complete creation of an AIOS squad from research to validation"
   orchestrator: "@squad-chief"
-  mode: "yolo"  # yolo | quality | hybrid
+  mode: "yolo" # yolo | quality | hybrid
   governance_protocol: "squads/squad-creator-pro/protocols/ai-first-governance.md"
   ci_policy:
     blocking_deterministic_only: true
@@ -103,7 +103,7 @@ yolo_mode:
 
 pre_flight:
   trigger: "Início do workflow (ANTES de tudo)"
-  blocking: true  # Precisa de resposta para continuar
+  blocking: true # Precisa de resposta para continuar
   purpose: "Informar usuário sobre o que vai precisar e escolher modo"
 
   message: |
@@ -197,7 +197,8 @@ pre_flight:
       stops_for: ["Materials collection", "DNA validation"]
 
     hybrid_any:
-      checkpoints_active: ["CP_MATERIALS per mind", "CP3 for known experts", "CP6"]
+      checkpoints_active:
+        ["CP_MATERIALS per mind", "CP3 for known experts", "CP6"]
       auto_proceed: "per mind based on materials"
 
   post_pre_flight: |
@@ -314,9 +315,21 @@ phase_materials:
       version: "2.0"
       purpose: "15 veto conditions: SC_VC_001-010 (PV) + AN_VC_001-005 (AN)"
       agents:
-        pedro_valerio: ["SC_VC_001", "SC_VC_002", "SC_VC_003", "SC_VC_004", "SC_VC_005",
-                        "SC_VC_006", "SC_VC_007", "SC_VC_008", "SC_VC_009", "SC_VC_010"]
-        oalanicolas: ["AN_VC_001", "AN_VC_002", "AN_VC_003", "AN_VC_004", "AN_VC_005"]
+        pedro_valerio:
+          [
+            "SC_VC_001",
+            "SC_VC_002",
+            "SC_VC_003",
+            "SC_VC_004",
+            "SC_VC_005",
+            "SC_VC_006",
+            "SC_VC_007",
+            "SC_VC_008",
+            "SC_VC_009",
+            "SC_VC_010",
+          ]
+        oalanicolas:
+          ["AN_VC_001", "AN_VC_002", "AN_VC_003", "AN_VC_004", "AN_VC_005"]
       applied_in: ["phase_0", "phase_1", "phase_3", "phase_5"]
 
     - id: "axioma-validator"
@@ -599,13 +612,18 @@ phases:
         domain: "{domain}"
         use_cases: "{use_cases}"
         budget_tier: "{from pre_flight or default: low_cost}"
-        search_depth: "standard"  # quick | standard | exhaustive
+        search_depth: "standard" # quick | standard | exhaustive
 
     parallel_execution:
       enabled: true
       agents:
         - name: "MCP Discovery Agent"
-          searches: ["modelcontextprotocol/servers", "github topics:mcp-server", "glama.ai/mcp"]
+          searches:
+            [
+              "modelcontextprotocol/servers",
+              "github topics:mcp-server",
+              "glama.ai/mcp",
+            ]
 
         - name: "API Discovery Agent"
           searches: ["RapidAPI", "PublicAPIs", "ProgrammableWeb"]
@@ -647,11 +665,11 @@ phases:
     checkpoint:
       id: CP_PHASE_0_5
       name: "Deep Tool Discovery Complete"
-      blocking: true  # BLOCKING - Tools are essential for squad value
+      blocking: true # BLOCKING - Tools are essential for squad value
       heuristic: SC_TLD_001
       criteria:
         # Execution criteria
-        - parallel_agents_executed: ">= 3 of 5"  # At least 3 agents must complete
+        - parallel_agents_executed: ">= 3 of 5" # At least 3 agents must complete
         - total_tools_discovered: ">= 10"
         # Quality criteria
         - decision_matrix_generated: true
@@ -1016,7 +1034,7 @@ phases:
     checkpoint:
       id: CP_PHASE_4
       name: "Integration Complete"
-      blocking: false  # Non-blocking, warnings only
+      blocking: false # Non-blocking, warnings only
       criteria:
         - all_dependencies_wired: true
         - readme_complete: true
@@ -1382,7 +1400,7 @@ heuristics:
       Comparative report generated with flags for human attention.
     criteria:
       - parallel_agents_executed: ">= 3 of 5"
-      - tools_discovered: ">= 5"  # Minimum, but quality determined by ranking
+      - tools_discovered: ">= 5" # Minimum, but quality determined by ranking
       - tier_distribution_calculated: true
       - comparative_report_generated: true
     notes:
@@ -1480,16 +1498,16 @@ error_handling:
   # Veto condition mapping (from config/veto-conditions.yaml v2.0)
   veto_conditions_reference:
     # Pedro Valério (SC_VC_*)
-    phase_0_discovery: ["SC_VC_001"]  # Domain Viability
-    phase_2_architecture: ["SC_VC_002"]  # Vision Clarity
-    phase_3_dna_extraction: ["SC_VC_003", "SC_VC_004"]  # Source Quality, DNA Completeness
-    phase_3_agent_creation: ["SC_VC_005", "SC_VC_006"]  # Agent Coherence, Smoke Test
-    phase_5_validation: ["SC_VC_007", "SC_VC_008", "SC_VC_009", "SC_VC_010"]  # Guardrail, Unidirectional, Axioma, Task Anatomy
+    phase_0_discovery: ["SC_VC_001"] # Domain Viability
+    phase_2_architecture: ["SC_VC_002"] # Vision Clarity
+    phase_3_dna_extraction: ["SC_VC_003", "SC_VC_004"] # Source Quality, DNA Completeness
+    phase_3_agent_creation: ["SC_VC_005", "SC_VC_006"] # Agent Coherence, Smoke Test
+    phase_5_validation: ["SC_VC_007", "SC_VC_008", "SC_VC_009", "SC_VC_010"] # Guardrail, Unidirectional, Axioma, Task Anatomy
 
     # OalaNicolas (AN_VC_*) - Phase 3 sub-phases
-    phase_3_sources: ["AN_VC_001", "AN_VC_003"]  # Volume Without Curation, Bronze Majority
-    phase_3_extraction: ["AN_VC_002", "AN_VC_004"]  # Trinity Incomplete, Citation Missing
-    phase_3_validation: ["AN_VC_005"]  # Handoff Without Validation
+    phase_3_sources: ["AN_VC_001", "AN_VC_003"] # Volume Without Curation, Bronze Majority
+    phase_3_extraction: ["AN_VC_002", "AN_VC_004"] # Trinity Incomplete, Citation Missing
+    phase_3_validation: ["AN_VC_005"] # Handoff Without Validation
 
   research_fails:
     - action: "Retry with different queries"

@@ -21,25 +21,25 @@ Toda task de design DEVE receber:
 # Obrigatório
 context:
   project:
-    name: string              # Nome do projeto
-    type: enum                # "greenfield" | "brownfield" | "migration"
-    stack: array              # ["react", "tailwind", "shadcn"]
+    name: string # Nome do projeto
+    type: enum # "greenfield" | "brownfield" | "migration"
+    stack: array # ["react", "tailwind", "shadcn"]
 
   design_system:
-    tokens_path: string       # Path para design-tokens-spec.yaml
-    registry_path: string     # Path para registry.json
-    metadata_path: string     # Path para metadata/components.json
+    tokens_path: string # Path para design-tokens-spec.yaml
+    registry_path: string # Path para registry.json
+    metadata_path: string # Path para metadata/components.json
 
   scope:
-    components: array         # Componentes envolvidos
-    tokens: array             # Tokens envolvidos
-    surfaces: array           # S1, S2, S3
+    components: array # Componentes envolvidos
+    tokens: array # Tokens envolvidos
+    surfaces: array # S1, S2, S3
 
-# Opcional
+  # Opcional
   constraints:
-    wcag_level: enum          # "A" | "AA" | "AAA"
-    browser_support: array    # ["chrome", "firefox", "safari"]
-    breakpoints: array        # ["mobile", "tablet", "desktop"]
+    wcag_level: enum # "A" | "AA" | "AAA"
+    browser_support: array # ["chrome", "firefox", "safari"]
+    breakpoints: array # ["mobile", "tablet", "desktop"]
 
   references:
     figma_url: string
@@ -68,14 +68,14 @@ Todas as tasks em `squads/design/tasks/` devem incluir:
 
 Este task requer o seguinte contexto:
 
-| Campo | Obrigatório | Default |
-|-------|-------------|---------|
-| project.name | ✅ | — |
-| project.type | ✅ | — |
-| design_system.tokens_path | ✅ | `squads/design/data/design-tokens-spec.yaml` |
-| design_system.registry_path | ✅ | `workspace/ui/registry.json` |
-| scope.components | ✅ | — |
-| constraints.wcag_level | ❌ | "AA" |
+| Campo                       | Obrigatório | Default                                      |
+| --------------------------- | ----------- | -------------------------------------------- |
+| project.name                | ✅          | —                                            |
+| project.type                | ✅          | —                                            |
+| design_system.tokens_path   | ✅          | `squads/design/data/design-tokens-spec.yaml` |
+| design_system.registry_path | ✅          | `workspace/ui/registry.json`                 |
+| scope.components            | ✅          | —                                            |
+| constraints.wcag_level      | ❌          | "AA"                                         |
 ```
 
 ### 2. Context Loader Script
@@ -86,17 +86,18 @@ module.exports = {
   loadContext(taskId) {
     return {
       design_system: {
-        tokens_path: 'squads/design/data/design-tokens-spec.yaml',
-        registry_path: 'workspace/ui/registry.json',
-        metadata_path: 'workspace/domains/design-system/metadata/components.json',
-        glossary_path: 'workspace/domains/design-system/glossary.yaml'
+        tokens_path: "squads/design/data/design-tokens-spec.yaml",
+        registry_path: "workspace/ui/registry.json",
+        metadata_path:
+          "workspace/domains/design-system/metadata/components.json",
+        glossary_path: "workspace/domains/design-system/glossary.yaml",
       },
       defaults: {
-        wcag_level: 'AA',
-        surfaces: ['S1', 'S2']
-      }
+        wcag_level: "AA",
+        surfaces: ["S1", "S2"],
+      },
     };
-  }
+  },
 };
 ```
 
@@ -124,6 +125,7 @@ validation:
 @brad-frost Execute ds-build-component
 
 **Context:**
+
 - project.name: "Lendário App"
 - project.type: "brownfield"
 - scope.components: ["Button", "Input"]
@@ -179,16 +181,17 @@ defaults:
 
 ---
 
-*Task criada: 2026-02-16*
-*Squad: Design*
-
+_Task criada: 2026-02-16_
+_Squad: Design_
 
 ## Process Guards
+
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
+
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

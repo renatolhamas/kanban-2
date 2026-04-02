@@ -62,22 +62,22 @@ Validar TODOS os componentes shadcn (base + derivados) como um conjunto coeso, g
 
 ## Grupos de Validacao
 
-| Grupo | Componentes | Status |
-|---|---|---|
-| Forms | Select, Checkbox, RadioGroup, Switch, Slider, Textarea, Form, Label | [ ] |
-| Overlays | Dialog, Drawer, Sheet, Popover, Tooltip, HoverCard, DropdownMenu, ContextMenu, Menubar, Command, AlertDialog | [ ] |
-| Navigation | Tabs, Breadcrumb, NavigationMenu, Pagination, Sidebar | [ ] |
-| Data Display | Table, Accordion, Carousel, Progress, Calendar, Avatar, Collapsible, Resizable, ScrollArea, Separator, Skeleton | [ ] |
-| Feedback | Alert, Toast/Sonner, Toggle, ToggleGroup | [ ] |
-| Base (re-check) | Button, Input, Badge, Card | [ ] |
+| Grupo           | Componentes                                                                                                     | Status |
+| --------------- | --------------------------------------------------------------------------------------------------------------- | ------ |
+| Forms           | Select, Checkbox, RadioGroup, Switch, Slider, Textarea, Form, Label                                             | [ ]    |
+| Overlays        | Dialog, Drawer, Sheet, Popover, Tooltip, HoverCard, DropdownMenu, ContextMenu, Menubar, Command, AlertDialog    | [ ]    |
+| Navigation      | Tabs, Breadcrumb, NavigationMenu, Pagination, Sidebar                                                           | [ ]    |
+| Data Display    | Table, Accordion, Carousel, Progress, Calendar, Avatar, Collapsible, Resizable, ScrollArea, Separator, Skeleton | [ ]    |
+| Feedback        | Alert, Toast/Sonner, Toggle, ToggleGroup                                                                        | [ ]    |
+| Base (re-check) | Button, Input, Badge, Card                                                                                      | [ ]    |
 
 ## Verdicts
 
-| Verdict | Condicao | Acao |
-|---------|----------|------|
-| **PASS** | Todos os checks ok | Pipeline completo |
-| **PASS com observacoes** | Checks criticos ok, minor visual diffs documentados | Pipeline completo com notas |
-| **FAIL** | API quebrada, acessibilidade comprometida, inconsistencia grave | Retornar para f3-derive-components |
+| Verdict                  | Condicao                                                        | Acao                               |
+| ------------------------ | --------------------------------------------------------------- | ---------------------------------- |
+| **PASS**                 | Todos os checks ok                                              | Pipeline completo                  |
+| **PASS com observacoes** | Checks criticos ok, minor visual diffs documentados             | Pipeline completo com notas        |
+| **FAIL**                 | API quebrada, acessibilidade comprometida, inconsistencia grave | Retornar para f3-derive-components |
 
 ## Metricas de Conclusao
 
@@ -91,6 +91,7 @@ Ao final, reportar:
 ## Output
 
 Report final de QA com:
+
 - Resultado por grupo
 - Metricas de conclusao
 - Lista de observacoes (se houver)

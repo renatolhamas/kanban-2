@@ -10,23 +10,29 @@
  * @created Story SYN-14
  */
 
-'use strict';
+"use strict";
 
-const path = require('path');
-const { safeReadJson } = require('./safe-read-json');
+const path = require("path");
+const { safeReadJson } = require("./safe-read-json");
 
 /**
  * Expected UAP loader output characteristics.
  * @type {Object.<string, { minFields: number, description: string }>}
  */
 const UAP_OUTPUT_EXPECTATIONS = {
-  agentConfig: { minFields: 3, description: 'Should have name, id, title at minimum' },
-  permissionMode: { minFields: 1, description: 'Should have mode value' },
-  gitConfig: { minFields: 1, description: 'Should have branch name' },
-  sessionContext: { minFields: 1, description: 'Should have session type' },
-  projectStatus: { minFields: 1, description: 'Should have status data' },
-  memories: { minFields: 0, description: 'Optional — Pro feature' },
-  synapseSession: { minFields: 1, description: 'Should have bridge write confirmation' },
+  agentConfig: {
+    minFields: 3,
+    description: "Should have name, id, title at minimum",
+  },
+  permissionMode: { minFields: 1, description: "Should have mode value" },
+  gitConfig: { minFields: 1, description: "Should have branch name" },
+  sessionContext: { minFields: 1, description: "Should have session type" },
+  projectStatus: { minFields: 1, description: "Should have status data" },
+  memories: { minFields: 0, description: "Optional — Pro feature" },
+  synapseSession: {
+    minFields: 1,
+    description: "Should have bridge write confirmation",
+  },
 };
 
 /**
@@ -41,10 +47,10 @@ const UAP_OUTPUT_EXPECTATIONS = {
  * }}
  */
 function collectOutputAnalysis(projectRoot) {
-  const metricsDir = path.join(projectRoot, '.synapse', 'metrics');
+  const metricsDir = path.join(projectRoot, ".synapse", "metrics");
 
-  const uapData = safeReadJson(path.join(metricsDir, 'uap-metrics.json'));
-  const hookData = safeReadJson(path.join(metricsDir, 'hook-metrics.json'));
+  const uapData = safeReadJson(path.join(metricsDir, "uap-metrics.json"));
+  const hookData = safeReadJson(path.join(metricsDir, "hook-metrics.json"));
 
   if (!uapData && !hookData) {
     return {
@@ -63,9 +69,9 @@ function collectOutputAnalysis(projectRoot) {
     uapAnalysis,
     hookAnalysis,
     summary: {
-      uapHealthy: uapAnalysis.filter(a => a.quality === 'good').length,
+      uapHealthy: uapAnalysis.filter((a) => a.quality === "good").length,
       uapTotal: uapAnalysis.length,
-      hookHealthy: hookAnalysis.filter(a => a.quality === 'good').length,
+      hookHealthy: hookAnalysis.filter((a) => a.quality === "good").length,
       hookTotal: hookAnalysis.length,
     },
   };
@@ -82,24 +88,51 @@ function _analyzeUapOutput(data) {
   return Object.entries(UAP_OUTPUT_EXPECTATIONS).map(([name, _expectation]) => {
     const loader = data.loaders[name];
     if (!loader) {
-      const desc = _expectation.description || '';
-      const detail = desc.includes('Optional') ? desc : 'Loader not present in metrics';
-      return { name, status: 'missing', quality: 'none', detail };
+      const desc = _expectation.description || "";
+      const detail = desc.includes("Optional")
+        ? desc
+        : "Loader not present in metrics";
+      return { name, status: "missing", quality: "none", detail };
     }
-    if (loader.status === 'error') {
-      return { name, status: 'error', quality: 'bad', detail: `Error: ${loader.error || 'unknown'}` };
+    if (loader.status === "error") {
+      return {
+        name,
+        status: "error",
+        quality: "bad",
+        detail: `Error: ${loader.error || "unknown"}`,
+      };
     }
-    if (loader.status === 'timeout') {
-      return { name, status: 'timeout', quality: 'bad', detail: `Timeout after ${loader.duration || 0}ms` };
+    if (loader.status === "timeout") {
+      return {
+        name,
+        status: "timeout",
+        quality: "bad",
+        detail: `Timeout after ${loader.duration || 0}ms`,
+      };
     }
-    if (loader.status === 'skipped') {
-      return { name, status: 'skipped', quality: 'none', detail: 'Loader was skipped' };
+    if (loader.status === "skipped") {
+      return {
+        name,
+        status: "skipped",
+        quality: "none",
+        detail: "Loader was skipped",
+      };
     }
     // Status 'ok' — check duration for anomalies
     if (loader.duration > 200) {
-      return { name, status: 'ok', quality: 'degraded', detail: `Slow: ${loader.duration}ms (>200ms)` };
+      return {
+        name,
+        status: "ok",
+        quality: "degraded",
+        detail: `Slow: ${loader.duration}ms (>200ms)`,
+      };
     }
-    return { name, status: 'ok', quality: 'good', detail: `${loader.duration}ms` };
+    return {
+      name,
+      status: "ok",
+      quality: "good",
+      detail: `${loader.duration}ms`,
+    };
   });
 }
 
@@ -113,21 +146,45 @@ function _analyzeHookOutput(data) {
 
   return Object.entries(data.perLayer).map(([name, info]) => {
     const rules = info.rules || 0;
-    const status = info.status || 'unknown';
+    const status = info.status || "unknown";
 
-    if (status === 'error') {
-      return { name, status, rules, quality: 'bad', detail: 'Error in layer' };
+    if (status === "error") {
+      return { name, status, rules, quality: "bad", detail: "Error in layer" };
     }
-    if (status === 'skipped') {
-      return { name, status, rules, quality: 'none', detail: info.reason || 'Skipped' };
+    if (status === "skipped") {
+      return {
+        name,
+        status,
+        rules,
+        quality: "none",
+        detail: info.reason || "Skipped",
+      };
     }
-    if (status === 'ok' && rules === 0) {
-      return { name, status, rules, quality: 'empty', detail: 'Loaded but produced 0 rules' };
+    if (status === "ok" && rules === 0) {
+      return {
+        name,
+        status,
+        rules,
+        quality: "empty",
+        detail: "Loaded but produced 0 rules",
+      };
     }
-    if (status === 'ok' && rules > 0) {
-      return { name, status, rules, quality: 'good', detail: `${rules} rules in ${info.duration || 0}ms` };
+    if (status === "ok" && rules > 0) {
+      return {
+        name,
+        status,
+        rules,
+        quality: "good",
+        detail: `${rules} rules in ${info.duration || 0}ms`,
+      };
     }
-    return { name, status, rules, quality: 'unknown', detail: `Status: ${status}` };
+    return {
+      name,
+      status,
+      rules,
+      quality: "unknown",
+      detail: `Status: ${status}`,
+    };
   });
 }
 

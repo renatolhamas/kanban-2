@@ -1,40 +1,40 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { LoginForm } from '@/components/LoginForm'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { LoginForm } from "@/components/LoginForm";
 
 export default function LoginPage() {
-  const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      setError(null)
+      setError(null);
 
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include', // Send cookies
-      })
+        credentials: "include", // Send cookies
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login failed')
+        throw new Error(data.error || "Login failed");
       }
 
       // Redirect after successful login
       setTimeout(() => {
-        router.push('/')
-      }, 500)
+        router.push("/");
+      }, 500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+      setError(err instanceof Error ? err.message : "Login failed");
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -57,5 +57,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

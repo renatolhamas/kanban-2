@@ -14,6 +14,7 @@ Diagnosticar por que um clone esta fraco, mapeando sintomas para causas raiz e p
 Perguntar ao usuario: "O que esta errado com o clone?"
 
 Sintomas comuns:
+
 - "Responde generico" → provavelmente falta Framework
 - "Nao parece a pessoa" → fontes bronze ou sem Voice DNA
 - "Se perde em conversas longas" → prompt monolitico, precisa estagios
@@ -25,18 +26,19 @@ Sintomas comuns:
 
 Usar `an-clone-anti-patterns.yaml` para diagnosticar:
 
-| Sintoma | Causa Raiz Provavel | Anti-pattern |
-|---------|---------------------|-------------|
-| Generico | Falta Framework | So Playbook, sem SE/ENTAO |
-| Nao parece pessoa | Fontes bronze | Volume sem curadoria |
-| Se perde | Prompt monolitico | Sem estagios |
-| Quebra facil | Sem immune system | Sem veto conditions |
-| Inventa | Sem Swipe File | Sem exemplos reais |
-| Robótico | Sem paradoxos | Contradictions resolvidas |
+| Sintoma           | Causa Raiz Provavel | Anti-pattern              |
+| ----------------- | ------------------- | ------------------------- |
+| Generico          | Falta Framework     | So Playbook, sem SE/ENTAO |
+| Nao parece pessoa | Fontes bronze       | Volume sem curadoria      |
+| Se perde          | Prompt monolitico   | Sem estagios              |
+| Quebra facil      | Sem immune system   | Sem veto conditions       |
+| Inventa           | Sem Swipe File      | Sem exemplos reais        |
+| Robótico          | Sem paradoxos       | Contradictions resolvidas |
 
 ### Step 3: Verify Trinity
 
 Checklist rapido:
+
 - [ ] Tem Playbook? (passo a passo)
 - [ ] Tem Framework? (SE/ENTAO)
 - [ ] Tem Swipe File? (exemplos reais)
@@ -47,21 +49,21 @@ Checklist rapido:
 
 Para cada causa raiz, prescrever acao especifica:
 
-| Causa | Tratamento | Prioridade |
-|-------|------------|------------|
-| Falta Framework | Extrair regras SE/ENTAO de entrevistas | URGENTE |
-| Fontes bronze | Reclassificar, buscar ouro | URGENTE |
-| Sem estagios | Mapear contextos, criar stages | ALTA |
-| Sem Swipe | Coletar exemplos reais | ALTA |
-| Sem immune | Definir veto conditions | MEDIA |
-| Sem paradoxos | Mapear contradictions produtivas | MEDIA |
+| Causa           | Tratamento                             | Prioridade |
+| --------------- | -------------------------------------- | ---------- |
+| Falta Framework | Extrair regras SE/ENTAO de entrevistas | URGENTE    |
+| Fontes bronze   | Reclassificar, buscar ouro             | URGENTE    |
+| Sem estagios    | Mapear contextos, criar stages         | ALTA       |
+| Sem Swipe       | Coletar exemplos reais                 | ALTA       |
+| Sem immune      | Definir veto conditions                | MEDIA      |
+| Sem paradoxos   | Mapear contradictions produtivas       | MEDIA      |
 
 ### Step 5: Generate Report
 
 ```yaml
 diagnosis_report:
   clone: "{nome}"
-  symptoms: [{lista}]
+  symptoms: [{ lista }]
   root_causes:
     - cause: "{causa}"
       evidence: "{evidencia}"

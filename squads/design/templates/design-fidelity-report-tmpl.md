@@ -9,25 +9,25 @@
 
 ## Summary
 
-| Category | Matches | Total | Score |
-|----------|---------|-------|-------|
-| Colors | {{colors_match}} | {{colors_total}} | {{colors_score}}% |
-| Spacing | {{spacing_match}} | {{spacing_total}} | {{spacing_score}}% |
-| Typography | {{typography_match}} | {{typography_total}} | {{typography_score}}% |
-| Effects | {{effects_match}} | {{effects_total}} | {{effects_score}}% |
-| **Overall** | **{{total_match}}** | **{{total_total}}** | **{{overall_score}}%** |
+| Category    | Matches              | Total                | Score                  |
+| ----------- | -------------------- | -------------------- | ---------------------- |
+| Colors      | {{colors_match}}     | {{colors_total}}     | {{colors_score}}%      |
+| Spacing     | {{spacing_match}}    | {{spacing_total}}    | {{spacing_score}}%     |
+| Typography  | {{typography_match}} | {{typography_total}} | {{typography_score}}%  |
+| Effects     | {{effects_match}}    | {{effects_total}}    | {{effects_score}}%     |
+| **Overall** | **{{total_match}}**  | **{{total_total}}**  | **{{overall_score}}%** |
 
 ---
 
 ## Score Interpretation
 
-| Score | Grade | Meaning |
-|-------|-------|---------|
-| 95-100% | A | Production ready |
-| 85-94% | B | Minor adjustments needed |
-| 70-84% | C | Significant drift |
-| 50-69% | D | Major revision required |
-| <50% | F | Rebuild recommended |
+| Score   | Grade | Meaning                  |
+| ------- | ----- | ------------------------ |
+| 95-100% | A     | Production ready         |
+| 85-94%  | B     | Minor adjustments needed |
+| 70-84%  | C     | Significant drift        |
+| 50-69%  | D     | Major revision required  |
+| <50%    | F     | Rebuild recommended      |
 
 **This implementation:** Grade {{grade}}
 
@@ -36,7 +36,8 @@
 ## Color Comparison
 
 | Token | Design | Code | Match | Fix |
-|-------|--------|------|-------|-----|
+| ----- | ------ | ---- | ----- | --- |
+
 {{#each colors}}
 | {{this.name}} | {{this.design}} | {{this.code}} | {{this.status}} | {{this.fix}} |
 {{/each}}
@@ -46,7 +47,8 @@
 ## Spacing Comparison
 
 | Location | Design | Code | Match | Fix |
-|----------|--------|------|-------|-----|
+| -------- | ------ | ---- | ----- | --- |
+
 {{#each spacing}}
 | {{this.location}} | {{this.design}} | {{this.code}} | {{this.status}} | {{this.fix}} |
 {{/each}}
@@ -56,7 +58,8 @@
 ## Typography Comparison
 
 | Element | Design | Code | Match | Fix |
-|---------|--------|------|-------|-----|
+| ------- | ------ | ---- | ----- | --- |
+
 {{#each typography}}
 | {{this.element}} | {{this.design}} | {{this.code}} | {{this.status}} | {{this.fix}} |
 {{/each}}
@@ -66,7 +69,8 @@
 ## Effects Comparison
 
 | Effect | Design | Code | Match |
-|--------|--------|------|-------|
+| ------ | ------ | ---- | ----- |
+
 {{#each effects}}
 | {{this.name}} | {{this.design}} | {{this.code}} | {{this.status}} |
 {{/each}}
@@ -76,25 +80,31 @@
 ## Actionable Fixes
 
 ### Priority 1: High Impact
+
 {{#each fixes_priority_1}}
 {{this.index}}. **{{this.description}}:** `{{this.from}}` -> `{{this.to}}`
-   - Files: {{this.files}}
-   - Impact: {{this.impact}} instances
-{{/each}}
+
+- Files: {{this.files}}
+- Impact: {{this.impact}} instances
+  {{/each}}
 
 ### Priority 2: Medium Impact
+
 {{#each fixes_priority_2}}
 {{this.index}}. **{{this.description}}:** `{{this.from}}` -> `{{this.to}}`
-   - Files: {{this.files}}
-   - Impact: {{this.impact}} instances
-{{/each}}
+
+- Files: {{this.files}}
+- Impact: {{this.impact}} instances
+  {{/each}}
 
 ### Priority 3: Low Impact
+
 {{#each fixes_priority_3}}
 {{this.index}}. **{{this.description}}:** `{{this.from}}` -> `{{this.to}}`
-   - Files: {{this.files}}
-   - Impact: {{this.impact}} instances
-{{/each}}
+
+- Files: {{this.files}}
+- Impact: {{this.impact}} instances
+  {{/each}}
 
 ---
 
@@ -103,7 +113,7 @@
 Based on this analysis, consider adding/updating these tokens:
 
 ```yaml
-{{token_recommendations}}
+{ { token_recommendations } }
 ```
 
 ---
@@ -113,7 +123,7 @@ Based on this analysis, consider adding/updating these tokens:
 Reference: `{{design_yaml_path}}`
 
 ```yaml
-{{design_tokens_yaml}}
+{ { design_tokens_yaml } }
 ```
 
 ---
@@ -123,7 +133,7 @@ Reference: `{{design_yaml_path}}`
 Reference: `{{code_yaml_path}}`
 
 ```yaml
-{{code_tokens_yaml}}
+{ { code_tokens_yaml } }
 ```
 
 ---
@@ -141,15 +151,15 @@ Reference: `{{code_yaml_path}}`
 
 ## Comparison Thresholds Used
 
-| Category | Threshold | Method |
-|----------|-----------|--------|
-| Colors | 5% | HSL distance |
-| Spacing | ±4px | Absolute difference |
-| Typography size | ±2px | Absolute difference |
-| Typography weight | exact | Exact match |
-| Border radius | ±2px | Absolute difference |
+| Category          | Threshold | Method              |
+| ----------------- | --------- | ------------------- |
+| Colors            | 5%        | HSL distance        |
+| Spacing           | ±4px      | Absolute difference |
+| Typography size   | ±2px      | Absolute difference |
+| Typography weight | exact     | Exact match         |
+| Border radius     | ±2px      | Absolute difference |
 
 ---
 
-*Generated by Brad Frost (Design System Architect) v3.5.0*
-*Command: `*design-compare {{reference_name}} {{implementation_path}}`*
+_Generated by Brad Frost (Design System Architect) v3.5.0_
+*Command: `*design-compare {{reference_name}} {{implementation_path}}`\*

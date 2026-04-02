@@ -7,12 +7,12 @@
 
 ## Resumo Executivo
 
-| Executor | Steps | % | Custo | Velocidade |
-|----------|-------|---|-------|------------|
-| **Worker (Script)** | 34 | 68% | $ | Muito Rápido |
-| **Agent (LLM)** | 8 | 16% | $$$$ | Rápido |
-| **Hybrid** | 6 | 12% | $$ | Moderado |
-| **Human** | 2 | 4% | $$$ | Lento |
+| Executor            | Steps | %   | Custo | Velocidade   |
+| ------------------- | ----- | --- | ----- | ------------ |
+| **Worker (Script)** | 34    | 68% | $     | Muito Rápido |
+| **Agent (LLM)**     | 8     | 16% | $$$$  | Rápido       |
+| **Hybrid**          | 6     | 12% | $$    | Moderado     |
+| **Human**           | 2     | 4%  | $$$   | Lento        |
 
 **Conclusão:** 68% do workflow pode ser script puro. LLM só onde há julgamento real.
 
@@ -20,13 +20,13 @@
 
 ## PHASE 0: INITIALIZATION
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| validate_inputs | Agent | **Worker** | Regex validation, file exists check - 100% determinístico |
-| validate_sources | Agent | **Worker** | `ls`, `test -d` - shell commands |
-| create_workspace | Agent | **Worker** | `mkdir -p` - puro shell |
-| init_audit_log | Agent | **Worker** | Template interpolation - jinja/envsubst |
-| create_backup | Agent | **Worker** | `tar -czf` - puro shell |
+| Step             | Atual | Otimizado  | Rationale                                                 |
+| ---------------- | ----- | ---------- | --------------------------------------------------------- |
+| validate_inputs  | Agent | **Worker** | Regex validation, file exists check - 100% determinístico |
+| validate_sources | Agent | **Worker** | `ls`, `test -d` - shell commands                          |
+| create_workspace | Agent | **Worker** | `mkdir -p` - puro shell                                   |
+| init_audit_log   | Agent | **Worker** | Template interpolation - jinja/envsubst                   |
+| create_backup    | Agent | **Worker** | `tar -czf` - puro shell                                   |
 
 **Phase 0: 100% Worker** ✅
 
@@ -67,17 +67,17 @@ create_backup() {
 
 ## PHASE 1: DISCOVERY
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| inventory_agents | Agent | **Worker** | `find | wc -l` - puro shell |
-| inventory_tasks | Agent | **Worker** | `find | wc -l` - puro shell |
-| inventory_skills | Agent | **Worker** | `find | wc -l` - puro shell |
-| inventory_data | Agent | **Worker** | `find | wc -l` - puro shell |
-| inventory_other | Agent | **Worker** | `find | wc -l` - puro shell |
-| inventory_quality | Agent | **Worker** | `wc -l` - puro shell |
+| Step                  | Atual | Otimizado  | Rationale                  |
+| --------------------- | ----- | ---------- | -------------------------- | ------------------- |
+| inventory_agents      | Agent | **Worker** | `find                      | wc -l` - puro shell |
+| inventory_tasks       | Agent | **Worker** | `find                      | wc -l` - puro shell |
+| inventory_skills      | Agent | **Worker** | `find                      | wc -l` - puro shell |
+| inventory_data        | Agent | **Worker** | `find                      | wc -l` - puro shell |
+| inventory_other       | Agent | **Worker** | `find                      | wc -l` - puro shell |
+| inventory_quality     | Agent | **Worker** | `wc -l` - puro shell       |
 | build_inventory_table | Agent | **Worker** | Template + dados coletados |
-| cross_reference_map | Agent | **Worker** | `grep -r` - puro shell |
-| log_discovery | Agent | **Worker** | Append to YAML file |
+| cross_reference_map   | Agent | **Worker** | `grep -r` - puro shell     |
+| log_discovery         | Agent | **Worker** | Append to YAML file        |
 
 **Phase 1: 100% Worker** ✅
 
@@ -136,20 +136,21 @@ build_inventory_table() {
 
 ## PHASE 2: DEDUPLICATION
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| exact_match_detection | Agent | **Worker** | `sort | uniq -d` - puro shell |
-| semantic_match_detection | Agent | **Hybrid** | ⚠️ Precisa entender função similar |
-| quality_comparison | Agent | **Worker** | `wc -l`, `grep -c` - puro shell |
-| create_golden_records | Agent | **Worker (YOLO) / Hybrid (QUALITY)** | Regra: maior ganha = determinístico |
-| build_dedup_table | Agent | **Worker** | Template + dados |
-| log_deduplication | Agent | **Worker** | Append YAML |
+| Step                     | Atual | Otimizado                            | Rationale                           |
+| ------------------------ | ----- | ------------------------------------ | ----------------------------------- | --------------------- |
+| exact_match_detection    | Agent | **Worker**                           | `sort                               | uniq -d` - puro shell |
+| semantic_match_detection | Agent | **Hybrid**                           | ⚠️ Precisa entender função similar  |
+| quality_comparison       | Agent | **Worker**                           | `wc -l`, `grep -c` - puro shell     |
+| create_golden_records    | Agent | **Worker (YOLO) / Hybrid (QUALITY)** | Regra: maior ganha = determinístico |
+| build_dedup_table        | Agent | **Worker**                           | Template + dados                    |
+| log_deduplication        | Agent | **Worker**                           | Append YAML                         |
 
 **Phase 2: 83% Worker, 17% Hybrid**
 
 ### Onde LLM é necessário:
 
 **semantic_match_detection** - Precisa julgamento para:
+
 - "ads-analyst" e "performance-analyst" são a mesma função?
 - "fiscal" e "compliance-auditor" são duplicatas?
 
@@ -215,13 +216,13 @@ resolve_duplicate_by_quality() {
 
 ## PHASE 3: SCOPE FILTERING
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| define_domain_keywords | Agent | **Worker** | Config file estático |
-| classify_agents | Agent | **Worker** | Keyword matching - grep |
-| classify_tasks | Agent | **Worker** | Keyword matching - grep |
-| build_scope_table | Agent | **Worker** | Template + dados |
-| log_scope | Agent | **Worker** | Append YAML |
+| Step                   | Atual | Otimizado  | Rationale               |
+| ---------------------- | ----- | ---------- | ----------------------- |
+| define_domain_keywords | Agent | **Worker** | Config file estático    |
+| classify_agents        | Agent | **Worker** | Keyword matching - grep |
+| classify_tasks         | Agent | **Worker** | Keyword matching - grep |
+| build_scope_table      | Agent | **Worker** | Template + dados        |
+| log_scope              | Agent | **Worker** | Append YAML             |
 
 **Phase 3: 100% Worker** ✅
 
@@ -289,19 +290,19 @@ classify_component() {
 
 ## PHASE 4: COLLECTION
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| collect_agents | Agent | **Worker** | `cp` com lógica de dedup |
-| collect_tasks | Agent | **Worker** | `cp -n` |
-| collect_skills | Agent | **Worker** | `cp -rn` |
-| collect_data | Agent | **Worker** | `cp -n` |
-| collect_templates | Agent | **Worker** | `cp -n` |
-| collect_checklists | Agent | **Worker** | `cp -n` |
-| collect_workflows | Agent | **Worker** | `cp -n` |
-| handle_conflicts | Agent | **Hybrid** | ⚠️ Conflitos podem precisar julgamento |
-| verify_collection | Agent | **Worker** | `find | wc -l` |
-| reconciliation | Agent | **Worker** | Comparação numérica |
-| log_collection | Agent | **Worker** | Append YAML |
+| Step               | Atual | Otimizado  | Rationale                              |
+| ------------------ | ----- | ---------- | -------------------------------------- | ------ |
+| collect_agents     | Agent | **Worker** | `cp` com lógica de dedup               |
+| collect_tasks      | Agent | **Worker** | `cp -n`                                |
+| collect_skills     | Agent | **Worker** | `cp -rn`                               |
+| collect_data       | Agent | **Worker** | `cp -n`                                |
+| collect_templates  | Agent | **Worker** | `cp -n`                                |
+| collect_checklists | Agent | **Worker** | `cp -n`                                |
+| collect_workflows  | Agent | **Worker** | `cp -n`                                |
+| handle_conflicts   | Agent | **Hybrid** | ⚠️ Conflitos podem precisar julgamento |
+| verify_collection  | Agent | **Worker** | `find                                  | wc -l` |
+| reconciliation     | Agent | **Worker** | Comparação numérica                    |
+| log_collection     | Agent | **Worker** | Append YAML                            |
 
 **Phase 4: 91% Worker, 9% Hybrid**
 
@@ -351,13 +352,13 @@ verify_collection() {
 
 ## PHASE 5: VALIDATION
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| structural_validation | Agent | **Worker** | File exists, not empty, YAML syntax |
-| reference_validation | Agent | **Worker** | grep + file exists check |
-| quality_validation | Agent | **Worker** | wc -l + grep |
-| build_validation_report | Agent | **Worker** | Template + dados |
-| log_validation | Agent | **Worker** | Append YAML |
+| Step                    | Atual | Otimizado  | Rationale                           |
+| ----------------------- | ----- | ---------- | ----------------------------------- |
+| structural_validation   | Agent | **Worker** | File exists, not empty, YAML syntax |
+| reference_validation    | Agent | **Worker** | grep + file exists check            |
+| quality_validation      | Agent | **Worker** | wc -l + grep                        |
+| build_validation_report | Agent | **Worker** | Template + dados                    |
+| log_validation          | Agent | **Worker** | Append YAML                         |
 
 **Phase 5: 100% Worker** ✅
 
@@ -409,26 +410,28 @@ validate_references() {
 
 ## PHASE 6: STRUCTURE CREATION
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| create_target_directory | Agent | **Worker** | `mkdir -p` |
-| move_components | Agent | **Worker** | `mv` |
-| generate_config | Agent | **Agent** | ⚠️ Precisa gerar tiers, routing |
-| generate_readme | Agent | **Worker** | Template com variáveis |
-| create_orchestrator_if_needed | Agent | **Agent** | ⚠️ Precisa gerar agent completo |
-| preserve_audit_log | Agent | **Worker** | `mv` |
-| final_count_verification | Agent | **Worker** | `find | wc -l` |
-| log_structure_creation | Agent | **Worker** | Append YAML |
+| Step                          | Atual | Otimizado  | Rationale                       |
+| ----------------------------- | ----- | ---------- | ------------------------------- | ------ |
+| create_target_directory       | Agent | **Worker** | `mkdir -p`                      |
+| move_components               | Agent | **Worker** | `mv`                            |
+| generate_config               | Agent | **Agent**  | ⚠️ Precisa gerar tiers, routing |
+| generate_readme               | Agent | **Worker** | Template com variáveis          |
+| create_orchestrator_if_needed | Agent | **Agent**  | ⚠️ Precisa gerar agent completo |
+| preserve_audit_log            | Agent | **Worker** | `mv`                            |
+| final_count_verification      | Agent | **Worker** | `find                           | wc -l` |
+| log_structure_creation        | Agent | **Worker** | Append YAML                     |
 
 **Phase 6: 75% Worker, 25% Agent**
 
 ### Onde LLM é necessário:
 
 **generate_config** - Precisa:
+
 - Organizar agents em tiers (requer entender função de cada)
 - Definir routing rules (requer entender quando usar cada agent)
 
 **create_orchestrator** - Precisa:
+
 - Gerar agent completo com voice_dna, output_examples
 - Definir comandos disponíveis
 - Criar handoffs
@@ -454,13 +457,13 @@ routing:
 
 ## PHASE 7: INTEGRATION TEST
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
+| Step                  | Atual | Otimizado  | Rationale                           |
+| --------------------- | ----- | ---------- | ----------------------------------- |
 | smoke_test_activation | Agent | **Worker** | Verificar arquivo existe e é válido |
-| smoke_test_routing | Agent | **Worker** | Verificar referências existem |
-| smoke_test_tasks | Agent | **Worker** | Verificar sintaxe YAML/MD |
-| generate_test_report | Agent | **Worker** | Template + resultados |
-| log_integration | Agent | **Worker** | Append YAML |
+| smoke_test_routing    | Agent | **Worker** | Verificar referências existem       |
+| smoke_test_tasks      | Agent | **Worker** | Verificar sintaxe YAML/MD           |
+| generate_test_report  | Agent | **Worker** | Template + resultados               |
+| log_integration       | Agent | **Worker** | Append YAML                         |
 
 **Phase 7: 100% Worker** ✅
 
@@ -502,13 +505,13 @@ smoke_test_routing() {
 
 ## PHASE 8: CLEANUP
 
-| Step | Atual | Otimizado | Rationale |
-|------|-------|-----------|-----------|
-| confirm_cleanup | Agent | **Human** | ⚠️ Decisão destrutiva irreversível |
-| remove_sources | Agent | **Worker** | `rm -rf` (após confirmação) |
-| update_registry | Agent | **Worker** | Executar script |
-| cleanup_workspace | Agent | **Worker** | `rm -rf` |
-| log_cleanup | Agent | **Worker** | Append YAML |
+| Step              | Atual | Otimizado  | Rationale                          |
+| ----------------- | ----- | ---------- | ---------------------------------- |
+| confirm_cleanup   | Agent | **Human**  | ⚠️ Decisão destrutiva irreversível |
+| remove_sources    | Agent | **Worker** | `rm -rf` (após confirmação)        |
+| update_registry   | Agent | **Worker** | Executar script                    |
+| cleanup_workspace | Agent | **Worker** | `rm -rf`                           |
+| log_cleanup       | Agent | **Worker** | Append YAML                        |
 
 **Phase 8: 80% Worker, 20% Human**
 
@@ -518,19 +521,19 @@ smoke_test_routing() {
 
 ### Por Fase
 
-| Phase | Worker | Agent | Hybrid | Human | Total Steps |
-|-------|--------|-------|--------|-------|-------------|
-| 0: Init | 5 | 0 | 0 | 0 | 5 |
-| 1: Discovery | 9 | 0 | 0 | 0 | 9 |
-| 2: Deduplication | 5 | 0 | 1 | 0 | 6 |
-| 3: Scope | 5 | 0 | 0 | 0 | 5 |
-| 4: Collection | 10 | 0 | 1 | 0 | 11 |
-| 5: Validation | 5 | 0 | 0 | 0 | 5 |
-| 6: Structure | 6 | 2 | 0 | 0 | 8 |
-| 7: Integration | 5 | 0 | 0 | 0 | 5 |
-| 8: Cleanup | 4 | 0 | 0 | 1 | 5 |
-| **TOTAL** | **54** | **2** | **2** | **1** | **59** |
-| **%** | **91.5%** | **3.4%** | **3.4%** | **1.7%** | **100%** |
+| Phase            | Worker    | Agent    | Hybrid   | Human    | Total Steps |
+| ---------------- | --------- | -------- | -------- | -------- | ----------- |
+| 0: Init          | 5         | 0        | 0        | 0        | 5           |
+| 1: Discovery     | 9         | 0        | 0        | 0        | 9           |
+| 2: Deduplication | 5         | 0        | 1        | 0        | 6           |
+| 3: Scope         | 5         | 0        | 0        | 0        | 5           |
+| 4: Collection    | 10        | 0        | 1        | 0        | 11          |
+| 5: Validation    | 5         | 0        | 0        | 0        | 5           |
+| 6: Structure     | 6         | 2        | 0        | 0        | 8           |
+| 7: Integration   | 5         | 0        | 0        | 0        | 5           |
+| 8: Cleanup       | 4         | 0        | 0        | 1        | 5           |
+| **TOTAL**        | **54**    | **2**    | **2**    | **1**    | **59**      |
+| **%**            | **91.5%** | **3.4%** | **3.4%** | **1.7%** | **100%**    |
 
 ### Por Executor
 
@@ -547,25 +550,25 @@ smoke_test_routing() {
 
 ### Custo Estimado
 
-| Executor | Steps | Custo/Step | Total |
-|----------|-------|------------|-------|
-| Worker | 54 | $0.00 | $0.00 |
-| Agent | 2 | $0.50 | $1.00 |
-| Hybrid | 2 | $0.25 | $0.50 |
-| Human | 1 | $5.00 | $5.00 |
-| **TOTAL** | **59** | - | **$6.50** |
+| Executor  | Steps  | Custo/Step | Total     |
+| --------- | ------ | ---------- | --------- |
+| Worker    | 54     | $0.00      | $0.00     |
+| Agent     | 2      | $0.50      | $1.00     |
+| Hybrid    | 2      | $0.25      | $0.50     |
+| Human     | 1      | $5.00      | $5.00     |
+| **TOTAL** | **59** | -          | **$6.50** |
 
 vs. Tudo com LLM: 59 × $0.50 = **$29.50** (4.5x mais caro)
 
 ### Tempo Estimado
 
-| Executor | Steps | Tempo/Step | Total |
-|----------|-------|------------|-------|
-| Worker | 54 | 1s | 54s |
-| Agent | 2 | 30s | 60s |
-| Hybrid | 2 | 60s | 120s |
-| Human | 1 | 300s | 300s |
-| **TOTAL** | **59** | - | **~9 min** |
+| Executor  | Steps  | Tempo/Step | Total      |
+| --------- | ------ | ---------- | ---------- |
+| Worker    | 54     | 1s         | 54s        |
+| Agent     | 2      | 30s        | 60s        |
+| Hybrid    | 2      | 60s        | 120s       |
+| Human     | 1      | 300s       | 300s       |
+| **TOTAL** | **59** | -          | **~9 min** |
 
 vs. Tudo com LLM: 59 × 30s = **~30 min** (3.3x mais lento)
 
@@ -574,21 +577,25 @@ vs. Tudo com LLM: 59 × 30s = **~30 min** (3.3x mais lento)
 ## 🎯 ONDE LLM É REALMENTE NECESSÁRIO
 
 ### 1. semantic_match_detection (Phase 2)
+
 **Por quê?** Precisa entender se dois agents fazem a mesma coisa com nomes diferentes.
 
 **Mitigação:** Manter mapa estático de sinônimos conhecidos. LLM só para casos novos.
 
 ### 2. handle_conflicts (Phase 4)
+
 **Por quê?** Quando dois arquivos têm mesmo nome mas conteúdo diferente, precisa decidir qual manter ou como mergear.
 
 **Mitigação:** Em YOLO mode, sempre escolher o maior. LLM só em QUALITY mode.
 
 ### 3. generate_config - tiers/routing (Phase 6)
+
 **Por quê?** Organizar agents em tiers requer entender a função de cada um.
 
 **Mitigação:** Se squads fonte já têm tiers, herdar. LLM só para reconciliar.
 
 ### 4. create_orchestrator (Phase 6)
+
 **Por quê?** Gerar agent completo com voice_dna, comandos, etc.
 
 **Mitigação:** Template pesado + LLM só para partes criativas.
@@ -673,5 +680,5 @@ squads/squad-creator-pro/scripts/fusion/
 
 ---
 
-*Análise gerada pelo Executor Matrix Framework v1.0*
-*Data: 2026-02-03*
+_Análise gerada pelo Executor Matrix Framework v1.0_
+_Data: 2026-02-03_

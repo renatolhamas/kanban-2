@@ -12,13 +12,13 @@ Este documento consolida as ferramentas recomendadas para potencializar o Squad 
 
 ### Capability Gaps Identificados
 
-| Gap | Impacto | Solução Recomendada |
-|-----|---------|---------------------|
-| **Source Acquisition** | 🔴 CRÍTICO | mcp-youtube-transcript + Firecrawl |
-| **Deep Research** | 🔴 CRÍTICO | mcp-perplexity + Exa (já instalado) |
-| **Knowledge Storage** | 🟡 ALTO | Knowledge Graph Memory |
-| **Web Scraping** | 🟡 ALTO | Firecrawl MCP |
-| **Content Processing** | 🟢 MÉDIO | yt2doc + summarize CLI |
+| Gap                    | Impacto    | Solução Recomendada                 |
+| ---------------------- | ---------- | ----------------------------------- |
+| **Source Acquisition** | 🔴 CRÍTICO | mcp-youtube-transcript + Firecrawl  |
+| **Deep Research**      | 🔴 CRÍTICO | mcp-perplexity + Exa (já instalado) |
+| **Knowledge Storage**  | 🟡 ALTO    | Knowledge Graph Memory              |
+| **Web Scraping**       | 🟡 ALTO    | Firecrawl MCP                       |
+| **Content Processing** | 🟢 MÉDIO   | yt2doc + summarize CLI              |
 
 ---
 
@@ -36,11 +36,13 @@ npx -y @jkawamoto/mcp-youtube-transcript
 ```
 
 **Por que é crítico:**
+
 - Transcripts de entrevistas são a fonte #1 de Voice DNA
 - Keynotes e masterclasses capturam Thinking DNA
 - Suporte multi-idioma (experts internacionais)
 
 **Integração:**
+
 - `wf-auto-acquire-sources.yaml` - Fase 1
 - `collect-sources.md` - Aquisição automática
 - `*auto-acquire-sources` - Comando standalone
@@ -65,12 +67,14 @@ env FIRECRAWL_API_KEY=fc-YOUR_KEY npx -y firecrawl-mcp
 ```
 
 **Por que é crítico:**
+
 - Converte qualquer URL em markdown limpo (LLM-ready)
 - Extrai artigos de blogs de experts
 - Lida com anti-bot measures
 - Batch processing para múltiplas URLs
 
 **Integração:**
+
 - `wf-auto-acquire-sources.yaml` - Fases 2 e 4
 - `deep-research-pre-agent.md`
 - `collect-sources.md`
@@ -84,6 +88,7 @@ env FIRECRAWL_API_KEY=fc-YOUR_KEY npx -y firecrawl-mcp
 | API Key | Sim (free tier disponível) |
 
 **Obter API Key:**
+
 1. Acesse https://firecrawl.dev
 2. Crie conta gratuita
 3. Copie API key do dashboard
@@ -102,12 +107,14 @@ npx -y mcp-perplexity
 ```
 
 **Por que é importante:**
+
 - Research com citações (fontes verificáveis)
 - Validar existência de frameworks documentados
 - Complementa Exa para research iterativo
 - Melhor para perguntas complexas
 
 **Integração:**
+
 - `mind-research-loop.md` - Iterações de pesquisa
 - `deep-research-pre-agent.md`
 
@@ -130,12 +137,14 @@ npx -y @modelcontextprotocol/server-memory
 ```
 
 **Por que é importante:**
+
 - Armazena Voice DNA e Thinking DNA
 - Mantém contexto entre sessões
 - Relaciona minds com frameworks
 - Evita re-processamento
 
 **Integração:**
+
 - `wf-clone-mind.yaml` - Persistir outputs
 - `create-agent.md` - Recuperar DNA
 
@@ -330,12 +339,12 @@ phases:
 
 Cada fase tem fallback para quando MCPs não estão instalados:
 
-| MCP | Fallback |
-|-----|----------|
+| MCP                    | Fallback                                          |
+| ---------------------- | ------------------------------------------------- |
 | mcp-youtube-transcript | Exa search + WebFetch para transcripts existentes |
-| firecrawl-mcp | WebFetch nativo |
-| mcp-perplexity | Exa (já instalado) |
-| knowledge-graph-memory | Arquivos YAML locais |
+| firecrawl-mcp          | WebFetch nativo                                   |
+| mcp-perplexity         | Exa (já instalado)                                |
+| knowledge-graph-memory | Arquivos YAML locais                              |
 
 ---
 
@@ -343,13 +352,13 @@ Cada fase tem fallback para quando MCPs não estão instalados:
 
 O squad-creator já tem acesso a:
 
-| Ferramenta | Status | Uso |
-|------------|--------|-----|
-| **Exa MCP** | ✅ Instalado | Web search, research |
-| **Context7 MCP** | ✅ Instalado | Documentação de libraries |
-| **Desktop Commander** | ✅ Instalado | File operations, PDF, Excel |
-| **WebFetch** (nativo) | ✅ Disponível | Fetch de URLs |
-| **WebSearch** (nativo) | ✅ Disponível | Search básico |
+| Ferramenta             | Status        | Uso                         |
+| ---------------------- | ------------- | --------------------------- |
+| **Exa MCP**            | ✅ Instalado  | Web search, research        |
+| **Context7 MCP**       | ✅ Instalado  | Documentação de libraries   |
+| **Desktop Commander**  | ✅ Instalado  | File operations, PDF, Excel |
+| **WebFetch** (nativo)  | ✅ Disponível | Fetch de URLs               |
+| **WebSearch** (nativo) | ✅ Disponível | Search básico               |
 
 ---
 
@@ -376,4 +385,4 @@ O squad-creator já tem acesso a:
 ---
 
 **Squad Architect | Tool Recommendations v1.0**
-*"The right tools make elite mind cloning possible at scale."*
+_"The right tools make elite mind cloning possible at scale."_

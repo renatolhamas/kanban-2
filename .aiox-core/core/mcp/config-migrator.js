@@ -9,25 +9,30 @@
  * @story 2.11 - MCP System Global
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 const {
   readGlobalConfig,
   writeGlobalConfig,
   globalConfigExists,
   createGlobalStructure,
   createGlobalConfig,
-} = require('./global-config-manager');
-const { getProjectMcpPath, checkLinkStatus, LINK_STATUS, createLink } = require('./symlink-manager');
+} = require("./global-config-manager");
+const {
+  getProjectMcpPath,
+  checkLinkStatus,
+  LINK_STATUS,
+  createLink,
+} = require("./symlink-manager");
 
 /**
  * Migration options
  * @enum {string}
  */
 const MIGRATION_OPTION = {
-  MIGRATE: 'migrate',
-  KEEP_PROJECT: 'keep_project',
-  MERGE: 'merge',
+  MIGRATE: "migrate",
+  KEEP_PROJECT: "keep_project",
+  MERGE: "merge",
 };
 
 /**
@@ -37,16 +42,16 @@ const MIGRATION_OPTION = {
  */
 function detectProjectConfig(projectRoot = process.cwd()) {
   const possiblePaths = [
-    path.join(projectRoot, '.aiox-core', 'tools', 'mcp', 'global-config.json'),
-    path.join(projectRoot, '.aiox-core', 'mcp.json'),
-    path.join(projectRoot, '.claude', 'mcp.json'),
-    path.join(projectRoot, 'mcp.json'),
+    path.join(projectRoot, ".aiox-core", "tools", "mcp", "global-config.json"),
+    path.join(projectRoot, ".aiox-core", "mcp.json"),
+    path.join(projectRoot, ".claude", "mcp.json"),
+    path.join(projectRoot, "mcp.json"),
   ];
 
   for (const configPath of possiblePaths) {
     if (fs.existsSync(configPath)) {
       try {
-        const content = fs.readFileSync(configPath, 'utf8');
+        const content = fs.readFileSync(configPath, "utf8");
         const config = JSON.parse(content);
 
         return {
@@ -62,17 +67,17 @@ function detectProjectConfig(projectRoot = process.cwd()) {
   }
 
   // Also check for legacy mcpServers format (from .claude.json style)
-  const claudeConfigPath = path.join(projectRoot, '.claude.json');
+  const claudeConfigPath = path.join(projectRoot, ".claude.json");
   if (fs.existsSync(claudeConfigPath)) {
     try {
-      const content = fs.readFileSync(claudeConfigPath, 'utf8');
+      const content = fs.readFileSync(claudeConfigPath, "utf8");
       const config = JSON.parse(content);
 
       if (config.mcpServers && Object.keys(config.mcpServers).length > 0) {
         return {
           found: true,
           path: claudeConfigPath,
-          config: { servers: config.mcpServers, version: '1.0' },
+          config: { servers: config.mcpServers, version: "1.0" },
           serverCount: Object.keys(config.mcpServers).length,
           isLegacyFormat: true,
         };
@@ -106,24 +111,24 @@ function analyzeMigration(projectRoot = process.cwd()) {
   let message;
 
   if (linkStatus.status === LINK_STATUS.LINKED) {
-    scenario = 'already_linked';
+    scenario = "already_linked";
     recommendedOption = null;
-    message = 'Project is already linked to global MCP config.';
+    message = "Project is already linked to global MCP config.";
   } else if (!projectConfig.found && !hasGlobalConfig) {
-    scenario = 'fresh_install';
+    scenario = "fresh_install";
     recommendedOption = MIGRATION_OPTION.MIGRATE;
-    message = 'No existing MCP config found. Will create fresh global config.';
+    message = "No existing MCP config found. Will create fresh global config.";
   } else if (!projectConfig.found && hasGlobalConfig) {
-    scenario = 'link_only';
+    scenario = "link_only";
     recommendedOption = MIGRATION_OPTION.MIGRATE;
-    message = 'Global config exists. Will create link to it.';
+    message = "Global config exists. Will create link to it.";
   } else if (projectConfig.found && !hasGlobalConfig) {
-    scenario = 'migrate_to_global';
+    scenario = "migrate_to_global";
     recommendedOption = MIGRATION_OPTION.MIGRATE;
     message = `Project config found with ${projectConfig.serverCount} servers. Will migrate to global.`;
   } else {
     // Both exist
-    scenario = 'merge_required';
+    scenario = "merge_required";
     recommendedOption = MIGRATION_OPTION.MERGE;
     message = `Both project (${projectConfig.serverCount} servers) and global configs exist. Merge recommended.`;
   }
@@ -162,11 +167,11 @@ function mergeServers(existing = {}, incoming = {}, options = {}) {
     } else if (options.overwrite) {
       // Overwrite existing
       merged[name] = config;
-      stats.conflicts.push({ name, action: 'overwritten' });
+      stats.conflicts.push({ name, action: "overwritten" });
     } else {
       // Skip duplicate
       stats.skipped++;
-      stats.conflicts.push({ name, action: 'skipped' });
+      stats.conflicts.push({ name, action: "skipped" });
     }
   }
 
@@ -180,15 +185,19 @@ function mergeServers(existing = {}, incoming = {}, options = {}) {
  * @param {Object} options - Additional options
  * @returns {Object} Migration result
  */
-function executeMigration(projectRoot = process.cwd(), option = MIGRATION_OPTION.MIGRATE, options = {}) {
+function executeMigration(
+  projectRoot = process.cwd(),
+  option = MIGRATION_OPTION.MIGRATE,
+  options = {},
+) {
   const analysis = analyzeMigration(projectRoot);
 
   // Handle already linked
-  if (analysis.scenario === 'already_linked') {
+  if (analysis.scenario === "already_linked") {
     return {
       success: true,
-      message: 'Already linked to global config.',
-      action: 'none',
+      message: "Already linked to global config.",
+      action: "none",
     };
   }
 
@@ -196,8 +205,8 @@ function executeMigration(projectRoot = process.cwd(), option = MIGRATION_OPTION
   if (option === MIGRATION_OPTION.KEEP_PROJECT) {
     return {
       success: true,
-      message: 'Keeping project-level config. No changes made.',
-      action: 'none',
+      message: "Keeping project-level config. No changes made.",
+      action: "none",
     };
   }
 
@@ -215,7 +224,9 @@ function executeMigration(projectRoot = process.cwd(), option = MIGRATION_OPTION
     if (!analysis.hasGlobalConfig) {
       const structureResult = createGlobalStructure();
       if (!structureResult.success) {
-        results.errors.push(`Structure creation failed: ${structureResult.errors.join(', ')}`);
+        results.errors.push(
+          `Structure creation failed: ${structureResult.errors.join(", ")}`,
+        );
       } else {
         results.structureCreated = true;
       }
@@ -238,16 +249,17 @@ function executeMigration(projectRoot = process.cwd(), option = MIGRATION_OPTION
         results.serversMigrated = Object.keys(initialServers).length;
       }
     } else if (option === MIGRATION_OPTION.MERGE) {
-      const globalConfig = readGlobalConfig() || { version: '1.0', servers: {} };
+      const globalConfig = readGlobalConfig() || {
+        version: "1.0",
+        servers: {},
+      };
       const projectServers = analysis.projectConfig.found
         ? analysis.projectConfig.config.servers || {}
         : {};
 
-      const mergeResult = mergeServers(
-        globalConfig.servers,
-        projectServers,
-        { overwrite: options.overwrite },
-      );
+      const mergeResult = mergeServers(globalConfig.servers, projectServers, {
+        overwrite: options.overwrite,
+      });
 
       globalConfig.servers = mergeResult.servers;
 
@@ -262,9 +274,12 @@ function executeMigration(projectRoot = process.cwd(), option = MIGRATION_OPTION
     }
 
     // Step 3: Backup and remove project config if it exists as directory
-    if (analysis.linkStatus.status === LINK_STATUS.DIRECTORY && analysis.projectConfig.found) {
+    if (
+      analysis.linkStatus.status === LINK_STATUS.DIRECTORY &&
+      analysis.projectConfig.found
+    ) {
       const projectMcpPath = getProjectMcpPath(projectRoot);
-      const backupPath = projectMcpPath + '.backup.' + Date.now();
+      const backupPath = projectMcpPath + ".backup." + Date.now();
 
       try {
         fs.renameSync(projectMcpPath, backupPath);
@@ -307,7 +322,7 @@ function restoreFromBackup(backupPath, projectRoot = process.cwd()) {
   const projectMcpPath = getProjectMcpPath(projectRoot);
 
   if (!fs.existsSync(backupPath)) {
-    return { success: false, error: 'Backup not found' };
+    return { success: false, error: "Backup not found" };
   }
 
   try {

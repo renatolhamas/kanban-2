@@ -14,6 +14,7 @@ Apply the Critical Eye scoring engine to every variant in the inventory. The eng
 Authority: Nathan Curtis/EightShapes, GOV.UK Contribution Criteria, USWDS Lifecycle, Brad Frost — Death to Complexity.
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/critical-eye/cycle-{N}/scored.json`
 - **format:** JSON — each variant with detailed per-dimension scores
 - **consumed_by:** ds-critical-eye-compare
@@ -43,7 +44,7 @@ Authority: Nathan Curtis/EightShapes, GOV.UK Contribution Criteria, USWDS Lifecy
 3. **Score Quality (30 pts) — EightShapes Component QA**
    - For each variant, evaluate 6 sub-dimensions:
      - **token_compliance** (5pts): Count hardcoded values in source files (`#hex`, `Npx` except 0px). 0 hardcoded = 5pts, <5 = 3pts, 5-10 = 1pt, >10 = 0pts
-     - **states_coverage** (5pts): Count states implemented vs reference [default, hover, focus, disabled, error, loading]. Prorated: (implemented / 6) * 5
+     - **states_coverage** (5pts): Count states implemented vs reference [default, hover, focus, disabled, error, loading]. Prorated: (implemented / 6) \* 5
      - **accessibility** (5pts, BLOCKER): Check WCAG AA contrast, ARIA attributes, keyboard nav, focus-visible. Score 0 = AUTOMATIC REJECT
      - **responsiveness** (5pts): Check breakpoints coverage (mobile/tablet/desktop). All 3 = 5pts, 2 = 3pts, 1 = 1pt, fixed = 0pts
      - **composability** (5pts): Evaluate how well it composes with other catalog variants. 3+ canonicals = 5pts, 1-2 = 3pts, requires adaptation = 1pt, incompatible = 0pts

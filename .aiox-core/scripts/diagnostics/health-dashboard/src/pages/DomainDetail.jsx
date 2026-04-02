@@ -1,23 +1,28 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Card, StatusBadge, TrendChart, HealthScore } from '../components';
-import { useHealthData } from '../hooks';
-import './DomainDetail.css';
+import React from "react";
+import { useParams, Link } from "react-router-dom";
+import { Card, StatusBadge, TrendChart, HealthScore } from "../components";
+import { useHealthData } from "../hooks";
+import "./DomainDetail.css";
 
 const DOMAIN_LABELS = {
-  project: 'Project Coherence',
-  local: 'Local Environment',
-  repository: 'Repository Health',
-  deployment: 'Deployment',
-  services: 'Service Integration'
+  project: "Project Coherence",
+  local: "Local Environment",
+  repository: "Repository Health",
+  deployment: "Deployment",
+  services: "Service Integration",
 };
 
 const DOMAIN_DESCRIPTIONS = {
-  project: 'Validates AIOX configuration files, task definitions, agent references, and template integrity.',
-  local: 'Checks development environment prerequisites including Node.js, Git, IDE configuration, and environment variables.',
-  repository: 'Monitors GitHub Actions, branch protection, dependencies, and security vulnerabilities.',
-  deployment: 'Verifies deployment configuration, environment variables, and service endpoints.',
-  services: 'Tests connectivity to external services including GitHub API, MCP servers, and the memory layer.'
+  project:
+    "Validates AIOX configuration files, task definitions, agent references, and template integrity.",
+  local:
+    "Checks development environment prerequisites including Node.js, Git, IDE configuration, and environment variables.",
+  repository:
+    "Monitors GitHub Actions, branch protection, dependencies, and security vulnerabilities.",
+  deployment:
+    "Verifies deployment configuration, environment variables, and service endpoints.",
+  services:
+    "Tests connectivity to external services including GitHub API, MCP servers, and the memory layer.",
 };
 
 /**
@@ -43,17 +48,19 @@ function DomainDetail() {
       <div className="domain-not-found">
         <h2>Domain not found</h2>
         <p>The domain "{domainId}" does not exist.</p>
-        <Link to="/" className="back-link">&larr; Back to Dashboard</Link>
+        <Link to="/" className="back-link">
+          &larr; Back to Dashboard
+        </Link>
       </div>
     );
   }
 
   const label = DOMAIN_LABELS[domainId] || domainId;
-  const description = DOMAIN_DESCRIPTIONS[domainId] || '';
+  const description = DOMAIN_DESCRIPTIONS[domainId] || "";
   const checks = domainData.checks || [];
-  const passedCount = checks.filter(c => c.status === 'passed').length;
-  const failedCount = checks.filter(c => c.status === 'failed').length;
-  const skippedCount = checks.filter(c => c.status === 'skipped').length;
+  const passedCount = checks.filter((c) => c.status === "passed").length;
+  const failedCount = checks.filter((c) => c.status === "failed").length;
+  const skippedCount = checks.filter((c) => c.status === "skipped").length;
 
   return (
     <div className="domain-detail">
@@ -112,7 +119,10 @@ function DomainDetail() {
             </thead>
             <tbody>
               {checks.map((check, index) => (
-                <tr key={check.id || index} className={`check-row check-row--${check.status}`}>
+                <tr
+                  key={check.id || index}
+                  className={`check-row check-row--${check.status}`}
+                >
                   <td className="check-id">
                     <code>{check.id}</code>
                   </td>
@@ -127,9 +137,7 @@ function DomainDetail() {
                       <span className="na">-</span>
                     )}
                   </td>
-                  <td className="check-duration">
-                    {check.duration || '-'}
-                  </td>
+                  <td className="check-duration">{check.duration || "-"}</td>
                   <td className="check-details">
                     {check.message && (
                       <span className="check-message">{check.message}</span>

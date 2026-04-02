@@ -6,20 +6,20 @@
  * for dependency-aware scheduling.
  */
 
-const EventEmitter = require('events');
-const _path = require('path');
+const EventEmitter = require("events");
+const _path = require("path");
 
 // Import dependencies with fallbacks
 let WaveAnalyzer;
 try {
-  WaveAnalyzer = require('../../workflow-intelligence/engine/wave-analyzer');
+  WaveAnalyzer = require("../../workflow-intelligence/engine/wave-analyzer");
 } catch {
   WaveAnalyzer = null;
 }
 
 let RateLimitManager;
 try {
-  RateLimitManager = require('./rate-limit-manager');
+  RateLimitManager = require("./rate-limit-manager");
 } catch {
   RateLimitManager = null;
 }
@@ -31,13 +31,16 @@ class WaveExecutor extends EventEmitter {
     // Configuration
     this.maxParallel = config.maxParallel || 4;
     this.taskTimeout = config.taskTimeout || 10 * 60 * 1000; // 10 minutes
-    this.continueOnNonCriticalFailure = config.continueOnNonCriticalFailure !== false;
+    this.continueOnNonCriticalFailure =
+      config.continueOnNonCriticalFailure !== false;
 
     // Dependencies
-    this.waveAnalyzer = config.waveAnalyzer || (WaveAnalyzer ? new WaveAnalyzer() : null);
+    this.waveAnalyzer =
+      config.waveAnalyzer || (WaveAnalyzer ? new WaveAnalyzer() : null);
     this.taskExecutor = config.taskExecutor || null;
     this.rateLimitManager =
-      config.rateLimitManager || (RateLimitManager ? new RateLimitManager() : null);
+      config.rateLimitManager ||
+      (RateLimitManager ? new RateLimitManager() : null);
 
     // State
     this.activeExecutions = new Map();
@@ -76,11 +79,14 @@ class WaveExecutor extends EventEmitter {
         success: true,
         waves: [],
         totalDuration: 0,
-        message: 'No waves to execute',
+        message: "No waves to execute",
       };
     }
 
-    this.emit('execution_started', { workflowId, totalWaves: analysis.waves.length });
+    this.emit("execution_started", {
+      workflowId,
+      totalWaves: analysis.waves.length,
+    });
 
     const results = [];
     let aborted = false;
@@ -89,9 +95,12 @@ class WaveExecutor extends EventEmitter {
       if (aborted) break;
 
       this.currentWaveIndex = wave.index;
-      this.emit('wave_started', {
+      this.emit("wave_started", {
         waveIndex: wave.index,
-        tasks: wave.tasks.map((t) => ({ id: t.id, description: t.description })),
+        tasks: wave.tasks.map((t) => ({
+          id: t.id,
+          description: t.description,
+        })),
         totalTasks: wave.tasks.length,
       });
 
@@ -104,7 +113,7 @@ class WaveExecutor extends EventEmitter {
         duration: waveResult.reduce((sum, r) => sum + (r.duration || 0), 0),
       });
 
-      this.emit('wave_completed', {
+      this.emit("wave_completed", {
         waveIndex: wave.index,
         results: waveResult,
         success: waveResult.every((r) => r.success),
@@ -113,9 +122,9 @@ class WaveExecutor extends EventEmitter {
       // Check if we should continue
       const criticalFailed = waveResult.some((r) => !r.success && r.critical);
       if (criticalFailed) {
-        this.emit('wave_failed', {
+        this.emit("wave_failed", {
           waveIndex: wave.index,
-          reason: 'critical_task_failed',
+          reason: "critical_task_failed",
           failedTasks: waveResult.filter((r) => !r.success && r.critical),
         });
 
@@ -136,7 +145,7 @@ class WaveExecutor extends EventEmitter {
       metrics: this.calculateMetrics(results),
     };
 
-    this.emit('execution_completed', executionResult);
+    this.emit("execution_completed", executionResult);
 
     return executionResult;
   }
@@ -160,7 +169,9 @@ class WaveExecutor extends EventEmitter {
 
     for (const chunk of chunks) {
       // Execute chunk in parallel
-      const promises = chunk.map((task) => this.executeTaskWithTimeout(task, context));
+      const promises = chunk.map((task) =>
+        this.executeTaskWithTimeout(task, context),
+      );
 
       const chunkResults = await Promise.allSettled(promises);
 
@@ -169,7 +180,7 @@ class WaveExecutor extends EventEmitter {
         const result = chunkResults[i];
         const task = chunk[i];
 
-        if (result.status === 'fulfilled') {
+        if (result.status === "fulfilled") {
           allResults.push({
             taskId: task.id,
             success: result.value.success,
@@ -181,15 +192,15 @@ class WaveExecutor extends EventEmitter {
           allResults.push({
             taskId: task.id,
             success: false,
-            error: result.reason?.message || 'Unknown error',
+            error: result.reason?.message || "Unknown error",
             critical: task.critical || false,
             duration: 0,
           });
         }
 
-        this.emit('task_completed', {
+        this.emit("task_completed", {
           taskId: task.id,
-          success: result.status === 'fulfilled' && result.value?.success,
+          success: result.status === "fulfilled" && result.value?.success,
           waveIndex: wave.index,
         });
       }
@@ -211,16 +222,21 @@ class WaveExecutor extends EventEmitter {
     this.activeExecutions.set(task.id, {
       task,
       startTime,
-      status: 'running',
+      status: "running",
     });
 
-    this.emit('task_started', { taskId: task.id, description: task.description });
+    this.emit("task_started", {
+      taskId: task.id,
+      description: task.description,
+    });
 
     try {
       // Create timeout promise
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => {
-          reject(new Error(`Task ${task.id} timed out after ${this.taskTimeout}ms`));
+          reject(
+            new Error(`Task ${task.id} timed out after ${this.taskTimeout}ms`),
+          );
         }, this.taskTimeout);
       });
 
@@ -248,7 +264,7 @@ class WaveExecutor extends EventEmitter {
         task,
         startTime,
         endTime: Date.now(),
-        status: 'completed',
+        status: "completed",
         success: result.success,
       });
 
@@ -262,7 +278,7 @@ class WaveExecutor extends EventEmitter {
         task,
         startTime,
         endTime: Date.now(),
-        status: 'failed',
+        status: "failed",
         error: error.message,
       });
 
@@ -288,7 +304,7 @@ class WaveExecutor extends EventEmitter {
   async defaultExecutor(task, _context) {
     // This should be overridden or configured
     console.log(`[WaveExecutor] Executing task: ${task.id}`);
-    return { success: true, output: 'Default executor - no action taken' };
+    return { success: true, output: "Default executor - no action taken" };
   }
 
   /**
@@ -314,7 +330,10 @@ class WaveExecutor extends EventEmitter {
     const allTasks = waveResults.flatMap((w) => w.results);
     const successful = allTasks.filter((t) => t.success).length;
     const failed = allTasks.filter((t) => !t.success).length;
-    const totalDuration = allTasks.reduce((sum, t) => sum + (t.duration || 0), 0);
+    const totalDuration = allTasks.reduce(
+      (sum, t) => sum + (t.duration || 0),
+      0,
+    );
 
     // Calculate wall time (actual elapsed time)
     const wallTime = waveResults.reduce((sum, w) => {
@@ -326,7 +345,8 @@ class WaveExecutor extends EventEmitter {
       totalTasks: allTasks.length,
       successful,
       failed,
-      successRate: allTasks.length > 0 ? (successful / allTasks.length) * 100 : 100,
+      successRate:
+        allTasks.length > 0 ? (successful / allTasks.length) * 100 : 100,
       totalDuration,
       wallTime,
       parallelEfficiency: wallTime > 0 ? totalDuration / wallTime : 1,
@@ -362,18 +382,23 @@ class WaveExecutor extends EventEmitter {
   formatStatus() {
     const status = this.getStatus();
 
-    let output = '🌊 Wave Executor Status\n';
-    output += '━'.repeat(40) + '\n\n';
+    let output = "🌊 Wave Executor Status\n";
+    output += "━".repeat(40) + "\n\n";
 
     output += `Current Wave: ${status.currentWave}\n`;
     output += `Completed Waves: ${status.completedWaves}\n`;
     output += `Active Executions: ${status.activeExecutions.length}\n\n`;
 
     if (status.activeExecutions.length > 0) {
-      output += '**Active Tasks:**\n';
+      output += "**Active Tasks:**\n";
       for (const exec of status.activeExecutions) {
         const elapsed = Math.round(exec.elapsed / 1000);
-        const icon = exec.status === 'running' ? '🔄' : exec.status === 'completed' ? '✅' : '❌';
+        const icon =
+          exec.status === "running"
+            ? "🔄"
+            : exec.status === "completed"
+              ? "✅"
+              : "❌";
         output += `  ${icon} ${exec.taskId} - ${elapsed}s\n`;
       }
     }
@@ -386,10 +411,10 @@ class WaveExecutor extends EventEmitter {
    */
   cancelAll() {
     for (const [taskId, execution] of this.activeExecutions) {
-      execution.status = 'cancelled';
-      this.emit('task_cancelled', { taskId });
+      execution.status = "cancelled";
+      this.emit("task_cancelled", { taskId });
     }
-    this.emit('execution_cancelled', { reason: 'user_requested' });
+    this.emit("execution_cancelled", { reason: "user_requested" });
   }
 }
 

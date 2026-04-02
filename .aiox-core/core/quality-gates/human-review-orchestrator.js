@@ -13,10 +13,10 @@
  * @story 3.5 - Human Review Orchestration (Layer 3)
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { FocusAreaRecommender } = require('./focus-area-recommender');
-const { NotificationManager } = require('./notification-manager');
+const fs = require("fs").promises;
+const path = require("path");
+const { FocusAreaRecommender } = require("./focus-area-recommender");
+const { NotificationManager } = require("./notification-manager");
 
 /**
  * Human Review Orchestrator
@@ -30,9 +30,12 @@ class HumanReviewOrchestrator {
   constructor(config = {}) {
     this.config = config;
     this.focusRecommender = new FocusAreaRecommender(config.focusAreas || {});
-    this.notificationManager = new NotificationManager(config.notifications || {});
-    this.statusPath = config.statusPath || '.aiox/qa-status.json';
-    this.reviewRequestsPath = config.reviewRequestsPath || '.aiox/human-review-requests';
+    this.notificationManager = new NotificationManager(
+      config.notifications || {},
+    );
+    this.statusPath = config.statusPath || ".aiox/qa-status.json";
+    this.reviewRequestsPath =
+      config.reviewRequestsPath || ".aiox/human-review-requests";
     // Status queue for serializing concurrent writes to status file
     this.statusQueue = Promise.resolve();
   }
@@ -48,15 +51,15 @@ class HumanReviewOrchestrator {
     const startTime = Date.now();
 
     // Step 1: Check Layer 1 pass/fail
-    const layer1Check = this.checkLayerPassed(layer1Result, 'Layer 1');
+    const layer1Check = this.checkLayerPassed(layer1Result, "Layer 1");
     if (!layer1Check.pass) {
-      return this.block(layer1Check, 'layer1', startTime);
+      return this.block(layer1Check, "layer1", startTime);
     }
 
     // Step 2: Check Layer 2 pass/fail
-    const layer2Check = this.checkLayerPassed(layer2Result, 'Layer 2');
+    const layer2Check = this.checkLayerPassed(layer2Result, "Layer 2");
     if (!layer2Check.pass) {
-      return this.block(layer2Check, 'layer2', startTime);
+      return this.block(layer2Check, "layer2", startTime);
     }
 
     // Step 3: Both layers passed - generate human review request
@@ -74,9 +77,9 @@ class HumanReviewOrchestrator {
 
     return {
       pass: true,
-      status: 'pending_human_review',
+      status: "pending_human_review",
       duration: Date.now() - startTime,
-      message: 'Layers 1+2 passed. Human review requested.',
+      message: "Layers 1+2 passed. Human review requested.",
       reviewRequest,
       layers: {
         layer1: layer1Check,
@@ -146,12 +149,12 @@ class HumanReviewOrchestrator {
    * @returns {string} Severity level
    */
   determineSeverity(result) {
-    if (result.check === 'lint') return 'HIGH';
-    if (result.check === 'test') return 'CRITICAL';
-    if (result.check === 'typecheck') return 'HIGH';
-    if (result.issues?.critical > 0) return 'CRITICAL';
-    if (result.issues?.high > 0) return 'HIGH';
-    return 'MEDIUM';
+    if (result.check === "lint") return "HIGH";
+    if (result.check === "test") return "CRITICAL";
+    if (result.check === "typecheck") return "HIGH";
+    if (result.issues?.critical > 0) return "CRITICAL";
+    if (result.issues?.high > 0) return "HIGH";
+    return "MEDIUM";
   }
 
   /**
@@ -163,16 +166,16 @@ class HumanReviewOrchestrator {
    */
   block(layerCheck, stoppedAt, startTime) {
     const blockMessages = {
-      layer1: 'Fix linting, tests, and type errors before human review',
-      layer2: 'Fix CodeRabbit and Quinn issues before human review',
+      layer1: "Fix linting, tests, and type errors before human review",
+      layer2: "Fix CodeRabbit and Quinn issues before human review",
     };
 
     return {
       pass: false,
-      status: 'blocked',
+      status: "blocked",
       stoppedAt,
       duration: Date.now() - startTime,
-      message: blockMessages[stoppedAt] || 'Fix issues before proceeding',
+      message: blockMessages[stoppedAt] || "Fix issues before proceeding",
       reason: layerCheck.reason,
       issues: layerCheck.issues,
       fixFirst: this.generateFixRecommendations(layerCheck),
@@ -195,20 +198,22 @@ class HumanReviewOrchestrator {
       };
 
       switch (issue.check) {
-        case 'lint':
-          rec.suggestion = 'Run `npm run lint:fix` to auto-fix linting issues';
+        case "lint":
+          rec.suggestion = "Run `npm run lint:fix` to auto-fix linting issues";
           break;
-        case 'test':
-          rec.suggestion = 'Run `npm test` and fix failing tests';
+        case "test":
+          rec.suggestion = "Run `npm test` and fix failing tests";
           break;
-        case 'typecheck':
-          rec.suggestion = 'Run `npm run typecheck` and resolve type errors';
+        case "typecheck":
+          rec.suggestion = "Run `npm run typecheck` and resolve type errors";
           break;
-        case 'coderabbit':
-          rec.suggestion = 'Review CodeRabbit feedback and address CRITICAL/HIGH issues';
+        case "coderabbit":
+          rec.suggestion =
+            "Review CodeRabbit feedback and address CRITICAL/HIGH issues";
           break;
-        case 'quinn':
-          rec.suggestion = 'Review Quinn suggestions and address blocking items';
+        case "quinn":
+          rec.suggestion =
+            "Review Quinn suggestions and address blocking items";
           break;
         default:
           rec.suggestion = `Address ${issue.check} issues before proceeding`;
@@ -236,7 +241,10 @@ class HumanReviewOrchestrator {
     });
 
     // Generate summary from automated reviews
-    const automatedSummary = this.generateAutomatedSummary(layer1Result, layer2Result);
+    const automatedSummary = this.generateAutomatedSummary(
+      layer1Result,
+      layer2Result,
+    );
 
     return {
       id: this.generateRequestId(),
@@ -244,10 +252,10 @@ class HumanReviewOrchestrator {
       prContext,
       focusAreas,
       automatedSummary,
-      skipAreas: ['syntax', 'formatting', 'simple-logic'],
+      skipAreas: ["syntax", "formatting", "simple-logic"],
       estimatedTime: this.estimateReviewTime(focusAreas),
       reviewer: await this.assignReviewer(prContext),
-      status: 'pending',
+      status: "pending",
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
     };
   }
@@ -261,11 +269,11 @@ class HumanReviewOrchestrator {
   generateAutomatedSummary(layer1Result, layer2Result) {
     const summary = {
       layer1: {
-        status: layer1Result?.pass ? 'passed' : 'failed',
+        status: layer1Result?.pass ? "passed" : "failed",
         checks: [],
       },
       layer2: {
-        status: layer2Result?.pass ? 'passed' : 'failed',
+        status: layer2Result?.pass ? "passed" : "failed",
         coderabbit: null,
         quinn: null,
       },
@@ -276,27 +284,42 @@ class HumanReviewOrchestrator {
       layer1Result.results.forEach((r) => {
         summary.layer1.checks.push({
           check: r.check,
-          status: r.pass ? 'passed' : (r.skipped ? 'skipped' : 'failed'),
+          status: r.pass ? "passed" : r.skipped ? "skipped" : "failed",
           message: r.message,
         });
       });
     }
 
     // Layer 2 CodeRabbit summary
-    const coderabbitResult = layer2Result?.results?.find((r) => r.check === 'coderabbit');
+    const coderabbitResult = layer2Result?.results?.find(
+      (r) => r.check === "coderabbit",
+    );
     if (coderabbitResult) {
       summary.layer2.coderabbit = {
-        status: coderabbitResult.pass ? 'passed' : (coderabbitResult.skipped ? 'skipped' : 'issues_found'),
-        issues: coderabbitResult.issues || { critical: 0, high: 0, medium: 0, low: 0 },
+        status: coderabbitResult.pass
+          ? "passed"
+          : coderabbitResult.skipped
+            ? "skipped"
+            : "issues_found",
+        issues: coderabbitResult.issues || {
+          critical: 0,
+          high: 0,
+          medium: 0,
+          low: 0,
+        },
         details: coderabbitResult.details?.slice(0, 5) || [], // Top 5 issues
       };
     }
 
     // Layer 2 Quinn summary
-    const quinnResult = layer2Result?.results?.find((r) => r.check === 'quinn');
+    const quinnResult = layer2Result?.results?.find((r) => r.check === "quinn");
     if (quinnResult) {
       summary.layer2.quinn = {
-        status: quinnResult.pass ? 'passed' : (quinnResult.skipped ? 'skipped' : 'issues_found'),
+        status: quinnResult.pass
+          ? "passed"
+          : quinnResult.skipped
+            ? "skipped"
+            : "issues_found",
         suggestions: quinnResult.suggestions || 0,
         blocking: quinnResult.blocking || 0,
         details: quinnResult.details?.slice(0, 5) || [], // Top 5 suggestions
@@ -315,10 +338,11 @@ class HumanReviewOrchestrator {
     const baseTime = 10; // Base 10 minutes
     const perAreaTime = 5; // 5 minutes per focus area
 
-    const areaCount = (focusAreas.primary?.length || 0) +
-                     (focusAreas.secondary?.length || 0) * 0.5;
+    const areaCount =
+      (focusAreas.primary?.length || 0) +
+      (focusAreas.secondary?.length || 0) * 0.5;
 
-    return Math.round(baseTime + (areaCount * perAreaTime));
+    return Math.round(baseTime + areaCount * perAreaTime);
   }
 
   /**
@@ -328,12 +352,12 @@ class HumanReviewOrchestrator {
    */
   async assignReviewer(_prContext) {
     // Use round-robin or auto-assignment
-    const reviewers = ['@architect', '@tech-lead', '@senior-dev'];
+    const reviewers = ["@architect", "@tech-lead", "@senior-dev"];
 
     try {
       let status = {};
       try {
-        status = JSON.parse(await fs.readFile(this.statusPath, 'utf8'));
+        status = JSON.parse(await fs.readFile(this.statusPath, "utf8"));
       } catch {
         // No status file
       }
@@ -364,20 +388,20 @@ class HumanReviewOrchestrator {
    * @throws {Error} If ID contains invalid characters
    */
   validateRequestId(id) {
-    if (!id || typeof id !== 'string') {
-      throw new Error('Request ID is required and must be a string');
+    if (!id || typeof id !== "string") {
+      throw new Error("Request ID is required and must be a string");
     }
 
     // Only allow alphanumeric, hyphens, underscores, and dots
     const validIdPattern = /^[A-Za-z0-9_.-]+$/;
     if (!validIdPattern.test(id)) {
-      throw new Error('Invalid request ID: contains disallowed characters');
+      throw new Error("Invalid request ID: contains disallowed characters");
     }
 
     // Ensure the ID doesn't resolve outside the intended directory
     const sanitizedId = path.basename(id);
     if (sanitizedId !== id) {
-      throw new Error('Invalid request ID: path traversal detected');
+      throw new Error("Invalid request ID: path traversal detected");
     }
 
     return id;
@@ -410,7 +434,7 @@ class HumanReviewOrchestrator {
     const resolvedPath = path.resolve(requestPath);
     const resolvedBase = path.resolve(this.reviewRequestsPath);
     if (!resolvedPath.startsWith(resolvedBase + path.sep)) {
-      throw new Error('Path traversal attempt detected');
+      throw new Error("Path traversal attempt detected");
     }
 
     await fs.mkdir(this.reviewRequestsPath, { recursive: true });
@@ -427,36 +451,38 @@ class HumanReviewOrchestrator {
    */
   async updateStatus(reviewRequest) {
     // Chain the update operation onto the queue to serialize concurrent writes
-    this.statusQueue = this.statusQueue.then(async () => {
-      let status = {};
+    this.statusQueue = this.statusQueue
+      .then(async () => {
+        let status = {};
 
-      try {
-        status = JSON.parse(await fs.readFile(this.statusPath, 'utf8'));
-      } catch {
-        // Create new status
-      }
+        try {
+          status = JSON.parse(await fs.readFile(this.statusPath, "utf8"));
+        } catch {
+          // Create new status
+        }
 
-      status.lastHumanReviewRequest = {
-        id: reviewRequest.id,
-        createdAt: reviewRequest.createdAt,
-        reviewer: reviewRequest.reviewer,
-        status: reviewRequest.status,
-        estimatedTime: reviewRequest.estimatedTime,
-      };
+        status.lastHumanReviewRequest = {
+          id: reviewRequest.id,
+          createdAt: reviewRequest.createdAt,
+          reviewer: reviewRequest.reviewer,
+          status: reviewRequest.status,
+          estimatedTime: reviewRequest.estimatedTime,
+        };
 
-      // Update reviewer index for round-robin
-      const reviewers = ['@architect', '@tech-lead', '@senior-dev'];
-      const currentIndex = reviewers.indexOf(reviewRequest.reviewer);
-      if (currentIndex !== -1) {
-        status.lastReviewerIndex = currentIndex;
-      }
+        // Update reviewer index for round-robin
+        const reviewers = ["@architect", "@tech-lead", "@senior-dev"];
+        const currentIndex = reviewers.indexOf(reviewRequest.reviewer);
+        if (currentIndex !== -1) {
+          status.lastReviewerIndex = currentIndex;
+        }
 
-      await fs.mkdir(path.dirname(this.statusPath), { recursive: true });
-      await fs.writeFile(this.statusPath, JSON.stringify(status, null, 2));
-    }).catch((err) => {
-      // Log but don't break the queue for future updates
-      console.error('Failed to update status:', err.message);
-    });
+        await fs.mkdir(path.dirname(this.statusPath), { recursive: true });
+        await fs.writeFile(this.statusPath, JSON.stringify(status, null, 2));
+      })
+      .catch((err) => {
+        // Log but don't break the queue for future updates
+        console.error("Failed to update status:", err.message);
+      });
 
     // Wait for this update to complete
     await this.statusQueue;
@@ -472,13 +498,13 @@ class HumanReviewOrchestrator {
       const requests = [];
 
       for (const file of files) {
-        if (file.endsWith('.json')) {
+        if (file.endsWith(".json")) {
           const content = await fs.readFile(
             path.join(this.reviewRequestsPath, file),
-            'utf8',
+            "utf8",
           );
           const request = JSON.parse(content);
-          if (request.status === 'pending') {
+          if (request.status === "pending") {
             requests.push(request);
           }
         }
@@ -500,19 +526,22 @@ class HumanReviewOrchestrator {
     // Validate ID to prevent path traversal
     const validatedId = this.validateRequestId(requestId);
 
-    const requestPath = path.join(this.reviewRequestsPath, `${validatedId}.json`);
+    const requestPath = path.join(
+      this.reviewRequestsPath,
+      `${validatedId}.json`,
+    );
 
     // Additional containment check
     const resolvedPath = path.resolve(requestPath);
     const resolvedBase = path.resolve(this.reviewRequestsPath);
     if (!resolvedPath.startsWith(resolvedBase + path.sep)) {
-      throw new Error('Path traversal attempt detected');
+      throw new Error("Path traversal attempt detected");
     }
 
     try {
-      const request = JSON.parse(await fs.readFile(requestPath, 'utf8'));
+      const request = JSON.parse(await fs.readFile(requestPath, "utf8"));
 
-      request.status = reviewResult.approved ? 'approved' : 'changes_requested';
+      request.status = reviewResult.approved ? "approved" : "changes_requested";
       request.completedAt = new Date().toISOString();
       request.reviewResult = reviewResult;
       request.actualTime = reviewResult.timeSpent || null;
@@ -521,7 +550,9 @@ class HumanReviewOrchestrator {
 
       return request;
     } catch (error) {
-      throw new Error(`Failed to complete review ${requestId}: ${error.message}`);
+      throw new Error(
+        `Failed to complete review ${requestId}: ${error.message}`,
+      );
     }
   }
 }

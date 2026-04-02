@@ -9,11 +9,13 @@
 > **Dependencies:** depends_on: `[atomic-refactor-plan]` · enables: `[validate-design-fidelity]` · workflow: `refactoring`
 
 ## Input Schema
+
 - **requires:** Output from `atomic-refactor-plan`
 - **format:** YAML data
 - **location:** `outputs/design-system/{project}/refactoring/refactor-plan.yaml`
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/refactoring/refactor-results.md`
 - **format:** Markdown report
 - **consumed_by:** validate-design-fidelity
@@ -21,18 +23,21 @@
 ## ⛔ GATES OBRIGATÓRIOS (LER PRIMEIRO)
 
 ### GATE 0: Devo Atomizar?
+
 ```bash
 wc -l {arquivo}
 # Se <500 → NÃO atomize, apenas organize inline
 ```
 
 ### GATE 1: Antes de Cada Hook
+
 ```
 PERGUNTA: Esse hook será usado em OUTRO componente?
 SE NÃO → não crie o hook, mantenha useState inline
 ```
 
 ### GATE 2: Validação Final
+
 ```bash
 find {pasta-criada} -name "*.ts" -o -name "*.tsx" | xargs wc -l | tail -1
 # Se linhas_depois > linhas_antes → FALHA, simplificar
@@ -79,6 +84,7 @@ Executes Atomic Design refactoring on a single component, decomposing a monolith
    - Check: useState count >= 0 AND render function count >= 0 AND repeated patterns >= 0 — log "Analysis: {hooks} useState, {renders} render functions, {patterns} repeated patterns"
 
 2. **Create Folder Structure**
+
    ```
    {domain}/{component-name}/
    ├── types.ts
@@ -93,6 +99,7 @@ Executes Atomic Design refactoring on a single component, decomposing a monolith
    └── organisms/
        └── index.ts
    ```
+
    - Check: `test -d {component-name}/hooks/` AND `test -d {component-name}/organisms/` — abort with "Directory structure creation failed: {missing dir}"
 
 3. **Extract Types**
@@ -186,18 +193,20 @@ app/components/creator/courses/
 ## Failure Handling
 
 - **Tests fail after refactor:** Revert to pre-refactor state. Compare diff to identify breaking change. Fix and re-run
-- **Visual regression detected:** Run *visual-test to capture exact differences. Fix token references or CSS specificity issues
+- **Visual regression detected:** Run \*visual-test to capture exact differences. Fix token references or CSS specificity issues
 - **Build errors:** Check import paths updated. Verify component name changes propagated to all consumers
-- **Refactor plan outdated:** If codebase changed since plan, re-run *refactor-plan before executing
+- **Refactor plan outdated:** If codebase changed since plan, re-run \*refactor-plan before executing
 
 ## Success Criteria
 
 ### ⛔ GATE 2 (Obrigatório)
+
 - [ ] **Linhas totais ≤ original** (se aumentou → simplificar)
 - [ ] **≤7 arquivos criados** (se mais → consolidar)
 - [ ] **0 hooks órfãos** (se tem → mover inline)
 
 ### Demais Critérios
+
 - [ ] useState reusáveis extraídos para hooks (específicos ficam inline)
 - [ ] All `render{X}()` extracted to organisms
 - [ ] Repeated UI patterns extracted to molecules
@@ -329,6 +338,7 @@ export const StatCard: React.FC<StatCardProps> = ({ icon, label, value }) => (
 ```
 
 Output:
+
 ```
 🔍 Uma: Analyzing CoursesTemplate.tsx...
 
@@ -381,11 +391,11 @@ Uma says: "Clean architecture is not optional."
 - Commit after each successful component refactoring
 - Test in browser before marking as done
 
-
 ## Related Checklists
 
 - `squads/design/checklists/atomic-refactor-checklist.md`
 - `squads/design/checklists/ds-component-quality-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

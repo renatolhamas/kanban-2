@@ -7,6 +7,7 @@
 **Mode:** Guided (human checkpoints at Phase 1 and Phase 3)
 
 **References:**
+
 - `data/pipeline-patterns.md` → Pattern reference (consulted in Phase 1)
 - `templates/pipeline-state-tmpl.py` → State manager scaffold
 - `templates/pipeline-progress-tmpl.py` → Progress tracker scaffold
@@ -49,20 +50,22 @@ OUTPUT: squads/{squad}/lib/ with pipeline code
 
 **Run this checklist before proceeding:**
 
-| # | Question | Y/N |
-|---|----------|-----|
-| 1 | Does the squad process items through 3+ sequential phases? | |
-| 2 | Does each item take > 1 minute to process? | |
-| 3 | Would it be painful to restart from scratch if interrupted? | |
-| 4 | Do you process items in batches (> 1 item)? | |
-| 5 | Do you need to track cost per item/phase? | |
+| #   | Question                                                    | Y/N |
+| --- | ----------------------------------------------------------- | --- |
+| 1   | Does the squad process items through 3+ sequential phases?  |     |
+| 2   | Does each item take > 1 minute to process?                  |     |
+| 3   | Would it be painful to restart from scratch if interrupted? |     |
+| 4   | Do you process items in batches (> 1 item)?                 |     |
+| 5   | Do you need to track cost per item/phase?                   |     |
 
 **Score:**
+
 - **3+ yes** → Proceed to Phase 1
 - **1-2 yes** → Pipeline is optional, ask user
 - **0 yes** → **VETO** — squad doesn't need pipeline, just use functions
 
 **Examples:**
+
 - Books squad: 5/5 → Pipeline (11 phases, hours per book, batch processing)
 - MMOS squad: 4/5 → Pipeline (8+ phases, long-running, resume needed)
 - Creator-OS: 3/5 → Pipeline (curriculum → lessons → validation)
@@ -89,20 +92,20 @@ For each phase, I need:
 
 **Format output as table:**
 
-| # | Name | Critical | Timeout | Cacheable | Description |
-|---|------|----------|---------|-----------|-------------|
-| 0 | research | Yes | 600s | Yes | Fetch external sources |
-| 1 | extract | Yes | 300s | No | Extract key content |
-| ... | | | | | |
+| #   | Name     | Critical | Timeout | Cacheable | Description            |
+| --- | -------- | -------- | ------- | --------- | ---------------------- |
+| 0   | research | Yes      | 600s    | Yes       | Fetch external sources |
+| 1   | extract  | Yes      | 300s    | No        | Extract key content    |
+| ... |          |          |         |           |                        |
 
 ### Step 1.2: Determine Components
 
-| Component | When to Include | Default |
-|-----------|----------------|---------|
-| `pipeline_state.py` | Always if resume needed (Q3 = yes) | Include |
-| `progress.py` | Always if batch processing (Q4 = yes) | Include |
-| `phase_runner.py` | Always | Include |
-| `__init__.py` | Always | Include |
+| Component           | When to Include                       | Default |
+| ------------------- | ------------------------------------- | ------- |
+| `pipeline_state.py` | Always if resume needed (Q3 = yes)    | Include |
+| `progress.py`       | Always if batch processing (Q4 = yes) | Include |
+| `phase_runner.py`   | Always                                | Include |
+| `__init__.py`       | Always                                | Include |
 
 ### Step 1.3: CHECKPOINT
 
@@ -165,7 +168,7 @@ async def phase_{name}_handler(
     raise NotImplementedError("TODO: Implement phase_{name}_handler")
 ```
 
-### Step 2.3: Generate __init__.py
+### Step 2.3: Generate **init**.py
 
 ```python
 """
@@ -208,6 +211,7 @@ squads/{squad}/
 ```
 
 **Decision: Flat vs Handlers directory**
+
 - **< 5 phases**: Keep handlers inline in `phase_runner.py`
 - **5+ phases**: Create `handlers/` directory with one file per phase
 
@@ -261,33 +265,33 @@ Next steps for the developer:
 
 ## Veto Conditions
 
-| Condition | Action |
-|-----------|--------|
-| Squad scored 0 on qualification | **VETO** — don't create pipeline |
-| Phase has no clear input/output contract | **VETO** — define contracts first |
-| Squad already has lib/ with different pattern | **VETO** — audit existing code first |
-| Phases are not sequential (parallel needed) | **VETO** — this pattern is sequential only |
+| Condition                                     | Action                                     |
+| --------------------------------------------- | ------------------------------------------ |
+| Squad scored 0 on qualification               | **VETO** — don't create pipeline           |
+| Phase has no clear input/output contract      | **VETO** — define contracts first          |
+| Squad already has lib/ with different pattern | **VETO** — audit existing code first       |
+| Phases are not sequential (parallel needed)   | **VETO** — this pattern is sequential only |
 
 ---
 
 ## Anti-Patterns to Prevent
 
-| Anti-Pattern | Why | Prevention |
-|-------------|-----|------------|
-| Copy template without customizing | Dead code, confusion | Phase 2 replaces ALL customization points |
-| Create pipeline for simple squad | Over-engineering | Phase 0 qualification with score threshold |
-| Hardcode domain terms in state manager | Can't reuse | State manager stays agnostic, domain in metadata |
-| Skip self-test | Broken code ships | Phase 3 is mandatory |
+| Anti-Pattern                           | Why                  | Prevention                                       |
+| -------------------------------------- | -------------------- | ------------------------------------------------ |
+| Copy template without customizing      | Dead code, confusion | Phase 2 replaces ALL customization points        |
+| Create pipeline for simple squad       | Over-engineering     | Phase 0 qualification with score threshold       |
+| Hardcode domain terms in state manager | Can't reuse          | State manager stays agnostic, domain in metadata |
+| Skip self-test                         | Broken code ships    | Phase 3 is mandatory                             |
 
 ---
 
 ## Handoffs
 
-| When | To | What |
-|------|-----|------|
-| Need custom CLI entry point | `@dev` | `bin/run-pipeline.py` script |
-| Need database persistence (not JSON) | `@data-engineer` | DB adapter for state |
-| Need parallel phase execution | `@architect` | Different pattern needed |
+| When                                 | To               | What                         |
+| ------------------------------------ | ---------------- | ---------------------------- |
+| Need custom CLI entry point          | `@dev`           | `bin/run-pipeline.py` script |
+| Need database persistence (not JSON) | `@data-engineer` | DB adapter for state         |
+| Need parallel phase execution        | `@architect`     | Different pattern needed     |
 
 ---
 

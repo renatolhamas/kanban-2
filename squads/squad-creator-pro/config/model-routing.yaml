@@ -23,7 +23,7 @@ updated: "2026-02-13"
 tiers:
   haiku:
     description: "Fast, cheap. For deterministic tasks with clear patterns."
-    model_id: "haiku"  # Maps to Task tool model parameter
+    model_id: "haiku" # Maps to Task tool model parameter
     cost_per_mtok:
       input: 1.00
       output: 5.00
@@ -80,7 +80,7 @@ external_providers:
     latency_vs_opus: "25x faster"
     savings_vs_opus: "97.7%"
     pt_br_quality: "9/10"
-    privacy_risk: "moderate"  # Singapore entity, China parent
+    privacy_risk: "moderate" # Singapore entity, China parent
     best_for:
       - "Voice DNA extraction (production-ready with v1.4.0 task + v2.0 runner)"
       - "Batch processing"
@@ -102,10 +102,10 @@ external_providers:
       input: 0.50
       output: 2.80
     context_window: 256000
-    qualified_date: null  # Not yet tested
+    qualified_date: null # Not yet tested
     validation_report: "infrastructure/services/llm-router/docs/model-discovery/scans/2026-02-08/validation-kimi-k2-5.md"
     verdict: "MONITOR"
-    privacy_risk: "high"  # China, trains on prompts
+    privacy_risk: "high" # China, trains on prompts
     latency_warning: "HIGH (15-200s per request)"
     notes: |
       Validation report exists but not empirically tested on squad-creator tasks.
@@ -136,7 +136,7 @@ tasks:
     caveat: "Haiku score inflation +19%, but pass/fail matches"
 
   validate-squad.md:
-    tier: haiku  # QUALIFIED after re-test with expert_override fix
+    tier: haiku # QUALIFIED after re-test with expert_override fix
     confidence: high
     reason: "91% voice_dna signal triggers expert override"
     validated: true
@@ -161,7 +161,7 @@ tasks:
     note: "Added Scoring Calibration section in v1.1.0"
 
   pv-modernization-score.md:
-    tier: script  # UPGRADED - 100% deterministic scoring
+    tier: script # UPGRADED - 100% deterministic scoring
     confidence: high
     reason: "Binary pass/fail checkpoints, no interpretation needed"
     validated: true
@@ -170,7 +170,7 @@ tasks:
     note: "Converted to script-first architecture"
 
   an-fidelity-score.md:
-    tier: script  # UPGRADED from haiku - can be 100% deterministic
+    tier: script # UPGRADED from haiku - can be 100% deterministic
     confidence: high
     reason: "8-layer × 5 binary checkpoints - fully scriptable"
     validated: true
@@ -180,7 +180,7 @@ tasks:
     note: "95% of task can be bash script. LLM only for gap recommendations."
 
   an-clone-review.md:
-    tier: haiku  # QUALIFIED v2.2.0 after scope fix
+    tier: haiku # QUALIFIED v2.2.0 after scope fix
     confidence: high
     reason: "SCOPE DEFINITION added - explicit wrapper + delegated scope"
     validated: true
@@ -191,7 +191,7 @@ tasks:
     note: "Script handles 90% deterministic checks. Scope fix enabled Haiku for final verdict."
 
   an-diagnose-clone.md:
-    tier: opus  # CONFIRMED after formal test
+    tier: opus # CONFIRMED after formal test
     confidence: high
     reason: "Requires accurate file content analysis - Haiku simulates instead of reads"
     validated: true
@@ -202,7 +202,7 @@ tasks:
     note: "Task value is in nuanced LLM analysis, not scriptable"
 
   an-validate-clone.md:
-    tier: haiku  # QUALIFIED v2.2.0 after strict rules fix
+    tier: haiku # QUALIFIED v2.2.0 after strict rules fix
     confidence: high
     reason: "CHECKPOINT CLARIFICATIONS added - strict rules, no inference"
     validated: true
@@ -212,7 +212,7 @@ tasks:
     note: "Strict scoring rules eliminated Haiku generous bias."
 
   an-assess-sources.md:
-    tier: haiku  # CHANGED back to haiku after v2.2.1 iterative refinement
+    tier: haiku # CHANGED back to haiku after v2.2.1 iterative refinement
     confidence: high
     reason: "Binary Checkpoints + Scope Definition + No Override Rule = 100% tier match"
     validated: true
@@ -471,7 +471,7 @@ metrics:
     - tokens_in
     - tokens_out
     - latency_ms
-    - quality_score  # If available
+    - quality_score # If available
     - fallback_triggered
 
   report_location: "outputs/metrics/model-routing-{date}.yaml"
@@ -488,12 +488,12 @@ external_alternatives:
     external_option:
       model: glm5
       qualified: true
-      quality_vs_opus: "95-98%"  # UPGRADED 2026-02-13 after task v1.4.0 + runner v2.0
+      quality_vs_opus: "95-98%" # UPGRADED 2026-02-13 after task v1.4.0 + runner v2.0
       savings: "97.7%"
       pt_br_qualified: true
       tested_date: "2026-02-13"
-      runner_version: "v2.0"  # Requires runner v2.0 (full task content)
-      task_version: "v1.4.0"  # Requires task v1.4.0 (explicit quality requirements)
+      runner_version: "v2.0" # Requires runner v2.0 (full task content)
+      task_version: "v1.4.0" # Requires task v1.4.0 (explicit quality requirements)
       use_when:
         - "Batch processing multiple minds"
         - "Cost-sensitive workflows"

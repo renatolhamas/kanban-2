@@ -21,7 +21,9 @@ class BaseLayer {
    */
   constructor(name, config = {}) {
     if (new.target === BaseLayer) {
-      throw new Error('BaseLayer is abstract and cannot be instantiated directly');
+      throw new Error(
+        "BaseLayer is abstract and cannot be instantiated directly",
+      );
     }
     this.name = name;
     this.config = config;
@@ -38,7 +40,7 @@ class BaseLayer {
    * @returns {Promise<Object>} Layer results
    */
   async execute(_context) {
-    throw new Error('execute() must be implemented by subclass');
+    throw new Error("execute() must be implemented by subclass");
   }
 
   /**
@@ -93,7 +95,9 @@ class BaseLayer {
   getSummary() {
     const passed = this.results.filter((r) => r.pass).length;
     const failed = this.results.filter((r) => !r.pass).length;
-    const warnings = this.results.filter((r) => r.warnings && r.warnings.length > 0).length;
+    const warnings = this.results.filter(
+      (r) => r.warnings && r.warnings.length > 0,
+    ).length;
 
     return {
       layer: this.name,

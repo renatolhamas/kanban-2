@@ -11,8 +11,8 @@
  * @story 2.10 - Quality Gate Manager
  */
 
-const { spawn } = require('child_process');
-const { BaseLayer } = require('./base-layer');
+const { spawn } = require("child_process");
+const { BaseLayer } = require("./base-layer");
 
 /**
  * Layer 1: Pre-commit checks
@@ -24,7 +24,7 @@ class Layer1PreCommit extends BaseLayer {
    * @param {Object} config - Layer 1 configuration from quality-gate-config.yaml
    */
   constructor(config = {}) {
-    super('Layer 1: Pre-commit', config);
+    super("Layer 1: Pre-commit", config);
     this.checks = config.checks || {};
     this.failFast = config.failFast !== false;
   }
@@ -43,18 +43,18 @@ class Layer1PreCommit extends BaseLayer {
 
     if (!this.enabled) {
       this.addResult({
-        check: 'layer1',
+        check: "layer1",
         pass: true,
         skipped: true,
-        message: 'Layer 1 disabled',
+        message: "Layer 1 disabled",
       });
       this.stopTimer();
       return this.getSummary();
     }
 
     if (verbose) {
-      console.log('\n📋 Layer 1: Pre-commit Checks');
-      console.log('━'.repeat(50));
+      console.log("\n📋 Layer 1: Pre-commit Checks");
+      console.log("━".repeat(50));
     }
 
     // Run lint check
@@ -89,8 +89,10 @@ class Layer1PreCommit extends BaseLayer {
 
     if (verbose) {
       const summary = this.getSummary();
-      const icon = summary.pass ? '✅' : '❌';
-      console.log(`\n${icon} Layer 1 ${summary.pass ? 'PASSED' : 'FAILED'} (${this.formatDuration(summary.duration)})`);
+      const icon = summary.pass ? "✅" : "❌";
+      console.log(
+        `\n${icon} Layer 1 ${summary.pass ? "PASSED" : "FAILED"} (${this.formatDuration(summary.duration)})`,
+      );
     }
 
     return this.getSummary();
@@ -104,30 +106,40 @@ class Layer1PreCommit extends BaseLayer {
   async runLint(context = {}) {
     const { verbose = false } = context;
     const config = this.checks.lint || {};
-    const command = config.command || 'npm run lint';
+    const command = config.command || "npm run lint";
     const timeout = config.timeout || 60000;
-    const failOn = config.failOn || 'error';
+    const failOn = config.failOn || "error";
 
     if (verbose) {
-      console.log('  🔍 Running lint check...');
+      console.log("  🔍 Running lint check...");
     }
 
     try {
       const result = await this.runCommand(command, timeout);
-      const hasErrors = result.stderr.includes('error') || result.exitCode !== 0;
-      const hasWarnings = result.stdout.includes('warning') || result.stderr.includes('warning');
+      const hasErrors =
+        result.stderr.includes("error") || result.exitCode !== 0;
+      const hasWarnings =
+        result.stdout.includes("warning") || result.stderr.includes("warning");
 
       // Parse error and warning counts
-      const errorMatch = result.stdout.match(/(\d+)\s+error/i) || result.stderr.match(/(\d+)\s+error/i);
-      const warningMatch = result.stdout.match(/(\d+)\s+warning/i) || result.stderr.match(/(\d+)\s+warning/i);
+      const errorMatch =
+        result.stdout.match(/(\d+)\s+error/i) ||
+        result.stderr.match(/(\d+)\s+error/i);
+      const warningMatch =
+        result.stdout.match(/(\d+)\s+warning/i) ||
+        result.stderr.match(/(\d+)\s+warning/i);
 
-      const errorCount = errorMatch ? parseInt(errorMatch[1]) : (hasErrors ? 1 : 0);
+      const errorCount = errorMatch
+        ? parseInt(errorMatch[1])
+        : hasErrors
+          ? 1
+          : 0;
       const warningCount = warningMatch ? parseInt(warningMatch[1]) : 0;
 
-      const pass = failOn === 'error' ? !hasErrors : (!hasErrors && !hasWarnings);
+      const pass = failOn === "error" ? !hasErrors : !hasErrors && !hasWarnings;
 
       const lintResult = {
-        check: 'lint',
+        check: "lint",
         pass,
         exitCode: result.exitCode,
         errors: errorCount,
@@ -140,14 +152,14 @@ class Layer1PreCommit extends BaseLayer {
       };
 
       if (verbose) {
-        const icon = pass ? '✓' : '✗';
+        const icon = pass ? "✓" : "✗";
         console.log(`  ${icon} Lint: ${lintResult.message}`);
       }
 
       return lintResult;
     } catch (error) {
       return {
-        check: 'lint',
+        check: "lint",
         pass: false,
         error: error.message,
         message: `Lint error: ${error.message}`,
@@ -163,11 +175,11 @@ class Layer1PreCommit extends BaseLayer {
   async runTests(context = {}) {
     const { verbose = false } = context;
     const config = this.checks.test || {};
-    const command = config.command || 'npm test';
+    const command = config.command || "npm test";
     const timeout = config.timeout || 300000;
 
     if (verbose) {
-      console.log('  🧪 Running unit tests...');
+      console.log("  🧪 Running unit tests...");
     }
 
     try {
@@ -187,14 +199,16 @@ class Layer1PreCommit extends BaseLayer {
       // Check coverage if enabled
       let coverage = null;
       if (config.coverage?.enabled) {
-        const coverageMatch = result.stdout.match(/All files[^|]*\|\s*(\d+(?:\.\d+)?)/);
+        const coverageMatch = result.stdout.match(
+          /All files[^|]*\|\s*(\d+(?:\.\d+)?)/,
+        );
         if (coverageMatch) {
           coverage = parseFloat(coverageMatch[1]);
         }
       }
 
       const testResult = {
-        check: 'test',
+        check: "test",
         pass,
         exitCode: result.exitCode,
         tests: {
@@ -211,10 +225,11 @@ class Layer1PreCommit extends BaseLayer {
       };
 
       if (verbose) {
-        const icon = pass ? '✓' : '✗';
+        const icon = pass ? "✓" : "✗";
         console.log(`  ${icon} Tests: ${testResult.message}`);
         if (coverage !== null) {
-          const coverageIcon = coverage >= (config.coverage?.minimum || 80) ? '✓' : '⚠️';
+          const coverageIcon =
+            coverage >= (config.coverage?.minimum || 80) ? "✓" : "⚠️";
           console.log(`  ${coverageIcon} Coverage: ${coverage}%`);
         }
       }
@@ -222,7 +237,7 @@ class Layer1PreCommit extends BaseLayer {
       return testResult;
     } catch (error) {
       return {
-        check: 'test',
+        check: "test",
         pass: false,
         error: error.message,
         message: `Test error: ${error.message}`,
@@ -238,40 +253,48 @@ class Layer1PreCommit extends BaseLayer {
   async runTypeCheck(context = {}) {
     const { verbose = false } = context;
     const config = this.checks.typecheck || {};
-    const command = config.command || 'npm run typecheck';
+    const command = config.command || "npm run typecheck";
     const timeout = config.timeout || 120000;
 
     if (verbose) {
-      console.log('  📝 Running type check...');
+      console.log("  📝 Running type check...");
     }
 
     try {
       const result = await this.runCommand(command, timeout);
 
       // Parse type errors
-      const errorMatch = result.stderr.match(/(\d+)\s+error/i) || result.stdout.match(/(\d+)\s+error/i);
-      const errorCount = errorMatch ? parseInt(errorMatch[1]) : (result.exitCode !== 0 ? 1 : 0);
+      const errorMatch =
+        result.stderr.match(/(\d+)\s+error/i) ||
+        result.stdout.match(/(\d+)\s+error/i);
+      const errorCount = errorMatch
+        ? parseInt(errorMatch[1])
+        : result.exitCode !== 0
+          ? 1
+          : 0;
 
       const pass = result.exitCode === 0;
 
       const typeResult = {
-        check: 'typecheck',
+        check: "typecheck",
         pass,
         exitCode: result.exitCode,
         errors: errorCount,
         duration: result.duration,
-        message: pass ? 'Type check passed' : `Type check failed (${errorCount} errors)`,
+        message: pass
+          ? "Type check passed"
+          : `Type check failed (${errorCount} errors)`,
       };
 
       if (verbose) {
-        const icon = pass ? '✓' : '✗';
+        const icon = pass ? "✓" : "✗";
         console.log(`  ${icon} TypeCheck: ${typeResult.message}`);
       }
 
       return typeResult;
     } catch (error) {
       return {
-        check: 'typecheck',
+        check: "typecheck",
         pass: false,
         error: error.message,
         message: `TypeCheck error: ${error.message}`,
@@ -288,25 +311,25 @@ class Layer1PreCommit extends BaseLayer {
   runCommand(command, timeout = 60000) {
     return new Promise((resolve, reject) => {
       const startTime = Date.now();
-      const [cmd, ...args] = command.split(' ');
+      const [cmd, ...args] = command.split(" ");
 
       // Use shell for npm commands on Windows
       const options = {
         shell: true,
         cwd: process.cwd(),
-        env: { ...process.env, FORCE_COLOR: '1' },
+        env: { ...process.env, FORCE_COLOR: "1" },
       };
 
       const child = spawn(cmd, args, options);
 
-      let stdout = '';
-      let stderr = '';
+      let stdout = "";
+      let stderr = "";
 
-      child.stdout.on('data', (data) => {
+      child.stdout.on("data", (data) => {
         stdout += data.toString();
       });
 
-      child.stderr.on('data', (data) => {
+      child.stderr.on("data", (data) => {
         stderr += data.toString();
       });
 
@@ -315,7 +338,7 @@ class Layer1PreCommit extends BaseLayer {
         reject(new Error(`Command timed out after ${timeout}ms`));
       }, timeout);
 
-      child.on('close', (exitCode) => {
+      child.on("close", (exitCode) => {
         clearTimeout(timer);
         resolve({
           exitCode,
@@ -325,7 +348,7 @@ class Layer1PreCommit extends BaseLayer {
         });
       });
 
-      child.on('error', (error) => {
+      child.on("error", (error) => {
         clearTimeout(timer);
         reject(error);
       });

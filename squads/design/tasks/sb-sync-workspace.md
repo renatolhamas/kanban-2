@@ -7,16 +7,16 @@
 
 ## Task Anatomy
 
-| Field | Value |
-|-------|-------|
-| **task_name** | Sync Storybook with Workspace |
-| **status** | `pending` |
-| **responsible_executor** | @storybook-expert |
-| **execution_type** | `Agent` |
-| **input** | Story files, workspace metadata, component files |
-| **output** | Synchronized inventory, drift report |
-| **action_items** | 6 steps |
-| **acceptance_criteria** | 5 criteria |
+| Field                    | Value                                            |
+| ------------------------ | ------------------------------------------------ |
+| **task_name**            | Sync Storybook with Workspace                    |
+| **status**               | `pending`                                        |
+| **responsible_executor** | @storybook-expert                                |
+| **execution_type**       | `Agent`                                          |
+| **input**                | Story files, workspace metadata, component files |
+| **output**               | Synchronized inventory, drift report             |
+| **action_items**         | 6 steps                                          |
+| **acceptance_criteria**  | 5 criteria                                       |
 
 ## Overview
 
@@ -48,6 +48,7 @@ and Workspace (source of truth for governance, metadata, and cross-squad integra
 ```
 
 **Sync direction:**
+
 - Storybook → Workspace: component inventory, atomic hierarchy, variant list, coverage status
 - Workspace → Storybook: metadata enrichment (owner, domain, deprecation status)
 
@@ -89,7 +90,14 @@ Scan all `.stories.tsx` files and extract:
       "story_file": "src/components/ui/button.stories.tsx",
       "title": "Base Components/Button",
       "atomic_level": "atom",
-      "variants": ["Default", "Destructive", "Outline", "Secondary", "Ghost", "Link"],
+      "variants": [
+        "Default",
+        "Destructive",
+        "Outline",
+        "Secondary",
+        "Ghost",
+        "Link"
+      ],
       "has_gallery": true,
       "has_play_function": true,
       "has_a11y": true,
@@ -101,6 +109,7 @@ Scan all `.stories.tsx` files and extract:
 ```
 
 For each story file:
+
 - [ ] Parse `title` field to determine atomic hierarchy
 - [ ] Count named exports (story count)
 - [ ] Check for `play` functions (interaction coverage)
@@ -110,6 +119,7 @@ For each story file:
 ### Step 2: Read Workspace Metadata
 
 Read existing workspace component metadata:
+
 - [ ] `workspace/domains/design-system/metadata/components.json`
 - [ ] Any domain-specific component registries
 - [ ] Governance rules (deprecation, ownership)
@@ -118,13 +128,13 @@ Read existing workspace component metadata:
 
 Compare Storybook inventory against Workspace metadata:
 
-| Drift Type | Meaning | Resolution |
-|------------|---------|------------|
-| **In Storybook, not in Workspace** | New component not registered | Add to workspace metadata |
-| **In Workspace, not in Storybook** | Component exists in metadata but has no story | Flag as undocumented |
-| **Hierarchy mismatch** | Story title says "atom" but workspace says "molecule" | Storybook wins (it renders the truth) |
-| **Variant mismatch** | Workspace lists 3 variants, Storybook shows 6 | Storybook wins (it renders them) |
-| **Missing coverage** | Component has story but no interaction test | Flag for test improvement |
+| Drift Type                         | Meaning                                               | Resolution                            |
+| ---------------------------------- | ----------------------------------------------------- | ------------------------------------- |
+| **In Storybook, not in Workspace** | New component not registered                          | Add to workspace metadata             |
+| **In Workspace, not in Storybook** | Component exists in metadata but has no story         | Flag as undocumented                  |
+| **Hierarchy mismatch**             | Story title says "atom" but workspace says "molecule" | Storybook wins (it renders the truth) |
+| **Variant mismatch**               | Workspace lists 3 variants, Storybook shows 6         | Storybook wins (it renders them)      |
+| **Missing coverage**               | Component has story but no interaction test           | Flag for test improvement             |
 
 ### Step 4: Sync Storybook → Workspace
 
@@ -159,25 +169,29 @@ workspace only contributes governance context.
 **Drifted:** {drift_count}
 
 ## New in Storybook (not in Workspace)
-| Component | Story Title | Action |
-|-----------|-------------|--------|
-| InputOTP | Base Components/InputOTP | Added to workspace |
+
+| Component | Story Title              | Action             |
+| --------- | ------------------------ | ------------------ |
+| InputOTP  | Base Components/InputOTP | Added to workspace |
 
 ## In Workspace Only (no Story)
-| Component | Workspace Status | Action |
-|-----------|-----------------|--------|
-| LegacyTable | active | NEEDS STORY |
+
+| Component   | Workspace Status | Action      |
+| ----------- | ---------------- | ----------- |
+| LegacyTable | active           | NEEDS STORY |
 
 ## Hierarchy Mismatches (Storybook wins)
-| Component | Storybook | Workspace | Resolved |
-|-----------|-----------|-----------|----------|
-| SearchBar | molecule | atom | → molecule |
+
+| Component | Storybook | Workspace | Resolved   |
+| --------- | --------- | --------- | ---------- |
+| SearchBar | molecule  | atom      | → molecule |
 
 ## Coverage Gaps
+
 | Component | Story | Play | A11y | Gallery |
-|-----------|-------|------|------|---------|
-| Dialog | Yes | No | Yes | No |
-| AgentCard | Yes | No | No | No |
+| --------- | ----- | ---- | ---- | ------- |
+| Dialog    | Yes   | No   | Yes  | No      |
+| AgentCard | Yes   | No   | No   | No      |
 ```
 
 ## Acceptance Criteria
@@ -191,18 +205,21 @@ workspace only contributes governance context.
 ## Error Handling
 
 ### Workspace Metadata File Missing
+
 - **Trigger:** `components.json` doesnt exist
 - **Detection:** File read fails
 - **Recovery:** Create initial metadata from Storybook inventory (storybook-to-workspace only)
 - **Prevention:** Check file exists in Step 2
 
 ### Story Title Doesnt Map to Atomic Level
+
 - **Trigger:** Custom title that doesnt follow Base Components/Components/Features pattern
 - **Detection:** Title parsing fails
 - **Recovery:** Classify as "unclassified", flag in drift report
 - **Prevention:** Document title conventions in storybook-expert
 
 ### Circular Ownership Conflict
+
 - **Trigger:** Workspace says component belongs to Squad A, but story is in Squad B directory
 - **Detection:** Owner mismatch
 - **Recovery:** Flag in drift report, dont auto-resolve (governance decision)
@@ -211,18 +228,20 @@ workspace only contributes governance context.
 ## Dependencies
 
 ### Depends On (Upstream)
+
 - `sb-generate-all-stories` or `sb-brownfield-migrate` — Stories must exist first
 
 ### Required By (Downstream)
+
 - None (utility task, run on-demand or on schedule)
 
 ## Handoff
 
-| Attribute | Value |
-|-----------|-------|
-| **Next Task** | None (utility task) |
-| **Trigger** | After story generation or on-demand |
-| **Executor** | @storybook-expert |
+| Attribute     | Value                               |
+| ------------- | ----------------------------------- |
+| **Next Task** | None (utility task)                 |
+| **Trigger**   | After story generation or on-demand |
+| **Executor**  | @storybook-expert                   |
 
 ## Veto Conditions
 

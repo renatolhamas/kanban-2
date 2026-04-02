@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Template Overrides — Consumer Helper
@@ -12,17 +12,17 @@
 
 /** Known story template section IDs (from story-tmpl.yaml) */
 const KNOWN_STORY_SECTIONS = [
-  'community-origin',
-  'status',
-  'executor-assignment',
-  'story',
-  'acceptance-criteria',
-  'coderabbit-integration',
-  'tasks-subtasks',
-  'dev-notes',
-  'change-log',
-  'dev-agent-record',
-  'qa-results',
+  "community-origin",
+  "status",
+  "executor-assignment",
+  "story",
+  "acceptance-criteria",
+  "coderabbit-integration",
+  "tasks-subtasks",
+  "dev-notes",
+  "change-log",
+  "dev-agent-record",
+  "qa-results",
 ];
 
 /**
@@ -44,16 +44,15 @@ function getTemplateOverrides(resolvedConfig) {
     : [];
 
   // Validate section IDs
-  const allSections = [
-    ...(sectionsOrder ?? []),
-    ...optionalSections,
-  ];
+  const allSections = [...(sectionsOrder ?? []), ...optionalSections];
 
-  const unknown = allSections.filter((id) => !KNOWN_STORY_SECTIONS.includes(id));
+  const unknown = allSections.filter(
+    (id) => !KNOWN_STORY_SECTIONS.includes(id),
+  );
   if (unknown.length > 0) {
     throw new Error(
-      `Unknown story section ID(s) in template_overrides: ${unknown.join(', ')}. ` +
-      `Valid IDs: ${KNOWN_STORY_SECTIONS.join(', ')}`
+      `Unknown story section ID(s) in template_overrides: ${unknown.join(", ")}. ` +
+        `Valid IDs: ${KNOWN_STORY_SECTIONS.join(", ")}`,
     );
   }
 

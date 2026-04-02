@@ -16,7 +16,7 @@ input:
   # Use existing sources for DNA extraction
   target: "squads/squad-creator-pro/minds/pedro_valerio"
   params:
-    focus: "both"  # voice + thinking
+    focus: "both" # voice + thinking
   context_files:
     - "squads/squad-creator-pro/minds/pedro_valerio/sources/"
 

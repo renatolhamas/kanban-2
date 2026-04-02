@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const { CodeGraphProvider } = require('./providers/code-graph-provider');
-const { RegistryProvider } = require('./providers/registry-provider');
+const { CodeGraphProvider } = require("./providers/code-graph-provider");
+const { RegistryProvider } = require("./providers/registry-provider");
 
 // --- Constants (adjustable, not hardcoded magic numbers) ---
 const CIRCUIT_BREAKER_THRESHOLD = 3;
@@ -9,9 +9,9 @@ const CIRCUIT_BREAKER_RESET_MS = 60000;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 // Circuit breaker states
-const CB_CLOSED = 'CLOSED';
-const CB_OPEN = 'OPEN';
-const CB_HALF_OPEN = 'HALF-OPEN';
+const CB_CLOSED = "CLOSED";
+const CB_OPEN = "OPEN";
+const CB_HALF_OPEN = "HALF-OPEN";
 
 /**
  * CodeIntelClient — Central entry point for code intelligence.
@@ -66,7 +66,7 @@ class CodeIntelClient {
 
     // Code Graph MCP — T3, available when mcpCallFn is configured
     const codeGraphProvider = new CodeGraphProvider({
-      mcpServerName: options.mcpServerName || 'code-graph',
+      mcpServerName: options.mcpServerName || "code-graph",
       mcpCallFn: options.mcpCallFn || null,
     });
     this._providers.push(codeGraphProvider);
@@ -93,7 +93,10 @@ class CodeIntelClient {
 
     for (const provider of this._providers) {
       try {
-        if (typeof provider.isAvailable === 'function' && provider.isAvailable()) {
+        if (
+          typeof provider.isAvailable === "function" &&
+          provider.isAvailable()
+        ) {
           this._activeProvider = provider;
           return provider;
         }
@@ -126,7 +129,9 @@ class CodeIntelClient {
     const provider = this._detectProvider();
     if (!provider) {
       if (!this._noProviderWarned) {
-        console.warn('[code-intel] No provider available. Code intelligence features disabled.');
+        console.warn(
+          "[code-intel] No provider available. Code intelligence features disabled.",
+        );
         this._noProviderWarned = true;
       }
       return null;
@@ -185,7 +190,10 @@ class CodeIntelClient {
 
   getCircuitBreakerState() {
     // Re-check if open timer expired
-    if (this._cbState === CB_OPEN && Date.now() - this._cbOpenedAt >= CIRCUIT_BREAKER_RESET_MS) {
+    if (
+      this._cbState === CB_OPEN &&
+      Date.now() - this._cbOpenedAt >= CIRCUIT_BREAKER_RESET_MS
+    ) {
       this._cbState = CB_HALF_OPEN;
     }
     return this._cbState;
@@ -251,35 +259,35 @@ class CodeIntelClient {
   // --- 8 Primitive Capabilities (public API) ---
 
   async findDefinition(symbol, options) {
-    return this._executeCapability('findDefinition', [symbol, options]);
+    return this._executeCapability("findDefinition", [symbol, options]);
   }
 
   async findReferences(symbol, options) {
-    return this._executeCapability('findReferences', [symbol, options]);
+    return this._executeCapability("findReferences", [symbol, options]);
   }
 
   async findCallers(symbol, options) {
-    return this._executeCapability('findCallers', [symbol, options]);
+    return this._executeCapability("findCallers", [symbol, options]);
   }
 
   async findCallees(symbol, options) {
-    return this._executeCapability('findCallees', [symbol, options]);
+    return this._executeCapability("findCallees", [symbol, options]);
   }
 
   async analyzeDependencies(path, options) {
-    return this._executeCapability('analyzeDependencies', [path, options]);
+    return this._executeCapability("analyzeDependencies", [path, options]);
   }
 
   async analyzeComplexity(path, options) {
-    return this._executeCapability('analyzeComplexity', [path, options]);
+    return this._executeCapability("analyzeComplexity", [path, options]);
   }
 
   async analyzeCodebase(path, options) {
-    return this._executeCapability('analyzeCodebase', [path, options]);
+    return this._executeCapability("analyzeCodebase", [path, options]);
   }
 
   async getProjectStats(options) {
-    return this._executeCapability('getProjectStats', [options]);
+    return this._executeCapability("getProjectStats", [options]);
   }
 }
 

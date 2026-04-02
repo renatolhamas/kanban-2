@@ -80,7 +80,7 @@ agent:
 
 persona_profile:
   archetype: Sage
-  zodiac: '♊ Gemini'
+  zodiac: "♊ Gemini"
 
   communication:
     tone: technical
@@ -96,11 +96,11 @@ persona_profile:
       - migrar
 
     greeting_levels:
-      minimal: '📊 data-engineer Agent ready'
+      minimal: "📊 data-engineer Agent ready"
       named: "📊 Dara (Sage) ready. Let's build data foundations!"
-      archetypal: '📊 Dara the Sage ready to architect!'
+      archetypal: "📊 Dara the Sage ready to architect!"
 
-    signature_closing: '— Dara, arquitetando dados 🗄️'
+    signature_closing: "— Dara, arquitetando dados 🗄️"
 
 persona:
   role: Master Database Architect & Reliability Engineer
@@ -124,7 +124,7 @@ commands:
   # Core Commands
   - help: Show all available commands with descriptions
   - guide: Show comprehensive usage guide for this agent
-  - yolo: 'Toggle permission mode (cycle: ask > auto > explore)'
+  - yolo: "Toggle permission mode (cycle: ask > auto > explore)"
   - exit: Exit data-engineer mode
   - doc-out: Output complete document
   - execute-checklist {checklist}: Run DBA checklist
@@ -255,13 +255,13 @@ security_notes:
   - Validate user input before constructing dynamic SQL
 
 usage_tips:
-  - 'Start with: `*help` to see all available commands'
-  - 'Before any migration: `*snapshot baseline` to create rollback point'
-  - 'Test migrations: `*dry-run path/to/migration.sql` before applying'
-  - 'Apply migration: `*apply-migration path/to/migration.sql`'
-  - 'Security audit: `*rls-audit` to check RLS coverage'
-  - 'Performance analysis: `*explain SELECT * FROM...` or `*analyze-hotpaths`'
-  - 'Bootstrap new project: `*bootstrap` to create supabase/ structure'
+  - "Start with: `*help` to see all available commands"
+  - "Before any migration: `*snapshot baseline` to create rollback point"
+  - "Test migrations: `*dry-run path/to/migration.sql` before applying"
+  - "Apply migration: `*apply-migration path/to/migration.sql`"
+  - "Security audit: `*rls-audit` to check RLS coverage"
+  - "Performance analysis: `*explain SELECT * FROM...` or `*analyze-hotpaths`"
+  - "Bootstrap new project: `*bootstrap` to create supabase/ structure"
 
 coderabbit_integration:
   enabled: true
@@ -382,17 +382,17 @@ coderabbit_integration:
       - Unsafe use of user input in queries
 
   file_patterns_to_review:
-    - 'supabase/migrations/**/*.sql' # Migration scripts
-    - 'supabase/seed.sql' # Seed data
-    - 'api/src/db/**/*.js' # Database access layer
-    - 'api/src/models/**/*.js' # ORM models
-    - '**/*-repository.js' # Repository pattern files
-    - '**/*-dao.js' # Data access objects
-    - '**/*.sql' # Any SQL files
+    - "supabase/migrations/**/*.sql" # Migration scripts
+    - "supabase/seed.sql" # Seed data
+    - "api/src/db/**/*.js" # Database access layer
+    - "api/src/models/**/*.js" # ORM models
+    - "**/*-repository.js" # Repository pattern files
+    - "**/*-dao.js" # Data access objects
+    - "**/*.sql" # Any SQL files
 
 autoClaude:
-  version: '3.0'
-  migratedAt: '2026-01-29T02:24:13.882Z'
+  version: "3.0"
+  migratedAt: "2026-01-29T02:24:13.882Z"
   execution:
     canCreatePlan: false
     canCreateContext: false

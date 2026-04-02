@@ -12,6 +12,7 @@ Standardize where and how QA fix request documents are created when QA gate verd
 ## Standard
 
 ### Location
+
 **Base Path:** `docs/fix_request/`
 
 All QA fix request documents MUST be saved in this directory (created if not exists).
@@ -21,12 +22,14 @@ All QA fix request documents MUST be saved in this directory (created if not exi
 **Format:** `QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md`
 
 **Components:**
+
 - **Prefix:** `QA-FIX_REQUEST` (fixed)
 - **Date:** `YYYY-MM-DD` (ISO date, e.g., `2026-04-02`)
 - **Story Identifier:** Story number or document name (e.g., `story-1.2`, `auth-endpoints`)
 - **Extension:** `.md`
 
 **Examples:**
+
 ```
 QA-FIX_REQUEST-2026-04-02_story-1.2.md
 QA-FIX_REQUEST-2026-04-02_story-3.1-database-migration.md
@@ -45,7 +48,7 @@ Every QA fix request document MUST include:
 **To:** @dev (or applicable agent)  
 **Story/Component:** {identifier}  
 **Gate Status:** FAIL | CONCERNS  
-**Date:** YYYY-MM-DD  
+**Date:** YYYY-MM-DD
 
 ---
 
@@ -58,7 +61,7 @@ Every QA fix request document MUST include:
 **Current:** {current code/state}  
 **Problem:** {what's wrong}  
 **Fix:** {exact fix with code}  
-**Verification:** {how to verify fix works}  
+**Verification:** {how to verify fix works}
 
 ---
 
@@ -97,7 +100,7 @@ When creating QA fix request, append to story's **QA Results** section:
 
 Gate: FAIL → docs/qa/gates/{epic}.{story}-{slug}.yml
 
-**Fix Request:** docs/fix_request/QA-FIX_REQUEST-{YYYY-MM-DD}_{story-id}.md
+**Fix Request:** docs/fix*request/QA-FIX_REQUEST-{YYYY-MM-DD}*{story-id}.md
 ```
 
 ## Automation Rules
@@ -105,17 +108,20 @@ Gate: FAIL → docs/qa/gates/{epic}.{story}-{slug}.yml
 ### When to Create
 
 Create QA fix request when:
+
 - [ ] Gate verdict is **FAIL** (blocking issues found)
 - [ ] Gate verdict is **CONCERNS** with specific actionable fixes
 - [ ] Multiple issues require structured handoff to @dev
 
 Do NOT create when:
+
 - Gate verdict is **PASS** (no fixes needed)
 - Gate verdict is **WAIVED** (issues accepted as-is)
 
 ### File Existence Check
 
 Before creating:
+
 ```bash
 # Verify directory exists
 mkdir -p docs/fix_request
@@ -135,18 +141,18 @@ ls docs/fix_request/QA-FIX_REQUEST-{today}_{story}*.md
 qa:
   qaLocation: docs/qa
   fixRequestLocation: docs/fix_request
-  fixRequestNaming: 'QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md'
+  fixRequestNaming: "QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md"
 ```
 
 ## Why This Standard
 
-| Aspect | Benefit |
-|--------|---------|
-| **Dedicated Folder** | Easy discovery, prevents clutter in project root |
-| **ISO Date Format** | Sorts chronologically, universal standard |
-| **Story Identifier** | Links fix request to specific story/component |
+| Aspect                | Benefit                                                   |
+| --------------------- | --------------------------------------------------------- |
+| **Dedicated Folder**  | Easy discovery, prevents clutter in project root          |
+| **ISO Date Format**   | Sorts chronologically, universal standard                 |
+| **Story Identifier**  | Links fix request to specific story/component             |
 | **Prefix Convention** | Clear at-a-glance identification of fix request documents |
-| **Consistent Naming** | Programmatic parsing, grep/find compatibility |
+| **Consistent Naming** | Programmatic parsing, grep/find compatibility             |
 
 ## Examples in Repository
 

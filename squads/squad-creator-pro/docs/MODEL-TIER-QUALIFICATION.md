@@ -26,11 +26,11 @@ Threshold de aprovação:
 
 ### Economia por Tier
 
-| Tier | Input/1M | Output/1M | vs Opus |
-|------|----------|-----------|---------|
-| Haiku | $1.00 | $5.00 | **-80%** |
-| Sonnet | $3.00 | $15.00 | **-40%** |
-| Opus | $5.00 | $25.00 | baseline |
+| Tier   | Input/1M | Output/1M | vs Opus  |
+| ------ | -------- | --------- | -------- |
+| Haiku  | $1.00    | $5.00     | **-80%** |
+| Sonnet | $3.00    | $15.00    | **-40%** |
+| Opus   | $5.00    | $25.00    | baseline |
 
 > **Nota:** Preços atualizados para Opus 4.5/4.6 (fev 2026). Legacy Opus 4.0/4.1 era $15/$75.
 
@@ -42,13 +42,13 @@ Cada output é avaliado em 5 dimensões:
 
 ### Dimensões de Qualidade
 
-| Dimensão | Weight | Critério |
-|----------|--------|----------|
-| **Completeness** | 0.30 | Output tem todas as seções/campos esperados? |
-| **Accuracy** | 0.30 | Scores, decisões, classificações corretas? |
-| **Reasoning** | 0.20 | Justificativas coerentes e úteis? |
-| **Format** | 0.10 | Output segue formato esperado? |
-| **Actionability** | 0.10 | Recomendações são acionáveis? |
+| Dimensão          | Weight | Critério                                     |
+| ----------------- | ------ | -------------------------------------------- |
+| **Completeness**  | 0.30   | Output tem todas as seções/campos esperados? |
+| **Accuracy**      | 0.30   | Scores, decisões, classificações corretas?   |
+| **Reasoning**     | 0.20   | Justificativas coerentes e úteis?            |
+| **Format**        | 0.10   | Output segue formato esperado?               |
+| **Actionability** | 0.10   | Recomendações são acionáveis?                |
 
 ### Escala de Scoring
 
@@ -129,12 +129,12 @@ Quando Haiku não atinge 90%, aplicar compensações iterativas:
 
 ### Tipos de Compensação
 
-| Tipo | Quando Usar | Exemplo |
-|------|-------------|---------|
-| **Output Examples** | Output está incompleto | Adicionar 2-3 outputs completos de referência |
-| **Checklist Inline** | Está faltando seções | "Verifique: [ ] seção A [ ] seção B [ ] seção C" |
-| **Template Strict** | Formato inconsistente | YAML/JSON schema no prompt |
-| **Validation Script** | Erros detectáveis | Script que valida e retorna erros |
+| Tipo                  | Quando Usar            | Exemplo                                          |
+| --------------------- | ---------------------- | ------------------------------------------------ |
+| **Output Examples**   | Output está incompleto | Adicionar 2-3 outputs completos de referência    |
+| **Checklist Inline**  | Está faltando seções   | "Verifique: [ ] seção A [ ] seção B [ ] seção C" |
+| **Template Strict**   | Formato inconsistente  | YAML/JSON schema no prompt                       |
+| **Validation Script** | Erros detectáveis      | Script que valida e retorna erros                |
 
 ---
 
@@ -172,7 +172,7 @@ test_case:
   baseline:
     # Referência ao output do Opus
     opus_output: "test-results/{task-name}/opus-baseline.yaml"
-    opus_score: 10.0  # Por definição
+    opus_score: 10.0 # Por definição
 ```
 
 ### Localização
@@ -203,6 +203,7 @@ squads/squad-creator-pro/
 ```
 
 **Estrutura por task:** Cada task tem sua própria pasta em `test-cases/` contendo:
+
 - `test-case.yaml` - Definição do teste
 - `{model}-output.yaml` - Outputs de cada modelo testado
 
@@ -266,12 +267,12 @@ Documentar padrões conforme testamos:
 
 ### Haiku Precisa de Compensação Para
 
-| Padrão | Compensação |
-|--------|-------------|
-| Multi-step reasoning | Chain-of-thought no prompt |
-| Complex output | Template strict com schema |
-| Quality judgment | Rubric inline detalhada |
-| Missing sections | Checklist de seções obrigatórias |
+| Padrão               | Compensação                      |
+| -------------------- | -------------------------------- |
+| Multi-step reasoning | Chain-of-thought no prompt       |
+| Complex output       | Template strict com schema       |
+| Quality judgment     | Rubric inline detalhada          |
+| Missing sections     | Checklist de seções obrigatórias |
 
 ### Haiku Não Elegível Para
 
@@ -312,13 +313,13 @@ node scripts/model-usage-logger.cjs report
 
 ## 8. Métricas de Sucesso
 
-| Métrica | Target | Atual | Medição |
-|---------|--------|-------|---------|
-| Tasks em Haiku | >= 15/41 (37%) | 15/41 | Após validação |
-| Tasks em Sonnet | <= 14/41 (34%) | 14/41 | Após validação |
-| Tasks em Opus | <= 12/41 (29%) | 12/41 | Após validação |
-| Economia total | >= 50% | ~60% | Comparado com tudo em Opus |
-| Qualidade mínima | >= 90% | TBD | Score vs Opus baseline |
+| Métrica          | Target         | Atual | Medição                    |
+| ---------------- | -------------- | ----- | -------------------------- |
+| Tasks em Haiku   | >= 15/41 (37%) | 15/41 | Após validação             |
+| Tasks em Sonnet  | <= 14/41 (34%) | 14/41 | Após validação             |
+| Tasks em Opus    | <= 12/41 (29%) | 12/41 | Após validação             |
+| Economia total   | >= 50%         | ~60%  | Comparado com tudo em Opus |
+| Qualidade mínima | >= 90%         | TBD   | Score vs Opus baseline     |
 
 > **Nota:** Com Opus 4.5/4.6 a $5/$25, a economia de usar Haiku ($1/$5) é ~80%, não ~93%.
 
@@ -326,12 +327,12 @@ node scripts/model-usage-logger.cjs report
 
 ## 9. Changelog
 
-| Data | Mudança |
-|------|---------|
-| 2026-02-11 | Framework criado |
+| Data       | Mudança                                  |
+| ---------- | ---------------------------------------- |
+| 2026-02-11 | Framework criado                         |
 | 2026-02-11 | pv-axioma-assessment validado (Haiku OK) |
 
 ---
 
-*Model Tier Qualification Framework v1.0*
-*Squad Creator Token Economy*
+_Model Tier Qualification Framework v1.0_
+_Squad Creator Token Economy_

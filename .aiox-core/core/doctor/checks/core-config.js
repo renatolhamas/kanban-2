@@ -8,26 +8,30 @@
  * @story INS-4.1
  */
 
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
-const name = 'core-config';
+const name = "core-config";
 
-const REQUIRED_SECTIONS = ['boundary', 'project', 'ide'];
+const REQUIRED_SECTIONS = ["boundary", "project", "ide"];
 
 async function run(context) {
-  const configPath = path.join(context.projectRoot, '.aiox-core', 'core-config.yaml');
+  const configPath = path.join(
+    context.projectRoot,
+    ".aiox-core",
+    "core-config.yaml",
+  );
 
   if (!fs.existsSync(configPath)) {
     return {
       check: name,
-      status: 'FAIL',
-      message: 'core-config.yaml not found',
-      fixCommand: 'npx aiox-core install --force',
+      status: "FAIL",
+      message: "core-config.yaml not found",
+      fixCommand: "npx aiox-core install --force",
     };
   }
 
-  const content = fs.readFileSync(configPath, 'utf8');
+  const content = fs.readFileSync(configPath, "utf8");
 
   const missingSections = REQUIRED_SECTIONS.filter(
     (section) => !content.includes(`${section}:`),
@@ -36,17 +40,17 @@ async function run(context) {
   if (missingSections.length === 0) {
     return {
       check: name,
-      status: 'PASS',
-      message: 'Schema valid, boundary section present',
+      status: "PASS",
+      message: "Schema valid, boundary section present",
       fixCommand: null,
     };
   }
 
   return {
     check: name,
-    status: 'FAIL',
-    message: `Missing sections: ${missingSections.join(', ')}`,
-    fixCommand: 'npx aiox-core install --force',
+    status: "FAIL",
+    message: `Missing sections: ${missingSections.join(", ")}`,
+    fixCommand: "npx aiox-core install --force",
   };
 }
 

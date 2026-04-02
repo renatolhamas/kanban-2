@@ -10,16 +10,16 @@
 
 ### Minimum Thresholds
 
-| Metric | Minimum | Target | Measurement |
-|--------|---------|--------|-------------|
-| Required fields present | 8/8 | 8/8 | Count of 8 mandatory fields |
-| task_name format valid | true | true | Verb + Object pattern |
-| execution_type valid | true | true | Enum: Human/Agent/Hybrid/Worker |
-| estimated_time format | valid | valid | Xh or X-Yh pattern |
-| inputs array | 1+ items | 2+ items | Count of input items |
-| outputs array | 1+ items | 2+ items | Count of output items |
-| action_items | 1+ items | 3+ items | Count of action steps |
-| acceptance_criteria | 1+ items | 2+ items | Count of criteria |
+| Metric                  | Minimum  | Target   | Measurement                     |
+| ----------------------- | -------- | -------- | ------------------------------- |
+| Required fields present | 8/8      | 8/8      | Count of 8 mandatory fields     |
+| task_name format valid  | true     | true     | Verb + Object pattern           |
+| execution_type valid    | true     | true     | Enum: Human/Agent/Hybrid/Worker |
+| estimated_time format   | valid    | valid    | Xh or X-Yh pattern              |
+| inputs array            | 1+ items | 2+ items | Count of input items            |
+| outputs array           | 1+ items | 2+ items | Count of output items           |
+| action_items            | 1+ items | 3+ items | Count of action steps           |
+| acceptance_criteria     | 1+ items | 2+ items | Count of criteria               |
 
 ```yaml
 automated_checks:
@@ -78,12 +78,12 @@ Every task MUST have ALL 8 fields. No exceptions.
 
 ### 1.2 Field Presence Scoring
 
-| Fields Present | Score | Status |
-|----------------|-------|--------|
-| 8/8 | 100% | PASS |
-| 7/8 | 87.5% | CONDITIONAL |
-| 6/8 | 75% | FAIL |
-| <6/8 | <75% | HARD FAIL |
+| Fields Present | Score | Status      |
+| -------------- | ----- | ----------- |
+| 8/8            | 100%  | PASS        |
+| 7/8            | 87.5% | CONDITIONAL |
+| 6/8            | 75%   | FAIL        |
+| <6/8           | <75%  | HARD FAIL   |
 
 ### 1.3 Optional Fields
 
@@ -166,16 +166,17 @@ task_name: "Verify Deliverable Specs"
 
 ### 3.1 Valid Execution Types
 
-| Type | Pattern ID | Characteristics | When to Use |
-|------|------------|-----------------|-------------|
-| **Human** | HO-EP-001 | Judgment, creativity, relationships | Decisions, negotiations, approvals |
-| **Agent** | HO-EP-002 | Analysis, generation, pattern recognition | Data analysis, content generation |
-| **Hybrid** | HO-EP-003 | AI assists, human validates | Reviews, assisted approvals |
-| **Worker** | HO-EP-004 | Deterministic, APIs, file ops | Automation, integrations |
+| Type       | Pattern ID | Characteristics                           | When to Use                        |
+| ---------- | ---------- | ----------------------------------------- | ---------------------------------- |
+| **Human**  | HO-EP-001  | Judgment, creativity, relationships       | Decisions, negotiations, approvals |
+| **Agent**  | HO-EP-002  | Analysis, generation, pattern recognition | Data analysis, content generation  |
+| **Hybrid** | HO-EP-003  | AI assists, human validates               | Reviews, assisted approvals        |
+| **Worker** | HO-EP-004  | Deterministic, APIs, file ops             | Automation, integrations           |
 
 ### 3.2 Execution Type Selection Criteria
 
 **Use Human (HO-EP-001) when:**
+
 - [ ] Task requires creative judgment
 - [ ] Task involves stakeholder relationships
 - [ ] Task requires emotional intelligence
@@ -183,6 +184,7 @@ task_name: "Verify Deliverable Specs"
 - [ ] Task outcome significantly impacts business
 
 **Use Agent (HO-EP-002) when:**
+
 - [ ] Task involves pattern recognition in large datasets
 - [ ] Task requires content generation at scale
 - [ ] Task needs natural language processing
@@ -190,6 +192,7 @@ task_name: "Verify Deliverable Specs"
 - [ ] Task is analysis-heavy
 
 **Use Hybrid (HO-EP-003) when:**
+
 - [ ] AI can draft, human must approve
 - [ ] Speed matters but accuracy is critical
 - [ ] Task requires AI analysis + human judgment
@@ -197,6 +200,7 @@ task_name: "Verify Deliverable Specs"
 - [ ] High-stakes decisions with AI support
 
 **Use Worker (HO-EP-004) when:**
+
 - [ ] Task is fully deterministic
 - [ ] Task involves API calls or file operations
 - [ ] Task requires 100% consistency
@@ -211,12 +215,12 @@ execution_type_check:
   case_sensitive: true
 
   common_errors:
-    - "human"      # Wrong: lowercase
-    - "HUMAN"      # Wrong: uppercase
-    - "H"          # Wrong: abbreviated
-    - "Manual"     # Wrong: not a valid type
-    - "Automated"  # Wrong: not a valid type
-    - "Bot"        # Wrong: not a valid type
+    - "human" # Wrong: lowercase
+    - "HUMAN" # Wrong: uppercase
+    - "H" # Wrong: abbreviated
+    - "Manual" # Wrong: not a valid type
+    - "Automated" # Wrong: not a valid type
+    - "Bot" # Wrong: not a valid type
 ```
 
 ### 3.4 Executor Matrix Cross-Reference
@@ -266,12 +270,12 @@ estimated_time: "2"         # Wrong: string without unit
 
 ### 4.4 Time Estimates by Execution Type
 
-| Execution Type | Typical Range | Red Flag |
-|----------------|---------------|----------|
-| Worker | 0-0.5h | >1h (should be faster) |
-| Agent | 0.5-2h | >4h (efficiency concern) |
-| Hybrid | 1-4h | >8h (consider splitting) |
-| Human | 1-8h | >16h (split into subtasks) |
+| Execution Type | Typical Range | Red Flag                   |
+| -------------- | ------------- | -------------------------- |
+| Worker         | 0-0.5h        | >1h (should be faster)     |
+| Agent          | 0.5-2h        | >4h (efficiency concern)   |
+| Hybrid         | 1-4h          | >8h (consider splitting)   |
+| Human          | 1-8h          | >16h (split into subtasks) |
 
 ---
 
@@ -420,11 +424,11 @@ acceptance_criteria:
 ### 6.3 Criteria Count Guidelines
 
 | Task Complexity | Action Items | Acceptance Criteria |
-|-----------------|--------------|---------------------|
-| Simple | 2-3 | 1-2 |
-| Medium | 3-5 | 2-3 |
-| Complex | 5-8 | 3-5 |
-| Critical | 5-10 | 4-7 |
+| --------------- | ------------ | ------------------- |
+| Simple          | 2-3          | 1-2                 |
+| Medium          | 3-5          | 2-3                 |
+| Complex         | 5-8          | 3-5                 |
+| Critical        | 5-10         | 4-7                 |
 
 ---
 
@@ -499,25 +503,25 @@ def validate_task_anatomy(task):
 
 ### 8.2 Decision Matrix
 
-| Score | Status | Action |
-|-------|--------|--------|
-| 95-100% | PASS | Task ready for deployment |
-| 80-94% | PASS | Deploy with minor notes |
-| 60-79% | CONDITIONAL | Review and fix warnings |
-| 40-59% | FAIL | Fix required fields first |
-| <40% | HARD FAIL | Rewrite task definition |
+| Score   | Status      | Action                    |
+| ------- | ----------- | ------------------------- |
+| 95-100% | PASS        | Task ready for deployment |
+| 80-94%  | PASS        | Deploy with minor notes   |
+| 60-79%  | CONDITIONAL | Review and fix warnings   |
+| 40-59%  | FAIL        | Fix required fields first |
+| <40%    | HARD FAIL   | Rewrite task definition   |
 
 ### 8.3 Common Failures and Fixes
 
-| Failure | Cause | Fix |
-|---------|-------|-----|
-| Missing fields | Incomplete template | Add all 8 required fields |
-| Bad task_name | Not Verb + Object | Rename to "Verb + Object" format |
-| Invalid execution_type | Typo or wrong case | Use exact: Human/Agent/Hybrid/Worker |
-| Input not array | Single string | Convert to array with at least 1 item |
-| Output not array | Single string | Convert to array with at least 1 item |
-| Empty action_items | Placeholder | Add specific executable steps |
-| Generic criteria | "Task done" | Add testable, specific criteria |
+| Failure                | Cause               | Fix                                   |
+| ---------------------- | ------------------- | ------------------------------------- |
+| Missing fields         | Incomplete template | Add all 8 required fields             |
+| Bad task_name          | Not Verb + Object   | Rename to "Verb + Object" format      |
+| Invalid execution_type | Typo or wrong case  | Use exact: Human/Agent/Hybrid/Worker  |
+| Input not array        | Single string       | Convert to array with at least 1 item |
+| Output not array       | Single string       | Convert to array with at least 1 item |
+| Empty action_items     | Placeholder         | Add specific executable steps         |
+| Generic criteria       | "Task done"         | Add testable, specific criteria       |
 
 ---
 
@@ -527,12 +531,12 @@ Use this template for new tasks:
 
 ```yaml
 task:
-  id: "{task_id}"                           # kebab-case, unique
-  task_name: "{Verb + Object}"              # Title Case, action-oriented
-  status: "pending"                         # pending|in_progress|completed
-  responsible_executor: "{executor_name}"   # Who/what executes
+  id: "{task_id}" # kebab-case, unique
+  task_name: "{Verb + Object}" # Title Case, action-oriented
+  status: "pending" # pending|in_progress|completed
+  responsible_executor: "{executor_name}" # Who/what executes
   execution_type: "{Human|Agent|Hybrid|Worker}"
-  estimated_time: "{X}h"                    # Xh or X-Yh format
+  estimated_time: "{X}h" # Xh or X-Yh format
 
   input:
     - "{specific_input_1}"
@@ -576,16 +580,16 @@ task:
 
 ## Required Fields Check
 
-| Field | Present | Valid | Notes |
-|-------|---------|-------|-------|
-| task_name | {yes/no} | {yes/no} | {notes} |
-| status | {yes/no} | {yes/no} | {notes} |
+| Field                | Present  | Valid    | Notes   |
+| -------------------- | -------- | -------- | ------- |
+| task_name            | {yes/no} | {yes/no} | {notes} |
+| status               | {yes/no} | {yes/no} | {notes} |
 | responsible_executor | {yes/no} | {yes/no} | {notes} |
-| execution_type | {yes/no} | {yes/no} | {notes} |
-| input | {yes/no} | {yes/no} | {notes} |
-| output | {yes/no} | {yes/no} | {notes} |
-| action_items | {yes/no} | {yes/no} | {notes} |
-| acceptance_criteria | {yes/no} | {yes/no} | {notes} |
+| execution_type       | {yes/no} | {yes/no} | {notes} |
+| input                | {yes/no} | {yes/no} | {notes} |
+| output               | {yes/no} | {yes/no} | {notes} |
+| action_items         | {yes/no} | {yes/no} | {notes} |
+| acceptance_criteria  | {yes/no} | {yes/no} | {notes} |
 
 ## Format Validation
 
@@ -602,6 +606,7 @@ task:
 - [ ] Auditability: {score}%
 
 ## Overall Score: {score}%
+
 ## Status: {PASS|CONDITIONAL|FAIL|HARD_FAIL}
 
 ## Issues Found

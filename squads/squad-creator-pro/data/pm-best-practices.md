@@ -293,47 +293,55 @@ anti_patterns:
 Use this checklist before approving squad PRD:
 
 ### 7.1 Problem Definition
+
 - [ ] Clear articulation of problem being solved
 - [ ] Target user identified
 - [ ] Success metrics defined
 - [ ] Why existing solutions don't work
 
 ### 7.2 Domain Analysis
+
 - [ ] ALL workflows mapped (table format)
 - [ ] Workflow categories defined
 - [ ] Automation potential assessed per workflow
 - [ ] No workflows missing
 
 ### 7.3 Elite Minds
-- [ ] >= 3 elite minds identified
+
+- [ ] > = 3 elite minds identified
 - [ ] Each mind has documented frameworks
 - [ ] Tier distribution covers all needs
 - [ ] Sources for each mind noted
 
 ### 7.4 Agent Architecture
+
 - [ ] Orchestrator defined
 - [ ] Agents assigned to tiers
 - [ ] Handoff map complete
 - [ ] No orphan agents (all have purpose)
 
 ### 7.5 Epic Structure
+
 - [ ] Epic 1 = Foundation + Orchestrator
 - [ ] Epics are sequential (no backwards deps)
 - [ ] Each epic delivers usable functionality
 - [ ] Cross-cutting concerns flow through
 
 ### 7.6 Stories
+
 - [ ] Stories sized for single AI session
 - [ ] Acceptance criteria testable
 - [ ] Quality gates defined per story
 - [ ] Specialist assignments predicted
 
 ### 7.7 Success Criteria
+
 - [ ] Measurable outcomes defined
 - [ ] Coverage metrics clear
 - [ ] Quality thresholds set
 
 ### 7.8 Risks
+
 - [ ] Risks identified
 - [ ] Mitigations planned
 - [ ] Rollback approach defined
@@ -435,6 +443,6 @@ example_prd:
 
 ---
 
-*PM Best Practices for Squad Creator v1.0*
-*Source: AIOS PM Agent (Morgan)*
-*Integrated: 2026-02-03*
+_PM Best Practices for Squad Creator v1.0_
+_Source: AIOS PM Agent (Morgan)_
+_Integrated: 2026-02-03_

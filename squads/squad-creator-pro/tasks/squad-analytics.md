@@ -33,16 +33,16 @@
 
 ### What Script Does (Deterministic)
 
-| Feature | Method | Output |
-|---------|--------|--------|
-| File counts | `glob()` | agents: 16, tasks: 55, etc. |
-| Line counts | `wc -l` equivalent | file.md: 1,234 lines |
-| Extra folders | `path.exists()` | data/minds/, docs/sops/ |
-| Min lines check | Numeric comparison | ✅ > 300 or ⚠️ < 300 |
-| README/config exists | `file.exists()` | has_readme: true |
-| Totals/averages | Math | avg: 1,814 lines |
-| Sorting/filtering | Algorithm | --sort-by agents |
-| Output formats | Formatting | table, json |
+| Feature              | Method             | Output                      |
+| -------------------- | ------------------ | --------------------------- |
+| File counts          | `glob()`           | agents: 16, tasks: 55, etc. |
+| Line counts          | `wc -l` equivalent | file.md: 1,234 lines        |
+| Extra folders        | `path.exists()`    | data/minds/, docs/sops/     |
+| Min lines check      | Numeric comparison | ✅ > 300 or ⚠️ < 300        |
+| README/config exists | `file.exists()`    | has_readme: true            |
+| Totals/averages      | Math               | avg: 1,814 lines            |
+| Sorting/filtering    | Algorithm          | --sort-by agents            |
+| Output formats       | Formatting         | table, json                 |
 
 ### Script CLI
 
@@ -68,15 +68,15 @@ python3 scripts/squad-analytics.py --squad hormozi -l --format json
 
 ### Script Flags
 
-| Flag | Short | Description |
-|------|-------|-------------|
-| `--squad NAME` | `-s` | Analyze single squad |
-| `--line-counts` | `-l` | Show lines per file |
-| `--quality-audit` | `-q` | Check against minimums (300/500) |
-| `--detailed` | `-d` | Show component names |
-| `--format` | | `table` (default), `json` |
-| `--sort-by` | | `name`, `agents`, `tasks`, `total` |
-| `--squads-path` | | Custom path to squads/ |
+| Flag              | Short | Description                        |
+| ----------------- | ----- | ---------------------------------- |
+| `--squad NAME`    | `-s`  | Analyze single squad               |
+| `--line-counts`   | `-l`  | Show lines per file                |
+| `--quality-audit` | `-q`  | Check against minimums (300/500)   |
+| `--detailed`      | `-d`  | Show component names               |
+| `--format`        |       | `table` (default), `json`          |
+| `--sort-by`       |       | `name`, `agents`, `tasks`, `total` |
+| `--squads-path`   |       | Custom path to squads/             |
 
 ### Script Output Example
 
@@ -110,14 +110,14 @@ python3 scripts/squad-analytics.py --squad hormozi -l --format json
 
 ### What Agent Does (Requires Interpretation)
 
-| Feature | Why LLM Required | How |
-|---------|------------------|-----|
-| voice_dna quality | Read content, evaluate completeness | Read agent file, check sections |
-| Task Anatomy compliance | Check 8 semantic fields | Parse task structure |
-| Agent depth (SC_AGT_003) | Evaluate thinking depth | Analyze frameworks, examples |
-| Content gap analysis | Interpret what's missing vs intentional | Compare to standards |
-| Recommendations | Generate contextual suggestions | Based on findings |
-| Health score | Qualitative judgment | Combine metrics + content |
+| Feature                  | Why LLM Required                        | How                             |
+| ------------------------ | --------------------------------------- | ------------------------------- |
+| voice_dna quality        | Read content, evaluate completeness     | Read agent file, check sections |
+| Task Anatomy compliance  | Check 8 semantic fields                 | Parse task structure            |
+| Agent depth (SC_AGT_003) | Evaluate thinking depth                 | Analyze frameworks, examples    |
+| Content gap analysis     | Interpret what's missing vs intentional | Compare to standards            |
+| Recommendations          | Generate contextual suggestions         | Based on findings               |
+| Health score             | Qualitative judgment                    | Combine metrics + content       |
 
 ### Agent Workflow
 
@@ -136,18 +136,18 @@ python3 scripts/squad-analytics.py --squad hormozi -l --format json
 
 ### When to Use Agent Analysis
 
-| Request | Script Only | + Agent |
-|---------|:-----------:|:-------:|
-| "Show me hormozi stats" | ✅ | |
-| "How many agents in hormozi?" | ✅ | |
-| "Is hormozi squad quality good?" | ✅ | ✅ |
-| "What's missing in hormozi?" | | ✅ |
-| "How can I improve hormozi?" | | ✅ |
-| "Compare hormozi vs copy" | ✅ (metrics) | ✅ (quality) |
+| Request                          | Script Only  |   + Agent    |
+| -------------------------------- | :----------: | :----------: |
+| "Show me hormozi stats"          |      ✅      |              |
+| "How many agents in hormozi?"    |      ✅      |              |
+| "Is hormozi squad quality good?" |      ✅      |      ✅      |
+| "What's missing in hormozi?"     |              |      ✅      |
+| "How can I improve hormozi?"     |              |      ✅      |
+| "Compare hormozi vs copy"        | ✅ (metrics) | ✅ (quality) |
 
 ---
 
-## Command: *squad-analytics
+## Command: \*squad-analytics
 
 ### Basic Usage (Script Only)
 
@@ -158,6 +158,7 @@ python3 scripts/squad-analytics.py --squad hormozi -l --format json
 ```
 
 **Agent Action:**
+
 ```python
 # Execute script
 output = bash("python3 scripts/squad-analytics.py --squad {name} -l -q")
@@ -173,6 +174,7 @@ print(output)
 ```
 
 **Agent Action:**
+
 ```python
 # 1. Execute script
 metrics = bash("python3 scripts/squad-analytics.py --squad {name} -l -q --format json")
@@ -192,11 +194,11 @@ for agent in data["line_counts"]["agents"][:3]:
 
 ## Quality Thresholds (Checked by Script)
 
-| Component | Minimum | Rationale |
-|-----------|---------|-----------|
-| Agents | 300 lines | voice_dna + examples + anti_patterns |
-| Workflows | 500 lines | phases + checkpoints + frameworks |
-| Tasks | 100 lines | anatomy + validation |
+| Component | Minimum   | Rationale                            |
+| --------- | --------- | ------------------------------------ |
+| Agents    | 300 lines | voice_dna + examples + anti_patterns |
+| Workflows | 500 lines | phases + checkpoints + frameworks    |
+| Tasks     | 100 lines | anatomy + validation                 |
 
 ---
 
@@ -204,12 +206,12 @@ for agent in data["line_counts"]["agents"][:3]:
 
 Script automatically detects squad-specific folders:
 
-| Folder | Contents | Example Squad |
-|--------|----------|---------------|
-| `data/minds/` | DNA extraction files | hormozi |
-| `docs/sops/` | Standard Operating Procedures | hormozi |
-| `docs/` | Documentation | most squads |
-| `pipelines/` | Pipeline code | mmos, books |
+| Folder        | Contents                      | Example Squad |
+| ------------- | ----------------------------- | ------------- |
+| `data/minds/` | DNA extraction files          | hormozi       |
+| `docs/sops/`  | Standard Operating Procedures | hormozi       |
+| `docs/`       | Documentation                 | most squads   |
+| `pipelines/`  | Pipeline code                 | mmos, books   |
 
 ---
 
@@ -242,6 +244,7 @@ squads/squad-creator-pro/scripts/squad-analytics.py
 ## Changelog
 
 ### v3.0.0 (2026-02-10)
+
 - Clear separation: Script (deterministic) vs Agent (LLM)
 - Added `--squad NAME` filter
 - Added `--line-counts` / `-l` flag
@@ -251,11 +254,13 @@ squads/squad-creator-pro/scripts/squad-analytics.py
 - Those features now documented as "Agent Phase"
 
 ### v2.0.0 (2026-02-05)
+
 - Added health indicators (moved to Agent phase)
 - Added gap analysis (moved to Agent phase)
 - Added recommendations (moved to Agent phase)
 
 ### v1.0.0 (2026-02-01)
+
 - Initial release with basic counting
 
 ---

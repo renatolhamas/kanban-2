@@ -1,47 +1,51 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { RegisterForm } from '@/components/RegisterForm'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { RegisterForm } from "@/components/RegisterForm";
 
 export default function RegisterPage() {
-  const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  const handleRegister = async (email: string, name: string, password: string) => {
+  const handleRegister = async (
+    email: string,
+    name: string,
+    password: string,
+  ) => {
     try {
-      setError(null)
+      setError(null);
 
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, name, password }),
-        credentials: 'include', // Send cookies
-      })
+        credentials: "include", // Send cookies
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        const errorMessage = data.error || 'Registration failed'
-        setError(errorMessage)
-        throw new Error(errorMessage)
+        const errorMessage = data.error || "Registration failed";
+        setError(errorMessage);
+        throw new Error(errorMessage);
       }
 
       // Success - get redirect URL from response header
-      const redirectTo = response.headers.get('X-Redirect-To') || '/settings/connection'
+      const redirectTo =
+        response.headers.get("X-Redirect-To") || "/settings/connection";
 
       // Redirect after successful registration
       setTimeout(() => {
-        router.push(redirectTo)
-      }, 1500)
+        router.push(redirectTo);
+      }, 1500);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Registration failed'
-      setError(errorMessage)
-      throw err // Re-throw so RegisterForm knows it failed
+      setError(err instanceof Error ? err.message : "Registration failed");
+      throw err;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -66,11 +70,11 @@ export default function RegisterPage() {
         {/* Additional info */}
         <div className="mt-6 p-4 bg-white rounded-lg shadow text-center text-sm text-gray-600">
           <p>
-            By registering, you agree to our{' '}
+            By registering, you agree to our{" "}
             <a href="#" className="text-blue-600 hover:underline">
               Terms of Service
-            </a>
-            {' '}and{' '}
+            </a>{" "}
+            and{" "}
             <a href="#" className="text-blue-600 hover:underline">
               Privacy Policy
             </a>
@@ -78,5 +82,5 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

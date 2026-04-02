@@ -37,9 +37,9 @@ O Squad Creator usa o **Executor Decision Tree** para decidir quem executa cada 
 
 ### 🔧 IDE Sync (Worker)
 
-| Script | Linhas | Propósito |
-|--------|--------|-----------|
-| `sync-ide-command.py` | 430 | Sincroniza squad components para IDEs |
+| Script                | Linhas | Propósito                             |
+| --------------------- | ------ | ------------------------------------- |
+| `sync-ide-command.py` | 430    | Sincroniza squad components para IDEs |
 
 ```bash
 # Sincronizar squad completo
@@ -53,6 +53,7 @@ python3 scripts/sync-ide-command.py agent oalanicolas --force
 ```
 
 **Suporta:**
+
 - Claude Code: `.claude/commands/{pack}/`
 - Cursor: `.cursor/rules/` (converte MD → MDC)
 
@@ -60,13 +61,13 @@ python3 scripts/sync-ide-command.py agent oalanicolas --force
 
 ### ✅ Validação (Worker/Hybrid)
 
-| Script | Linhas | Propósito | Tipo |
-|--------|--------|-----------|------|
-| `validate-squad-structure.py` | 535 | Phases 0-2 da validação | Worker |
-| `quality_gate.py` | 414 | Quality gates e thresholds | Worker |
-| `yaml_validator.py` | 487 | Validação de sintaxe YAML | Worker |
-| `checklist_validator.py` | 419 | Validação de checklists | Worker |
-| `naming_validator.py` | 284 | Validação de nomenclatura | Worker |
+| Script                        | Linhas | Propósito                  | Tipo   |
+| ----------------------------- | ------ | -------------------------- | ------ |
+| `validate-squad-structure.py` | 535    | Phases 0-2 da validação    | Worker |
+| `quality_gate.py`             | 414    | Quality gates e thresholds | Worker |
+| `yaml_validator.py`           | 487    | Validação de sintaxe YAML  | Worker |
+| `checklist_validator.py`      | 419    | Validação de checklists    | Worker |
+| `naming_validator.py`         | 284    | Validação de nomenclatura  | Worker |
 
 ```bash
 # Validar estrutura (JSON output para Agent)
@@ -83,12 +84,12 @@ python3 scripts/quality_gate.py squads/squad-creator-pro/
 
 ### 📊 Analytics (Hybrid)
 
-| Script | Linhas | Propósito | Tipo |
-|--------|--------|-----------|------|
-| `refresh-registry.py` | 267 | Escaneia squads, gera JSON | Worker |
-| `squad-analytics.py` | 335 | Métricas e estatísticas | Worker |
-| `inventory.py` | 268 | Inventário de componentes | Worker |
-| `scoring.py` | 392 | Scoring de qualidade | Worker |
+| Script                | Linhas | Propósito                  | Tipo   |
+| --------------------- | ------ | -------------------------- | ------ |
+| `refresh-registry.py` | 267    | Escaneia squads, gera JSON | Worker |
+| `squad-analytics.py`  | 335    | Métricas e estatísticas    | Worker |
+| `inventory.py`        | 268    | Inventário de componentes  | Worker |
+| `scoring.py`          | 392    | Scoring de qualidade       | Worker |
 
 ```bash
 # Refresh registry (output JSON para Agent enriquecer)
@@ -105,9 +106,9 @@ python3 scripts/inventory.py squads/squad-creator-pro/
 
 ### 🔍 Dependências
 
-| Script | Linhas | Propósito |
-|--------|--------|-----------|
-| `dependency_check.py` | 345 | Verifica dependências entre componentes |
+| Script                | Linhas | Propósito                               |
+| --------------------- | ------ | --------------------------------------- |
+| `dependency_check.py` | 345    | Verifica dependências entre componentes |
 
 ```bash
 python3 scripts/dependency_check.py squads/squad-creator-pro/
@@ -135,11 +136,11 @@ Pattern: EXEC-W-001 (Worker - Deterministic)
 
 ### Output Formats
 
-| Flag | Formato | Uso |
-|------|---------|-----|
-| `--output text` | Human-readable | Terminal (default) |
+| Flag            | Formato          | Uso                  |
+| --------------- | ---------------- | -------------------- |
+| `--output text` | Human-readable   | Terminal (default)   |
 | `--output json` | JSON estruturado | Para Agent processar |
-| `--verbose` | Detalhado | Debug |
+| `--verbose`     | Detalhado        | Debug                |
 
 ---
 
@@ -194,14 +195,14 @@ python -m pytest scripts/tests/ -v
 python -m pytest scripts/tests/test_sync_ide_command.py -v
 ```
 
-| Script | Teste | Cases |
-|--------|-------|-------|
-| `sync-ide-command.py` | `test_sync_ide_command.py` | 25+ |
-| `validate-squad-structure.py` | `test_validate_squad_structure.py` | 30+ |
-| `quality_gate.py` | `test_quality_gate.py` | 15+ |
-| `yaml_validator.py` | `test_yaml_validator.py` | 20+ |
-| `refresh-registry.py` | `test_refresh_registry.py` | 20+ |
-| `squad-analytics.py` | `test_squad_analytics.py` | 25+ |
+| Script                        | Teste                              | Cases |
+| ----------------------------- | ---------------------------------- | ----- |
+| `sync-ide-command.py`         | `test_sync_ide_command.py`         | 25+   |
+| `validate-squad-structure.py` | `test_validate_squad_structure.py` | 30+   |
+| `quality_gate.py`             | `test_quality_gate.py`             | 15+   |
+| `yaml_validator.py`           | `test_yaml_validator.py`           | 20+   |
+| `refresh-registry.py`         | `test_refresh_registry.py`         | 20+   |
+| `squad-analytics.py`          | `test_squad_analytics.py`          | 25+   |
 
 ---
 
@@ -209,10 +210,10 @@ python -m pytest scripts/tests/test_sync_ide_command.py -v
 
 A separação Worker/Agent reduz custos significativamente:
 
-| Métrica | Valor |
-|---------|-------|
-| **Economia mensal** | ~$45/mês |
-| **Economia anual** | ~$540/ano |
+| Métrica                 | Valor           |
+| ----------------------- | --------------- |
+| **Economia mensal**     | ~$45/mês        |
+| **Economia anual**      | ~$540/ano       |
 | **Tokens LLM evitados** | ~15M tokens/mês |
 
 ### Por que Worker é mais barato?

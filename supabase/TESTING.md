@@ -14,15 +14,18 @@ This runs all tests against a local Supabase instance.
 ## Prerequisites
 
 ### Install Supabase CLI
+
 ```bash
 npm install -g supabase@latest
 ```
 
 ### Docker
+
 - Download Docker Desktop from https://www.docker.com
 - Keep Docker running during tests
 
 ### Verify Installation
+
 ```bash
 supabase --version
 docker ps
@@ -33,9 +36,11 @@ docker ps
 ## Test Suites
 
 ### 1. **CRITICAL Tests** (Tests 1-10)
+
 File: `supabase/tests/1.1-critical-tests.sql`
 
 Validates:
+
 - ✅ All 8 tables exist
 - ✅ FK constraints (valid/invalid inserts, CASCADE/SET NULL)
 - ✅ Unique constraints (email, phone per tenant)
@@ -44,14 +49,17 @@ Validates:
 - ✅ RLS enabled on all tables
 
 **Run manually:**
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres -f supabase/tests/1.1-critical-tests.sql
 ```
 
 ### 2. **RLS Integration Tests** (Tests 1-6)
+
 File: `supabase/tests/1.1-rls-integration-tests.sql`
 
 Validates:
+
 - ✅ Tenant A can see own tenant data
 - ✅ Tenant A blocked from seeing Tenant B data (SELECT)
 - ✅ Tenant A blocked from UPDATE Tenant B data
@@ -60,14 +68,17 @@ Validates:
 - ✅ Deep nested RLS on messages (via conversation)
 
 **Run manually:**
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres -f supabase/tests/1.1-rls-integration-tests.sql
 ```
 
 ### 3. **Performance Tests** (Tests 1-6)
+
 File: `supabase/tests/1.1-performance-tests.sql`
 
 Validates index usage with EXPLAIN ANALYZE:
+
 - ✅ idx_conversations_tenant_status
 - ✅ idx_messages_conversation_created
 - ✅ idx_contacts_phone_tenant
@@ -76,14 +87,17 @@ Validates index usage with EXPLAIN ANALYZE:
 - ✅ idx_conversations_kanban_column
 
 **Run manually:**
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres -f supabase/tests/1.1-performance-tests.sql
 ```
 
 ### 4. **Rollback Test**
+
 File: `supabase/run-tests.sh` (Step 8)
 
 Validates:
+
 - ✅ Migration can be rolled back (all tables/functions dropped)
 - ✅ Migration can be re-applied cleanly (idempotent)
 
@@ -92,11 +106,13 @@ Validates:
 ## Step-by-Step Manual Testing
 
 ### Step 1: Start Local Supabase
+
 ```bash
 supabase start
 ```
 
 Wait for output:
+
 ```
 Supabase local development setup is running.
      API URL: http://localhost:54321
@@ -106,12 +122,14 @@ Supabase local development setup is running.
 ```
 
 ### Step 2: Apply Migration
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres \
   -f supabase/migrations/20260401234048_create_core_schema.sql
 ```
 
 Expected output:
+
 ```
 CREATE EXTENSION
 CREATE EXTENSION
@@ -127,6 +145,7 @@ COMMENT ON TABLE
 ```
 
 ### Step 3: Verify Schema
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres << 'SQL'
 -- Count tables
@@ -150,28 +169,33 @@ SQL
 ```
 
 ### Step 4: Run Critical Tests
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres \
   -f supabase/tests/1.1-critical-tests.sql
 ```
 
 All tests should output:
+
 ```
 ✅ TEST X PASSED: ...
 ```
 
 ### Step 5: Run RLS Tests
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres \
   -f supabase/tests/1.1-rls-integration-tests.sql
 ```
 
 All tests should output:
+
 ```
 ✅ RLS TEST X PASSED: ...
 ```
 
 ### Step 6: Run Performance Tests
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres \
   -f supabase/tests/1.1-performance-tests.sql
@@ -180,6 +204,7 @@ psql -h localhost -p 5432 -U postgres -d postgres \
 All EXPLAIN ANALYZE output should show "Index Scan" operations.
 
 ### Step 7: Test Rollback
+
 ```bash
 # Drop all tables and functions
 psql -h localhost -p 5432 -U postgres -d postgres << 'ROLLBACK'
@@ -205,6 +230,7 @@ VERIFY
 ```
 
 ### Step 8: Re-apply Migration
+
 ```bash
 psql -h localhost -p 5432 -U postgres -d postgres \
   -f supabase/migrations/20260401234048_create_core_schema.sql
@@ -213,6 +239,7 @@ psql -h localhost -p 5432 -U postgres -d postgres \
 Should succeed without errors.
 
 ### Step 9: Stop Supabase
+
 ```bash
 supabase stop
 ```
@@ -221,35 +248,40 @@ supabase stop
 
 ## Expected Test Results
 
-| Test Suite | Tests | Expected | Status |
-|---|---|---|---|
-| CRITICAL | 1-10 | ✅ All PASSED | ✓ |
-| RLS Integration | 1-6 | ✅ All PASSED | ✓ |
-| Performance | 1-6 | ✅ All using indexes | ✓ |
-| Rollback | 1 | ✅ Idempotent | ✓ |
+| Test Suite      | Tests | Expected             | Status |
+| --------------- | ----- | -------------------- | ------ |
+| CRITICAL        | 1-10  | ✅ All PASSED        | ✓      |
+| RLS Integration | 1-6   | ✅ All PASSED        | ✓      |
+| Performance     | 1-6   | ✅ All using indexes | ✓      |
+| Rollback        | 1     | ✅ Idempotent        | ✓      |
 
 ---
 
 ## Troubleshooting
 
 ### "Supabase CLI not found"
+
 ```bash
 npm install -g supabase@latest
 ```
 
 ### "Docker not running"
+
 - Start Docker Desktop
 - Retry `supabase start`
 
 ### "psql: command not found"
+
 - Install PostgreSQL client (comes with PostgreSQL)
 - Or use Supabase CLI: `supabase db shell`
 
 ### Test fails with "Table already exists"
+
 - Run: `supabase reset`
 - Re-apply migration
 
 ### Permission denied on run-tests.sh
+
 ```bash
 chmod +x supabase/run-tests.sh
 bash supabase/run-tests.sh

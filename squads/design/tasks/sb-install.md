@@ -7,16 +7,16 @@
 
 ## Task Anatomy
 
-| Field | Value |
-|-------|-------|
-| **task_name** | Install Storybook |
-| **status** | `pending` |
-| **responsible_executor** | @storybook-expert |
-| **execution_type** | `Agent` |
-| **input** | Project root path, package manager (npm/pnpm/bun) |
-| **output** | Storybook packages installed as devDependencies |
-| **action_items** | 5 steps |
-| **acceptance_criteria** | 4 criteria |
+| Field                    | Value                                             |
+| ------------------------ | ------------------------------------------------- |
+| **task_name**            | Install Storybook                                 |
+| **status**               | `pending`                                         |
+| **responsible_executor** | @storybook-expert                                 |
+| **execution_type**       | `Agent`                                           |
+| **input**                | Project root path, package manager (npm/pnpm/bun) |
+| **output**               | Storybook packages installed as devDependencies   |
+| **action_items**         | 5 steps                                           |
+| **acceptance_criteria**  | 4 criteria                                        |
 
 ## Overview
 
@@ -47,6 +47,7 @@ Install Storybook with the `nextjs-vite` framework and all required addons as de
 ### Step 1: Detect Project Environment
 
 Read `package.json` to identify:
+
 - [ ] Framework (Next.js, Vite, React)
 - [ ] Existing Storybook packages (if any — abort if already installed)
 - [ ] Package manager (from lockfile: package-lock.json → npm, pnpm-lock.yaml → pnpm, bun.lockb → bun)
@@ -57,20 +58,22 @@ Read `package.json` to identify:
 Based on framework detection, select packages:
 
 **Core (always required):**
+
 ```
 storybook
 ```
 
 **Framework adapter (select ONE):**
 
-| Framework | Adapter Package |
-|-----------|----------------|
-| Next.js + Vite | `@storybook/nextjs-vite` |
-| Next.js + Webpack | `@storybook/nextjs` |
-| Vite (standalone) | `@storybook/react-vite` |
+| Framework            | Adapter Package             |
+| -------------------- | --------------------------- |
+| Next.js + Vite       | `@storybook/nextjs-vite`    |
+| Next.js + Webpack    | `@storybook/nextjs`         |
+| Vite (standalone)    | `@storybook/react-vite`     |
 | Webpack (standalone) | `@storybook/react-webpack5` |
 
 **Addons (recommended set):**
+
 ```
 @storybook/addon-docs
 @storybook/addon-a11y
@@ -80,6 +83,7 @@ storybook
 ```
 
 **Notes:**
+
 - In Storybook v10+, `@storybook/test` is bundled as `storybook/test` — do NOT install separately
 - Types (`Meta`, `StoryObj`, `Preview`) import from the framework adapter, NOT from `storybook`
 
@@ -90,6 +94,7 @@ storybook
 ```
 
 If peer dependency conflicts occur:
+
 - Try `--legacy-peer-deps` (npm) or `--no-strict-peer-deps` (pnpm)
 - Document which flag was needed
 
@@ -102,6 +107,7 @@ If peer dependency conflicts occur:
 ### Step 5: Add Scripts to package.json
 
 Add to `scripts`:
+
 ```json
 {
   "storybook": "storybook dev -p 6006",
@@ -119,12 +125,14 @@ Add to `scripts`:
 ## Error Handling
 
 ### Peer Dependency Conflict
+
 - **Trigger:** npm/pnpm rejects install due to peer dep mismatch
 - **Detection:** Exit code != 0 with "ERESOLVE" or "peer dep" in output
 - **Recovery:** Retry with `--legacy-peer-deps`. If still fails, check for `@storybook/test` as separate package (remove it — bundled in v10)
 - **Prevention:** Always check for existing Storybook packages before installing
 
 ### Framework Adapter Wrong Choice
+
 - **Trigger:** Project uses Vite but nextjs adapter selected (or vice versa)
 - **Detection:** Build fails with "Cannot find module" for framework-specific APIs
 - **Recovery:** Uninstall wrong adapter, install correct one based on framework detection
@@ -132,11 +140,11 @@ Add to `scripts`:
 
 ## Handoff
 
-| Attribute | Value |
-|-----------|-------|
-| **Next Task** | `sb-configure` |
-| **Trigger** | All acceptance criteria met |
-| **Executor** | @storybook-expert |
+| Attribute     | Value                       |
+| ------------- | --------------------------- |
+| **Next Task** | `sb-configure`              |
+| **Trigger**   | All acceptance criteria met |
+| **Executor**  | @storybook-expert           |
 
 ### Handoff Package
 

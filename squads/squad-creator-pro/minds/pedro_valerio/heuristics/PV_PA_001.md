@@ -18,14 +18,14 @@ PV_PA_001:
   pattern_reference: "HO-PP-003"
 
   weights:
-    truthfulness_coherence: 1.0  # VETO power
+    truthfulness_coherence: 1.0 # VETO power
     system_adherence_potential: 0.8
     technical_skill: 0.3
 
   thresholds:
-    truthfulness: 0.7  # Must be 'Coherent'
+    truthfulness: 0.7 # Must be 'Coherent'
     system_adherence: 0.7
-    technical_skill: null  # No minimum, context-dependent
+    technical_skill: null # No minimum, context-dependent
 
   veto_conditions:
     - condition: "truthfulness_coherence < 0.7"
@@ -69,11 +69,11 @@ FALLBACK: Apply test period with revealing tasks when coherence is uncertain
 
 ## Evaluation Criteria
 
-| Criterion | Weight | Threshold | VETO Power | Description |
-|-----------|--------|-----------|------------|-------------|
-| Truthfulness Coherence | 1.0 | Must be 'Coherent' | YES | Is the executor honest and consistent? |
-| System Adherence Potential | 0.8 | ≥0.7 | NO | Can they operate within clear systems? |
-| Technical Skill | 0.3 | Context-dependent | NO | Current technical ability level |
+| Criterion                  | Weight | Threshold          | VETO Power | Description                            |
+| -------------------------- | ------ | ------------------ | ---------- | -------------------------------------- |
+| Truthfulness Coherence     | 1.0    | Must be 'Coherent' | YES        | Is the executor honest and consistent? |
+| System Adherence Potential | 0.8    | ≥0.7               | NO         | Can they operate within clear systems? |
+| Technical Skill            | 0.3    | Context-dependent  | NO         | Current technical ability level        |
 
 ## Truthfulness Assessment
 
@@ -110,6 +110,7 @@ performance:
 ## Failure Modes
 
 ### False Negative Rejection
+
 - **Trigger:** Interpreting communication error or misunderstanding as deliberate lie; overly rigid system
 - **Manifestation:** Rejecting talented, high-potential candidate for small interview inconsistency
 - **Detection:** Feedback from other interviewers that 'lie' perception was too severe
@@ -119,6 +120,7 @@ performance:
 ## Behavioral Evidence
 
 **Example:** Dismissing technically superior filmmakers
+
 - **Context:** Internal conflict in filming team
 - **Information Available:** Evidence that filmmakers were creating stories (lying) to harm a colleague
 - **Heuristic Application:** 'truthfulness_coherence' parameter was violated. Weight of 'technical_skill' became irrelevant. Removal decision was immediate.
@@ -162,11 +164,11 @@ checkpoint:
 ## Executor Type Coherence Matrix
 
 | Executor Type | Min Truthfulness | Min System Adherence | Technical Weight |
-|---------------|------------------|----------------------|------------------|
-| Human | 0.7 (VETO) | 0.7 | 0.3 |
-| Hybrid | 0.7 (VETO) | 0.8 | 0.4 |
-| Agent | N/A | 0.9 | 0.6 |
-| Worker | N/A | 0.95 | 0.8 |
+| ------------- | ---------------- | -------------------- | ---------------- |
+| Human         | 0.7 (VETO)       | 0.7                  | 0.3              |
+| Hybrid        | 0.7 (VETO)       | 0.8                  | 0.4              |
+| Agent         | N/A              | 0.9                  | 0.6              |
+| Worker        | N/A              | 0.95                 | 0.8              |
 
 ---
 

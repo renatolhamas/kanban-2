@@ -10,19 +10,20 @@
 
 ## Mission Parameters
 
-| Parameter | Value |
-|-----------|-------|
-| **Target Mind** | Alex Hormozi |
-| **Sources to Assess** | 4 (representative sample) |
-| **Assessment Method** | 25 Binary Checkpoints (v2.0) |
-| **Framework** | 5 Dimensions × 5 Checkpoints |
-| **Output Path** | `squads/squad-creator-pro/test-cases/an-assess-sources/haiku-output.yaml` |
+| Parameter             | Value                                                                     |
+| --------------------- | ------------------------------------------------------------------------- |
+| **Target Mind**       | Alex Hormozi                                                              |
+| **Sources to Assess** | 4 (representative sample)                                                 |
+| **Assessment Method** | 25 Binary Checkpoints (v2.0)                                              |
+| **Framework**         | 5 Dimensions × 5 Checkpoints                                              |
+| **Output Path**       | `squads/squad-creator-pro/test-cases/an-assess-sources/haiku-output.yaml` |
 
 ---
 
 ## Sources Assessed
 
 ### 1. Livro $100M Ofertas - Capítulo 6 (A Equação de Valor)
+
 - **Type:** Livro (Book)
 - **Pages:** ~40
 - **Status:** ✅ Content fully read and analyzed
@@ -30,6 +31,7 @@
 - **Notes:** Foundation of entire system. 4-pillar value framework.
 
 ### 2. Livro $100M Ofertas - Capítulo 8 (O Processo de Pensamento)
+
 - **Type:** Livro (Book)
 - **Pages:** ~25
 - **Status:** ✅ Content fully read and analyzed
@@ -37,6 +39,7 @@
 - **Notes:** Divergent thinking methodology for offer generation.
 
 ### 3. Livro $100M Leads - Seção I & II
+
 - **Type:** Livro (Book)
 - **Pages:** ~100 (Sections 1-2 of 5)
 - **Status:** ✅ Content fully read and analyzed
@@ -44,6 +47,7 @@
 - **Notes:** Core Four framework for infinite lead generation.
 
 ### 4. Livro $100m Modelos - Framework Completo + Insights
+
 - **Type:** Livro (Book)
 - **Pages:** ~80 (consolidated sections)
 - **Status:** ✅ Content fully read and analyzed
@@ -51,6 +55,7 @@
 - **Notes:** 3-Stage operationalization (Get/More/Max Money).
 
 ### 5. Entrevista Tom Bilyeu
+
 - **Type:** Entrevista (Interview)
 - **Duration:** Unknown
 - **Status:** ⚠️ No content available (URL only)
@@ -62,6 +67,7 @@
 ## Assessment Methodology Applied
 
 ### Scoring Framework
+
 **25 Binary Checkpoints across 5 Dimensions:**
 
 ```
@@ -102,24 +108,27 @@ COMPLETUDE (Completeness)
 ```
 
 ### Pass/Fail Criteria
+
 - **PASS:** Evidence EXISTS (not perfect, but present)
 - **FAIL:** Evidence MISSING (not weak, completely absent)
 - **Partial:** Interpreted as PASS (generous calibration)
 - **Dúvida:** Interpreted as PASS (benefit of doubt)
 
 ### Tier Classification
-| Tier | Average Score | Checkpoints | Definition |
-|------|-------|------------|-----------|
-| Crown Jewel | ≥ 4.0 | 20-25 | 0.8% of sources, 51% of value |
-| Ouro | 3.0-3.9 | 15-19 | 4% of sources, 33% of value |
-| Mixed | 2.0-2.9 | 10-14 | 20% of sources, 16% of value |
-| Bronze | < 2.0 | < 10 | 80% of sources, skip |
+
+| Tier        | Average Score | Checkpoints | Definition                    |
+| ----------- | ------------- | ----------- | ----------------------------- |
+| Crown Jewel | ≥ 4.0         | 20-25       | 0.8% of sources, 51% of value |
+| Ouro        | 3.0-3.9       | 15-19       | 4% of sources, 33% of value   |
+| Mixed       | 2.0-2.9       | 10-14       | 20% of sources, 16% of value  |
+| Bronze      | < 2.0         | < 10        | 80% of sources, skip          |
 
 ---
 
 ## Results Summary
 
 ### Tier Distribution
+
 ```
 ⭐ Crown Jewel:  1 source   (25%)   avg: 5.0
 🥇 Ouro:         3 sources  (75%)   avg: 4.7
@@ -132,7 +141,9 @@ Overall Average Quality: 4.2/5.0 ✅ EXCELLENT
 ### Top-Ranked Sources
 
 #### #1 CROWN JEWEL: Capítulo 6 - Equação de Valor
+
 **Score: 5.0/5.0**
+
 - Autenticidade: 5/5
 - Profundidade: 5/5
 - Atualidade: 5/5
@@ -145,7 +156,9 @@ This chapter contains the foundational framework that powers everything Alex doe
 **Extraction Priority:** URGENT #1
 
 #### #2 OURO: Capítulo 8 - Processo de Pensamento
+
 **Score: 4.8/5.0**
+
 - Autenticidade: 5/5
 - Profundidade: 5/5
 - Atualidade: 5/5
@@ -158,7 +171,9 @@ Teaches the methodology for generating infinite offer variations using divergent
 **Extraction Priority:** HIGH #2
 
 #### #3 OURO: Leads Seções I-II
+
 **Score: 4.8/5.0**
+
 - Autenticidade: 5/5
 - Profundidade: 5/5
 - Atualidade: 5/5
@@ -171,7 +186,9 @@ The Core Four framework is the most universal lead generation system. It elegant
 **Extraction Priority:** HIGH #3
 
 #### #4 OURO: Money Models Framework
+
 **Score: 4.4/5.0**
+
 - Autenticidade: 3/5 (less narrative)
 - Profundidade: 5/5
 - Atualidade: 5/5
@@ -312,8 +329,10 @@ Average: 4.0/5.0 (EXCELLENT)
 ## Calibration Accuracy
 
 ### Haiku Bias Correction Applied
+
 **Issue:** Haiku models tend to under-score
 **Solution:** Applied "generous interpretation" on 3 borderline dimensions
+
 - Profundidade Capítulo 8: Generous on "cross-domain" connection
 - Atualidade Leads: Generous on "not contradicted" assumption
 - Unicidade Models: Generous on "original framework" (3-stages)
@@ -321,10 +340,12 @@ Average: 4.0/5.0 (EXCELLENT)
 **Result:** Scores still binary (pass/fail) but interpretation favored "evidence exists" interpretation
 
 ### Special Rules Applied
+
 - ✅ IF Profundidade = 5 AND Autenticidade ≥ 4 → Crown Jewel? YES (Cap 6: 5/5 AND 5/5)
 - ✅ IF todas dimensões ≥ 4.0 → Crown Jewel? YES (Cap 6: 5/5/5/5/5 on all)
 
 ### Confidence Level: HIGH
+
 - 3/4 sources had complete content available
 - Checkpoints align with source quality
 - Tier assignments defensible and reproducible
@@ -334,6 +355,7 @@ Average: 4.0/5.0 (EXCELLENT)
 ## Deliverables
 
 ### File 1: haiku-output.yaml (21 KB)
+
 - Complete YAML structure with 25 checkpoints per source
 - Detailed scoring breakdown
 - Specific notes for each checkpoint
@@ -341,6 +363,7 @@ Average: 4.0/5.0 (EXCELLENT)
 - Recommendations and gaps identified
 
 ### File 2: ASSESSMENT-SUMMARY.md (11 KB)
+
 - Executive summary
 - Individual source rankings (tier by tier)
 - Strategic assessment (strengths vs gaps)
@@ -349,6 +372,7 @@ Average: 4.0/5.0 (EXCELLENT)
 - Quality certification and sign-off
 
 ### File 3: EXECUTION-REPORT.md (this file)
+
 - Task parameters and status
 - Sources assessed summary
 - Methodology applied
@@ -361,20 +385,24 @@ Average: 4.0/5.0 (EXCELLENT)
 ## Next Steps Recommended
 
 ### IMMEDIATE (This Week)
+
 - [ ] Route Crown Jewel (Capítulo 6) to DNA extraction
 - [ ] Priority: All 4 pillars of Value Equation
 
 ### SHORT TERM (Weeks 2-3)
+
 - [ ] Extract Capítulos 8 (divergent thinking)
 - [ ] Extract Leads Sections I-II (Core Four + Lead Magnet)
 - [ ] Extract Models Framework (3-Stage GMMM)
 
 ### MEDIUM TERM (Month 2)
+
 - [ ] Transcribe Tom Bilyeu interview (30 min effort)
 - [ ] Locate & assess top 5 other interviews
 - [ ] Search for acquisition.com YouTube training videos
 
 ### LONG TERM (Month 3+)
+
 - [ ] Extract remaining Leads sections (III-V)
 - [ ] Extract remaining Offers chapters
 - [ ] Compile all social media threads (Twitter/LinkedIn)
@@ -402,6 +430,7 @@ Average: 4.0/5.0 (EXCELLENT)
 **Recommendation:** PROCEED TO DNA EXTRACTION
 
 **Critical Path:**
+
 1. Extract Crown Jewel (Ch 6) first - 3-4 hours
 2. Extract 3 Ouro sources next - 6-8 hours total
 3. Defer interview transcription until later
@@ -410,4 +439,3 @@ Average: 4.0/5.0 (EXCELLENT)
 ---
 
 **END OF REPORT**
-

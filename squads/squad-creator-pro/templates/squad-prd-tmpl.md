@@ -33,15 +33,16 @@
 {{BACKGROUND_CONTEXT}}
 
 **Key Questions Answered:**
+
 - Why does this squad need to exist?
 - What pain exists today without it?
 - What's the opportunity cost of NOT building this?
 
 ### 1.3 Change Log
 
-| Date | Version | Description | Author |
-|------|---------|-------------|--------|
-| {{DATE}} | 1.0.0 | Initial PRD | @squad-chief |
+| Date     | Version | Description | Author       |
+| -------- | ------- | ----------- | ------------ |
+| {{DATE}} | 1.0.0   | Initial PRD | @squad-chief |
 
 ---
 
@@ -51,10 +52,10 @@
 
 > Complete list of ALL workflows this squad handles
 
-| # | Workflow | Category | Frequency | Complexity | Automatizável |
-|---|----------|----------|-----------|------------|---------------|
-| 1.1 | {{WORKFLOW}} | {{CATEGORY}} | {{FREQ}} | {{COMPLEX}} | {{AUTO_PCT}} |
-| ... | ... | ... | ... | ... | ... |
+| #   | Workflow     | Category     | Frequency | Complexity  | Automatizável |
+| --- | ------------ | ------------ | --------- | ----------- | ------------- |
+| 1.1 | {{WORKFLOW}} | {{CATEGORY}} | {{FREQ}}  | {{COMPLEX}} | {{AUTO_PCT}}  |
+| ... | ...          | ...          | ...       | ...         | ...           |
 
 **Total Workflows:** {{TOTAL}}
 **High Automation (>80%):** {{COUNT}} ({{PCT}}%)
@@ -82,11 +83,11 @@ categories:
 
 ### 3.1 Research Summary
 
-| Mind | Tier | Domain | Framework Documented | Score |
-|------|------|--------|---------------------|-------|
-| {{MIND_1}} | Tier 0 | {{DOMAIN}} | {{FRAMEWORK}} | {{SCORE}}/15 |
-| {{MIND_2}} | Tier 1 | {{DOMAIN}} | {{FRAMEWORK}} | {{SCORE}}/15 |
-| ... | ... | ... | ... | ... |
+| Mind       | Tier   | Domain     | Framework Documented | Score        |
+| ---------- | ------ | ---------- | -------------------- | ------------ |
+| {{MIND_1}} | Tier 0 | {{DOMAIN}} | {{FRAMEWORK}}        | {{SCORE}}/15 |
+| {{MIND_2}} | Tier 1 | {{DOMAIN}} | {{FRAMEWORK}}        | {{SCORE}}/15 |
+| ...        | ...    | ...        | ...                  | ...          |
 
 ### 3.2 Tier Distribution
 
@@ -94,29 +95,29 @@ categories:
 tier_distribution:
   tier_0:
     purpose: "Diagnosis, Classification, Onboarding"
-    minds: [{{LIST}}]
+    minds: [{ { LIST } }]
     coverage: "{{WHAT_THEY_COVER}}"
 
   tier_1:
     purpose: "Masters with proven results"
-    minds: [{{LIST}}]
+    minds: [{ { LIST } }]
     coverage: "{{WHAT_THEY_COVER}}"
 
   tier_2:
     purpose: "Systematizers, Framework creators"
-    minds: [{{LIST}}]
+    minds: [{ { LIST } }]
     coverage: "{{WHAT_THEY_COVER}}"
 
   tier_3:
     purpose: "Format/Channel specialists"
-    minds: [{{LIST}}]
+    minds: [{ { LIST } }]
     coverage: "{{WHAT_THEY_COVER}}"
 ```
 
 ### 3.3 Gap Analysis
 
-| Gap | Impact | Mitigation |
-|-----|--------|------------|
+| Gap     | Impact     | Mitigation     |
+| ------- | ---------- | -------------- |
 | {{GAP}} | {{IMPACT}} | {{MITIGATION}} |
 
 ---
@@ -144,14 +145,14 @@ agents:
     - id: "{{AGENT_ID}}"
       name: "{{AGENT_NAME}}"
       based_on: "{{MIND_NAME}}"
-      workflows: [{{WORKFLOW_IDS}}]
+      workflows: [{ { WORKFLOW_IDS } }]
       purpose: "{{PURPOSE}}"
 
   tier_1:
     - id: "{{AGENT_ID}}"
       name: "{{AGENT_NAME}}"
       based_on: "{{MIND_NAME}}"
-      workflows: [{{WORKFLOW_IDS}}]
+      workflows: [{ { WORKFLOW_IDS } }]
       purpose: "{{PURPOSE}}"
 
   tier_2:
@@ -189,12 +190,13 @@ agents:
 
 ### 4.4 Workflow → Agent Matrix
 
-| Workflow | Primary Agent | Support Agent | Quality Gate |
-|----------|---------------|---------------|--------------|
-| {{WORKFLOW}} | @{{AGENT}} | @{{AGENT}} | {{GATE}} |
-| ... | ... | ... | ... |
+| Workflow     | Primary Agent | Support Agent | Quality Gate |
+| ------------ | ------------- | ------------- | ------------ |
+| {{WORKFLOW}} | @{{AGENT}}    | @{{AGENT}}    | {{GATE}}     |
+| ...          | ...           | ...           | ...          |
 
 **Coverage Check:**
+
 - [ ] All {{TOTAL}} workflows assigned to at least 1 agent
 - [ ] No orphan workflows
 - [ ] No orphan agents
@@ -207,12 +209,12 @@ agents:
 
 ### Overview
 
-| Epic | Title | Agents | Workflows | Estimated Effort |
-|------|-------|--------|-----------|------------------|
-| 1 | Foundation + Orchestrator | 1-2 | 0 | {{EFFORT}} |
-| 2 | {{TITLE}} | {{N}} | {{N}} | {{EFFORT}} |
-| 3 | {{TITLE}} | {{N}} | {{N}} | {{EFFORT}} |
-| ... | ... | ... | ... | ... |
+| Epic | Title                     | Agents | Workflows | Estimated Effort |
+| ---- | ------------------------- | ------ | --------- | ---------------- |
+| 1    | Foundation + Orchestrator | 1-2    | 0         | {{EFFORT}}       |
+| 2    | {{TITLE}}                 | {{N}}  | {{N}}     | {{EFFORT}}       |
+| 3    | {{TITLE}}                 | {{N}}  | {{N}}     | {{EFFORT}}       |
+| ...  | ...                       | ...    | ...       | ...              |
 
 ### Epic Dependencies
 
@@ -237,6 +239,7 @@ Epic 6 (Tier 3)
 **Goal:** Establish squad infrastructure and create orchestrator agent that routes all requests.
 
 **Deliverables:**
+
 - [ ] Directory structure (`squads/{{PACK_NAME}}/`)
 - [ ] `config.yaml` with pack metadata
 - [ ] `README.md` with usage documentation
@@ -252,12 +255,14 @@ Epic 6 (Tier 3)
 **So that** all components have consistent locations
 
 **Acceptance Criteria:**
+
 - [ ] `squads/{{PACK_NAME}}/` directory created
 - [ ] All subdirectories exist (agents/, tasks/, workflows/, etc.)
 - [ ] `config.yaml` valid and complete
 - [ ] `README.md` with activation instructions
 
 **Quality Gates:**
+
 - Pre-Commit: Structure validation
 - Specialist: @squad-chief
 
@@ -270,6 +275,7 @@ Epic 6 (Tier 3)
 **So that** I don't need to know which agent to call
 
 **Execution:**
+
 ```yaml
 workflow: "create-agent.md"
 type: "functional"
@@ -281,12 +287,14 @@ template: "templates/agent-tmpl.md"
 ```
 
 **Acceptance Criteria:**
+
 - [ ] `agents/{{PACK_NAME}}-chief.md` created
 - [ ] Agent >= 400 lines
 - [ ] Routing logic for all tiers defined
 - [ ] `*help` command lists all capabilities
 
 **Quality Gates:**
+
 - Pre-Commit: SC_AGT_001 (Agent Quality)
 - Specialist: @squad-chief
 
@@ -317,6 +325,7 @@ story_nova:
 ```
 
 **Quality Gate SC_AGT_003 (Depth Gate) - NOVO:**
+
 ```yaml
 SC_AGT_003:
   name: "Agent Depth Quality"
@@ -336,6 +345,7 @@ SC_AGT_003:
 **Goal:** {{EPIC_GOAL}}
 
 **Deliverables:**
+
 - [ ] {{DELIVERABLE_1}}
 - [ ] {{DELIVERABLE_2}}
 
@@ -348,10 +358,12 @@ SC_AGT_003:
 **So that** {{BENEFIT}}
 
 **Acceptance Criteria:**
+
 - [ ] {{CRITERION_1}}
 - [ ] {{CRITERION_2}}
 
 **Quality Gates:**
+
 - Pre-Commit: {{GATE}}
 - Specialist: @{{SPECIALIST}}
 
@@ -365,11 +377,11 @@ SC_AGT_003:
 
 ### 7.1 Coverage Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Workflow Coverage | 100% | All {{TOTAL}} workflows have assigned agent |
-| Automation Rate | >= 70% | High-automation workflows functional |
-| Agent Quality | >= 7.0 | All agents pass quality gate |
+| Metric            | Target | Measurement                                 |
+| ----------------- | ------ | ------------------------------------------- |
+| Workflow Coverage | 100%   | All {{TOTAL}} workflows have assigned agent |
+| Automation Rate   | >= 70% | High-automation workflows functional        |
+| Agent Quality     | >= 7.0 | All agents pass quality gate                |
 
 ### 7.2 Functional Criteria
 
@@ -390,10 +402,10 @@ SC_AGT_003:
 
 ## 8. Risks & Mitigations
 
-| # | Risk | Impact | Probability | Mitigation | Rollback |
-|---|------|--------|-------------|------------|----------|
-| 1 | {{RISK}} | High/Med/Low | High/Med/Low | {{MITIGATION}} | {{ROLLBACK}} |
-| 2 | ... | ... | ... | ... | ... |
+| #   | Risk     | Impact       | Probability  | Mitigation     | Rollback     |
+| --- | -------- | ------------ | ------------ | -------------- | ------------ |
+| 1   | {{RISK}} | High/Med/Low | High/Med/Low | {{MITIGATION}} | {{ROLLBACK}} |
+| 2   | ...      | ...          | ...          | ...            | ...          |
 
 ---
 
@@ -416,49 +428,55 @@ SC_AGT_003:
 
 ## Appendix A: Research Sources
 
-| Mind | Source Type | Source | Quality |
-|------|-------------|--------|---------|
-| {{MIND}} | Book | {{TITLE}} | Ouro |
-| {{MIND}} | Interview | {{TITLE}} | Bronze |
+| Mind     | Source Type | Source    | Quality |
+| -------- | ----------- | --------- | ------- |
+| {{MIND}} | Book        | {{TITLE}} | Ouro    |
+| {{MIND}} | Interview   | {{TITLE}} | Bronze  |
 
 ---
 
 ## Appendix B: PRD Checklist
 
 ### Problem Definition
+
 - [ ] Clear problem articulation
 - [ ] Target user identified
 - [ ] Success metrics defined
 
 ### Domain Analysis
+
 - [ ] ALL workflows mapped
 - [ ] Categories defined
 - [ ] Automation assessed
 
 ### Elite Minds
-- [ ] >= 3 minds identified
+
+- [ ] > = 3 minds identified
 - [ ] Frameworks documented
 - [ ] Tier coverage complete
 
 ### Agent Architecture
+
 - [ ] Orchestrator defined
 - [ ] Handoff map complete
 - [ ] No orphan agents/workflows
 
 ### Epic Structure
+
 - [ ] Epic 1 = Foundation
 - [ ] Sequential dependencies
 - [ ] Each epic delivers value
 
 ### Quality
+
 - [ ] Gates defined per story
 - [ ] Specialists assigned
 - [ ] Success criteria measurable
 
-**Score:** __/6 categories
+**Score:** \_\_/6 categories
 **Threshold:** >= 5/6 to approve
 
 ---
 
-*Squad PRD Template v1.0*
-*Reference: data/pm-best-practices.md*
+_Squad PRD Template v1.0_
+_Reference: data/pm-best-practices.md_

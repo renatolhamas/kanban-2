@@ -8,11 +8,11 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const projectChecks = require('./project');
-const localChecks = require('./local');
-const repositoryChecks = require('./repository');
-const deploymentChecks = require('./deployment');
-const servicesChecks = require('./services');
+const projectChecks = require("./project");
+const localChecks = require("./local");
+const repositoryChecks = require("./repository");
+const deploymentChecks = require("./deployment");
+const servicesChecks = require("./services");
 
 /**
  * All available checks organized by domain

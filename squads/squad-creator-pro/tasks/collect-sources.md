@@ -179,11 +179,11 @@ discovered_sources:
 
 ### 2.1 Sistema de Tiers
 
-| Tier | Tipo | Confiança | Exemplos |
-|------|------|-----------|----------|
-| **Tier 1** | Primário (do expert) | ALTA | Livros próprios, entrevistas diretas |
-| **Tier 2** | Secundário (sobre expert) | MÉDIA | Biografias, case studies |
-| **Tier 3** | Terciário (agregado) | BAIXA | Wikipedia, resumos |
+| Tier       | Tipo                      | Confiança | Exemplos                             |
+| ---------- | ------------------------- | --------- | ------------------------------------ |
+| **Tier 1** | Primário (do expert)      | ALTA      | Livros próprios, entrevistas diretas |
+| **Tier 2** | Secundário (sobre expert) | MÉDIA     | Biografias, case studies             |
+| **Tier 3** | Terciário (agregado)      | BAIXA     | Wikipedia, resumos                   |
 
 ### 2.2 Classificar Fontes Descobertas
 
@@ -230,7 +230,7 @@ minimum_requirements:
 
   # Diversidade de Tipos
   source_types:
-    required: 3  # diferentes tipos
+    required: 3 # diferentes tipos
     actual: 0
     types_found: []
     status: "✅|❌"
@@ -249,7 +249,7 @@ minimum_requirements:
 
   # Cobertura Temporal
   temporal_coverage:
-    periods_covered: []  # ex: "2010-2015", "2020-present"
+    periods_covered: [] # ex: "2010-2015", "2020-present"
     has_multiple_periods:
       required: true
       actual: false
@@ -514,7 +514,7 @@ sources_inventory:
   validation:
     total_sources: 14
     tier_1_count: 8
-    type_diversity: 4  # books, interviews, articles, courses
+    type_diversity: 4 # books, interviews, articles, courses
     content_volume:
       hours: 12
       pages: 800
@@ -530,4 +530,4 @@ sources_inventory:
 ---
 
 **Squad Architect | Source Collector v2.0**
-*"Three sources make a pattern. One source is just a guess."*
+_"Three sources make a pattern. One source is just a guess."_

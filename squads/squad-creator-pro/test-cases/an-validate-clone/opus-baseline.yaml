@@ -437,8 +437,8 @@ validation_report:
     current_version: "V1.0 (Basic)"
     current_score: "73.89%"
     next_milestone: "V2.0 (Intermediate) at 75%"
-    points_needed: 0.4  # 0.04 * 36 = ~1.5 weighted points
-    gaps_to_close: 2  # minimum to reach 75%
+    points_needed: 0.4 # 0.04 * 36 = ~1.5 weighted points
+    gaps_to_close: 2 # minimum to reach 75%
     estimated_effort: "~2 hours"
 
     upgrade_path:

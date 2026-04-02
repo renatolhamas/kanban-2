@@ -13,18 +13,18 @@ Este checklist valida a estrutura e conformidade de Quality Gates conforme o pad
 
 Todo Quality Gate DEVE conter os seguintes campos:
 
-| Campo | Tipo | Descricao | Exemplo |
-|-------|------|-----------|---------|
-| `id` | string | Identificador unico no formato QG-X.Y | `QG-1.1B` |
-| `name` | string | Nome descritivo do gate | `Briefing Completeness Gate` |
-| `phase` | number | Numero da fase do workflow | `1` |
-| `placement` | enum | Posicao do gate na fase | `transition` |
-| `type` | enum | Tipo de execucao do gate | `hybrid` |
-| `severity` | enum | Nivel de severidade | `blocking` |
-| `criteria` | array | Lista de criterios de validacao | Ver secao 3 |
-| `executor` | object | Quem executa a validacao | Ver secao 6 |
-| `pass_action` | array | Acoes quando aprovado | `["Status -> Aprovado"]` |
-| `fail_action` | array | Acoes quando reprovado | `["Status -> Bloqueado"]` |
+| Campo         | Tipo   | Descricao                             | Exemplo                      |
+| ------------- | ------ | ------------------------------------- | ---------------------------- |
+| `id`          | string | Identificador unico no formato QG-X.Y | `QG-1.1B`                    |
+| `name`        | string | Nome descritivo do gate               | `Briefing Completeness Gate` |
+| `phase`       | number | Numero da fase do workflow            | `1`                          |
+| `placement`   | enum   | Posicao do gate na fase               | `transition`                 |
+| `type`        | enum   | Tipo de execucao do gate              | `hybrid`                     |
+| `severity`    | enum   | Nivel de severidade                   | `blocking`                   |
+| `criteria`    | array  | Lista de criterios de validacao       | Ver secao 3                  |
+| `executor`    | object | Quem executa a validacao              | Ver secao 6                  |
+| `pass_action` | array  | Acoes quando aprovado                 | `["Status -> Aprovado"]`     |
+| `fail_action` | array  | Acoes quando reprovado                | `["Status -> Bloqueado"]`    |
 
 ### Checklist de Campos Obrigatorios
 
@@ -45,12 +45,12 @@ Todo Quality Gate DEVE conter os seguintes campos:
 
 O campo `type` define COMO o gate e executado:
 
-| Tipo | Descricao | Quando Usar |
-|------|-----------|-------------|
-| `manual` | Validacao humana completa | Decisoes criticas, aprovacoes finais |
-| `automated` | Validacao 100% automatizada | Dados minimos, formatos, thresholds |
-| `hybrid` | AI analisa + humano valida | Revisoes assistidas, aprovacoes complexas |
-| `external` | Sistema externo valida | Webhooks, APIs terceiras |
+| Tipo        | Descricao                   | Quando Usar                               |
+| ----------- | --------------------------- | ----------------------------------------- |
+| `manual`    | Validacao humana completa   | Decisoes criticas, aprovacoes finais      |
+| `automated` | Validacao 100% automatizada | Dados minimos, formatos, thresholds       |
+| `hybrid`    | AI analisa + humano valida  | Revisoes assistidas, aprovacoes complexas |
+| `external`  | Sistema externo valida      | Webhooks, APIs terceiras                  |
 
 ### Checklist de Tipo
 
@@ -67,11 +67,11 @@ O campo `type` define COMO o gate e executado:
 
 O campo `severity` define O QUE ACONTECE se o gate falhar:
 
-| Severidade | Descricao | Comportamento |
-|------------|-----------|---------------|
-| `blocking` | Gate bloqueante | Impede avanco; requer correcao |
-| `warning` | Gate de alerta | Permite avanco; registra alerta |
-| `info` | Gate informativo | Apenas registra; nao afeta fluxo |
+| Severidade | Descricao        | Comportamento                    |
+| ---------- | ---------------- | -------------------------------- |
+| `blocking` | Gate bloqueante  | Impede avanco; requer correcao   |
+| `warning`  | Gate de alerta   | Permite avanco; registra alerta  |
+| `info`     | Gate informativo | Apenas registra; nao afeta fluxo |
 
 ### Checklist de Severidade
 
@@ -87,11 +87,11 @@ O campo `severity` define O QUE ACONTECE se o gate falhar:
 
 O campo `placement` define ONDE o gate e executado na fase:
 
-| Placement | Descricao | Quando Usar |
-|-----------|-----------|-------------|
-| `entry` | Entrada da fase | Validar pre-condicoes antes de iniciar |
+| Placement    | Descricao             | Quando Usar                               |
+| ------------ | --------------------- | ----------------------------------------- |
+| `entry`      | Entrada da fase       | Validar pre-condicoes antes de iniciar    |
 | `transition` | Transicao entre fases | Validar antes de passar para proxima fase |
-| `exit` | Saida da fase | Validar resultado final da fase |
+| `exit`       | Saida da fase         | Validar resultado final da fase           |
 
 ### Checklist de Placement
 
@@ -114,28 +114,28 @@ criteria:
     field: "nome_do_campo"
     value: valor_esperado
     operator: ">= | == | contains | > | < | != | in"
-    weight: 0.0-1.0  # Opcional
+    weight: 0.0-1.0 # Opcional
 ```
 
 ### Campos do Criteria
 
-| Campo | Obrigatorio | Descricao | Valores |
-|-------|-------------|-----------|---------|
-| `check` | Sim | Descricao legivel | String |
-| `type` | Sim | Tipo de validacao | `threshold`, `presence`, `enum`, `count` |
-| `field` | Condicional | Campo a validar | Nome do campo |
-| `value` | Condicional | Valor esperado | Depende do tipo |
-| `operator` | Condicional | Operador de comparacao | `>=`, `==`, `>`, `<`, `!=`, `contains`, `in` |
-| `weight` | Nao | Peso na media ponderada | 0.0 a 1.0 |
+| Campo      | Obrigatorio | Descricao               | Valores                                      |
+| ---------- | ----------- | ----------------------- | -------------------------------------------- |
+| `check`    | Sim         | Descricao legivel       | String                                       |
+| `type`     | Sim         | Tipo de validacao       | `threshold`, `presence`, `enum`, `count`     |
+| `field`    | Condicional | Campo a validar         | Nome do campo                                |
+| `value`    | Condicional | Valor esperado          | Depende do tipo                              |
+| `operator` | Condicional | Operador de comparacao  | `>=`, `==`, `>`, `<`, `!=`, `contains`, `in` |
+| `weight`   | Nao         | Peso na media ponderada | 0.0 a 1.0                                    |
 
 ### Tipos de Criteria
 
-| Tipo | Descricao | Campos Requeridos |
-|------|-----------|-------------------|
+| Tipo        | Descricao                    | Campos Requeridos            |
+| ----------- | ---------------------------- | ---------------------------- |
 | `threshold` | Valor numerico minimo/maximo | `field`, `value`, `operator` |
-| `presence` | Campo deve existir/ter valor | `field` |
-| `enum` | Valor deve estar em lista | `field`, `value` (array) |
-| `count` | Quantidade de itens | `field`, `value`, `operator` |
+| `presence`  | Campo deve existir/ter valor | `field`                      |
+| `enum`      | Valor deve estar em lista    | `field`, `value` (array)     |
+| `count`     | Quantidade de itens          | `field`, `value`, `operator` |
 
 ### Checklist de Criteria
 
@@ -164,18 +164,18 @@ O campo `thresholds` define limites para decisao automatica:
 
 ```yaml
 thresholds:
-  pass: 0.60    # >= este valor = APROVADO
-  review: 0.40  # >= este valor = REVISAO MANUAL
-  fail: 0.40    # < este valor = REPROVADO
+  pass: 0.60 # >= este valor = APROVADO
+  review: 0.40 # >= este valor = REVISAO MANUAL
+  fail: 0.40 # < este valor = REPROVADO
 ```
 
 ### Regras de Thresholds
 
-| Threshold | Descricao | Regra |
-|-----------|-----------|-------|
-| `pass` | Limite para aprovacao automatica | Score >= pass = PASS |
-| `review` | Limite para revisao humana | review <= Score < pass = REVIEW |
-| `fail` | Limite para reprovacao | Score < fail = FAIL |
+| Threshold | Descricao                        | Regra                           |
+| --------- | -------------------------------- | ------------------------------- |
+| `pass`    | Limite para aprovacao automatica | Score >= pass = PASS            |
+| `review`  | Limite para revisao humana       | review <= Score < pass = REVIEW |
+| `fail`    | Limite para reprovacao           | Score < fail = FAIL             |
 
 ### Checklist de Thresholds
 
@@ -196,9 +196,9 @@ O campo `executor` define QUEM executa o gate:
 ```yaml
 executor:
   type: "hybrid | manual | automated | external"
-  ai_agent: "nome-do-agente"    # Se hybrid/automated
-  human_review: "Role/Pessoa"   # Se hybrid/manual
-  external_system: "sistema"    # Se external
+  ai_agent: "nome-do-agente" # Se hybrid/automated
+  human_review: "Role/Pessoa" # Se hybrid/manual
+  external_system: "sistema" # Se external
 ```
 
 ### Checklist de Executor
@@ -284,28 +284,44 @@ function validateQualityGate(gate) {
   const errors = [];
 
   // 1. Campos obrigatorios
-  const required = ['id', 'name', 'phase', 'placement', 'type', 'severity',
-                    'criteria', 'executor', 'pass_action', 'fail_action'];
-  required.forEach(field => {
+  const required = [
+    "id",
+    "name",
+    "phase",
+    "placement",
+    "type",
+    "severity",
+    "criteria",
+    "executor",
+    "pass_action",
+    "fail_action",
+  ];
+  required.forEach((field) => {
     if (!gate[field]) errors.push(`Missing required field: ${field}`);
   });
 
   // 2. Tipo valido
-  const validTypes = ['manual', 'automated', 'hybrid', 'external'];
+  const validTypes = ["manual", "automated", "hybrid", "external"];
   if (!validTypes.includes(gate.type)) {
-    errors.push(`Invalid type: ${gate.type}. Must be one of: ${validTypes.join(', ')}`);
+    errors.push(
+      `Invalid type: ${gate.type}. Must be one of: ${validTypes.join(", ")}`,
+    );
   }
 
   // 3. Severidade valida
-  const validSeverities = ['blocking', 'warning', 'info'];
+  const validSeverities = ["blocking", "warning", "info"];
   if (!validSeverities.includes(gate.severity)) {
-    errors.push(`Invalid severity: ${gate.severity}. Must be one of: ${validSeverities.join(', ')}`);
+    errors.push(
+      `Invalid severity: ${gate.severity}. Must be one of: ${validSeverities.join(", ")}`,
+    );
   }
 
   // 4. Placement valido
-  const validPlacements = ['entry', 'transition', 'exit'];
+  const validPlacements = ["entry", "transition", "exit"];
   if (!validPlacements.includes(gate.placement)) {
-    errors.push(`Invalid placement: ${gate.placement}. Must be one of: ${validPlacements.join(', ')}`);
+    errors.push(
+      `Invalid placement: ${gate.placement}. Must be one of: ${validPlacements.join(", ")}`,
+    );
   }
 
   // 5. Criteria structure
@@ -314,7 +330,7 @@ function validateQualityGate(gate) {
       if (!c.check) errors.push(`Criteria ${i}: missing 'check'`);
       if (!c.type) errors.push(`Criteria ${i}: missing 'type'`);
 
-      const validCriteriaTypes = ['threshold', 'presence', 'enum', 'count'];
+      const validCriteriaTypes = ["threshold", "presence", "enum", "count"];
       if (!validCriteriaTypes.includes(c.type)) {
         errors.push(`Criteria ${i}: invalid type '${c.type}'`);
       }
@@ -322,12 +338,12 @@ function validateQualityGate(gate) {
   }
 
   // 6. Thresholds (if hybrid/automated)
-  if (['hybrid', 'automated'].includes(gate.type) && gate.thresholds) {
+  if (["hybrid", "automated"].includes(gate.type) && gate.thresholds) {
     if (gate.thresholds.pass < gate.thresholds.review) {
-      errors.push('Thresholds: pass must be >= review');
+      errors.push("Thresholds: pass must be >= review");
     }
     if (gate.thresholds.review < gate.thresholds.fail) {
-      errors.push('Thresholds: review must be >= fail');
+      errors.push("Thresholds: review must be >= fail");
     }
   }
 
@@ -356,20 +372,20 @@ Use este checklist rapido para validar Quality Gates:
 
 ### Severity Guide
 
-| Se o Gate | Use Severity |
-|-----------|--------------|
-| Impede producao se falhar | `blocking` |
-| Relevante mas nao critico | `warning` |
-| Apenas para metricas | `info` |
+| Se o Gate                 | Use Severity |
+| ------------------------- | ------------ |
+| Impede producao se falhar | `blocking`   |
+| Relevante mas nao critico | `warning`    |
+| Apenas para metricas      | `info`       |
 
 ### Type Guide
 
-| Se a Validacao | Use Type |
-|----------------|----------|
-| Requer julgamento humano | `manual` |
+| Se a Validacao             | Use Type    |
+| -------------------------- | ----------- |
+| Requer julgamento humano   | `manual`    |
 | Pode ser 100% automatizada | `automated` |
-| AI analisa + humano valida | `hybrid` |
-| Sistema externo decide | `external` |
+| AI analisa + humano valida | `hybrid`    |
+| Sistema externo decide     | `external`  |
 
 ---
 
@@ -381,5 +397,5 @@ Use este checklist rapido para validar Quality Gates:
 
 ---
 
-*Quality Gate Validation Checklist v1.0.0*
-*Squad-Creator Checklists*
+_Quality Gate Validation Checklist v1.0.0_
+_Squad-Creator Checklists_

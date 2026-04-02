@@ -17,7 +17,7 @@ workflow:
 
   estimated_time: "15-30 min"
   complexity: medium
-  elicit: false  # Executa automaticamente sem input do usuário
+  elicit: false # Executa automaticamente sem input do usuário
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # INPUTS & OUTPUTS
@@ -76,7 +76,6 @@ tools:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 phases:
-
   # ─────────────────────────────────────────────────────────────────────────────
   # PHASE 0: SETUP
   # ─────────────────────────────────────────────────────────────────────────────
@@ -146,9 +145,9 @@ phases:
       - step: 1.3
         name: "Extract transcripts"
         tool_priority:
-          1: mcp-youtube-transcript  # Se instalado
-          2: exa + WebFetch          # Fallback: buscar transcripts existentes
-          3: manual_note             # Último recurso: marcar para download manual
+          1: mcp-youtube-transcript # Se instalado
+          2: exa + WebFetch # Fallback: buscar transcripts existentes
+          3: manual_note # Último recurso: marcar para download manual
 
         action_if_mcp_available: |
           For each video_url:
@@ -205,8 +204,8 @@ phases:
       - step: 2.3
         name: "Extract summaries"
         tool_priority:
-          1: firecrawl-mcp       # Se instalado
-          2: WebFetch            # Fallback nativo
+          1: firecrawl-mcp # Se instalado
+          2: WebFetch # Fallback nativo
 
         action: |
           For each summary_url:
@@ -294,7 +293,7 @@ phases:
           - '"{mind_name}" articles'
           - 'site:medium.com author:"{mind_name}"'
           - 'site:linkedin.com/pulse "{mind_name}"'
-        tier: 1  # Primary - expert's own words
+        tier: 1 # Primary - expert's own words
 
       - step: 4.2
         name: "Find content ABOUT the expert"
@@ -304,7 +303,7 @@ phases:
           - '"{mind_name}" framework analysis'
           - '"{mind_name}" principles breakdown'
           - '"{mind_name}" biography profile'
-        tier: 2  # Secondary - about the expert
+        tier: 2 # Secondary - about the expert
 
       - step: 4.3
         name: "Extract articles"

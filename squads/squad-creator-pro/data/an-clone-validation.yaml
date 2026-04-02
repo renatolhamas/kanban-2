@@ -32,7 +32,8 @@ fidelity_score:
       type: "Observable"
       weight: 0.8
       what_to_check: "Clone segue padroes de resposta da pessoa?"
-      examples: ["sempre comeca com X", "nunca responde Y", "ritual de abertura"]
+      examples:
+        ["sempre comeca com X", "nunca responde Y", "ritual de abertura"]
       score_guide:
         1: "Sem padroes reconheciveis"
         3: "Alguns rituais presentes"
@@ -43,7 +44,8 @@ fidelity_score:
       type: "Observable"
       weight: 0.8
       what_to_check: "Clone reconhece situacoes como a pessoa reconheceria?"
-      examples: ["identifica red flags", "detecta oportunidades", "pattern matching"]
+      examples:
+        ["identifica red flags", "detecta oportunidades", "pattern matching"]
       score_guide:
         1: "Nao reconhece nada especifico"
         3: "Reconhece patterns obvios"
@@ -76,7 +78,8 @@ fidelity_score:
       type: "Deep Identity"
       weight: 1.0
       what_to_check: "Clone tem as mesmas obsessoes/fixacoes da pessoa?"
-      examples: ["temas que volta sempre", "batalhas que compra", "hills to die on"]
+      examples:
+        ["temas que volta sempre", "batalhas que compra", "hills to die on"]
       score_guide:
         1: "Sem obsessoes claras"
         3: "Algumas obsessoes presentes"
@@ -116,7 +119,8 @@ blind_test_protocol:
       metric: "% que atribui ao especialista"
     - step: 4
       action: "Revelar que e IA e pedir feedback especifico"
-      questions: ["O que pareceu real?", "O que pareceu falso?", "O que faltou?"]
+      questions:
+        ["O que pareceu real?", "O que pareceu falso?", "O que faltou?"]
     - step: 5
       action: "Iterar clone baseado em feedback"
       target: "80%+ atribuem ao especialista"

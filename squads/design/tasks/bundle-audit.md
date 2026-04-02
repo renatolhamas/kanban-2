@@ -8,6 +8,7 @@
 ## Overview
 
 This task performs detailed bundle analysis:
+
 - CSS class usage and estimated size
 - Component JS size estimation
 - Tree-shaking opportunities
@@ -40,6 +41,7 @@ tail -50 /tmp/class-usage.txt | head -20
 ```
 
 **Output:**
+
 ```
 CSS Class Analysis
 ==================
@@ -77,6 +79,7 @@ done < /tmp/component-sizes.txt | head -10
 ```
 
 **Output:**
+
 ```
 Component Size Estimation
 =========================
@@ -118,6 +121,7 @@ grep -rhn --include="*.tsx" "<div className=" {path}/ \
 ```
 
 **Output:**
+
 ```
 Duplicate Patterns Detected
 ===========================
@@ -133,64 +137,72 @@ Recommendation: Extract to shared molecules
 
 ```markdown
 # Bundle Audit Report
+
 Generated: {timestamp}
 Path: {path}
 
 ## Summary
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| Unique CSS Classes | 234 | <500 | ✅ |
-| Est. CSS Size | 12KB | <50KB | ✅ |
-| Est. JS Size (min) | 45KB | <100KB | ✅ |
-| Est. Total (gzip) | 15KB | <30KB | ✅ |
+
+| Metric             | Value | Target | Status |
+| ------------------ | ----- | ------ | ------ |
+| Unique CSS Classes | 234   | <500   | ✅     |
+| Est. CSS Size      | 12KB  | <50KB  | ✅     |
+| Est. JS Size (min) | 45KB  | <100KB | ✅     |
+| Est. Total (gzip)  | 15KB  | <30KB  | ✅     |
 
 ## CSS Analysis
 
 ### Class Usage Distribution
-| Range | Count | % of Total |
-|-------|-------|------------|
-| Used >50x | 12 | 5% |
-| Used 10-50x | 45 | 19% |
-| Used 2-10x | 89 | 38% |
-| Used 1x | 88 | 38% |
+
+| Range       | Count | % of Total |
+| ----------- | ----- | ---------- |
+| Used >50x   | 12    | 5%         |
+| Used 10-50x | 45    | 19%        |
+| Used 2-10x  | 89    | 38%        |
+| Used 1x     | 88    | 38%        |
 
 ### Top 10 Classes
-| Class | Usage | Estimated Size |
-|-------|-------|----------------|
-| flex | 142 | included |
-| items-center | 128 | included |
-| p-4 | 98 | included |
-| ... | ... | ... |
+
+| Class        | Usage | Estimated Size |
+| ------------ | ----- | -------------- |
+| flex         | 142   | included       |
+| items-center | 128   | included       |
+| p-4          | 98    | included       |
+| ...          | ...   | ...            |
 
 ### Rarely Used Classes (bloat candidates)
-| Class | Usage | Recommendation |
-|-------|-------|----------------|
-| animate-accordion-down | 1 | Consider removal |
-| scroll-smooth | 1 | Consider removal |
-| ... | ... | ... |
+
+| Class                  | Usage | Recommendation   |
+| ---------------------- | ----- | ---------------- |
+| animate-accordion-down | 1     | Consider removal |
+| scroll-smooth          | 1     | Consider removal |
+| ...                    | ...   | ...              |
 
 ## JS Analysis
 
 ### Largest Components
-| Component | Lines | Est. Size | Status |
-|-----------|-------|-----------|--------|
-| FeedbackSection.tsx | 373 | 18KB | ⚠️ Refactor |
-| ListGroupsView.tsx | 289 | 14KB | ⚠️ Refactor |
-| ... | ... | ... | ... |
+
+| Component           | Lines | Est. Size | Status      |
+| ------------------- | ----- | --------- | ----------- |
+| FeedbackSection.tsx | 373   | 18KB      | ⚠️ Refactor |
+| ListGroupsView.tsx  | 289   | 14KB      | ⚠️ Refactor |
+| ...                 | ...   | ...       | ...         |
 
 ### Tree-shaking Opportunities
-| File | Unused Imports | Savings |
-|------|----------------|---------|
-| Header.tsx | lodash, date-fns | ~5KB |
-| ... | ... | ... |
+
+| File       | Unused Imports   | Savings |
+| ---------- | ---------------- | ------- |
+| Header.tsx | lodash, date-fns | ~5KB    |
+| ...        | ...              | ...     |
 
 ## Duplicate Code
 
 ### Repeated Patterns (extract to molecules)
-| Pattern | Occurrences | Files |
-|---------|-------------|-------|
-| `<div className="flex items-center gap-2">` | 12 | Card, List, ... |
-| ... | ... | ... |
+
+| Pattern                                     | Occurrences | Files           |
+| ------------------------------------------- | ----------- | --------------- |
+| `<div className="flex items-center gap-2">` | 12          | Card, List, ... |
+| ...                                         | ...         | ...             |
 
 ## Recommendations
 
@@ -200,12 +212,13 @@ Path: {path}
 4. **INFO:** Enable dynamic imports for Dialog, Modal
 
 ## Projected Savings
-| Action | Current | After | Savings |
-|--------|---------|-------|---------|
-| Refactor large components | 150KB | 80KB | 47% |
-| Extract duplicates | - | - | ~5KB |
-| Remove unused classes | 12KB | 10KB | 17% |
-| **Total** | **162KB** | **90KB** | **44%** |
+
+| Action                    | Current   | After    | Savings |
+| ------------------------- | --------- | -------- | ------- |
+| Refactor large components | 150KB     | 80KB     | 47%     |
+| Extract duplicates        | -         | -        | ~5KB    |
+| Remove unused classes     | 12KB      | 10KB     | 17%     |
+| **Total**                 | **162KB** | **90KB** | **44%** |
 ```
 
 ## Failure Handling
@@ -240,6 +253,6 @@ Path: {path}
 - `*dead-code` - Unused code detection
 - `*refactor-plan` - Plan component refactoring
 
-
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

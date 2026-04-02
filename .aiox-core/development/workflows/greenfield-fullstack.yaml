@@ -157,7 +157,7 @@ workflow:
       action: shard_documents
       creates: sharded_docs
       duration_estimate: "15-30 min"
-      requires:  # all validated artifacts must be saved in project docs/ folder
+      requires: # all validated artifacts must be saved in project docs/ folder
         - prd.md
         - front-end-spec.md
         - fullstack-architecture.md
@@ -242,7 +242,8 @@ workflow:
         - Return to QA for final approval
 
     - meta: repeat
-      target_steps: [sm-create-story, dev-implement-story, qa-review-implementation]
+      target_steps:
+        [sm-create-story, dev-implement-story, qa-review-implementation]
       condition: stories_remaining
       notes: |
         Repeat story cycle (SM → Dev → QA) for all epic stories

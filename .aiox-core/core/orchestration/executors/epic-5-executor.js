@@ -13,19 +13,19 @@
  * @version 1.0.0
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const EpicExecutor = require('./epic-executor');
+const fs = require("fs-extra");
+const path = require("path");
+const EpicExecutor = require("./epic-executor");
 
 /**
  * Recovery strategies
  */
 const RecoveryStrategy = {
-  RETRY_SAME_APPROACH: 'retry_same_approach',
-  ROLLBACK_AND_RETRY: 'rollback_and_retry',
-  SKIP_PHASE: 'skip_phase',
-  ESCALATE_TO_HUMAN: 'escalate_to_human',
-  STUCK_RECOVERY: 'stuck_recovery',
+  RETRY_SAME_APPROACH: "retry_same_approach",
+  ROLLBACK_AND_RETRY: "rollback_and_retry",
+  SKIP_PHASE: "skip_phase",
+  ESCALATE_TO_HUMAN: "escalate_to_human",
+  STUCK_RECOVERY: "stuck_recovery",
 };
 
 /**
@@ -50,9 +50,9 @@ class Epic5Executor extends EpicExecutor {
   _getStuckDetector() {
     if (!this._stuckDetector) {
       try {
-        this._stuckDetector = require('../../infrastructure/scripts/stuck-detector');
+        this._stuckDetector = require("../../infrastructure/scripts/stuck-detector");
       } catch (error) {
-        this._log(`StuckDetector not available: ${error.message}`, 'warn');
+        this._log(`StuckDetector not available: ${error.message}`, "warn");
       }
     }
     return this._stuckDetector;
@@ -65,9 +65,9 @@ class Epic5Executor extends EpicExecutor {
   _getRollbackManager() {
     if (!this._rollbackManager) {
       try {
-        this._rollbackManager = require('../../infrastructure/scripts/rollback-manager');
+        this._rollbackManager = require("../../infrastructure/scripts/rollback-manager");
       } catch (error) {
-        this._log(`RollbackManager not available: ${error.message}`, 'warn');
+        this._log(`RollbackManager not available: ${error.message}`, "warn");
       }
     }
     return this._rollbackManager;
@@ -105,19 +105,27 @@ class Epic5Executor extends EpicExecutor {
         isStuck = stuckStatus.isStuck;
 
         if (isStuck) {
-          this._log('Circular pattern detected - stuck state', 'warn');
+          this._log("Circular pattern detected - stuck state", "warn");
         }
       }
 
       // Select recovery strategy
-      const strategy = this._selectRecoveryStrategy(failedEpic, error, attempts, isStuck);
+      const strategy = this._selectRecoveryStrategy(
+        failedEpic,
+        error,
+        attempts,
+        isStuck,
+      );
       this._log(`Selected strategy: ${strategy}`);
 
       // Execute recovery based on strategy
-      const recoveryResult = await this._executeRecoveryStrategy(strategy, context);
+      const recoveryResult = await this._executeRecoveryStrategy(
+        strategy,
+        context,
+      );
 
       this._addArtifact(
-        'recovery-log',
+        "recovery-log",
         JSON.stringify({
           failedEpic,
           strategy,
@@ -203,7 +211,7 @@ class Epic5Executor extends EpicExecutor {
         return this._executeStuckRecovery(context);
 
       default:
-        return { shouldRetry: false, reason: 'unknown_strategy' };
+        return { shouldRetry: false, reason: "unknown_strategy" };
     }
   }
 
@@ -212,12 +220,12 @@ class Epic5Executor extends EpicExecutor {
    * @private
    */
   async _executeRetrySameApproach(_context) {
-    this._log('Executing retry with same approach');
+    this._log("Executing retry with same approach");
 
     return {
       shouldRetry: true,
       newApproach: false,
-      message: 'Retrying with same approach',
+      message: "Retrying with same approach",
     };
   }
 
@@ -226,7 +234,7 @@ class Epic5Executor extends EpicExecutor {
    * @private
    */
   async _executeRollbackAndRetry(context) {
-    this._log('Executing rollback and retry');
+    this._log("Executing rollback and retry");
 
     const RollbackManager = this._getRollbackManager();
     if (RollbackManager) {
@@ -236,16 +244,16 @@ class Epic5Executor extends EpicExecutor {
           rootPath: this.projectRoot,
         });
         await manager.rollbackLastChange();
-        this._log('Rollback completed');
+        this._log("Rollback completed");
       } catch (error) {
-        this._log(`Rollback failed: ${error.message}`, 'warn');
+        this._log(`Rollback failed: ${error.message}`, "warn");
       }
     }
 
     return {
       shouldRetry: true,
       newApproach: true,
-      message: 'Rolled back and will retry with different approach',
+      message: "Rolled back and will retry with different approach",
     };
   }
 
@@ -254,12 +262,12 @@ class Epic5Executor extends EpicExecutor {
    * @private
    */
   async _executeSkipPhase(_context) {
-    this._log('Skipping failing phase');
+    this._log("Skipping failing phase");
 
     return {
       shouldRetry: false,
       skipped: true,
-      message: 'Phase skipped due to persistent failures',
+      message: "Phase skipped due to persistent failures",
     };
   }
 
@@ -268,10 +276,14 @@ class Epic5Executor extends EpicExecutor {
    * @private
    */
   async _executeEscalateToHuman(context) {
-    this._log('Escalating to human intervention');
+    this._log("Escalating to human intervention");
 
     // Create escalation report
-    const reportPath = this._getPath('.aiox', 'escalations', `${context.storyId}-${Date.now()}.md`);
+    const reportPath = this._getPath(
+      ".aiox",
+      "escalations",
+      `${context.storyId}-${Date.now()}.md`,
+    );
 
     const report = `# Escalation Report
 
@@ -302,13 +314,13 @@ ${context.attempts} attempts made before escalation.
 
     await fs.ensureDir(path.dirname(reportPath));
     await fs.writeFile(reportPath, report);
-    this._addArtifact('escalation-report', reportPath);
+    this._addArtifact("escalation-report", reportPath);
 
     return {
       shouldRetry: false,
       escalated: true,
       reportPath,
-      message: 'Escalated to human - intervention required',
+      message: "Escalated to human - intervention required",
     };
   }
 
@@ -317,7 +329,7 @@ ${context.attempts} attempts made before escalation.
    * @private
    */
   async _executeStuckRecovery(context) {
-    this._log('Executing stuck state recovery');
+    this._log("Executing stuck state recovery");
 
     // Always escalate when stuck
     return this._executeEscalateToHuman(context);

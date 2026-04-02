@@ -42,17 +42,17 @@
  * Aliases like 'ux-expert' and 'github-devops' are excluded
  */
 const PRIMARY_AGENTS = new Set([
-  'architect',
-  'data-engineer',
-  'dev',
-  'qa',
-  'pm',
-  'po',
-  'sm',
-  'analyst',
-  'ux-design-expert',
-  'devops',
-  'aiox-master',
+  "architect",
+  "data-engineer",
+  "dev",
+  "qa",
+  "pm",
+  "po",
+  "sm",
+  "analyst",
+  "ux-design-expert",
+  "devops",
+  "aiox-master",
 ]);
 
 /**
@@ -71,43 +71,43 @@ class SkillDispatcher {
      */
     this.skillMapping = {
       // Core development agents
-      architect: 'AIOX:agents:architect',
-      'data-engineer': 'AIOX:agents:data-engineer',
-      dev: 'AIOX:agents:dev',
-      qa: 'AIOX:agents:qa',
+      architect: "AIOX:agents:architect",
+      "data-engineer": "AIOX:agents:data-engineer",
+      dev: "AIOX:agents:dev",
+      qa: "AIOX:agents:qa",
 
       // Product agents
-      pm: 'AIOX:agents:pm',
-      po: 'AIOX:agents:po',
-      sm: 'AIOX:agents:sm',
-      analyst: 'AIOX:agents:analyst',
+      pm: "AIOX:agents:pm",
+      po: "AIOX:agents:po",
+      sm: "AIOX:agents:sm",
+      analyst: "AIOX:agents:analyst",
 
       // Specialized agents
-      'ux-design-expert': 'AIOX:agents:ux-design-expert',
-      'ux-expert': 'AIOX:agents:ux-design-expert', // Alias
-      devops: 'AIOX:agents:devops',
-      'github-devops': 'AIOX:agents:devops', // Alias
+      "ux-design-expert": "AIOX:agents:ux-design-expert",
+      "ux-expert": "AIOX:agents:ux-design-expert", // Alias
+      devops: "AIOX:agents:devops",
+      "github-devops": "AIOX:agents:devops", // Alias
 
       // Master agent
-      'aiox-master': 'AIOX:agents:aiox-master',
+      "aiox-master": "AIOX:agents:aiox-master",
     };
 
     /**
      * Agent personas for human-readable output
      */
     this.agentPersonas = {
-      architect: { name: 'Aria', title: 'System Architect' },
-      'data-engineer': { name: 'Dara', title: 'Database Architect' },
-      dev: { name: 'Dex', title: 'Senior Developer' },
-      qa: { name: 'Quinn', title: 'QA Guardian' },
-      pm: { name: 'Priya', title: 'Project Manager' },
-      po: { name: 'Oscar', title: 'Product Owner' },
-      sm: { name: 'Sam', title: 'Scrum Master' },
-      analyst: { name: 'Alex', title: 'Business Analyst' },
-      'ux-design-expert': { name: 'Brad', title: 'UX Design Expert' },
-      'ux-expert': { name: 'Brad', title: 'UX Design Expert' },
-      devops: { name: 'Gage', title: 'DevOps Engineer' },
-      'aiox-master': { name: 'Orion', title: 'Master Orchestrator' },
+      architect: { name: "Aria", title: "System Architect" },
+      "data-engineer": { name: "Dara", title: "Database Architect" },
+      dev: { name: "Dex", title: "Senior Developer" },
+      qa: { name: "Quinn", title: "QA Guardian" },
+      pm: { name: "Priya", title: "Project Manager" },
+      po: { name: "Oscar", title: "Product Owner" },
+      sm: { name: "Sam", title: "Scrum Master" },
+      analyst: { name: "Alex", title: "Business Analyst" },
+      "ux-design-expert": { name: "Brad", title: "UX Design Expert" },
+      "ux-expert": { name: "Brad", title: "UX Design Expert" },
+      devops: { name: "Gage", title: "DevOps Engineer" },
+      "aiox-master": { name: "Orion", title: "Master Orchestrator" },
     };
   }
 
@@ -127,7 +127,7 @@ class SkillDispatcher {
    */
   getAgentPersona(agentId) {
     return (
-      this.agentPersonas[agentId] || { name: agentId, title: 'AIOX Agent' }
+      this.agentPersonas[agentId] || { name: agentId, title: "AIOX Agent" }
     );
   }
 
@@ -204,31 +204,31 @@ class SkillDispatcher {
     args.push(`--phase=${phase.phase}`);
 
     if (context.yoloMode) {
-      args.push('--yolo');
+      args.push("--yolo");
     }
 
     // Add tech stack flags if profile is available
     if (techStackProfile) {
       if (techStackProfile.hasDatabase) {
-        args.push('--has-database');
+        args.push("--has-database");
         if (techStackProfile.database.type) {
           args.push(`--db-type="${techStackProfile.database.type}"`);
         }
       }
 
       if (techStackProfile.hasFrontend) {
-        args.push('--has-frontend');
+        args.push("--has-frontend");
         if (techStackProfile.frontend.framework) {
           args.push(`--frontend="${techStackProfile.frontend.framework}"`);
         }
       }
 
       if (techStackProfile.hasTypeScript) {
-        args.push('--typescript');
+        args.push("--typescript");
       }
     }
 
-    return args.join(' ');
+    return args.join(" ");
   }
 
   /**
@@ -243,14 +243,14 @@ class SkillDispatcher {
     // Handle null/undefined
     if (skillResult === null || skillResult === undefined) {
       return {
-        status: 'failed',
-        summary: 'No result returned from skill',
+        status: "failed",
+        summary: "No result returned from skill",
         timestamp,
       };
     }
 
     // Already structured JSON object
-    if (typeof skillResult === 'object' && skillResult.status) {
+    if (typeof skillResult === "object" && skillResult.status) {
       return {
         ...skillResult,
         timestamp: skillResult.timestamp || timestamp,
@@ -258,14 +258,14 @@ class SkillDispatcher {
     }
 
     // String result - try to extract JSON
-    if (typeof skillResult === 'string') {
+    if (typeof skillResult === "string") {
       // Try to find JSON block in markdown
       const jsonMatch = skillResult.match(/```json\n?([\s\S]*?)\n?```/);
       if (jsonMatch) {
         try {
           const parsed = JSON.parse(jsonMatch[1]);
           return {
-            status: parsed.status || 'success',
+            status: parsed.status || "success",
             output_path: parsed.output_path || phase.creates,
             summary: parsed.summary,
             findings: parsed.findings,
@@ -281,7 +281,7 @@ class SkillDispatcher {
       try {
         const parsed = JSON.parse(skillResult);
         return {
-          status: parsed.status || 'success',
+          status: parsed.status || "success",
           ...parsed,
           timestamp,
         };
@@ -291,7 +291,7 @@ class SkillDispatcher {
 
       // Plain text result - assume success
       return {
-        status: 'success',
+        status: "success",
         output_path: phase.creates,
         summary: skillResult.substring(0, 500), // Truncate for summary
         timestamp,
@@ -300,7 +300,7 @@ class SkillDispatcher {
 
     // Unknown result type - wrap in default structure
     return {
-      status: 'success',
+      status: "success",
       output: skillResult,
       output_path: phase.creates,
       timestamp,
@@ -315,7 +315,7 @@ class SkillDispatcher {
    */
   createSkipResult(phase, reason) {
     return {
-      status: 'skipped',
+      status: "skipped",
       reason,
       phase: phase.phase,
       phaseName: phase.phase_name,
@@ -330,16 +330,16 @@ class SkillDispatcher {
    * @returns {string} Formatted log message
    */
   formatDispatchLog(payload) {
-    const agentId = payload.skill.split(':').pop();
+    const agentId = payload.skill.split(":").pop();
     const persona = this.getAgentPersona(agentId);
 
     return [
       `Dispatching to ${persona.name} (@${agentId})`,
       `  Skill: ${payload.skill}`,
       `  Phase: ${payload.context.phase} - ${payload.context.phaseName}`,
-      `  Task: ${payload.context.task || 'N/A'}`,
-      `  Output: ${payload.context.creates || 'N/A'}`,
-    ].join('\n');
+      `  Task: ${payload.context.task || "N/A"}`,
+      `  Output: ${payload.context.creates || "N/A"}`,
+    ].join("\n");
   }
 
   /**
@@ -356,7 +356,7 @@ class SkillDispatcher {
    * @returns {boolean}
    */
   isValidAgent(agentId) {
-    return agentId in this.skillMapping || agentId.startsWith('AIOX:');
+    return agentId in this.skillMapping || agentId.startsWith("AIOX:");
   }
 }
 

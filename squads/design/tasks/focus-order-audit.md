@@ -11,6 +11,7 @@
 ## Overview
 
 Comprehensive keyboard accessibility audit covering:
+
 1. **Tab order validation** - logical focus sequence
 2. **Focus indicators** - visible, sufficient contrast
 3. **Keyboard traps** - elements that capture focus
@@ -21,12 +22,12 @@ Comprehensive keyboard accessibility audit covering:
 
 ## Input
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `path` | Yes | Directory to audit (e.g., `./app/components`) |
-| `--component` | No | Audit single component |
-| `--generate-map` | No | Generate visual focus order diagram |
-| `--fix` | No | Auto-fix simple issues |
+| Parameter        | Required | Description                                   |
+| ---------------- | -------- | --------------------------------------------- |
+| `path`           | Yes      | Directory to audit (e.g., `./app/components`) |
+| `--component`    | No       | Audit single component                        |
+| `--generate-map` | No       | Generate visual focus order diagram           |
+| `--fix`          | No       | Auto-fix simple issues                        |
 
 ---
 
@@ -38,8 +39,8 @@ Find all elements that should be keyboard accessible:
 
 ```typescript
 interface InteractiveElement {
-  type: 'native' | 'custom';
-  element: string;            // button, a, div, span, etc.
+  type: "native" | "custom";
+  element: string; // button, a, div, span, etc.
   file: string;
   line: number;
   hasTabIndex: boolean;
@@ -52,17 +53,31 @@ interface InteractiveElement {
 
 // Elements to scan for
 const nativeInteractive = [
-  'button', 'a[href]', 'input', 'select', 'textarea',
-  '[contenteditable]', 'details', 'summary'
+  "button",
+  "a[href]",
+  "input",
+  "select",
+  "textarea",
+  "[contenteditable]",
+  "details",
+  "summary",
 ];
 
 const customInteractive = [
   // Elements with click handlers
-  'onClick=', '@click=', '(click)=',
+  "onClick=",
+  "@click=",
+  "(click)=",
   // Elements with interactive roles
-  'role="button"', 'role="link"', 'role="tab"',
-  'role="menuitem"', 'role="option"', 'role="checkbox"',
-  'role="radio"', 'role="switch"', 'role="slider"'
+  'role="button"',
+  'role="link"',
+  'role="tab"',
+  'role="menuitem"',
+  'role="option"',
+  'role="checkbox"',
+  'role="radio"',
+  'role="switch"',
+  'role="slider"',
 ];
 ```
 
@@ -74,19 +89,20 @@ interface TabOrderResult {
   file: string;
   line: number;
   tabIndex: number;
-  order: number;         // Computed tab order position
+  order: number; // Computed tab order position
   issues: TabOrderIssue[];
 }
 
 type TabOrderIssue =
-  | 'positive-tabindex'     // tabIndex > 0 (anti-pattern)
-  | 'negative-tabindex'     // tabIndex < 0 on interactive
-  | 'out-of-order'          // Visual vs DOM order mismatch
-  | 'skip-heading'          // Skips heading levels
-  | 'focus-trap-detected';  // Can't tab out
+  | "positive-tabindex" // tabIndex > 0 (anti-pattern)
+  | "negative-tabindex" // tabIndex < 0 on interactive
+  | "out-of-order" // Visual vs DOM order mismatch
+  | "skip-heading" // Skips heading levels
+  | "focus-trap-detected"; // Can't tab out
 ```
 
 **Tab Order Rules:**
+
 1. `tabIndex="0"` - Natural order (preferred)
 2. `tabIndex="-1"` - Programmatically focusable only
 3. `tabIndex="1+"` - ANTI-PATTERN (forces order, breaks predictability)
@@ -102,21 +118,22 @@ interface FocusIndicator {
   focusStyle: {
     outline: string | null;
     boxShadow: string | null;
-    ring: string | null;      // Tailwind ring-*
+    ring: string | null; // Tailwind ring-*
     custom: boolean;
   };
-  contrastRatio: number;      // Focus vs background
+  contrastRatio: number; // Focus vs background
   issues: FocusIndicatorIssue[];
 }
 
 type FocusIndicatorIssue =
-  | 'outline-none-no-replacement'  // outline:none without alternative
-  | 'insufficient-contrast'        // Focus indicator < 3:1
-  | 'too-subtle'                   // Very thin/light focus
-  | 'focus-visible-missing';       // No :focus-visible support
+  | "outline-none-no-replacement" // outline:none without alternative
+  | "insufficient-contrast" // Focus indicator < 3:1
+  | "too-subtle" // Very thin/light focus
+  | "focus-visible-missing"; // No :focus-visible support
 ```
 
 **WCAG 2.2 Focus Requirements:**
+
 - **2.4.7 Focus Visible (AA):** Focus indicator must be visible
 - **2.4.11 Focus Not Obscured (AA):** Focus not fully hidden by other content
 - **2.4.12 Focus Not Obscured Enhanced (AAA):** Focus not partially hidden
@@ -133,33 +150,33 @@ interface KeyboardHandler {
     onClick: boolean;
     onKeyDown: boolean;
     onKeyUp: boolean;
-    onKeyPress: boolean;  // Deprecated
+    onKeyPress: boolean; // Deprecated
   };
-  expectedKeys: string[];  // Enter, Space, Arrow*, Escape
+  expectedKeys: string[]; // Enter, Space, Arrow*, Escape
   issues: KeyboardIssue[];
 }
 
 type KeyboardIssue =
-  | 'click-only'              // onClick without keyboard handler
-  | 'missing-enter-space'     // Button without Enter/Space
-  | 'missing-escape'          // Modal/dialog without Escape
-  | 'missing-arrows'          // Menu/tabs without arrow keys
-  | 'using-deprecated';       // onKeyPress instead of onKeyDown
+  | "click-only" // onClick without keyboard handler
+  | "missing-enter-space" // Button without Enter/Space
+  | "missing-escape" // Modal/dialog without Escape
+  | "missing-arrows" // Menu/tabs without arrow keys
+  | "using-deprecated"; // onKeyPress instead of onKeyDown
 ```
 
 **Expected Keyboard Patterns:**
 
-| Element/Role | Required Keys |
-|--------------|---------------|
-| Button | Enter, Space |
-| Link | Enter |
-| Menu item | Enter, Arrow Up/Down |
-| Tab | Enter, Arrow Left/Right |
-| Modal/Dialog | Escape (close) |
-| Dropdown | Escape, Arrow Up/Down |
-| Slider | Arrow Left/Right |
-| Checkbox | Space |
-| Radio | Space, Arrow Up/Down |
+| Element/Role | Required Keys           |
+| ------------ | ----------------------- |
+| Button       | Enter, Space            |
+| Link         | Enter                   |
+| Menu item    | Enter, Arrow Up/Down    |
+| Tab          | Enter, Arrow Left/Right |
+| Modal/Dialog | Escape (close)          |
+| Dropdown     | Escape, Arrow Up/Down   |
+| Slider       | Arrow Left/Right        |
+| Checkbox     | Space                   |
+| Radio        | Space, Arrow Up/Down    |
 
 ### Phase 5: Focus Trap Detection
 
@@ -168,7 +185,7 @@ interface FocusTrap {
   element: string;
   file: string;
   line: number;
-  trapType: 'intentional' | 'unintentional';
+  trapType: "intentional" | "unintentional";
   hasEscapeRoute: boolean;
   issues: FocusTrapIssue[];
 }
@@ -177,14 +194,14 @@ interface FocusTrap {
 const intentionalTraps = [
   'role="dialog"',
   'role="alertdialog"',
-  'aria-modal="true"'
+  'aria-modal="true"',
 ];
 
 // Patterns that often cause unintentional traps
 const trapPatterns = [
-  'tabIndex="-1".*tabIndex="-1"',  // Sequential -1s
-  'onBlur.*focus',                  // Focus on blur
-  'useEffect.*focus'                // Auto-focus loops
+  'tabIndex="-1".*tabIndex="-1"', // Sequential -1s
+  "onBlur.*focus", // Focus on blur
+  "useEffect.*focus", // Auto-focus loops
 ];
 ```
 
@@ -195,11 +212,11 @@ interface ModalFocusAudit {
   component: string;
   file: string;
   checks: {
-    trapsFocus: boolean;           // Focus stays in modal
-    restoresFocus: boolean;        // Returns focus on close
+    trapsFocus: boolean; // Focus stays in modal
+    restoresFocus: boolean; // Returns focus on close
     firstFocusable: string | null; // First element focused
-    closesOnEscape: boolean;       // Escape key closes
-    hasAriaModal: boolean;         // aria-modal="true"
+    closesOnEscape: boolean; // Escape key closes
+    hasAriaModal: boolean; // aria-modal="true"
   };
   issues: ModalFocusIssue[];
 }
@@ -211,7 +228,7 @@ interface ModalFocusAudit {
 
 ### 1. Focus Order Report
 
-```markdown
+````markdown
 # Focus Order Audit Report
 
 **Path:** ./app/components
@@ -220,13 +237,13 @@ interface ModalFocusAudit {
 
 ## Summary
 
-| Category | Issues | Critical | Serious | Moderate |
-|----------|--------|----------|---------|----------|
-| Tab Order | 8 | 2 | 4 | 2 |
-| Focus Indicators | 12 | 5 | 4 | 3 |
-| Keyboard Handlers | 15 | 6 | 7 | 2 |
-| Focus Traps | 3 | 1 | 2 | 0 |
-| **Total** | **38** | **14** | **17** | **7** |
+| Category          | Issues | Critical | Serious | Moderate |
+| ----------------- | ------ | -------- | ------- | -------- |
+| Tab Order         | 8      | 2        | 4       | 2        |
+| Focus Indicators  | 12     | 5        | 4       | 3        |
+| Keyboard Handlers | 15     | 6        | 7       | 2        |
+| Focus Traps       | 3      | 1        | 2       | 0        |
+| **Total**         | **38** | **14**   | **17**  | **7**    |
 
 ## Critical Issues
 
@@ -237,13 +254,16 @@ interface ModalFocusAudit {
 **Problem:** Has click handler but no keyboard support
 
 **Current:**
+
 ```tsx
 <div onClick={handleClick} className="cursor-pointer">
   Click me
 </div>
 ```
+````
 
 **Fix:**
+
 ```tsx
 <button onClick={handleClick} className="cursor-pointer">
   Click me
@@ -274,6 +294,7 @@ interface ModalFocusAudit {
 **Problem:** `outline: none` without visible focus alternative
 
 **Current:**
+
 ```css
 button:focus {
   outline: none;
@@ -281,6 +302,7 @@ button:focus {
 ```
 
 **Fix:**
+
 ```css
 button:focus-visible {
   outline: 2px solid var(--color-focus-ring);
@@ -305,11 +327,13 @@ button:focus-visible {
 **File:** `app/components/modals/ConfirmDialog.tsx:8`
 **Element:** `Dialog`
 **Problems:**
+
 - Focus can escape modal with Tab
 - No Escape key handler
 - Focus not restored on close
 
 **Required Implementation:**
+
 - Add focus trap (first/last element loop)
 - Add onKeyDown for Escape
 - Store activeElement before open, restore on close
@@ -333,13 +357,13 @@ button:focus-visible {
 
 ## Focus Indicator Inventory
 
-| Component | Focus Style | Contrast | Status |
-|-----------|-------------|----------|--------|
-| Button | ring-2 ring-primary | 4.2:1 | ✅ Pass |
-| Input | ring-2 ring-blue-500 | 3.8:1 | ✅ Pass |
-| Link | underline + color | 3.1:1 | ✅ Pass |
-| Card | outline: none | N/A | ❌ Fail |
-| Tab | border-bottom | 2.1:1 | ⚠️ Low |
+| Component | Focus Style          | Contrast | Status  |
+| --------- | -------------------- | -------- | ------- |
+| Button    | ring-2 ring-primary  | 4.2:1    | ✅ Pass |
+| Input     | ring-2 ring-blue-500 | 3.8:1    | ✅ Pass |
+| Link      | underline + color    | 3.1:1    | ✅ Pass |
+| Card      | outline: none        | N/A      | ❌ Fail |
+| Tab       | border-bottom        | 2.1:1    | ⚠️ Low  |
 
 ## Recommendations
 
@@ -348,7 +372,8 @@ button:focus-visible {
 3. **Remove positive tabIndex values** - 2 occurrences
 4. **Implement focus trap in modals** - 2 modals affected
 5. **Add Escape key handlers** - 3 dialogs missing
-```
+
+````
 
 ---
 
@@ -368,7 +393,7 @@ button:focus-visible {
 // 3. Convert positive tabIndex
 - <input tabIndex={1}>
 + <input tabIndex={0}>
-```
+````
 
 ---
 
@@ -396,7 +421,7 @@ button:focus-visible {
 ## Failure Handling
 
 - **No interactive elements discovered:** Verify scan includes all file types (.tsx, .jsx, .vue, .html). If truly zero, report "No interactive elements found"
-- **Focus indicator detection misses Tailwind ring-* classes:** Expand scan patterns to include ring-*, outline-*, focus:*, focus-visible:* Tailwind utilities
+- **Focus indicator detection misses Tailwind ring-\* classes:** Expand scan patterns to include ring-_, outline-_, focus:_, focus-visible:_ Tailwind utilities
 - **Tab order mapping fails for dynamic content:** Document dynamic sections as "tab order varies at runtime — requires manual testing" in report
 - **Auto-fix introduces breaking changes:** Generate fix suggestions as code comments instead of applying directly. Always preserve original code
 
@@ -440,11 +465,11 @@ focus_order_audit:
 
 **Brad says:** "If you can't Tab to it, keyboard users can't use it. Zero click-only elements."
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-accessibility-wcag-checklist.md`
 - `squads/design/checklists/ds-a11y-release-gate-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

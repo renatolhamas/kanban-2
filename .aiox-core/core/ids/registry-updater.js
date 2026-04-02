@@ -1,11 +1,13 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
-const lockfile = require('proper-lockfile');
-const { RegistryLoader } = require(path.resolve(__dirname, 'registry-loader.js'));
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const lockfile = require("proper-lockfile");
+const { RegistryLoader } = require(
+  path.resolve(__dirname, "registry-loader.js"),
+);
 const {
   extractEntityId,
   extractKeywords,
@@ -17,13 +19,26 @@ const {
   ADAPTABILITY_DEFAULTS,
   REPO_ROOT,
   REGISTRY_PATH,
-} = require(path.resolve(__dirname, '../../development/scripts/populate-entity-registry.js'));
-const { enrichRegistryEntry } = require(path.resolve(__dirname, '../code-intel/helpers/creation-helper'));
-const { classifyLayer } = require(path.resolve(__dirname, 'layer-classifier'));
+} = require(
+  path.resolve(
+    __dirname,
+    "../../development/scripts/populate-entity-registry.js",
+  ),
+);
+const { enrichRegistryEntry } = require(
+  path.resolve(__dirname, "../code-intel/helpers/creation-helper"),
+);
+const { classifyLayer } = require(path.resolve(__dirname, "layer-classifier"));
 
-const LOCK_FILE = path.resolve(REPO_ROOT, '.aiox-core/data/.entity-registry.lock');
-const BACKUP_DIR = path.resolve(REPO_ROOT, '.aiox-core/data/registry-backups');
-const AUDIT_LOG_PATH = path.resolve(REPO_ROOT, '.aiox-core/data/registry-update-log.jsonl');
+const LOCK_FILE = path.resolve(
+  REPO_ROOT,
+  ".aiox-core/data/.entity-registry.lock",
+);
+const BACKUP_DIR = path.resolve(REPO_ROOT, ".aiox-core/data/registry-backups");
+const AUDIT_LOG_PATH = path.resolve(
+  REPO_ROOT,
+  ".aiox-core/data/registry-update-log.jsonl",
+);
 const MAX_AUDIT_LOG_SIZE = 5 * 1024 * 1024; // 5MB
 const DEBOUNCE_MS = 100;
 const LOCK_TIMEOUT_MS = 5000;
@@ -33,7 +48,14 @@ const LOCK_STALE_MS = 10000;
 
 const WATCH_PATHS = SCAN_CONFIG.map((c) => c.basePath);
 
-const INCLUDE_EXTENSIONS = new Set(['.md', '.yaml', '.yml', '.js', '.ts', '.mjs']);
+const INCLUDE_EXTENSIONS = new Set([
+  ".md",
+  ".yaml",
+  ".yml",
+  ".js",
+  ".ts",
+  ".mjs",
+]);
 
 const EXCLUDE_PATTERNS = [
   /node_modules/,
@@ -74,15 +96,15 @@ class RegistryUpdater {
    * Returns the chokidar watcher instance.
    */
   startWatcher() {
-    const chokidar = require('chokidar');
+    const chokidar = require("chokidar");
 
     const watchPaths = WATCH_PATHS.map((p) => {
       const abs = path.resolve(this._repoRoot, p);
-      return abs.replace(/\\/g, '/');
+      return abs.replace(/\\/g, "/");
     }).filter((p) => fs.existsSync(p));
 
     if (watchPaths.length === 0) {
-      console.warn('[IDS-Updater] No watch paths found. Watcher not started.');
+      console.warn("[IDS-Updater] No watch paths found. Watcher not started.");
       return null;
     }
 
@@ -95,14 +117,16 @@ class RegistryUpdater {
     });
 
     this._watcher
-      .on('add', (filePath) => this._queueUpdate('add', filePath))
-      .on('change', (filePath) => this._queueUpdate('change', filePath))
-      .on('unlink', (filePath) => this._queueUpdate('unlink', filePath))
-      .on('error', (err) => {
+      .on("add", (filePath) => this._queueUpdate("add", filePath))
+      .on("change", (filePath) => this._queueUpdate("change", filePath))
+      .on("unlink", (filePath) => this._queueUpdate("unlink", filePath))
+      .on("error", (err) => {
         console.error(`[IDS-Updater] Watcher error: ${err.message}`);
       });
 
-    console.log(`[IDS-Updater] Watching ${watchPaths.length} paths for changes.`);
+    console.log(
+      `[IDS-Updater] Watching ${watchPaths.length} paths for changes.`,
+    );
     return this._watcher;
   }
 
@@ -113,7 +137,7 @@ class RegistryUpdater {
     if (this._watcher) {
       await this._watcher.close();
       this._watcher = null;
-      console.log('[IDS-Updater] Watcher stopped.');
+      console.log("[IDS-Updater] Watcher stopped.");
     }
     if (this._debounceTimer) {
       clearTimeout(this._debounceTimer);
@@ -130,7 +154,9 @@ class RegistryUpdater {
     if (!changes || changes.length === 0) return { updated: 0, errors: [] };
 
     const validChanges = changes
-      .filter((c) => c && typeof c.filePath === 'string' && c.filePath && c.action)
+      .filter(
+        (c) => c && typeof c.filePath === "string" && c.filePath && c.action,
+      )
       .map((c) => {
         const abs = path.isAbsolute(c.filePath)
           ? c.filePath
@@ -138,20 +164,22 @@ class RegistryUpdater {
         // For unlink, file doesn't exist so _resolveSymlink returns original path
         // We need to manually resolve the path to match _repoRoot format on macOS
         let resolved = this._resolveSymlink(abs);
-        if (c.action === 'unlink' && resolved === abs) {
+        if (c.action === "unlink" && resolved === abs) {
           // File doesn't exist - normalize path manually for macOS /var -> /private/var
           // This ensures path.relative() works correctly with _repoRoot
-          resolved = abs.replace(/^\/var\//, '/private/var/');
+          resolved = abs.replace(/^\/var\//, "/private/var/");
         }
         return { action: c.action, filePath: resolved };
       })
       .filter((c) => {
         // For unlink (delete), skip file existence checks - the file no longer exists
         // We only need to verify the path would be in scope and not excluded
-        if (c.action === 'unlink') {
+        if (c.action === "unlink") {
           if (this._isExcluded(c.filePath)) return false;
           // For deletions, check if path matches any known category pattern
-          const relPath = path.relative(this._repoRoot, c.filePath).replace(/\\/g, '/');
+          const relPath = path
+            .relative(this._repoRoot, c.filePath)
+            .replace(/\\/g, "/");
           return this._detectCategory(relPath) !== null;
         }
         // For add/change, use standard inclusion check
@@ -178,18 +206,18 @@ class RegistryUpdater {
         : path.resolve(this._repoRoot, filePath);
 
       if (fs.existsSync(abs)) {
-        changes.push({ action: 'change', filePath: abs });
+        changes.push({ action: "change", filePath: abs });
       } else {
-        changes.push({ action: 'unlink', filePath: abs });
+        changes.push({ action: "unlink", filePath: abs });
       }
     }
 
     const result = await this.processChanges(changes);
 
     this._logAudit({
-      trigger: 'agent-task-complete',
-      taskId: task?.id || 'unknown',
-      agent: task?.agent || 'unknown',
+      trigger: "agent-task-complete",
+      taskId: task?.id || "unknown",
+      agent: task?.agent || "unknown",
       artifactCount: artifacts.length,
       updated: result.updated,
     });
@@ -200,8 +228,12 @@ class RegistryUpdater {
   // ─── Internal: Queuing & Debouncing ──────────────────────────────
 
   _queueUpdate(action, filePath) {
-    const normalized = path.resolve(filePath).replace(/\\/g, '/');
-    this._pendingUpdates.set(normalized, { action, filePath: normalized, timestamp: Date.now() });
+    const normalized = path.resolve(filePath).replace(/\\/g, "/");
+    this._pendingUpdates.set(normalized, {
+      action,
+      filePath: normalized,
+      timestamp: Date.now(),
+    });
 
     if (this._debounceTimer) {
       clearTimeout(this._debounceTimer);
@@ -222,7 +254,9 @@ class RegistryUpdater {
       if (!this._debounceTimer) {
         this._debounceTimer = setTimeout(() => {
           this._flushPending().catch((err) => {
-            console.error(`[IDS-Updater] Deferred flush failed: ${err.message}`);
+            console.error(
+              `[IDS-Updater] Deferred flush failed: ${err.message}`,
+            );
             this._isProcessing = false;
           });
         }, this._debounceMs);
@@ -256,13 +290,13 @@ class RegistryUpdater {
 
             let mutated = false;
             switch (action) {
-              case 'add':
+              case "add":
                 mutated = this._handleFileCreate(registry, abs);
                 break;
-              case 'change':
+              case "change":
                 mutated = this._handleFileModify(registry, abs);
                 break;
-              case 'unlink':
+              case "unlink":
                 mutated = this._handleFileDelete(registry, abs);
                 break;
               default:
@@ -270,11 +304,19 @@ class RegistryUpdater {
             }
             if (mutated) updated++;
 
-            this._logAudit({ action, path: path.relative(this._repoRoot, abs).replace(/\\/g, '/'), trigger: 'watcher' });
+            this._logAudit({
+              action,
+              path: path.relative(this._repoRoot, abs).replace(/\\/g, "/"),
+              trigger: "watcher",
+            });
           } catch (err) {
-            const relPath = path.relative(this._repoRoot, filePath).replace(/\\/g, '/');
+            const relPath = path
+              .relative(this._repoRoot, filePath)
+              .replace(/\\/g, "/");
             errors.push({ path: relPath, error: err.message });
-            console.error(`[IDS-Updater] Error processing ${relPath}: ${err.message}`);
+            console.error(
+              `[IDS-Updater] Error processing ${relPath}: ${err.message}`,
+            );
           }
         }
 
@@ -291,7 +333,7 @@ class RegistryUpdater {
       });
     } catch (err) {
       console.error(`[IDS-Updater] Batch execution failed: ${err.message}`);
-      errors.push({ path: 'batch', error: err.message });
+      errors.push({ path: "batch", error: err.message });
     } finally {
       this._isProcessing = false;
     }
@@ -303,16 +345,18 @@ class RegistryUpdater {
   // ─── Internal: File Handlers (AC 2, 3, 4) ───────────────────────
 
   _handleFileCreate(registry, absPath) {
-    const relPath = path.relative(this._repoRoot, absPath).replace(/\\/g, '/');
+    const relPath = path.relative(this._repoRoot, absPath).replace(/\\/g, "/");
     const config = this._detectCategory(relPath);
     if (!config) return false;
 
-    let content = '';
+    let content = "";
     try {
-      content = fs.readFileSync(absPath, 'utf8');
+      content = fs.readFileSync(absPath, "utf8");
     } catch (err) {
-      if (err.code === 'EACCES' || err.code === 'EPERM') {
-        console.warn(`[IDS-Updater] Permission denied reading ${relPath} — skipping`);
+      if (err.code === "EACCES" || err.code === "EPERM") {
+        console.warn(
+          `[IDS-Updater] Permission denied reading ${relPath} — skipping`,
+        );
         return false;
       }
       throw err;
@@ -356,7 +400,7 @@ class RegistryUpdater {
   }
 
   _handleFileModify(registry, absPath) {
-    const relPath = path.relative(this._repoRoot, absPath).replace(/\\/g, '/');
+    const relPath = path.relative(this._repoRoot, absPath).replace(/\\/g, "/");
     const config = this._detectCategory(relPath);
     if (!config) return false;
 
@@ -368,12 +412,14 @@ class RegistryUpdater {
       return this._handleFileCreate(registry, absPath);
     }
 
-    let content = '';
+    let content = "";
     try {
-      content = fs.readFileSync(absPath, 'utf8');
+      content = fs.readFileSync(absPath, "utf8");
     } catch (err) {
-      if (err.code === 'EACCES' || err.code === 'EPERM') {
-        console.warn(`[IDS-Updater] Permission denied reading ${relPath} — skipping`);
+      if (err.code === "EACCES" || err.code === "EPERM") {
+        console.warn(
+          `[IDS-Updater] Permission denied reading ${relPath} — skipping`,
+        );
         return false;
       }
       throw err;
@@ -393,7 +439,7 @@ class RegistryUpdater {
   }
 
   _handleFileDelete(registry, absPath) {
-    const relPath = path.relative(this._repoRoot, absPath).replace(/\\/g, '/');
+    const relPath = path.relative(this._repoRoot, absPath).replace(/\\/g, "/");
     const entityId = extractEntityId(absPath);
 
     let found = false;
@@ -460,13 +506,23 @@ class RegistryUpdater {
 
         // Pre-populate usedBy if code intel found references
         if (enrichment.usedBy && enrichment.usedBy.length > 0) {
-          entity.usedBy = [...new Set([...(entity.usedBy || []), ...enrichment.usedBy])];
+          entity.usedBy = [
+            ...new Set([...(entity.usedBy || []), ...enrichment.usedBy]),
+          ];
         }
 
         // Pre-populate dependencies if code intel found them
-        if (enrichment.dependencies && enrichment.dependencies.nodes && enrichment.dependencies.nodes.length > 0) {
-          const existingDeps = Array.isArray(entity.dependencies) ? entity.dependencies : [];
-          const newDeps = enrichment.dependencies.nodes.filter((n) => typeof n === 'string');
+        if (
+          enrichment.dependencies &&
+          enrichment.dependencies.nodes &&
+          enrichment.dependencies.nodes.length > 0
+        ) {
+          const existingDeps = Array.isArray(entity.dependencies)
+            ? entity.dependencies
+            : [];
+          const newDeps = enrichment.dependencies.nodes.filter(
+            (n) => typeof n === "string",
+          );
           entity.dependencies = [...new Set([...existingDeps, ...newDeps])];
         }
       } catch {
@@ -495,10 +551,12 @@ class RegistryUpdater {
     }
 
     try {
-      fs.writeFileSync(this._registryPath, yamlStr, 'utf8');
+      fs.writeFileSync(this._registryPath, yamlStr, "utf8");
     } catch (err) {
-      if (err.code === 'ENOSPC') {
-        console.error('[IDS-Updater] Disk full — registry write failed. Retrying not possible.');
+      if (err.code === "ENOSPC") {
+        console.error(
+          "[IDS-Updater] Disk full — registry write failed. Retrying not possible.",
+        );
         throw err;
       }
       throw new Error(`[IDS-Updater] Failed to write registry: ${err.message}`);
@@ -553,7 +611,11 @@ class RegistryUpdater {
 
     try {
       this._rotateLogIfNeeded();
-      fs.appendFileSync(this._auditLogPath, JSON.stringify(logEntry) + '\n', 'utf8');
+      fs.appendFileSync(
+        this._auditLogPath,
+        JSON.stringify(logEntry) + "\n",
+        "utf8",
+      );
     } catch {
       // Audit logging should never break the main flow
     }
@@ -567,8 +629,11 @@ class RegistryUpdater {
         if (!fs.existsSync(this._backupDir)) {
           fs.mkdirSync(this._backupDir, { recursive: true });
         }
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const backupPath = path.join(this._backupDir, `registry-update-log-${timestamp}.jsonl`);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+        const backupPath = path.join(
+          this._backupDir,
+          `registry-update-log-${timestamp}.jsonl`,
+        );
         fs.renameSync(this._auditLogPath, backupPath);
       }
     } catch {
@@ -579,7 +644,7 @@ class RegistryUpdater {
   // ─── Internal: Helpers ───────────────────────────────────────────
 
   _detectCategory(relPath) {
-    const normalized = relPath.replace(/\\/g, '/');
+    const normalized = relPath.replace(/\\/g, "/");
     for (const config of SCAN_CONFIG) {
       if (normalized.startsWith(config.basePath)) {
         return config;
@@ -589,14 +654,14 @@ class RegistryUpdater {
   }
 
   _isExcluded(filePath) {
-    const normalized = filePath.replace(/\\/g, '/');
+    const normalized = filePath.replace(/\\/g, "/");
     return EXCLUDE_PATTERNS.some((pattern) => pattern.test(normalized));
   }
 
   _isIncluded(filePath) {
     const ext = path.extname(filePath).toLowerCase();
     if (!INCLUDE_EXTENSIONS.has(ext)) return false;
-    const relPath = path.relative(this._repoRoot, filePath).replace(/\\/g, '/');
+    const relPath = path.relative(this._repoRoot, filePath).replace(/\\/g, "/");
     return this._detectCategory(relPath) !== null;
   }
 
@@ -648,14 +713,20 @@ class RegistryUpdater {
   queryAuditLog(filter = {}) {
     if (!fs.existsSync(this._auditLogPath)) return [];
 
-    const lines = fs.readFileSync(this._auditLogPath, 'utf8').trim().split('\n').filter(Boolean);
-    let entries = lines.map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    }).filter(Boolean);
+    const lines = fs
+      .readFileSync(this._auditLogPath, "utf8")
+      .trim()
+      .split("\n")
+      .filter(Boolean);
+    let entries = lines
+      .map((line) => {
+        try {
+          return JSON.parse(line);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
 
     if (filter.action) {
       entries = entries.filter((e) => e.action === filter.action);
@@ -680,63 +751,72 @@ class RegistryUpdater {
 if (require.main === module) {
   const args = process.argv.slice(2);
 
-  if (args.includes('--watch')) {
+  if (args.includes("--watch")) {
     const updater = new RegistryUpdater();
     updater.startWatcher();
-    console.log('[IDS-Updater] Running in watcher mode. Press Ctrl+C to stop.');
+    console.log("[IDS-Updater] Running in watcher mode. Press Ctrl+C to stop.");
 
-    process.on('SIGINT', async () => {
-      console.log('\n[IDS-Updater] Shutting down...');
+    process.on("SIGINT", async () => {
+      console.log("\n[IDS-Updater] Shutting down...");
       await updater.stopWatcher();
       const stats = updater.getStats();
       console.log(`[IDS-Updater] Total updates: ${stats.totalUpdates}`);
       process.exit(0);
     });
 
-    process.on('SIGTERM', async () => {
+    process.on("SIGTERM", async () => {
       await updater.stopWatcher();
       process.exit(0);
     });
-  } else if (args.includes('--files')) {
-    const fileIdx = args.indexOf('--files');
+  } else if (args.includes("--files")) {
+    const fileIdx = args.indexOf("--files");
     const files = args.slice(fileIdx + 1);
 
     if (files.length === 0) {
-      console.error('[IDS-Updater] No files specified. Usage: --files file1 file2 ...');
+      console.error(
+        "[IDS-Updater] No files specified. Usage: --files file1 file2 ...",
+      );
       process.exit(1);
     }
 
     const updater = new RegistryUpdater();
     const changes = files.map((f) => {
       const abs = path.isAbsolute(f) ? f : path.resolve(REPO_ROOT, f);
-      const action = fs.existsSync(abs) ? 'change' : 'unlink';
+      const action = fs.existsSync(abs) ? "change" : "unlink";
       return { action, filePath: abs };
     });
 
-    updater.processChanges(changes).then((result) => {
-      console.log(`[IDS-Updater] Processed ${result.updated} updates.`);
-      if (result.errors.length > 0) {
-        console.error('[IDS-Updater] Errors:', result.errors);
+    updater
+      .processChanges(changes)
+      .then((result) => {
+        console.log(`[IDS-Updater] Processed ${result.updated} updates.`);
+        if (result.errors.length > 0) {
+          console.error("[IDS-Updater] Errors:", result.errors);
+          process.exit(1);
+        }
+        process.exit(0);
+      })
+      .catch((err) => {
+        console.error(`[IDS-Updater] Fatal error: ${err.message}`);
         process.exit(1);
-      }
-      process.exit(0);
-    }).catch((err) => {
-      console.error(`[IDS-Updater] Fatal error: ${err.message}`);
-      process.exit(1);
-    });
-  } else if (args.includes('--log')) {
+      });
+  } else if (args.includes("--log")) {
     const updater = new RegistryUpdater();
-    const limitIdx = args.indexOf('--limit');
+    const limitIdx = args.indexOf("--limit");
     const limit = limitIdx >= 0 ? parseInt(args[limitIdx + 1], 10) : 20;
     const entries = updater.queryAuditLog({ limit });
     for (const entry of entries) {
-      console.log(`${entry.timestamp} | ${entry.action || entry.trigger} | ${entry.path || ''}`);
+      console.log(
+        `${entry.timestamp} | ${entry.action || entry.trigger} | ${entry.path || ""}`,
+      );
     }
   } else {
-    console.log('Usage:');
-    console.log('  --watch              Start file watcher (persistent mode)');
-    console.log('  --files f1 f2 ...    Process specific files (on-demand mode)');
-    console.log('  --log [--limit N]    Query audit log');
+    console.log("Usage:");
+    console.log("  --watch              Start file watcher (persistent mode)");
+    console.log(
+      "  --files f1 f2 ...    Process specific files (on-demand mode)",
+    );
+    console.log("  --log [--limit N]    Query audit log");
   }
 }
 

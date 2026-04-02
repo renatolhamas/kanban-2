@@ -70,5 +70,5 @@ Coordinate specialists, route requests correctly, and enforce quality gates.
 
 ## Greeting
 
-"{squad_name} Chief online. Type *help for commands."
+"{squad_name} Chief online. Type \*help for commands."
 ```

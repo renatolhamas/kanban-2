@@ -8,20 +8,20 @@
  * @story INS-4.8
  */
 
-const path = require('path');
-const fs = require('fs');
+const path = require("path");
+const fs = require("fs");
 
-const name = 'skills-count';
+const name = "skills-count";
 
 async function run(context) {
-  const skillsDir = path.join(context.projectRoot, '.claude', 'skills');
+  const skillsDir = path.join(context.projectRoot, ".claude", "skills");
 
   if (!fs.existsSync(skillsDir)) {
     return {
       check: name,
-      status: 'FAIL',
-      message: 'Skills directory not found (.claude/skills/)',
-      fixCommand: 'npx aiox-core install --force',
+      status: "FAIL",
+      message: "Skills directory not found (.claude/skills/)",
+      fixCommand: "npx aiox-core install --force",
     };
   }
 
@@ -31,14 +31,16 @@ async function run(context) {
   } catch {
     return {
       check: name,
-      status: 'FAIL',
-      message: 'Cannot read skills directory',
-      fixCommand: 'npx aiox-core install --force',
+      status: "FAIL",
+      message: "Cannot read skills directory",
+      fixCommand: "npx aiox-core install --force",
     };
   }
 
   const skills = entries.filter(
-    (d) => d.isDirectory() && fs.existsSync(path.join(skillsDir, d.name, 'SKILL.md')),
+    (d) =>
+      d.isDirectory() &&
+      fs.existsSync(path.join(skillsDir, d.name, "SKILL.md")),
   );
 
   const count = skills.length;
@@ -46,16 +48,16 @@ async function run(context) {
   if (count === 0) {
     return {
       check: name,
-      status: 'FAIL',
-      message: 'No skills found (expected >=7)',
-      fixCommand: 'npx aiox-core install --force',
+      status: "FAIL",
+      message: "No skills found (expected >=7)",
+      fixCommand: "npx aiox-core install --force",
     };
   }
 
   if (count >= 7) {
     return {
       check: name,
-      status: 'PASS',
+      status: "PASS",
       message: `${count} skills found`,
       fixCommand: null,
     };
@@ -63,9 +65,9 @@ async function run(context) {
 
   return {
     check: name,
-    status: 'WARN',
+    status: "WARN",
     message: `Only ${count}/7 skills found`,
-    fixCommand: 'npx aiox-core install --force',
+    fixCommand: "npx aiox-core install --force",
   };
 }
 

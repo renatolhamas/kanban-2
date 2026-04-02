@@ -43,11 +43,11 @@
 
 ## 7.2 Modelo de Permissões (MVP)
 
-| Entidade | Permissões | Notas |
-|----------|-----------|-------|
-| **Owner** | Full access (todas as features) | Criado automaticamente no Register |
-| **Attendant** | RLS read/write limitado (Fase 2+) | N/A para MVP |
-| **Public** | Register + Login apenas | Sem acesso a dados de nenhum tenant |
+| Entidade      | Permissões                        | Notas                               |
+| ------------- | --------------------------------- | ----------------------------------- |
+| **Owner**     | Full access (todas as features)   | Criado automaticamente no Register  |
+| **Attendant** | RLS read/write limitado (Fase 2+) | N/A para MVP                        |
+| **Public**    | Register + Login apenas           | Sem acesso a dados de nenhum tenant |
 
 ## 7.3 RLS Policies (Enforcement)
 

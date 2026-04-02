@@ -11,6 +11,7 @@
 ## Overview
 
 Generates a comprehensive contrast matrix showing all foreground/background color combinations in the codebase with:
+
 - WCAG 2.2 contrast ratios (AA and AAA)
 - APCA (Advanced Perceptual Contrast Algorithm) Lc values
 - Usage locations
@@ -21,12 +22,12 @@ Generates a comprehensive contrast matrix showing all foreground/background colo
 
 ## Input
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `path` | Yes | Directory to scan (e.g., `./app/components`) |
-| `--format` | No | Output: `table`, `html`, `json` (default: `table`) |
-| `--include-tokens` | No | Include design token colors |
-| `--theme` | No | Filter by theme: `light`, `dark`, `sepia`, `all` (default: `all`) |
+| Parameter          | Required | Description                                                       |
+| ------------------ | -------- | ----------------------------------------------------------------- |
+| `path`             | Yes      | Directory to scan (e.g., `./app/components`)                      |
+| `--format`         | No       | Output: `table`, `html`, `json` (default: `table`)                |
+| `--include-tokens` | No       | Include design token colors                                       |
+| `--theme`          | No       | Filter by theme: `light`, `dark`, `sepia`, `all` (default: `all`) |
 
 ---
 
@@ -40,30 +41,42 @@ Extract all colors from:
 // Sources to scan
 const colorSources = [
   // CSS/SCSS
-  'color:', 'background-color:', 'border-color:', 'fill:', 'stroke:',
+  "color:",
+  "background-color:",
+  "border-color:",
+  "fill:",
+  "stroke:",
   // Tailwind classes
-  'text-', 'bg-', 'border-', 'fill-', 'stroke-',
+  "text-",
+  "bg-",
+  "border-",
+  "fill-",
+  "stroke-",
   // CSS variables
-  'var(--color-', '--color-',
+  "var(--color-",
+  "--color-",
   // Inline styles
-  'style={{ color:', 'style={{ backgroundColor:',
+  "style={{ color:",
+  "style={{ backgroundColor:",
   // Hex values
-  '#[0-9A-Fa-f]{3,8}',
+  "#[0-9A-Fa-f]{3,8}",
   // RGB/RGBA
-  'rgb(', 'rgba(',
+  "rgb(",
+  "rgba(",
   // HSL/HSLA
-  'hsl(', 'hsla(',
+  "hsl(",
+  "hsla(",
   // OKLCH
-  'oklch('
+  "oklch(",
 ];
 
 interface ExtractedColor {
-  value: string;           // Normalized hex
-  original: string;        // Original format found
-  source: 'css' | 'tailwind' | 'token' | 'inline';
-  usage: 'foreground' | 'background' | 'border' | 'unknown';
+  value: string; // Normalized hex
+  original: string; // Original format found
+  source: "css" | "tailwind" | "token" | "inline";
+  usage: "foreground" | "background" | "border" | "unknown";
   files: Array<{ path: string; line: number }>;
-  theme?: 'light' | 'dark' | 'sepia';
+  theme?: "light" | "dark" | "sepia";
 }
 ```
 
@@ -77,20 +90,20 @@ interface ContrastResult {
   background: string;
 
   // WCAG 2.x Contrast Ratio
-  wcagRatio: number;        // e.g., 4.52:1
+  wcagRatio: number; // e.g., 4.52:1
 
   // WCAG 2.2 Compliance
   wcag: {
-    AA_normal: boolean;     // ≥4.5:1 for <18px
-    AA_large: boolean;      // ≥3:1 for ≥18px/bold
-    AAA_normal: boolean;    // ≥7:1
-    AAA_large: boolean;     // ≥4.5:1
+    AA_normal: boolean; // ≥4.5:1 for <18px
+    AA_large: boolean; // ≥3:1 for ≥18px/bold
+    AAA_normal: boolean; // ≥7:1
+    AAA_large: boolean; // ≥4.5:1
     ui_components: boolean; // ≥3:1 (borders, icons)
   };
 
   // APCA (Lc values)
   apca: {
-    Lc: number;             // Lightness contrast (-108 to +106)
+    Lc: number; // Lightness contrast (-108 to +106)
     recommended_size: string; // e.g., "14px+" or "18px bold+"
     pass: boolean;
   };
@@ -99,9 +112,9 @@ interface ContrastResult {
   usage: Array<{
     file: string;
     line: number;
-    element: string;        // e.g., "Button", "p", "span"
-    fontSize: string;       // If detectable
-    fontWeight: string;     // If detectable
+    element: string; // e.g., "Button", "p", "span"
+    fontSize: string; // If detectable
+    fontWeight: string; // If detectable
   }>;
 }
 ```
@@ -109,6 +122,7 @@ interface ContrastResult {
 ### Phase 3: WCAG 2.2 + APCA Calculations
 
 **WCAG 2.x Contrast Ratio Formula:**
+
 ```typescript
 function getWCAGContrastRatio(fg: string, bg: string): number {
   const L1 = getRelativeLuminance(fg);
@@ -120,7 +134,7 @@ function getWCAGContrastRatio(fg: string, bg: string): number {
 
 function getRelativeLuminance(hex: string): number {
   const rgb = hexToRgb(hex);
-  const [r, g, b] = rgb.map(c => {
+  const [r, g, b] = rgb.map((c) => {
     c = c / 255;
     return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
   });
@@ -129,6 +143,7 @@ function getRelativeLuminance(hex: string): number {
 ```
 
 **APCA Lc Calculation:**
+
 ```typescript
 // APCA W3 reference algorithm
 function getAPCAContrast(textColor: string, bgColor: string): number {
@@ -144,15 +159,15 @@ function getAPCAContrast(textColor: string, bgColor: string): number {
 
 **APCA Minimum Lc Values by Font Size/Weight:**
 
-| Font Size | Weight | Min |Lc| for Body | Min |Lc| for UI |
-|-----------|--------|---------------------|-------------------|
-| 12px | 400 | 90 | 75 |
-| 14px | 400 | 75 | 60 |
-| 16px | 400 | 60 | 50 |
-| 18px | 400 | 55 | 45 |
-| 24px | 400 | 45 | 40 |
-| 14px | 700 | 60 | 50 |
-| 18px | 700 | 50 | 40 |
+| Font Size | Weight | Min | Lc  | for Body | Min | Lc  | for UI |
+| --------- | ------ | --- | --- | -------- | --- | --- | ------ |
+| 12px      | 400    | 90  | 75  |
+| 14px      | 400    | 75  | 60  |
+| 16px      | 400    | 60  | 50  |
+| 18px      | 400    | 55  | 45  |
+| 24px      | 400    | 45  | 40  |
+| 14px      | 700    | 60  | 50  |
+| 18px      | 700    | 50  | 40  |
 
 ### Phase 4: Matrix Generation
 
@@ -160,7 +175,7 @@ Group by theme and generate matrix:
 
 ```typescript
 interface ContrastMatrix {
-  theme: 'light' | 'dark' | 'sepia';
+  theme: "light" | "dark" | "sepia";
   colors: {
     foregrounds: ExtractedColor[];
     backgrounds: ExtractedColor[];
@@ -191,23 +206,23 @@ interface ContrastMatrix {
 
 ## Summary
 
-| Metric | Count | Percentage |
-|--------|-------|------------|
-| Total pairs | 156 | 100% |
-| WCAG AA Pass | 142 | 91.0% |
-| WCAG AAA Pass | 98 | 62.8% |
-| APCA Pass | 138 | 88.5% |
-| **Failures** | **14** | **9.0%** |
+| Metric        | Count  | Percentage |
+| ------------- | ------ | ---------- |
+| Total pairs   | 156    | 100%       |
+| WCAG AA Pass  | 142    | 91.0%      |
+| WCAG AAA Pass | 98     | 62.8%      |
+| APCA Pass     | 138    | 88.5%      |
+| **Failures**  | **14** | **9.0%**   |
 
 ## Complete Matrix
 
-| Foreground | Background | Ratio | AA | AAA | APCA Lc | Status |
-|------------|------------|-------|----|----|---------|--------|
-| #212121 | #FAFAFA | 16.1:1 | ✓ | ✓ | -92.4 | ✅ Pass |
-| #424242 | #FFFFFF | 10.5:1 | ✓ | ✓ | -85.2 | ✅ Pass |
-| #757575 | #FFFFFF | 4.6:1 | ✓ | ✗ | -63.1 | ⚠️ AA only |
-| #999999 | #FFFFFF | 2.8:1 | ✗ | ✗ | -48.7 | ❌ Fail |
-| #D4AF37 | #1A1A1A | 8.2:1 | ✓ | ✓ | +78.3 | ✅ Pass |
+| Foreground | Background | Ratio  | AA  | AAA | APCA Lc | Status     |
+| ---------- | ---------- | ------ | --- | --- | ------- | ---------- |
+| #212121    | #FAFAFA    | 16.1:1 | ✓   | ✓   | -92.4   | ✅ Pass    |
+| #424242    | #FFFFFF    | 10.5:1 | ✓   | ✓   | -85.2   | ✅ Pass    |
+| #757575    | #FFFFFF    | 4.6:1  | ✓   | ✗   | -63.1   | ⚠️ AA only |
+| #999999    | #FFFFFF    | 2.8:1  | ✗   | ✗   | -48.7   | ❌ Fail    |
+| #D4AF37    | #1A1A1A    | 8.2:1  | ✓   | ✓   | +78.3   | ✅ Pass    |
 
 ## Failures Detail
 
@@ -216,10 +231,12 @@ interface ContrastMatrix {
 **Problem:** Fails WCAG AA (need 4.5:1)
 **APCA Lc:** -48.7 (need ≥60 for body text)
 **Used in:**
+
 - `app/components/ui/Input.tsx:45` - placeholder text
 - `app/components/ui/Label.tsx:12` - disabled state
 
 **Recommendations:**
+
 1. Darken to #767676 for 4.5:1 (minimum AA)
 2. Darken to #595959 for 7:1 (AAA compliant)
 3. Or change background to #F0F0F0 with #999999 = 3.3:1 (large text only)
@@ -228,6 +245,7 @@ interface ContrastMatrix {
 
 **Problem:** Passes AA but fails AAA
 **Used in:**
+
 - `app/components/shared/Caption.tsx:8` - 12px caption text
 
 **Note:** For 12px text, APCA recommends Lc ≥ 75. Current Lc is -63.1.
@@ -237,6 +255,7 @@ interface ContrastMatrix {
 ### 2. HTML Report (with --format html)
 
 Interactive HTML with:
+
 - Color swatches
 - Visual comparison
 - Filter by pass/fail
@@ -284,14 +303,15 @@ Interactive HTML with:
 
 This task validates against the reading guide principles:
 
-| Rule | Contrast Requirement | This Task |
-|------|---------------------|-----------|
-| Rule 8 | Minimum 4.5:1 (WCAG AA) | ✓ Validates |
-| Rule 10 | Dark mode: avoid pure black/white | ✓ Detects 21:1 |
-| Rule 13 | Links distinguishable ≥3:1 from text | ✓ Validates link colors |
-| Accessibility | APCA for modern accuracy | ✓ Includes APCA Lc |
+| Rule          | Contrast Requirement                 | This Task               |
+| ------------- | ------------------------------------ | ----------------------- |
+| Rule 8        | Minimum 4.5:1 (WCAG AA)              | ✓ Validates             |
+| Rule 10       | Dark mode: avoid pure black/white    | ✓ Detects 21:1          |
+| Rule 13       | Links distinguishable ≥3:1 from text | ✓ Validates link colors |
+| Accessibility | APCA for modern accuracy             | ✓ Includes APCA Lc      |
 
 **Special Checks:**
+
 - Dark mode halation detection (contrast > 18:1 flagged)
 - Link vs text color contrast (≥3:1 required)
 - Focus indicator contrast (≥3:1 vs background)
@@ -363,11 +383,11 @@ contrast_matrix:
 
 **Brad says:** "Contrast isn't subjective. Numbers don't lie. 4.5:1 or it fails."
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-accessibility-wcag-checklist.md`
 - `squads/design/checklists/ds-a11y-release-gate-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

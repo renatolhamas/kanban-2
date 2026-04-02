@@ -46,7 +46,6 @@ clone_review:
   # STEP 2: TRINITY VERIFICATION (Binary Checkpoints)
   # ============================================================
   trinity:
-
     # ----- PLAYBOOK (5 checkpoints) -----
     playbook:
       checkpoints:

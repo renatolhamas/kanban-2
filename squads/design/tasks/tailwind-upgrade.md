@@ -12,13 +12,14 @@
 Plan and execute migration from Tailwind CSS v3 (or earlier) to v4 (Oxide engine). Covers risk assessment, @theme conversion, Oxide benchmarks, dependency alignment, and human-in-the-loop verification.
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/modernization/tailwind-upgrade-report.md`
 - **format:** Markdown report
 - **consumed_by:** audit-tailwind-config
 
 ## Prerequisites
 
-- Existing Tailwind configuration and usage inventoried (*audit command recommended)
+- Existing Tailwind configuration and usage inventoried (\*audit command recommended)
 - Node.js ≥ 18.17 (prefer 20+)
 - Access to CI pipelines and performance metrics
 - Visual regression tooling (Chromatic, Lost Pixel, or equivalent)
@@ -26,11 +27,13 @@ Plan and execute migration from Tailwind CSS v3 (or earlier) to v4 (Oxide engine
 ## Workflow
 
 ### 1. Discovery & Planning
+
 - Capture current Tailwind version, build times, CSS bundle size
 - Identify PostCSS/Sass/Less/Stylus usage (must be removed/replaced)
 - List third-party libraries dependent on `tailwind.config.js` (e.g. daisyUI)
 
 ### 2. Dry Run Upgrade
+
 - Create feature branch `chore/tailwind-v4-upgrade`
 - Run official upgrade CLI
   ```bash
@@ -40,12 +43,14 @@ Plan and execute migration from Tailwind CSS v3 (or earlier) to v4 (Oxide engine
 - Replace `tailwind.config.js` customizations with `@theme`, `@layer`, `@plugin` CSS equivalents
 
 ### 3. Token & Utility Validation
+
 - Ensure design tokens re-exported via `@theme` (core, semantic, component layers)
 - Regenerate CSS utilities relying on previous `theme.extend`
 - Validate arbitrary values still required; prefer tokenized utilities
 - Confirm `@container`, `@starting-style`, 3D transforms working
 
 ### 4. Benchmark Oxide Engine
+
 - Measure cold build, incremental build (with and without new CSS)
 - Target benchmarks (Catalyst reference):
   - Cold build ≤ 120ms (target <100ms)
@@ -54,16 +59,19 @@ Plan and execute migration from Tailwind CSS v3 (or earlier) to v4 (Oxide engine
 - Record metrics in README/Changelog
 
 ### 5. Regression Testing
+
 - Run full unit + integration suite
 - Execute visual regression (Chromatic/Lost Pixel) to detect class/utility drift
 - Verify dark mode, theming, and Tailwind plugins still functional
 
 ### 6. Documentation & Rollout
+
 - Update contributing docs with new `@theme` usage
 - Refresh `.cursorrules` / coding guidelines (Tailwind v4 best practices)
 - Communicate rollout checklist to team, include fallback steps
 
 ### 7. Update State
+
 - Log upgrade metadata in `.state.yaml` (tailwind_version, benchmarks, validation status)
 - Flag `tailwind_theme_validated: true` when `@theme` layers verified
 
@@ -112,6 +120,6 @@ Plan and execute migration from Tailwind CSS v3 (or earlier) to v4 (Oxide engine
 - Validate IDE tooling (Tailwind IntelliSense, Prettier plugin) upgraded to v4-aware releases
 - Encourage incremental adoption: keep feature flags until confidence is high
 
-
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

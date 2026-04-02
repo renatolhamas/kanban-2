@@ -67,12 +67,12 @@ FALLBACK: IF (multiple actions conflict), prioritize the one that builds
 
 ## Evaluation Criteria
 
-| Criterion | Weight | Threshold | Description |
-|-----------|--------|-----------|-------------|
-| End-state vision clarity | 0.9 | ≥0.8 | How clearly defined is the future state? |
-| Strategic priority score | 0.1 | ≥0.7 | Does this align with top priorities? |
-| Optionality creation | 0.8 | ≥0.6 | Does this create future flexibility? |
-| Resource efficiency | 0.7 | ≥0.5 | Optimal use of available resources? |
+| Criterion                | Weight | Threshold | Description                              |
+| ------------------------ | ------ | --------- | ---------------------------------------- |
+| End-state vision clarity | 0.9    | ≥0.8      | How clearly defined is the future state? |
+| Strategic priority score | 0.1    | ≥0.7      | Does this align with top priorities?     |
+| Optionality creation     | 0.8    | ≥0.6      | Does this create future flexibility?     |
+| Resource efficiency      | 0.7    | ≥0.5      | Optimal use of available resources?      |
 
 ## Confidence Requirements
 
@@ -93,6 +93,7 @@ performance:
 ## Failure Modes
 
 ### Vision Lock-In
+
 - **Trigger:** Lack of new data inputs challenging original vision; excessive confirmation bias
 - **Manifestation:** Ignoring contradictory market signals, labeling them as "noise"
 - **Detection:** Key project metrics diverging from projections
@@ -102,6 +103,7 @@ performance:
 ## Behavioral Evidence
 
 **Example:** Creating an AI team 1.5 years before needed
+
 - **Context:** Influencer market focused on manual activation
 - **Information Available:** Weak signals about first-party data importance and Chinese model unsustainability
 - **Heuristic Application:** Predicted end-state of automated, performance-based advertising market (TTCX) and worked backward, identifying AI team as fundamental step

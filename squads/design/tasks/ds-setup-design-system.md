@@ -13,6 +13,7 @@
 Initialize design system structure for greenfield or brownfield projects. Loads tokens from Brad's .state.yaml or prompts for manual setup. Creates directory structure, validates tokens, prepares for component generation. **v4.0: Supports agentic-ready setup (machine-readable infrastructure for AI consumption) and W3C DTCG v1.0 token format by default.**
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/setup/`
 - **format:** Directory structure with token config, framework scaffolding, and .state.yaml
 - **consumed_by:** ds-build-component
@@ -68,7 +69,7 @@ This task uses interactive elicitation to configure setup.
    - Create subdirectories: atoms/, molecules/, organisms/, templates/
    - Create tokens/ directory for token files
    - Create docs/ for pattern library documentation
-   - Create __tests__/ for test files
+   - Create **tests**/ for test files
    - Check: `test -d atoms/` AND `test -d molecules/` AND `test -d organisms/` AND `test -d tokens/` — abort with "Directory creation failed: {missing dir}"
 
 4. **Copy Token Files**
@@ -130,7 +131,7 @@ This task uses interactive elicitation to configure setup.
 # .state.yaml Merovingian setup section
 atlas_setup:
   completed_at: "2025-10-27T15:00:00Z"
-  starting_point: "brownfield"  # or "greenfield"
+  starting_point: "brownfield" # or "greenfield"
 
   configuration:
     component_directory: "src/design-system"
@@ -209,6 +210,7 @@ atlas_setup:
 ```
 
 Output:
+
 ```
 🏗️ Merovingian: Setting up design system structure...
 
@@ -254,6 +256,7 @@ Merovingian says: "Foundation is solid. Ready to build."
 ```
 
 Output:
+
 ```
 🏗️ Merovingian: No Brad state found. Starting greenfield setup...
 
@@ -285,8 +288,7 @@ User selects 1
 - Merovingian automatically creates TypeScript types for tokens
 - Base styles include CSS reset and token variables
 - Setup can be re-run safely (asks before overwriting)
-- Next step after setup: *build {pattern} to generate components
-
+- Next step after setup: \*build {pattern} to generate components
 
 ## Related Checklists
 
@@ -294,4 +296,5 @@ User selects 1
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

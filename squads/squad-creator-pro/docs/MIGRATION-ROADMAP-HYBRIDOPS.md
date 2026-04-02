@@ -10,6 +10,7 @@
 ## VISÃO GERAL
 
 Migrar patterns do HybridOps para fortalecer o squad-creator com:
+
 - **4 Modos do Pedro Valério** (validado com Pedro original)
 - **Veto Conditions** que bloqueiam artefatos ruins
 - **Task Anatomy** padronizado (8 campos)
@@ -19,12 +20,14 @@ Migrar patterns do HybridOps para fortalecer o squad-creator com:
 - **Integração com workflow** squad-chief → oalanicolas → pedro-valerio
 
 **EXCLUÍDO DO ESCOPO:**
+
 - ~~Dual-Mode Execution~~ (não aplicável ao squad-creator)
 - ~~ClickUp Integration~~ (não aplicável ao squad-creator)
 
 ---
 
 ## FASE 0: AGENT UPDATE (ANTES de tudo)
+
 **Objetivo:** Atualizar pedro-valerio.md com os 4 modos validados
 
 ### 0.1 Atualizar Agent File com 4 Modos
@@ -121,6 +124,7 @@ Me passa os insumos que eu construo os artefatos."
 ```
 
 **Acceptance Criteria:**
+
 - [ ] 4 modos documentados no agent file
 - [ ] Comandos mapeados por modo
 - [ ] Greeting atualizado
@@ -138,6 +142,7 @@ Me passa os insumos que eu construo os artefatos."
 **REGRA:** Squad-creator deve ser 100% self-contained. Nenhuma referência externa.
 
 **Estrutura a criar:**
+
 ```
 squads/squad-creator-pro/
 ├── minds/
@@ -152,6 +157,7 @@ squads/squad-creator-pro/
 ```
 
 **Comandos de cópia:**
+
 ```bash
 # Criar estrutura
 mkdir -p squads/squad-creator-pro/minds/pedro_valerio/{heuristics,artifacts}
@@ -172,6 +178,7 @@ cp squads/hybrid-ops-squad/minds/pedro_valerio/artifacts/Assinatura_Linguistica.
 ```
 
 **Sync com .claude/commands/:**
+
 ```bash
 # Copiar para commands também
 mkdir -p .claude/commands/squad-creator/minds/pedro_valerio/{heuristics,artifacts}
@@ -180,6 +187,7 @@ cp -r squads/squad-creator-pro/minds/pedro_valerio/* \
 ```
 
 **Acceptance Criteria:**
+
 - [ ] 3 heuristics copiados para squad-creator/minds/
 - [ ] 2 artifacts copiados para squad-creator/minds/
 - [ ] Zero referências externas
@@ -195,11 +203,13 @@ cp -r squads/squad-creator-pro/minds/pedro_valerio/* \
 **Task:** Sincronizar agent atualizado
 
 **Comando:**
+
 ```bash
 cp squads/squad-creator-pro/agents/pedro-valerio.md .claude/commands/squad-creator/agents/pedro-valerio.md
 ```
 
 **Ou usar script existente:**
+
 ```bash
 python squads/squad-creator-pro/scripts/sync-ide-command.py
 ```
@@ -209,6 +219,7 @@ python squads/squad-creator-pro/scripts/sync-ide-command.py
 ---
 
 ## FASE 1: FOUNDATION (Semana 1)
+
 **Objetivo:** Estabelecer base de veto conditions e task anatomy
 
 ### 1.1 Implementar Veto Conditions Framework
@@ -216,6 +227,7 @@ python squads/squad-creator-pro/scripts/sync-ide-command.py
 **Task:** Criar engine de veto conditions em quality gates
 
 **Arquivos a criar:**
+
 ```
 squads/squad-creator-pro/
 ├── config/
@@ -225,6 +237,7 @@ squads/squad-creator-pro/
 ```
 
 **Estrutura `veto-conditions.yaml`:**
+
 ```yaml
 veto_engine:
   version: "1.0"
@@ -286,11 +299,13 @@ veto_engine:
 ```
 
 **Integração em tasks:**
+
 - `validate-squad.md` - Adicionar veto checks por fase
 - `create-agent.md` - Adicionar SC_VC_002 check
 - `create-workflow.md` - Adicionar SC_VC_003 check
 
 **Acceptance Criteria:**
+
 - [ ] `veto-conditions.yaml` criado com 5+ conditions
 - [ ] Veto checks integrados em validate-squad.md
 - [ ] VETO bloqueia progresso até resolução
@@ -305,6 +320,7 @@ veto_engine:
 **Task:** Criar validador automático de task anatomy
 
 **Arquivos a criar/modificar:**
+
 ```
 squads/squad-creator-pro/
 ├── config/
@@ -316,6 +332,7 @@ squads/squad-creator-pro/
 ```
 
 **Schema `task-anatomy.yaml`:**
+
 ```yaml
 task_anatomy:
   version: "1.0"
@@ -389,6 +406,7 @@ task_anatomy:
 ```
 
 **Acceptance Criteria:**
+
 - [ ] `task-anatomy.yaml` schema criado
 - [ ] `task-anatomy-validator.py` implementado
 - [ ] Validação integrada em `create-task.md`
@@ -399,6 +417,7 @@ task_anatomy:
 ---
 
 ## FASE 2: HEURISTICS ENGINE (Semana 2)
+
 **Objetivo:** Implementar heuristics de validação com veto power
 
 ### 2.1 Implementar SC_HE_001 - Squad Vision Validation
@@ -450,46 +469,46 @@ heuristics:
 **Adicionar a `heuristics.yaml`:**
 
 ```yaml
-  SC_HE_002:
-    name: "Agent Coherence Scan"
-    source_pattern: "HO-HE-002 (PV_PA_001)"
-    phase: "agent_validation"
+SC_HE_002:
+  name: "Agent Coherence Scan"
+  source_pattern: "HO-HE-002 (PV_PA_001)"
+  phase: "agent_validation"
 
-    purpose: "Validate agent behavior matches documented persona"
+  purpose: "Validate agent behavior matches documented persona"
 
-    weights:
-      output_consistency: 1.0      # VETO power
-      persona_alignment: 0.9
-      guardrail_compliance: 1.0    # VETO power
+  weights:
+    output_consistency: 1.0 # VETO power
+    persona_alignment: 0.9
+    guardrail_compliance: 1.0 # VETO power
 
-    thresholds:
-      coherent: 0.7
-      inconsistent: 0.4
-      incoherent: 0.0
+  thresholds:
+    coherent: 0.7
+    inconsistent: 0.4
+    incoherent: 0.0
 
-    veto_conditions:
-      - condition: "output_consistency < 0.7"
-        action: "VETO - Agent output varies unexpectedly"
-      - condition: "guardrail_compliance < 1.0"
-        action: "VETO - Agent violates safety guardrails"
+  veto_conditions:
+    - condition: "output_consistency < 0.7"
+      action: "VETO - Agent output varies unexpectedly"
+    - condition: "guardrail_compliance < 1.0"
+      action: "VETO - Agent violates safety guardrails"
 
-    tests:
-      - name: "Consistency Test"
-        method: "Run same input 10x"
-        threshold: "10/10 identical outputs"
+  tests:
+    - name: "Consistency Test"
+      method: "Run same input 10x"
+      threshold: "10/10 identical outputs"
 
-      - name: "Persona Alignment Test"
-        method: "Compare output style to voice_dna"
-        threshold: ">90% alignment"
+    - name: "Persona Alignment Test"
+      method: "Compare output style to voice_dna"
+      threshold: ">90% alignment"
 
-      - name: "Guardrail Compliance Test"
-        method: "Test edge cases against anti_patterns"
-        threshold: "0 violations"
+    - name: "Guardrail Compliance Test"
+      method: "Test edge cases against anti_patterns"
+      threshold: "0 violations"
 
-    outcomes:
-      APPROVE: "Agent is coherent and reliable"
-      REVIEW: "Minor inconsistencies, investigate"
-      VETO: "Agent is incoherent, redesign required"
+  outcomes:
+    APPROVE: "Agent is coherent and reliable"
+    REVIEW: "Minor inconsistencies, investigate"
+    VETO: "Agent is incoherent, redesign required"
 ```
 
 **Esforço:** 4h
@@ -503,53 +522,53 @@ heuristics:
 **Adicionar a `heuristics.yaml`:**
 
 ```yaml
-  SC_HE_003:
-    name: "Workflow Automation Validation"
-    source_pattern: "HO-HE-003 (PV_PM_001)"
-    phase: "workflow_validation"
+SC_HE_003:
+  name: "Workflow Automation Validation"
+  source_pattern: "HO-HE-003 (PV_PM_001)"
+  phase: "workflow_validation"
 
-    purpose: "Ensure workflows have proper automation with guardrails"
+  purpose: "Ensure workflows have proper automation with guardrails"
 
-    automation_mandate:
-      rule_1: "Task repeated 2+ times → Document and automate"
-      rule_2: "Task repeated 3+ times without automation → Design failure"
-      rule_3: "Any automation MUST have 5 guardrails"
+  automation_mandate:
+    rule_1: "Task repeated 2+ times → Document and automate"
+    rule_2: "Task repeated 3+ times without automation → Design failure"
+    rule_3: "Any automation MUST have 5 guardrails"
 
-    required_guardrails:
-      - name: "loop_prevention"
-        description: "Max iterations, deduplication"
-      - name: "idempotency"
-        description: "Same input → same output"
-      - name: "audit_trail"
-        description: "Log all state changes"
-      - name: "manual_escape"
-        description: "Human override route"
-      - name: "retry_logic"
-        description: "Graceful failure handling"
+  required_guardrails:
+    - name: "loop_prevention"
+      description: "Max iterations, deduplication"
+    - name: "idempotency"
+      description: "Same input → same output"
+    - name: "audit_trail"
+      description: "Log all state changes"
+    - name: "manual_escape"
+      description: "Human override route"
+    - name: "retry_logic"
+      description: "Graceful failure handling"
 
-    weights:
-      guardrails_present: 1.0    # VETO power
-      checkpoint_coverage: 0.9
-      unidirectional_flow: 0.9
-      handoff_continuity: 0.8
+  weights:
+    guardrails_present: 1.0 # VETO power
+    checkpoint_coverage: 0.9
+    unidirectional_flow: 0.9
+    handoff_continuity: 0.8
 
-    validation_matrix:
-      - check: "Has checkpoints per phase"
-        required: true
-      - check: "Flow is unidirectional"
-        required: true
-      - check: "Veto conditions defined"
-        required: true
-      - check: "Zero time gaps in handoffs"
-        required: true
-      - check: "All 5 guardrails present"
-        required: true
-        veto_on_fail: true
+  validation_matrix:
+    - check: "Has checkpoints per phase"
+      required: true
+    - check: "Flow is unidirectional"
+      required: true
+    - check: "Veto conditions defined"
+      required: true
+    - check: "Zero time gaps in handoffs"
+      required: true
+    - check: "All 5 guardrails present"
+      required: true
+      veto_on_fail: true
 
-    outcomes:
-      APPROVE: "Workflow is well-designed"
-      REVIEW: "Missing non-critical elements"
-      VETO: "Missing guardrails or critical flaws"
+  outcomes:
+    APPROVE: "Workflow is well-designed"
+    REVIEW: "Missing non-critical elements"
+    VETO: "Missing guardrails or critical flaws"
 ```
 
 **Esforço:** 4h
@@ -557,6 +576,7 @@ heuristics:
 ---
 
 ## FASE 3: AXIOMA & QUALITY (Semana 3)
+
 **Objetivo:** Scoring multidimensional e quality gates avançados
 
 ### 3.1 Implementar Axioma 10-Dimensões
@@ -789,6 +809,7 @@ quality_gates:
 ---
 
 ## FASE 4: EXECUTOR & COHERENCE (Semana 4)
+
 **Objetivo:** Executor assignment validation e coherence detection
 
 ### 4.1 Implementar Executor Decision Tree
@@ -844,6 +865,7 @@ executor_validation:
 ```
 
 **Integração em `create-task.md`:**
+
 - Adicionar check de executor type vs task nature
 - Sugerir Worker quando Agent é overkill
 - WARN se Agent usado para deterministic task
@@ -915,6 +937,7 @@ class CoherenceValidator:
 ---
 
 ## FASE 5: INTEGRATION & DOCUMENTATION (Semana 5)
+
 **Objetivo:** Integrar tudo, atualizar squad-chief, e documentar
 
 ### 5.1 Integrar Patterns em Workflows
@@ -922,6 +945,7 @@ class CoherenceValidator:
 **Task:** Atualizar workflows para usar novos patterns
 
 **Arquivos a modificar:**
+
 - `workflows/wf-create-squad.yaml` - Adicionar veto checkpoints
 - `workflows/wf-validate-squad.yaml` - Integrar axioma scoring
 - `tasks/validate-squad.md` - Usar quality gates
@@ -972,6 +996,7 @@ review_commands:
 ```
 
 **Acceptance Criteria:**
+
 - [ ] Review commands usam patterns corretos
 - [ ] Routing para modos do Pedro documentado
 - [ ] Quality gates integrados
@@ -985,6 +1010,7 @@ review_commands:
 **Task:** Testar fluxo completo com os novos patterns
 
 **Teste:**
+
 ```
 1. squad-chief recebe demanda
 2. squad-chief delega para oalanicolas
@@ -996,6 +1022,7 @@ review_commands:
 ```
 
 **Acceptance Criteria:**
+
 - [ ] Fluxo completo funciona
 - [ ] Handoff template INSUMOS_READY validado
 - [ ] Veto conditions bloqueiam quando devem
@@ -1012,6 +1039,7 @@ review_commands:
 **Arquivo:** `squads/squad-creator-pro/docs/PATTERN-LIBRARY.md`
 
 Conteúdo:
+
 - Lista de todos patterns implementados
 - Quando usar cada pattern
 - Exemplos de aplicação
@@ -1027,6 +1055,7 @@ Conteúdo:
 **Task:** Atualizar docs com novos patterns
 
 **Arquivos a modificar:**
+
 - `docs/CONCEPTS.md` - Adicionar Veto Conditions, Axioma, 4 Modos
 - `docs/FAQ.md` - Perguntas sobre quality gates e modos
 - `README.md` - Mencionar heuristics engine e estrutura Squad OPS
@@ -1037,20 +1066,21 @@ Conteúdo:
 
 ## CRONOGRAMA CONSOLIDADO (REVISADO v1.1)
 
-| Semana | Fase | Deliverables | Esforço |
-|--------|------|--------------|---------|
-| **0** | Agent Update | pedro-valerio.md + 4 modos + Mind COPY + Sync | **7h** |
-| **1** | Foundation | Veto Conditions + Task Anatomy | 8h |
-| **2** | Heuristics | SC_HE_001, SC_HE_002, SC_HE_003 | 12h |
-| **3** | Quality | Axioma 10-Dim + Quality Gates | 14h |
-| **4** | Executor | Executor Validation + Coherence | 10h |
-| **5** | Integration | Workflows + squad-chief + Docs + Test E2E | **18h** |
+| Semana | Fase         | Deliverables                                  | Esforço |
+| ------ | ------------ | --------------------------------------------- | ------- |
+| **0**  | Agent Update | pedro-valerio.md + 4 modos + Mind COPY + Sync | **7h**  |
+| **1**  | Foundation   | Veto Conditions + Task Anatomy                | 8h      |
+| **2**  | Heuristics   | SC_HE_001, SC_HE_002, SC_HE_003               | 12h     |
+| **3**  | Quality      | Axioma 10-Dim + Quality Gates                 | 14h     |
+| **4**  | Executor     | Executor Validation + Coherence               | 10h     |
+| **5**  | Integration  | Workflows + squad-chief + Docs + Test E2E     | **18h** |
 
 **Total:** ~69h (6 semanas, ~11.5h/semana)
 
 **REGRA:** Squad-creator é 100% self-contained. Mind artifacts são COPIADOS, não referenciados.
 
 **Breakdown Fase 0:**
+
 - 0.1 Agent file com 4 modos: 4h
 - 0.2 Copiar mind artifacts: 1h
 - 0.3 Sync com .claude/commands/: 0.5h
@@ -1074,20 +1104,21 @@ Fase 0 ──┬──> Fase 1 ──> Fase 2 ──> Fase 3
 
 ### Métricas de Qualidade
 
-| Métrica | Antes | Meta |
-|---------|-------|------|
-| **Pedro Valério tem 4 modos** | 0 | 4 |
-| **Comandos mapeados por modo** | 0 | 12+ |
-| Agents com veto check | 0% | 100% |
-| Tasks com 8 campos | ~60% | 100% |
-| Workflows com guardrails | ~40% | 100% |
-| Squads com axioma score | 0% | 100% |
-| **Mind artifacts copiados** | 0 | 5 |
-| **Squad-chief usa quality gates** | 0 | 100% |
+| Métrica                           | Antes | Meta |
+| --------------------------------- | ----- | ---- |
+| **Pedro Valério tem 4 modos**     | 0     | 4    |
+| **Comandos mapeados por modo**    | 0     | 12+  |
+| Agents com veto check             | 0%    | 100% |
+| Tasks com 8 campos                | ~60%  | 100% |
+| Workflows com guardrails          | ~40%  | 100% |
+| Squads com axioma score           | 0%    | 100% |
+| **Mind artifacts copiados**       | 0     | 5    |
+| **Squad-chief usa quality gates** | 0     | 100% |
 
 ### Definição de Done
 
 **Fase 0 (CRÍTICO):**
+
 - [ ] pedro-valerio.md tem 4 modos documentados
 - [ ] Comandos mapeados: `*eng-*`, `*arq-*`, `*auto-*`, `*tmpl-*`
 - [ ] Greeting atualizado com modos
@@ -1095,6 +1126,7 @@ Fase 0 ──┬──> Fase 1 ──> Fase 2 ──> Fase 3
 - [ ] Sync com .claude/commands/ feito
 
 **Fases 1-4:**
+
 - [ ] Veto conditions bloqueiam artefatos ruins
 - [ ] Task anatomy é enforced automaticamente
 - [ ] Heuristics engine valida agents/workflows
@@ -1103,6 +1135,7 @@ Fase 0 ──┬──> Fase 1 ──> Fase 2 ──> Fase 3
 - [ ] Coherence validation detecta contradições
 
 **Fase 5:**
+
 - [ ] Squad-chief usa quality gates em reviews
 - [ ] Workflow E2E testado e funcionando
 - [ ] Handoff INSUMOS_READY validado
@@ -1113,12 +1146,12 @@ Fase 0 ──┬──> Fase 1 ──> Fase 2 ──> Fase 3
 
 ## RISCOS E MITIGAÇÕES
 
-| Risco | Probabilidade | Impacto | Mitigação |
-|-------|---------------|---------|-----------|
-| Over-engineering | Média | Alto | Começar com P1 patterns apenas |
-| Veto muito agressivo | Média | Médio | Tunning iterativo de thresholds |
-| Adoção lenta | Baixa | Médio | Documentação clara + exemplos |
-| Incompatibilidade | Baixa | Alto | Testar em squad existente primeiro |
+| Risco                | Probabilidade | Impacto | Mitigação                          |
+| -------------------- | ------------- | ------- | ---------------------------------- |
+| Over-engineering     | Média         | Alto    | Começar com P1 patterns apenas     |
+| Veto muito agressivo | Média         | Médio   | Tunning iterativo de thresholds    |
+| Adoção lenta         | Baixa         | Médio   | Documentação clara + exemplos      |
+| Incompatibilidade    | Baixa         | Alto    | Testar em squad existente primeiro |
 
 ---
 
@@ -1150,12 +1183,12 @@ Fase 0 ──┬──> Fase 1 ──> Fase 2 ──> Fase 3
 
 ## CHANGELOG
 
-| Versão | Data | Mudanças |
-|--------|------|----------|
-| v1.2 | 2026-02-10 | Self-contained: COPIAR artifacts em vez de referenciar |
-| v1.1 | 2026-02-10 | Adicionado Fase 0, Mind Artifacts, Squad-chief integration |
-| v1.0 | 2026-02-10 | Versão inicial |
+| Versão | Data       | Mudanças                                                   |
+| ------ | ---------- | ---------------------------------------------------------- |
+| v1.2   | 2026-02-10 | Self-contained: COPIAR artifacts em vez de referenciar     |
+| v1.1   | 2026-02-10 | Adicionado Fase 0, Mind Artifacts, Squad-chief integration |
+| v1.0   | 2026-02-10 | Versão inicial                                             |
 
 ---
 
-*Roadmap v1.2 - 2026-02-10*
+_Roadmap v1.2 - 2026-02-10_

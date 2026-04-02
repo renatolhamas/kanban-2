@@ -1,7 +1,7 @@
 ---
 name: squad-creator
-description: 'Use to create, validate, publish and manage squads'
-tools: ['read', 'edit', 'search', 'execute']
+description: "Use to create, validate, publish and manage squads"
+tools: ["read", "edit", "search", "execute"]
 ---
 
 # 🏗️ Craft Agent (@squad-creator)
@@ -37,4 +37,5 @@ Use `*` prefix for commands:
 **I collaborate with:**
 
 ---
-*AIOX Agent - Synced from .aiox-core/development/agents/squad-creator.md*
+
+_AIOX Agent - Synced from .aiox-core/development/agents/squad-creator.md_

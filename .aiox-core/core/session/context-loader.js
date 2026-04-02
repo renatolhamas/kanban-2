@@ -15,11 +15,15 @@
  * Part of Story 6.1.2.5 UX Improvements
  */
 
-const fs = require('fs');
-const path = require('path');
-const ContextDetector = require('./context-detector');
+const fs = require("fs");
+const path = require("path");
+const ContextDetector = require("./context-detector");
 
-const SESSION_STATE_PATH = path.join(process.cwd(), '.aiox', 'session-state.json');
+const SESSION_STATE_PATH = path.join(
+  process.cwd(),
+  ".aiox",
+  "session-state.json",
+);
 const MAX_COMMANDS_HISTORY = 10;
 
 class SessionContextLoader {
@@ -36,13 +40,16 @@ class SessionContextLoader {
    */
   loadContext(currentAgentId) {
     // Pass sessionStatePath to detector so it uses the correct file (important for testing)
-    const sessionType = this.detector.detectSessionType([], this.sessionStatePath);
+    const sessionType = this.detector.detectSessionType(
+      [],
+      this.sessionStatePath,
+    );
     const sessionState = this.loadSessionState();
 
-    if (sessionType === 'new') {
+    if (sessionType === "new") {
       // Fresh session - no context
       return {
-        sessionType: 'new',
+        sessionType: "new",
         message: null,
         previousAgent: null,
         lastCommands: [],
@@ -87,10 +94,13 @@ class SessionContextLoader {
         return {};
       }
 
-      const content = fs.readFileSync(this.sessionStatePath, 'utf8');
+      const content = fs.readFileSync(this.sessionStatePath, "utf8");
       return JSON.parse(content);
     } catch (error) {
-      console.warn('[SessionContext] Failed to load session state:', error.message);
+      console.warn(
+        "[SessionContext] Failed to load session state:",
+        error.message,
+      );
       return {};
     }
   }
@@ -132,9 +142,10 @@ class SessionContextLoader {
    * @returns {string|null} Context message
    */
   generateContextMessage(context) {
-    const { sessionType, previousAgent, lastCommands, workflowActive } = context;
+    const { sessionType, previousAgent, lastCommands, workflowActive } =
+      context;
 
-    if (sessionType === 'new') {
+    if (sessionType === "new") {
       return null;
     }
 
@@ -143,10 +154,19 @@ class SessionContextLoader {
     // Previous agent context
     if (previousAgent) {
       const agentName = previousAgent.agentName || previousAgent.agentId;
-      const minutesAgo = Math.floor((Date.now() - previousAgent.activatedAt) / 60000);
-      const timeAgo = minutesAgo < 1 ? 'just now' : minutesAgo === 1 ? '1 minute ago' : `${minutesAgo} minutes ago`;
+      const minutesAgo = Math.floor(
+        (Date.now() - previousAgent.activatedAt) / 60000,
+      );
+      const timeAgo =
+        minutesAgo < 1
+          ? "just now"
+          : minutesAgo === 1
+            ? "1 minute ago"
+            : `${minutesAgo} minutes ago`;
 
-      parts.push(`📍 **Session Context**: Continuing from @${previousAgent.agentId} (${agentName}) activated ${timeAgo}`);
+      parts.push(
+        `📍 **Session Context**: Continuing from @${previousAgent.agentId} (${agentName}) activated ${timeAgo}`,
+      );
 
       if (previousAgent.lastCommand) {
         parts.push(`   Last action: *${previousAgent.lastCommand}`);
@@ -155,7 +175,7 @@ class SessionContextLoader {
 
     // Recent commands
     if (lastCommands.length > 0) {
-      const recentCmds = lastCommands.slice(-5).join(', *');
+      const recentCmds = lastCommands.slice(-5).join(", *");
       parts.push(`   Recent commands: *${recentCmds}`);
     }
 
@@ -164,7 +184,7 @@ class SessionContextLoader {
       parts.push(`   ⚡ Active Workflow: ${workflowActive}`);
     }
 
-    return parts.length > 0 ? parts.join('\n') : null;
+    return parts.length > 0 ? parts.join("\n") : null;
   }
 
   /**
@@ -215,7 +235,8 @@ class SessionContextLoader {
 
         // Keep last N commands
         if (sessionState.lastCommands.length > MAX_COMMANDS_HISTORY) {
-          sessionState.lastCommands = sessionState.lastCommands.slice(-MAX_COMMANDS_HISTORY);
+          sessionState.lastCommands =
+            sessionState.lastCommands.slice(-MAX_COMMANDS_HISTORY);
         }
       }
 
@@ -227,7 +248,7 @@ class SessionContextLoader {
       // Save to file
       this.detector.updateSessionState(sessionState, this.sessionStatePath);
     } catch (error) {
-      console.warn('[SessionContext] Failed to update session:', error.message);
+      console.warn("[SessionContext] Failed to update session:", error.message);
     }
   }
 
@@ -240,7 +261,7 @@ class SessionContextLoader {
         fs.unlinkSync(this.sessionStatePath);
       }
     } catch (error) {
-      console.warn('[SessionContext] Failed to clear session:', error.message);
+      console.warn("[SessionContext] Failed to clear session:", error.message);
     }
   }
 
@@ -254,7 +275,7 @@ class SessionContextLoader {
     const context = this.loadContext(currentAgentId);
 
     if (!context.message) {
-      return '';
+      return "";
     }
 
     return `\n${context.message}\n`;
@@ -290,12 +311,13 @@ class SessionContextLoader {
         sessionState.lastCommands = [];
       }
 
-      const commandEntry = taskName.startsWith('*') ? taskName : `*${taskName}`;
+      const commandEntry = taskName.startsWith("*") ? taskName : `*${taskName}`;
       sessionState.lastCommands.push(commandEntry);
 
       // Keep last N commands
       if (sessionState.lastCommands.length > MAX_COMMANDS_HISTORY) {
-        sessionState.lastCommands = sessionState.lastCommands.slice(-MAX_COMMANDS_HISTORY);
+        sessionState.lastCommands =
+          sessionState.lastCommands.slice(-MAX_COMMANDS_HISTORY);
       }
 
       // Update task completion history
@@ -337,7 +359,10 @@ class SessionContextLoader {
         workflowState: sessionState.workflowState,
       };
     } catch (error) {
-      console.warn('[SessionContext] Failed to record task completion:', error.message);
+      console.warn(
+        "[SessionContext] Failed to record task completion:",
+        error.message,
+      );
       return { success: false, error: error.message };
     }
   }
@@ -351,27 +376,51 @@ class SessionContextLoader {
    * @private
    */
   _inferWorkflowState(taskName, _result) {
-    const normalizedTask = taskName.toLowerCase().replace(/^\*/, '');
+    const normalizedTask = taskName.toLowerCase().replace(/^\*/, "");
 
     // Map task completions to workflow states
     const stateMap = {
-      'validate-story-draft': { workflow: 'story_development', state: 'validated' },
-      'validate-next-story': { workflow: 'story_development', state: 'validated' },
-      'develop': { workflow: 'story_development', state: 'in_development' },
-      'develop-yolo': { workflow: 'story_development', state: 'in_development' },
-      'develop-interactive': { workflow: 'story_development', state: 'in_development' },
-      'review-qa': { workflow: 'story_development', state: 'qa_reviewed' },
-      'apply-qa-fixes': { workflow: 'story_development', state: 'qa_reviewed' },
-      'pre-push-quality-gate': { workflow: 'git_workflow', state: 'staged' },
-      'create-epic': { workflow: 'epic_creation', state: 'epic_drafted' },
-      'create-story': { workflow: 'epic_creation', state: 'stories_created' },
-      'create-next-story': { workflow: 'epic_creation', state: 'stories_created' },
-      'backlog-review': { workflow: 'backlog_management', state: 'reviewed' },
-      'backlog-prioritize': { workflow: 'backlog_management', state: 'prioritized' },
-      'analyze-impact': { workflow: 'architecture_review', state: 'analyzed' },
-      'create-doc': { workflow: 'documentation_workflow', state: 'drafted' },
-      'db-domain-modeling': { workflow: 'database_workflow', state: 'designed' },
-      'db-apply-migration': { workflow: 'database_workflow', state: 'migrated' },
+      "validate-story-draft": {
+        workflow: "story_development",
+        state: "validated",
+      },
+      "validate-next-story": {
+        workflow: "story_development",
+        state: "validated",
+      },
+      develop: { workflow: "story_development", state: "in_development" },
+      "develop-yolo": {
+        workflow: "story_development",
+        state: "in_development",
+      },
+      "develop-interactive": {
+        workflow: "story_development",
+        state: "in_development",
+      },
+      "review-qa": { workflow: "story_development", state: "qa_reviewed" },
+      "apply-qa-fixes": { workflow: "story_development", state: "qa_reviewed" },
+      "pre-push-quality-gate": { workflow: "git_workflow", state: "staged" },
+      "create-epic": { workflow: "epic_creation", state: "epic_drafted" },
+      "create-story": { workflow: "epic_creation", state: "stories_created" },
+      "create-next-story": {
+        workflow: "epic_creation",
+        state: "stories_created",
+      },
+      "backlog-review": { workflow: "backlog_management", state: "reviewed" },
+      "backlog-prioritize": {
+        workflow: "backlog_management",
+        state: "prioritized",
+      },
+      "analyze-impact": { workflow: "architecture_review", state: "analyzed" },
+      "create-doc": { workflow: "documentation_workflow", state: "drafted" },
+      "db-domain-modeling": {
+        workflow: "database_workflow",
+        state: "designed",
+      },
+      "db-apply-migration": {
+        workflow: "database_workflow",
+        state: "migrated",
+      },
     };
 
     return stateMap[normalizedTask] || null;
@@ -419,23 +468,23 @@ class SessionContextLoader {
 if (require.main === module) {
   const loader = new SessionContextLoader();
   const command = process.argv[2];
-  const agentId = process.argv[3] || 'dev';
+  const agentId = process.argv[3] || "dev";
 
-  if (command === 'load') {
+  if (command === "load") {
     const context = loader.loadContext(agentId);
     console.log(JSON.stringify(context, null, 2));
-  } else if (command === 'clear') {
+  } else if (command === "clear") {
     loader.clearSession();
-    console.log('✅ Session cleared');
-  } else if (command === 'update') {
+    console.log("✅ Session cleared");
+  } else if (command === "update") {
     const agentName = process.argv[4] || agentId.toUpperCase();
     const lastCommand = process.argv[5] || null;
     loader.updateSession(agentId, agentName, lastCommand);
-    console.log('✅ Session updated');
+    console.log("✅ Session updated");
   } else {
     // Default: show greeting format
     const message = loader.formatForGreeting(agentId);
-    console.log(message || '(No session context)');
+    console.log(message || "(No session context)");
   }
 }
 

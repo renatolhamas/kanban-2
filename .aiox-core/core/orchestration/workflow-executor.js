@@ -16,17 +16,17 @@
  * @version 1.1.0
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const fsSync = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
 // Import dependencies from Story 11.1, 11.2, and 11.5
-const ExecutorAssignment = require('./executor-assignment');
-const TerminalSpawner = require('./terminal-spawner');
-const { SessionState, ActionType } = require('./session-state');
+const ExecutorAssignment = require("./executor-assignment");
+const TerminalSpawner = require("./terminal-spawner");
+const { SessionState, ActionType } = require("./session-state");
 
 // Constants
 const DEFAULT_TIMEOUT_MS = 7200000; // 2 hours
@@ -38,11 +38,11 @@ const STATE_SAVE_INTERVAL_MS = 300000; // 5 minutes
  * @enum {string}
  */
 const PhaseStatus = {
-  PENDING: 'pending',
-  RUNNING: 'running',
-  COMPLETED: 'completed',
-  FAILED: 'failed',
-  SKIPPED: 'skipped',
+  PENDING: "pending",
+  RUNNING: "running",
+  COMPLETED: "completed",
+  FAILED: "failed",
+  SKIPPED: "skipped",
 };
 
 /**
@@ -50,10 +50,10 @@ const PhaseStatus = {
  * @enum {string}
  */
 const CheckpointDecision = {
-  GO: 'GO',
-  PAUSE: 'PAUSE',
-  REVIEW: 'REVIEW',
-  ABORT: 'ABORT',
+  GO: "GO",
+  PAUSE: "PAUSE",
+  REVIEW: "REVIEW",
+  ABORT: "ABORT",
 };
 
 /**
@@ -92,10 +92,10 @@ class WorkflowExecutor {
 
     this.workflowPath = path.join(
       projectRoot,
-      '.aiox-core/development/workflows/development-cycle.yaml',
+      ".aiox-core/development/workflows/development-cycle.yaml",
     );
-    this.statePath = path.join(projectRoot, '.aiox/workflow-state/');
-    this.configPath = path.join(projectRoot, '.aiox-core/core-config.yaml');
+    this.statePath = path.join(projectRoot, ".aiox/workflow-state/");
+    this.configPath = path.join(projectRoot, ".aiox-core/core-config.yaml");
 
     this.workflow = null;
     this.state = null;
@@ -116,7 +116,7 @@ class WorkflowExecutor {
    * @returns {void}
    */
   onPhaseChange(callback) {
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
       this._phaseChangeCallbacks.push(callback);
     }
   }
@@ -127,7 +127,7 @@ class WorkflowExecutor {
    * @returns {void}
    */
   onAgentSpawn(callback) {
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
       this._agentSpawnCallbacks.push(callback);
     }
   }
@@ -138,7 +138,7 @@ class WorkflowExecutor {
    * @returns {void}
    */
   onTerminalSpawn(callback) {
-    if (typeof callback === 'function') {
+    if (typeof callback === "function") {
       this._terminalSpawnCallbacks.push(callback);
     }
   }
@@ -156,7 +156,9 @@ class WorkflowExecutor {
         callback(phase, storyId, executor);
       } catch (error) {
         if (this.options.debug) {
-          console.log(`[WorkflowExecutor] Phase change callback error: ${error.message}`);
+          console.log(
+            `[WorkflowExecutor] Phase change callback error: ${error.message}`,
+          );
         }
       }
     }
@@ -174,7 +176,9 @@ class WorkflowExecutor {
         callback(agent, task);
       } catch (error) {
         if (this.options.debug) {
-          console.log(`[WorkflowExecutor] Agent spawn callback error: ${error.message}`);
+          console.log(
+            `[WorkflowExecutor] Agent spawn callback error: ${error.message}`,
+          );
         }
       }
     }
@@ -193,7 +197,9 @@ class WorkflowExecutor {
         callback(agent, pid, task);
       } catch (error) {
         if (this.options.debug) {
-          console.log(`[WorkflowExecutor] Terminal spawn callback error: ${error.message}`);
+          console.log(
+            `[WorkflowExecutor] Terminal spawn callback error: ${error.message}`,
+          );
         }
       }
     }
@@ -204,7 +210,7 @@ class WorkflowExecutor {
    * @returns {Promise<Object>} Workflow definition
    */
   async loadWorkflow() {
-    const content = await fs.readFile(this.workflowPath, 'utf8');
+    const content = await fs.readFile(this.workflowPath, "utf8");
     this.workflow = yaml.load(content);
     return this.workflow;
   }
@@ -215,11 +221,13 @@ class WorkflowExecutor {
    */
   async loadConfig() {
     try {
-      const content = await fs.readFile(this.configPath, 'utf8');
+      const content = await fs.readFile(this.configPath, "utf8");
       this.config = yaml.load(content);
     } catch (error) {
       if (this.options.debug) {
-        console.log(`[WorkflowExecutor] Config not found at ${this.configPath}, using defaults`);
+        console.log(
+          `[WorkflowExecutor] Config not found at ${this.configPath}, using defaults`,
+        );
         console.log(`[WorkflowExecutor] Error: ${error.message}`);
       }
       this.config = { coderabbit_integration: { enabled: false } };
@@ -237,7 +245,7 @@ class WorkflowExecutor {
 
     // Check for existing state
     if (this.options.autoResume && fsSync.existsSync(stateFile)) {
-      const content = await fs.readFile(stateFile, 'utf8');
+      const content = await fs.readFile(stateFile, "utf8");
       this.state = yaml.load(content);
       this.state.lastUpdated = new Date();
 
@@ -250,8 +258,8 @@ class WorkflowExecutor {
 
     // Create new state
     this.state = {
-      workflowId: 'development-cycle',
-      currentPhase: '1_validation',
+      workflowId: "development-cycle",
+      currentPhase: "1_validation",
       currentStory: storyPath,
       executor: null,
       qualityGate: null,
@@ -272,7 +280,7 @@ class WorkflowExecutor {
    * @returns {string} State file path
    */
   getStateFilePath(storyPath) {
-    const storyName = path.basename(storyPath, '.story.md');
+    const storyName = path.basename(storyPath, ".story.md");
     return path.join(this.statePath, `${storyName}-state.yaml`);
   }
 
@@ -312,15 +320,16 @@ class WorkflowExecutor {
 
       // Map phase ID to phase name
       const phaseNameMap = {
-        '1_validation': 'validation',
-        '2_development': 'development',
-        '3_self_healing': 'self_healing',
-        '4_quality_gate': 'quality_gate',
-        '5_push': 'push',
-        '6_checkpoint': 'checkpoint',
+        "1_validation": "validation",
+        "2_development": "development",
+        "3_self_healing": "self_healing",
+        "4_quality_gate": "quality_gate",
+        "5_push": "push",
+        "6_checkpoint": "checkpoint",
       };
 
-      const phaseName = phaseNameMap[this.state.currentPhase] || this.state.currentPhase;
+      const phaseName =
+        phaseNameMap[this.state.currentPhase] || this.state.currentPhase;
 
       await this.sessionState.updateSessionState({
         workflow: {
@@ -339,12 +348,16 @@ class WorkflowExecutor {
       });
 
       if (this.options.debug) {
-        console.log(`[WorkflowExecutor] Synced to session state: phase=${phaseName}`);
+        console.log(
+          `[WorkflowExecutor] Synced to session state: phase=${phaseName}`,
+        );
       }
     } catch (error) {
       // Non-fatal - log and continue
       if (this.options.debug) {
-        console.log(`[WorkflowExecutor] Session state sync failed: ${error.message}`);
+        console.log(
+          `[WorkflowExecutor] Session state sync failed: ${error.message}`,
+        );
       }
     }
   }
@@ -355,7 +368,7 @@ class WorkflowExecutor {
    * @returns {Promise<Object>} Story metadata
    */
   async readStoryMetadata(storyPath) {
-    const content = await fs.readFile(storyPath, 'utf8');
+    const content = await fs.readFile(storyPath, "utf8");
 
     // Extract YAML from markdown frontmatter
     const yamlMatch = content.match(/```yaml\n([\s\S]*?)```/);
@@ -386,7 +399,7 @@ class WorkflowExecutor {
     this.state.qualityGate = storyMetadata.quality_gate;
 
     if (this.options.debug) {
-      console.log('[WorkflowExecutor] Starting workflow execution');
+      console.log("[WorkflowExecutor] Starting workflow execution");
       console.log(`  Story: ${storyPath}`);
       console.log(`  Executor: ${this.state.executor}`);
       console.log(`  Quality Gate: ${this.state.qualityGate}`);
@@ -397,7 +410,11 @@ class WorkflowExecutor {
     let continueExecution = true;
 
     while (continueExecution) {
-      const phaseResult = await this.executePhase(currentPhase, storyPath, epicContext);
+      const phaseResult = await this.executePhase(
+        currentPhase,
+        storyPath,
+        epicContext,
+      );
       this.state.phaseResults[currentPhase] = phaseResult;
       await this.saveState();
 
@@ -419,9 +436,9 @@ class WorkflowExecutor {
 
         if (!currentPhase) {
           continueExecution = false;
-        } else if (currentPhase === 'workflow_paused') {
+        } else if (currentPhase === "workflow_paused") {
           continueExecution = false;
-        } else if (currentPhase === 'workflow_aborted') {
+        } else if (currentPhase === "workflow_aborted") {
           continueExecution = false;
         }
 
@@ -434,7 +451,9 @@ class WorkflowExecutor {
     }
 
     return {
-      success: this.state.phaseResults['6_checkpoint']?.decision !== CheckpointDecision.ABORT,
+      success:
+        this.state.phaseResults["6_checkpoint"]?.decision !==
+        CheckpointDecision.ABORT,
       state: this.state,
       phaseResults: this.state.phaseResults,
     };
@@ -451,7 +470,10 @@ class WorkflowExecutor {
     const phase = this.workflow.workflow.phases[phaseId];
 
     if (!phase) {
-      return { status: PhaseStatus.FAILED, error: `Phase not found: ${phaseId}` };
+      return {
+        status: PhaseStatus.FAILED,
+        error: `Phase not found: ${phaseId}`,
+      };
     }
 
     if (this.options.debug) {
@@ -462,7 +484,7 @@ class WorkflowExecutor {
     if (phase.condition) {
       const conditionMet = this.evaluateCondition(phase.condition);
       if (!conditionMet) {
-        return { status: PhaseStatus.SKIPPED, reason: 'Condition not met' };
+        return { status: PhaseStatus.SKIPPED, reason: "Condition not met" };
       }
     }
 
@@ -470,25 +492,33 @@ class WorkflowExecutor {
     const agent = this.resolveAgent(phase.agent);
 
     // Story 12.6: Emit phase change for observability (AC1, AC2)
-    const storyId = path.basename(storyPath, '.story.md');
+    const storyId = path.basename(storyPath, ".story.md");
     this._emitPhaseChange(phaseId, storyId, agent);
 
     // Execute based on phase type
     switch (phaseId) {
-      case '1_validation':
-        return this.executeValidationPhase(phase, agent, storyPath, epicContext);
-      case '2_development':
+      case "1_validation":
+        return this.executeValidationPhase(
+          phase,
+          agent,
+          storyPath,
+          epicContext,
+        );
+      case "2_development":
         return this.executeDevelopmentPhase(phase, agent, storyPath);
-      case '3_self_healing':
+      case "3_self_healing":
         return this.executeSelfHealingPhase(phase, agent);
-      case '4_quality_gate':
+      case "4_quality_gate":
         return this.executeQualityGatePhase(phase, agent, storyPath);
-      case '5_push':
+      case "5_push":
         return this.executePushPhase(phase, agent, storyPath);
-      case '6_checkpoint':
+      case "6_checkpoint":
         return this.executeCheckpointPhase(phase, agent, storyPath);
       default:
-        return { status: PhaseStatus.FAILED, error: `Unknown phase: ${phaseId}` };
+        return {
+          status: PhaseStatus.FAILED,
+          error: `Unknown phase: ${phaseId}`,
+        };
     }
   }
 
@@ -498,10 +528,10 @@ class WorkflowExecutor {
    * @returns {string} Resolved agent ID
    */
   resolveAgent(agentRef) {
-    if (agentRef === '${story.executor}') {
+    if (agentRef === "${story.executor}") {
       return this.state.executor;
     }
-    if (agentRef === '${story.quality_gate}') {
+    if (agentRef === "${story.quality_gate}") {
       return this.state.qualityGate;
     }
     return agentRef;
@@ -514,7 +544,7 @@ class WorkflowExecutor {
    */
   evaluateCondition(condition) {
     // Handle CodeRabbit integration check
-    if (condition.includes('coderabbit_integration.enabled')) {
+    if (condition.includes("coderabbit_integration.enabled")) {
       return this.config?.coderabbit_integration?.enabled === true;
     }
     return true;
@@ -536,13 +566,13 @@ class WorkflowExecutor {
       const issues = [];
 
       if (!storyMetadata.executor) {
-        issues.push('Story must have an executor assigned');
+        issues.push("Story must have an executor assigned");
       }
       if (!storyMetadata.quality_gate) {
-        issues.push('Story must have a quality_gate assigned');
+        issues.push("Story must have a quality_gate assigned");
       }
       if (storyMetadata.executor === storyMetadata.quality_gate) {
-        issues.push('Executor and Quality Gate must be different agents');
+        issues.push("Executor and Quality Gate must be different agents");
       }
 
       // Validate executor assignment using Story 11.1
@@ -550,7 +580,9 @@ class WorkflowExecutor {
         const validation = ExecutorAssignment.validateExecutorAssignment({
           executor: storyMetadata.executor,
           quality_gate: storyMetadata.quality_gate,
-          quality_gate_tools: storyMetadata.quality_gate_tools || ['code_review'],
+          quality_gate_tools: storyMetadata.quality_gate_tools || [
+            "code_review",
+          ],
         });
         if (!validation.isValid) {
           issues.push(...validation.errors);
@@ -597,7 +629,7 @@ class WorkflowExecutor {
       }
 
       // Story 12.6: Emit agent spawn for observability (AC1)
-      this._emitAgentSpawn(agent, 'development');
+      this._emitAgentSpawn(agent, "development");
 
       // Use terminal spawning (Story 11.2)
       if (phase.spawn_in_terminal && TerminalSpawner.isSpawnerAvailable()) {
@@ -608,15 +640,19 @@ class WorkflowExecutor {
           metadata: this.state.accumulatedContext,
         };
 
-        const result = await TerminalSpawner.spawnAgent(agent.replace('@', ''), 'develop', {
-          context,
-          timeout: DEFAULT_TIMEOUT_MS,
-          debug: this.options.debug,
-        });
+        const result = await TerminalSpawner.spawnAgent(
+          agent.replace("@", ""),
+          "develop",
+          {
+            context,
+            timeout: DEFAULT_TIMEOUT_MS,
+            debug: this.options.debug,
+          },
+        );
 
         // Story 12.6: Emit terminal spawn for observability (AC1)
         if (result.pid) {
-          this._emitTerminalSpawn(agent, result.pid, 'development');
+          this._emitTerminalSpawn(agent, result.pid, "development");
         }
 
         return {
@@ -639,7 +675,7 @@ class WorkflowExecutor {
           files_modified: [],
           tests_added: [],
         },
-        note: 'Terminal spawning not available, manual execution required',
+        note: "Terminal spawning not available, manual execution required",
       };
     } catch (error) {
       return {
@@ -658,8 +694,14 @@ class WorkflowExecutor {
    */
   async executeSelfHealingPhase(phase, agent) {
     try {
-      const maxIterations = phase.config?.max_iterations || this.config?.coderabbit_integration?.self_healing?.max_iterations || 3;
-      const severityFilter = phase.config?.severity_filter || ['CRITICAL', 'HIGH'];
+      const maxIterations =
+        phase.config?.max_iterations ||
+        this.config?.coderabbit_integration?.self_healing?.max_iterations ||
+        3;
+      const severityFilter = phase.config?.severity_filter || [
+        "CRITICAL",
+        "HIGH",
+      ];
       let iterations = 0;
       const issuesFixed = [];
       const issuesRemaining = [];
@@ -668,11 +710,13 @@ class WorkflowExecutor {
       const coderabbitConfig = this.config?.coderabbit_integration;
       if (!coderabbitConfig?.enabled) {
         if (this.options.debug) {
-          console.log('[WorkflowExecutor] CodeRabbit not enabled, skipping self-healing');
+          console.log(
+            "[WorkflowExecutor] CodeRabbit not enabled, skipping self-healing",
+          );
         }
         return {
           status: PhaseStatus.SKIPPED,
-          reason: 'CodeRabbit integration not enabled',
+          reason: "CodeRabbit integration not enabled",
         };
       }
 
@@ -681,15 +725,20 @@ class WorkflowExecutor {
         iterations++;
 
         if (this.options.debug) {
-          console.log(`[WorkflowExecutor] Self-healing iteration ${iterations}/${maxIterations}`);
+          console.log(
+            `[WorkflowExecutor] Self-healing iteration ${iterations}/${maxIterations}`,
+          );
         }
 
         // Run CodeRabbit analysis
-        const analysisResult = await this.runCodeRabbitAnalysis(coderabbitConfig);
+        const analysisResult =
+          await this.runCodeRabbitAnalysis(coderabbitConfig);
 
         if (!analysisResult.success) {
           if (this.options.debug) {
-            console.log(`[WorkflowExecutor] CodeRabbit analysis failed: ${analysisResult.error}`);
+            console.log(
+              `[WorkflowExecutor] CodeRabbit analysis failed: ${analysisResult.error}`,
+            );
           }
           // Graceful degradation - continue without self-healing
           if (coderabbitConfig.graceful_degradation?.skip_if_not_installed) {
@@ -699,7 +748,9 @@ class WorkflowExecutor {
                 iterations,
                 issues_fixed: issuesFixed,
                 issues_remaining: issuesRemaining,
-                note: analysisResult.error || coderabbitConfig.graceful_degradation?.fallback_message,
+                note:
+                  analysisResult.error ||
+                  coderabbitConfig.graceful_degradation?.fallback_message,
               },
             };
           }
@@ -707,13 +758,15 @@ class WorkflowExecutor {
         }
 
         // Filter issues by severity
-        const relevantIssues = analysisResult.issues.filter(
-          (issue) => severityFilter.includes(issue.severity),
+        const relevantIssues = analysisResult.issues.filter((issue) =>
+          severityFilter.includes(issue.severity),
         );
 
         if (relevantIssues.length === 0) {
           if (this.options.debug) {
-            console.log('[WorkflowExecutor] No relevant issues found, self-healing complete');
+            console.log(
+              "[WorkflowExecutor] No relevant issues found, self-healing complete",
+            );
           }
           break;
         }
@@ -742,7 +795,9 @@ class WorkflowExecutor {
         // If no issues were fixed in this iteration, stop
         if (issuesFixed.length === 0 && iterations > 1) {
           if (this.options.debug) {
-            console.log('[WorkflowExecutor] No issues fixed in iteration, stopping');
+            console.log(
+              "[WorkflowExecutor] No issues fixed in iteration, stopping",
+            );
           }
           break;
         }
@@ -774,17 +829,19 @@ class WorkflowExecutor {
    */
   async runCodeRabbitAnalysis(coderabbitConfig) {
     try {
-      const { exec } = require('child_process');
-      const { promisify } = require('util');
+      const { exec } = require("child_process");
+      const { promisify } = require("util");
       const execAsync = promisify(exec);
 
       // Build command based on installation mode
       let command;
-      if (coderabbitConfig.installation_mode === 'wsl') {
-        const wslPath = this.projectRoot.replace(/^([A-Z]):/, (_, drive) => `/mnt/${drive.toLowerCase()}`).replace(/\\/g, '/');
+      if (coderabbitConfig.installation_mode === "wsl") {
+        const wslPath = this.projectRoot
+          .replace(/^([A-Z]):/, (_, drive) => `/mnt/${drive.toLowerCase()}`)
+          .replace(/\\/g, "/");
         command = `wsl bash -c 'cd "${wslPath}" && ~/.local/bin/coderabbit --prompt-only -t uncommitted 2>&1'`;
       } else {
-        command = 'coderabbit --prompt-only -t uncommitted';
+        command = "coderabbit --prompt-only -t uncommitted";
       }
 
       if (this.options.debug) {
@@ -792,7 +849,8 @@ class WorkflowExecutor {
       }
 
       const { stdout, stderr } = await execAsync(command, {
-        timeout: (coderabbitConfig.self_healing?.timeout_minutes || 30) * 60 * 1000,
+        timeout:
+          (coderabbitConfig.self_healing?.timeout_minutes || 30) * 60 * 1000,
         maxBuffer: 10 * 1024 * 1024, // 10MB
       });
 
@@ -806,10 +864,10 @@ class WorkflowExecutor {
       };
     } catch (error) {
       // Handle command not found or execution errors
-      if (error.code === 'ENOENT' || error.message?.includes('not found')) {
+      if (error.code === "ENOENT" || error.message?.includes("not found")) {
         return {
           success: false,
-          error: 'CodeRabbit CLI not installed',
+          error: "CodeRabbit CLI not installed",
           issues: [],
         };
       }
@@ -839,10 +897,10 @@ class WorkflowExecutor {
         const parsed = JSON.parse(jsonMatch[1]);
         if (Array.isArray(parsed)) {
           return parsed.map((item) => ({
-            file: item.file || item.path || 'unknown',
+            file: item.file || item.path || "unknown",
             line: item.line || item.lineNumber || 0,
-            severity: item.severity || 'MEDIUM',
-            message: item.message || item.description || '',
+            severity: item.severity || "MEDIUM",
+            message: item.message || item.description || "",
             suggestion: item.suggestion || item.fix || null,
           }));
         }
@@ -852,7 +910,7 @@ class WorkflowExecutor {
     }
 
     // Parse text-based output (line-by-line issues)
-    const lines = output.split('\n');
+    const lines = output.split("\n");
     const severityPattern = /\[(CRITICAL|HIGH|MEDIUM|LOW)\]/i;
     const filePattern = /([^\s:]+):(\d+)/;
 
@@ -862,10 +920,13 @@ class WorkflowExecutor {
 
       if (severityMatch) {
         issues.push({
-          file: fileMatch ? fileMatch[1] : 'unknown',
+          file: fileMatch ? fileMatch[1] : "unknown",
           line: fileMatch ? parseInt(fileMatch[2], 10) : 0,
           severity: severityMatch[1].toUpperCase(),
-          message: line.replace(severityPattern, '').replace(filePattern, '').trim(),
+          message: line
+            .replace(severityPattern, "")
+            .replace(filePattern, "")
+            .trim(),
           suggestion: null,
         });
       }
@@ -884,7 +945,9 @@ class WorkflowExecutor {
     // This would require integration with an AI model to generate fixes
     // Just log the attempt and return false
     if (this.options.debug) {
-      console.log(`[WorkflowExecutor] Would auto-fix: ${issue.file}:${issue.line} - ${issue.message}`);
+      console.log(
+        `[WorkflowExecutor] Would auto-fix: ${issue.file}:${issue.line} - ${issue.message}`,
+      );
     }
 
     // If issue has a suggestion, we could apply it
@@ -905,7 +968,7 @@ class WorkflowExecutor {
       if (agent === this.state.executor) {
         return {
           status: PhaseStatus.FAILED,
-          error: 'Quality Gate agent must be different from executor',
+          error: "Quality Gate agent must be different from executor",
         };
       }
 
@@ -914,7 +977,7 @@ class WorkflowExecutor {
       }
 
       // Story 12.6: Emit agent spawn for observability (AC1)
-      this._emitAgentSpawn(agent, 'quality_gate');
+      this._emitAgentSpawn(agent, "quality_gate");
 
       // Use terminal spawning
       if (phase.spawn_in_terminal && TerminalSpawner.isSpawnerAvailable()) {
@@ -924,25 +987,30 @@ class WorkflowExecutor {
           instructions: `Execute quality review for story: ${storyPath}`,
           metadata: {
             executor: this.state.executor,
-            implementation: this.state.phaseResults['2_development']?.implementation,
+            implementation:
+              this.state.phaseResults["2_development"]?.implementation,
           },
         };
 
-        const result = await TerminalSpawner.spawnAgent(agent.replace('@', ''), 'quality-review', {
-          context,
-          timeout: DEFAULT_TIMEOUT_MS / 4, // 30 minutes
-          debug: this.options.debug,
-        });
+        const result = await TerminalSpawner.spawnAgent(
+          agent.replace("@", ""),
+          "quality-review",
+          {
+            context,
+            timeout: DEFAULT_TIMEOUT_MS / 4, // 30 minutes
+            debug: this.options.debug,
+          },
+        );
 
         // Story 12.6: Emit terminal spawn for observability (AC1)
         if (result.pid) {
-          this._emitTerminalSpawn(agent, result.pid, 'quality_gate');
+          this._emitTerminalSpawn(agent, result.pid, "quality_gate");
         }
 
         return {
           status: result.success ? PhaseStatus.COMPLETED : PhaseStatus.FAILED,
           review_result: {
-            verdict: result.success ? 'APPROVED' : 'NEEDS_WORK',
+            verdict: result.success ? "APPROVED" : "NEEDS_WORK",
             score: result.success ? 90 : 60,
             findings: [],
             recommendations: [],
@@ -955,12 +1023,12 @@ class WorkflowExecutor {
       return {
         status: PhaseStatus.COMPLETED,
         review_result: {
-          verdict: 'APPROVED',
+          verdict: "APPROVED",
           score: 100,
           findings: [],
           recommendations: [],
         },
-        note: 'Terminal spawning not available, manual review required',
+        note: "Terminal spawning not available, manual review required",
       };
     } catch (error) {
       return {
@@ -984,7 +1052,7 @@ class WorkflowExecutor {
       }
 
       // Story 12.6: Emit agent spawn for observability (AC1)
-      this._emitAgentSpawn(agent, 'push');
+      this._emitAgentSpawn(agent, "push");
 
       // Use terminal spawning
       if (phase.spawn_in_terminal && TerminalSpawner.isSpawnerAvailable()) {
@@ -993,28 +1061,33 @@ class WorkflowExecutor {
           files: [],
           instructions: `Execute *pre-push and *push for story: ${storyPath}`,
           metadata: {
-            review_result: this.state.phaseResults['4_quality_gate']?.review_result,
+            review_result:
+              this.state.phaseResults["4_quality_gate"]?.review_result,
           },
         };
 
-        const result = await TerminalSpawner.spawnAgent(agent.replace('@', ''), 'push-and-pr', {
-          context,
-          timeout: DEFAULT_TIMEOUT_MS / 12, // 10 minutes
-          debug: this.options.debug,
-        });
+        const result = await TerminalSpawner.spawnAgent(
+          agent.replace("@", ""),
+          "push-and-pr",
+          {
+            context,
+            timeout: DEFAULT_TIMEOUT_MS / 12, // 10 minutes
+            debug: this.options.debug,
+          },
+        );
 
         // Story 12.6: Emit terminal spawn for observability (AC1)
         if (result.pid) {
-          this._emitTerminalSpawn(agent, result.pid, 'push');
+          this._emitTerminalSpawn(agent, result.pid, "push");
         }
 
         return {
           status: result.success ? PhaseStatus.COMPLETED : PhaseStatus.FAILED,
           push_result: {
-            commit_hash: '',
-            branch: 'main',
+            commit_hash: "",
+            branch: "main",
           },
-          pr_url: '',
+          pr_url: "",
           output: result.output,
         };
       }
@@ -1023,11 +1096,11 @@ class WorkflowExecutor {
       return {
         status: PhaseStatus.COMPLETED,
         push_result: {
-          commit_hash: '',
-          branch: 'main',
+          commit_hash: "",
+          branch: "main",
         },
-        pr_url: '',
-        note: 'Terminal spawning not available, manual push required',
+        pr_url: "",
+        note: "Terminal spawning not available, manual push required",
       };
     } catch (error) {
       return {
@@ -1049,7 +1122,9 @@ class WorkflowExecutor {
     // In a real implementation, this would wait for user input
 
     if (this.options.debug) {
-      console.log('[WorkflowExecutor] Checkpoint reached - awaiting human decision');
+      console.log(
+        "[WorkflowExecutor] Checkpoint reached - awaiting human decision",
+      );
     }
 
     // For now, return with GO decision (would be replaced by actual elicitation)
@@ -1059,10 +1134,10 @@ class WorkflowExecutor {
       next_story: null,
       awaiting_input: true,
       options: {
-        GO: 'Continue to next story',
-        PAUSE: 'Save state and stop',
-        REVIEW: 'Show what was done',
-        ABORT: 'Stop the epic',
+        GO: "Continue to next story",
+        PAUSE: "Save state and stop",
+        REVIEW: "Show what was done",
+        ABORT: "Stop the epic",
       },
     };
   }
@@ -1080,16 +1155,16 @@ class WorkflowExecutor {
 
     if (result.status === PhaseStatus.COMPLETED) {
       // Handle checkpoint decisions
-      if (currentPhase === '6_checkpoint') {
+      if (currentPhase === "6_checkpoint") {
         switch (result.decision) {
           case CheckpointDecision.GO:
-            return '1_validation'; // Loop back
+            return "1_validation"; // Loop back
           case CheckpointDecision.PAUSE:
-            return 'workflow_paused';
+            return "workflow_paused";
           case CheckpointDecision.ABORT:
-            return 'workflow_aborted';
+            return "workflow_aborted";
           case CheckpointDecision.REVIEW:
-            return '6_checkpoint'; // Stay at checkpoint after review
+            return "6_checkpoint"; // Stay at checkpoint after review
           default:
             return null;
         }
@@ -1112,7 +1187,7 @@ class WorkflowExecutor {
    */
   getErrorHandler(phaseId, result) {
     const phase = this.workflow.workflow.phases[phaseId];
-    return phase?.on_failure || 'default_error_handler';
+    return phase?.on_failure || "default_error_handler";
   }
 
   /**
@@ -1129,18 +1204,19 @@ class WorkflowExecutor {
     }
 
     // Check max attempts
-    const maxAttempts = handler.actions?.find((a) => a.max_attempts)?.max_attempts || 3;
+    const maxAttempts =
+      handler.actions?.find((a) => a.max_attempts)?.max_attempts || 3;
     if (this.state.attemptCount >= maxAttempts) {
       return { retry: false, nextPhase: null, escalate: true };
     }
 
     // Determine action
-    if (handlerId === 'return_to_development') {
-      return { retry: false, nextPhase: '2_development' };
+    if (handlerId === "return_to_development") {
+      return { retry: false, nextPhase: "2_development" };
     }
 
-    if (handlerId === 'return_to_quality_gate') {
-      return { retry: false, nextPhase: '4_quality_gate' };
+    if (handlerId === "return_to_quality_gate") {
+      return { retry: false, nextPhase: "4_quality_gate" };
     }
 
     return { retry: true };

@@ -77,5 +77,5 @@
 **Build: PASS (TypeScript 0 errors, next build OK)**
 **Verdict: PASS**
 
-*Validado em: 2026-02-21*
-*Validado por: Foundations Pipeline — f2-qa-base-components*
+_Validado em: 2026-02-21_
+_Validado por: Foundations Pipeline — f2-qa-base-components_

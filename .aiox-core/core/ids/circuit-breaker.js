@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * CircuitBreaker — IDS Story IDS-5a
@@ -15,9 +15,9 @@
  * Source: ids-principles.md circuit_breaker config
  */
 
-const STATE_CLOSED = 'CLOSED';
-const STATE_OPEN = 'OPEN';
-const STATE_HALF_OPEN = 'HALF_OPEN';
+const STATE_CLOSED = "CLOSED";
+const STATE_OPEN = "OPEN";
+const STATE_HALF_OPEN = "HALF_OPEN";
 
 const DEFAULT_FAILURE_THRESHOLD = 5;
 const DEFAULT_SUCCESS_THRESHOLD = 3;
@@ -31,8 +31,10 @@ class CircuitBreaker {
    * @param {number} [options.resetTimeoutMs=60000] — Time before transitioning to half-open
    */
   constructor(options = {}) {
-    this._failureThreshold = options.failureThreshold ?? DEFAULT_FAILURE_THRESHOLD;
-    this._successThreshold = options.successThreshold ?? DEFAULT_SUCCESS_THRESHOLD;
+    this._failureThreshold =
+      options.failureThreshold ?? DEFAULT_FAILURE_THRESHOLD;
+    this._successThreshold =
+      options.successThreshold ?? DEFAULT_SUCCESS_THRESHOLD;
     this._resetTimeoutMs = options.resetTimeoutMs ?? DEFAULT_RESET_TIMEOUT_MS;
 
     this._state = STATE_CLOSED;

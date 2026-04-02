@@ -19,24 +19,24 @@
  *   └── README.md
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SQUADS_BASE = path.resolve(__dirname, '..', '..'); // squads/
-const ACTIVE_SQUAD_PATH = path.join(SQUADS_BASE, '.active-squad');
+const SQUADS_BASE = path.resolve(__dirname, "..", ".."); // squads/
+const ACTIVE_SQUAD_PATH = path.join(SQUADS_BASE, ".active-squad");
 
 const DIRECTORIES = [
-  'agents',
-  'tasks',
-  'templates',
-  'data',
-  'checklists',
-  'docs',
-  'scripts'
+  "agents",
+  "tasks",
+  "templates",
+  "data",
+  "checklists",
+  "docs",
+  "scripts",
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -151,22 +151,22 @@ function outputError(code, message, details = {}) {
 }
 
 function resolveSlug(cliSlug) {
-  if (cliSlug && !cliSlug.startsWith('-')) return cliSlug;
+  if (cliSlug && !cliSlug.startsWith("-")) return cliSlug;
   if (fs.existsSync(ACTIVE_SQUAD_PATH)) {
-    return fs.readFileSync(ACTIVE_SQUAD_PATH, 'utf8').trim();
+    return fs.readFileSync(ACTIVE_SQUAD_PATH, "utf8").trim();
   }
   return null;
 }
 
 function getStatePath(slug) {
-  return path.join(SQUADS_BASE, slug, 'metadata', 'state.json');
+  return path.join(SQUADS_BASE, slug, "metadata", "state.json");
 }
 
 function readState(slug) {
   const statePath = getStatePath(slug);
   if (fs.existsSync(statePath)) {
     try {
-      return JSON.parse(fs.readFileSync(statePath, 'utf8'));
+      return JSON.parse(fs.readFileSync(statePath, "utf8"));
     } catch {
       return null;
     }
@@ -187,7 +187,7 @@ function parseArg(args, flag) {
 function main() {
   const args = process.argv.slice(2);
 
-  if (args[0] === '--help' || args[0] === '-h') {
+  if (args[0] === "--help" || args[0] === "-h") {
     console.log(`Squad Scaffold - Creates directory structure for new squads
 
 Usage:
@@ -197,7 +197,7 @@ Usage:
 Options:
   --name "Name"    Display name for the squad (default: slug title-cased)
 
-Creates directories: ${DIRECTORIES.join(', ')}
+Creates directories: ${DIRECTORIES.join(", ")}
 Creates files: README.md, config.yaml`);
     process.exit(0);
   }
@@ -207,29 +207,33 @@ Creates files: README.md, config.yaml`);
   const slug = resolveSlug(cliSlug);
 
   if (!slug) {
-    outputError('NO_SLUG', 'No slug provided and no .active-squad file found', {
-      hint: 'Run: node squad-state-manager.cjs init <slug> first'
+    outputError("NO_SLUG", "No slug provided and no .active-squad file found", {
+      hint: "Run: node squad-state-manager.cjs init <slug> first",
     });
     process.exit(1);
   }
 
   // Validate slug format
   if (!/^[a-z0-9]+(_[a-z0-9]+)*$/.test(slug)) {
-    outputError('INVALID_SLUG', 'Slug must be snake_case', {
+    outputError("INVALID_SLUG", "Slug must be snake_case", {
       received: slug,
-      expected_pattern: '^[a-z0-9]+(_[a-z0-9]+)*$'
+      expected_pattern: "^[a-z0-9]+(_[a-z0-9]+)*$",
     });
     process.exit(1);
   }
 
   // Get display name from args or state or derive from slug
   const state = readState(slug);
-  const argName = parseArg(args, '--name');
-  const displayName = argName ||
+  const argName = parseArg(args, "--name");
+  const displayName =
+    argName ||
     (state && state.display_name) ||
-    slug.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    slug
+      .split("_")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
 
-  const date = new Date().toISOString().split('T')[0];
+  const date = new Date().toISOString().split("T")[0];
   const squadDir = path.join(SQUADS_BASE, slug);
   const created = [];
   const skipped = [];
@@ -240,7 +244,7 @@ Creates files: README.md, config.yaml`);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
       // Create .gitkeep
-      fs.writeFileSync(path.join(dirPath, '.gitkeep'), '');
+      fs.writeFileSync(path.join(dirPath, ".gitkeep"), "");
       created.push(`${dir}/`);
     } else {
       skipped.push(`${dir}/`);
@@ -248,21 +252,21 @@ Creates files: README.md, config.yaml`);
   }
 
   // Create README.md
-  const readmePath = path.join(squadDir, 'README.md');
+  const readmePath = path.join(squadDir, "README.md");
   if (!fs.existsSync(readmePath)) {
     fs.writeFileSync(readmePath, getReadmeTemplate(slug, displayName, date));
-    created.push('README.md');
+    created.push("README.md");
   } else {
-    skipped.push('README.md');
+    skipped.push("README.md");
   }
 
   // Create config.yaml
-  const configPath = path.join(squadDir, 'config.yaml');
+  const configPath = path.join(squadDir, "config.yaml");
   if (!fs.existsSync(configPath)) {
     fs.writeFileSync(configPath, getConfigTemplate(slug, displayName, date));
-    created.push('config.yaml');
+    created.push("config.yaml");
   } else {
-    skipped.push('config.yaml');
+    skipped.push("config.yaml");
   }
 
   outputJson({
@@ -272,9 +276,10 @@ Creates files: README.md, config.yaml`);
     path: squadDir,
     created,
     skipped,
-    message: created.length > 0
-      ? `Created ${created.length} items`
-      : 'Structure already exists'
+    message:
+      created.length > 0
+        ? `Created ${created.length} items`
+        : "Structure already exists",
   });
 }
 

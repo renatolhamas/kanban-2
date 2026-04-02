@@ -12,13 +12,14 @@
 Generate production-ready React TypeScript component from design tokens. Includes component file, styles (CSS Modules), tests, optional Storybook stories, and documentation. All styling uses tokens (zero hardcoded values). **v4.0: Supports Fluent 2 patterns as component blueprint option. Generates Storybook stories with Chromatic-ready visual test states.**
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/components/{Component}/`
 - **format:** TypeScript source (TSX, CSS Module, tests, stories, docs)
 - **consumed_by:** ds-compose-molecule, ds-extend-pattern
 
 ## Prerequisites
 
-- Setup completed (*setup command run successfully)
+- Setup completed (\*setup command run successfully)
 - Tokens loaded and accessible
 - React and TypeScript configured
 - Reference: Read data/fluent2-design-principles.md for Fluent 2 component patterns
@@ -49,7 +50,7 @@ This task uses interactive elicitation to configure component.
 ### Steps
 
 1. **Validate Prerequisites**
-   - Run `test -f tokens.yaml` (or tokens.json) to confirm tokens file exists; abort with "Tokens not found — run *setup first" if missing
+   - Run `test -f tokens.yaml` (or tokens.json) to confirm tokens file exists; abort with "Tokens not found — run \*setup first" if missing
    - Search for existing `{Component}.tsx` in the design-system directory; if found, prompt user to confirm overwrite
    - Validate component name matches PascalCase regex `/^[A-Z][a-zA-Z]+$/`
    - Check: tokens file exists AND component name is PascalCase (`/^[A-Z][a-zA-Z]+$/`) — abort if either fails
@@ -225,7 +226,7 @@ export const Button: React.FC<ButtonProps> = ({
 
 ## Failure Handling
 
-- **Missing required tokens:** If grep fails to find token name in tokens file, abort with "Required token {name} not found. Available tokens: {list}. Run *setup or add missing tokens before building component."
+- **Missing required tokens:** If grep fails to find token name in tokens file, abort with "Required token {name} not found. Available tokens: {list}. Run \*setup or add missing tokens before building component."
 - **TypeScript compilation errors:** If `tsc --noEmit {component}.tsx` returns non-zero exit code, abort with "TypeScript errors in {Component}.tsx: {errors}. Fix type errors before proceeding."
 - **Hardcoded design values detected:** If CSS module contains hardcoded colors (#hex) or spacing values (e.g., 16px except 0px), abort with "{N} hardcoded values detected. Replace with tokens: {list}."
 - **Test coverage below threshold:** If `npm test --coverage` shows coverage <80%, abort with "Test coverage {actual}% below required 80%. Add tests for: {uncovered paths}."
@@ -274,6 +275,7 @@ export const Button: React.FC<ButtonProps> = ({
 ```
 
 Output:
+
 ```
 🏗️ Merovingian: Building Button component...
 
@@ -320,6 +322,7 @@ Merovingian says: "Built right. Built once."
 ```
 
 Output includes additional features:
+
 - Validation states (error, success)
 - Helper text prop
 - Label integration
@@ -339,11 +342,11 @@ Output includes additional features:
 - Components follow Atomic Design principles
 - Merovingian ensures quality at every step
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

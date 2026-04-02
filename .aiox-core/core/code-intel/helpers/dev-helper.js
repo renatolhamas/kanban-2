@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-const { getEnricher, getClient, isCodeIntelAvailable } = require('../index');
+const { getEnricher, getClient, isCodeIntelAvailable } = require("../index");
 
 // Risk level thresholds based on blast radius (reference count)
 const RISK_THRESHOLDS = {
-  LOW_MAX: 4,       // 0-4 refs = LOW
-  MEDIUM_MAX: 15,   // 5-15 refs = MEDIUM
-                     // >15 refs = HIGH
+  LOW_MAX: 4, // 0-4 refs = LOW
+  MEDIUM_MAX: 15, // 5-15 refs = MEDIUM
+  // >15 refs = HIGH
 };
 
 // Minimum references to suggest REUSE (>threshold = REUSE, <=threshold = ADAPT)
@@ -34,13 +34,14 @@ async function checkBeforeWriting(fileName, description) {
 
   try {
     const enricher = getEnricher();
-    const dupes = await enricher.detectDuplicates(description, { path: '.' });
+    const dupes = await enricher.detectDuplicates(description, { path: "." });
 
     // Also search for the fileName as a symbol reference
     const client = getClient();
     const nameRefs = await client.findReferences(fileName);
 
-    const hasMatches = (dupes && dupes.matches && dupes.matches.length > 0) ||
+    const hasMatches =
+      (dupes && dupes.matches && dupes.matches.length > 0) ||
       (nameRefs && nameRefs.length > 0);
 
     if (!hasMatches) {
@@ -82,11 +83,11 @@ async function suggestReuse(symbol) {
 
     const refCount = refs ? refs.length : 0;
     // REUSE if widely used, ADAPT if exists but lightly used
-    const suggestion = refCount > REUSE_MIN_REFS ? 'REUSE' : 'ADAPT';
+    const suggestion = refCount > REUSE_MIN_REFS ? "REUSE" : "ADAPT";
 
     return {
-      file: definition ? definition.file : (refs[0] ? refs[0].file : null),
-      line: definition ? definition.line : (refs[0] ? refs[0].line : null),
+      file: definition ? definition.file : refs[0] ? refs[0].file : null,
+      line: definition ? definition.line : refs[0] ? refs[0].line : null,
       references: refCount,
       suggestion,
     };
@@ -160,7 +161,9 @@ function _formatSuggestion(dupes, nameRefs) {
     parts.push(`Found ${dupes.matches.length} similar match(es) in codebase`);
     const firstMatch = dupes.matches[0];
     if (firstMatch.file) {
-      parts.push(`Closest: ${firstMatch.file}${firstMatch.line ? ':' + firstMatch.line : ''}`);
+      parts.push(
+        `Closest: ${firstMatch.file}${firstMatch.line ? ":" + firstMatch.line : ""}`,
+      );
     }
   }
 
@@ -168,13 +171,17 @@ function _formatSuggestion(dupes, nameRefs) {
     parts.push(`Symbol already referenced in ${nameRefs.length} location(s)`);
     const firstRef = nameRefs[0];
     if (firstRef.file) {
-      parts.push(`First ref: ${firstRef.file}${firstRef.line ? ':' + firstRef.line : ''}`);
+      parts.push(
+        `First ref: ${firstRef.file}${firstRef.line ? ":" + firstRef.line : ""}`,
+      );
     }
   }
 
-  parts.push('Consider REUSE or ADAPT before creating new code (IDS Article IV-A)');
+  parts.push(
+    "Consider REUSE or ADAPT before creating new code (IDS Article IV-A)",
+  );
 
-  return parts.join('. ') + '.';
+  return parts.join(". ") + ".";
 }
 
 /**
@@ -185,12 +192,12 @@ function _formatSuggestion(dupes, nameRefs) {
  */
 function _calculateRiskLevel(blastRadius) {
   if (blastRadius <= RISK_THRESHOLDS.LOW_MAX) {
-    return 'LOW';
+    return "LOW";
   }
   if (blastRadius <= RISK_THRESHOLDS.MEDIUM_MAX) {
-    return 'MEDIUM';
+    return "MEDIUM";
   }
-  return 'HIGH';
+  return "HIGH";
 }
 
 module.exports = {

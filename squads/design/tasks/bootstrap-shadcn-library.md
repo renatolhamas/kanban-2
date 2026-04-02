@@ -21,16 +21,20 @@ Install and curate a Shadcn UI component library leveraging Tailwind v4, Radix p
 ## Workflow
 
 1. **Initialize Shadcn CLI**
+
    ```bash
    npx shadcn@latest init
    ```
+
    - Configure paths (`components`, `lib/utils.ts`)
    - Enable TypeScript + Tailwind + Radix defaults
 
 2. **Install Core Utilities**
+
    ```bash
    npx shadcn@latest add button input card textarea badge skeleton spinner
    ```
+
    - Ensure `cn` helper uses `clsx` + `tailwind-merge`
    - Add `Spinner` component for loading states (if not provided by template)
 
@@ -86,11 +90,11 @@ Install and curate a Shadcn UI component library leveraging Tailwind v4, Radix p
 - Document manual updates (Shadcn is copy/paste — no automatic updates)
 - Schedule regular audits to pull upstream improvements intentionally
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

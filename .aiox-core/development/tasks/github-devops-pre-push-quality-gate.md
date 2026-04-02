@@ -11,16 +11,19 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
+
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
+
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
+
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -245,6 +248,7 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
+
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -264,8 +268,8 @@ updated_at: 2025-11-17
 
 ---
 
-
 ## Prerequisites
+
 - Git repository with changes to push
 - package.json with npm scripts (gracefully handles missing scripts)
 - Repository context detected (run `aiox init` if needed)
@@ -275,11 +279,11 @@ updated_at: 2025-11-17
 ### 1. Repository Context Detection
 
 ```javascript
-const { detectRepositoryContext } = require('./../scripts/repository-detector');
+const { detectRepositoryContext } = require("./../scripts/repository-detector");
 
 const context = detectRepositoryContext();
 if (!context) {
-  console.error('❌ Unable to detect repository context');
+  console.error("❌ Unable to detect repository context");
   console.error('Run "aiox init" to configure installation mode');
   process.exit(1);
 }
@@ -297,6 +301,7 @@ git status --porcelain
 ```
 
 If output is not empty, fail with message:
+
 ```
 ❌ Uncommitted changes detected!
 
@@ -312,6 +317,7 @@ git diff --check
 ```
 
 If conflicts detected, fail with message:
+
 ```
 ❌ Merge conflicts detected!
 
@@ -322,8 +328,8 @@ Resolve conflicts before pushing.
 
 ```javascript
 function runNpmScript(scriptName, projectRoot) {
-  const packageJsonPath = path.join(projectRoot, 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+  const packageJsonPath = path.join(projectRoot, "package.json");
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
 
   if (!packageJson.scripts || !packageJson.scripts[scriptName]) {
     console.log(`⚠️  Script "${scriptName}" not found - skipping`);
@@ -333,7 +339,7 @@ function runNpmScript(scriptName, projectRoot) {
   try {
     execSync(`npm run ${scriptName}`, {
       cwd: projectRoot,
-      stdio: 'inherit'
+      stdio: "inherit",
     });
     console.log(`✓ ${scriptName} PASSED`);
     return { passed: true };
@@ -359,16 +365,16 @@ Same logic as lint, but for `npm run build`.
 ### 8. Run CodeRabbit CLI Review (TR-3.14.12)
 
 ```javascript
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
 
 function runCodeRabbitReview(projectRoot) {
-  console.log('\n🐰 Running CodeRabbit CLI Review...');
-  console.log('⏱️  This may take 7-30 minutes. Please wait...\n');
+  console.log("\n🐰 Running CodeRabbit CLI Review...");
+  console.log("⏱️  This may take 7-30 minutes. Please wait...\n");
 
   try {
     // Construct WSL command with proper paths
     const wslProjectPath = projectRoot
-      .replace(/\\/g, '/')
+      .replace(/\\/g, "/")
       .replace(/^([A-Z]):/, (match, drive) => `/mnt/${drive.toLowerCase()}`);
 
     const coderabbitCommand = `wsl bash -c 'cd ${wslProjectPath} && ~/.local/bin/coderabbit --prompt-only -t uncommitted'`;
@@ -378,10 +384,10 @@ function runCodeRabbitReview(projectRoot) {
     // Execute with 15-minute timeout
     const output = execSync(coderabbitCommand, {
       cwd: projectRoot,
-      encoding: 'utf8',
+      encoding: "utf8",
       timeout: 900000, // 15 minutes
-      stdio: 'pipe',
-      maxBuffer: 10 * 1024 * 1024 // 10MB buffer
+      stdio: "pipe",
+      maxBuffer: 10 * 1024 * 1024, // 10MB buffer
     });
 
     // Parse CodeRabbit output
@@ -399,39 +405,43 @@ function runCodeRabbitReview(projectRoot) {
     return { gateImpact, results, rawOutput: output };
   } catch (error) {
     // Handle timeout
-    if (error.killed && error.signal === 'SIGTERM') {
-      console.error('❌ CodeRabbit review timed out after 15 minutes');
-      console.error('   Review may still be processing. Check manually.');
-      return { gateImpact: 'FAIL', error: 'Timeout', timeout: true };
+    if (error.killed && error.signal === "SIGTERM") {
+      console.error("❌ CodeRabbit review timed out after 15 minutes");
+      console.error("   Review may still be processing. Check manually.");
+      return { gateImpact: "FAIL", error: "Timeout", timeout: true };
     }
 
     // Handle authentication errors
-    if (error.stderr && error.stderr.includes('not authenticated')) {
-      console.error('❌ CodeRabbit not authenticated');
-      console.error('   Run: wsl bash -c "~/.local/bin/coderabbit auth status"');
-      return { gateImpact: 'FAIL', error: 'Not authenticated' };
+    if (error.stderr && error.stderr.includes("not authenticated")) {
+      console.error("❌ CodeRabbit not authenticated");
+      console.error(
+        '   Run: wsl bash -c "~/.local/bin/coderabbit auth status"',
+      );
+      return { gateImpact: "FAIL", error: "Not authenticated" };
     }
 
     // Handle command not found
-    if (error.stderr && error.stderr.includes('command not found')) {
-      console.error('❌ CodeRabbit CLI not found in WSL');
-      console.error('   Expected location: ~/.local/bin/coderabbit');
-      console.error('   Verify: wsl bash -c "~/.local/bin/coderabbit --version"');
-      return { gateImpact: 'FAIL', error: 'Not installed' };
+    if (error.stderr && error.stderr.includes("command not found")) {
+      console.error("❌ CodeRabbit CLI not found in WSL");
+      console.error("   Expected location: ~/.local/bin/coderabbit");
+      console.error(
+        '   Verify: wsl bash -c "~/.local/bin/coderabbit --version"',
+      );
+      return { gateImpact: "FAIL", error: "Not installed" };
     }
 
     // Generic error with output for debugging
-    console.error('❌ CodeRabbit review failed:', error.message);
+    console.error("❌ CodeRabbit review failed:", error.message);
     if (error.stdout) {
-      console.log('Output:', error.stdout.toString().substring(0, 500));
+      console.log("Output:", error.stdout.toString().substring(0, 500));
     }
-    return { gateImpact: 'CONCERNS', error: error.message };
+    return { gateImpact: "CONCERNS", error: error.message };
   }
 }
 
 function parseCodeRabbitOutput(output) {
   // CodeRabbit outputs issues with type markers
-  const lines = output.split('\n');
+  const lines = output.split("\n");
 
   let critical = 0;
   let high = 0;
@@ -440,13 +450,19 @@ function parseCodeRabbitOutput(output) {
 
   for (const line of lines) {
     // Check for issue type markers
-    if (line.includes('Type: critical') || line.match(/\bCRITICAL\b/i)) {
+    if (line.includes("Type: critical") || line.match(/\bCRITICAL\b/i)) {
       critical++;
-    } else if (line.includes('Type: high') || line.match(/\bHIGH\b/i)) {
+    } else if (line.includes("Type: high") || line.match(/\bHIGH\b/i)) {
       high++;
-    } else if (line.includes('Type: potential_issue') || line.match(/\bMEDIUM\b/i)) {
+    } else if (
+      line.includes("Type: potential_issue") ||
+      line.match(/\bMEDIUM\b/i)
+    ) {
       medium++;
-    } else if (line.includes('Type: refactor_suggestion') || line.match(/\bLOW\b/i)) {
+    } else if (
+      line.includes("Type: refactor_suggestion") ||
+      line.match(/\bLOW\b/i)
+    ) {
       low++;
     }
   }
@@ -457,47 +473,56 @@ function parseCodeRabbitOutput(output) {
 function determineCodeRabbitGate(results) {
   // CRITICAL issues = auto-fail (block push)
   if (results.critical > 0) {
-    console.log(`\n❌ FAIL: ${results.critical} CRITICAL issue(s) found - MUST FIX`);
-    return 'FAIL';
+    console.log(
+      `\n❌ FAIL: ${results.critical} CRITICAL issue(s) found - MUST FIX`,
+    );
+    return "FAIL";
   }
 
   // HIGH issues = concerns (warn but allow push)
   if (results.high > 0) {
-    console.log(`\n⚠️  CONCERNS: ${results.high} HIGH issue(s) found - recommend fix`);
-    return 'CONCERNS';
+    console.log(
+      `\n⚠️  CONCERNS: ${results.high} HIGH issue(s) found - recommend fix`,
+    );
+    return "CONCERNS";
   }
 
   // Only MEDIUM or LOW = pass with notes
   if (results.medium > 0 || results.low > 0) {
-    console.log(`\n✅ PASS: Only ${results.medium} MEDIUM and ${results.low} LOW issues`);
+    console.log(
+      `\n✅ PASS: Only ${results.medium} MEDIUM and ${results.low} LOW issues`,
+    );
   } else {
     console.log(`\n✅ PASS: No issues found`);
   }
 
-  return 'PASS';
+  return "PASS";
 }
 ```
 
 **Usage in pre-push flow:**
+
 ```javascript
 const coderabbitResult = runCodeRabbitReview(process.cwd());
 
-if (coderabbitResult.gateImpact === 'FAIL') {
-  console.error('\n❌ CodeRabbit quality gate FAILED - cannot push');
+if (coderabbitResult.gateImpact === "FAIL") {
+  console.error("\n❌ CodeRabbit quality gate FAILED - cannot push");
   process.exit(1);
 }
 
-if (coderabbitResult.gateImpact === 'CONCERNS') {
+if (coderabbitResult.gateImpact === "CONCERNS") {
   // Ask user for confirmation
-  const { confirm } = await inquirer.prompt([{
-    type: 'confirm',
-    name: 'confirm',
-    message: 'CodeRabbit found HIGH issues. Continue anyway?',
-    default: false
-  }]);
+  const { confirm } = await inquirer.prompt([
+    {
+      type: "confirm",
+      name: "confirm",
+      message: "CodeRabbit found HIGH issues. Continue anyway?",
+      default: false,
+    },
+  ]);
 
   if (!confirm) {
-    console.log('Push cancelled - please address HIGH issues');
+    console.log("Push cancelled - please address HIGH issues");
     process.exit(2);
   }
 }
@@ -506,21 +531,21 @@ if (coderabbitResult.gateImpact === 'CONCERNS') {
 ### 9. Run Security Scan (TR-3.14.11)
 
 ```javascript
-const { execSync } = require('child_process');
-const path = require('path');
+const { execSync } = require("child_process");
+const path = require("path");
 
 function runSecurityScan(storyId, storyPath, projectRoot) {
-  console.log('\n🔒 Running Security Scan (SAST)...\n');
+  console.log("\n🔒 Running Security Scan (SAST)...\n");
 
   try {
     // Execute security-scan.md task
-    const securityScanPath = path.join(__dirname, 'security-scan.md');
+    const securityScanPath = path.join(__dirname, "security-scan.md");
 
     // For now, run security checks directly
     const results = {
       audit: runNpmAudit(projectRoot),
       eslint: runESLintSecurity(projectRoot),
-      secrets: runSecretDetection(projectRoot)
+      secrets: runSecretDetection(projectRoot),
     };
 
     // Determine gate impact
@@ -530,15 +555,15 @@ function runSecurityScan(storyId, storyPath, projectRoot) {
 
     return { gateImpact, results };
   } catch (error) {
-    console.error('❌ Security scan failed:', error.message);
-    return { gateImpact: 'FAIL', error };
+    console.error("❌ Security scan failed:", error.message);
+    return { gateImpact: "FAIL", error };
   }
 }
 
 function runNpmAudit(projectRoot) {
   try {
-    const output = execSync('npm audit --audit-level=moderate --json', {
-      cwd: projectRoot
+    const output = execSync("npm audit --audit-level=moderate --json", {
+      cwd: projectRoot,
     }).toString();
 
     const results = JSON.parse(output);
@@ -549,7 +574,7 @@ function runNpmAudit(projectRoot) {
       high: vulns.high || 0,
       moderate: vulns.moderate || 0,
       low: vulns.low || 0,
-      gate: vulns.critical > 0 ? 'FAIL' : (vulns.high > 0 ? 'CONCERNS' : 'PASS')
+      gate: vulns.critical > 0 ? "FAIL" : vulns.high > 0 ? "CONCERNS" : "PASS",
     };
   } catch (error) {
     // npm audit exits with 1 if vulnerabilities found
@@ -562,41 +587,44 @@ function runNpmAudit(projectRoot) {
         high: vulns.high || 0,
         moderate: vulns.moderate || 0,
         low: vulns.low || 0,
-        gate: vulns.critical > 0 ? 'FAIL' : (vulns.high > 0 ? 'CONCERNS' : 'PASS')
+        gate:
+          vulns.critical > 0 ? "FAIL" : vulns.high > 0 ? "CONCERNS" : "PASS",
       };
     }
 
-    console.warn('⚠️  npm audit failed - skipping dependency check');
-    return { gate: 'PASS', skipped: true };
+    console.warn("⚠️  npm audit failed - skipping dependency check");
+    return { gate: "PASS", skipped: true };
   }
 }
 
 function runESLintSecurity(projectRoot) {
   // Check if ESLint security config exists
-  const eslintConfigPath = path.join(projectRoot, '.eslintrc.security.json');
+  const eslintConfigPath = path.join(projectRoot, ".eslintrc.security.json");
 
   if (!fs.existsSync(eslintConfigPath)) {
-    console.log('⚠️  .eslintrc.security.json not found - skipping ESLint security');
-    return { gate: 'PASS', skipped: true };
+    console.log(
+      "⚠️  .eslintrc.security.json not found - skipping ESLint security",
+    );
+    return { gate: "PASS", skipped: true };
   }
 
   try {
-    execSync('npx eslint . --ext .js,.ts --config .eslintrc.security.json', {
+    execSync("npx eslint . --ext .js,.ts --config .eslintrc.security.json", {
       cwd: projectRoot,
-      stdio: 'pipe'
+      stdio: "pipe",
     });
 
-    return { gate: 'PASS', issues: 0 };
+    return { gate: "PASS", issues: 0 };
   } catch (error) {
     // ESLint exits with 1 if issues found
-    const output = error.stdout?.toString() || '';
+    const output = error.stdout?.toString() || "";
     const errorCount = (output.match(/error/g) || []).length;
     const warningCount = (output.match(/warning/g) || []).length;
 
     return {
-      gate: errorCount > 0 ? 'FAIL' : (warningCount > 0 ? 'CONCERNS' : 'PASS'),
+      gate: errorCount > 0 ? "FAIL" : warningCount > 0 ? "CONCERNS" : "PASS",
       errors: errorCount,
-      warnings: warningCount
+      warnings: warningCount,
     };
   }
 }
@@ -605,28 +633,30 @@ function runSecretDetection(projectRoot) {
   try {
     execSync('npx secretlint "**/*"', {
       cwd: projectRoot,
-      stdio: 'pipe'
+      stdio: "pipe",
     });
 
-    return { gate: 'PASS', secretsFound: 0 };
+    return { gate: "PASS", secretsFound: 0 };
   } catch (error) {
     // secretlint exits with 1 if secrets found
-    return { gate: 'FAIL', secretsFound: 1 };
+    return { gate: "FAIL", secretsFound: 1 };
   }
 }
 
 function determineSecurityGate(results) {
   // Secrets are auto-fail
-  if (results.secrets.gate === 'FAIL') return 'FAIL';
+  if (results.secrets.gate === "FAIL") return "FAIL";
 
   // Any FAIL → overall FAIL
-  if (results.audit.gate === 'FAIL' || results.eslint.gate === 'FAIL') return 'FAIL';
+  if (results.audit.gate === "FAIL" || results.eslint.gate === "FAIL")
+    return "FAIL";
 
   // Any CONCERNS → overall CONCERNS
-  if (results.audit.gate === 'CONCERNS' || results.eslint.gate === 'CONCERNS') return 'CONCERNS';
+  if (results.audit.gate === "CONCERNS" || results.eslint.gate === "CONCERNS")
+    return "CONCERNS";
 
   // All PASS → overall PASS
-  return 'PASS';
+  return "PASS";
 }
 ```
 
@@ -636,22 +666,27 @@ function determineSecurityGate(results) {
 > **Behavior:** Advisory only — NEVER blocks push. Auto-skips if code intelligence unavailable.
 
 ```javascript
-const { assessPrePushImpact, classifyRiskLevel } = require('.aiox-core/core/code-intel/helpers/devops-helper');
+const {
+  assessPrePushImpact,
+  classifyRiskLevel,
+} = require(".aiox-core/core/code-intel/helpers/devops-helper");
 
 async function runImpactAnalysis(changedFiles) {
   // Auto-skip if code intelligence unavailable
-  const { isCodeIntelAvailable } = require('.aiox-core/core/code-intel');
+  const { isCodeIntelAvailable } = require(".aiox-core/core/code-intel");
   if (!isCodeIntelAvailable()) {
-    console.log('ℹ️  Code intelligence not available — skipping impact analysis');
+    console.log(
+      "ℹ️  Code intelligence not available — skipping impact analysis",
+    );
     return { skipped: true };
   }
 
-  console.log('\n📊 Running Impact Analysis...\n');
+  console.log("\n📊 Running Impact Analysis...\n");
 
   const result = await assessPrePushImpact(changedFiles);
 
   if (!result) {
-    console.log('ℹ️  Impact analysis returned no data — skipping');
+    console.log("ℹ️  Impact analysis returned no data — skipping");
     return { skipped: true };
   }
 
@@ -659,8 +694,10 @@ async function runImpactAnalysis(changedFiles) {
   console.log(result.report);
 
   // HIGH risk: add extra warning (advisory, does not block)
-  if (result.riskLevel === 'HIGH') {
-    console.log('\n⚠️  HIGH RISK detected. Additional confirmation recommended before push.');
+  if (result.riskLevel === "HIGH") {
+    console.log(
+      "\n⚠️  HIGH RISK detected. Additional confirmation recommended before push.",
+    );
   }
 
   return {
@@ -693,27 +730,31 @@ Impact Analysis:
 ```javascript
 function checkStoryStatus(storyPath) {
   if (!storyPath || !fs.existsSync(storyPath)) {
-    console.log('⚠️  No story file specified - skipping story status check');
+    console.log("⚠️  No story file specified - skipping story status check");
     return { skipped: true };
   }
 
-  const storyContent = fs.readFileSync(storyPath, 'utf8');
+  const storyContent = fs.readFileSync(storyPath, "utf8");
 
   // Look for status: "Done" or status: "Ready for Review"
-  const statusMatch = storyContent.match(/status:\s*["']?(Done|Ready for Review|InProgress)["']?/i);
+  const statusMatch = storyContent.match(
+    /status:\s*["']?(Done|Ready for Review|InProgress)["']?/i,
+  );
 
   if (!statusMatch) {
-    console.log('⚠️  Unable to determine story status - skipping');
+    console.log("⚠️  Unable to determine story status - skipping");
     return { skipped: true };
   }
 
   const status = statusMatch[1];
 
-  if (status === 'Done' || status === 'Ready for Review') {
+  if (status === "Done" || status === "Ready for Review") {
     console.log(`✓ Story status: ${status}`);
     return { passed: true, status };
   } else {
-    console.log(`⚠️  Story status: ${status} (expected Done or Ready for Review)`);
+    console.log(
+      `⚠️  Story status: ${status} (expected Done or Ready for Review)`,
+    );
     return { passed: false, status };
   }
 }
@@ -814,20 +855,21 @@ Proceed with push anyway? (y/N)
 
 ```javascript
 async function requestPushApproval(gateStatus) {
-  if (gateStatus === 'FAIL') {
-    console.log('\n❌ Quality gate FAILED. Cannot proceed with push.');
+  if (gateStatus === "FAIL") {
+    console.log("\n❌ Quality gate FAILED. Cannot proceed with push.");
     process.exit(1);
   }
 
   const { confirm } = await inquirer.prompt([
     {
-      type: 'confirm',
-      name: 'confirm',
-      message: gateStatus === 'PASS'
-        ? 'Proceed with push to remote?'
-        : 'Quality gate has CONCERNS. Proceed anyway?',
-      default: gateStatus === 'PASS'
-    }
+      type: "confirm",
+      name: "confirm",
+      message:
+        gateStatus === "PASS"
+          ? "Proceed with push to remote?"
+          : "Quality gate has CONCERNS. Proceed anyway?",
+      default: gateStatus === "PASS",
+    },
   ]);
 
   return confirm;
@@ -853,8 +895,10 @@ Called via `@github-devops *pre-push` command.
 - Detailed logging for troubleshooting
 
 ## Handoff
+
 next_agent: @devops
-next_command: *push
+next_command: \*push
 condition: All quality checks PASS
 alternatives:
-  - agent: @dev, command: *run-tests, condition: Quality checks FAIL, needs fixes
+
+- agent: @dev, command: \*run-tests, condition: Quality checks FAIL, needs fixes

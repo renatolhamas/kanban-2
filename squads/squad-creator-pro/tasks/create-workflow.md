@@ -8,6 +8,7 @@
 **Quality Standard:** AIOS Level (500+ lines, 3+ phases, checkpoints)
 
 **Frameworks Used:**
+
 - `data/tier-system-framework.md` → Phase tier classification (Phase 2)
 - `data/executor-matrix-framework.md` → Agent assignment (Phase 3)
 - `data/decision-heuristics-framework.md` → Checkpoint logic (Phase 4)
@@ -21,6 +22,7 @@ This task guides the creation of multi-phase workflows that orchestrate complex 
 **CRITICAL:** Prefer workflows over standalone tasks when the operation has 3+ phases, multiple agents, or needs intermediate validation.
 
 **v2.0 Changes:**
+
 - PHASE-based structure with checkpoints
 - Framework integration at every phase
 - Quality gate SC_WFL_001 must pass
@@ -85,13 +87,13 @@ workflow_criteria:
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `workflow_name` | string | Yes | Human-readable name | `"High-Ticket Sales Pipeline"` |
-| `workflow_id` | string | Yes | kebab-case identifier | `"high-ticket-sales"` |
-| `pack_name` | string | Yes | Target squad | `"copy"` |
-| `duration` | string | Yes | Expected duration | `"7-10 days"` |
-| `phase_count` | int | Yes | Number of phases (min 3) | `5` |
+| Parameter       | Type   | Required | Description              | Example                        |
+| --------------- | ------ | -------- | ------------------------ | ------------------------------ |
+| `workflow_name` | string | Yes      | Human-readable name      | `"High-Ticket Sales Pipeline"` |
+| `workflow_id`   | string | Yes      | kebab-case identifier    | `"high-ticket-sales"`          |
+| `pack_name`     | string | Yes      | Target squad             | `"copy"`                       |
+| `duration`      | string | Yes      | Expected duration        | `"7-10 days"`                  |
+| `phase_count`   | int    | Yes      | Number of phases (min 3) | `5`                            |
 
 ---
 
@@ -114,6 +116,7 @@ workflow_criteria:
 ### Step 0.1: Validate Workflow Criteria
 
 **Actions:**
+
 ```yaml
 validate_criteria:
   check_each:
@@ -129,6 +132,7 @@ validate_criteria:
 ```
 
 **Elicitation:**
+
 ```yaml
 elicit_validation:
   questions:
@@ -145,6 +149,7 @@ elicit_validation:
 ### Step 0.2: Define Workflow Identity
 
 **Elicitation:**
+
 ```yaml
 elicit_identity:
   workflow_name:
@@ -168,6 +173,7 @@ elicit_identity:
 ### Step 0.3: Define Scope
 
 **Elicitation:**
+
 ```yaml
 elicit_scope:
   primary_goal:
@@ -184,6 +190,7 @@ elicit_scope:
 ```
 
 **Output (PHASE 0):**
+
 ```yaml
 phase_0_output:
   workflow_name: "High-Ticket Sales Pipeline"
@@ -207,6 +214,7 @@ phase_0_output:
 **Apply: tier-system-framework.md**
 
 **Actions:**
+
 ```yaml
 design_phases:
   tier_definitions:
@@ -227,6 +235,7 @@ design_phases:
 ### Step 1.2: Define Each Phase
 
 **Template for each phase:**
+
 ```yaml
 phase_template:
   structure: |
@@ -253,6 +262,7 @@ phase_template:
 ```
 
 **Elicitation per phase:**
+
 ```yaml
 elicit_phase:
   phase_identity:
@@ -273,6 +283,7 @@ elicit_phase:
 ### Step 1.3: Add Inline Structures (If Needed)
 
 **When to add inline structures:**
+
 ```yaml
 inline_structure_criteria:
   add_when:
@@ -315,6 +326,7 @@ inline_structure_criteria:
 ```
 
 **Output (PHASE 1):**
+
 ```yaml
 phase_1_output:
   phases_defined: 5
@@ -324,6 +336,7 @@ phase_1_output:
 ```
 
 **Checkpoint SC_PHS_001:**
+
 ```yaml
 heuristic_id: SC_PHS_001
 name: "Phases Defined"
@@ -332,7 +345,7 @@ criteria:
   - phases_count >= 3
   - all_phases_have_tier
   - all_phases_have_tasks
-  - tier_0_exists  # Foundation phase required
+  - tier_0_exists # Foundation phase required
 ```
 
 ---
@@ -346,6 +359,7 @@ criteria:
 ### Step 2.1: Define Checkpoints Per Phase
 
 **Actions:**
+
 ```yaml
 checkpoint_design:
   every_phase_must_have:
@@ -364,6 +378,7 @@ checkpoint_design:
 ```
 
 **Elicitation:**
+
 ```yaml
 elicit_checkpoint:
   for_each_phase:
@@ -378,6 +393,7 @@ elicit_checkpoint:
 **Apply: decision-heuristics-framework.md**
 
 **Actions:**
+
 ```yaml
 veto_conditions:
   purpose: "Define conditions that BLOCK progress"
@@ -400,6 +416,7 @@ veto_conditions:
 ### Step 2.3: Design Error Handling
 
 **Actions:**
+
 ```yaml
 error_handling:
   template: |
@@ -422,6 +439,7 @@ error_handling:
 ```
 
 **Output (PHASE 2):**
+
 ```yaml
 phase_2_output:
   checkpoints_defined: 5
@@ -442,6 +460,7 @@ phase_2_output:
 **Apply: executor-matrix-framework.md**
 
 **Actions:**
+
 ```yaml
 agent_assignment:
   template: |
@@ -459,6 +478,7 @@ agent_assignment:
 ```
 
 **Elicitation:**
+
 ```yaml
 elicit_agents:
   for_each_phase:
@@ -470,6 +490,7 @@ elicit_agents:
 ### Step 3.2: Define Handoff Points
 
 **Actions:**
+
 ```yaml
 handoff_points:
   template: |
@@ -492,6 +513,7 @@ handoff_points:
 ### Step 3.3: Map Synergies and Conflicts
 
 **Actions:**
+
 ```yaml
 synergies_conflicts:
   synergies:
@@ -505,6 +527,7 @@ synergies_conflicts:
 ```
 
 **Output (PHASE 3):**
+
 ```yaml
 phase_3_output:
   agents_assigned: 8
@@ -524,6 +547,7 @@ phase_3_output:
 ### Step 4.1: Compile Workflow File
 
 **Actions:**
+
 ```yaml
 compile_workflow:
   sections:
@@ -545,6 +569,7 @@ compile_workflow:
 ### Step 4.2: Run Quality Gate SC_WFL_001
 
 **Actions:**
+
 ```yaml
 run_quality_gate:
   heuristic_id: SC_WFL_001
@@ -589,6 +614,7 @@ run_quality_gate:
 ### Step 4.3: Save Workflow File
 
 **Actions:**
+
 ```yaml
 save_workflow:
   path: "squads/{pack_name}/workflows/wf-{workflow_id}.yaml"
@@ -601,11 +627,12 @@ save_workflow:
 ```
 
 **Output (PHASE 4):**
+
 ```yaml
 phase_4_output:
   quality_score: 8.5/10
   blocking_requirements: "ALL PASS"
-  workflow_file: "squads/{squad-name}/workflows/{workflow-name}.yaml"  # Example
+  workflow_file: "squads/{squad-name}/workflows/{workflow-name}.yaml" # Example
   lines: 650
   status: "PASS"
 ```
@@ -620,12 +647,13 @@ phase_4_output:
 ### Step 5.1: Present Workflow Summary
 
 **Actions:**
+
 ```yaml
 present_summary:
   workflow_created:
     name: "High-Ticket Sales Pipeline"
     id: "wf-high-ticket-sales"
-    file: "squads/{squad-name}/workflows/{workflow-name}.yaml"  # Example
+    file: "squads/{squad-name}/workflows/{workflow-name}.yaml" # Example
     lines: 650
 
   structure:
@@ -643,28 +671,31 @@ present_summary:
 
 ## Outputs
 
-| Output | Location | Description |
-|--------|----------|-------------|
-| Workflow File | `squads/{pack_name}/workflows/wf-{workflow_id}.yaml` | Complete workflow |
-| Updated README | `squads/{pack_name}/README.md` | Workflow added |
-| Updated Config | `squads/{pack_name}/config.yaml` | Workflow registered |
+| Output         | Location                                             | Description         |
+| -------------- | ---------------------------------------------------- | ------------------- |
+| Workflow File  | `squads/{pack_name}/workflows/wf-{workflow_id}.yaml` | Complete workflow   |
+| Updated README | `squads/{pack_name}/README.md`                       | Workflow added      |
+| Updated Config | `squads/{pack_name}/config.yaml`                     | Workflow registered |
 
 ---
 
 ## Validation Criteria (All Must Pass)
 
 ### Structure
+
 - [ ] Workflow file is valid YAML
 - [ ] Has 3+ phases
 - [ ] Has tier 0 (foundation) phase
 
 ### Content
+
 - [ ] Each phase has id, name, days, tier, description
 - [ ] Each phase has at least 1 task
 - [ ] Each phase has checkpoint with criteria
 - [ ] Agents assigned to all phases
 
 ### Quality
+
 - [ ] Lines >= 500
 - [ ] SC_WFL_001 score >= 7.0
 - [ ] Error handling defined
@@ -674,13 +705,13 @@ present_summary:
 
 ## Heuristics Reference
 
-| Heuristic ID | Name | Where Applied | Blocking |
-|--------------|------|---------------|----------|
-| SC_WFL_PRE | Workflow Pre-Check | Phase 0 | Yes |
-| SC_PHS_001 | Phases Defined | Phase 1 | Yes |
-| SC_CKP_001 | Checkpoints Complete | Phase 2 | Yes |
-| SC_AGN_001 | Agents Assigned | Phase 3 | Yes |
-| SC_WFL_001 | Workflow Quality Gate | Phase 4 | Yes |
+| Heuristic ID | Name                  | Where Applied | Blocking |
+| ------------ | --------------------- | ------------- | -------- |
+| SC_WFL_PRE   | Workflow Pre-Check    | Phase 0       | Yes      |
+| SC_PHS_001   | Phases Defined        | Phase 1       | Yes      |
+| SC_CKP_001   | Checkpoints Complete  | Phase 2       | Yes      |
+| SC_AGN_001   | Agents Assigned       | Phase 3       | Yes      |
+| SC_WFL_001   | Workflow Quality Gate | Phase 4       | Yes      |
 
 ---
 
@@ -706,6 +737,7 @@ error_handling:
 ## Integration with AIOS
 
 This task creates workflows that:
+
 - Follow AIOS workflow standards (YAML format)
 - Have 3+ phases with tier classification
 - Include checkpoints with veto conditions

@@ -9,7 +9,7 @@ description: |
 scoring:
   overall_threshold: 7.0
   minimum_per_dimension: 6.0
-  veto_on_failure: false  # Default REVIEW, não VETO
+  veto_on_failure: false # Default REVIEW, não VETO
 
 dimensions:
   - id: 1

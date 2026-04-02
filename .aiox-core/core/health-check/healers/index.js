@@ -9,8 +9,8 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const BackupManager = require('./backup-manager');
-const { CheckStatus } = require('../base-check');
+const BackupManager = require("./backup-manager");
+const { CheckStatus } = require("../base-check");
 
 /**
  * Healing tiers
@@ -77,7 +77,10 @@ class HealerManager {
     // Filter healable issues
     const healableResults = checkResults.filter(
       (r) =>
-        r.healable && r.healingTier > 0 && r.healingTier <= maxTier && r.status !== CheckStatus.PASS,
+        r.healable &&
+        r.healingTier > 0 &&
+        r.healingTier <= maxTier &&
+        r.status !== CheckStatus.PASS,
     );
 
     for (const result of healableResults) {
@@ -113,8 +116,8 @@ class HealerManager {
         checkId,
         success: false,
         tier: healingTier,
-        message: 'No healer registered for this check',
-        action: 'none',
+        message: "No healer registered for this check",
+        action: "none",
       };
     }
 
@@ -135,7 +138,7 @@ class HealerManager {
           success: false,
           tier: healingTier,
           message: `Unknown healing tier: ${healingTier}`,
-          action: 'none',
+          action: "none",
         };
     }
   }
@@ -157,8 +160,8 @@ class HealerManager {
           checkId,
           success: false,
           tier: HealingTier.SILENT,
-          message: 'Target file is in security blocklist',
-          action: 'blocked',
+          message: "Target file is in security blocklist",
+          action: "blocked",
         };
       }
 
@@ -177,8 +180,8 @@ class HealerManager {
         checkId,
         success: true,
         tier: HealingTier.SILENT,
-        message: healer.successMessage || 'Issue fixed automatically',
-        action: healer.action || 'fixed',
+        message: healer.successMessage || "Issue fixed automatically",
+        action: healer.action || "fixed",
         backupPath,
         dryRun: this.dryRun,
       };
@@ -197,7 +200,7 @@ class HealerManager {
         success: false,
         tier: HealingTier.SILENT,
         message: `Fix failed: ${error.message}`,
-        action: 'error',
+        action: "error",
         error: error.message,
       };
     }
@@ -219,17 +222,17 @@ class HealerManager {
       checkId,
       success: false,
       tier: HealingTier.PROMPTED,
-      message: healer.promptMessage || 'Fix requires confirmation',
-      action: 'prompt',
+      message: healer.promptMessage || "Fix requires confirmation",
+      action: "prompt",
       prompt: {
         question: healer.promptQuestion || `Apply fix for ${checkResult.name}?`,
         description: healer.promptDescription || checkResult.recommendation,
-        risk: healer.risk || 'moderate',
+        risk: healer.risk || "moderate",
         healer: healer.name,
       },
       fix: async (confirmed) => {
         if (!confirmed) {
-          return { success: false, message: 'Fix declined by user' };
+          return { success: false, message: "Fix declined by user" };
         }
         return await this.executeTier1(checkResult, healer);
       },
@@ -252,14 +255,14 @@ class HealerManager {
       checkId,
       success: false,
       tier: HealingTier.MANUAL,
-      message: 'Manual intervention required',
-      action: 'manual',
+      message: "Manual intervention required",
+      action: "manual",
       guide: {
         title: `Fix ${checkResult.name}`,
         description: checkResult.message,
-        steps: healer?.steps || [recommendation || 'Follow the recommendation'],
+        steps: healer?.steps || [recommendation || "Follow the recommendation"],
         documentation: healer?.documentation || null,
-        warning: healer?.warning || 'Backup your files before making changes',
+        warning: healer?.warning || "Backup your files before making changes",
       },
     };
   }

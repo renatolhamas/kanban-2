@@ -16,12 +16,14 @@ An Agentic DS is a design system where AI agents are **deliberately constrained*
 ## The "Vibe Coding" Problem
 
 Unconstrained AI generates plausible-looking but undisciplined output:
+
 - Hardcoded color values instead of tokens
 - Custom spacing that doesn't follow your scale
 - Components that look right but don't match your API
 - Accessibility gaps because the AI optimized for appearance
 
 When AI is constrained to DS materials:
+
 - Every color comes from your token set
 - Every spacing value follows your scale
 - Every component matches your documented API
@@ -48,6 +50,7 @@ When AI is constrained to DS materials:
 ### Component API Documentation
 
 Every component needs:
+
 - **Props/API surface** — what inputs it accepts, with types
 - **Variants** — enumerated options (size: sm | md | lg)
 - **Composition rules** — what goes inside, what doesn't
@@ -57,6 +60,7 @@ Every component needs:
 ### Storybook MCP Addon
 
 The Storybook MCP addon exposes component stories as structured context for LLMs:
+
 1. Storybook indexes your component library
 2. MCP addon wraps that index as a tool for AI agents
 3. AI queries the tool before generating UI code
@@ -70,12 +74,14 @@ With MCP: AI generates `<NavItem variant="primary" icon={HomeIcon}>` using your 
 ## Checklist: Is Your DS AI-Ready?
 
 ### Tokens
+
 - [ ] Tokens in W3C DTCG JSON format (not just Figma variables)
 - [ ] Every token has `$description` explaining usage intent
 - [ ] Modes (light/dark/hc) defined with explicit mappings
 - [ ] Token files published as versioned artifacts
 
 ### Components
+
 - [ ] Every component has typed prop definitions
 - [ ] Variants are enumerated, not open-ended
 - [ ] Composition rules documented (what nests inside what)
@@ -83,12 +89,14 @@ With MCP: AI generates `<NavItem variant="primary" icon={HomeIcon}>` using your 
 - [ ] Accessibility requirements documented per component
 
 ### Infrastructure
+
 - [ ] Storybook MCP addon installed and configured
 - [ ] Component metadata exportable as JSON
 - [ ] API docs auto-generated from source
 - [ ] Version-pinned so AI references a stable snapshot
 
 ### Governance
+
 - [ ] Process for AI-generated contributions (review, lint, test)
 - [ ] Token validation in CI (no hardcoded values)
 - [ ] Component usage auditing (detect drift from DS)

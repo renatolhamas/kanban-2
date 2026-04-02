@@ -7,32 +7,38 @@
  *   - curation-report.md (human-readable report)
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const ROOT = process.cwd();
-const EXTRACTION_DIR = path.join(ROOT, 'workspace', 'domains', 'design-system', 'extraction');
-const CURATED_DIR = path.join(EXTRACTION_DIR, 'curated');
-const MERGED_PATH = path.join(EXTRACTION_DIR, 'all-pages-merged.json');
-const STYLES_PATH = path.join(EXTRACTION_DIR, 'figma-styles.json');
-const VARIABLES_PATH = path.join(EXTRACTION_DIR, 'figma-variables.json');
-const REPORT_JSON = path.join(CURATED_DIR, 'curation-report.json');
-const REPORT_MD = path.join(CURATED_DIR, 'curation-report.md');
+const EXTRACTION_DIR = path.join(
+  ROOT,
+  "workspace",
+  "domains",
+  "design-system",
+  "extraction",
+);
+const CURATED_DIR = path.join(EXTRACTION_DIR, "curated");
+const MERGED_PATH = path.join(EXTRACTION_DIR, "all-pages-merged.json");
+const STYLES_PATH = path.join(EXTRACTION_DIR, "figma-styles.json");
+const VARIABLES_PATH = path.join(EXTRACTION_DIR, "figma-variables.json");
+const REPORT_JSON = path.join(CURATED_DIR, "curation-report.json");
+const REPORT_MD = path.join(CURATED_DIR, "curation-report.md");
 
 function readCurated(name) {
   const filePath = path.join(CURATED_DIR, name);
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
 function main() {
-  console.log('=== CURATION REPORT GENERATION ===\n');
+  console.log("=== CURATION REPORT GENERATION ===\n");
 
-  const colors = readCurated('curated-colors.json');
-  const spacing = readCurated('curated-spacing.json');
-  const typography = readCurated('curated-typography.json');
-  const shadows = readCurated('curated-shadows.json');
-  const radius = readCurated('curated-radius.json');
-  const components = readCurated('curated-components.json');
+  const colors = readCurated("curated-colors.json");
+  const spacing = readCurated("curated-spacing.json");
+  const typography = readCurated("curated-typography.json");
+  const shadows = readCurated("curated-shadows.json");
+  const radius = readCurated("curated-radius.json");
+  const components = readCurated("curated-components.json");
 
   // Aggregate all decisions
   const allDecisions = [
@@ -47,22 +53,26 @@ function main() {
   const beforeTotal =
     colors.scores.before +
     spacing.scores.before +
-    (typography.scores.before.families + typography.scores.before.sizes + typography.scores.before.weights) +
+    (typography.scores.before.families +
+      typography.scores.before.sizes +
+      typography.scores.before.weights) +
     shadows.scores.before +
     radius.scores.before;
 
   const afterTotal =
     colors.scores.after +
     spacing.scores.after +
-    (typography.scores.after.families + typography.scores.after.sizes + typography.scores.after.weights) +
+    (typography.scores.after.families +
+      typography.scores.after.sizes +
+      typography.scores.after.weights) +
     shadows.scores.after +
     radius.scores.after;
 
   const overallReduction = ((beforeTotal - afterTotal) / beforeTotal) * 100;
 
   const report = {
-    brand: 'clickmax',
-    source: 'all-pages-merged.json',
+    brand: "clickmax",
+    source: "all-pages-merged.json",
     pagesIncluded: colors.meta.pagesIncluded,
     timestamp: new Date().toISOString(),
     scores: {
@@ -116,15 +126,34 @@ function main() {
         before: beforeTotal,
         after: afterTotal,
         reduction: `${Math.round(overallReduction * 10) / 10}%`,
-        target: '80%',
-        status: overallReduction >= 80 ? 'PASS' : overallReduction >= 60 ? 'CONDITIONAL' : 'FAIL',
+        target: "80%",
+        status:
+          overallReduction >= 80
+            ? "PASS"
+            : overallReduction >= 60
+              ? "CONDITIONAL"
+              : "FAIL",
       },
     },
     decisions: allDecisions,
     decisionCount: allDecisions.length,
     figmaMetadata: {
-      stylesCount: (() => { try { return JSON.parse(fs.readFileSync(STYLES_PATH, 'utf8')).length; } catch (_) { return 0; } })(),
-      variablesCount: (() => { try { return Object.keys(JSON.parse(fs.readFileSync(VARIABLES_PATH, 'utf8')).variables || {}).length; } catch (_) { return 0; } })(),
+      stylesCount: (() => {
+        try {
+          return JSON.parse(fs.readFileSync(STYLES_PATH, "utf8")).length;
+        } catch (_) {
+          return 0;
+        }
+      })(),
+      variablesCount: (() => {
+        try {
+          return Object.keys(
+            JSON.parse(fs.readFileSync(VARIABLES_PATH, "utf8")).variables || {},
+          ).length;
+        } catch (_) {
+          return 0;
+        }
+      })(),
     },
   };
 
@@ -146,11 +175,13 @@ function main() {
   md += `| Category | Before | After | Reduction | Target | Status |\n`;
   md += `|----------|--------|-------|-----------|--------|--------|\n`;
 
-  const categories = ['colors', 'spacing', 'typography', 'shadows', 'radius'];
+  const categories = ["colors", "spacing", "typography", "shadows", "radius"];
   for (const cat of categories) {
     const s = report.scores[cat];
-    const before = typeof s.before === 'object' ? JSON.stringify(s.before) : s.before;
-    const after = typeof s.after === 'object' ? JSON.stringify(s.after) : s.after;
+    const before =
+      typeof s.before === "object" ? JSON.stringify(s.before) : s.before;
+    const after =
+      typeof s.after === "object" ? JSON.stringify(s.after) : s.after;
     md += `| ${cat} | ${before} | ${after} | ${s.reduction} | ${s.target} | ${s.status} |\n`;
   }
 
@@ -173,7 +204,7 @@ function main() {
     md += `| # | Name | Count | Atomic | Priority |\n`;
     md += `|---|------|-------|--------|----------|\n`;
     topComponents.forEach((c, i) => {
-      md += `| ${i + 1} | ${c.name || '(unnamed)'} | ${c.count} | ${c.atomicLevel} | ${c.priority} |\n`;
+      md += `| ${i + 1} | ${c.name || "(unnamed)"} | ${c.count} | ${c.atomicLevel} | ${c.priority} |\n`;
     });
   }
 
@@ -182,14 +213,18 @@ function main() {
   let figmaVarCount = 0;
   let figmaColCount = 0;
   try {
-    const styles = JSON.parse(fs.readFileSync(STYLES_PATH, 'utf8'));
+    const styles = JSON.parse(fs.readFileSync(STYLES_PATH, "utf8"));
     figmaStylesCount = styles.length;
-  } catch (_) { /* optional */ }
+  } catch (_) {
+    /* optional */
+  }
   try {
-    const vars = JSON.parse(fs.readFileSync(VARIABLES_PATH, 'utf8'));
+    const vars = JSON.parse(fs.readFileSync(VARIABLES_PATH, "utf8"));
     figmaVarCount = Object.keys(vars.variables || {}).length;
     figmaColCount = Object.keys(vars.variableCollections || {}).length;
-  } catch (_) { /* optional */ }
+  } catch (_) {
+    /* optional */
+  }
 
   md += `\n## Figma Metadata\n\n`;
   md += `| Metric | Count |\n`;
@@ -201,9 +236,11 @@ function main() {
   // New Properties Coverage
   let mergedStats = {};
   try {
-    const merged = JSON.parse(fs.readFileSync(MERGED_PATH, 'utf8'));
+    const merged = JSON.parse(fs.readFileSync(MERGED_PATH, "utf8"));
     mergedStats = merged.meta?.stats || {};
-  } catch (_) { /* optional */ }
+  } catch (_) {
+    /* optional */
+  }
 
   md += `\n## Extended Properties Coverage\n\n`;
   md += `| Property | Count |\n`;
@@ -216,9 +253,9 @@ function main() {
   md += `\n## Quality Gates\n\n`;
   md += `| Gate | Value | Status |\n`;
   md += `|------|-------|--------|\n`;
-  md += `| WCAG AA (colors) | ${report.scores.colors.wcag_aa_pass} | ${report.scores.colors.wcag_aa_pass === '100%' ? 'PASS' : 'CONDITIONAL'} |\n`;
-  md += `| Color coverage | ${report.scores.colors.coverage} | ${report.scores.colors.coverage >= '95' ? 'PASS' : 'CONDITIONAL'} |\n`;
-  md += `| Spacing coverage | ${report.scores.spacing.coverage} | ${report.scores.spacing.coverage >= '95' ? 'PASS' : 'CONDITIONAL'} |\n`;
+  md += `| WCAG AA (colors) | ${report.scores.colors.wcag_aa_pass} | ${report.scores.colors.wcag_aa_pass === "100%" ? "PASS" : "CONDITIONAL"} |\n`;
+  md += `| Color coverage | ${report.scores.colors.coverage} | ${report.scores.colors.coverage >= "95" ? "PASS" : "CONDITIONAL"} |\n`;
+  md += `| Spacing coverage | ${report.scores.spacing.coverage} | ${report.scores.spacing.coverage >= "95" ? "PASS" : "CONDITIONAL"} |\n`;
   md += `| Base unit | ${report.scores.spacing.base_unit} | PASS |\n`;
 
   md += `\n## Decisions Trail\n\n`;
@@ -227,21 +264,22 @@ function main() {
   // Group decisions by category
   const decisionsByCategory = new Map();
   for (const d of allDecisions) {
-    if (!decisionsByCategory.has(d.category)) decisionsByCategory.set(d.category, []);
+    if (!decisionsByCategory.has(d.category))
+      decisionsByCategory.set(d.category, []);
     decisionsByCategory.get(d.category).push(d);
   }
 
   for (const [category, decisions] of decisionsByCategory) {
     md += `### ${category} (${decisions.length} decisions)\n\n`;
     for (const d of decisions.slice(0, 5)) {
-      md += `- **${d.action}**: ${d.items.slice(0, 3).join(', ')}${d.items.length > 3 ? ` (+${d.items.length - 3} more)` : ''} → \`${d.result}\`\n`;
+      md += `- **${d.action}**: ${d.items.slice(0, 3).join(", ")}${d.items.length > 3 ? ` (+${d.items.length - 3} more)` : ""} → \`${d.result}\`\n`;
       md += `  - _${d.reason}_\n`;
       md += `  - Authority: ${d.authority}\n`;
     }
     if (decisions.length > 5) {
       md += `- _... and ${decisions.length - 5} more_\n`;
     }
-    md += '\n';
+    md += "\n";
   }
 
   md += `---\n_Generated by DS Curation Pipeline_\n`;
@@ -250,9 +288,11 @@ function main() {
   console.log(`  ✓ ${REPORT_MD}`);
 
   console.log(`\n--- SUMMARY ---`);
-  console.log(`  Overall: ${report.scores.overall.before} → ${report.scores.overall.after} (${report.scores.overall.reduction}) → ${report.scores.overall.status}`);
+  console.log(
+    `  Overall: ${report.scores.overall.before} → ${report.scores.overall.after} (${report.scores.overall.reduction}) → ${report.scores.overall.status}`,
+  );
   console.log(`  Decisions: ${report.decisionCount}`);
-  console.log('\n=== DONE ===');
+  console.log("\n=== DONE ===");
 }
 
 main();

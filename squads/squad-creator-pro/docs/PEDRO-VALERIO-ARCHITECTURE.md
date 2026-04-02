@@ -9,6 +9,7 @@
 ## 1. Visão Geral
 
 O Pedro Valério é um **clone de mente** (mind clone) que opera como agente especializado em:
+
 - Auditoria de processos e workflows
 - Design de veto conditions
 - Validação de compliance com IDS (Incremental Development System)
@@ -72,20 +73,20 @@ claude -p \
 
 ### 3.1 Seções Principais
 
-| Seção | Propósito | Linhas Aprox |
-|-------|-----------|--------------|
-| `activation-instructions` | Como iniciar o agente | ~20 |
-| `agent` | Metadata (name, tier, whenToUse) | ~30 |
-| `persona` | Identidade e core_beliefs | ~50 |
-| `thinking_dna` | Frameworks de pensamento | ~400 |
-| `meta_axiomas` | 10 dimensões de avaliação | ~200 |
-| `heuristics` | Regras de decisão (PV001-IDS005) | ~150 |
-| `voice_dna` | Vocabulário, tom, modos | ~300 |
-| `behavioral_modes` | 5 modos de comportamento | ~80 |
-| `authenticity_markers` | 12 checklist de validação | ~100 |
-| `response_algorithm` | Pseudocódigo de resposta | ~80 |
-| `output_examples` | 9 exemplos de output | ~350 |
-| `commands` | 21 comandos disponíveis | ~50 |
+| Seção                     | Propósito                        | Linhas Aprox |
+| ------------------------- | -------------------------------- | ------------ |
+| `activation-instructions` | Como iniciar o agente            | ~20          |
+| `agent`                   | Metadata (name, tier, whenToUse) | ~30          |
+| `persona`                 | Identidade e core_beliefs        | ~50          |
+| `thinking_dna`            | Frameworks de pensamento         | ~400         |
+| `meta_axiomas`            | 10 dimensões de avaliação        | ~200         |
+| `heuristics`              | Regras de decisão (PV001-IDS005) | ~150         |
+| `voice_dna`               | Vocabulário, tom, modos          | ~300         |
+| `behavioral_modes`        | 5 modos de comportamento         | ~80          |
+| `authenticity_markers`    | 12 checklist de validação        | ~100         |
+| `response_algorithm`      | Pseudocódigo de resposta         | ~80          |
+| `output_examples`         | 9 exemplos de output             | ~350         |
+| `commands`                | 21 comandos disponíveis          | ~50          |
 
 ### 3.2 Hierarquia de Ativação
 
@@ -97,10 +98,10 @@ SEMPRE ATIVO (guia toda resposta):
   - heuristics.veto[*]
 
 ATIVADO POR CONTEXTO:
-  - meta_axiomas         # quando *axioma-assessment
-  - workflow_validation  # quando *modernization-score
-  - behavioral_modes     # detectado automaticamente
-  - output_examples      # pattern matching interno
+  - meta_axiomas # quando *axioma-assessment
+  - workflow_validation # quando *modernization-score
+  - behavioral_modes # detectado automaticamente
+  - output_examples # pattern matching interno
 
 REFERÊNCIA PASSIVA:
   - AIOS Knowledge Sources
@@ -197,7 +198,7 @@ User: "Como configuro automação de status?"
 Output: Explicação didática com demonstração
 ```
 
-### 5.3 Fluxo: *axioma-assessment
+### 5.3 Fluxo: \*axioma-assessment
 
 ```
 User: "*axioma-assessment processo-de-onboarding"
@@ -251,13 +252,13 @@ Output: Pushback direto + demonstração de risco
 
 ### 6.1 Custo por Tipo de Interação
 
-| Cenário | Tokens Usados | % do Total |
-|---------|---------------|------------|
-| Resposta simples ("Show, beleza") | ~200 | 1% |
-| Explicação técnica | ~1500 | 8% |
-| Audit básico | ~3000 | 15% |
-| Audit com *axioma-assessment | ~5000 | 25% |
-| Todas as features ativas | ~15000 | 75% |
+| Cenário                           | Tokens Usados | % do Total |
+| --------------------------------- | ------------- | ---------- |
+| Resposta simples ("Show, beleza") | ~200          | 1%         |
+| Explicação técnica                | ~1500         | 8%         |
+| Audit básico                      | ~3000         | 15%        |
+| Audit com \*axioma-assessment     | ~5000         | 25%        |
+| Todas as features ativas          | ~15000        | 75%        |
 
 ### 6.2 Por Que Não Consome 20k Tokens por Resposta
 
@@ -355,26 +356,27 @@ def respond_as_pedro(message, context):
 
 Toda resposta DEVE ter pelo menos 8/12 markers:
 
-| # | Marker | Check |
-|---|--------|-------|
-| 1 | Clareza radical explícita | Elimina ambiguidade? |
-| 2 | Automação antes de delegação | Sugere automação? |
-| 3 | Responsável único + data | Define dono e prazo? |
-| 4 | Linguagem signature | "deixa eu mostrar", "tá vendo?"? |
-| 5 | Mandamento ou regra | Articula regra clara? |
-| 6 | Integração entre sistemas | Considera conexões? |
-| 7 | Rastreabilidade/log | Menciona registro? |
-| 8 | Propósito acima de tarefa | Conecta "como" ao "por que"? |
-| 9 | Verdade/coerência como filtro | Rejeita inconsistências? |
-| 10 | Perpetuidade/escalabilidade | "Funciona sem mim?"? |
-| 11 | Demonstração ou visualização | Oferece mostrar? |
-| 12 | Culpa do comunicador | Atribui erro ao design? |
+| #   | Marker                        | Check                            |
+| --- | ----------------------------- | -------------------------------- |
+| 1   | Clareza radical explícita     | Elimina ambiguidade?             |
+| 2   | Automação antes de delegação  | Sugere automação?                |
+| 3   | Responsável único + data      | Define dono e prazo?             |
+| 4   | Linguagem signature           | "deixa eu mostrar", "tá vendo?"? |
+| 5   | Mandamento ou regra           | Articula regra clara?            |
+| 6   | Integração entre sistemas     | Considera conexões?              |
+| 7   | Rastreabilidade/log           | Menciona registro?               |
+| 8   | Propósito acima de tarefa     | Conecta "como" ao "por que"?     |
+| 9   | Verdade/coerência como filtro | Rejeita inconsistências?         |
+| 10  | Perpetuidade/escalabilidade   | "Funciona sem mim?"?             |
+| 11  | Demonstração ou visualização  | Oferece mostrar?                 |
+| 12  | Culpa do comunicador          | Atribui erro ao design?          |
 
 ---
 
 ## 9. Comandos Disponíveis (21)
 
 ### Core Process Audit
+
 - `*audit {workflow/task}` - Auditar por falhas de processo
 - `*design-heuristic` - Criar decision heuristic
 - `*find-automation` - Identificar automações faltando
@@ -382,10 +384,12 @@ Toda resposta DEVE ter pelo menos 8/12 markers:
 - `*veto-check` - Validar veto conditions
 
 ### IDS (Incremental Development System)
+
 - `*ids-audit {task/workflow}` - Auditar compliance IDS
 - `*create-rate {project}` - Calcular CREATE rate
 
 ### AIOS Modern Patterns
+
 - `*modernization-score {workflow}` - 12-point checklist
 - `*gate-classification` - Human-in-loop vs automático
 - `*agent-activation-check` - Validar --append-system-prompt
@@ -395,12 +399,14 @@ Toda resposta DEVE ter pelo menos 8/12 markers:
 - `*preservation-audit {refactor}` - Validar preservação
 
 ### Meta-Axiomas & Assessment
+
 - `*axioma-assessment {process}` - Avaliar 10 dimensões
 - `*authenticity-check {response}` - Validar 12 markers
 - `*mode-diagnosis` - Identificar modo ativo
 - `*filter-check` - Validar 6 critical filters
 
 ### General
+
 - `*help` - Mostrar comandos
 - `*exit` - Sair do modo
 
@@ -410,11 +416,11 @@ Toda resposta DEVE ter pelo menos 8/12 markers:
 
 Quando Pedro Valério atinge seus limites, ele faz handoff:
 
-| Situação | Handoff Para | O Que Passa |
-|----------|--------------|-------------|
-| Automação precisa de código | `@dev` | Especificação da lógica |
-| UX/UI além de configuração | `@design` | Lógica + wireframe mental |
-| Processo precisa ser recriado | `squad-chief` | Lista de veto conditions |
+| Situação                      | Handoff Para  | O Que Passa               |
+| ----------------------------- | ------------- | ------------------------- |
+| Automação precisa de código   | `@dev`        | Especificação da lógica   |
+| UX/UI além de configuração    | `@design`     | Lógica + wireframe mental |
+| Processo precisa ser recriado | `squad-chief` | Lista de veto conditions  |
 
 ---
 
@@ -452,5 +458,5 @@ Quando Pedro Valério atinge seus limites, ele faz handoff:
 
 ---
 
-*Documentação criada: 2026-02-06*
-*Clone version: 1832 linhas | 12 frameworks | 21 comandos*
+_Documentação criada: 2026-02-06_
+_Clone version: 1832 linhas | 12 frameworks | 21 comandos_

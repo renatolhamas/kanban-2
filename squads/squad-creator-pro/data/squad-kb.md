@@ -13,6 +13,7 @@ This knowledge base contains comprehensive guidance on creating high-quality AIO
 **What is an Squad?**
 
 An squad is a modular, self-contained extension to AIOS-FULLSTACK that adds domain-specific capabilities through:
+
 - Specialized agents with domain expertise
 - Workflow tasks that solve domain problems
 - Output templates that produce domain artifacts
@@ -51,11 +52,13 @@ squads/{pack-name}/
 ```
 
 **Required Files:**
+
 - `config.yaml` - Pack configuration and metadata
 - `README.md` - Comprehensive documentation
 - At least one agent in `agents/`
 
 **Optional but Recommended:**
+
 - Tasks for common workflows
 - Templates for standard outputs
 - Checklists for validation
@@ -91,12 +94,14 @@ squads/{pack-name}/
 **Authenticity**
 
 Create genuine personas that reflect real domain experts:
+
 - Professional background and experience level
 - Communication style and personality traits
 - Values, priorities, and decision-making approach
 - Areas of expertise and limitations
 
 **Example:**
+
 ```yaml
 persona:
   role: Senior Legal Contract Specialist with 15+ years experience
@@ -108,6 +113,7 @@ persona:
 **Consistency**
 
 Ensure persona is consistent across:
+
 - Communication tone and style
 - Decision-making approach
 - Expertise level and confidence
@@ -118,6 +124,7 @@ Ensure persona is consistent across:
 **Naming Conventions**
 
 All commands start with `*`:
+
 - `*help` - Show available commands (required)
 - `*create-X` - Create new artifact
 - `*review-X` - Review existing artifact
@@ -173,6 +180,7 @@ customization: |
 **1. Simple Linear Workflows**
 
 Sequential steps without branching:
+
 ```markdown
 Step 1: Gather requirements
 Step 2: Process data
@@ -183,6 +191,7 @@ Step 4: Validate results
 **2. Interactive Workflows**
 
 Gather information through elicitation:
+
 ```markdown
 Step 1: Ask user for X
 Step 2: Based on X, determine Y
@@ -193,6 +202,7 @@ Step 4: Generate customized output
 **3. Complex Workflows**
 
 Multiple sections with conditional logic:
+
 ```markdown
 Section 1: Initial setup (always)
 Section 2: Basic info (always)
@@ -204,6 +214,7 @@ Section 5: Finalize (always)
 **4. Orchestration Workflows**
 
 Coordinate multiple sub-tasks:
+
 ```markdown
 Step 1: Execute task A
 Step 2: If A succeeds, execute task B and C in parallel
@@ -217,6 +228,7 @@ Step 5: Validate complete workflow
 **Incremental vs "YOLO" Mode**
 
 Always offer users choice:
+
 ```markdown
 - Ask: "How would you like to proceed?
   A. Incremental: Step-by-step with review at each stage
@@ -251,6 +263,7 @@ custom_elicitation:
 
 ```markdown
 ## Validation
+
 - [ ] Required field X is present
 - [ ] Format matches specification Y
 - [ ] Business rule Z is satisfied
@@ -372,7 +385,7 @@ sections:
 sections:
   - id: advanced-config
     title: Advanced Configuration
-    condition: {{requires_advanced_config}}
+    condition: { { requires_advanced_config } }
     template: |
       ## Advanced Settings
       {{advanced_settings}}
@@ -398,26 +411,31 @@ sections:
 ### 5.1 Validation Levels
 
 **Level 1: Syntax Validation**
+
 - YAML/JSON parsing succeeds
 - Markdown renders correctly
 - No broken references
 
 **Level 2: Structural Validation**
+
 - All required fields present
 - Dependencies exist
 - Naming conventions followed
 
 **Level 3: Functional Validation**
+
 - Agents activate successfully
 - Tasks execute completely
 - Templates generate valid output
 
 **Level 4: Domain Validation**
+
 - Content is domain-appropriate
 - Expertise level is credible
 - Outputs meet professional standards
 
 **Level 5: Integration Validation**
+
 - Integrates with AIOS framework
 - Works with other packs
 - Memory layer functions correctly
@@ -427,6 +445,7 @@ sections:
 **Component Testing**
 
 Test each component independently:
+
 1. Agent activation
 2. Command execution
 3. Task workflow
@@ -436,6 +455,7 @@ Test each component independently:
 **Integration Testing**
 
 Test components together:
+
 1. Agent → Task execution
 2. Task → Template generation
 3. Agent → Checklist validation
@@ -444,6 +464,7 @@ Test components together:
 **User Acceptance Testing**
 
 Real-world usage scenarios:
+
 1. New user installation
 2. Typical workflow execution
 3. Error recovery
@@ -458,6 +479,7 @@ Real-world usage scenarios:
 **Never Generate Unsafe Code**
 
 Prohibited patterns:
+
 - `eval()` or dynamic code execution
 - Unvalidated input to system commands
 - SQL injection vulnerabilities
@@ -467,6 +489,7 @@ Prohibited patterns:
 **Safe Code Patterns**
 
 Required practices:
+
 - Input sanitization
 - Output encoding
 - Parameterized queries
@@ -512,6 +535,7 @@ api_key: "{{API_KEY}}"  # Load from environment variable
 **Clear Purpose**
 
 Every component should answer:
+
 - What does this do?
 - When should I use it?
 - What do I need to provide?
@@ -529,6 +553,7 @@ Every component should answer:
 **Essential Documentation**
 
 Every pack must document:
+
 1. Purpose and use cases
 2. Installation instructions
 3. Usage examples
@@ -548,6 +573,7 @@ Every pack must document:
 **User-Friendly Errors**
 
 Good error message structure:
+
 1. What went wrong
 2. Why it went wrong
 3. How to fix it
@@ -571,6 +597,7 @@ Good error message structure:
 ### 8.1 Professional Services
 
 **Legal Domain**
+
 - Emphasize compliance and risk management
 - Use precise legal terminology
 - Include regulatory references
@@ -578,6 +605,7 @@ Good error message structure:
 - Validate against legal standards
 
 **Medical/Healthcare**
+
 - Prioritize patient safety
 - Use standard medical terminology
 - Include evidence-based practices
@@ -585,6 +613,7 @@ Good error message structure:
 - Validate against clinical guidelines
 
 **Financial Services**
+
 - Focus on accuracy and audit trails
 - Use financial reporting standards
 - Include risk assessments
@@ -594,6 +623,7 @@ Good error message structure:
 ### 8.2 Creative Domains
 
 **Content Creation**
+
 - Emphasize creativity and originality
 - Support iterative refinement
 - Provide style guidance
@@ -601,6 +631,7 @@ Good error message structure:
 - Encourage experimentation
 
 **Design & Architecture**
+
 - Visual thinking support
 - Include diagrams and mockups
 - Provide design patterns
@@ -610,6 +641,7 @@ Good error message structure:
 ### 8.3 Technical Domains
 
 **Software Development**
+
 - Follow coding standards
 - Include testing strategies
 - Provide architecture patterns
@@ -617,6 +649,7 @@ Good error message structure:
 - Emphasize maintainability
 
 **Data & Analytics**
+
 - Focus on accuracy and rigor
 - Include statistical methods
 - Provide visualization options
@@ -632,6 +665,7 @@ Good error message structure:
 **Agent Activation**
 
 Standard syntax: `@agent-id`
+
 ```bash
 @{squad-name}:{agent-name}  # e.g., @legal-contract-specialist
 ```
@@ -639,6 +673,7 @@ Standard syntax: `@agent-id`
 **Command Execution**
 
 Standard syntax: `*command-name`
+
 ```bash
 *create-contract
 *review-document
@@ -648,17 +683,18 @@ Standard syntax: `*command-name`
 **Memory Layer**
 
 Store and retrieve domain knowledge:
+
 ```javascript
 // Save to memory
-memory.save('legal-contracts', {
-  template: 'service-agreement',
-  jurisdiction: 'california',
-  created: Date.now()
+memory.save("legal-contracts", {
+  template: "service-agreement",
+  jurisdiction: "california",
+  created: Date.now(),
 });
 
 // Retrieve from memory
-const contracts = memory.query('legal-contracts', {
-  jurisdiction: 'california'
+const contracts = memory.query("legal-contracts", {
+  jurisdiction: "california",
 });
 ```
 
@@ -667,16 +703,18 @@ const contracts = memory.query('legal-contracts', {
 **Dependency Declaration**
 
 In `config.yaml`:
+
 ```yaml
 dependencies:
-  - aios-developer  # For code generation
-  - document-library  # For templates
+  - aios-developer # For code generation
+  - document-library # For templates
 ```
 
 **Agent Collaboration**
 
 ```markdown
 ## Integration Points
+
 - Collaborate with @architect for system design
 - Use @qa-specialist for validation
 - Integrate with @pm for planning
@@ -720,6 +758,7 @@ integration:
 **Upgrade Guidance**
 
 Document for each version:
+
 - What changed
 - Why it changed
 - Migration steps
@@ -739,6 +778,7 @@ Document for each version:
 **Adding New Components**
 
 Making it easy to add:
+
 - New agents (via templates)
 - New tasks (via patterns)
 - New templates (via examples)
@@ -818,6 +858,7 @@ KB: workflow-patterns.md
 **Agent Won't Activate**
 
 Possible causes:
+
 - Agent ID doesn't match filename
 - YAML syntax error in agent definition
 - Missing required fields in agent config
@@ -827,6 +868,7 @@ Solution: Validate YAML syntax and check all required fields
 **Task Fails to Execute**
 
 Possible causes:
+
 - Referenced template doesn't exist
 - Elicitation configuration invalid
 - Task instructions ambiguous
@@ -836,6 +878,7 @@ Solution: Verify all dependencies exist and instructions are clear
 **Template Generates Invalid Output**
 
 Possible causes:
+
 - Placeholder names mismatch
 - YAML syntax errors
 - Conditional logic errors
@@ -857,50 +900,61 @@ Solution: Test template with sample data, validate YAML syntax
 ### 13.1 Design Anti-Patterns
 
 ❌ **Monolithic Agents**
+
 - One agent trying to do everything
 - Better: Specialized agents for different roles
 
 ❌ **Over-Complex Tasks**
+
 - Tasks with 20+ steps
 - Better: Break into smaller, focused tasks
 
 ❌ **Template Explosion**
+
 - 50 nearly-identical templates
 - Better: One flexible template with conditionals
 
 ❌ **Circular Dependencies**
+
 - Agent A needs Task B which needs Agent A
 - Better: Hierarchical dependencies
 
 ### 13.2 Technical Anti-Patterns
 
 ❌ **Hardcoded Values**
+
 - Embedding specific values in templates
 - Better: Use placeholders and configuration
 
 ❌ **Unclear References**
+
 - Generic names like `task1.md`, `template.yaml`
 - Better: Descriptive names like `create-contract.md`
 
 ❌ **Insufficient Validation**
+
 - No error checking
 - Better: Comprehensive validation at each step
 
 ❌ **Poor Error Messages**
+
 - "Error: Invalid"
 - Better: "Error: Contract duration must be 1-60 months. You provided: 0"
 
 ### 13.3 UX Anti-Patterns
 
 ❌ **Expert-Only Language**
+
 - Using jargon without explanation
 - Better: Explain terms or provide glossary
 
 ❌ **Missing Examples**
+
 - Documentation without usage examples
 - Better: At least 2-3 realistic examples
 
 ❌ **Assumed Knowledge**
+
 - Expecting users know AIOS internals
 - Better: Self-contained documentation
 
@@ -911,11 +965,13 @@ Solution: Test template with sample data, validate YAML syntax
 ### 14.1 Design for Change
 
 **Principle: Loose Coupling**
+
 - Components interact through well-defined interfaces
 - Changes to one component don't break others
 - Easy to swap implementations
 
 **Principle: High Cohesion**
+
 - Related functionality grouped together
 - Each component has single, clear purpose
 - Minimal cross-component dependencies
@@ -923,12 +979,14 @@ Solution: Test template with sample data, validate YAML syntax
 ### 14.2 Technology Evolution
 
 **Stay Current**
+
 - Monitor AIOS framework updates
 - Update dependencies regularly
 - Test with new AIOS versions
 - Deprecate obsolete features gracefully
 
 **Plan for Growth**
+
 - Modular architecture
 - Extensible designs
 - Configuration-driven behavior
@@ -967,6 +1025,7 @@ Solution: Test template with sample data, validate YAML syntax
 ## CONCLUSION
 
 Creating high-quality squads requires:
+
 1. Deep domain understanding
 2. User-centered design
 3. Technical excellence
@@ -974,6 +1033,7 @@ Creating high-quality squads requires:
 5. Continuous improvement
 
 Follow this knowledge base to create squads that:
+
 - Solve real problems
 - Provide genuine value
 - Delight users

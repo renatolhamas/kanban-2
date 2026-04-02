@@ -30,10 +30,22 @@
       "type": "object",
       "description": "Default paths for framework resources",
       "properties": {
-        "agents_dir": { "type": "string", "description": "Path to agent definitions" },
-        "tasks_dir": { "type": "string", "description": "Path to task definitions" },
-        "templates_dir": { "type": "string", "description": "Path to templates" },
-        "checklists_dir": { "type": "string", "description": "Path to checklists" },
+        "agents_dir": {
+          "type": "string",
+          "description": "Path to agent definitions"
+        },
+        "tasks_dir": {
+          "type": "string",
+          "description": "Path to task definitions"
+        },
+        "templates_dir": {
+          "type": "string",
+          "description": "Path to templates"
+        },
+        "checklists_dir": {
+          "type": "string",
+          "description": "Path to checklists"
+        },
         "tools_dir": { "type": "string", "description": "Path to tools" },
         "scripts": {
           "type": "object",
@@ -46,9 +58,18 @@
           },
           "additionalProperties": false
         },
-        "data_dir": { "type": "string", "description": "Path to data directory" },
-        "elicitation_dir": { "type": "string", "description": "Path to elicitation templates" },
-        "squads_template_dir": { "type": "string", "description": "Path to squad templates" },
+        "data_dir": {
+          "type": "string",
+          "description": "Path to data directory"
+        },
+        "elicitation_dir": {
+          "type": "string",
+          "description": "Path to elicitation templates"
+        },
+        "squads_template_dir": {
+          "type": "string",
+          "description": "Path to squad templates"
+        },
         "minds_dir": { "type": "string", "description": "Path to minds output" }
       },
       "additionalProperties": false
@@ -107,7 +128,10 @@
       "description": "IDE synchronization system for agent definitions",
       "properties": {
         "enabled": { "type": "boolean", "default": true },
-        "source": { "type": "string", "description": "Source directory for agent definitions" },
+        "source": {
+          "type": "string",
+          "description": "Source directory for agent definitions"
+        },
         "targets": {
           "type": "object",
           "description": "IDE target configurations",
@@ -116,7 +140,14 @@
             "properties": {
               "enabled": { "type": "boolean" },
               "path": { "type": "string" },
-              "format": { "type": "string", "enum": ["full-markdown-yaml", "condensed-rules", "cursor-style"] }
+              "format": {
+                "type": "string",
+                "enum": [
+                  "full-markdown-yaml",
+                  "condensed-rules",
+                  "cursor-style"
+                ]
+              }
             },
             "additionalProperties": false
           }

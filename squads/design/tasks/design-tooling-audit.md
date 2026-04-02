@@ -16,9 +16,11 @@ This task provides a structured approach to auditing the design tool ecosystem. 
 ## Malouf Framework Reference
 
 ### Core Principle
+
 > "The best tools amplify good process - they can't fix bad process."
 
 ### Tool Categories (How We Work Lens)
+
 1. **Design Tools** - Core design work (Figma, Sketch, etc.)
 2. **Prototyping Tools** - Interactive prototypes
 3. **Collaboration Tools** - Communication and feedback
@@ -28,14 +30,15 @@ This task provides a structured approach to auditing the design tool ecosystem. 
 7. **Documentation Tools** - Specs and guidelines
 
 ### Evaluation Criteria
-| Criterion | Description |
-|-----------|-------------|
-| Adoption | What % of team uses it? |
-| Workflow Fit | Does it match how we work? |
-| Integration | Does it connect to other tools? |
-| Governance | Are there clear usage guidelines? |
-| Cost Efficiency | Value vs cost? |
-| Scalability | Will it work as we grow? |
+
+| Criterion       | Description                       |
+| --------------- | --------------------------------- |
+| Adoption        | What % of team uses it?           |
+| Workflow Fit    | Does it match how we work?        |
+| Integration     | Does it connect to other tools?   |
+| Governance      | Are there clear usage guidelines? |
+| Cost Efficiency | Value vs cost?                    |
+| Scalability     | Will it work as we grow?          |
 
 ## Task Steps
 
@@ -169,16 +172,18 @@ output: |
   ## WORKFLOW-TOOL MAPPING
 
   ### Design Creation Workflow
-  ```
-  [Step 1] --[Tool]--> [Step 2] --[Tool]--> [Step 3]
-                              |
-                         [Gap: ...]
-  ```
+```
 
-  ### Identified Gaps
-  | Workflow | Step | Gap Description | Impact |
-  |----------|------|-----------------|--------|
-  | [workflow] | [step] | [gap] | [high/med/low] |
+[Step 1] --[Tool]--> [Step 2] --[Tool]--> [Step 3]
+|
+[Gap: ...]
+
+```
+
+### Identified Gaps
+| Workflow | Step | Gap Description | Impact |
+|----------|------|-----------------|--------|
+| [workflow] | [step] | [gap] | [high/med/low] |
 ```
 
 ### Phase 4: Governance Assessment
@@ -368,13 +373,13 @@ output: |
 
 ## Common Tool Stack Anti-patterns
 
-| Anti-pattern | Symptom | Solution |
-|--------------|---------|----------|
-| Tool sprawl | 5+ tools for similar function | Consolidate |
-| Shelfware | Paid tools unused | Audit and sunset |
-| Shadow IT | Unapproved tools in use | Governance + training |
-| Missing governance | No standards or ownership | Establish governance |
-| Poor integration | Manual data transfer | Invest in integration |
+| Anti-pattern       | Symptom                       | Solution              |
+| ------------------ | ----------------------------- | --------------------- |
+| Tool sprawl        | 5+ tools for similar function | Consolidate           |
+| Shelfware          | Paid tools unused             | Audit and sunset      |
+| Shadow IT          | Unapproved tools in use       | Governance + training |
+| Missing governance | No standards or ownership     | Establish governance  |
+| Poor integration   | Manual data transfer          | Invest in integration |
 
 ## Related Tasks
 
@@ -392,13 +397,14 @@ output: |
 
 > Remember: A tool audit without workflow understanding is just a spreadsheet exercise. Understand how work flows, then evaluate if tools support that flow.
 
-
 ## Process Guards
+
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
+
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

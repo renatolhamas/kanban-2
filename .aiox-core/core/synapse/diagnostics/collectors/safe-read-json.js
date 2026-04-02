@@ -8,9 +8,9 @@
  * @created Story SYN-14 (QA refactor)
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs');
+const fs = require("fs");
 
 /**
  * Safely read and parse a JSON file.
@@ -22,7 +22,7 @@ const fs = require('fs');
 function safeReadJson(filePath) {
   try {
     if (!fs.existsSync(filePath)) return null;
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
   } catch {
     return null;
   }

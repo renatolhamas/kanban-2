@@ -9,12 +9,12 @@ Framework for classifying WHO executes each task in a workflow.
 
 ## 1. Executor Types
 
-| Type | Characteristics | Cost | Speed | When to Use |
-|------|-----------------|------|-------|-------------|
-| **Human** | Judgment, creativity, relationships | $$$ | Slow | Critical decisions, negotiations, creative work |
-| **Agent (AI)** | Analysis, generation, pattern recognition | $$$$ | Fast | Data analysis, content generation, pattern matching |
-| **Hybrid** | AI assists, human validates | $$ | Moderate | Reviews, assisted approvals, quality validation |
-| **Worker** | Deterministic, APIs, file operations | $ | Very Fast | Automations, integrations, file operations |
+| Type           | Characteristics                           | Cost | Speed     | When to Use                                         |
+| -------------- | ----------------------------------------- | ---- | --------- | --------------------------------------------------- |
+| **Human**      | Judgment, creativity, relationships       | $$$  | Slow      | Critical decisions, negotiations, creative work     |
+| **Agent (AI)** | Analysis, generation, pattern recognition | $$$$ | Fast      | Data analysis, content generation, pattern matching |
+| **Hybrid**     | AI assists, human validates               | $$   | Moderate  | Reviews, assisted approvals, quality validation     |
+| **Worker**     | Deterministic, APIs, file operations      | $    | Very Fast | Automations, integrations, file operations          |
 
 ---
 
@@ -196,18 +196,18 @@ START: What type of task is this?
 
 ## 4. Selection Matrix
 
-| Requirement | Human | Agent | Hybrid | Worker |
-|-------------|-------|-------|--------|--------|
-| Creativity | ✅ | ⚠️ | ✅ | ❌ |
-| Judgment | ✅ | ⚠️ | ✅ | ❌ |
-| Speed | ❌ | ✅ | ⚠️ | ✅ |
-| Consistency | ⚠️ | ✅ | ✅ | ✅ |
-| Scale | ❌ | ✅ | ✅ | ✅ |
-| Low cost | ❌ | ⚠️ | ✅ | ✅ |
-| Complex reasoning | ✅ | ⚠️ | ✅ | ❌ |
-| Data processing | ⚠️ | ✅ | ✅ | ✅ |
-| Relationships | ✅ | ❌ | ⚠️ | ❌ |
-| Availability | ⚠️ | ✅ | ✅ | ✅ |
+| Requirement       | Human | Agent | Hybrid | Worker |
+| ----------------- | ----- | ----- | ------ | ------ |
+| Creativity        | ✅    | ⚠️    | ✅     | ❌     |
+| Judgment          | ✅    | ⚠️    | ✅     | ❌     |
+| Speed             | ❌    | ✅    | ⚠️     | ✅     |
+| Consistency       | ⚠️    | ✅    | ✅     | ✅     |
+| Scale             | ❌    | ✅    | ✅     | ✅     |
+| Low cost          | ❌    | ⚠️    | ✅     | ✅     |
+| Complex reasoning | ✅    | ⚠️    | ✅     | ❌     |
+| Data processing   | ⚠️    | ✅    | ✅     | ✅     |
+| Relationships     | ✅    | ❌    | ⚠️     | ❌     |
+| Availability      | ⚠️    | ✅    | ✅     | ✅     |
 
 Legend: ✅ Strong | ⚠️ Moderate | ❌ Weak
 
@@ -250,8 +250,7 @@ task:
 pattern: "ai-draft-human-review"
 executor: Hybrid
 
-flow:
-  1. Agent creates initial draft
+flow: 1. Agent creates initial draft
   2. Human reviews and provides feedback
   3. Agent incorporates feedback
   4. Human approves final version
@@ -268,8 +267,7 @@ use_when:
 pattern: "human-decision-ai-execution"
 executor: Hybrid
 
-flow:
-  1. Human makes strategic decision
+flow: 1. Human makes strategic decision
   2. Agent executes decision at scale
   3. Worker handles mechanical tasks
   4. Human reviews results
@@ -286,8 +284,7 @@ use_when:
 pattern: "automated-pipeline"
 executor: Worker + Agent
 
-flow:
-  1. Trigger event occurs
+flow: 1. Trigger event occurs
   2. Worker fetches/transforms data
   3. Agent processes/analyzes
   4. Worker stores/distributes results
@@ -305,8 +302,7 @@ use_when:
 pattern: "human-critical"
 executor: Human with Worker support
 
-flow:
-  1. Worker prepares context and data
+flow: 1. Worker prepares context and data
   2. Human makes critical decision
   3. Worker executes approved action
   4. Human monitors outcome
@@ -401,8 +397,7 @@ migration:
   from: Human
   to: Hybrid
   trigger: "Task is repeatable with pattern"
-  steps:
-    1. Document human decision criteria
+  steps: 1. Document human decision criteria
     2. Train AI on historical decisions
     3. Start with AI draft, human review
     4. Reduce human involvement as confidence grows
@@ -415,8 +410,7 @@ migration:
   from: Hybrid
   to: Agent
   trigger: "Human approval rate > 95%"
-  steps:
-    1. Analyze rejection reasons
+  steps: 1. Analyze rejection reasons
     2. Codify edge cases
     3. Implement automated validation
     4. Move to exception-only human review
@@ -429,8 +423,7 @@ migration:
   from: Agent
   to: Worker
   trigger: "Task becomes deterministic"
-  steps:
-    1. Identify stable patterns
+  steps: 1. Identify stable patterns
     2. Codify rules
     3. Implement as script/automation
     4. Remove AI dependency
@@ -438,4 +431,4 @@ migration:
 
 ---
 
-*AIOS Executor Matrix Framework v1.0*
+_AIOS Executor Matrix Framework v1.0_

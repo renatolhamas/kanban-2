@@ -7,7 +7,7 @@
 validation_report:
   squad_name: copy
   squad_type: pipeline
-  validation_date: '2026-02-11'
+  validation_date: "2026-02-11"
   model: haiku
   validator: Squad Architect v3.3.0
 

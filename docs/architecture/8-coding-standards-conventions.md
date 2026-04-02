@@ -13,7 +13,7 @@
 interface User {
   id: UUID;
   email: string;
-  role: 'owner' | 'attendant';
+  role: "owner" | "attendant";
 }
 
 async function getUser(id: UUID): Promise<User> {
@@ -21,34 +21,35 @@ async function getUser(id: UUID): Promise<User> {
 }
 
 // ❌ Avoid
-const getUser = (id) => { // Missing type annotation
+const getUser = (id) => {
+  // Missing type annotation
   // ...
 };
 ```
 
 ## 8.2 File Naming Conventions
 
-| Category | Pattern | Example |
-|----------|---------|---------|
-| Components | PascalCase + `.tsx` | `KanbanBoard.tsx` |
-| Hooks | `use` prefix + camelCase | `useConversations.ts` |
-| Utilities | camelCase + `.ts` | `formatPhone.ts` |
-| API routes | kebab-case + `route.ts` | `/conversations/[id]/route.ts` |
-| Types | PascalCase (same as interface) | `User.ts` → `export interface User {}` |
+| Category   | Pattern                        | Example                                |
+| ---------- | ------------------------------ | -------------------------------------- |
+| Components | PascalCase + `.tsx`            | `KanbanBoard.tsx`                      |
+| Hooks      | `use` prefix + camelCase       | `useConversations.ts`                  |
+| Utilities  | camelCase + `.ts`              | `formatPhone.ts`                       |
+| API routes | kebab-case + `route.ts`        | `/conversations/[id]/route.ts`         |
+| Types      | PascalCase (same as interface) | `User.ts` → `export interface User {}` |
 
 ## 8.3 Imports Organization
 
 ```typescript
 // 1. External packages
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@supabase/auth-helpers-nextjs';
+import React, { useState, useEffect } from "react";
+import { supabase } from "@supabase/auth-helpers-nextjs";
 
 // 2. Absolute imports (@/*)
-import { useAuth } from '@/hooks/useAuth';
-import { User } from '@/lib/types/database';
+import { useAuth } from "@/hooks/useAuth";
+import { User } from "@/lib/types/database";
 
 // 3. Relative imports
-import { Header } from '../layout/Header';
+import { Header } from "../layout/Header";
 ```
 
 ## 8.4 Error Handling Pattern
@@ -87,11 +88,11 @@ interface KanbanBoardProps {
 
 export function KanbanBoard({ kanbanId, onCardClick }: KanbanBoardProps) {
   const [columns, setColumns] = useState<Column[]>([]);
-  
+
   useEffect(() => {
     // Load data
   }, [kanbanId]);
-  
+
   return (
     <div className="kanban-board">
       {/* JSX */}

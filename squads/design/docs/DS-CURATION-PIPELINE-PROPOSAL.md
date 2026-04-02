@@ -22,18 +22,18 @@ O AIOS precisa transformar dados BRUTOS de Figma (31K+ nodes, 146+ cores, 76 tex
 
 As decisoes de padronizacao sao fundamentadas nestas fontes, nesta ordem de prioridade:
 
-| Tier | Fonte | Tipo | Arquivo Local |
-|------|-------|------|---------------|
-| S | W3C DTCG Spec v1.0 (Oct 2025) | Standard | `squads/design/data/w3c-dtcg-spec-reference.md` |
-| S | WCAG 2.2 / APCA | Standard | `squads/design/data/wcag-compliance-guide.md` |
-| A | Brad Frost — Atomic Design + DS+AI | Authority | `squads/design/data/brad-frost-dna.yaml` (714 lines) |
-| A | Workshop Alan/Ruan/Pedro 2026-02-16 | Internal | `docs/research/2026-02-16-ux-writing-governance-ds-ai/meeting-insights-2026-02-16.md` |
-| A | Tailwind v4 + Shadcn v4 Conventions | Technology | `docs/research/2026-02-16-tailwind-shadcn-design-system-componentization/02-research-report.md` |
-| B | Material Design 3 (Google) | Enterprise | `squads/design/data/ds-reference-architectures.md` |
-| B | Fluent 2 (Microsoft) | Enterprise | `squads/design/data/fluent2-design-principles.md` |
-| B | Carbon (IBM) / Spectrum (Adobe) | Enterprise | `squads/design/data/ds-reference-architectures.md` |
-| B | Nathan Curtis / EightShapes | Authority | Web research (token naming patterns) |
-| C | Vignelli Design Philosophy | Aesthetic | `docs/research/2026-02-13-vignelli-design-philosophy/02-report.md` |
+| Tier | Fonte                               | Tipo       | Arquivo Local                                                                                   |
+| ---- | ----------------------------------- | ---------- | ----------------------------------------------------------------------------------------------- |
+| S    | W3C DTCG Spec v1.0 (Oct 2025)       | Standard   | `squads/design/data/w3c-dtcg-spec-reference.md`                                                 |
+| S    | WCAG 2.2 / APCA                     | Standard   | `squads/design/data/wcag-compliance-guide.md`                                                   |
+| A    | Brad Frost — Atomic Design + DS+AI  | Authority  | `squads/design/data/brad-frost-dna.yaml` (714 lines)                                            |
+| A    | Workshop Alan/Ruan/Pedro 2026-02-16 | Internal   | `docs/research/2026-02-16-ux-writing-governance-ds-ai/meeting-insights-2026-02-16.md`           |
+| A    | Tailwind v4 + Shadcn v4 Conventions | Technology | `docs/research/2026-02-16-tailwind-shadcn-design-system-componentization/02-research-report.md` |
+| B    | Material Design 3 (Google)          | Enterprise | `squads/design/data/ds-reference-architectures.md`                                              |
+| B    | Fluent 2 (Microsoft)                | Enterprise | `squads/design/data/fluent2-design-principles.md`                                               |
+| B    | Carbon (IBM) / Spectrum (Adobe)     | Enterprise | `squads/design/data/ds-reference-architectures.md`                                              |
+| B    | Nathan Curtis / EightShapes         | Authority  | Web research (token naming patterns)                                                            |
+| C    | Vignelli Design Philosophy          | Aesthetic  | `docs/research/2026-02-13-vignelli-design-philosophy/02-report.md`                              |
 
 **Regra:** Decisoes de padronizacao DEVEM citar pelo menos 1 fonte Tier S ou A. Fontes B/C sao complementares.
 
@@ -111,11 +111,13 @@ As decisoes de padronizacao sao fundamentadas nestas fontes, nesta ordem de prio
 **Upgrade do algoritmo atual:** HSL clustering → OKLCH deltaE clustering.
 
 **Por que OKLCH e nao HSL:**
+
 - HSL nao e perceptualmente uniforme (fonte: W3C DTCG, Tailwind v4, Shadcn v4)
 - OKLCH garante que `deltaE = 5%` realmente PARECE 5% diferente pro olho humano
 - Material Design 3 ja usa paletas tonais OKLCH-like (0-100 scale)
 
 **Algoritmo:**
+
 ```
 Input: Array de cores hex/rgb do Figma raw
   ↓
@@ -153,6 +155,7 @@ Output: Paleta consolidada (tipicamente 8-15 cores primarias)
 ### 4.2 SPACING — GCD Base Unit + Harmonic Scale
 
 **Algoritmo:**
+
 ```
 Input: Todos os valores de padding, margin, gap do Figma raw
   ↓
@@ -186,6 +189,7 @@ Output: 13-16 spacing tokens (escala consistente)
 ### 4.3 TYPOGRAPHY — Modular Scale + Font Consolidation
 
 **Algoritmo:**
+
 ```
 Input: Todas as font families, sizes, weights, line-heights do Figma raw
   ↓
@@ -227,6 +231,7 @@ Output: 3 families, 9-10 sizes, 5 weights, 4 line-heights, 4 letter-spacings
 ### 4.4 SHADOWS — Depth Level Consolidation
 
 **Algoritmo:**
+
 ```
 Input: Todos os box-shadow/drop-shadow do Figma raw
   ↓
@@ -255,6 +260,7 @@ Output: 5-7 shadow tokens + 0-2 brand-specific
 ### 4.5 BORDER RADIUS — Harmonic Scale
 
 **Algoritmo:**
+
 ```
 Input: Todos os border-radius do Figma raw
   ↓
@@ -402,27 +408,27 @@ Apos executar todos os algoritmos, o pipeline gera um `curation-report.json`:
 
 ### 6.1 Scripts a Criar
 
-| Script | Funcao | Input | Output |
-|--------|--------|-------|--------|
-| `squads/design/scripts/design-system/curate_colors.cjs` | OKLCH clustering + contrast validation | figma-tokens-raw.json | curated-colors.json |
-| `squads/design/scripts/design-system/curate_spacing.cjs` | GCD detection + scale generation | figma-tokens-raw.json | curated-spacing.json |
-| `squads/design/scripts/design-system/curate_typography.cjs` | Font consolidation + modular scale | figma-tokens-raw.json | curated-typography.json |
-| `squads/design/scripts/design-system/curate_shadows.cjs` | Depth bucketing + token replacement | figma-tokens-raw.json | curated-shadows.json |
-| `squads/design/scripts/design-system/curate_radius.cjs` | Harmonic scale mapping | figma-tokens-raw.json | curated-radius.json |
-| `squads/design/scripts/design-system/curate_components.cjs` | Frequency filter + atomic classification | figma-tokens-raw.json | curated-components.json |
-| `squads/design/scripts/design-system/generate_tokens.cjs` | Combina curated-*.json → CSS tokens | curated-*.json | tokens/*.css |
-| `squads/design/scripts/design-system/generate_curation_report.cjs` | Scoring + decision trail | curated-*.json | curation-report.json |
-| `squads/design/scripts/design-system/validate_curation.cjs` | Quality gates (thresholds check) | curation-report.json | PASS/FAIL |
+| Script                                                             | Funcao                                   | Input                 | Output                  |
+| ------------------------------------------------------------------ | ---------------------------------------- | --------------------- | ----------------------- |
+| `squads/design/scripts/design-system/curate_colors.cjs`            | OKLCH clustering + contrast validation   | figma-tokens-raw.json | curated-colors.json     |
+| `squads/design/scripts/design-system/curate_spacing.cjs`           | GCD detection + scale generation         | figma-tokens-raw.json | curated-spacing.json    |
+| `squads/design/scripts/design-system/curate_typography.cjs`        | Font consolidation + modular scale       | figma-tokens-raw.json | curated-typography.json |
+| `squads/design/scripts/design-system/curate_shadows.cjs`           | Depth bucketing + token replacement      | figma-tokens-raw.json | curated-shadows.json    |
+| `squads/design/scripts/design-system/curate_radius.cjs`            | Harmonic scale mapping                   | figma-tokens-raw.json | curated-radius.json     |
+| `squads/design/scripts/design-system/curate_components.cjs`        | Frequency filter + atomic classification | figma-tokens-raw.json | curated-components.json |
+| `squads/design/scripts/design-system/generate_tokens.cjs`          | Combina curated-\*.json → CSS tokens     | curated-\*.json       | tokens/\*.css           |
+| `squads/design/scripts/design-system/generate_curation_report.cjs` | Scoring + decision trail                 | curated-\*.json       | curation-report.json    |
+| `squads/design/scripts/design-system/validate_curation.cjs`        | Quality gates (thresholds check)         | curation-report.json  | PASS/FAIL               |
 
 ### 6.2 Integracao com MCP
 
 Novas tools para o MCP server:
 
-| Tool | Descricao |
-|------|-----------|
-| `design_system.curate_brand` | Executa pipeline completo para uma brand |
-| `design_system.get_curation_report` | Retorna ultimo curation-report.json |
-| `design_system.compare_brands` | Compara tokens entre 2 brands |
+| Tool                                | Descricao                                |
+| ----------------------------------- | ---------------------------------------- |
+| `design_system.curate_brand`        | Executa pipeline completo para uma brand |
+| `design_system.get_curation_report` | Retorna ultimo curation-report.json      |
+| `design_system.compare_brands`      | Compara tokens entre 2 brands            |
 
 ### 6.3 Integracao com Workflow Existente
 
@@ -441,39 +447,39 @@ Pipeline novo:   ingest → curate → tokenize → validate → output
 
 ### 7.1 Decisoes que EXIGEM julgamento humano
 
-| Decisao | Por que nao automatiza | Mitigacao |
-|---------|----------------------|-----------|
-| **Identidade de marca** | A cor accent (#D4AF37 gold vs #D4FF00 lime) e uma decisao de negocio, nao tecnica | Pipeline PRESERVA accent, so consolida variantes |
-| **Hierarquia visual** | Qual componente e "hero" vs "secondary" depende do contexto da pagina | Pipeline classifica por frequencia, humano valida prioridade |
-| **Tom emocional** | Sombras suaves vs dramaticas, radius arredondado vs angular = decisao estetica | Pipeline oferece opcoes ranked, humano escolhe |
-| **Excepcoes de marca** | Um botao com radius especial para campanha, uma cor fora do padrao | Pipeline flagga como "override manual" com justificativa obrigatoria |
-| **Contexto de uso** | O mesmo componente pode precisar de variantes diferentes em checkout vs landing page | Pipeline cria variantes semanticas, humano valida mapeamento |
+| Decisao                 | Por que nao automatiza                                                               | Mitigacao                                                            |
+| ----------------------- | ------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
+| **Identidade de marca** | A cor accent (#D4AF37 gold vs #D4FF00 lime) e uma decisao de negocio, nao tecnica    | Pipeline PRESERVA accent, so consolida variantes                     |
+| **Hierarquia visual**   | Qual componente e "hero" vs "secondary" depende do contexto da pagina                | Pipeline classifica por frequencia, humano valida prioridade         |
+| **Tom emocional**       | Sombras suaves vs dramaticas, radius arredondado vs angular = decisao estetica       | Pipeline oferece opcoes ranked, humano escolhe                       |
+| **Excepcoes de marca**  | Um botao com radius especial para campanha, uma cor fora do padrao                   | Pipeline flagga como "override manual" com justificativa obrigatoria |
+| **Contexto de uso**     | O mesmo componente pode precisar de variantes diferentes em checkout vs landing page | Pipeline cria variantes semanticas, humano valida mapeamento         |
 
 ### 7.2 Limitacoes tecnicas
 
-| Limitacao | Impacto | Workaround |
-|-----------|---------|------------|
-| **Figma API retorna nodes sem semantica** | Nao sabemos se um retangulo e "card" ou "container" sem nomear | Depende de naming conventions no Figma (componentes nomeados) |
-| **OKLCH conversion nao e 100% reversivel** | Arredondamentos minimos ao converter hex → OKLCH → hex | Aceitavel (< 0.5% deltaE de erro) |
-| **Componentes complexos** | DataTable, Calendar, RichTextEditor nao sao extraiveis do Figma automaticamente | Construir manualmente seguindo tokens curados |
-| **Animacoes** | Figma nao exporta motion/transition data | Capturar via Playwright + Gemini 3.0 (futuro) |
-| **Responsividade** | Figma mostra layouts fixos, nao breakpoints reais | Definir breakpoints manualmente (mobile/tablet/desktop) |
-| **Multi-pagina Figma** | Hoje so 1 de 78 paginas foi extraida | Precisa script de batch extraction (figma-scan.cjs existe, precisa ampliar) |
-| **Acessibilidade visual** | Contraste pode ser validado, mas UX de leitor de tela nao | Testes manuais com NVDA/VoiceOver necessarios |
+| Limitacao                                  | Impacto                                                                         | Workaround                                                                  |
+| ------------------------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| **Figma API retorna nodes sem semantica**  | Nao sabemos se um retangulo e "card" ou "container" sem nomear                  | Depende de naming conventions no Figma (componentes nomeados)               |
+| **OKLCH conversion nao e 100% reversivel** | Arredondamentos minimos ao converter hex → OKLCH → hex                          | Aceitavel (< 0.5% deltaE de erro)                                           |
+| **Componentes complexos**                  | DataTable, Calendar, RichTextEditor nao sao extraiveis do Figma automaticamente | Construir manualmente seguindo tokens curados                               |
+| **Animacoes**                              | Figma nao exporta motion/transition data                                        | Capturar via Playwright + Gemini 3.0 (futuro)                               |
+| **Responsividade**                         | Figma mostra layouts fixos, nao breakpoints reais                               | Definir breakpoints manualmente (mobile/tablet/desktop)                     |
+| **Multi-pagina Figma**                     | Hoje so 1 de 78 paginas foi extraida                                            | Precisa script de batch extraction (figma-scan.cjs existe, precisa ampliar) |
+| **Acessibilidade visual**                  | Contraste pode ser validado, mas UX de leitor de tela nao                       | Testes manuais com NVDA/VoiceOver necessarios                               |
 
 ### 7.3 O que o pipeline FAZ bem (automacao confiavel)
 
-| Capacidade | Confianca | Fonte |
-|------------|-----------|-------|
-| Clustering perceptual de cores | 95%+ | Algoritmo matematico (deltaE) |
-| Deteccao de base unit (4px/8px) | 99%+ | GCD matematico |
-| Geracao de escala tipografica | 90%+ | Modular scale matematico |
-| Validacao de contraste WCAG | 100% | Formula WCAG computable |
-| Consolidacao de shadows por depth | 85%+ | Bucketing numerico |
-| Mapping de radius para escala | 90%+ | Bucketing numerico |
-| Deteccao de variantes de botao | 80%+ | Keyword analysis (heuristica) |
-| Geracao de curation-report | 100% | Scoring formula definida |
-| Validacao de quality gates | 100% | Thresholds numericos |
+| Capacidade                        | Confianca | Fonte                         |
+| --------------------------------- | --------- | ----------------------------- |
+| Clustering perceptual de cores    | 95%+      | Algoritmo matematico (deltaE) |
+| Deteccao de base unit (4px/8px)   | 99%+      | GCD matematico                |
+| Geracao de escala tipografica     | 90%+      | Modular scale matematico      |
+| Validacao de contraste WCAG       | 100%      | Formula WCAG computable       |
+| Consolidacao de shadows por depth | 85%+      | Bucketing numerico            |
+| Mapping de radius para escala     | 90%+      | Bucketing numerico            |
+| Deteccao de variantes de botao    | 80%+      | Keyword analysis (heuristica) |
+| Geracao de curation-report        | 100%      | Scoring formula definida      |
+| Validacao de quality gates        | 100%      | Thresholds numericos          |
 
 ---
 
@@ -497,18 +503,18 @@ Estas decisoes foram extraidas diretamente do workshop e sao **lei**:
 
 ## 9. ROADMAP DE EXECUCAO
 
-| Fase | Descricao | Dependencia | Esforco |
-|------|-----------|-------------|---------|
-| **10.1** | `curate_colors.cjs` — OKLCH clustering + contrast | figma-tokens-raw.json | 1 sessao |
-| **10.2** | `curate_spacing.cjs` — GCD + harmonic scale | figma-tokens-raw.json | 0.5 sessao |
-| **10.3** | `curate_typography.cjs` — Font consolidation | figma-tokens-raw.json | 0.5 sessao |
-| **10.4** | `curate_shadows.cjs` — Depth bucketing | figma-tokens-raw.json | 0.5 sessao |
-| **10.5** | `curate_radius.cjs` — Harmonic scale | figma-tokens-raw.json | 0.5 sessao |
-| **10.6** | `generate_tokens.cjs` — Curated → CSS | 10.1-10.5 | 1 sessao |
-| **10.7** | `generate_curation_report.cjs` — Scoring | 10.1-10.5 | 0.5 sessao |
-| **10.8** | `validate_curation.cjs` — Quality gates | 10.7 | 0.5 sessao |
-| **10.9** | Batch Figma extraction (78 paginas) | figma-scan.cjs | 1 sessao |
-| **10.10** | Re-curate com dados completos | 10.9 | 1 sessao |
+| Fase      | Descricao                                         | Dependencia           | Esforco    |
+| --------- | ------------------------------------------------- | --------------------- | ---------- |
+| **10.1**  | `curate_colors.cjs` — OKLCH clustering + contrast | figma-tokens-raw.json | 1 sessao   |
+| **10.2**  | `curate_spacing.cjs` — GCD + harmonic scale       | figma-tokens-raw.json | 0.5 sessao |
+| **10.3**  | `curate_typography.cjs` — Font consolidation      | figma-tokens-raw.json | 0.5 sessao |
+| **10.4**  | `curate_shadows.cjs` — Depth bucketing            | figma-tokens-raw.json | 0.5 sessao |
+| **10.5**  | `curate_radius.cjs` — Harmonic scale              | figma-tokens-raw.json | 0.5 sessao |
+| **10.6**  | `generate_tokens.cjs` — Curated → CSS             | 10.1-10.5             | 1 sessao   |
+| **10.7**  | `generate_curation_report.cjs` — Scoring          | 10.1-10.5             | 0.5 sessao |
+| **10.8**  | `validate_curation.cjs` — Quality gates           | 10.7                  | 0.5 sessao |
+| **10.9**  | Batch Figma extraction (78 paginas)               | figma-scan.cjs        | 1 sessao   |
+| **10.10** | Re-curate com dados completos                     | 10.9                  | 1 sessao   |
 
 **Total estimado:** ~7 sessoes de trabalho
 
@@ -517,23 +523,27 @@ Estas decisoes foram extraidas diretamente do workshop e sao **lei**:
 ## 10. COMO VALIDAR O PIPELINE
 
 ### Teste 1: Idempotencia
+
 ```
 Rodar pipeline 2x com mesmo input → output identico
 ```
 
 ### Teste 2: Regressao contra Lendario
+
 ```
 Rodar pipeline com dados Lendario → comparar com tokens manuais ja criados
 Diferenca aceitavel: < 5% nos valores finais
 ```
 
 ### Teste 3: Novo brand (cold start)
+
 ```
 Extrair Figma de um 3o brand → pipeline produz DS valido sem intervencao manual?
 Expectativa: 80-90% automatico, 10-20% revisao humana
 ```
 
 ### Teste 4: Quality gates bloqueiam corretamente
+
 ```
 Injetar dados com contraste invalido → pipeline DEVE rejeitar com FAIL
 Injetar dados com < 85% reducao cores → pipeline DEVE retornar CONDITIONAL
@@ -543,18 +553,18 @@ Injetar dados com < 85% reducao cores → pipeline DEVE retornar CONDITIONAL
 
 ## 11. COMPARACAO COM EQUIPES SILICON VALLEY
 
-| Aspecto | Enterprise (Material/Fluent/Carbon) | AIOS Pipeline |
-|---------|-------------------------------------|---------------|
-| **Token naming** | namespace-category-variant-scale | Mesmo padrao (W3C DTCG) |
-| **Color space** | OKLCH / tonal palettes | OKLCH com deltaE clustering |
-| **3-tier hierarchy** | Primitive → Semantic → Component | Identico |
-| **Quality gates** | CI/CD automated | Scripts com thresholds numericos |
-| **Accessibility** | WCAG AA built-in | Contraste automatico, ARIA manual |
-| **Governance** | Federated (IBM) / Centralized (Google) | Governance Squad + validation scripts |
-| **Machine-readable** | JSON APIs, Storybook | MCP server + metadata JSON |
-| **Multi-brand** | Material Dynamic Color | Catalog multi-brand com brand.json |
-| **Consolidation** | Manual by DS team | Algoritmos automaticos (85%+ reducao) |
-| **Gap** | Equipes de 10-50 pessoas full-time | AI + scripts + revisao humana |
+| Aspecto              | Enterprise (Material/Fluent/Carbon)    | AIOS Pipeline                         |
+| -------------------- | -------------------------------------- | ------------------------------------- |
+| **Token naming**     | namespace-category-variant-scale       | Mesmo padrao (W3C DTCG)               |
+| **Color space**      | OKLCH / tonal palettes                 | OKLCH com deltaE clustering           |
+| **3-tier hierarchy** | Primitive → Semantic → Component       | Identico                              |
+| **Quality gates**    | CI/CD automated                        | Scripts com thresholds numericos      |
+| **Accessibility**    | WCAG AA built-in                       | Contraste automatico, ARIA manual     |
+| **Governance**       | Federated (IBM) / Centralized (Google) | Governance Squad + validation scripts |
+| **Machine-readable** | JSON APIs, Storybook                   | MCP server + metadata JSON            |
+| **Multi-brand**      | Material Dynamic Color                 | Catalog multi-brand com brand.json    |
+| **Consolidation**    | Manual by DS team                      | Algoritmos automaticos (85%+ reducao) |
+| **Gap**              | Equipes de 10-50 pessoas full-time     | AI + scripts + revisao humana         |
 
 **Veredito:** O pipeline cobre ~85% do que uma equipe enterprise faz. Os 15% restantes sao: testes com usuarios reais, iteracao com stakeholders, edge cases de layout responsivo, e componentes complexos (calendar, rich text, etc.) que exigem construcao manual.
 
@@ -566,10 +576,12 @@ Injetar dados com < 85% reducao cores → pipeline DEVE retornar CONDITIONAL
 9 scripts Node.js que transformam dados brutos de Figma em tokens curados usando algoritmos matematicos (OKLCH deltaE, GCD, modular scale, depth bucketing) com quality gates numericos (>= 85% reducao cores, >= 4.5:1 contraste, >= 95% coverage).
 
 **O que muda:**
+
 - Hoje: curadoria 100% manual, sem rastreabilidade
 - Depois: curadoria 80-90% automatica, com curation-report.json documentando cada decisao
 
 **O que NAO muda:**
+
 - Decisoes de identidade de marca continuam humanas
 - Componentes complexos continuam sendo construidos manualmente
 - Review humano continua obrigatorio antes de commit

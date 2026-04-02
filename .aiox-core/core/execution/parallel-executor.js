@@ -5,17 +5,17 @@
  * Executes Claude and Gemini in parallel for improved quality and reliability.
  */
 
-const EventEmitter = require('events');
+const EventEmitter = require("events");
 
 /**
  * Parallel execution modes
  */
 const ParallelMode = {
-  RACE: 'race', // First successful response wins
-  CONSENSUS: 'consensus', // Both must agree
-  BEST_OF: 'best-of', // Score and pick best
-  MERGE: 'merge', // Combine outputs
-  FALLBACK: 'fallback', // Primary with backup
+  RACE: "race", // First successful response wins
+  CONSENSUS: "consensus", // Both must agree
+  BEST_OF: "best-of", // Score and pick best
+  MERGE: "merge", // Combine outputs
+  FALLBACK: "fallback", // Primary with backup
 };
 
 class ParallelExecutor extends EventEmitter {
@@ -46,20 +46,22 @@ class ParallelExecutor extends EventEmitter {
     const startTime = Date.now();
 
     this.stats.executions++;
-    this.emit('parallel_started', { mode });
+    this.emit("parallel_started", { mode });
 
     // Execute both in parallel
     const results = await Promise.allSettled([
-      this._wrapExecution('claude', claudeExecutor),
-      this._wrapExecution('gemini', geminiExecutor),
+      this._wrapExecution("claude", claudeExecutor),
+      this._wrapExecution("gemini", geminiExecutor),
     ]);
 
-    const claudeResult = results[0].status === 'fulfilled' ? results[0].value : null;
-    const geminiResult = results[1].status === 'fulfilled' ? results[1].value : null;
+    const claudeResult =
+      results[0].status === "fulfilled" ? results[0].value : null;
+    const geminiResult =
+      results[1].status === "fulfilled" ? results[1].value : null;
 
     const duration = Date.now() - startTime;
 
-    this.emit('parallel_completed', {
+    this.emit("parallel_completed", {
       mode,
       duration,
       claudeSuccess: !!claudeResult?.success,
@@ -98,8 +100,10 @@ class ParallelExecutor extends EventEmitter {
    */
   _raceMode(claude, gemini) {
     // Return first successful
-    if (claude?.success) return { ...claude, mode: 'race', selectedProvider: 'claude' };
-    if (gemini?.success) return { ...gemini, mode: 'race', selectedProvider: 'gemini' };
+    if (claude?.success)
+      return { ...claude, mode: "race", selectedProvider: "claude" };
+    if (gemini?.success)
+      return { ...gemini, mode: "race", selectedProvider: "gemini" };
     return this._handleBothFailed(claude, gemini);
   }
 
@@ -119,20 +123,20 @@ class ParallelExecutor extends EventEmitter {
       this.stats.consensusAgreements++;
       return {
         ...claude,
-        mode: 'consensus',
+        mode: "consensus",
         consensus: true,
         similarity,
-        providers: ['claude', 'gemini'],
+        providers: ["claude", "gemini"],
       };
     }
 
     // No consensus - return Claude with warning
     return {
       ...claude,
-      mode: 'consensus',
+      mode: "consensus",
       consensus: false,
       similarity,
-      warning: 'Providers did not reach consensus',
+      warning: "Providers did not reach consensus",
     };
   }
 
@@ -144,19 +148,21 @@ class ParallelExecutor extends EventEmitter {
       return this._handleBothFailed(claude, gemini);
     }
 
-    if (!claude?.success) return { ...gemini, mode: 'best-of', selectedProvider: 'gemini' };
-    if (!gemini?.success) return { ...claude, mode: 'best-of', selectedProvider: 'claude' };
+    if (!claude?.success)
+      return { ...gemini, mode: "best-of", selectedProvider: "gemini" };
+    if (!gemini?.success)
+      return { ...claude, mode: "best-of", selectedProvider: "claude" };
 
     // Score based on output quality heuristics
     const claudeScore = this._scoreOutput(claude.output);
     const geminiScore = this._scoreOutput(gemini.output);
 
     const selected = claudeScore >= geminiScore ? claude : gemini;
-    const selectedProvider = claudeScore >= geminiScore ? 'claude' : 'gemini';
+    const selectedProvider = claudeScore >= geminiScore ? "claude" : "gemini";
 
     return {
       ...selected,
-      mode: 'best-of',
+      mode: "best-of",
       selectedProvider,
       scores: { claude: claudeScore, gemini: geminiScore },
     };
@@ -170,8 +176,8 @@ class ParallelExecutor extends EventEmitter {
       return this._handleBothFailed(claude, gemini);
     }
 
-    if (!claude?.success) return { ...gemini, mode: 'merge' };
-    if (!gemini?.success) return { ...claude, mode: 'merge' };
+    if (!claude?.success) return { ...gemini, mode: "merge" };
+    if (!gemini?.success) return { ...claude, mode: "merge" };
 
     // Simple merge - could be enhanced with semantic merging
     const merged = this._mergeOutputs(claude.output, gemini.output);
@@ -179,8 +185,8 @@ class ParallelExecutor extends EventEmitter {
     return {
       success: true,
       output: merged,
-      mode: 'merge',
-      providers: ['claude', 'gemini'],
+      mode: "merge",
+      providers: ["claude", "gemini"],
     };
   }
 
@@ -189,13 +195,18 @@ class ParallelExecutor extends EventEmitter {
    */
   _fallbackMode(claude, gemini) {
     if (claude?.success) {
-      return { ...claude, mode: 'fallback', selectedProvider: 'claude' };
+      return { ...claude, mode: "fallback", selectedProvider: "claude" };
     }
 
     this.stats.fallbacksUsed++;
 
     if (gemini?.success) {
-      return { ...gemini, mode: 'fallback', selectedProvider: 'gemini', usedFallback: true };
+      return {
+        ...gemini,
+        mode: "fallback",
+        selectedProvider: "gemini",
+        usedFallback: true,
+      };
     }
 
     return this._handleBothFailed(claude, gemini);
@@ -207,7 +218,7 @@ class ParallelExecutor extends EventEmitter {
   _handleBothFailed(claude, gemini) {
     return {
       success: false,
-      error: 'Both providers failed',
+      error: "Both providers failed",
       claudeError: claude?.error,
       geminiError: gemini?.error,
     };
@@ -221,7 +232,7 @@ class ParallelExecutor extends EventEmitter {
       const result = await Promise.race([
         executor(),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout')), this.timeout),
+          setTimeout(() => reject(new Error("Timeout")), this.timeout),
         ),
       ]);
       return { ...result, provider };
@@ -258,11 +269,11 @@ class ParallelExecutor extends EventEmitter {
     if (output.length > 500) score += 1;
 
     // Structure (code blocks, lists)
-    if (output.includes('```')) score += 2;
-    if (output.includes('- ') || output.includes('* ')) score += 1;
+    if (output.includes("```")) score += 2;
+    if (output.includes("- ") || output.includes("* ")) score += 1;
 
     // Completeness indicators
-    if (output.includes('done') || output.includes('complete')) score += 1;
+    if (output.includes("done") || output.includes("complete")) score += 1;
 
     return score;
   }
@@ -282,9 +293,13 @@ class ParallelExecutor extends EventEmitter {
     return {
       ...this.stats,
       consensusRate:
-        this.stats.executions > 0 ? this.stats.consensusAgreements / this.stats.executions : 0,
+        this.stats.executions > 0
+          ? this.stats.consensusAgreements / this.stats.executions
+          : 0,
       fallbackRate:
-        this.stats.executions > 0 ? this.stats.fallbacksUsed / this.stats.executions : 0,
+        this.stats.executions > 0
+          ? this.stats.fallbacksUsed / this.stats.executions
+          : 0,
     };
   }
 }

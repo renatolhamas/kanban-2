@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 /**
  * SYNAPSE Hook Entry Point — UserPromptSubmit
@@ -14,9 +14,18 @@
  * @module synapse-engine-hook
  */
 
-const path = require('path');
+const path = require("path");
 const { resolveHookRuntime, buildHookOutput } = require(
-  path.join(__dirname, '..', '..', '.aiox-core', 'core', 'synapse', 'runtime', 'hook-runtime.js'),
+  path.join(
+    __dirname,
+    "..",
+    "..",
+    ".aiox-core",
+    "core",
+    "synapse",
+    "runtime",
+    "hook-runtime.js",
+  ),
 );
 
 /** Safety timeout (ms) — defense-in-depth; Claude Code also manages hook timeout. */
@@ -28,13 +37,18 @@ const HOOK_TIMEOUT_MS = 5000;
  */
 function readStdin() {
   return new Promise((resolve, reject) => {
-    let data = '';
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('error', (e) => reject(e));
-    process.stdin.on('data', (chunk) => { data += chunk; });
-    process.stdin.on('end', () => {
-      try { resolve(JSON.parse(data)); }
-      catch (e) { reject(e); }
+    let data = "";
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("error", (e) => reject(e));
+    process.stdin.on("data", (chunk) => {
+      data += chunk;
+    });
+    process.stdin.on("end", () => {
+      try {
+        resolve(JSON.parse(data));
+      } catch (e) {
+        reject(e);
+      }
     });
   });
 }
@@ -51,10 +65,17 @@ async function main() {
   if (runtime.sessionId && runtime.sessionsDir) {
     try {
       const { updateSession } = require(
-        path.join(runtime.cwd, '.aiox-core', 'core', 'synapse', 'session', 'session-manager.js'),
+        path.join(
+          runtime.cwd,
+          ".aiox-core",
+          "core",
+          "synapse",
+          "session",
+          "session-manager.js",
+        ),
       );
       updateSession(runtime.sessionId, runtime.sessionsDir, {
-        context: { last_bracket: result.bracket || 'FRESH' },
+        context: { last_bracket: result.bracket || "FRESH" },
       });
     } catch (_err) {
       // Fire-and-forget — never block the prompt
@@ -78,8 +99,8 @@ async function main() {
       const flushed = process.stdout.write(output, (err) => finish(err));
       if (flushed) {
         setImmediate(() => finish());
-      } else if (typeof process.stdout.once === 'function') {
-        process.stdout.once('drain', () => finish());
+      } else if (typeof process.stdout.once === "function") {
+        process.stdout.once("drain", () => finish());
       }
     } catch (err) {
       finish(err);

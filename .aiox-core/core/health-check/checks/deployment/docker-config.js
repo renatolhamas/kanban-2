@@ -8,10 +8,10 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { execSync } = require('child_process');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const fs = require("fs").promises;
+const path = require("path");
+const { execSync } = require("child_process");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Docker configuration check
@@ -22,15 +22,15 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 class DockerConfigCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'deployment.docker-config',
-      name: 'Docker Configuration',
-      description: 'Verifies Docker configuration',
+      id: "deployment.docker-config",
+      name: "Docker Configuration",
+      description: "Verifies Docker configuration",
       domain: CheckDomain.DEPLOYMENT,
       severity: CheckSeverity.INFO,
       timeout: 5000,
       cacheable: true,
       healingTier: 0,
-      tags: ['docker', 'containers'],
+      tags: ["docker", "containers"],
     });
   }
 
@@ -46,10 +46,10 @@ class DockerConfigCheck extends BaseCheck {
 
     // Check for Docker files
     const filesToCheck = [
-      'Dockerfile',
-      'docker-compose.yml',
-      'docker-compose.yaml',
-      '.dockerignore',
+      "Dockerfile",
+      "docker-compose.yml",
+      "docker-compose.yaml",
+      ".dockerignore",
     ];
 
     for (const file of filesToCheck) {
@@ -62,39 +62,42 @@ class DockerConfigCheck extends BaseCheck {
     }
 
     if (dockerFiles.length === 0) {
-      return this.pass('No Docker configuration found (not using Docker)', {
+      return this.pass("No Docker configuration found (not using Docker)", {
         details: { dockerFiles: [] },
       });
     }
 
     // Validate Dockerfile if present
-    if (dockerFiles.includes('Dockerfile')) {
+    if (dockerFiles.includes("Dockerfile")) {
       try {
-        const content = await fs.readFile(path.join(projectRoot, 'Dockerfile'), 'utf8');
+        const content = await fs.readFile(
+          path.join(projectRoot, "Dockerfile"),
+          "utf8",
+        );
 
         // Check for FROM instruction
-        if (!content.includes('FROM ')) {
-          issues.push('Dockerfile missing FROM instruction');
+        if (!content.includes("FROM ")) {
+          issues.push("Dockerfile missing FROM instruction");
         }
 
         // Check for security best practices
-        if (content.includes('root') && !content.includes('USER ')) {
-          issues.push('Dockerfile may be running as root');
+        if (content.includes("root") && !content.includes("USER ")) {
+          issues.push("Dockerfile may be running as root");
         }
 
         // Check if .dockerignore exists
-        if (!dockerFiles.includes('.dockerignore')) {
-          issues.push('Missing .dockerignore file');
+        if (!dockerFiles.includes(".dockerignore")) {
+          issues.push("Missing .dockerignore file");
         }
       } catch {
-        issues.push('Could not read Dockerfile');
+        issues.push("Could not read Dockerfile");
       }
     }
 
     // Check if Docker is available
     let dockerAvailable = false;
     try {
-      execSync('docker --version', { encoding: 'utf8', windowsHide: true });
+      execSync("docker --version", { encoding: "utf8", windowsHide: true });
       dockerAvailable = true;
     } catch {
       // Docker not installed
@@ -107,13 +110,15 @@ class DockerConfigCheck extends BaseCheck {
     };
 
     if (issues.length > 0) {
-      return this.warning(`Docker configuration issues: ${issues.join(', ')}`, {
-        recommendation: 'Review Docker configuration for best practices',
+      return this.warning(`Docker configuration issues: ${issues.join(", ")}`, {
+        recommendation: "Review Docker configuration for best practices",
         details: { ...details, issues },
       });
     }
 
-    return this.pass(`Docker configured (${dockerFiles.join(', ')})`, { details });
+    return this.pass(`Docker configured (${dockerFiles.join(", ")})`, {
+      details,
+    });
   }
 }
 

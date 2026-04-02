@@ -108,14 +108,14 @@ BEFORE any debugging:
 
 ## Common Verification Scenarios
 
-| Symptom | First Check | Common Cause |
-|---------|-------------|--------------|
-| "File not found" | `ls -la` | Wrong path, typo |
-| "Connection refused" | `curl -I` | Server not running |
-| "Not working" (vague) | Ask user to repeat | Misunderstood requirement |
-| "Still showing old" | Hard refresh | Browser cache |
-| "Env var undefined" | `echo $VAR` | Not exported, wrong shell |
-| "DB error" | `psql -c 'SELECT 1'` | Connection, credentials |
+| Symptom               | First Check          | Common Cause              |
+| --------------------- | -------------------- | ------------------------- |
+| "File not found"      | `ls -la`             | Wrong path, typo          |
+| "Connection refused"  | `curl -I`            | Server not running        |
+| "Not working" (vague) | Ask user to repeat   | Misunderstood requirement |
+| "Still showing old"   | Hard refresh         | Browser cache             |
+| "Env var undefined"   | `echo $VAR`          | Not exported, wrong shell |
+| "DB error"            | `psql -c 'SELECT 1'` | Connection, credentials   |
 
 ## Anti-Patterns
 

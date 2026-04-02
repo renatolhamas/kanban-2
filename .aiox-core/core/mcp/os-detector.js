@@ -9,18 +9,18 @@
  * @story 2.11 - MCP System Global
  */
 
-const os = require('os');
-const path = require('path');
+const os = require("os");
+const path = require("path");
 
 /**
  * Operating system types
  * @enum {string}
  */
 const OS_TYPES = {
-  WINDOWS: 'windows',
-  MACOS: 'macos',
-  LINUX: 'linux',
-  UNKNOWN: 'unknown',
+  WINDOWS: "windows",
+  MACOS: "macos",
+  LINUX: "linux",
+  UNKNOWN: "unknown",
 };
 
 /**
@@ -31,11 +31,11 @@ function detectOS() {
   const platform = os.platform();
 
   switch (platform) {
-    case 'win32':
+    case "win32":
       return OS_TYPES.WINDOWS;
-    case 'darwin':
+    case "darwin":
       return OS_TYPES.MACOS;
-    case 'linux':
+    case "linux":
       return OS_TYPES.LINUX;
     default:
       return OS_TYPES.UNKNOWN;
@@ -88,7 +88,7 @@ function getHomeDir() {
  * @returns {string} Path to ~/.aiox/
  */
 function getGlobalAioxDir() {
-  return path.join(getHomeDir(), '.aiox');
+  return path.join(getHomeDir(), ".aiox");
 }
 
 /**
@@ -96,7 +96,7 @@ function getGlobalAioxDir() {
  * @returns {string} Path to ~/.aiox/mcp/
  */
 function getGlobalMcpDir() {
-  return path.join(getGlobalAioxDir(), 'mcp');
+  return path.join(getGlobalAioxDir(), "mcp");
 }
 
 /**
@@ -104,7 +104,7 @@ function getGlobalMcpDir() {
  * @returns {string} Path to ~/.aiox/mcp/global-config.json
  */
 function getGlobalConfigPath() {
-  return path.join(getGlobalMcpDir(), 'global-config.json');
+  return path.join(getGlobalMcpDir(), "global-config.json");
 }
 
 /**
@@ -112,7 +112,7 @@ function getGlobalConfigPath() {
  * @returns {string} Path to ~/.aiox/mcp/servers/
  */
 function getServersDir() {
-  return path.join(getGlobalMcpDir(), 'servers');
+  return path.join(getGlobalMcpDir(), "servers");
 }
 
 /**
@@ -120,7 +120,7 @@ function getServersDir() {
  * @returns {string} Path to ~/.aiox/mcp/cache/
  */
 function getCacheDir() {
-  return path.join(getGlobalMcpDir(), 'cache');
+  return path.join(getGlobalMcpDir(), "cache");
 }
 
 /**
@@ -128,7 +128,7 @@ function getCacheDir() {
  * @returns {string} Path to ~/.aiox/credentials/
  */
 function getCredentialsDir() {
-  return path.join(getGlobalAioxDir(), 'credentials');
+  return path.join(getGlobalAioxDir(), "credentials");
 }
 
 /**
@@ -165,7 +165,7 @@ function hasWindowsSymlinkSupport() {
  * @returns {string} 'junction' for Windows, 'symlink' for Unix
  */
 function getLinkType() {
-  return isWindows() ? 'junction' : 'symlink';
+  return isWindows() ? "junction" : "symlink";
 }
 
 module.exports = {

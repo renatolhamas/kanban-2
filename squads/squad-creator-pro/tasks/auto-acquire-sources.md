@@ -60,6 +60,7 @@ Execute estas buscas no YouTube:
 ### 1.2 Critérios de Seleção
 
 Priorizar vídeos que:
+
 - Têm 10+ minutos (conteúdo substancial)
 - Expert é o entrevistado principal
 - Legenda/transcrição disponível
@@ -75,11 +76,12 @@ youtube_sources:
     duration: ""
     url: ""
     transcript_status: "available|extracted|unavailable"
-    tier: 1  # Primário - expert falando
+    tier: 1 # Primário - expert falando
     key_topics: []
 ```
 
 **Ferramentas:**
+
 - YouTube Data API (search)
 - youtube-transcript-api (Python)
 - Whisper (se transcrição indisponível)
@@ -109,12 +111,12 @@ Para cada livro encontrado, buscar:
 
 ### 2.3 Fontes de Resumos
 
-| Fonte | Tier | Confiança |
-|-------|------|-----------|
-| Blinkist | 2 | Média (condensado) |
-| Shortform | 2 | Alta (detalhado) |
-| Four Minute Books | 3 | Baixa (muito condensado) |
-| Blog reviews | 2-3 | Varia |
+| Fonte             | Tier | Confiança                |
+| ----------------- | ---- | ------------------------ |
+| Blinkist          | 2    | Média (condensado)       |
+| Shortform         | 2    | Alta (detalhado)         |
+| Four Minute Books | 3    | Baixa (muito condensado) |
+| Blog reviews      | 2-3  | Varia                    |
 
 ```yaml
 book_sources:
@@ -126,7 +128,7 @@ book_sources:
       - source: ""
         url: ""
         depth: "detailed|condensed|highlights"
-    tier: 2  # Secundário até ter livro completo
+    tier: 2 # Secundário até ter livro completo
 ```
 
 ---
@@ -154,7 +156,7 @@ podcast_sources:
     duration: ""
     url: ""
     transcript_available: true|false
-    tier: 1  # Primário - expert falando
+    tier: 1 # Primário - expert falando
 ```
 
 ---
@@ -184,10 +186,10 @@ site:linkedin.com/pulse "{mind_name}"
 article_sources:
   - id: "AR01"
     title: ""
-    author: ""  # É o expert ou sobre o expert?
+    author: "" # É o expert ou sobre o expert?
     source: ""
     url: ""
-    tier: 1|2  # 1 se autor é o expert, 2 se sobre
+    tier: 1|2 # 1 se autor é o expert, 2 se sobre
 ```
 
 ---
@@ -346,4 +348,4 @@ workflow_integration:
 ---
 
 **Squad Architect | Auto-Acquire v1.0**
-*"More sources = higher fidelity. Automate the obvious."*
+_"More sources = higher fidelity. Automate the obvious."_

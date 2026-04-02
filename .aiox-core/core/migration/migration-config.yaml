@@ -72,8 +72,8 @@ validation:
   lint: true
   tests: true
   timeout:
-    lint: 60000      # 1 minute
-    tests: 300000    # 5 minutes
+    lint: 60000 # 1 minute
+    tests: 300000 # 5 minutes
 
 # Safety settings
 safety:

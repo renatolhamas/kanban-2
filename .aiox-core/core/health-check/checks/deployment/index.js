@@ -9,11 +9,11 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const EnvFileCheck = require('./env-file');
-const BuildConfigCheck = require('./build-config');
-const CiConfigCheck = require('./ci-config');
-const DockerConfigCheck = require('./docker-config');
-const DeploymentReadinessCheck = require('./deployment-readiness');
+const EnvFileCheck = require("./env-file");
+const BuildConfigCheck = require("./build-config");
+const CiConfigCheck = require("./ci-config");
+const DockerConfigCheck = require("./docker-config");
+const DeploymentReadinessCheck = require("./deployment-readiness");
 
 /**
  * All deployment domain checks

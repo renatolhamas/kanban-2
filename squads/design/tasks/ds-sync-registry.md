@@ -17,9 +17,11 @@ Garante que todos os artefatos dependentes permanecem sincronizados.
 ## AI-First Governance Gate (Obrigatório)
 
 Antes de finalizar, executar protocolo:
+
 - `squads/design/protocols/ai-first-governance.md`
 
 Checklist mínimo:
+
 - [ ] Validou fontes canônicas (`workspace/system/*`, `workspace/ui/registry.json`, `workspace/domains/design-system/*`)
 - [ ] Classificou cada claim como `Implemented`, `Partially implemented` ou `Concept only`
 - [ ] Não há contradição entre relatório e artefatos reais
@@ -56,6 +58,7 @@ Execute esta task quando:
 ```
 
 **Ações:**
+
 - [ ] Adicionar entrada se componente novo
 - [ ] Atualizar `files` se path mudou
 - [ ] Atualizar `dependencies` se imports mudaram
@@ -77,6 +80,7 @@ Execute esta task quando:
 ```
 
 **Ações:**
+
 - [ ] Criar metadata se componente novo
 - [ ] Atualizar props se interface mudou
 - [ ] Atualizar variants se adicionou/removeu
@@ -87,6 +91,7 @@ Execute esta task quando:
 **Arquivo:** `[component].stories.tsx`
 
 **Ações:**
+
 - [ ] Adicionar story se componente novo
 - [ ] Atualizar stories se props mudaram
 - [ ] Adicionar stories para novas variants
@@ -94,6 +99,7 @@ Execute esta task quando:
 ### 4. Documentação (Obrigatório)
 
 **Ações:**
+
 - [ ] Atualizar CHANGELOG.md com mudança
 - [ ] Atualizar docs se API mudou
 - [ ] Atualizar migration guide se breaking change
@@ -103,6 +109,7 @@ Execute esta task quando:
 **Arquivo:** `index.ts` do módulo
 
 **Ações:**
+
 - [ ] Adicionar export se componente novo
 - [ ] Verificar que types são exportados
 
@@ -141,17 +148,20 @@ Execute esta task quando:
 ## Checklist de Validação
 
 ### Pre-Sync
+
 - [ ] Mudança está completa (não parcial)
 - [ ] Testes passam localmente
 - [ ] Sem erros de TypeScript
 
 ### Post-Sync
+
 - [ ] `registry.json` válido (JSON parse OK)
 - [ ] Metadata tem todos campos obrigatórios
 - [ ] Imports funcionam de todos entry points
 - [ ] Changelog atualizado com data e descrição
 
 ### Quality Gate
+
 - [ ] `npm run typecheck` passa
 - [ ] `npm run lint` passa
 - [ ] Nenhum `// @ts-ignore` adicionado
@@ -163,8 +173,9 @@ Execute esta task quando:
 
 ### Cenário: Adicionou variant "loading" ao Button
 
-```markdown
+````markdown
 ## Mudança
+
 - Componente: Button
 - Tipo: Nova variant
 - Arquivos alterados: button.tsx, button.variants.ts
@@ -172,9 +183,11 @@ Execute esta task quando:
 ## Sync Executado
 
 ### 1. registry.json
+
 Sem mudança (mesmos files e deps)
 
 ### 2. metadata/components/button.json
+
 ```json
 {
   "variants": [
@@ -187,11 +200,14 @@ Sem mudança (mesmos files e deps)
   ]
 }
 ```
+````
 
 ### 3. button.stories.tsx
+
 Adicionada story "Loading State"
 
 ### 4. CHANGELOG.md
+
 ```
 ## [Unreleased]
 ### Added
@@ -199,10 +215,12 @@ Adicionada story "Loading State"
 ```
 
 ### 5. Validação
+
 - [x] typecheck passa
 - [x] lint passa
 - [x] registry válido
-```
+
+````
 
 ---
 
@@ -233,7 +251,7 @@ jobs:
             echo "CHANGELOG.md not updated!"
             exit 1
           fi
-```
+````
 
 ### Pre-commit Hook
 
@@ -276,12 +294,12 @@ npm run validate:metadata
 
 ---
 
-*Task criada: 2026-02-16*
-*Squad: Design*
-*Insight Source: #7 Sync Obrigatório Após Mudanças Estruturais*
-
+_Task criada: 2026-02-16_
+_Squad: Design_
+_Insight Source: #7 Sync Obrigatório Após Mudanças Estruturais_
 
 ## Process Guards
+
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

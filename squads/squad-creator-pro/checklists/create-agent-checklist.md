@@ -171,11 +171,11 @@ smoke_test:
 
 ## Scoring
 
-| Score | Result | Action |
-|-------|--------|--------|
-| 100% Blocking | PASS | Proceed with integration |
-| 80%+ Blocking | CONDITIONAL | Document gaps, proceed |
-| <80% Blocking | FAIL | Fix issues, re-run checklist |
+| Score         | Result      | Action                       |
+| ------------- | ----------- | ---------------------------- |
+| 100% Blocking | PASS        | Proceed with integration     |
+| 80%+ Blocking | CONDITIONAL | Document gaps, proceed       |
+| <80% Blocking | FAIL        | Fix issues, re-run checklist |
 
 ---
 

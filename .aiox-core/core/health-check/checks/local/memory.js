@@ -8,8 +8,8 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const os = require('os');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const os = require("os");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Minimum free memory (512MB)
@@ -30,15 +30,15 @@ const WARNING_FREE_MEMORY_MB = 1024;
 class MemoryCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'local.memory',
-      name: 'Memory Availability',
-      description: 'Verifies sufficient memory is available',
+      id: "local.memory",
+      name: "Memory Availability",
+      description: "Verifies sufficient memory is available",
       domain: CheckDomain.LOCAL,
       severity: CheckSeverity.MEDIUM,
       timeout: 1000,
       cacheable: false, // Don't cache - memory can change
       healingTier: 3, // Manual - close applications
-      tags: ['memory', 'resources'],
+      tags: ["memory", "resources"],
     });
   }
 
@@ -74,7 +74,7 @@ class MemoryCheck extends BaseCheck {
       return this.fail(
         `Low memory: ${this.formatMemory(freeMB)} free (minimum ${this.formatMemory(MIN_FREE_MEMORY_MB)})`,
         {
-          recommendation: 'Close unused applications to free up memory',
+          recommendation: "Close unused applications to free up memory",
           healable: false,
           healingTier: 3,
           details,
@@ -84,23 +84,30 @@ class MemoryCheck extends BaseCheck {
 
     // Warning: below recommended
     if (freeMB < WARNING_FREE_MEMORY_MB) {
-      return this.warning(`Memory running low: ${this.formatMemory(freeMB)} free`, {
-        recommendation: 'Consider closing some applications for better performance',
-        details,
-      });
+      return this.warning(
+        `Memory running low: ${this.formatMemory(freeMB)} free`,
+        {
+          recommendation:
+            "Consider closing some applications for better performance",
+          details,
+        },
+      );
     }
 
     // Warning: high usage percentage
     if (usedPercent > 90) {
       return this.warning(`High memory usage: ${usedPercent}% used`, {
-        recommendation: 'Memory usage is high - performance may be affected',
+        recommendation: "Memory usage is high - performance may be affected",
         details,
       });
     }
 
-    return this.pass(`Memory OK: ${this.formatMemory(freeMB)} free (${100 - usedPercent}%)`, {
-      details,
-    });
+    return this.pass(
+      `Memory OK: ${this.formatMemory(freeMB)} free (${100 - usedPercent}%)`,
+      {
+        details,
+      },
+    );
   }
 
   /**
@@ -119,16 +126,16 @@ class MemoryCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: 'memory-cleanup-guide',
-      action: 'manual',
-      manualGuide: 'Free up system memory',
+      name: "memory-cleanup-guide",
+      action: "manual",
+      manualGuide: "Free up system memory",
       steps: [
-        'Close unused browser tabs',
-        'Close unused applications',
-        'Restart heavy applications (IDEs, Docker)',
-        'If persistent, consider adding more RAM',
+        "Close unused browser tabs",
+        "Close unused applications",
+        "Restart heavy applications (IDEs, Docker)",
+        "If persistent, consider adding more RAM",
       ],
-      warning: 'Save your work before closing applications',
+      warning: "Save your work before closing applications",
     };
   }
 }

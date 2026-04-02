@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * G4 — Dev Context Gate
@@ -19,8 +19,10 @@
  * Source: IDS-5a, ids-principles.md G4 definition
  */
 
-const path = require('path');
-const { VerificationGate } = require(path.resolve(__dirname, '../verification-gate.js'));
+const path = require("path");
+const { VerificationGate } = require(
+  path.resolve(__dirname, "../verification-gate.js"),
+);
 
 // G4 has stricter timeout since it must be < 2s
 const G4_DEFAULT_TIMEOUT_MS = 2000;
@@ -35,12 +37,12 @@ class G4DevContextGate extends VerificationGate {
    */
   constructor(options = {}) {
     if (!options.decisionEngine) {
-      throw new Error('[IDS-G4] decisionEngine is required');
+      throw new Error("[IDS-G4] decisionEngine is required");
     }
 
     super({
-      gateId: 'G4',
-      agent: '@dev',
+      gateId: "G4",
+      agent: "@dev",
       blocking: false, // Never blocks
       timeoutMs: options.timeoutMs ?? G4_DEFAULT_TIMEOUT_MS,
       circuitBreakerOptions: options.circuitBreakerOptions,
@@ -64,7 +66,7 @@ class G4DevContextGate extends VerificationGate {
     if (!context || !context.intent) {
       return {
         passed: true,
-        warnings: ['No intent provided for G4 dev context check'],
+        warnings: ["No intent provided for G4 dev context check"],
         opportunities: [],
       };
     }
@@ -77,8 +79,8 @@ class G4DevContextGate extends VerificationGate {
       // Extract meaningful parts from file paths
       const pathKeywords = context.filePaths
         .map((p) => path.basename(p, path.extname(p)))
-        .join(' ');
-      enrichedIntent += ' ' + pathKeywords;
+        .join(" ");
+      enrichedIntent += " " + pathKeywords;
     }
 
     const analysis = this._decisionEngine.analyze(enrichedIntent, {
@@ -107,7 +109,7 @@ class G4DevContextGate extends VerificationGate {
     // Log metrics for every invocation
     const executionTimeMs = Date.now() - startTime;
     this._recordMetrics({
-      storyId: context.storyId || 'unknown',
+      storyId: context.storyId || "unknown",
       intent: context.intent,
       matchesFound: opportunities.length,
       executionTimeMs,
@@ -130,7 +132,7 @@ class G4DevContextGate extends VerificationGate {
    */
   _recordMetrics(metrics) {
     this._metricsLog.push(metrics);
-    this._log('info', `Metrics recorded for ${metrics.storyId}`, {
+    this._log("info", `Metrics recorded for ${metrics.storyId}`, {
       matchesFound: metrics.matchesFound,
       executionTimeMs: metrics.executionTimeMs,
     });

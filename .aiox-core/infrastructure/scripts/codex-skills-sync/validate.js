@@ -1,18 +1,18 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const { parseAllAgents } = require('../ide-sync/agent-parser');
-const { getSkillId } = require('./index');
+const { parseAllAgents } = require("../ide-sync/agent-parser");
+const { getSkillId } = require("./index");
 
 function getDefaultOptions() {
   const projectRoot = process.cwd();
   return {
     projectRoot,
-    sourceDir: path.join(projectRoot, '.aiox-core', 'development', 'agents'),
-    skillsDir: path.join(projectRoot, '.codex', 'skills'),
+    sourceDir: path.join(projectRoot, ".aiox-core", "development", "agents"),
+    skillsDir: path.join(projectRoot, ".codex", "skills"),
     strict: false,
     quiet: false,
     json: false,
@@ -22,22 +22,30 @@ function getDefaultOptions() {
 function parseArgs(argv = process.argv.slice(2)) {
   const args = new Set(argv);
   return {
-    strict: args.has('--strict'),
-    quiet: args.has('--quiet') || args.has('-q'),
-    json: args.has('--json'),
+    strict: args.has("--strict"),
+    quiet: args.has("--quiet") || args.has("-q"),
+    json: args.has("--json"),
   };
 }
 
 function isParsableAgent(agent) {
-  return !agent.error || agent.error === 'YAML parse failed, using fallback extraction';
+  return (
+    !agent.error ||
+    agent.error === "YAML parse failed, using fallback extraction"
+  );
 }
 
 function validateSkillContent(content, expected) {
   const issues = [];
   const requiredChecks = [
-    { ok: content.includes(`name: ${expected.skillId}`), reason: `missing frontmatter name "${expected.skillId}"` },
     {
-      ok: content.includes(`.aiox-core/development/agents/${expected.filename}`),
+      ok: content.includes(`name: ${expected.skillId}`),
+      reason: `missing frontmatter name "${expected.skillId}"`,
+    },
+    {
+      ok: content.includes(
+        `.aiox-core/development/agents/${expected.filename}`,
+      ),
       reason: `missing canonical agent path "${expected.filename}"`,
     },
     {
@@ -45,8 +53,8 @@ function validateSkillContent(content, expected) {
       reason: `missing canonical greeting command for "${expected.agentId}"`,
     },
     {
-      ok: content.includes('source of truth'),
-      reason: 'missing source-of-truth activation note',
+      ok: content.includes("source of truth"),
+      reason: "missing source-of-truth activation note",
     },
   ];
 
@@ -66,11 +74,19 @@ function validateCodexSkills(options = {}) {
 
   if (!fs.existsSync(resolved.skillsDir)) {
     errors.push(`Skills directory not found: ${resolved.skillsDir}`);
-    return { ok: false, checked: 0, expected: 0, errors, warnings, missing: [], orphaned: [] };
+    return {
+      ok: false,
+      checked: 0,
+      expected: 0,
+      errors,
+      warnings,
+      missing: [],
+      orphaned: [],
+    };
   }
 
   const agents = parseAllAgents(resolved.sourceDir).filter(isParsableAgent);
-  const expected = agents.map(agent => ({
+  const expected = agents.map((agent) => ({
     agentId: agent.id,
     filename: agent.filename,
     skillId: getSkillId(agent.id),
@@ -78,18 +94,22 @@ function validateCodexSkills(options = {}) {
 
   const missing = [];
   for (const item of expected) {
-    const skillPath = path.join(resolved.skillsDir, item.skillId, 'SKILL.md');
+    const skillPath = path.join(resolved.skillsDir, item.skillId, "SKILL.md");
     if (!fs.existsSync(skillPath)) {
       missing.push(item.skillId);
-      errors.push(`Missing skill file: ${path.relative(resolved.projectRoot, skillPath)}`);
+      errors.push(
+        `Missing skill file: ${path.relative(resolved.projectRoot, skillPath)}`,
+      );
       continue;
     }
 
     let content;
     try {
-      content = fs.readFileSync(skillPath, 'utf8');
+      content = fs.readFileSync(skillPath, "utf8");
     } catch (error) {
-      errors.push(`${item.skillId}: unable to read skill file (${error.message})`);
+      errors.push(
+        `${item.skillId}: unable to read skill file (${error.message})`,
+      );
       continue;
     }
     const issues = validateSkillContent(content, item);
@@ -98,22 +118,25 @@ function validateCodexSkills(options = {}) {
     }
   }
 
-  const expectedIds = new Set(expected.map(item => item.skillId));
+  const expectedIds = new Set(expected.map((item) => item.skillId));
   const orphaned = [];
   if (resolved.strict) {
-    const dirs = fs.readdirSync(resolved.skillsDir, { withFileTypes: true })
-      .filter(entry => entry.isDirectory() && entry.name.startsWith('aiox-'))
-      .map(entry => entry.name);
+    const dirs = fs
+      .readdirSync(resolved.skillsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && entry.name.startsWith("aiox-"))
+      .map((entry) => entry.name);
     for (const dir of dirs) {
       if (!expectedIds.has(dir)) {
         orphaned.push(dir);
-        errors.push(`Orphaned skill directory: ${path.join(path.relative(resolved.projectRoot, resolved.skillsDir), dir)}`);
+        errors.push(
+          `Orphaned skill directory: ${path.join(path.relative(resolved.projectRoot, resolved.skillsDir), dir)}`,
+        );
       }
     }
   }
 
   if (expected.length === 0) {
-    warnings.push('No parseable agents found in sourceDir');
+    warnings.push("No parseable agents found in sourceDir");
   }
 
   return {
@@ -134,13 +157,13 @@ function formatHumanReport(result) {
 
   const lines = [
     `❌ Codex skills validation failed (${result.errors.length} issue(s))`,
-    ...result.errors.map(error => `- ${error}`),
+    ...result.errors.map((error) => `- ${error}`),
   ];
 
   if (result.warnings.length > 0) {
-    lines.push(...result.warnings.map(warning => `⚠️ ${warning}`));
+    lines.push(...result.warnings.map((warning) => `⚠️ ${warning}`));
   }
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 function main() {

@@ -14,16 +14,16 @@
 
 ## Task Anatomy
 
-| Field | Value |
-|-------|-------|
-| **task_name** | Optimize Workflow Execution |
-| **status** | `active` |
-| **responsible_executor** | @squad-chief |
-| **execution_type** | Agent |
-| **input** | `target` (workflow file path) |
-| **output** | Relatório de otimização + economia de tokens |
-| **action_items** | Analisar, otimizar, medir economia |
-| **acceptance_criteria** | Workflow otimizado + relatório de ROI |
+| Field                    | Value                                        |
+| ------------------------ | -------------------------------------------- |
+| **task_name**            | Optimize Workflow Execution                  |
+| **status**               | `active`                                     |
+| **responsible_executor** | @squad-chief                                 |
+| **execution_type**       | Agent                                        |
+| **input**                | `target` (workflow file path)                |
+| **output**               | Relatório de otimização + economia de tokens |
+| **action_items**         | Analisar, otimizar, medir economia           |
+| **acceptance_criteria**  | Workflow otimizado + relatório de ROI        |
 
 ---
 
@@ -55,14 +55,14 @@ Flags:
 
 ## 6 DIMENSÕES DE OTIMIZAÇÃO
 
-| # | Dimensão | O que otimiza | Métrica |
-|---|----------|---------------|---------|
-| D1 | **Phase Necessity** | Fases necessárias vs redundantes | % fases removíveis |
-| D2 | **Parallelization** | Sequential → Parallel onde possível | # oportunidades |
-| D3 | **Checkpoint Hierarchy** | Human → Heuristic onde aplicável | % automatizável |
-| D4 | **Executor Distribution** | Agent → Worker/Hybrid por fase | % Worker |
-| D5 | **GAP ZERO Compliance** | Tempo idle entre handoffs | gaps encontrados |
-| D6 | **Cost Projection** | Tokens por execução | $/mês |
+| #   | Dimensão                  | O que otimiza                       | Métrica            |
+| --- | ------------------------- | ----------------------------------- | ------------------ |
+| D1  | **Phase Necessity**       | Fases necessárias vs redundantes    | % fases removíveis |
+| D2  | **Parallelization**       | Sequential → Parallel onde possível | # oportunidades    |
+| D3  | **Checkpoint Hierarchy**  | Human → Heuristic onde aplicável    | % automatizável    |
+| D4  | **Executor Distribution** | Agent → Worker/Hybrid por fase      | % Worker           |
+| D5  | **GAP ZERO Compliance**   | Tempo idle entre handoffs           | gaps encontrados   |
+| D6  | **Cost Projection**       | Tokens por execução                 | $/mês              |
 
 ---
 
@@ -213,7 +213,7 @@ identify_parallel:
 
 ### Step 2.3: Output D2 Analysis
 
-```yaml
+````yaml
 output_format:
   table: |
     ## D2: Parallelization Opportunities
@@ -230,7 +230,7 @@ output_format:
     ```
     {mermaid_diagram}
     ```
-```
+````
 
 ---
 
@@ -842,9 +842,9 @@ CORRECT:
 
 ## Changelog
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-02-12 | Initial version — 6 dimensions analysis + implementation mode |
+| Version | Date       | Changes                                                       |
+| ------- | ---------- | ------------------------------------------------------------- |
+| 1.0.0   | 2026-02-12 | Initial version — 6 dimensions analysis + implementation mode |
 
 ---
 

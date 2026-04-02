@@ -12,13 +12,14 @@
 Produce W3C Design Tokens (DTCG v1.0.0 stable) exports from the canonical YAML tokens file. Validates schema compliance, OKLCH color usage, and publishes artifacts for downstream platforms (web, iOS, Android, Flutter). **v4.0: References w3c-dtcg-spec-reference.md for spec compliance. Uses $value, $type, $description format per W3C DTCG v1.0 stable (October 2025).**
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/tokens/dtcg-exports/`
 - **format:** JSON data (W3C DTCG v1.0 multi-platform)
 - **consumed_by:** ds-token-w3c-extract
 
 ## Prerequisites
 
-- tokens.yaml generated via *tokenize (core/semantic/component layers present)
+- tokens.yaml generated via \*tokenize (core/semantic/component layers present)
 - Node.js ≥ 18 / Python ≥ 3.10 (for validation tools)
 - DTCG CLI or schema validator installed (`npm install -g @designtokens/cli` recommended)
 - Reference: Read data/w3c-dtcg-spec-reference.md for W3C DTCG v1.0 stable format
@@ -87,11 +88,11 @@ Produce W3C Design Tokens (DTCG v1.0.0 stable) exports from the canonical YAML t
 - Coordinate with platform teams before breaking changes (e.g., renaming tokens)
 - Store validation reports alongside artifacts for audit/compliance
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

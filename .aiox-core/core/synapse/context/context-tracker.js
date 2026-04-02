@@ -24,10 +24,10 @@
  * @type {Object.<string, {min: number, max: number, tokenBudget: number}>}
  */
 const BRACKETS = {
-  FRESH:    { min: 60, max: 100, tokenBudget: 800 },
-  MODERATE: { min: 40, max: 60,  tokenBudget: 1500 },
-  DEPLETED: { min: 25, max: 40,  tokenBudget: 2000 },
-  CRITICAL: { min: 0,  max: 25,  tokenBudget: 2500 },
+  FRESH: { min: 60, max: 100, tokenBudget: 800 },
+  MODERATE: { min: 40, max: 60, tokenBudget: 1500 },
+  DEPLETED: { min: 25, max: 40, tokenBudget: 2000 },
+  CRITICAL: { min: 0, max: 25, tokenBudget: 2500 },
 };
 
 /**
@@ -66,10 +66,22 @@ const DEFAULTS = {
  * CRITICAL: All layers + memory hints + handoff warning
  */
 const LAYER_CONFIGS = {
-  FRESH:    { layers: [0, 1, 2, 7], memoryHints: false, handoffWarning: false },
-  MODERATE: { layers: [0, 1, 2, 3, 4, 5, 6, 7], memoryHints: false, handoffWarning: false },
-  DEPLETED: { layers: [0, 1, 2, 3, 4, 5, 6, 7], memoryHints: true, handoffWarning: false },
-  CRITICAL: { layers: [0, 1, 2, 3, 4, 5, 6, 7], memoryHints: true, handoffWarning: true },
+  FRESH: { layers: [0, 1, 2, 7], memoryHints: false, handoffWarning: false },
+  MODERATE: {
+    layers: [0, 1, 2, 3, 4, 5, 6, 7],
+    memoryHints: false,
+    handoffWarning: false,
+  },
+  DEPLETED: {
+    layers: [0, 1, 2, 3, 4, 5, 6, 7],
+    memoryHints: true,
+    handoffWarning: false,
+  },
+  CRITICAL: {
+    layers: [0, 1, 2, 3, 4, 5, 6, 7],
+    memoryHints: true,
+    handoffWarning: true,
+  },
 };
 
 /**
@@ -79,20 +91,20 @@ const LAYER_CONFIGS = {
  * @returns {string} Bracket name: 'FRESH' | 'MODERATE' | 'DEPLETED' | 'CRITICAL'
  */
 function calculateBracket(contextPercent) {
-  if (typeof contextPercent !== 'number' || isNaN(contextPercent)) {
-    return 'CRITICAL';
+  if (typeof contextPercent !== "number" || isNaN(contextPercent)) {
+    return "CRITICAL";
   }
 
   if (contextPercent >= 60) {
-    return 'FRESH';
+    return "FRESH";
   }
   if (contextPercent >= 40) {
-    return 'MODERATE';
+    return "MODERATE";
   }
   if (contextPercent >= 25) {
-    return 'DEPLETED';
+    return "DEPLETED";
   }
-  return 'CRITICAL';
+  return "CRITICAL";
 }
 
 /**
@@ -113,7 +125,11 @@ function estimateContextPercent(promptCount, options = {}) {
     maxContext = DEFAULTS.maxContext,
   } = options;
 
-  if (typeof promptCount !== 'number' || isNaN(promptCount) || promptCount < 0) {
+  if (
+    typeof promptCount !== "number" ||
+    isNaN(promptCount) ||
+    promptCount < 0
+  ) {
     return 100;
   }
 
@@ -122,7 +138,7 @@ function estimateContextPercent(promptCount, options = {}) {
   }
 
   const usedTokens = promptCount * avgTokensPerPrompt * XML_SAFETY_MULTIPLIER;
-  const percent = 100 - (usedTokens / maxContext * 100);
+  const percent = 100 - (usedTokens / maxContext) * 100;
   return Math.max(0, Math.min(100, percent));
 }
 
@@ -171,7 +187,7 @@ function getActiveLayers(bracket) {
  * @returns {boolean} True if bracket is CRITICAL
  */
 function needsHandoffWarning(bracket) {
-  return bracket === 'CRITICAL';
+  return bracket === "CRITICAL";
 }
 
 /**
@@ -181,7 +197,7 @@ function needsHandoffWarning(bracket) {
  * @returns {boolean} True if bracket is DEPLETED or CRITICAL
  */
 function needsMemoryHints(bracket) {
-  return bracket === 'DEPLETED' || bracket === 'CRITICAL';
+  return bracket === "DEPLETED" || bracket === "CRITICAL";
 }
 
 module.exports = {

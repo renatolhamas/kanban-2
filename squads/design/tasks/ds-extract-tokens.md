@@ -13,18 +13,20 @@
 Generate design token system from consolidated patterns. Exports to multiple formats (YAML, JSON, CSS custom properties, Tailwind config, SCSS variables) with semantic naming conventions. **v4.0: Outputs W3C DTCG v1.0 format by default ($value, $type, $description).**
 
 ## Input Schema
+
 - **requires:** Output from `ds-consolidate-patterns`
 - **format:** Text data (color-clusters.txt, spacing-consolidation.txt, button-consolidation.txt)
 - **location:** `outputs/design-system/{project}/consolidation/`
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/tokens/tokens.yaml`
 - **format:** YAML data (with JSON, CSS, Tailwind, SCSS exports)
 - **consumed_by:** ds-generate-migration-strategy, export-design-tokens-dtcg
 
 ## Prerequisites
 
-- Consolidation completed (*consolidate command run successfully)
+- Consolidation completed (\*consolidate command run successfully)
 - .state.yaml contains consolidation data
 - Consolidated pattern files exist (color-clusters.txt, spacing-consolidation.txt, etc)
 - Reference: Read data/w3c-dtcg-spec-reference.md for DTCG v1.0 token format
@@ -59,7 +61,7 @@ This task uses interactive elicitation to configure token generation.
    - Read .state.yaml consolidation section
    - Load consolidated pattern files
    - Confirm .state.yaml contains `phase: "consolidation_complete"` string; abort if missing
-   - Check: .state.yaml contains `phase: "consolidation_complete"` AND consolidated pattern files exist — abort with "Consolidation not completed: run *consolidate first"
+   - Check: .state.yaml contains `phase: "consolidation_complete"` AND consolidated pattern files exist — abort with "Consolidation not completed: run \*consolidate first"
 
 2. **Extract Color Tokens**
    - Read color-clusters.txt
@@ -119,7 +121,7 @@ This task uses interactive elicitation to configure token generation.
     - Check: `test -f tokens.scss` AND file contains $variable declarations — abort with "SCSS generation failed"
 
 11. **Validate Token Coverage**
-    - Count original patterns from consolidation output and count tokens that map to them; compute coverage = mapped/total * 100
+    - Count original patterns from consolidation output and count tokens that map to them; compute coverage = mapped/total \* 100
     - Target: >95% coverage
     - List each uncovered pattern by name with its source file
     - Check: token coverage >= 95% of original patterns — if below, list uncovered patterns and log "Coverage: {pct}% ({covered}/{total})"
@@ -204,7 +206,7 @@ shadow:
 - **Token coverage <95%:** Identify uncovered patterns. Add manual token definitions for edge cases. Re-calculate coverage
 - **Naming conflicts:** Use prefix strategy (e.g., `--color-primary-legacy` vs `--color-primary`). Document conflicts in migration notes
 - **Invalid token values:** Validate against CSS spec. Convert non-standard values (e.g., named colors → hex → OKLCH)
-- **Consolidation data missing:** Re-run *consolidate before proceeding. Do not generate partial token sets
+- **Consolidation data missing:** Re-run \*consolidate before proceeding. Do not generate partial token sets
 
 ## Success Criteria
 
@@ -220,18 +222,18 @@ shadow:
 
 > **GATE: Token Completeness Review** — Verify token coverage before migration planning
 
-| Metric | Threshold | Action if FAIL |
-|--------|-----------|----------------|
-| Token coverage | >= 95% of consolidated patterns | Add manual token definitions for uncovered patterns, re-calculate |
-| Naming conflicts | 0 | Resolve with prefix strategy (`--legacy-` prefix), re-validate |
-| W3C DTCG compliance | 100% of generated tokens | Fix non-compliant token structures, re-export |
-| Token file valid | Parseable JSON/YAML | Fix syntax errors, validate with JSON Schema |
+| Metric              | Threshold                       | Action if FAIL                                                    |
+| ------------------- | ------------------------------- | ----------------------------------------------------------------- |
+| Token coverage      | >= 95% of consolidated patterns | Add manual token definitions for uncovered patterns, re-calculate |
+| Naming conflicts    | 0                               | Resolve with prefix strategy (`--legacy-` prefix), re-validate    |
+| W3C DTCG compliance | 100% of generated tokens        | Fix non-compliant token structures, re-export                     |
+| Token file valid    | Parseable JSON/YAML             | Fix syntax errors, validate with JSON Schema                      |
 
 **Rework rule:** If coverage stuck below 90% after adding manual tokens, review consolidation output — some patterns may have been incorrectly merged.
 
 ## Error Handling
 
-- **No consolidation data**: Exit with message to run *consolidate first
+- **No consolidation data**: Exit with message to run \*consolidate first
 - **Invalid consolidated patterns**: Log which patterns failed, continue with valid ones
 - **Export format error**: Validate syntax, report errors, fix or skip format
 - **Low coverage (<95%)**: Warn user, suggest additional consolidation
@@ -252,6 +254,7 @@ shadow:
 ```
 
 Output:
+
 ```
 🔍 Brad: Extracting tokens from consolidated patterns...
 
@@ -280,9 +283,9 @@ Ready for Merovingian to build components or generate migration strategy.
 /* tokens.css */
 :root {
   /* Colors */
-  --color-primary: #0066CC;
-  --color-primary-dark: #0052A3;
-  --color-error: #DC2626;
+  --color-primary: #0066cc;
+  --color-primary-dark: #0052a3;
+  --color-error: #dc2626;
 
   /* Spacing */
   --space-xs: 4px;
@@ -303,10 +306,10 @@ Ready for Merovingian to build components or generate migration strategy.
 - Hover states auto-detected by "-dark" suffix
 - Coverage <95% means some patterns weren't consolidated
 - Export formats stay in sync - update tokens.yaml and regenerate all
-- Brad recommends: Run *migrate next to create migration strategy
-- For component generation, hand off to Merovingian: *agent atlas
+- Brad recommends: Run \*migrate next to create migration strategy
+- For component generation, hand off to Merovingian: \*agent atlas
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
-

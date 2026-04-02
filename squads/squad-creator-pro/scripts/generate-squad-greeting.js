@@ -28,18 +28,22 @@
  * @location squads/squad-creator-pro/scripts/
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 // Framework dependencies (from .aiox-core/)
-const { SquadLoader } = require('../../../.aiox-core/development/scripts/squad/squad-loader');
-const GreetingBuilder = require('../../../.aiox-core/development/scripts/greeting-builder');
-const SessionContextLoader = require('../../../.aiox-core/scripts/session-context-loader');
-const { loadProjectStatus } = require('../../../.aiox-core/infrastructure/scripts/project-status-loader');
+const {
+  SquadLoader,
+} = require("../../../.aiox-core/development/scripts/squad/squad-loader");
+const GreetingBuilder = require("../../../.aiox-core/development/scripts/greeting-builder");
+const SessionContextLoader = require("../../../.aiox-core/scripts/session-context-loader");
+const {
+  loadProjectStatus,
+} = require("../../../.aiox-core/infrastructure/scripts/project-status-loader");
 
-const SQUADS_PATH = './squads';
-const REGISTRY_PATH = './squads/squad-creator-pro/data/squad-registry.yaml';
+const SQUADS_PATH = "./squads";
+const REGISTRY_PATH = "./squads/squad-creator-pro/data/squad-registry.yaml";
 const TIMEOUT_MS = 200;
 
 /**
@@ -50,10 +54,16 @@ const TIMEOUT_MS = 200;
  * @returns {Promise<Object>} Parsed agent definition
  */
 async function loadSquadAgent(squadName, agentName) {
-  const agentPath = path.join(process.cwd(), SQUADS_PATH, squadName, 'agents', `${agentName}.md`);
+  const agentPath = path.join(
+    process.cwd(),
+    SQUADS_PATH,
+    squadName,
+    "agents",
+    `${agentName}.md`,
+  );
 
   try {
-    const content = await fs.readFile(agentPath, 'utf8');
+    const content = await fs.readFile(agentPath, "utf8");
 
     // Extract YAML block
     const yamlMatch = content.match(/```ya?ml\n([\s\S]*?)\n```/);
@@ -65,13 +75,13 @@ async function loadSquadAgent(squadName, agentName) {
 
     // Validate required fields
     if (!agentDef.agent || !agentDef.agent.id) {
-      throw new Error('Invalid agent definition: missing agent.id');
+      throw new Error("Invalid agent definition: missing agent.id");
     }
 
     // Normalize with defaults
     return normalizeAgentDefinition(agentDef);
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if (error.code === "ENOENT") {
       throw new Error(`Agent file not found: ${agentPath}`);
     }
     throw error;
@@ -88,9 +98,9 @@ function normalizeAgentDefinition(agentDef) {
   const agent = agentDef.agent;
 
   // Ensure required fields
-  agent.id = agent.id || 'unknown';
+  agent.id = agent.id || "unknown";
   agent.name = agent.name || agent.id;
-  agent.icon = agent.icon || '🤖';
+  agent.icon = agent.icon || "🤖";
 
   // Ensure persona_profile with greeting_levels
   if (!agentDef.persona_profile) {
@@ -128,10 +138,12 @@ async function loadSquadConfig(squadName) {
 
   try {
     const { manifestPath } = await loader.resolve(squadName);
-    const content = await fs.readFile(manifestPath, 'utf8');
+    const content = await fs.readFile(manifestPath, "utf8");
     return yaml.load(content);
   } catch (error) {
-    console.warn(`[generate-squad-greeting] Failed to load config: ${error.message}`);
+    console.warn(
+      `[generate-squad-greeting] Failed to load config: ${error.message}`,
+    );
     return { settings: { activation: {} } };
   }
 }
@@ -144,10 +156,12 @@ async function loadSquadConfig(squadName) {
 async function loadSquadRegistry() {
   try {
     const registryPath = path.join(process.cwd(), REGISTRY_PATH);
-    const content = await fs.readFile(registryPath, 'utf8');
+    const content = await fs.readFile(registryPath, "utf8");
     return yaml.load(content);
   } catch (error) {
-    console.warn(`[generate-squad-greeting] Failed to load registry: ${error.message}`);
+    console.warn(
+      `[generate-squad-greeting] Failed to load registry: ${error.message}`,
+    );
     return null;
   }
 }
@@ -198,8 +212,8 @@ function getTopSquads(registry, limit = 5) {
     .map(([name, data]) => ({
       name,
       agents: data.agents || 0,
-      domain: data.domain || '',
-      purpose: data.purpose?.substring(0, 35) || '',
+      domain: data.domain || "",
+      purpose: data.purpose?.substring(0, 35) || "",
       isQualityRef: data.quality_reference || false,
     }))
     .sort((a, b) => b.agents - a.agents)
@@ -233,7 +247,7 @@ async function generateEcosystemReport(settings = {}) {
 |-------|--------|--------|`;
 
       for (const squad of topSquads) {
-        const marker = squad.isQualityRef ? ' ⭐' : '';
+        const marker = squad.isQualityRef ? " ⭐" : "";
         report += `
 | ${squad.name}${marker} | ${squad.agents} | ${squad.domain} |`;
       }
@@ -253,14 +267,14 @@ async function generateEcosystemReport(settings = {}) {
 
   // Show gaps if enabled
   if (settings.show_gaps && registry?.gaps) {
-    const highPriorityGaps = registry.gaps.filter(g => g.priority === 'high');
+    const highPriorityGaps = registry.gaps.filter((g) => g.priority === "high");
     if (highPriorityGaps.length > 0) {
       report += `
 
 ### Domain Gaps (High Priority)`;
       for (const gap of highPriorityGaps.slice(0, 3)) {
         report += `
-- **${gap.domain}**: ${gap.potential_minds?.slice(0, 2).join(', ') || 'needs research'}`;
+- **${gap.domain}**: ${gap.potential_minds?.slice(0, 2).join(", ") || "needs research"}`;
       }
     }
   }
@@ -279,9 +293,11 @@ async function loadSessionContext(agentId) {
     const loader = new SessionContextLoader();
     return await loader.loadContext(agentId);
   } catch (error) {
-    console.warn(`[generate-squad-greeting] Session context failed: ${error.message}`);
+    console.warn(
+      `[generate-squad-greeting] Session context failed: ${error.message}`,
+    );
     return {
-      sessionType: 'new',
+      sessionType: "new",
       message: null,
       previousAgent: null,
       lastCommands: [],
@@ -308,7 +324,7 @@ async function generateSquadGreeting(squadName, agentName) {
 
     // Determine agent name (default to squad-chief or first agent)
     if (!agentName) {
-      agentName = 'squad-chief'; // Default orchestrator
+      agentName = "squad-chief"; // Default orchestrator
     }
 
     // Load agent definition
@@ -357,9 +373,9 @@ async function generateSquadGreeting(squadName, agentName) {
       console.warn(`[generate-squad-greeting] Slow generation: ${duration}ms`);
     }
 
-    return parts.join('\n\n');
+    return parts.join("\n\n");
   } catch (error) {
-    console.error('[generate-squad-greeting] Error:', {
+    console.error("[generate-squad-greeting] Error:", {
       squadName,
       agentName,
       error: error.message,
@@ -391,25 +407,29 @@ if (require.main === module) {
   const agentName = process.argv[3];
 
   if (!squadName) {
-    console.error('Usage: node generate-squad-greeting.js <squad-name> [agent-name]');
-    console.error('\nExamples:');
-    console.error('  node generate-squad-greeting.js squad-creator');
-    console.error('  node generate-squad-greeting.js squad-creator squad-chief');
+    console.error(
+      "Usage: node generate-squad-greeting.js <squad-name> [agent-name]",
+    );
+    console.error("\nExamples:");
+    console.error("  node generate-squad-greeting.js squad-creator");
+    console.error(
+      "  node generate-squad-greeting.js squad-creator squad-chief",
+    );
     process.exit(1);
   }
 
   // Execute with timeout protection
   const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Greeting timeout')), TIMEOUT_MS),
+    setTimeout(() => reject(new Error("Greeting timeout")), TIMEOUT_MS),
   );
 
   Promise.race([generateSquadGreeting(squadName, agentName), timeoutPromise])
-    .then(greeting => {
+    .then((greeting) => {
       console.log(greeting);
       process.exit(0);
     })
-    .catch(error => {
-      console.error('Error:', error.message);
+    .catch((error) => {
+      console.error("Error:", error.message);
       console.log(generateFallbackGreeting(squadName, agentName));
       process.exit(1);
     });

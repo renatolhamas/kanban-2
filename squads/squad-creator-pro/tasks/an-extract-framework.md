@@ -14,6 +14,7 @@ Extrair a Trindade completa (Playbook + Framework + Swipe File) de uma fonte esp
 Perguntar: "Qual a fonte? (entrevista, livro, curso, post, video)"
 
 Avaliar qualidade:
+
 - OURO → proceder com extracao completa
 - BRONZE → avisar que resultado sera limitado, sugerir buscar ouro
 
@@ -22,11 +23,13 @@ Avaliar qualidade:
 O Playbook e a RECEITA — passo a passo da metodologia.
 
 Buscar na fonte:
+
 - "Como ele faz X?" → sequencia de passos
 - "Qual o processo dele?" → workflow
 - "O que faz primeiro, segundo, terceiro?" → ordem
 
 Template:
+
 ```yaml
 playbook:
   name: "{nome da metodologia}"
@@ -43,11 +46,13 @@ playbook:
 O Framework e a FORMA — regras de decisao SE/ENTAO.
 
 Buscar na fonte:
+
 - "Quando ele ve X, o que faz?" → regra condicional
 - "Como decide entre A e B?" → criterio
 - "O que NUNCA faria?" → veto condition
 
 Template:
+
 ```yaml
 framework:
   rules:
@@ -64,12 +69,14 @@ framework:
 O Swipe File sao EXEMPLOS — provas que funcionam.
 
 Buscar na fonte:
+
 - Casos reais com numeros
 - Exemplos especificos citados
 - Analogias e metaforas usadas
 - Historias contadas repetidamente
 
 Template:
+
 ```yaml
 swipe_file:
   cases:
@@ -85,6 +92,7 @@ swipe_file:
 ### Step 5: Validate Completeness
 
 Checklist da Trindade:
+
 - [ ] Playbook tem passos claros e sequenciais
 - [ ] Framework tem regras SE/ENTAO (nao so teoria)
 - [ ] Swipe File tem exemplos REAIS (nao inventados)

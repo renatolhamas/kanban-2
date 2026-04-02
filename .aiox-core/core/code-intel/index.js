@@ -1,10 +1,16 @@
-'use strict';
+"use strict";
 
-const { CodeIntelClient } = require('./code-intel-client');
-const { CodeIntelEnricher } = require('./code-intel-enricher');
-const { CodeIntelProvider, CAPABILITIES } = require('./providers/provider-interface');
-const { CodeGraphProvider, TOOL_MAP } = require('./providers/code-graph-provider');
-const { RegistryProvider } = require('./providers/registry-provider');
+const { CodeIntelClient } = require("./code-intel-client");
+const { CodeIntelEnricher } = require("./code-intel-enricher");
+const {
+  CodeIntelProvider,
+  CAPABILITIES,
+} = require("./providers/provider-interface");
+const {
+  CodeGraphProvider,
+  TOOL_MAP,
+} = require("./providers/code-graph-provider");
+const { RegistryProvider } = require("./providers/registry-provider");
 
 // Singleton client instance (lazily initialized)
 let _defaultClient = null;
@@ -70,21 +76,23 @@ async function enrichWithCodeIntel(baseResult, options = {}) {
 
     const capabilityArgs = {
       assessImpact: () => [Array.isArray(options.files) ? options.files : []],
-      detectDuplicates: () => [options.description || '', options],
-      findTests: () => [options.symbol || ''],
-      getConventions: () => [options.target || '.'],
-      describeProject: () => [options.target || '.'],
+      detectDuplicates: () => [options.description || "", options],
+      findTests: () => [options.symbol || ""],
+      getConventions: () => [options.target || "."],
+      describeProject: () => [options.target || "."],
     };
 
     const promises = capabilities.map(async (cap) => {
-      if (typeof enricher[cap] === 'function') {
+      if (typeof enricher[cap] === "function") {
         let timer;
         try {
-          const args = capabilityArgs[cap] ? capabilityArgs[cap]() : [options.target || '.'];
+          const args = capabilityArgs[cap]
+            ? capabilityArgs[cap]()
+            : [options.target || "."];
           const result = await Promise.race([
             enricher[cap](...args),
             new Promise((_, reject) => {
-              timer = setTimeout(() => reject(new Error('timeout')), timeout);
+              timer = setTimeout(() => reject(new Error("timeout")), timeout);
             }),
           ]);
           enrichments[cap] = result;
@@ -97,8 +105,11 @@ async function enrichWithCodeIntel(baseResult, options = {}) {
     await Promise.allSettled(promises);
   } catch (error) {
     // Graceful — never throws, returns baseResult unchanged on failure
-    if (options.fallbackBehavior !== 'silent') {
-      console.warn('[code-intel] Enrichment failed, returning base result:', error.message);
+    if (options.fallbackBehavior !== "silent") {
+      console.warn(
+        "[code-intel] Enrichment failed, returning base result:",
+        error.message,
+      );
     }
     return baseResult;
   }

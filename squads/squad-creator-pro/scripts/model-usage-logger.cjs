@@ -16,15 +16,15 @@
  *   node model-usage-logger.cjs validate validate-squad.md
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
 // Paths
-const SQUAD_ROOT = path.join(__dirname, '..');
-const METRICS_DIR = path.join(SQUAD_ROOT, '../../outputs/metrics');
-const CONFIG_PATH = path.join(SQUAD_ROOT, 'config/model-routing.yaml');
-const LOG_PATH = path.join(METRICS_DIR, 'model-usage.jsonl');
+const SQUAD_ROOT = path.join(__dirname, "..");
+const METRICS_DIR = path.join(SQUAD_ROOT, "../../outputs/metrics");
+const CONFIG_PATH = path.join(SQUAD_ROOT, "config/model-routing.yaml");
+const LOG_PATH = path.join(METRICS_DIR, "model-usage.jsonl");
 
 // Ensure metrics dir exists
 if (!fs.existsSync(METRICS_DIR)) {
@@ -34,7 +34,7 @@ if (!fs.existsSync(METRICS_DIR)) {
 // Load routing config
 function loadConfig() {
   try {
-    const content = fs.readFileSync(CONFIG_PATH, 'utf8');
+    const content = fs.readFileSync(CONFIG_PATH, "utf8");
     return yaml.load(content);
   } catch (e) {
     console.error(`Error loading config: ${e.message}`);
@@ -44,9 +44,9 @@ function loadConfig() {
 
 // Get expected tier for a task
 function getExpectedTier(taskName, config) {
-  if (!config || !config.tasks) return 'opus'; // default
+  if (!config || !config.tasks) return "opus"; // default
   const task = config.tasks[taskName];
-  return task ? task.tier : 'opus';
+  return task ? task.tier : "opus";
 }
 
 // Log a model usage event
@@ -65,18 +65,24 @@ function logUsage(task, model, tokensIn = 0, tokensOut = 0, latencyMs = 0) {
     tokens_out: parseInt(tokensOut) || 0,
     latency_ms: parseInt(latencyMs) || 0,
     cost_actual: calculateCost(model, tokensIn, tokensOut),
-    cost_if_opus: calculateCost('opus', tokensIn, tokensOut),
-    savings: calculateCost('opus', tokensIn, tokensOut) - calculateCost(model, tokensIn, tokensOut)
+    cost_if_opus: calculateCost("opus", tokensIn, tokensOut),
+    savings:
+      calculateCost("opus", tokensIn, tokensOut) -
+      calculateCost(model, tokensIn, tokensOut),
   };
 
   // Append to JSONL log
-  fs.appendFileSync(LOG_PATH, JSON.stringify(entry) + '\n');
+  fs.appendFileSync(LOG_PATH, JSON.stringify(entry) + "\n");
 
   // Print result
-  const status = isCorrect ? '✅' : '❌';
-  console.log(`${status} Logged: ${task} → ${model} (expected: ${expectedTier})`);
+  const status = isCorrect ? "✅" : "❌";
+  console.log(
+    `${status} Logged: ${task} → ${model} (expected: ${expectedTier})`,
+  );
   if (entry.savings > 0) {
-    console.log(`   Savings: $${entry.savings.toFixed(4)} (${((entry.savings / entry.cost_if_opus) * 100).toFixed(1)}%)`);
+    console.log(
+      `   Savings: $${entry.savings.toFixed(4)} (${((entry.savings / entry.cost_if_opus) * 100).toFixed(1)}%)`,
+    );
   }
 
   return entry;
@@ -86,9 +92,9 @@ function logUsage(task, model, tokensIn = 0, tokensOut = 0, latencyMs = 0) {
 // Prices per 1M tokens - Opus 4.5/4.6 (Feb 2026)
 function calculateCost(model, tokensIn, tokensOut) {
   const rates = {
-    haiku: { input: 1.00, output: 5.00 },
-    sonnet: { input: 3.00, output: 15.00 },
-    opus: { input: 5.00, output: 25.00 }
+    haiku: { input: 1.0, output: 5.0 },
+    sonnet: { input: 3.0, output: 15.0 },
+    opus: { input: 5.0, output: 25.0 },
   };
   const rate = rates[model] || rates.opus;
   return (tokensIn * rate.input + tokensOut * rate.output) / 1000000;
@@ -97,16 +103,22 @@ function calculateCost(model, tokensIn, tokensOut) {
 // Generate usage report
 function generateReport(days = 7) {
   if (!fs.existsSync(LOG_PATH)) {
-    console.log('No usage data yet. Run some tasks first.');
+    console.log("No usage data yet. Run some tasks first.");
     return;
   }
 
-  const lines = fs.readFileSync(LOG_PATH, 'utf8').trim().split('\n');
+  const lines = fs.readFileSync(LOG_PATH, "utf8").trim().split("\n");
   const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
   const entries = lines
-    .map(line => { try { return JSON.parse(line); } catch { return null; } })
-    .filter(e => e && new Date(e.timestamp) > cutoff);
+    .map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    })
+    .filter((e) => e && new Date(e.timestamp) > cutoff);
 
   if (entries.length === 0) {
     console.log(`No data in the last ${days} days.`);
@@ -116,15 +128,15 @@ function generateReport(days = 7) {
   // Aggregate stats
   const stats = {
     total: entries.length,
-    correct: entries.filter(e => e.correct).length,
+    correct: entries.filter((e) => e.correct).length,
     by_model: {},
     by_task: {},
     total_savings: 0,
     total_cost_actual: 0,
-    total_cost_if_opus: 0
+    total_cost_if_opus: 0,
   };
 
-  entries.forEach(e => {
+  entries.forEach((e) => {
     // By model
     stats.by_model[e.model_used] = (stats.by_model[e.model_used] || 0) + 1;
 
@@ -143,39 +155,46 @@ function generateReport(days = 7) {
   });
 
   // Print report
-  console.log('\n' + '='.repeat(60));
-  console.log('MODEL ROUTING USAGE REPORT');
-  console.log('='.repeat(60));
+  console.log("\n" + "=".repeat(60));
+  console.log("MODEL ROUTING USAGE REPORT");
+  console.log("=".repeat(60));
   console.log(`Period: Last ${days} days`);
   console.log(`Total executions: ${stats.total}`);
-  console.log(`Correct routing: ${stats.correct}/${stats.total} (${((stats.correct/stats.total)*100).toFixed(1)}%)`);
+  console.log(
+    `Correct routing: ${stats.correct}/${stats.total} (${((stats.correct / stats.total) * 100).toFixed(1)}%)`,
+  );
 
-  console.log('\n--- By Model ---');
+  console.log("\n--- By Model ---");
   Object.entries(stats.by_model).forEach(([model, count]) => {
     const pct = ((count / stats.total) * 100).toFixed(1);
     console.log(`  ${model}: ${count} (${pct}%)`);
   });
 
-  console.log('\n--- Cost Analysis ---');
+  console.log("\n--- Cost Analysis ---");
   console.log(`  Actual cost:    $${stats.total_cost_actual.toFixed(4)}`);
   console.log(`  If all Opus:    $${stats.total_cost_if_opus.toFixed(4)}`);
   console.log(`  Total savings:  $${stats.total_savings.toFixed(4)}`);
   if (stats.total_cost_if_opus > 0) {
-    const savingsPct = ((stats.total_savings / stats.total_cost_if_opus) * 100).toFixed(1);
+    const savingsPct = (
+      (stats.total_savings / stats.total_cost_if_opus) *
+      100
+    ).toFixed(1);
     console.log(`  Savings rate:   ${savingsPct}%`);
   }
 
-  console.log('\n--- Top Tasks (by execution count) ---');
+  console.log("\n--- Top Tasks (by execution count) ---");
   const sortedTasks = Object.entries(stats.by_task)
     .sort((a, b) => b[1].count - a[1].count)
     .slice(0, 10);
 
   sortedTasks.forEach(([task, data]) => {
     const correctPct = ((data.correct / data.count) * 100).toFixed(0);
-    console.log(`  ${task}: ${data.count}x (${correctPct}% correct, $${data.savings.toFixed(4)} saved)`);
+    console.log(
+      `  ${task}: ${data.count}x (${correctPct}% correct, $${data.savings.toFixed(4)} saved)`,
+    );
   });
 
-  console.log('\n' + '='.repeat(60));
+  console.log("\n" + "=".repeat(60));
 }
 
 // Validate expected tier for a task
@@ -184,40 +203,42 @@ function validateTask(taskName) {
   const expected = getExpectedTier(taskName, config);
   const taskConfig = config?.tasks?.[taskName];
 
-  console.log('\n--- Task Validation ---');
+  console.log("\n--- Task Validation ---");
   console.log(`Task: ${taskName}`);
   console.log(`Expected tier: ${expected}`);
 
   if (taskConfig) {
-    console.log(`Confidence: ${taskConfig.confidence || 'unknown'}`);
-    console.log(`Reason: ${taskConfig.reason || 'not specified'}`);
+    console.log(`Confidence: ${taskConfig.confidence || "unknown"}`);
+    console.log(`Reason: ${taskConfig.reason || "not specified"}`);
   } else {
-    console.log('⚠️  Task not found in config - will use opus (default)');
+    console.log("⚠️  Task not found in config - will use opus (default)");
   }
 
   return expected;
 }
 
 // CLI handler
-const [,, command, ...args] = process.argv;
+const [, , command, ...args] = process.argv;
 
 switch (command) {
-  case 'log':
+  case "log":
     if (args.length < 2) {
-      console.log('Usage: node model-usage-logger.cjs log <task> <model> [tokens_in] [tokens_out] [latency_ms]');
+      console.log(
+        "Usage: node model-usage-logger.cjs log <task> <model> [tokens_in] [tokens_out] [latency_ms]",
+      );
       process.exit(1);
     }
     logUsage(...args);
     break;
 
-  case 'report':
-    const days = args[0] === '--days' ? parseInt(args[1]) || 7 : 7;
+  case "report":
+    const days = args[0] === "--days" ? parseInt(args[1]) || 7 : 7;
     generateReport(days);
     break;
 
-  case 'validate':
+  case "validate":
     if (!args[0]) {
-      console.log('Usage: node model-usage-logger.cjs validate <task>');
+      console.log("Usage: node model-usage-logger.cjs validate <task>");
       process.exit(1);
     }
     validateTask(args[0]);

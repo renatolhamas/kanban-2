@@ -10,12 +10,14 @@
 **Worker Scripts:** `scripts/validate-squad.sh`, `scripts/quality_gate.py`, `scripts/yaml_validator.py`
 
 **Process Validation (via @pedro-valerio):**
+
 - Audit workflows para verificar se impedem caminhos errados
 - Validar veto conditions em cada checkpoint
 - Identificar gaps de tempo entre handoffs
 - Garantir fluxo unidirecional (cards nunca voltam)
 
 **Core Philosophy:**
+
 ```
 Quality comes from adherence to principles AND context-awareness.
 An orchestrator doesn't need voice_dna. An expert agent does.
@@ -23,6 +25,7 @@ Validation must understand WHAT type of squad it's validating.
 ```
 
 **Frameworks Used:**
+
 - `config/veto-conditions.yaml` → Veto engine with 10 blocking conditions **[v3.3]**
 - `config/task-anatomy.yaml` → 8-field task validation schema **[v3.3]**
 - `data/squad-type-definitions.yaml` → Squad type detection and requirements
@@ -86,11 +89,11 @@ OUTPUT: Validation Report + Final Score
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `squad_name` | string | Yes | Name of squad to validate | `"{your-squad}"` |
-| `squad_path` | string | No | Override default path | `"squads/{squad-name}/"` |
-| `type_override` | string | No | Force squad type | `"expert"`, `"pipeline"`, `"hybrid"` |
+| Parameter       | Type   | Required | Description               | Example                              |
+| --------------- | ------ | -------- | ------------------------- | ------------------------------------ |
+| `squad_name`    | string | Yes      | Name of squad to validate | `"{your-squad}"`                     |
+| `squad_path`    | string | No       | Override default path     | `"squads/{squad-name}/"`             |
+| `type_override` | string | No       | Force squad type          | `"expert"`, `"pipeline"`, `"hybrid"` |
 
 ---
 
@@ -158,7 +161,7 @@ detection_algorithm:
   if tie:
     if real_person_names_in_agents: "expert"
     elif phase_numbering_present: "pipeline"
-    else: "pipeline"  # default
+    else: "pipeline" # default
 ```
 
 ### Step 0.3: Load Type Requirements
@@ -172,13 +175,14 @@ load_requirements:
     required_components: [...]
     optional_components: [...]
     veto_conditions: [...]
-    benchmarks: {...}
+    benchmarks: { ... }
 ```
 
 **Output (PHASE 0):**
+
 ```yaml
 phase_0_output:
-  detected_type: "pipeline"  # or "expert" or "hybrid"
+  detected_type: "pipeline" # or "expert" or "hybrid"
   confidence: 0.85
   signals:
     agents_count: 1
@@ -264,7 +268,7 @@ reference_checks:
       For each agent:
         For each file in dependencies:
           Check file exists
-    threshold: "80%"  # Allow some missing
+    threshold: "80%" # Allow some missing
     on_fail_above_threshold: "ABORT - >20% missing references"
 
   - id: "T1-REF-003"
@@ -344,7 +348,7 @@ security_scan:
 
     - id: "T1-SEC-005"
       check: "No AWS Secret Keys"
-      action: "grep -rE 'aws[_-]?secret.*['\"][A-Za-z0-9/+=]{40}'"
+      action: 'grep -rE ''aws[_-]?secret.*[''"][A-Za-z0-9/+=]{40}'''
       on_match: "ABORT - AWS Secret Key found"
 
     - id: "T1-SEC-006"
@@ -398,18 +402,19 @@ security_scan:
 
   # False positive exclusions
   exclude_patterns:
-    - "{{.*}}"           # Jinja/Mustache placeholders
-    - "$[A-Z_]+"         # Shell variables
-    - "process.env."     # Node.js env
-    - "os.environ"       # Python env
-    - "# Example:"       # Example in comments
-    - "your-.*-here"     # Placeholder text
+    - "{{.*}}" # Jinja/Mustache placeholders
+    - "$[A-Z_]+" # Shell variables
+    - "process.env." # Node.js env
+    - "os.environ" # Python env
+    - "# Example:" # Example in comments
+    - "your-.*-here" # Placeholder text
 ```
 
 **Tier 1 Output:**
+
 ```yaml
 tier_1_result:
-  status: "PASS"  # or "ABORT"
+  status: "PASS" # or "ABORT"
   checks_run: 11
   checks_passed: 11
   checks_failed: 0
@@ -436,7 +441,7 @@ checklist_coverage:
     step_2: "Count checklists in checklists/"
     step_3: "Calculate ratio: checklists / complex_tasks"
 
-  threshold: 0.30  # 30%
+  threshold: 0.30 # 30%
   result:
     pass_if: "ratio >= 0.30"
     warn_if: "ratio >= 0.20"
@@ -459,7 +464,7 @@ orphan_detection:
       check_3: "Is task referenced in any workflow?"
       if_none: "Mark as ORPHAN"
 
-  threshold: 2  # Max orphans allowed
+  threshold: 2 # Max orphans allowed
   result:
     pass_if: "orphan_count <= 2"
     warn_if: "orphan_count <= 5"
@@ -481,7 +486,7 @@ phase_coverage:
     step_2: "For each phase, verify task reference exists"
     step_3: "Calculate coverage %"
 
-  threshold: 1.0  # 100%
+  threshold: 1.0 # 100%
   result:
     pass_if: "coverage == 100%"
     fail_if: "coverage < 100%"
@@ -501,7 +506,7 @@ data_usage:
     step_2: "For each file, grep all agents and tasks for filename"
     step_3: "Calculate usage %"
 
-  threshold: 0.50  # 50%
+  threshold: 0.50 # 50%
   result:
     pass_if: "usage >= 50%"
     warn_if: "usage >= 30%"
@@ -556,15 +561,16 @@ tool_registry_validation:
 ```
 
 **Tier 2 Output:**
+
 ```yaml
 tier_2_result:
-  status: "PASS"  # or "ABORT"
+  status: "PASS" # or "ABORT"
   metrics:
     checklist_coverage: "35%"
     orphan_tasks: 1
-    phase_coverage: "100%"  # if pipeline
+    phase_coverage: "100%" # if pipeline
     data_usage: "67%"
-    tool_registry: "N/A"  # or "PASS" if exists and valid [v3.2]
+    tool_registry: "N/A" # or "PASS" if exists and valid [v3.2]
   issues: []
 ```
 
@@ -731,7 +737,7 @@ documentation:
       points: 1
       check: "External dependencies listed?"
 
-    - name: "Changelog separation"  # [v3.2.1]
+    - name: "Changelog separation" # [v3.2.1]
       points: 1
       check: |
         Tasks >= v2.0.0 have separate CHANGELOG.md?
@@ -811,6 +817,7 @@ optimization_opportunities:
 ```
 
 **Tier 3 Output:**
+
 ```yaml
 tier_3_result:
   scores:
@@ -818,13 +825,16 @@ tier_3_result:
     pipeline_coherence: 7.0
     checklist_actionability: 6.5
     documentation: 8.0
-    optimization_opportunities: 6.0  # Indicates room for improvement
+    optimization_opportunities: 6.0 # Indicates room for improvement
   weighted_total: 7.2
   details:
-    prompt_quality_samples: ["brutal-extractor.md", "final-writer.md", "gap-analyzer.md"]
-    coherence_issues: ["Phase 3.5 not in workflow.yaml", "Sequence 10 collision"]
-    checklist_issues: ["book-summary-scoring.md missing auto-correction for some items"]
-    optimization_notes:  # [v3.2]
+    prompt_quality_samples:
+      ["brutal-extractor.md", "final-writer.md", "gap-analyzer.md"]
+    coherence_issues:
+      ["Phase 3.5 not in workflow.yaml", "Sequence 10 collision"]
+    checklist_issues:
+      ["book-summary-scoring.md missing auto-correction for some items"]
+    optimization_notes: # [v3.2]
       agent_tasks_convertible: 3
       potential_monthly_savings: "~$15"
       recommendation: "Run *optimize {squad} for details"
@@ -931,7 +941,7 @@ pipeline_validation:
     automation_script:
       id: "T4P-AS"
       weight: 0.15
-      required: false  # Required only if phases >= 8
+      required: false # Required only if phases >= 8
       applies_when: "phases_count >= 8"
       criteria:
         - "Script exists in scripts/ directory"
@@ -945,7 +955,7 @@ pipeline_validation:
       scoring:
         7_of_7: 10
         6_of_7: 8
-        5_of_7: 7  # minimum pass
+        5_of_7: 7 # minimum pass
         below_5: "FAIL"
 ```
 
@@ -1039,7 +1049,7 @@ hybrid_validation:
       scoring:
         10_of_10: 10
         8_of_10: 8
-        6_of_10: 6  # Minimum pass
+        6_of_10: 6 # Minimum pass
         below_6: "CONDITIONAL - Executor types need review"
 
       anti_patterns:
@@ -1050,6 +1060,7 @@ hybrid_validation:
 ```
 
 **Tier 4 Output:**
+
 ```yaml
 # Pipeline squad example:
 tier_4_result:
@@ -1057,7 +1068,7 @@ tier_4_result:
   score: 7.5
   checks:
     workflow_definition: 8.0
-    phase_checkpoints: 6.0  # Missing rework rules
+    phase_checkpoints: 6.0 # Missing rework rules
     orchestrator_completeness: 9.0
     intermediate_outputs: 7.0
   issues:
@@ -1073,7 +1084,7 @@ tier_4_result_hybrid:
     behavioral_states: 7.5
     heuristic_validation: 8.0
     process_standards: 7.0
-    executor_decision_tree: 8.5  # [v3.2] NEW
+    executor_decision_tree: 8.5 # [v3.2] NEW
   issues:
     - "2 tasks marked Agent could be Worker"
     - "Missing fallback for Hybrid→Human"
@@ -1091,7 +1102,7 @@ tier_4_result_hybrid:
 **Result:** VETO or PROCEED
 **Reference:** `config/veto-conditions.yaml` **[v3.3]**
 
-### Universal Vetos (SC_VC_*)
+### Universal Vetos (SC*VC*\*)
 
 ```yaml
 universal_vetos:
@@ -1196,11 +1207,12 @@ hybrid_vetos:
 ```
 
 **Veto Output:**
+
 ```yaml
 veto_result:
-  status: "PROCEED"  # or "VETO"
-  triggered: null  # or veto ID
-  message: null  # or veto message
+  status: "PROCEED" # or "VETO"
+  triggered: null # or veto ID
+  message: null # or veto message
 ```
 
 ---
@@ -1278,7 +1290,7 @@ report_structure:
     tier_4_contextual:
       type: "Expert | Pipeline | Hybrid"
       score: "X.X/10"
-      breakdown: {...}
+      breakdown: { ... }
 
   veto_status:
     triggered: "None | VXX"
@@ -1311,10 +1323,10 @@ report_structure:
 
 ## Outputs
 
-| Output | Location | Description |
-|--------|----------|-------------|
-| Validation Report | Console + `{squad_path}/docs/validation-report-{date}.md` | Full report |
-| Score Summary | Console | Quick pass/fail with score |
+| Output            | Location                                                  | Description                |
+| ----------------- | --------------------------------------------------------- | -------------------------- |
+| Validation Report | Console + `{squad_path}/docs/validation-report-{date}.md` | Full report                |
+| Score Summary     | Console                                                   | Quick pass/fail with score |
 
 ---
 
@@ -1336,41 +1348,41 @@ report_structure:
 
 ## Quick Reference: What's Required by Type
 
-| Component | Expert | Pipeline | Hybrid |
-|-----------|--------|----------|--------|
-| voice_dna | REQUIRED | optional | optional |
-| objection_algorithms | REQUIRED | optional | optional |
-| output_examples | REQUIRED | optional | optional |
-| tier_organization | REQUIRED | optional | optional |
-| workflow_definition | optional | REQUIRED | optional |
-| phase_checkpoints | optional | REQUIRED | optional |
-| orchestrator | optional | REQUIRED | optional |
-| automation_script | optional | **IF 8+ phases** | optional |
-| persona_profile | optional | optional | REQUIRED |
-| behavioral_states | optional | optional | REQUIRED |
-| heuristic_validation | optional | optional | REQUIRED |
-| **executor_decision_tree** [v3.2] | optional | optional | **REQUIRED** |
-| **tool_registry** [v3.2] | optional | optional | optional |
-| **optimization_check** [v3.2] | informational | informational | informational |
+| Component                         | Expert        | Pipeline         | Hybrid        |
+| --------------------------------- | ------------- | ---------------- | ------------- |
+| voice_dna                         | REQUIRED      | optional         | optional      |
+| objection_algorithms              | REQUIRED      | optional         | optional      |
+| output_examples                   | REQUIRED      | optional         | optional      |
+| tier_organization                 | REQUIRED      | optional         | optional      |
+| workflow_definition               | optional      | REQUIRED         | optional      |
+| phase_checkpoints                 | optional      | REQUIRED         | optional      |
+| orchestrator                      | optional      | REQUIRED         | optional      |
+| automation_script                 | optional      | **IF 8+ phases** | optional      |
+| persona_profile                   | optional      | optional         | REQUIRED      |
+| behavioral_states                 | optional      | optional         | REQUIRED      |
+| heuristic_validation              | optional      | optional         | REQUIRED      |
+| **executor_decision_tree** [v3.2] | optional      | optional         | **REQUIRED**  |
+| **tool_registry** [v3.2]          | optional      | optional         | optional      |
+| **optimization_check** [v3.2]     | informational | informational    | informational |
 
 ---
 
 ## Related
 
-| Command | Purpose |
-|---------|---------|
-| `*validate-squad {name}` | Full squad validation |
+| Command                  | Purpose                 |
+| ------------------------ | ----------------------- |
+| `*validate-squad {name}` | Full squad validation   |
 | `*validate-agent {file}` | Single agent validation |
-| `*validate-task {file}` | Single task validation |
+| `*validate-task {file}`  | Single task validation  |
 
-| Reference | File |
-|-----------|------|
-| Checklist | `checklists/squad-checklist.md` |
-| Type Definitions | `data/squad-type-definitions.yaml` |
-| Quality Framework | `data/quality-dimensions-framework.md` |
+| Reference              | File                                        |
+| ---------------------- | ------------------------------------------- |
+| Checklist              | `checklists/squad-checklist.md`             |
+| Type Definitions       | `data/squad-type-definitions.yaml`          |
+| Quality Framework      | `data/quality-dimensions-framework.md`      |
 | Executor Decision Tree | `data/executor-decision-tree.md` **[v3.2]** |
-| Tool Registry | `data/tool-registry.yaml` **[v3.2]** |
-| Optimize Task | `tasks/optimize.md` **[v3.2]** |
+| Tool Registry          | `data/tool-registry.yaml` **[v3.2]**        |
+| Optimize Task          | `tasks/optimize.md` **[v3.2]**              |
 
 ---
 

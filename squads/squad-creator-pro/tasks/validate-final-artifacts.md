@@ -37,21 +37,25 @@ optional_but_scored:
 ## Hard Gates
 
 1. `Structure Gate` (blocking)
+
 - All required files exist.
 - Entry agent is valid and referenced.
 - No broken internal path references.
 
 2. `Execution Gate` (blocking)
+
 - At least one runnable workflow exists.
 - Task references resolve to existing files.
 - No circular phase dependency in workflows.
 
 3. `Quality Gate` (blocking)
+
 - `validate-squad` score >= 7.0.
 - No critical security findings.
 - No veto condition triggered.
 
 4. `Usability Gate` (warning)
+
 - README includes activation and example commands.
 - At least one end-to-end example path.
 

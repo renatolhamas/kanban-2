@@ -9,9 +9,9 @@
  *   console.log(config.paths.tasks);  // /path/to/project/squads/squad-creator-pro/tasks
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
 // ============================================================================
 // PROJECT ROOT DETECTION
@@ -24,17 +24,17 @@ function findProjectRoot(startDir = __dirname) {
 
   while (depth < maxDepth) {
     // Check for markers that indicate project root
-    const markers = [
-      'package.json',
-      '.git',
-      '.claude'
-    ];
+    const markers = ["package.json", ".git", ".claude"];
 
     for (const marker of markers) {
       const markerPath = path.join(currentDir, marker);
       if (fs.existsSync(markerPath)) {
         // Verify it's the right project by checking for squads/squad-creator
-        const squadCreatorPath = path.join(currentDir, 'squads', 'squad-creator');
+        const squadCreatorPath = path.join(
+          currentDir,
+          "squads",
+          "squad-creator",
+        );
         if (fs.existsSync(squadCreatorPath)) {
           return currentDir;
         }
@@ -51,7 +51,9 @@ function findProjectRoot(startDir = __dirname) {
     depth++;
   }
 
-  throw new Error('Could not find project root. Make sure you are running from within the project.');
+  throw new Error(
+    "Could not find project root. Make sure you are running from within the project.",
+  );
 }
 
 // ============================================================================
@@ -59,13 +61,19 @@ function findProjectRoot(startDir = __dirname) {
 // ============================================================================
 
 function loadSquadConfig(projectRoot) {
-  const configPath = path.join(projectRoot, 'squads', 'squad-creator', 'config', 'squad-config.yaml');
+  const configPath = path.join(
+    projectRoot,
+    "squads",
+    "squad-creator",
+    "config",
+    "squad-config.yaml",
+  );
 
   if (!fs.existsSync(configPath)) {
     throw new Error(`Squad config not found: ${configPath}`);
   }
 
-  const content = fs.readFileSync(configPath, 'utf-8');
+  const content = fs.readFileSync(configPath, "utf-8");
   return yaml.load(content);
 }
 
@@ -76,14 +84,14 @@ function loadSquadConfig(projectRoot) {
 function resolvePaths(projectRoot, pathsConfig) {
   const resolved = {};
 
-  function resolve(obj, prefix = '') {
+  function resolve(obj, prefix = "") {
     for (const [key, value] of Object.entries(obj)) {
       const fullKey = prefix ? `${prefix}.${key}` : key;
 
-      if (typeof value === 'string') {
+      if (typeof value === "string") {
         // It's a path - resolve it
         resolved[fullKey] = path.join(projectRoot, value);
-      } else if (typeof value === 'object' && value !== null) {
+      } else if (typeof value === "object" && value !== null) {
         // It's a nested object - recurse
         resolve(value, fullKey);
       }
@@ -116,28 +124,29 @@ function getConfig() {
     // Resolved absolute paths
     paths: {
       // Squad-creator paths
-      squadRoot: resolvedPaths['squad_root'],
-      tasks: resolvedPaths['tasks'],
-      agents: resolvedPaths['agents'],
-      config: resolvedPaths['config'],
-      scripts: resolvedPaths['scripts'],
+      squadRoot: resolvedPaths["squad_root"],
+      tasks: resolvedPaths["tasks"],
+      agents: resolvedPaths["agents"],
+      config: resolvedPaths["config"],
+      scripts: resolvedPaths["scripts"],
 
       // Output paths
-      outputs: resolvedPaths['outputs.root'],
-      minds: resolvedPaths['outputs.minds'],
-      llmTests: resolvedPaths['outputs.llm_tests'],
-      llmTestInputs: resolvedPaths['outputs.llm_test_inputs'],
+      outputs: resolvedPaths["outputs.root"],
+      minds: resolvedPaths["outputs.minds"],
+      llmTests: resolvedPaths["outputs.llm_tests"],
+      llmTestInputs: resolvedPaths["outputs.llm_test_inputs"],
 
       // Infrastructure
-      envLoader: resolvedPaths['infrastructure.env_loader'],
-      llmRouter: resolvedPaths['infrastructure.llm_router'],
+      envLoader: resolvedPaths["infrastructure.env_loader"],
+      llmRouter: resolvedPaths["infrastructure.llm_router"],
     },
 
     // Helper to join paths relative to project root
     resolve: (...segments) => path.join(projectRoot, ...segments),
 
     // Helper to join paths relative to squad-creator
-    squadResolve: (...segments) => path.join(projectRoot, 'squads', 'squad-creator', ...segments),
+    squadResolve: (...segments) =>
+      path.join(projectRoot, "squads", "squad-creator", ...segments),
   };
 
   return _config;

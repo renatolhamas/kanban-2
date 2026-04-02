@@ -29,10 +29,22 @@ workflow:
   executor_summary:
     total_steps: 56
     distribution:
-      Worker: { count: 44, percent: 79, description: "Determinístico, bash/template" }
-      Agent: { count: 5, percent: 9, description: "Requer LLM para decisão semântica" }
-      Hybrid: { count: 6, percent: 11, description: "Worker + Agent validation" }
-      Human: { count: 1, percent: 1, description: "Aprovação para ações irreversíveis" }
+      Worker:
+        { count: 44, percent: 79, description: "Determinístico, bash/template" }
+      Agent:
+        {
+          count: 5,
+          percent: 9,
+          description: "Requer LLM para decisão semântica",
+        }
+      Hybrid:
+        { count: 6, percent: 11, description: "Worker + Agent validation" }
+      Human:
+        {
+          count: 1,
+          percent: 1,
+          description: "Aprovação para ações irreversíveis",
+        }
 
     agent_decision_points:
       - id: semantic_match_detection
@@ -79,7 +91,7 @@ config:
         duplicate_resolution: "keep_highest_quality"
         scope_filtering: "strict"
         naming: "auto"
-        cleanup_sources: false  # YOLO nunca deleta fontes
+        cleanup_sources: false # YOLO nunca deleta fontes
 
     quality:
       description: "Checkpoints humanos, decisões validadas"
@@ -100,7 +112,7 @@ config:
   quality_thresholds:
     min_agent_lines: 300
     min_task_lines: 100
-    similarity_threshold: 0.85  # Para fuzzy matching
+    similarity_threshold: 0.85 # Para fuzzy matching
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # UNIVERSAL ANTI-PATTERNS (NUNCA FAZER)
@@ -250,9 +262,9 @@ phases:
         - "Audit log inicializado"
       veto_on: "Qualquer check falhar"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 1: DISCOVERY (Due Diligence - M&A Pattern)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 1: DISCOVERY (Due Diligence - M&A Pattern)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_1_discovery
     name: "Discovery (Due Diligence)"
     description: "Inventário COMPLETO de todos os assets"
@@ -398,9 +410,9 @@ phases:
       total_assets: "AssetCounts"
       cross_references: "list[Reference]"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 2: DEDUPLICATION (Entity Resolution Pattern)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 2: DEDUPLICATION (Entity Resolution Pattern)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_2_deduplication
     name: "Deduplication (Entity Resolution)"
     description: "Identificar e resolver duplicatas"
@@ -434,15 +446,34 @@ phases:
           LLM precisa ler descrições e comparar função real.
         semantic_groups:
           - group: "analyst"
-            patterns: ["ads-analyst", "performance-analyst", "analyst", "metrics-analyst"]
+            patterns:
+              [
+                "ads-analyst",
+                "performance-analyst",
+                "analyst",
+                "metrics-analyst",
+              ]
           - group: "scaler"
-            patterns: ["scale-optimizer", "scaling-specialist", "scaler", "growth-optimizer"]
+            patterns:
+              [
+                "scale-optimizer",
+                "scaling-specialist",
+                "scaler",
+                "growth-optimizer",
+              ]
           - group: "auditor"
             patterns: ["fiscal", "compliance-auditor", "auditor", "validator"]
           - group: "creative"
-            patterns: ["creative-analyst", "creative-strategist", "creative-director", "creative-generator"]
+            patterns:
+              [
+                "creative-analyst",
+                "creative-strategist",
+                "creative-director",
+                "creative-generator",
+              ]
           - group: "traffic"
-            patterns: ["traffic-manager", "traffic-head", "media-buyer", "ads-manager"]
+            patterns:
+              ["traffic-manager", "traffic-head", "media-buyer", "ads-manager"]
 
       - id: quality_comparison
         action: "Comparar qualidade das variantes"
@@ -558,9 +589,9 @@ phases:
       agents_to_keep: "list[{agent, source_squad}]"
       agents_to_exclude: "list[{agent, reason}]"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 3: SCOPE FILTERING
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 3: SCOPE FILTERING
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_3_scope
     name: "Scope Filtering"
     description: "Filtrar componentes fora do domínio target"
@@ -574,12 +605,22 @@ phases:
         example:
           domain: "paid_traffic"
           include_keywords:
-            primary: ["ads", "traffic", "campaign", "pixel", "tracking", "attribution"]
-            secondary: ["creative", "copy", "scaling", "optimization", "roas", "cpa", "ctr"]
+            primary:
+              ["ads", "traffic", "campaign", "pixel", "tracking", "attribution"]
+            secondary:
+              [
+                "creative",
+                "copy",
+                "scaling",
+                "optimization",
+                "roas",
+                "cpa",
+                "ctr",
+              ]
             platforms: ["meta", "google", "youtube", "tiktok", "linkedin"]
           exclude_keywords:
             explicit: ["brand", "pr", "organic", "seo", "content-marketing"]
-            ambiguous: ["social", "web-design", "email"]  # Requer análise
+            ambiguous: ["social", "web-design", "email"] # Requer análise
 
       - id: classify_agents
         action: "Classificar cada agent como IN_SCOPE ou OUT_OF_SCOPE"
@@ -677,9 +718,9 @@ phases:
         data: "list[{name, source}]"
       excluded_components: "list[{name, reason}]"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 4: COLLECTION (ETL Extract + Transform)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 4: COLLECTION (ETL Extract + Transform)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_4_collection
     name: "Collection (ETL Extract)"
     description: "Copiar componentes selecionados para workspace"
@@ -841,9 +882,9 @@ phases:
       conflicts_resolved: "number"
       provenance_map: "map[component -> source_squad]"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 5: VALIDATION (Quality Gates)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 5: VALIDATION (Quality Gates)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_5_validation
     name: "Validation (Quality Gates)"
     description: "Validar integridade antes de criar estrutura final"
@@ -989,9 +1030,9 @@ phases:
       validation_report: "markdown"
       issues_to_fix: "list[Issue]"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 6: STRUCTURE CREATION (ETL Load)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 6: STRUCTURE CREATION (ETL Load)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_6_structure
     name: "Structure Creation (ETL Load)"
     description: "Criar estrutura final do squad fusionado"
@@ -1300,9 +1341,9 @@ phases:
       config_valid: "boolean"
       final_counts: "AssetCounts"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 7: INTEGRATION TEST (Strangler Fig Pattern)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 7: INTEGRATION TEST (Strangler Fig Pattern)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_7_integration
     name: "Integration Test"
     description: "Testar squad fusionado antes de cleanup"
@@ -1384,9 +1425,9 @@ phases:
       test_status: "pass|warn|fail"
       test_report: "markdown"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 7.5: COMMAND SYNC (IDE Integration)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 7.5: COMMAND SYNC (IDE Integration)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_7_5_command_sync
     name: "Command Sync (IDE Integration)"
     description: "Sincronizar commands para .claude/commands/ e remover commands antigos"
@@ -1494,9 +1535,9 @@ phases:
       commands_synced: "boolean"
       old_commands_removed: "list[string]"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# PHASE 8: CLEANUP (Optional)
-# ═══════════════════════════════════════════════════════════════════════════════
+  # ═══════════════════════════════════════════════════════════════════════════════
+  # PHASE 8: CLEANUP (Optional)
+  # ═══════════════════════════════════════════════════════════════════════════════
   - id: phase_8_cleanup
     name: "Cleanup (Optional)"
     description: "Remover squads fonte após fusão bem-sucedida"

@@ -32,6 +32,7 @@ node bin/aiox-ids.js ids:health --fix
 ```
 
 This will:
+
 - Create a backup of the registry before changes
 - Auto-fix issues: checksum mismatches, orphaned references, missing keywords, stale timestamps
 - Skip non-auto-healable issues (missing files) and emit warnings
@@ -63,27 +64,29 @@ Review the warnings and take manual action as suggested.
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | No critical issues |
-| 1 | Critical issues found (e.g., missing files) |
+| Code | Meaning                                     |
+| ---- | ------------------------------------------- |
+| 0    | No critical issues                          |
+| 1    | Critical issues found (e.g., missing files) |
 
 ---
 
 ## Programmatic Usage
 
 ```javascript
-const { RegistryHealer } = require('.aiox-core/core/ids/registry-healer');
+const { RegistryHealer } = require(".aiox-core/core/ids/registry-healer");
 
 const healer = new RegistryHealer();
 const healthResult = healer.runHealthCheck();
 
 if (healthResult.summary.total > 0) {
   const healResult = healer.heal(healthResult.issues, { autoOnly: true });
-  console.log(`Healed: ${healResult.healed.length}, Skipped: ${healResult.skipped.length}`);
+  console.log(
+    `Healed: ${healResult.healed.length}, Skipped: ${healResult.skipped.length}`,
+  );
 }
 ```
 
 ---
 
-*Story IDS-4a | Self-Healing Data Integrity*
+_Story IDS-4a | Self-Healing Data Integrity_

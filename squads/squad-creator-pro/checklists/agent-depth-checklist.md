@@ -13,6 +13,7 @@
 Agents podem passar em SC_AGT_001 (linhas) e SC_AGT_002 (estrutura) mas ainda serem **genéricos e fracos**.
 
 **Sintomas de agent sem profundidade:**
+
 - Frameworks são listas de passos sem TEORIA
 - Heurísticas são regras sem EXEMPLOS
 - Voice DNA é funcional mas não DISTINTIVO
@@ -56,7 +57,7 @@ framework:
       example: "Em julho: R$ 81k / 12 * 7 = R$ 47.250 é o limite proporcional"
 ```
 
-**Score:** ___/4
+**Score:** \_\_\_/4
 
 ---
 
@@ -94,7 +95,7 @@ heuristics:
       - "Cliente já planejando ME"
 ```
 
-**Score:** ___/4
+**Score:** \_\_\_/4
 
 ---
 
@@ -139,7 +140,7 @@ voice_dna:
       usage: "Quando está 80% cheio, qualquer gota pode derramar"
 ```
 
-**Score:** ___/4
+**Score:** \_\_\_/4
 
 ---
 
@@ -171,7 +172,7 @@ anti_patterns:
       alternative: "Emitir dia 1, enviar dia 5, lembrete dia 15"
 ```
 
-**Score:** ___/4
+**Score:** \_\_\_/4
 
 ---
 
@@ -191,20 +192,20 @@ test: |
   Se a pessoa não consegue identificar → FAIL
 ```
 
-**Score:** ___/4
+**Score:** \_\_\_/4
 
 ---
 
 ## SCORING
 
-| Seção | Score | Max |
-|-------|-------|-----|
-| 1. Frameworks com teoria | ___/4 | 4 |
-| 2. Heurísticas com evidência | ___/4 | 4 |
-| 3. Voice DNA distintivo | ___/4 | 4 |
-| 4. Anti-patterns com razão | ___/4 | 4 |
-| 5. Teste de distintividade | ___/4 | 4 |
-| **TOTAL** | **___/20** | **20** |
+| Seção                        | Score         | Max    |
+| ---------------------------- | ------------- | ------ |
+| 1. Frameworks com teoria     | \_\_\_/4      | 4      |
+| 2. Heurísticas com evidência | \_\_\_/4      | 4      |
+| 3. Voice DNA distintivo      | \_\_\_/4      | 4      |
+| 4. Anti-patterns com razão   | \_\_\_/4      | 4      |
+| 5. Teste de distintividade   | \_\_\_/4      | 4      |
+| **TOTAL**                    | **\_\_\_/20** | **20** |
 
 ---
 
@@ -229,16 +230,16 @@ action_if_fail:
 
 > **Nota:** Esta comparação é ilustrativa. Substitua pelos agents do seu domínio.
 
-| Aspecto | Agent Profundo (Bom) | Agent Genérico (Fraco) |
-|---------|----------------------|------------------------|
-| **Linhas** | 1.500+ | <500 |
-| **Frameworks** | Com filosofia, exemplos, templates | Lista de passos |
-| **Heurísticas** | Com citações reais do expert | Regras genéricas |
-| **Voice DNA** | Personalidade forte, metáforas | Funcional mas genérico |
-| **Distintividade** | Impossível confundir | Poderia ser qualquer agent |
-| **Score SC_AGT_003** | 18-20/20 | <12/20 |
+| Aspecto              | Agent Profundo (Bom)               | Agent Genérico (Fraco)     |
+| -------------------- | ---------------------------------- | -------------------------- |
+| **Linhas**           | 1.500+                             | <500                       |
+| **Frameworks**       | Com filosofia, exemplos, templates | Lista de passos            |
+| **Heurísticas**      | Com citações reais do expert       | Regras genéricas           |
+| **Voice DNA**        | Personalidade forte, metáforas     | Funcional mas genérico     |
+| **Distintividade**   | Impossível confundir               | Poderia ser qualquer agent |
+| **Score SC_AGT_003** | 18-20/20                           | <12/20                     |
 
 ---
 
 **Squad Creator | Depth Quality Gate v1.0**
-*"Structure without depth is just a template"*
+_"Structure without depth is just a template"_

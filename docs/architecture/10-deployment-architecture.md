@@ -80,12 +80,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      
+
       - run: npm install
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test
-      
+
       - uses: vercel/action@v4
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}

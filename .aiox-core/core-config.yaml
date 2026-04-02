@@ -1,7 +1,7 @@
 markdownExploder: true
 project:
   type: brownfield
-  installedAt: '2026-04-02T10:24:35.693Z'
+  installedAt: "2026-04-02T10:24:35.693Z"
   version: 2.1.0
 user_profile: bob
 ide:
@@ -29,7 +29,7 @@ mcp:
 qa:
   qaLocation: docs/qa
   fixRequestLocation: docs/fix_request
-  fixRequestNaming: 'QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md'
+  fixRequestNaming: "QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md"
 prd:
   prdFile: docs/prd.md
   prdVersion: v4

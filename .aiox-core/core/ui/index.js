@@ -11,7 +11,7 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
 const {
   ObservabilityPanel,
@@ -19,13 +19,9 @@ const {
   PanelMode,
   PipelineStage,
   createDefaultState,
-} = require('./observability-panel');
+} = require("./observability-panel");
 
-const {
-  PanelRenderer,
-  BOX,
-  STATUS,
-} = require('./panel-renderer');
+const { PanelRenderer, BOX, STATUS } = require("./panel-renderer");
 
 module.exports = {
   // Main panel

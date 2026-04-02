@@ -17,11 +17,11 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const EventEmitter = require('events');
+const fs = require("fs");
+const path = require("path");
+const EventEmitter = require("events");
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              GREENFIELD CONSTANTS
@@ -32,11 +32,11 @@ const EventEmitter = require('events');
  * @constant {string[]}
  */
 const DEFAULT_GREENFIELD_INDICATORS = [
-  'package.json',
-  '.git',
-  'docs/',
-  'src/',
-  '.aiox-core/',
+  "package.json",
+  ".git",
+  "docs/",
+  "src/",
+  ".aiox-core/",
 ];
 
 /**
@@ -44,12 +44,12 @@ const DEFAULT_GREENFIELD_INDICATORS = [
  * @enum {string}
  */
 const GreenfieldPhase = {
-  DETECTION: 'detection',
-  BOOTSTRAP: 'phase_0_bootstrap',
-  DISCOVERY: 'phase_1_discovery',
-  SHARDING: 'phase_2_sharding',
-  DEV_CYCLE: 'phase_3_dev_cycle',
-  COMPLETE: 'complete',
+  DETECTION: "detection",
+  BOOTSTRAP: "phase_0_bootstrap",
+  DISCOVERY: "phase_1_discovery",
+  SHARDING: "phase_2_sharding",
+  DEV_CYCLE: "phase_3_dev_cycle",
+  COMPLETE: "complete",
 };
 
 /**
@@ -57,11 +57,23 @@ const GreenfieldPhase = {
  * @constant {Array<{agent: string, task: string, creates: string}>}
  */
 const PHASE_1_SEQUENCE = [
-  { agent: '@analyst', task: 'project-brief', creates: 'docs/project-brief.md' },
-  { agent: '@pm', task: 'create-prd', creates: 'docs/prd.md' },
-  { agent: '@ux-design-expert', task: 'front-end-spec', creates: 'docs/front-end-spec.md' },
-  { agent: '@architect', task: 'architecture', creates: 'docs/fullstack-architecture.md' },
-  { agent: '@po', task: 'validate-artifacts', creates: null },
+  {
+    agent: "@analyst",
+    task: "project-brief",
+    creates: "docs/project-brief.md",
+  },
+  { agent: "@pm", task: "create-prd", creates: "docs/prd.md" },
+  {
+    agent: "@ux-design-expert",
+    task: "front-end-spec",
+    creates: "docs/front-end-spec.md",
+  },
+  {
+    agent: "@architect",
+    task: "architecture",
+    creates: "docs/fullstack-architecture.md",
+  },
+  { agent: "@po", task: "validate-artifacts", creates: null },
 ];
 
 /**
@@ -69,9 +81,9 @@ const PHASE_1_SEQUENCE = [
  * @enum {string}
  */
 const PhaseFailureAction = {
-  RETRY: 'retry',
-  SKIP: 'skip',
-  ABORT: 'abort',
+  RETRY: "retry",
+  SKIP: "skip",
+  ABORT: "abort",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -94,8 +106,8 @@ class GreenfieldHandler extends EventEmitter {
   constructor(projectRoot, options = {}) {
     super();
 
-    if (!projectRoot || typeof projectRoot !== 'string') {
-      throw new Error('projectRoot is required and must be a string');
+    if (!projectRoot || typeof projectRoot !== "string") {
+      throw new Error("projectRoot is required and must be a string");
     }
 
     this.projectRoot = projectRoot;
@@ -115,13 +127,13 @@ class GreenfieldHandler extends EventEmitter {
     // Workflow path
     this.workflowPath = path.join(
       projectRoot,
-      '.aiox-core/development/workflows/greenfield-fullstack.yaml',
+      ".aiox-core/development/workflows/greenfield-fullstack.yaml",
     );
 
     // Phase progress tracking
     this.phaseProgress = {};
 
-    this._log('GreenfieldHandler initialized');
+    this._log("GreenfieldHandler initialized");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════════════
@@ -132,12 +144,12 @@ class GreenfieldHandler extends EventEmitter {
   _getWorkflowExecutor() {
     if (!this._workflowExecutor) {
       try {
-        const { WorkflowExecutor } = require('./workflow-executor');
+        const { WorkflowExecutor } = require("./workflow-executor");
         this._workflowExecutor = new WorkflowExecutor(this.projectRoot, {
           debug: this.options.debug,
         });
       } catch (error) {
-        this._log(`WorkflowExecutor not available: ${error.message}`, 'warn');
+        this._log(`WorkflowExecutor not available: ${error.message}`, "warn");
       }
     }
     return this._workflowExecutor;
@@ -147,10 +159,10 @@ class GreenfieldHandler extends EventEmitter {
   _getSurfaceChecker() {
     if (!this._surfaceChecker) {
       try {
-        const { SurfaceChecker } = require('./surface-checker');
+        const { SurfaceChecker } = require("./surface-checker");
         this._surfaceChecker = new SurfaceChecker();
       } catch (error) {
-        this._log(`SurfaceChecker not available: ${error.message}`, 'warn');
+        this._log(`SurfaceChecker not available: ${error.message}`, "warn");
       }
     }
     return this._surfaceChecker;
@@ -160,12 +172,12 @@ class GreenfieldHandler extends EventEmitter {
   _getSessionState() {
     if (!this._sessionState) {
       try {
-        const { SessionState } = require('./session-state');
+        const { SessionState } = require("./session-state");
         this._sessionState = new SessionState(this.projectRoot, {
           debug: this.options.debug,
         });
       } catch (error) {
-        this._log(`SessionState not available: ${error.message}`, 'warn');
+        this._log(`SessionState not available: ${error.message}`, "warn");
       }
     }
     return this._sessionState;
@@ -203,8 +215,8 @@ class GreenfieldHandler extends EventEmitter {
   shouldSkipBootstrap(projectPath) {
     const targetPath = projectPath || this.projectRoot;
 
-    const hasPackageJson = fs.existsSync(path.join(targetPath, 'package.json'));
-    const hasGit = fs.existsSync(path.join(targetPath, '.git'));
+    const hasPackageJson = fs.existsSync(path.join(targetPath, "package.json"));
+    const hasGit = fs.existsSync(path.join(targetPath, ".git"));
 
     return hasPackageJson && hasGit;
   }
@@ -222,11 +234,11 @@ class GreenfieldHandler extends EventEmitter {
    * @returns {Promise<Object>} Handler result
    */
   async handle(context = {}) {
-    this._log('Greenfield handler invoked');
+    this._log("Greenfield handler invoked");
 
     // Check for resume (AC14)
     const resumePhase = context.resumeFromPhase;
-    if (typeof resumePhase === 'number' && resumePhase >= 0) {
+    if (typeof resumePhase === "number" && resumePhase >= 0) {
       return this._executeFromPhase(resumePhase, context);
     }
 
@@ -235,7 +247,7 @@ class GreenfieldHandler extends EventEmitter {
     const startPhase = skipBootstrap ? 1 : 0;
 
     if (skipBootstrap) {
-      this._log('Phase 0 skipped: package.json + .git already exist (AC16)');
+      this._log("Phase 0 skipped: package.json + .git already exist (AC16)");
     }
 
     // Start orchestration from the appropriate phase
@@ -267,7 +279,7 @@ class GreenfieldHandler extends EventEmitter {
         return this._executePhase3(context);
       default:
         return {
-          action: 'greenfield_error',
+          action: "greenfield_error",
           error: `Invalid phase number: ${phaseNumber}`,
         };
     }
@@ -285,34 +297,56 @@ class GreenfieldHandler extends EventEmitter {
    * @private
    */
   async _executePhase0(context) {
-    this._log('Phase 0: Environment Bootstrap');
-    this.phaseProgress[GreenfieldPhase.BOOTSTRAP] = { status: 'in_progress', startTime: Date.now() };
+    this._log("Phase 0: Environment Bootstrap");
+    this.phaseProgress[GreenfieldPhase.BOOTSTRAP] = {
+      status: "in_progress",
+      startTime: Date.now(),
+    };
 
-    this.emit('phaseStart', { phase: GreenfieldPhase.BOOTSTRAP, context });
+    this.emit("phaseStart", { phase: GreenfieldPhase.BOOTSTRAP, context });
 
     // AC2: Spawn @devops for environment-bootstrap
-    const spawnResult = await this._spawnAgent('@devops', 'environment-bootstrap', {
-      instructions: 'Execute *environment-bootstrap to set up the development environment',
-      creates: ['.aiox/config.yaml', '.aiox/environment-report.json', '.gitignore', 'README.md', 'package.json'],
-    });
+    const spawnResult = await this._spawnAgent(
+      "@devops",
+      "environment-bootstrap",
+      {
+        instructions:
+          "Execute *environment-bootstrap to set up the development environment",
+        creates: [
+          ".aiox/config.yaml",
+          ".aiox/environment-report.json",
+          ".gitignore",
+          "README.md",
+          "package.json",
+        ],
+      },
+    );
 
     this.phaseProgress[GreenfieldPhase.BOOTSTRAP] = {
-      status: spawnResult.success ? 'complete' : 'failed',
+      status: spawnResult.success ? "complete" : "failed",
       endTime: Date.now(),
       result: spawnResult,
     };
 
-    this.emit('phaseComplete', { phase: GreenfieldPhase.BOOTSTRAP, result: spawnResult, context });
+    this.emit("phaseComplete", {
+      phase: GreenfieldPhase.BOOTSTRAP,
+      result: spawnResult,
+      context,
+    });
 
     if (!spawnResult.success) {
-      return this._handlePhaseFailure(GreenfieldPhase.BOOTSTRAP, spawnResult.error, context);
+      return this._handlePhaseFailure(
+        GreenfieldPhase.BOOTSTRAP,
+        spawnResult.error,
+        context,
+      );
     }
 
     // AC11: Surface between Phase 0 → Phase 1
     // Ask user to describe what they want to build
     return this._surfaceBetweenPhases(0, 1, {
-      message: 'Ambiente configurado. Descreva o que quer construir.',
-      promptType: 'text_input',
+      message: "Ambiente configurado. Descreva o que quer construir.",
+      promptType: "text_input",
       context: { ...context, phase0Result: spawnResult },
     });
   }
@@ -331,10 +365,13 @@ class GreenfieldHandler extends EventEmitter {
    * @private
    */
   async _executePhase1(context) {
-    this._log('Phase 1: Discovery & Planning');
-    this.phaseProgress[GreenfieldPhase.DISCOVERY] = { status: 'in_progress', startTime: Date.now() };
+    this._log("Phase 1: Discovery & Planning");
+    this.phaseProgress[GreenfieldPhase.DISCOVERY] = {
+      status: "in_progress",
+      startTime: Date.now(),
+    };
 
-    this.emit('phaseStart', { phase: GreenfieldPhase.DISCOVERY, context });
+    this.emit("phaseStart", { phase: GreenfieldPhase.DISCOVERY, context });
 
     const stepResults = [];
 
@@ -372,12 +409,16 @@ class GreenfieldHandler extends EventEmitter {
     }
 
     this.phaseProgress[GreenfieldPhase.DISCOVERY] = {
-      status: 'complete',
+      status: "complete",
       endTime: Date.now(),
       stepResults,
     };
 
-    this.emit('phaseComplete', { phase: GreenfieldPhase.DISCOVERY, result: stepResults, context });
+    this.emit("phaseComplete", {
+      phase: GreenfieldPhase.DISCOVERY,
+      result: stepResults,
+      context,
+    });
 
     // Build artifacts summary for surface prompt
     const artifactsSummary = this._buildArtifactsSummary(stepResults);
@@ -386,7 +427,7 @@ class GreenfieldHandler extends EventEmitter {
     // Show artifacts summary and ask GO/PAUSE
     return this._surfaceBetweenPhases(1, 2, {
       message: `Artefatos de planejamento criados:\n${artifactsSummary}\n\nDeseja continuar com o sharding dos documentos?`,
-      promptType: 'go_pause',
+      promptType: "go_pause",
       context: { ...context, phase1Results: stepResults },
     });
   }
@@ -403,35 +444,52 @@ class GreenfieldHandler extends EventEmitter {
    * @private
    */
   async _executePhase2(context) {
-    this._log('Phase 2: Document Sharding');
-    this.phaseProgress[GreenfieldPhase.SHARDING] = { status: 'in_progress', startTime: Date.now() };
+    this._log("Phase 2: Document Sharding");
+    this.phaseProgress[GreenfieldPhase.SHARDING] = {
+      status: "in_progress",
+      startTime: Date.now(),
+    };
 
-    this.emit('phaseStart', { phase: GreenfieldPhase.SHARDING, context });
+    this.emit("phaseStart", { phase: GreenfieldPhase.SHARDING, context });
 
     // AC4: Spawn @po for document sharding
-    const spawnResult = await this._spawnAgent('@po', 'shard-documents', {
-      instructions: 'Shard docs/prd.md and docs/fullstack-architecture.md into development-ready chunks',
-      creates: ['docs/prd/', 'docs/architecture/'],
-      requires: ['docs/prd.md', 'docs/front-end-spec.md', 'docs/fullstack-architecture.md'],
+    const spawnResult = await this._spawnAgent("@po", "shard-documents", {
+      instructions:
+        "Shard docs/prd.md and docs/fullstack-architecture.md into development-ready chunks",
+      creates: ["docs/prd/", "docs/architecture/"],
+      requires: [
+        "docs/prd.md",
+        "docs/front-end-spec.md",
+        "docs/fullstack-architecture.md",
+      ],
     });
 
     this.phaseProgress[GreenfieldPhase.SHARDING] = {
-      status: spawnResult.success ? 'complete' : 'failed',
+      status: spawnResult.success ? "complete" : "failed",
       endTime: Date.now(),
       result: spawnResult,
     };
 
-    this.emit('phaseComplete', { phase: GreenfieldPhase.SHARDING, result: spawnResult, context });
+    this.emit("phaseComplete", {
+      phase: GreenfieldPhase.SHARDING,
+      result: spawnResult,
+      context,
+    });
 
     if (!spawnResult.success) {
-      return this._handlePhaseFailure(GreenfieldPhase.SHARDING, spawnResult.error, context);
+      return this._handlePhaseFailure(
+        GreenfieldPhase.SHARDING,
+        spawnResult.error,
+        context,
+      );
     }
 
     // AC13: Surface between Phase 2 → Phase 3
     // Show created stories and ask GO
     return this._surfaceBetweenPhases(2, 3, {
-      message: 'Documentos fragmentados para desenvolvimento. Stories criadas. Deseja iniciar o ciclo de desenvolvimento?',
-      promptType: 'go_pause',
+      message:
+        "Documentos fragmentados para desenvolvimento. Stories criadas. Deseja iniciar o ciclo de desenvolvimento?",
+      promptType: "go_pause",
       context: { ...context, phase2Result: spawnResult },
     });
   }
@@ -450,29 +508,33 @@ class GreenfieldHandler extends EventEmitter {
    * @private
    */
   async _executePhase3(context) {
-    this._log('Phase 3: Development Cycle');
-    this.phaseProgress[GreenfieldPhase.DEV_CYCLE] = { status: 'in_progress', startTime: Date.now() };
+    this._log("Phase 3: Development Cycle");
+    this.phaseProgress[GreenfieldPhase.DEV_CYCLE] = {
+      status: "in_progress",
+      startTime: Date.now(),
+    };
 
-    this.emit('phaseStart', { phase: GreenfieldPhase.DEV_CYCLE, context });
+    this.emit("phaseStart", { phase: GreenfieldPhase.DEV_CYCLE, context });
 
     // AC5: Transition to Development Cycle via WorkflowExecutor
     const workflowExecutor = this._getWorkflowExecutor();
 
     this.phaseProgress[GreenfieldPhase.DEV_CYCLE] = {
-      status: 'complete',
+      status: "complete",
       endTime: Date.now(),
     };
 
-    this.emit('phaseComplete', { phase: GreenfieldPhase.DEV_CYCLE, context });
+    this.emit("phaseComplete", { phase: GreenfieldPhase.DEV_CYCLE, context });
 
     return {
-      action: 'greenfield_dev_cycle',
+      action: "greenfield_dev_cycle",
       phase: GreenfieldPhase.DEV_CYCLE,
       data: {
-        message: 'Greenfield workflow completo! Entrando no ciclo de desenvolvimento.',
-        nextStep: 'development_cycle',
+        message:
+          "Greenfield workflow completo! Entrando no ciclo de desenvolvimento.",
+        nextStep: "development_cycle",
         workflowExecutorAvailable: !!workflowExecutor,
-        handoff: 'Use @sm → *create-story para iniciar o ciclo de stories',
+        handoff: "Use @sm → *create-story para iniciar o ciclo de stories",
         context,
       },
     };
@@ -494,14 +556,14 @@ class GreenfieldHandler extends EventEmitter {
   async _spawnAgent(agent, task, spawnContext = {}) {
     this._log(`Spawning ${agent} for ${task}`);
 
-    this.emit('agentSpawn', { agent, task, context: spawnContext });
+    this.emit("agentSpawn", { agent, task, context: spawnContext });
 
     try {
       // Try TerminalSpawner first (AC7)
-      const TerminalSpawner = require('./terminal-spawner');
+      const TerminalSpawner = require("./terminal-spawner");
 
       if (TerminalSpawner.isSpawnerAvailable()) {
-        const agentId = agent.replace('@', '');
+        const agentId = agent.replace("@", "");
         const result = await TerminalSpawner.spawnAgent(agentId, task, {
           context: {
             instructions: spawnContext.instructions || `Execute ${task}`,
@@ -514,7 +576,7 @@ class GreenfieldHandler extends EventEmitter {
         });
 
         if (result.pid) {
-          this.emit('terminalSpawn', { agent, pid: result.pid, task });
+          this.emit("terminalSpawn", { agent, pid: result.pid, task });
         }
 
         return {
@@ -526,14 +588,16 @@ class GreenfieldHandler extends EventEmitter {
       }
 
       // Fallback: Return instructions for manual execution
-      this._log(`TerminalSpawner not available, returning manual instructions for ${agent}`);
+      this._log(
+        `TerminalSpawner not available, returning manual instructions for ${agent}`,
+      );
       return {
         success: true,
         manual: true,
         instructions: `Spawn ${agent} manually and execute: *${task}`,
       };
     } catch (error) {
-      this._log(`Failed to spawn ${agent}: ${error.message}`, 'error');
+      this._log(`Failed to spawn ${agent}: ${error.message}`, "error");
       return {
         success: false,
         error: error.message,
@@ -561,19 +625,18 @@ class GreenfieldHandler extends EventEmitter {
     const surfaceChecker = this._getSurfaceChecker();
 
     // Build options based on prompt type
-    const options = surfaceConfig.promptType === 'go_pause'
-      ? ['GO', 'PAUSE']
-      : ['continue'];
+    const options =
+      surfaceConfig.promptType === "go_pause" ? ["GO", "PAUSE"] : ["continue"];
 
     const surfaceResult = surfaceChecker
       ? surfaceChecker.shouldSurface({
-        valid_options_count: options.length,
-        options_with_tradeoffs: surfaceConfig.message,
-      })
+          valid_options_count: options.length,
+          options_with_tradeoffs: surfaceConfig.message,
+        })
       : { should_surface: true };
 
     return {
-      action: 'greenfield_surface',
+      action: "greenfield_surface",
       phase: this._getPhaseEnum(fromPhase),
       nextPhase: toPhase,
       data: {
@@ -601,10 +664,10 @@ class GreenfieldHandler extends EventEmitter {
     const normalizedDecision = decision.toUpperCase().trim();
 
     // AC14: PAUSE saves current state for resume
-    if (normalizedDecision === 'PAUSE') {
+    if (normalizedDecision === "PAUSE") {
       await this._savePhaseForResume(nextPhase, context);
       return {
-        action: 'greenfield_paused',
+        action: "greenfield_paused",
         data: {
           message: `Workflow pausado. Resume da Phase ${nextPhase} quando quiser continuar.`,
           savedPhase: nextPhase,
@@ -614,7 +677,7 @@ class GreenfieldHandler extends EventEmitter {
     }
 
     // GO or text input: continue to next phase
-    if (normalizedDecision === 'GO' || normalizedDecision === 'CONTINUE') {
+    if (normalizedDecision === "GO" || normalizedDecision === "CONTINUE") {
       return this._executeFromPhase(nextPhase, context);
     }
 
@@ -639,18 +702,18 @@ class GreenfieldHandler extends EventEmitter {
    * @private
    */
   _handlePhaseFailure(phase, errorMessage, context) {
-    this._log(`Phase failed: ${phase} - ${errorMessage}`, 'error');
+    this._log(`Phase failed: ${phase} - ${errorMessage}`, "error");
 
-    this.emit('phaseError', { phase, error: errorMessage, context });
+    this.emit("phaseError", { phase, error: errorMessage, context });
 
     return {
-      action: 'greenfield_phase_failure',
+      action: "greenfield_phase_failure",
       phase,
       error: errorMessage,
       options: [
-        { action: PhaseFailureAction.RETRY, label: '1. Tentar novamente' },
-        { action: PhaseFailureAction.SKIP, label: '2. Pular esta fase' },
-        { action: PhaseFailureAction.ABORT, label: '3. Cancelar workflow' },
+        { action: PhaseFailureAction.RETRY, label: "1. Tentar novamente" },
+        { action: PhaseFailureAction.SKIP, label: "2. Pular esta fase" },
+        { action: PhaseFailureAction.ABORT, label: "3. Cancelar workflow" },
       ],
       context,
     };
@@ -677,32 +740,38 @@ class GreenfieldHandler extends EventEmitter {
         if (context.failedStep) {
           return this._executePhase1(context);
         }
-        return { action: 'retry_failed', error: `Cannot determine phase number for: ${phase}` };
+        return {
+          action: "retry_failed",
+          error: `Cannot determine phase number for: ${phase}`,
+        };
       }
 
       case PhaseFailureAction.SKIP: {
         this._log(`Skipping phase: ${phase}`);
-        this.phaseProgress[phase] = { status: 'skipped' };
+        this.phaseProgress[phase] = { status: "skipped" };
         const nextPhase = this._getNextPhaseNumber(phase);
         if (nextPhase <= 3) {
           return this._executeFromPhase(nextPhase, context);
         }
-        return { action: 'greenfield_complete', data: { message: 'Workflow completo (com fases puladas).' } };
+        return {
+          action: "greenfield_complete",
+          data: { message: "Workflow completo (com fases puladas)." },
+        };
       }
 
       case PhaseFailureAction.ABORT:
         this._log(`Aborting workflow at phase: ${phase}`);
         return {
-          action: 'greenfield_aborted',
+          action: "greenfield_aborted",
           data: {
-            message: 'Greenfield workflow cancelado.',
+            message: "Greenfield workflow cancelado.",
             lastPhase: phase,
             progress: this.phaseProgress,
           },
         };
 
       default:
-        return { action: 'invalid_action', error: `Unknown action: ${action}` };
+        return { action: "invalid_action", error: `Unknown action: ${action}` };
     }
   }
 
@@ -722,10 +791,10 @@ class GreenfieldHandler extends EventEmitter {
 
     if (exists) {
       this._log(`Updating existing ${artifactPath} (idempotent re-run)`);
-      return { exists: true, path: fullPath, action: 'update' };
+      return { exists: true, path: fullPath, action: "update" };
     }
 
-    return { exists: false, path: fullPath, action: 'create' };
+    return { exists: false, path: fullPath, action: "create" };
   }
 
   /**
@@ -761,11 +830,15 @@ class GreenfieldHandler extends EventEmitter {
       const exists = await sessionState.exists();
       if (exists) {
         await sessionState.loadSessionState();
-        await sessionState.recordPhaseChange(`greenfield_${phase}`, 'greenfield-fullstack', '@pm');
+        await sessionState.recordPhaseChange(
+          `greenfield_${phase}`,
+          "greenfield-fullstack",
+          "@pm",
+        );
         this._log(`Phase recorded in session state: ${phase}`);
       }
     } catch (error) {
-      this._log(`Failed to record phase: ${error.message}`, 'warn');
+      this._log(`Failed to record phase: ${error.message}`, "warn");
     }
   }
 
@@ -799,7 +872,7 @@ class GreenfieldHandler extends EventEmitter {
         this._log(`Phase ${phaseNumber} saved for resume`);
       }
     } catch (error) {
-      this._log(`Failed to save phase for resume: ${error.message}`, 'warn');
+      this._log(`Failed to save phase for resume: ${error.message}`, "warn");
     }
   }
 
@@ -817,7 +890,7 @@ class GreenfieldHandler extends EventEmitter {
     return stepResults
       .filter((s) => s.creates && s.success)
       .map((s) => `- ${s.creates} (${s.agent})`)
-      .join('\n');
+      .join("\n");
   }
 
   /**
@@ -843,10 +916,10 @@ class GreenfieldHandler extends EventEmitter {
    * @private
    */
   _getPhaseNumber(phase) {
-    if (phase.includes('phase_0') || phase.includes('bootstrap')) return 0;
-    if (phase.includes('phase_1') || phase.includes('discovery')) return 1;
-    if (phase.includes('phase_2') || phase.includes('sharding')) return 2;
-    if (phase.includes('phase_3') || phase.includes('dev_cycle')) return 3;
+    if (phase.includes("phase_0") || phase.includes("bootstrap")) return 0;
+    if (phase.includes("phase_1") || phase.includes("discovery")) return 1;
+    if (phase.includes("phase_2") || phase.includes("sharding")) return 2;
+    if (phase.includes("phase_3") || phase.includes("dev_cycle")) return 3;
     return -1;
   }
 
@@ -867,9 +940,9 @@ class GreenfieldHandler extends EventEmitter {
    * @param {string} [level='info'] - Log level
    * @private
    */
-  _log(message, level = 'info') {
-    if (this.options.debug || level === 'error' || level === 'warn') {
-      const prefix = level === 'error' ? '❌' : level === 'warn' ? '⚠️' : '🌱';
+  _log(message, level = "info") {
+    if (this.options.debug || level === "error" || level === "warn") {
+      const prefix = level === "error" ? "❌" : level === "warn" ? "⚠️" : "🌱";
       console.log(`[GreenfieldHandler] ${prefix} ${message}`);
     }
   }

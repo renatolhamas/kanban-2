@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   LineChart,
   Line,
@@ -8,15 +8,15 @@ import {
   Tooltip,
   ResponsiveContainer,
   Area,
-  AreaChart
-} from 'recharts';
-import './Chart.css';
+  AreaChart,
+} from "recharts";
+import "./Chart.css";
 
 const STATUS_COLORS = {
-  healthy: '#22c55e',
-  degraded: '#eab308',
-  warning: '#f97316',
-  critical: '#ef4444'
+  healthy: "#22c55e",
+  degraded: "#eab308",
+  warning: "#f97316",
+  critical: "#ef4444",
 };
 
 /**
@@ -42,9 +42,9 @@ function TrendChart({ data, height = 200, showArea = true }) {
   }
 
   // Add color to each data point
-  const chartData = data.map(point => ({
+  const chartData = data.map((point) => ({
     ...point,
-    color: getScoreColor(point.score)
+    color: getScoreColor(point.score),
   }));
 
   const latestScore = chartData[chartData.length - 1]?.score || 0;
@@ -54,7 +54,10 @@ function TrendChart({ data, height = 200, showArea = true }) {
     <div className="chart-container" style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
         {showArea ? (
-          <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <AreaChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+          >
             <defs>
               <linearGradient id="scoreGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={strokeColor} stopOpacity={0.3} />
@@ -79,12 +82,12 @@ function TrendChart({ data, height = 200, showArea = true }) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1e293b',
-                border: '1px solid #334155',
-                borderRadius: '8px'
+                backgroundColor: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: "8px",
               }}
               labelFormatter={(value) => new Date(value).toLocaleDateString()}
-              formatter={(value) => [`${value}%`, 'Score']}
+              formatter={(value) => [`${value}%`, "Score"]}
             />
             <Area
               type="monotone"
@@ -95,7 +98,10 @@ function TrendChart({ data, height = 200, showArea = true }) {
             />
           </AreaChart>
         ) : (
-          <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+          <LineChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
             <XAxis
               dataKey="date"
@@ -114,12 +120,12 @@ function TrendChart({ data, height = 200, showArea = true }) {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#1e293b',
-                border: '1px solid #334155',
-                borderRadius: '8px'
+                backgroundColor: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: "8px",
               }}
               labelFormatter={(value) => new Date(value).toLocaleDateString()}
-              formatter={(value) => [`${value}%`, 'Score']}
+              formatter={(value) => [`${value}%`, "Score"]}
             />
             <Line
               type="monotone"

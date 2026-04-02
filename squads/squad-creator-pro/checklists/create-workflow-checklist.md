@@ -210,12 +210,12 @@ quality_gate_checks:
 
 ## Scoring
 
-| Score | Result | Action |
-|-------|--------|--------|
-| 100% Blocking + 80% Recommended | EXCELLENT | Ready for production |
-| 100% Blocking + 50% Recommended | GOOD | Document gaps, usable |
+| Score                            | Result      | Action                    |
+| -------------------------------- | ----------- | ------------------------- |
+| 100% Blocking + 80% Recommended  | EXCELLENT   | Ready for production      |
+| 100% Blocking + 50% Recommended  | GOOD        | Document gaps, usable     |
 | 100% Blocking + <50% Recommended | CONDITIONAL | Improve fallback coverage |
-| <100% Blocking | FAIL | Fix blocking items |
+| <100% Blocking                   | FAIL        | Fix blocking items        |
 
 ---
 

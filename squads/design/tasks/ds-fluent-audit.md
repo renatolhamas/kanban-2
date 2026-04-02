@@ -11,6 +11,7 @@
 Calculate a Fluent 2 alignment score (0-100) by comparing your design system's component patterns, token naming, and accessibility approach against Fluent 2 specifications. Checks compound component patterns, token naming conventions, accessibility approach, and cross-platform readiness. Outputs alignment score with gap analysis.
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/fluent/fluent-alignment-report.json`
 - **format:** JSON data
 - **consumed_by:** ds-fluent-build
@@ -95,11 +96,11 @@ Calculate a Fluent 2 alignment score (0-100) by comparing your design system's c
 - Gaps have specific, actionable recommendations
 - Report distinguishes must-have vs. nice-to-have alignments
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

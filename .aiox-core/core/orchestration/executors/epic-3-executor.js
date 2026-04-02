@@ -11,19 +11,19 @@
  * @version 1.0.0
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const EpicExecutor = require('./epic-executor');
+const fs = require("fs-extra");
+const path = require("path");
+const EpicExecutor = require("./epic-executor");
 
 /**
  * Spec Pipeline phases
  */
 const SPEC_PHASES = [
-  'gather-requirements',
-  'assess-complexity',
-  'research-dependencies',
-  'write-spec',
-  'critique',
+  "gather-requirements",
+  "assess-complexity",
+  "research-dependencies",
+  "write-spec",
+  "critique",
 ];
 
 /**
@@ -34,10 +34,10 @@ class Epic3Executor extends EpicExecutor {
   constructor(orchestrator) {
     super(orchestrator, 3);
     this.pipelinePath = this._getPath(
-      '.aiox-core',
-      'development',
-      'workflows',
-      'spec-pipeline.yaml',
+      ".aiox-core",
+      "development",
+      "workflows",
+      "spec-pipeline.yaml",
     );
   }
 
@@ -56,18 +56,20 @@ class Epic3Executor extends EpicExecutor {
       const { storyId, source, prdPath, techStack } = context;
 
       this._log(`Executing Spec Pipeline for ${storyId}`);
-      this._log(`Source: ${source}, Tech Stack: ${techStack ? 'detected' : 'none'}`);
+      this._log(
+        `Source: ${source}, Tech Stack: ${techStack ? "detected" : "none"}`,
+      );
 
       // Validate inputs
       if (!storyId) {
-        return this._failExecution('storyId is required');
+        return this._failExecution("storyId is required");
       }
 
       // Check for existing spec
       const existingSpec = await this._findExistingSpec(storyId);
       if (existingSpec) {
         this._log(`Found existing spec: ${existingSpec}`);
-        this._addArtifact('spec', existingSpec, { reused: true });
+        this._addArtifact("spec", existingSpec, { reused: true });
         return this._completeExecution({
           specPath: existingSpec,
           reused: true,
@@ -92,15 +94,15 @@ class Epic3Executor extends EpicExecutor {
         phaseResults[phase] = phaseResult;
 
         if (!phaseResult.success) {
-          this._log(`Phase ${phase} failed`, 'warn');
+          this._log(`Phase ${phase} failed`, "warn");
           // Continue to next phase unless critical
-          if (phase === 'write-spec') {
+          if (phase === "write-spec") {
             return this._failExecution(`Critical phase failed: ${phase}`);
           }
         }
 
         // Extract spec path from write-spec phase
-        if (phase === 'write-spec' && phaseResult.specPath) {
+        if (phase === "write-spec" && phaseResult.specPath) {
           specPath = phaseResult.specPath;
         }
       }
@@ -108,21 +110,25 @@ class Epic3Executor extends EpicExecutor {
       // Validate spec was created
       if (!specPath) {
         // Generate default spec path
-        specPath = this._getPath('docs', 'stories', storyId, 'spec.md');
+        specPath = this._getPath("docs", "stories", storyId, "spec.md");
       }
 
       // Check if spec file exists
       if (!(await fs.pathExists(specPath))) {
         // Create stub spec for pipeline to continue
         await this._createStubSpec(specPath, storyId, context);
-        this._log('Created stub spec (real spec generation requires agent invocation)');
+        this._log(
+          "Created stub spec (real spec generation requires agent invocation)",
+        );
       }
 
-      this._addArtifact('spec', specPath);
+      this._addArtifact("spec", specPath);
 
       // Collect complexity and requirements from phases
-      const complexity = phaseResults['assess-complexity']?.complexity || 'STANDARD';
-      const requirements = phaseResults['gather-requirements']?.requirements || [];
+      const complexity =
+        phaseResults["assess-complexity"]?.complexity || "STANDARD";
+      const requirements =
+        phaseResults["gather-requirements"]?.requirements || [];
 
       return this._completeExecution({
         specPath,
@@ -141,10 +147,10 @@ class Epic3Executor extends EpicExecutor {
    */
   async _findExistingSpec(storyId) {
     const possiblePaths = [
-      this._getPath('docs', 'stories', storyId, 'spec.md'),
-      this._getPath('docs', 'stories', storyId, 'SPEC.md'),
-      this._getPath('docs', 'specs', `${storyId}.md`),
-      this._getPath('.aiox', 'specs', `${storyId}.md`),
+      this._getPath("docs", "stories", storyId, "spec.md"),
+      this._getPath("docs", "stories", storyId, "SPEC.md"),
+      this._getPath("docs", "specs", `${storyId}.md`),
+      this._getPath(".aiox", "specs", `${storyId}.md`),
     ];
 
     for (const specPath of possiblePaths) {
@@ -161,12 +167,17 @@ class Epic3Executor extends EpicExecutor {
    * @private
    */
   async _executePhase(phase, _context) {
-    const taskPath = this._getPath('.aiox-core', 'development', 'tasks', `spec-${phase}.md`);
+    const taskPath = this._getPath(
+      ".aiox-core",
+      "development",
+      "tasks",
+      `spec-${phase}.md`,
+    );
 
     // Check if task file exists
     if (!(await fs.pathExists(taskPath))) {
-      this._log(`Task file not found: ${taskPath}`, 'warn');
-      return { success: true, skipped: true, reason: 'task_not_found' };
+      this._log(`Task file not found: ${taskPath}`, "warn");
+      return { success: true, skipped: true, reason: "task_not_found" };
     }
 
     // In a full implementation, this would invoke the agent
@@ -176,8 +187,8 @@ class Epic3Executor extends EpicExecutor {
       phase,
       timestamp: new Date().toISOString(),
       // Stub values - real implementation invokes agents
-      complexity: phase === 'assess-complexity' ? 'STANDARD' : undefined,
-      requirements: phase === 'gather-requirements' ? [] : undefined,
+      complexity: phase === "assess-complexity" ? "STANDARD" : undefined,
+      requirements: phase === "gather-requirements" ? [] : undefined,
     };
   }
 
@@ -190,7 +201,7 @@ class Epic3Executor extends EpicExecutor {
 
 > **Status:** Draft (Auto-generated stub)
 > **Generated:** ${new Date().toISOString()}
-> **Tech Stack:** ${context.techStack ? JSON.stringify(context.techStack, null, 2) : 'Not detected'}
+> **Tech Stack:** ${context.techStack ? JSON.stringify(context.techStack, null, 2) : "Not detected"}
 
 ## Overview
 
@@ -199,7 +210,7 @@ when the Spec Pipeline agents are invoked.
 
 ## Requirements
 
-*To be gathered from ${context.source || 'story'}*
+*To be gathered from ${context.source || "story"}*
 
 ## Complexity Assessment
 

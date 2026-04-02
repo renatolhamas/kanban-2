@@ -17,11 +17,11 @@
  * @enum {string}
  */
 const ExecutionStatus = {
-  PENDING: 'pending',
-  RUNNING: 'running',
-  SUCCESS: 'success',
-  FAILED: 'failed',
-  SKIPPED: 'skipped',
+  PENDING: "pending",
+  RUNNING: "running",
+  SUCCESS: "success",
+  FAILED: "failed",
+  SKIPPED: "skipped",
 };
 
 /**
@@ -121,7 +121,7 @@ class EpicExecutor {
       timestamp: new Date().toISOString(),
     });
 
-    this._log(`Epic ${this.epicNum} failed: ${errorMessage}`, 'error');
+    this._log(`Epic ${this.epicNum} failed: ${errorMessage}`, "error");
 
     return {
       ...this.getResult(),
@@ -168,7 +168,7 @@ class EpicExecutor {
    * @param {string} [level='info'] - Log level
    * @protected
    */
-  _log(message, level = 'info') {
+  _log(message, level = "info") {
     const entry = {
       timestamp: new Date().toISOString(),
       level,
@@ -206,7 +206,9 @@ class EpicExecutor {
    */
   _getDurationMs() {
     if (!this.startTime || !this.endTime) return null;
-    return new Date(this.endTime).getTime() - new Date(this.startTime).getTime();
+    return (
+      new Date(this.endTime).getTime() - new Date(this.startTime).getTime()
+    );
   }
 
   /**
@@ -218,7 +220,7 @@ class EpicExecutor {
   _validateContext(context, required) {
     const missing = required.filter((field) => context[field] === undefined);
     if (missing.length > 0) {
-      throw new Error(`Missing required context fields: ${missing.join(', ')}`);
+      throw new Error(`Missing required context fields: ${missing.join(", ")}`);
     }
   }
 
@@ -228,7 +230,7 @@ class EpicExecutor {
    * @protected
    */
   _getPath(...segments) {
-    const path = require('path');
+    const path = require("path");
     return path.join(this.projectRoot, ...segments);
   }
 }

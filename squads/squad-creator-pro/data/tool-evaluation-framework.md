@@ -116,18 +116,18 @@ def normalize_score(value, all_values):
 
 **Métricas coletadas (valores brutos):**
 
-| Métrica | Fonte | Tipo |
-|---------|-------|------|
-| `github_stars` | GitHub API | Exponencial |
-| `github_forks` | GitHub API | Exponencial |
-| `npm_downloads_weekly` | npm API | Exponencial |
-| `pypi_downloads_monthly` | PyPI API | Exponencial |
-| `contributors_count` | GitHub API | Linear |
-| `open_issues_count` | GitHub API | Linear |
-| `closed_issues_count` | GitHub API | Linear |
-| `last_commit_days_ago` | GitHub API | Inverso (menor = melhor) |
-| `releases_last_year` | GitHub API | Linear |
-| `stackoverflow_questions` | SO API | Exponencial |
+| Métrica                   | Fonte      | Tipo                     |
+| ------------------------- | ---------- | ------------------------ |
+| `github_stars`            | GitHub API | Exponencial              |
+| `github_forks`            | GitHub API | Exponencial              |
+| `npm_downloads_weekly`    | npm API    | Exponencial              |
+| `pypi_downloads_monthly`  | PyPI API   | Exponencial              |
+| `contributors_count`      | GitHub API | Linear                   |
+| `open_issues_count`       | GitHub API | Linear                   |
+| `closed_issues_count`     | GitHub API | Linear                   |
+| `last_commit_days_ago`    | GitHub API | Inverso (menor = melhor) |
+| `releases_last_year`      | GitHub API | Linear                   |
+| `stackoverflow_questions` | SO API     | Exponencial              |
 
 **Cálculo do Tier de Social Proof:**
 
@@ -167,16 +167,16 @@ social_proof_tier:
 
 **Métricas coletadas:**
 
-| Métrica | Fonte | Tipo |
-|---------|-------|------|
-| `critical_cves` | NVD/MITRE | Absoluto (0 = ideal) |
-| `high_cves` | NVD/MITRE | Absoluto (0 = ideal) |
-| `medium_cves` | NVD/MITRE | Linear |
-| `low_cves` | NVD/MITRE | Linear |
-| `deps_vulnerabilities` | npm audit / pip | Contagem |
-| `has_security_policy` | GitHub | Boolean |
-| `has_security_audit` | Pesquisa | Boolean |
-| `signed_releases` | GitHub | Boolean |
+| Métrica                | Fonte           | Tipo                 |
+| ---------------------- | --------------- | -------------------- |
+| `critical_cves`        | NVD/MITRE       | Absoluto (0 = ideal) |
+| `high_cves`            | NVD/MITRE       | Absoluto (0 = ideal) |
+| `medium_cves`          | NVD/MITRE       | Linear               |
+| `low_cves`             | NVD/MITRE       | Linear               |
+| `deps_vulnerabilities` | npm audit / pip | Contagem             |
+| `has_security_policy`  | GitHub          | Boolean              |
+| `has_security_audit`   | Pesquisa        | Boolean              |
+| `signed_releases`      | GitHub          | Boolean              |
 
 **Cálculo do Security Score:**
 
@@ -201,10 +201,10 @@ security_assessment:
     deductions_relative:
       # Comparar quantidade de CVEs com outros projetos
       - cve_count_tier:
-          tier_1: -0  # Menos CVEs que 80% dos projetos
-          tier_2: -1  # Menos que mediana
-          tier_3: -2  # Mais que mediana
-          tier_4: -3  # Mais que 80% dos projetos
+          tier_1: -0 # Menos CVEs que 80% dos projetos
+          tier_2: -1 # Menos que mediana
+          tier_3: -2 # Mais que mediana
+          tier_4: -3 # Mais que 80% dos projetos
 
       - deps_vulnerabilities_tier:
           tier_1: -0
@@ -226,15 +226,15 @@ security_assessment:
 
 **Métricas coletadas:**
 
-| Métrica | Fonte | Tipo |
-|---------|-------|------|
-| `age_months` | GitHub created_at | Linear |
-| `major_version` | package.json/setup.py | Linear |
-| `breaking_changes_last_year` | CHANGELOG | Inverso |
-| `documentation_completeness` | Manual check | Score 1-5 |
-| `has_examples` | Repo check | Boolean |
-| `has_tests` | Repo check | Boolean |
-| `test_coverage` | Codecov/similar | Percentual |
+| Métrica                      | Fonte                 | Tipo       |
+| ---------------------------- | --------------------- | ---------- |
+| `age_months`                 | GitHub created_at     | Linear     |
+| `major_version`              | package.json/setup.py | Linear     |
+| `breaking_changes_last_year` | CHANGELOG             | Inverso    |
+| `documentation_completeness` | Manual check          | Score 1-5  |
+| `has_examples`               | Repo check            | Boolean    |
+| `has_tests`                  | Repo check            | Boolean    |
+| `test_coverage`              | Codecov/similar       | Percentual |
 
 **Cálculo:**
 
@@ -246,7 +246,7 @@ maturity_tier:
       weight: 0.30
 
     - dimension: stability
-      metrics: [breaking_changes_last_year]  # Inverso
+      metrics: [breaking_changes_last_year] # Inverso
       weight: 0.25
 
     - dimension: documentation
@@ -350,25 +350,25 @@ confidence:
   definition: "Certeza sobre as estimativas de Reach e Impact"
 
   evidence_levels:
-    high_confidence:  # 90-100%
+    high_confidence: # 90-100%
       criteria:
         - "Testamos a tool em ambiente similar"
         - "Temos métricas concretas de uso"
         - "Case studies documentados no nosso contexto"
 
-    medium_confidence:  # 70-89%
+    medium_confidence: # 70-89%
       criteria:
         - "Reviews confiáveis de usuários similares"
         - "Documentação clara com exemplos"
         - "Comunidade ativa respondendo dúvidas"
 
-    low_confidence:  # 50-69%
+    low_confidence: # 50-69%
       criteria:
         - "Parece promissor pela descrição"
         - "Pouca evidência de uso real"
         - "Documentação escassa"
 
-    speculative:  # < 50%
+    speculative: # < 50%
       criteria:
         - "Projeto muito novo"
         - "Nenhuma evidência de uso"
@@ -389,16 +389,16 @@ effort:
 
   components:
     installation:
-      one_command: 0.1      # npm install, brew install
-      few_steps: 0.25       # config file necessário
-      moderate_setup: 0.5   # env vars, API keys
-      complex_setup: 1.0    # docker, múltiplas deps
+      one_command: 0.1 # npm install, brew install
+      few_steps: 0.25 # config file necessário
+      moderate_setup: 0.5 # env vars, API keys
+      complex_setup: 1.0 # docker, múltiplas deps
 
     integration:
-      drop_in: 0.1          # Usar diretamente
-      minor_wrapper: 0.25   # Adapter simples
-      moderate_code: 0.5    # Algum desenvolvimento
-      significant_dev: 1.0  # Integração custom
+      drop_in: 0.1 # Usar diretamente
+      minor_wrapper: 0.25 # Adapter simples
+      moderate_code: 0.5 # Algum desenvolvimento
+      significant_dev: 1.0 # Integração custom
 
     learning_curve:
       intuitive: 0.0

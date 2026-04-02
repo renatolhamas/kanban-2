@@ -6,12 +6,12 @@
  * @migrated Story 2.2 - Core Module Creation
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const crypto = require('crypto');
+const fs = require("fs-extra");
+const path = require("path");
+const crypto = require("crypto");
 
 class ElicitationSessionManager {
-  constructor(sessionDir = '.aiox/sessions') {
+  constructor(sessionDir = ".aiox/sessions") {
     this.sessionDir = path.resolve(process.cwd(), sessionDir);
     this.activeSession = null;
   }
@@ -34,17 +34,17 @@ class ElicitationSessionManager {
     const session = {
       id: sessionId,
       type,
-      version: '1.0',
+      version: "1.0",
       created: new Date().toISOString(),
       updated: new Date().toISOString(),
-      status: 'active',
+      status: "active",
       currentStep: 0,
       totalSteps: 0,
       answers: {},
       metadata: {
         ...metadata,
-        user: process.env.USER || 'unknown',
-        hostname: require('os').hostname(),
+        user: process.env.USER || "unknown",
+        hostname: require("os").hostname(),
       },
     };
 
@@ -61,7 +61,7 @@ class ElicitationSessionManager {
   async saveSession(session = null) {
     const sessionToSave = session || this.activeSession;
     if (!sessionToSave) {
-      throw new Error('No active session to save');
+      throw new Error("No active session to save");
     }
 
     sessionToSave.updated = new Date().toISOString();
@@ -78,7 +78,7 @@ class ElicitationSessionManager {
   async loadSession(sessionId) {
     const sessionPath = this.getSessionPath(sessionId);
 
-    if (!await fs.pathExists(sessionPath)) {
+    if (!(await fs.pathExists(sessionPath))) {
       throw new Error(`Session ${sessionId} not found`);
     }
 
@@ -95,7 +95,7 @@ class ElicitationSessionManager {
    */
   async updateAnswers(answers, stepIndex = null) {
     if (!this.activeSession) {
-      throw new Error('No active session');
+      throw new Error("No active session");
     }
 
     // Merge answers
@@ -119,7 +119,7 @@ class ElicitationSessionManager {
     const sessions = [];
 
     for (const file of files) {
-      if (file.endsWith('.json')) {
+      if (file.endsWith(".json")) {
         try {
           const sessionPath = path.join(this.sessionDir, file);
           const session = await fs.readJson(sessionPath);
@@ -127,7 +127,11 @@ class ElicitationSessionManager {
           // Apply filters
           if (filters.type && session.type !== filters.type) continue;
           if (filters.status && session.status !== filters.status) continue;
-          if (filters.after && new Date(session.created) < new Date(filters.after)) continue;
+          if (
+            filters.after &&
+            new Date(session.created) < new Date(filters.after)
+          )
+            continue;
 
           sessions.push({
             id: session.id,
@@ -135,8 +139,10 @@ class ElicitationSessionManager {
             created: session.created,
             updated: session.updated,
             status: session.status,
-            progress: session.totalSteps > 0 ?
-              Math.round((session.currentStep / session.totalSteps) * 100) : 0,
+            progress:
+              session.totalSteps > 0
+                ? Math.round((session.currentStep / session.totalSteps) * 100)
+                : 0,
           });
         } catch (_error) {
           // Skip invalid session files
@@ -165,8 +171,10 @@ class ElicitationSessionManager {
       resumeFrom: session.currentStep,
       completedSteps: Object.keys(session.answers).length,
       remainingSteps: session.totalSteps - session.currentStep,
-      percentComplete: session.totalSteps > 0 ?
-        Math.round((session.currentStep / session.totalSteps) * 100) : 0,
+      percentComplete:
+        session.totalSteps > 0
+          ? Math.round((session.currentStep / session.totalSteps) * 100)
+          : 0,
     };
 
     return resumeInfo;
@@ -176,20 +184,20 @@ class ElicitationSessionManager {
    * Complete a session
    * @param {string} result - Completion result (success, cancelled, error)
    */
-  async completeSession(result = 'success') {
+  async completeSession(result = "success") {
     if (!this.activeSession) {
-      throw new Error('No active session');
+      throw new Error("No active session");
     }
 
-    this.activeSession.status = 'completed';
+    this.activeSession.status = "completed";
     this.activeSession.completedAt = new Date().toISOString();
     this.activeSession.result = result;
 
     await this.saveSession();
 
     // Move to completed directory if success
-    if (result === 'success') {
-      const completedDir = path.join(this.sessionDir, 'completed');
+    if (result === "success") {
+      const completedDir = path.join(this.sessionDir, "completed");
       await fs.ensureDir(completedDir);
 
       const oldPath = this.getSessionPath(this.activeSession.id);
@@ -207,7 +215,11 @@ class ElicitationSessionManager {
    */
   async deleteSession(sessionId) {
     const sessionPath = this.getSessionPath(sessionId);
-    const completedPath = path.join(this.sessionDir, 'completed', `${sessionId}.json`);
+    const completedPath = path.join(
+      this.sessionDir,
+      "completed",
+      `${sessionId}.json`,
+    );
 
     // Check both active and completed directories
     if (await fs.pathExists(sessionPath)) {
@@ -230,15 +242,15 @@ class ElicitationSessionManager {
    * @param {string} format - Export format (json, yaml)
    * @returns {Promise<string>} Exported data
    */
-  async exportSession(sessionId, format = 'json') {
+  async exportSession(sessionId, format = "json") {
     const session = await this.loadSession(sessionId);
 
     switch (format) {
-      case 'json':
+      case "json":
         return JSON.stringify(session, null, 2);
 
-      case 'yaml': {
-        const yaml = require('js-yaml');
+      case "yaml": {
+        const yaml = require("js-yaml");
         return yaml.dump(session);
       }
 
@@ -259,7 +271,10 @@ class ElicitationSessionManager {
     let deletedCount = 0;
 
     for (const session of sessions) {
-      if (new Date(session.updated) < cutoffDate && session.status !== 'active') {
+      if (
+        new Date(session.updated) < cutoffDate &&
+        session.status !== "active"
+      ) {
         await this.deleteSession(session.id);
         deletedCount++;
       }
@@ -273,7 +288,7 @@ class ElicitationSessionManager {
    * @private
    */
   generateSessionId() {
-    return crypto.randomBytes(8).toString('hex');
+    return crypto.randomBytes(8).toString("hex");
   }
 
   /**
@@ -284,7 +299,7 @@ class ElicitationSessionManager {
    */
   isValidSessionId(sessionId) {
     // SessionId must be a 16-character hex string (from crypto.randomBytes(8).toString('hex'))
-    return typeof sessionId === 'string' && /^[a-f0-9]{16}$/i.test(sessionId);
+    return typeof sessionId === "string" && /^[a-f0-9]{16}$/i.test(sessionId);
   }
 
   /**

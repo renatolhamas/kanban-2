@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 /**
  * Registry Healer - Self-Healing Data Integrity
@@ -17,23 +17,31 @@
  * @story IDS-4a (Self-Healing Registry: Data Integrity)
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
-const crypto = require('crypto');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const crypto = require("crypto");
 
-const { RegistryLoader } = require(path.resolve(__dirname, 'registry-loader.js'));
-const {
-  computeChecksum,
-  extractKeywords,
-  REPO_ROOT,
-  REGISTRY_PATH,
-} = require(path.resolve(__dirname, '../../development/scripts/populate-entity-registry.js'));
+const { RegistryLoader } = require(
+  path.resolve(__dirname, "registry-loader.js"),
+);
+const { computeChecksum, extractKeywords, REPO_ROOT, REGISTRY_PATH } = require(
+  path.resolve(
+    __dirname,
+    "../../development/scripts/populate-entity-registry.js",
+  ),
+);
 
 // ─── Constants ─────────────────────────────────────────────────────
 
-const HEALING_LOG_PATH = path.resolve(REPO_ROOT, '.aiox-core/data/registry-healing-log.jsonl');
-const HEALING_BACKUP_DIR = path.resolve(REPO_ROOT, '.aiox-core/data/registry-backups/healing');
+const HEALING_LOG_PATH = path.resolve(
+  REPO_ROOT,
+  ".aiox-core/data/registry-healing-log.jsonl",
+);
+const HEALING_BACKUP_DIR = path.resolve(
+  REPO_ROOT,
+  ".aiox-core/data/registry-backups/healing",
+);
 const MAX_HEALING_LOG_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_BACKUPS = 10;
 const STALE_DAYS_THRESHOLD = 7;
@@ -49,40 +57,40 @@ const SEVERITY_ORDER = {
 
 const HEALING_RULES = [
   {
-    id: 'missing-file',
-    description: 'Referenced file does not exist on disk',
-    severity: 'critical',
+    id: "missing-file",
+    description: "Referenced file does not exist on disk",
+    severity: "critical",
     autoHealable: false,
-    manualAction: 'Verify file location or remove entity from registry',
+    manualAction: "Verify file location or remove entity from registry",
   },
   {
-    id: 'checksum-mismatch',
-    description: 'File content changed since last verification',
-    severity: 'high',
+    id: "checksum-mismatch",
+    description: "File content changed since last verification",
+    severity: "high",
     autoHealable: true,
   },
   {
-    id: 'orphaned-usedBy',
-    description: 'usedBy reference points to non-existent entity',
-    severity: 'medium',
+    id: "orphaned-usedBy",
+    description: "usedBy reference points to non-existent entity",
+    severity: "medium",
     autoHealable: true,
   },
   {
-    id: 'orphaned-dependency',
-    description: 'dependency reference points to non-existent entity',
-    severity: 'medium',
+    id: "orphaned-dependency",
+    description: "dependency reference points to non-existent entity",
+    severity: "medium",
     autoHealable: true,
   },
   {
-    id: 'missing-keywords',
-    description: 'Entity has no keywords for searchability',
-    severity: 'low',
+    id: "missing-keywords",
+    description: "Entity has no keywords for searchability",
+    severity: "low",
     autoHealable: true,
   },
   {
-    id: 'stale-verification',
+    id: "stale-verification",
     description: `Entity not verified in over ${STALE_DAYS_THRESHOLD} days`,
-    severity: 'low',
+    severity: "low",
     autoHealable: true,
   },
 ];
@@ -112,9 +120,13 @@ function buildEntityIndex(entities) {
   if (!entities) return index;
 
   for (const [category, categoryEntities] of Object.entries(entities)) {
-    if (!categoryEntities || typeof categoryEntities !== 'object') continue;
+    if (!categoryEntities || typeof categoryEntities !== "object") continue;
     for (const [entityId, entityData] of Object.entries(categoryEntities)) {
-      index.set(entityId, { ...entityData, _category: category, _entityId: entityId });
+      index.set(entityId, {
+        ...entityData,
+        _category: category,
+        _entityId: entityId,
+      });
     }
   }
   return index;
@@ -144,15 +156,18 @@ class RegistryHealer {
    * @returns {object|null} NotificationManager instance or null
    */
   _getNotificationManager() {
-    if (this._notificationManager !== undefined && this._notificationManager !== null) {
+    if (
+      this._notificationManager !== undefined &&
+      this._notificationManager !== null
+    ) {
       return this._notificationManager;
     }
     try {
       const { NotificationManager } = require(
-        path.resolve(__dirname, '../quality-gates/notification-manager.js'),
+        path.resolve(__dirname, "../quality-gates/notification-manager.js"),
       );
       this._notificationManager = new NotificationManager({
-        channels: ['console', 'file'],
+        channels: ["console", "file"],
       });
     } catch {
       this._notificationManager = null;
@@ -181,10 +196,12 @@ class RegistryHealer {
 
       // Rule: missing-file (CRITICAL)
       if (!fs.existsSync(absPath)) {
-        issues.push(this._createIssue('missing-file', entityId, entity, {
-          path: entity.path,
-          absPath,
-        }));
+        issues.push(
+          this._createIssue("missing-file", entityId, entity, {
+            path: entity.path,
+            absPath,
+          }),
+        );
         // Skip further checks for missing files
         continue;
       }
@@ -193,10 +210,12 @@ class RegistryHealer {
       try {
         const currentChecksum = computeChecksum(absPath);
         if (entity.checksum && currentChecksum !== entity.checksum) {
-          issues.push(this._createIssue('checksum-mismatch', entityId, entity, {
-            expected: entity.checksum,
-            actual: currentChecksum,
-          }));
+          issues.push(
+            this._createIssue("checksum-mismatch", entityId, entity, {
+              expected: entity.checksum,
+              actual: currentChecksum,
+            }),
+          );
         }
       } catch {
         // File read error during checksum — treat as warning, not issue
@@ -204,44 +223,62 @@ class RegistryHealer {
 
       // Rule: orphaned-usedBy (MEDIUM)
       if (Array.isArray(entity.usedBy)) {
-        const orphanedUsedBy = entity.usedBy.filter((ref) => !entityIndex.has(ref));
+        const orphanedUsedBy = entity.usedBy.filter(
+          (ref) => !entityIndex.has(ref),
+        );
         if (orphanedUsedBy.length > 0) {
-          issues.push(this._createIssue('orphaned-usedBy', entityId, entity, {
-            orphanedRefs: orphanedUsedBy,
-            totalRefs: entity.usedBy.length,
-          }));
+          issues.push(
+            this._createIssue("orphaned-usedBy", entityId, entity, {
+              orphanedRefs: orphanedUsedBy,
+              totalRefs: entity.usedBy.length,
+            }),
+          );
         }
       }
 
       // Rule: orphaned-dependency (MEDIUM)
       if (Array.isArray(entity.dependencies)) {
-        const orphanedDeps = entity.dependencies.filter((ref) => !entityIndex.has(ref));
+        const orphanedDeps = entity.dependencies.filter(
+          (ref) => !entityIndex.has(ref),
+        );
         if (orphanedDeps.length > 0) {
-          issues.push(this._createIssue('orphaned-dependency', entityId, entity, {
-            orphanedRefs: orphanedDeps,
-            totalRefs: entity.dependencies.length,
-          }));
+          issues.push(
+            this._createIssue("orphaned-dependency", entityId, entity, {
+              orphanedRefs: orphanedDeps,
+              totalRefs: entity.dependencies.length,
+            }),
+          );
         }
       }
 
       // Rule: missing-keywords (LOW)
-      if (!entity.keywords || !Array.isArray(entity.keywords) || entity.keywords.length === 0) {
-        issues.push(this._createIssue('missing-keywords', entityId, entity, {
-          path: entity.path,
-        }));
+      if (
+        !entity.keywords ||
+        !Array.isArray(entity.keywords) ||
+        entity.keywords.length === 0
+      ) {
+        issues.push(
+          this._createIssue("missing-keywords", entityId, entity, {
+            path: entity.path,
+          }),
+        );
       }
 
       // Rule: stale-verification (LOW)
       if (daysSince(entity.lastVerified) > STALE_DAYS_THRESHOLD) {
-        issues.push(this._createIssue('stale-verification', entityId, entity, {
-          lastVerified: entity.lastVerified || 'never',
-          daysSince: Math.floor(daysSince(entity.lastVerified)),
-        }));
+        issues.push(
+          this._createIssue("stale-verification", entityId, entity, {
+            lastVerified: entity.lastVerified || "never",
+            daysSince: Math.floor(daysSince(entity.lastVerified)),
+          }),
+        );
       }
     }
 
     // Sort by severity
-    issues.sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
+    issues.sort(
+      (a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity],
+    );
 
     const summary = this._buildSummary(issues);
 
@@ -299,9 +336,10 @@ class RegistryHealer {
       bySeverity,
       autoHealable,
       needsManual,
-      autoHealableRate: issues.length > 0
-        ? Math.round((autoHealable / issues.length) * 100)
-        : 100,
+      autoHealableRate:
+        issues.length > 0
+          ? Math.round((autoHealable / issues.length) * 100)
+          : 100,
     };
   }
 
@@ -324,23 +362,21 @@ class RegistryHealer {
   heal(issues, options = {}) {
     const { autoOnly = true, dryRun = false } = options;
 
-    const batchId = `heal-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
+    const batchId = `heal-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
     const healed = [];
     const skipped = [];
     const errors = [];
 
     // Filter issues
-    const toHeal = autoOnly
-      ? issues.filter((i) => i.autoHealable)
-      : issues;
-    const toSkip = autoOnly
-      ? issues.filter((i) => !i.autoHealable)
-      : [];
+    const toHeal = autoOnly ? issues.filter((i) => i.autoHealable) : issues;
+    const toSkip = autoOnly ? issues.filter((i) => !i.autoHealable) : [];
 
-    skipped.push(...toSkip.map((i) => ({
-      ...i,
-      reason: 'Not auto-healable (requires manual intervention)',
-    })));
+    skipped.push(
+      ...toSkip.map((i) => ({
+        ...i,
+        reason: "Not auto-healable (requires manual intervention)",
+      })),
+    );
 
     if (toHeal.length === 0) {
       return { healed, skipped, errors, batchId, backupPath: null };
@@ -370,7 +406,7 @@ class RegistryHealer {
       if (dryRun) {
         healed.push({
           ...issue,
-          action: 'would-heal',
+          action: "would-heal",
           before: null,
           after: null,
         });
@@ -382,7 +418,7 @@ class RegistryHealer {
         if (result.success) {
           healed.push({
             ...issue,
-            action: 'healed',
+            action: "healed",
             before: result.before,
             after: result.after,
           });
@@ -419,7 +455,10 @@ class RegistryHealer {
           skipped,
           errors: [
             ...errors,
-            { error: `Registry write failed, rolled back: ${err.message}`, fatal: true },
+            {
+              error: `Registry write failed, rolled back: ${err.message}`,
+              fatal: true,
+            },
           ],
           batchId,
           backupPath,
@@ -433,7 +472,7 @@ class RegistryHealer {
         this._logHealingAction(batchId, item);
       }
       for (const err of errors) {
-        this._logHealingAction(batchId, { ...err, action: 'error' });
+        this._logHealingAction(batchId, { ...err, action: "error" });
       }
     }
 
@@ -451,23 +490,26 @@ class RegistryHealer {
     const entity = registry.entities?.[category]?.[entityId];
 
     if (!entity) {
-      return { success: false, error: `Entity ${entityId} not found in registry` };
+      return {
+        success: false,
+        error: `Entity ${entityId} not found in registry`,
+      };
     }
 
     switch (ruleId) {
-      case 'checksum-mismatch':
+      case "checksum-mismatch":
         return this._healChecksum(entity, issue);
 
-      case 'orphaned-usedBy':
+      case "orphaned-usedBy":
         return this._healOrphanedUsedBy(entity, issue, registry);
 
-      case 'orphaned-dependency':
+      case "orphaned-dependency":
         return this._healOrphanedDependency(entity, issue, registry);
 
-      case 'missing-keywords':
+      case "missing-keywords":
         return this._healMissingKeywords(entity, issue);
 
-      case 'stale-verification':
+      case "stale-verification":
         return this._healStaleVerification(entity);
 
       default:
@@ -503,7 +545,9 @@ class RegistryHealer {
   _healOrphanedDependency(entity, issue, registry) {
     const entityIndex = buildEntityIndex(registry.entities);
     const before = [...(entity.dependencies || [])];
-    entity.dependencies = (entity.dependencies || []).filter((ref) => entityIndex.has(ref));
+    entity.dependencies = (entity.dependencies || []).filter((ref) =>
+      entityIndex.has(ref),
+    );
     return { success: true, before, after: [...entity.dependencies] };
   }
 
@@ -515,12 +559,15 @@ class RegistryHealer {
     const absPath = path.resolve(this._repoRoot, entity.path);
 
     try {
-      const content = fs.readFileSync(absPath, 'utf8');
+      const content = fs.readFileSync(absPath, "utf8");
       const keywords = extractKeywords(absPath, content);
       entity.keywords = keywords;
       return { success: true, before, after: keywords };
     } catch (err) {
-      return { success: false, error: `Failed to extract keywords: ${err.message}` };
+      return {
+        success: false,
+        error: `Failed to extract keywords: ${err.message}`,
+      };
     }
   }
 
@@ -566,10 +613,10 @@ class RegistryHealer {
         try {
           await nm.sendThroughChannels({
             id: nm.generateNotificationId(),
-            type: 'ids_health_warning',
-            template: 'blocked',
+            type: "ids_health_warning",
+            template: "blocked",
             timestamp: new Date().toISOString(),
-            recipient: '@dev',
+            recipient: "@dev",
             subject: `[IDS] ${issue.severity.toUpperCase()}: ${issue.ruleId}`,
             content: warning.formatted,
             metadata: {
@@ -577,7 +624,7 @@ class RegistryHealer {
               ruleId: issue.ruleId,
               severity: issue.severity,
             },
-            status: 'sent',
+            status: "sent",
           });
         } catch {
           // Notification failure is non-blocking
@@ -594,40 +641,42 @@ class RegistryHealer {
    * @returns {object} Warning object with formatted text
    */
   _formatWarning(issue) {
-    const divider = '\u2501'.repeat(45);
+    const divider = "\u2501".repeat(45);
     const lines = [
-      '[IDS Self-Healing] WARNING',
+      "[IDS Self-Healing] WARNING",
       divider,
       `Issue: ${issue.ruleId} (${issue.severity.toUpperCase()})`,
       `Entity: ${issue.entityId}`,
       `Path: ${issue.entityPath}`,
-      '',
+      "",
       `Problem: ${issue.description}`,
     ];
 
     if (issue.details) {
-      lines.push('');
-      lines.push('Details:');
+      lines.push("");
+      lines.push("Details:");
       for (const [key, value] of Object.entries(issue.details)) {
-        if (key !== 'absPath') {
+        if (key !== "absPath") {
           lines.push(`  ${key}: ${JSON.stringify(value)}`);
         }
       }
     }
 
-    lines.push('');
-    lines.push('Suggested Actions:');
+    lines.push("");
+    lines.push("Suggested Actions:");
 
     const suggestedActions = this._getSuggestedActions(issue);
     for (let i = 0; i < suggestedActions.length; i++) {
       lines.push(`  ${i + 1}. ${suggestedActions[i]}`);
     }
 
-    lines.push('');
-    lines.push('This issue requires manual intervention and cannot be auto-fixed.');
+    lines.push("");
+    lines.push(
+      "This issue requires manual intervention and cannot be auto-fixed.",
+    );
     lines.push(divider);
 
-    const formatted = lines.join('\n');
+    const formatted = lines.join("\n");
 
     return {
       entityId: issue.entityId,
@@ -645,16 +694,16 @@ class RegistryHealer {
    */
   _getSuggestedActions(issue) {
     switch (issue.ruleId) {
-      case 'missing-file':
+      case "missing-file":
         return [
           `Check if file was moved: git log --follow --diff-filter=R -- "*${issue.entityId}*"`,
-          'If intentionally deleted, remove from registry',
+          "If intentionally deleted, remove from registry",
           `If accidentally deleted, restore from git: git checkout HEAD~1 -- ${issue.entityPath}`,
         ];
       default:
         return [
-          'Review the issue details and apply appropriate fix',
-          'Run \'aiox ids:health --fix\' after resolving',
+          "Review the issue details and apply appropriate fix",
+          "Run 'aiox ids:health --fix' after resolving",
         ];
     }
   }
@@ -700,11 +749,11 @@ class RegistryHealer {
     try {
       fs.copyFileSync(backupPath, this._registryPath);
       this._logHealingAction(batchId, {
-        action: 'rollback',
-        ruleId: 'rollback',
-        entityId: 'registry',
-        before: 'healed-state',
-        after: 'pre-healing-state',
+        action: "rollback",
+        ruleId: "rollback",
+        entityId: "registry",
+        before: "healed-state",
+        after: "pre-healing-state",
       });
       // Reload after rollback
       this._loader.load();
@@ -720,8 +769,9 @@ class RegistryHealer {
   _pruneBackups() {
     if (!fs.existsSync(this._backupDir)) return;
 
-    const files = fs.readdirSync(this._backupDir)
-      .filter((f) => f.endsWith('.yaml'))
+    const files = fs
+      .readdirSync(this._backupDir)
+      .filter((f) => f.endsWith(".yaml"))
       .map((f) => ({
         name: f,
         path: path.join(this._backupDir, f),
@@ -750,14 +800,14 @@ class RegistryHealer {
     const logEntry = {
       timestamp: new Date().toISOString(),
       batchId,
-      action: entry.action || 'heal',
+      action: entry.action || "heal",
       ruleId: entry.ruleId,
       entityId: entry.entityId,
       entityPath: entry.entityPath || null,
       severity: entry.severity || null,
       before: entry.before !== undefined ? entry.before : null,
       after: entry.after !== undefined ? entry.after : null,
-      success: entry.action !== 'error',
+      success: entry.action !== "error",
       error: entry.error || null,
     };
 
@@ -770,7 +820,7 @@ class RegistryHealer {
       // Rotate if too large
       this._rotateLogIfNeeded();
 
-      fs.appendFileSync(this._healingLogPath, JSON.stringify(logEntry) + '\n');
+      fs.appendFileSync(this._healingLogPath, JSON.stringify(logEntry) + "\n");
     } catch {
       // Logging failure is non-blocking
     }
@@ -784,7 +834,7 @@ class RegistryHealer {
       if (!fs.existsSync(this._healingLogPath)) return;
       const stats = fs.statSync(this._healingLogPath);
       if (stats.size > MAX_HEALING_LOG_SIZE) {
-        const rotatedPath = this._healingLogPath + '.old';
+        const rotatedPath = this._healingLogPath + ".old";
         fs.renameSync(this._healingLogPath, rotatedPath);
       }
     } catch {
@@ -804,18 +854,21 @@ class RegistryHealer {
   queryHealingLog(filter = {}) {
     if (!fs.existsSync(this._healingLogPath)) return [];
 
-    const lines = fs.readFileSync(this._healingLogPath, 'utf8')
+    const lines = fs
+      .readFileSync(this._healingLogPath, "utf8")
       .trim()
-      .split('\n')
+      .split("\n")
       .filter(Boolean);
 
-    let entries = lines.map((line) => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        return null;
-      }
-    }).filter(Boolean);
+    let entries = lines
+      .map((line) => {
+        try {
+          return JSON.parse(line);
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
 
     if (filter.batchId) {
       entries = entries.filter((e) => e.batchId === filter.batchId);
@@ -849,7 +902,7 @@ class RegistryHealer {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    fs.writeFileSync(this._registryPath, yamlStr, 'utf8');
+    fs.writeFileSync(this._registryPath, yamlStr, "utf8");
   }
 }
 

@@ -92,7 +92,6 @@ inputs:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 phases:
-
   # ─────────────────────────────────────────────────────────────────────────────
   # PHASE 0: SOURCE VALIDATION (BLOCKING GATE)
   # ─────────────────────────────────────────────────────────────────────────────
@@ -468,7 +467,7 @@ triplet_output:
 
 execution:
   mode: sequential
-  parallel_phases: []  # Todas sequenciais - cada fase depende da anterior
+  parallel_phases: [] # Todas sequenciais - cada fase depende da anterior
 
   commands:
     full_triplet: "*extract-knowledge {author} --topic {topic} --sources {path}"

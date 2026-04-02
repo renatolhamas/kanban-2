@@ -12,11 +12,13 @@ Review completo de um clone existente: fontes, trindade, estagios, fidelidade. E
 ### Step 1: Source Quality Review
 
 Avaliar fontes usadas no clone:
+
 - Classificar cada fonte (ouro vs bronze)
 - Calcular % ouro vs bronze
 - Verificar se base principal e ouro
 
 **Curadoria Score:**
+
 - 80%+ ouro → Excelente
 - 60-80% ouro → Aceitavel, melhorar
 - <60% ouro → Critico, refazer curadoria
@@ -25,15 +27,16 @@ Avaliar fontes usadas no clone:
 
 Verificar presenca e qualidade de cada perna:
 
-| Perna | Presente? | Qualidade | Gaps |
-|-------|-----------|-----------|------|
-| Playbook | Sim/Nao | 1-5 | {o que falta} |
-| Framework | Sim/Nao | 1-5 | {o que falta} |
-| Swipe File | Sim/Nao | 1-5 | {o que falta} |
+| Perna      | Presente? | Qualidade | Gaps          |
+| ---------- | --------- | --------- | ------------- |
+| Playbook   | Sim/Nao   | 1-5       | {o que falta} |
+| Framework  | Sim/Nao   | 1-5       | {o que falta} |
+| Swipe File | Sim/Nao   | 1-5       | {o que falta} |
 
 **Regra AN003**: SE clone fraco → provavelmente falta Framework.
 
 Qualidade por perna:
+
 - Playbook: Passos sao claros e sequenciais?
 - Framework: Tem regras SE/ENTAO especificas?
 - Swipe File: Exemplos sao REAIS (nao inventados)?
@@ -41,17 +44,20 @@ Qualidade por perna:
 ### Step 3: Stage Architecture Review
 
 SE clone usa estagios:
+
 - Cada estagio tem trindade propria?
 - Transicoes entre estagios sao claras?
 - Comportamento muda corretamente por contexto?
 
 SE clone nao usa estagios:
+
 - Precisa? Comportamento muda por contexto?
 - **Regra AN004**: Prompt gigante sem estagios = IA se perde
 
 ### Step 4: Quick Fidelity Check
 
 Avaliacao rapida (nao full score):
+
 - Voice DNA presente e consistente?
 - Thinking DNA com frameworks proprios?
 - Mantem personagem sob pressao basica?
@@ -64,22 +70,22 @@ clone_review:
   clone: "{nome}"
   date: "{data}"
   source_quality:
-    total_sources: {n}
+    total_sources: { n }
     ouro_percentage: "{%}"
     curadoria_score: "excelente|aceitavel|critico"
     action: "{recomendacao}"
   trinity:
     playbook:
       present: true|false
-      quality: {1-5}
+      quality: { 1-5 }
       gaps: "{o que falta}"
     framework:
       present: true|false
-      quality: {1-5}
+      quality: { 1-5 }
       gaps: "{o que falta}"
     swipe_file:
       present: true|false
-      quality: {1-5}
+      quality: { 1-5 }
       gaps: "{o que falta}"
   stages:
     has_stages: true|false

@@ -9,41 +9,41 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { CheckStatus, CheckSeverity } = require('../base-check');
+const { CheckStatus, CheckSeverity } = require("../base-check");
 
 /**
  * ANSI color codes
  */
 const colors = {
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-  dim: '\x1b[2m',
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  dim: "\x1b[2m",
 
   // Status colors
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-  white: '\x1b[37m',
+  red: "\x1b[31m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  blue: "\x1b[34m",
+  magenta: "\x1b[35m",
+  cyan: "\x1b[36m",
+  white: "\x1b[37m",
 
   // Background colors
-  bgRed: '\x1b[41m',
-  bgGreen: '\x1b[42m',
-  bgYellow: '\x1b[43m',
+  bgRed: "\x1b[41m",
+  bgGreen: "\x1b[42m",
+  bgYellow: "\x1b[43m",
 };
 
 /**
  * Status icons
  */
 const icons = {
-  pass: '✓',
-  fail: '✗',
-  warning: '⚠',
-  error: '⊘',
-  skipped: '○',
-  info: 'ℹ',
+  pass: "✓",
+  fail: "✗",
+  warning: "⚠",
+  error: "⊘",
+  skipped: "○",
+  info: "ℹ",
 };
 
 /**
@@ -73,20 +73,20 @@ class ConsoleReporter {
     const lines = [];
 
     // Header
-    lines.push('');
-    lines.push(this.formatHeader('AIOX Health Check Report'));
+    lines.push("");
+    lines.push(this.formatHeader("AIOX Health Check Report"));
     lines.push(this.formatDivider());
 
     // Overall summary
     lines.push(this.formatOverallSummary(scores.overall));
-    lines.push('');
+    lines.push("");
 
     // Domain summaries
-    lines.push(this.formatHeader('Domain Summary', 2));
+    lines.push(this.formatHeader("Domain Summary", 2));
     for (const [domain, domainScore] of Object.entries(scores.domains)) {
       lines.push(this.formatDomainSummary(domain, domainScore));
     }
-    lines.push('');
+    lines.push("");
 
     // Issues (failures and warnings)
     const issues = checkResults.filter(
@@ -97,39 +97,39 @@ class ConsoleReporter {
     );
 
     if (issues.length > 0) {
-      lines.push(this.formatHeader('Issues Found', 2));
+      lines.push(this.formatHeader("Issues Found", 2));
       for (const issue of issues) {
         lines.push(this.formatIssue(issue));
       }
-      lines.push('');
+      lines.push("");
     }
 
     // Auto-fixed items
     if (healingResults && healingResults.length > 0) {
       const fixed = healingResults.filter((h) => h.success);
       if (fixed.length > 0) {
-        lines.push(this.formatHeader('Auto-Fixed', 2));
+        lines.push(this.formatHeader("Auto-Fixed", 2));
         for (const fix of fixed) {
           lines.push(this.formatFix(fix));
         }
-        lines.push('');
+        lines.push("");
       }
     }
 
     // Verbose: show all checks
     if (this.verbose) {
-      lines.push(this.formatHeader('All Checks', 2));
+      lines.push(this.formatHeader("All Checks", 2));
       for (const result of checkResults) {
         lines.push(this.formatCheckResult(result));
       }
-      lines.push('');
+      lines.push("");
     }
 
     // Footer
     lines.push(this.formatDivider());
     lines.push(this.formatFooter(data));
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -148,7 +148,7 @@ class ConsoleReporter {
    * @private
    */
   formatDivider() {
-    return this.color(colors.dim, '─'.repeat(50));
+    return this.color(colors.dim, "─".repeat(50));
   }
 
   /**
@@ -162,15 +162,15 @@ class ConsoleReporter {
     const statusIcon = this.getStatusIcon(status);
 
     const lines = [
-      '',
-      this.color(`${colors.bold}`, 'Overall Health: ') +
+      "",
+      this.color(`${colors.bold}`, "Overall Health: ") +
         this.color(scoreColor, `${score}/100 ${statusIcon}`),
-      '',
+      "",
       this.color(colors.dim, `Status: ${status.toUpperCase()}`),
       this.color(colors.dim, `Issues: ${issuesCount}`),
     ];
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -206,10 +206,12 @@ class ConsoleReporter {
     ];
 
     if (issue.recommendation) {
-      lines.push(`     ${this.color(colors.cyan, '→ ' + issue.recommendation)}`);
+      lines.push(
+        `     ${this.color(colors.cyan, "→ " + issue.recommendation)}`,
+      );
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -227,7 +229,7 @@ class ConsoleReporter {
    */
   formatCheckResult(result) {
     const icon = this.getCheckIcon(result.status);
-    const duration = result.duration ? `${result.duration}ms` : '';
+    const duration = result.duration ? `${result.duration}ms` : "";
 
     return `  ${icon} ${result.name.padEnd(35)} ${this.color(colors.dim, duration)}`;
   }
@@ -238,7 +240,7 @@ class ConsoleReporter {
    */
   formatFooter(data) {
     const { timestamp, config } = data;
-    const mode = config?.mode || 'quick';
+    const mode = config?.mode || "quick";
     const time = new Date(timestamp).toLocaleTimeString();
 
     return this.color(colors.dim, `Mode: ${mode} | Time: ${time}`);
@@ -261,16 +263,16 @@ class ConsoleReporter {
    */
   getStatusIcon(status) {
     switch (status) {
-      case 'healthy':
-        return this.color(colors.green, '●');
-      case 'degraded':
-        return this.color(colors.yellow, '●');
-      case 'warning':
-        return this.color(colors.yellow, '●');
-      case 'critical':
-        return this.color(colors.red, '●');
+      case "healthy":
+        return this.color(colors.green, "●");
+      case "degraded":
+        return this.color(colors.yellow, "●");
+      case "warning":
+        return this.color(colors.yellow, "●");
+      case "critical":
+        return this.color(colors.red, "●");
       default:
-        return '○';
+        return "○";
     }
   }
 

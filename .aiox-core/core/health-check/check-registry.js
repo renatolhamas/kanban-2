@@ -9,7 +9,7 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { BaseCheck, CheckSeverity, CheckDomain } = require('./base-check');
+const { BaseCheck, CheckSeverity, CheckDomain } = require("./base-check");
 
 /**
  * Registry for health checks
@@ -46,7 +46,7 @@ class CheckRegistry {
    */
   register(check) {
     if (!(check instanceof BaseCheck)) {
-      throw new Error('Check must be an instance of BaseCheck');
+      throw new Error("Check must be an instance of BaseCheck");
     }
 
     if (this.checks.has(check.id)) {
@@ -137,7 +137,9 @@ class CheckRegistry {
    * @returns {BaseCheck[]} Array of checks with tag
    */
   getChecksByTag(tag) {
-    return this.getAllChecks().filter((check) => check.tags && check.tags.includes(tag));
+    return this.getAllChecks().filter(
+      (check) => check.tags && check.tags.includes(tag),
+    );
   }
 
   /**
@@ -171,7 +173,9 @@ class CheckRegistry {
       stats.bySeverity[severity] = checks.length;
     }
 
-    stats.healable = this.getAllChecks().filter((c) => c.healingTier > 0).length;
+    stats.healable = this.getAllChecks().filter(
+      (c) => c.healingTier > 0,
+    ).length;
 
     return stats;
   }
@@ -200,41 +204,56 @@ class CheckRegistry {
     // This will be populated as checks are implemented
     try {
       // Project domain checks
-      const projectChecks = require('./checks/project');
+      const projectChecks = require("./checks/project");
       for (const Check of Object.values(projectChecks)) {
-        if (typeof Check === 'function' && Check.prototype instanceof BaseCheck) {
+        if (
+          typeof Check === "function" &&
+          Check.prototype instanceof BaseCheck
+        ) {
           this.register(new Check());
         }
       }
 
       // Local environment checks
-      const localChecks = require('./checks/local');
+      const localChecks = require("./checks/local");
       for (const Check of Object.values(localChecks)) {
-        if (typeof Check === 'function' && Check.prototype instanceof BaseCheck) {
+        if (
+          typeof Check === "function" &&
+          Check.prototype instanceof BaseCheck
+        ) {
           this.register(new Check());
         }
       }
 
       // Repository checks
-      const repositoryChecks = require('./checks/repository');
+      const repositoryChecks = require("./checks/repository");
       for (const Check of Object.values(repositoryChecks)) {
-        if (typeof Check === 'function' && Check.prototype instanceof BaseCheck) {
+        if (
+          typeof Check === "function" &&
+          Check.prototype instanceof BaseCheck
+        ) {
           this.register(new Check());
         }
       }
 
       // Deployment checks
-      const deploymentChecks = require('./checks/deployment');
+      const deploymentChecks = require("./checks/deployment");
       for (const Check of Object.values(deploymentChecks)) {
-        if (typeof Check === 'function' && Check.prototype instanceof BaseCheck) {
+        if (
+          typeof Check === "function" &&
+          Check.prototype instanceof BaseCheck
+        ) {
           this.register(new Check());
         }
       }
 
       // Services checks
-      const servicesChecks = require('./checks/services');
+      const servicesChecks = require("./checks/services");
       for (const Check of Object.values(servicesChecks)) {
-        if (typeof Check === 'function' && Check.prototype instanceof BaseCheck) {
+        if (
+          typeof Check === "function" &&
+          Check.prototype instanceof BaseCheck
+        ) {
           this.register(new Check());
         }
       }
@@ -242,7 +261,10 @@ class CheckRegistry {
       // Built-in checks may not be available yet during initial setup
       // This is expected and will be populated as checks are implemented
       if (process.env.AIOX_DEBUG) {
-        console.warn('Some built-in checks could not be loaded:', error.message);
+        console.warn(
+          "Some built-in checks could not be loaded:",
+          error.message,
+        );
       }
     }
   }

@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { RegistryLoader } = require('../../ids/registry-loader');
+const { RegistryLoader } = require("../../ids/registry-loader");
 
 /**
  * Data source that provides entity statistics from entity-registry.yaml.
@@ -70,7 +70,7 @@ class RegistrySource {
     const categories = {};
 
     for (const [category, items] of Object.entries(entities)) {
-      if (!items || typeof items !== 'object') continue;
+      if (!items || typeof items !== "object") continue;
       const count = Object.keys(items).length;
       categories[category] = {
         count,

@@ -30,34 +30,97 @@ persona:
 routing_matrix:
   in_scope:
     design_system:
-      keywords: ["design system", "component", "token", "atomic", "registry", "metadata", "mcp", "dtcg", "agentic", "motion", "fluent"]
+      keywords:
+        [
+          "design system",
+          "component",
+          "token",
+          "atomic",
+          "registry",
+          "metadata",
+          "mcp",
+          "dtcg",
+          "agentic",
+          "motion",
+          "fluent",
+        ]
       route_to: "@brad-frost"
     foundations_pipeline:
-      keywords: ["foundations", "f1", "f2", "f3", "figma tokens", "base components", "derived components", "pipeline foundations"]
+      keywords:
+        [
+          "foundations",
+          "f1",
+          "f2",
+          "f3",
+          "figma tokens",
+          "base components",
+          "derived components",
+          "pipeline foundations",
+        ]
       route_to: "@ds-foundations-lead"
     token_architecture:
-      keywords: ["token architect", "figma variables", "token normalization", "token mapping"]
+      keywords:
+        [
+          "token architect",
+          "figma variables",
+          "token normalization",
+          "token mapping",
+        ]
       route_to: "@ds-token-architect"
     storybook:
-      keywords: ["storybook", "csf3", "play function", "interaction testing", "visual regression stories", "autodocs", "stories", "setup storybook", "install storybook", "configure storybook", "shadcn stories", "component documentation", "brownfield", "migrate", "migration", "scan", "inventory", "legacy components", "atomizar", "atomization"]
+      keywords:
+        [
+          "storybook",
+          "csf3",
+          "play function",
+          "interaction testing",
+          "visual regression stories",
+          "autodocs",
+          "stories",
+          "setup storybook",
+          "install storybook",
+          "configure storybook",
+          "shadcn stories",
+          "component documentation",
+          "brownfield",
+          "migrate",
+          "migration",
+          "scan",
+          "inventory",
+          "legacy components",
+          "atomizar",
+          "atomization",
+        ]
       route_to: "@storybook-expert"
     accessibility:
       keywords: ["a11y", "wcag", "aria", "contrast", "focus order"]
       route_to: "@brad-frost"
     designops:
-      keywords: ["designops", "maturity", "process", "scaling", "governance", "tooling"]
+      keywords:
+        ["designops", "maturity", "process", "scaling", "governance", "tooling"]
       route_to: "@dave-malouf"
     adoption:
-      keywords: ["buy-in", "stakeholder", "pitch", "adoption", "sell design system"]
+      keywords:
+        ["buy-in", "stakeholder", "pitch", "adoption", "sell design system"]
       route_to: "@dan-mall"
 
   out_of_scope:
     brand_logo:
-      keywords: ["brand", "marca", "logo", "identidade", "pricing", "positioning"]
+      keywords:
+        ["brand", "marca", "logo", "identidade", "pricing", "positioning"]
       route_to: "/Brand"
       note: "Handled by squads/brand"
     content_visual:
-      keywords: ["thumbnail", "youtube", "photo", "fotografia", "video", "editing", "color grading"]
+      keywords:
+        [
+          "thumbnail",
+          "youtube",
+          "photo",
+          "fotografia",
+          "video",
+          "editing",
+          "color grading",
+        ]
       route_to: "/ContentVisual"
       note: "Handled by squads/content-visual"
 

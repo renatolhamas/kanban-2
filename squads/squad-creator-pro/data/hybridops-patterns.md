@@ -24,21 +24,21 @@ SQUAD-CREATOR
 
 ### Mapeamento Modo → Pattern → Comandos
 
-| Modo | Responsabilidade | Patterns Usados | Comandos | Veto Conditions |
-|------|------------------|-----------------|----------|-----------------|
-| **Engenheiro de Processos** | Mapear do fim pro começo, encontrar gaps | HO-HE-001 (Future Back-Casting), HO-VC-001 | `*map-process`, `*find-gaps`, `*identify-owners` | Vision clarity < 0.7 |
-| **Arquiteto de Sistemas** | Estrutura, statuses, campos, permissões | HO-TP-001 (Task Anatomy), HO-EP-001/002/003/004 | `*design-structure`, `*create-statuses`, `*define-fields` | Missing required fields |
-| **Arquiteto de Automação** | Bloqueios, triggers, conexões, N8N | HO-HE-003 (Automation Tipping), HO-VC-003, HO-QG-001 | `*create-rules`, `*connect-systems`, `*design-triggers` | Guardrails missing |
-| **Construtor de Templates** | Templates, checklists, docs, teste da filha | HO-QG-001, HO-CV-001, HO-AX-001 | `*create-template`, `*write-instructions`, `*test-leigo` | Truthfulness < 0.7 |
+| Modo                        | Responsabilidade                            | Patterns Usados                                      | Comandos                                                  | Veto Conditions         |
+| --------------------------- | ------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------- | ----------------------- |
+| **Engenheiro de Processos** | Mapear do fim pro começo, encontrar gaps    | HO-HE-001 (Future Back-Casting), HO-VC-001           | `*map-process`, `*find-gaps`, `*identify-owners`          | Vision clarity < 0.7    |
+| **Arquiteto de Sistemas**   | Estrutura, statuses, campos, permissões     | HO-TP-001 (Task Anatomy), HO-EP-001/002/003/004      | `*design-structure`, `*create-statuses`, `*define-fields` | Missing required fields |
+| **Arquiteto de Automação**  | Bloqueios, triggers, conexões, N8N          | HO-HE-003 (Automation Tipping), HO-VC-003, HO-QG-001 | `*create-rules`, `*connect-systems`, `*design-triggers`   | Guardrails missing      |
+| **Construtor de Templates** | Templates, checklists, docs, teste da filha | HO-QG-001, HO-CV-001, HO-AX-001                      | `*create-template`, `*write-instructions`, `*test-leigo`  | Truthfulness < 0.7      |
 
 ### Ferramentas por Modo (da reunião)
 
-| Modo | Ferramentas |
-|------|-------------|
-| Engenheiro de Processos | Figma, Notion, Google Docs, Loom |
-| Arquiteto de Sistemas | ClickUp, Notion, Google Drive, Airtable |
-| Arquiteto de Automação | ClickUp Automations, N8N, Webhooks, APIs |
-| Construtor de Templates | Notion, ClickUp, Markdown, Loom |
+| Modo                    | Ferramentas                              |
+| ----------------------- | ---------------------------------------- |
+| Engenheiro de Processos | Figma, Notion, Google Docs, Loom         |
+| Arquiteto de Sistemas   | ClickUp, Notion, Google Drive, Airtable  |
+| Arquiteto de Automação  | ClickUp Automations, N8N, Webhooks, APIs |
+| Construtor de Templates | Notion, ClickUp, Markdown, Loom          |
 
 ---
 
@@ -63,29 +63,29 @@ squads/squad-creator-pro/
 
 ### Heuristics (Copiados de HybridOps)
 
-| Arquivo | Path Local | O que contém |
-|---------|------------|--------------|
-| **PV_BS_001** | `minds/pedro_valerio/heuristics/PV_BS_001.md` | Future Back-Casting (decisão estratégica) |
+| Arquivo       | Path Local                                    | O que contém                                      |
+| ------------- | --------------------------------------------- | ------------------------------------------------- |
+| **PV_BS_001** | `minds/pedro_valerio/heuristics/PV_BS_001.md` | Future Back-Casting (decisão estratégica)         |
 | **PV_PA_001** | `minds/pedro_valerio/heuristics/PV_PA_001.md` | Systemic Coherence Scan (validação de executores) |
-| **PV_PM_001** | `minds/pedro_valerio/heuristics/PV_PM_001.md` | Automation Tipping Point (quando automatizar) |
+| **PV_PM_001** | `minds/pedro_valerio/heuristics/PV_PM_001.md` | Automation Tipping Point (quando automatizar)     |
 
 ### Artifacts (Copiados de HybridOps)
 
-| Arquivo | Path Local | O que contém |
-|---------|------------|--------------|
-| **META_AXIOMAS** | `minds/pedro_valerio/artifacts/META_AXIOMAS.md` | 10 dimensões de validação, Axiomas Level -4 a 0 |
-| **Assinatura_Linguistica** | `minds/pedro_valerio/artifacts/Assinatura_Linguistica.md` | Voice DNA original |
+| Arquivo                    | Path Local                                                | O que contém                                    |
+| -------------------------- | --------------------------------------------------------- | ----------------------------------------------- |
+| **META_AXIOMAS**           | `minds/pedro_valerio/artifacts/META_AXIOMAS.md`           | 10 dimensões de validação, Axiomas Level -4 a 0 |
+| **Assinatura_Linguistica** | `minds/pedro_valerio/artifacts/Assinatura_Linguistica.md` | Voice DNA original                              |
 
 ### Fonte Original (para referência)
 
-| Arquivo | Path Original (HybridOps) |
-|---------|---------------------------|
-| PV_BS_001 | `squads/hybrid-ops-squad/minds/pedro_valerio/heuristics/PV_BS_001.md` |
-| PV_PA_001 | `squads/hybrid-ops-squad/minds/pedro_valerio/heuristics/PV_PA_001.md` |
-| PV_PM_001 | `squads/hybrid-ops-squad/minds/pedro_valerio/heuristics/PV_PM_001.md` |
-| META_AXIOMAS | `squads/hybrid-ops-squad/minds/pedro_valerio/artifacts/META_AXIOMAS.md` |
-| Assinatura | `squads/hybrid-ops-squad/minds/pedro_valerio/artifacts/Assinatura_Linguistica.md` |
-| heuristics.yaml | `squads/hybrid-ops-squad/config/heuristics.yaml` |
+| Arquivo         | Path Original (HybridOps)                                                         |
+| --------------- | --------------------------------------------------------------------------------- |
+| PV_BS_001       | `squads/hybrid-ops-squad/minds/pedro_valerio/heuristics/PV_BS_001.md`             |
+| PV_PA_001       | `squads/hybrid-ops-squad/minds/pedro_valerio/heuristics/PV_PA_001.md`             |
+| PV_PM_001       | `squads/hybrid-ops-squad/minds/pedro_valerio/heuristics/PV_PM_001.md`             |
+| META_AXIOMAS    | `squads/hybrid-ops-squad/minds/pedro_valerio/artifacts/META_AXIOMAS.md`           |
+| Assinatura      | `squads/hybrid-ops-squad/minds/pedro_valerio/artifacts/Assinatura_Linguistica.md` |
+| heuristics.yaml | `squads/hybrid-ops-squad/config/heuristics.yaml`                                  |
 
 **NOTA:** Os arquivos são COPIADOS uma vez. Atualizações futuras devem ser feitas no squad-creator diretamente.
 
@@ -113,6 +113,7 @@ squads/squad-creator-pro/
 **Heurística:** PV_BS_001
 
 **Definição:**
+
 ```yaml
 veto_trigger:
   condition: "end_state_vision_clarity < 0.7"
@@ -122,21 +123,25 @@ veto_trigger:
 ```
 
 **Quando Usar:**
+
 - Quando visão estratégica está abaixo de 70% de clareza
 - Antes de commitar recursos significativos e irreversíveis
 - Em decisões de arquitetura que definem fundação do sistema
 
 **Exemplo de Aplicação no Squad-Creator:**
+
 - Verificar se "DNA extraction pipeline" está claro antes de design
 - Validar se meta de "automated agent generation" é visível
 - Confirmar escopo de "quality gates" antes de Phase 2
 
 **Como Adaptar:**
+
 - Substituir `end_state_vision` por: `squad_creation_vision_clarity`
 - Manter threshold em 0.7
 - Criar questões validação específicas para squad-creator
 
 **Outputs Esperados:**
+
 - APPROVE: Proceed to Architecture
 - REVIEW: Clarify vision with team
 - VETO: Return to Discovery phase
@@ -151,6 +156,7 @@ veto_trigger:
 **Heurística:** PV_PA_001
 
 **Definição:**
+
 ```yaml
 veto_conditions:
   - condition: "truthfulness_coherence < 0.7"
@@ -162,21 +168,25 @@ veto_conditions:
 ```
 
 **Quando Usar:**
+
 - Incoerência detectada entre statements e actions
 - Mentira identificada propositalmente
 - Agent assignment não-confiável
 
 **Exemplo de Aplicação:**
+
 - Validar que agent do squad-creator segue suas próprias axiomas
 - Verificar se extraction logic é determinístico
 - Confirmar que output bate com documented behavior
 
 **Como Adaptar:**
+
 - `truthfulness_coherence` → `agent_behavior_coherence`
 - Aplicar a agents que pertencem ao squad
 - Usar para validar DNA clones antes de deploy
 
 **Guardrails:**
+
 - Teste comportamento com tasks que revelam consistência
 - Use métricas objetivas sobre impressões subjetivas
 - Implemente appeal tribunal para casos borderline
@@ -191,6 +201,7 @@ veto_conditions:
 **Heurística:** PV_PM_001
 
 **Definição:**
+
 ```yaml
 veto_condition:
   trigger: "guardrails_missing = true"
@@ -205,16 +216,19 @@ veto_condition:
 ```
 
 **Quando Usar:**
+
 - Antes de automate qualquer workflow
 - Quando frequency > 2x por mês
 - Em automations com systemic impact > 0.6
 
 **Exemplo no Squad-Creator:**
+
 - Agent-geração precisa: loop prevention, idempotency, audit trail
 - Extraction pipeline: rollback mechanism, manual override
 - Validation gates: timeout handling, fallback behavior
 
 **Como Adaptar:**
+
 - Manter 5 guardrails obrigatórios
 - Adicionar: `max_iterations`, `failure_threshold`, `notification_on_veto`
 - Criar checklist pré-automation
@@ -232,17 +246,17 @@ veto_condition:
 
 **Os 8 Campos Obrigatórios:**
 
-| # | Campo | Tipo | Validação | Exemplo |
-|---|-------|------|-----------|---------|
-| 1 | `task_name` | string | "Verb + Object" format | "Extract Mind DNA" |
-| 2 | `status` | enum | pending \| in_progress \| review \| completed \| blocked | "pending" |
-| 3 | `responsible_executor` | string | role or @agent reference | "@squad-creator:analyzer" |
-| 4 | `execution_type` | enum | Human \| Agent \| Hybrid \| Worker | "Agent" |
-| 5 | `estimated_time` | duration | Must include unit (h, m, d) | "2-3 hours" |
-| 6 | `input` | array | At least 1 item required | ["DNA template", "agent config"] |
-| 7 | `output` | array | At least 1 item required | ["extracted axiomas", "validation report"] |
-| 8 | `action_items` | array | Step-by-step execution (≥1) | ["Parse agent markdown", "Extract axiomas", "Validate..."] |
-| 9 | `acceptance_criteria` | array | "Done" definition (≥1) | ["All fields extracted", "Pass validation gate"] |
+| #   | Campo                  | Tipo     | Validação                                                | Exemplo                                                    |
+| --- | ---------------------- | -------- | -------------------------------------------------------- | ---------------------------------------------------------- |
+| 1   | `task_name`            | string   | "Verb + Object" format                                   | "Extract Mind DNA"                                         |
+| 2   | `status`               | enum     | pending \| in_progress \| review \| completed \| blocked | "pending"                                                  |
+| 3   | `responsible_executor` | string   | role or @agent reference                                 | "@squad-creator:analyzer"                                  |
+| 4   | `execution_type`       | enum     | Human \| Agent \| Hybrid \| Worker                       | "Agent"                                                    |
+| 5   | `estimated_time`       | duration | Must include unit (h, m, d)                              | "2-3 hours"                                                |
+| 6   | `input`                | array    | At least 1 item required                                 | ["DNA template", "agent config"]                           |
+| 7   | `output`               | array    | At least 1 item required                                 | ["extracted axiomas", "validation report"]                 |
+| 8   | `action_items`         | array    | Step-by-step execution (≥1)                              | ["Parse agent markdown", "Extract axiomas", "Validate..."] |
+| 9   | `acceptance_criteria`  | array    | "Done" definition (≥1)                                   | ["All fields extracted", "Pass validation gate"]           |
 
 **Estrutura Completa:**
 
@@ -283,6 +297,7 @@ task_definition:
 ```
 
 **Validação Checklist:**
+
 - [ ] task_name começa com verbo de ação
 - [ ] status é valor válido
 - [ ] responsible_executor é role ou @agent
@@ -295,6 +310,7 @@ task_definition:
 - [ ] Sem typos ou caracteres inválidos
 
 **Reusável em Squad-Creator:**
+
 - Aplicar ao 100% das tasks
 - Usar "Verb + Object" em Portuguese (Extrair, Validar, Gerar, etc)
 - Criar dependency graph baseado em handoff triggers
@@ -320,8 +336,8 @@ Validar alinhamento estratégico usando metodologia future back-casting. Respond
 ```yaml
 PV_BS_001:
   weights:
-    end_state_vision: 0.9          # Primary weight
-    market_signals: 0.1             # Secondary
+    end_state_vision: 0.9 # Primary weight
+    market_signals: 0.1 # Secondary
 
   thresholds:
     high_priority: 0.8
@@ -330,8 +346,8 @@ PV_BS_001:
     veto_threshold: 0.7
 
   veto_conditions:
-    - "end_state_vision_clarity < 0.7"        # VETO
-    - "strategic_priority_score < 0.5"        # REVIEW
+    - "end_state_vision_clarity < 0.7" # VETO
+    - "strategic_priority_score < 0.5" # REVIEW
 ```
 
 **Decision Tree:**
@@ -353,14 +369,15 @@ FALLBACK: If multiple actions conflict, prioritize the one that builds
 
 **Critérios de Avaliação:**
 
-| Critério | Weight | Threshold | Descrição |
-|----------|--------|-----------|-----------|
-| End-state vision clarity | 0.9 | ≥0.8 | Quão bem definido é o estado futuro? |
-| Strategic priority score | 0.1 | ≥0.7 | Alinha com top priorities? |
-| Optionality creation | 0.8 | ≥0.6 | Cria flexibilidade futura? |
-| Resource efficiency | 0.7 | ≥0.5 | Uso ótimo de recursos? |
+| Critério                 | Weight | Threshold | Descrição                            |
+| ------------------------ | ------ | --------- | ------------------------------------ |
+| End-state vision clarity | 0.9    | ≥0.8      | Quão bem definido é o estado futuro? |
+| Strategic priority score | 0.1    | ≥0.7      | Alinha com top priorities?           |
+| Optionality creation     | 0.8    | ≥0.6      | Cria flexibilidade futura?           |
+| Resource efficiency      | 0.7    | ≥0.5      | Uso ótimo de recursos?               |
 
 **Exemplo Behavioral Evidence (do HybridOps):**
+
 - **Context:** Mercado de influencer focado em ativação manual
 - **Decision:** Criar AI team 1.5 anos antes de ser necessário
 - **Rationale:** Mudança estrutural do mercado para advertising automation (TTCX)
@@ -381,14 +398,15 @@ decision_points:
   - "Dashboard analytics → REVIEW (nice-to-have, not core)"
 
 end_state_vision: "Autonomous creation of purpose-built squads with 0 manual configuration"
-vision_clarity: 0.85  # Clear vision
-strategic_priority: 0.9  # Top priority for AIOS
-optionality_paths: 3  # Multiple integration points
+vision_clarity: 0.85 # Clear vision
+strategic_priority: 0.9 # Top priority for AIOS
+optionality_paths: 3 # Multiple integration points
 
 result: APPROVE (0.87 score)
 ```
 
 **Performance Metrics:**
+
 - Decision speed: "1-3 days (vision crystallization); <1 hour (tactical)"
 - Accuracy rate: "85% (3-5 year horizons)"
 - Confidence level: "95% (once vision is established)"
@@ -411,14 +429,14 @@ Validar coerência de executor assignments e people assessment. Truthfulness tem
 ```yaml
 PV_PA_001:
   weights:
-    truthfulness_coherence: 1.0  # VETO power - absolute
+    truthfulness_coherence: 1.0 # VETO power - absolute
     system_adherence_potential: 0.8
     technical_skill: 0.3
 
   thresholds:
-    truthfulness: 0.7           # Must be 'Coherent'
+    truthfulness: 0.7 # Must be 'Coherent'
     system_adherence: 0.7
-    technical_skill: null        # No minimum, context-dependent
+    technical_skill: null # No minimum, context-dependent
 
   veto_conditions:
     - condition: "truthfulness_coherence < 0.7"
@@ -450,11 +468,11 @@ truthfulness_states:
 **Executor Type Coherence Matrix:**
 
 | Executor Type | Min Truthfulness | Min System Adherence | Tech Weight |
-|---------------|------------------|----------------------|-------------|
-| Human | 0.7 (VETO) | 0.7 | 0.3 |
-| Hybrid | 0.7 (VETO) | 0.8 | 0.4 |
-| Agent | N/A | 0.9 | 0.6 |
-| Worker | N/A | 0.95 | 0.8 |
+| ------------- | ---------------- | -------------------- | ----------- |
+| Human         | 0.7 (VETO)       | 0.7                  | 0.3         |
+| Hybrid        | 0.7 (VETO)       | 0.8                  | 0.4         |
+| Agent         | N/A              | 0.9                  | 0.6         |
+| Worker        | N/A              | 0.95                 | 0.8         |
 
 **Failure Modes to Watch:**
 
@@ -477,7 +495,7 @@ validation_criteria:
   - agent_output_matches_prompt: 0.9
   - consistency_across_runs: 0.85
   - behavior_matches_persona: 0.80
-  - follows_guardrails: 1.0  # VETO if fails
+  - follows_guardrails: 1.0 # VETO if fails
 
 veto_conditions:
   - "Agent generates outputs contradicting its persona"
@@ -531,13 +549,13 @@ PV_PM_001:
     task_systemic_impact: 0.9
     task_automatability: 0.8
     task_frequency: 0.7
-    guardrails_present: 1.0  # VETO power
+    guardrails_present: 1.0 # VETO power
 
   thresholds:
-    systemic_impact: 0.6      # For deep work allocation
-    automatability: 0.5       # For removal from agenda
+    systemic_impact: 0.6 # For deep work allocation
+    automatability: 0.5 # For removal from agenda
     frequency: "2x per month" # Minimum for automation justification
-    standardization: 0.7      # Process must be standardized
+    standardization: 0.7 # Process must be standardized
 ```
 
 **Decision Tree:**
@@ -621,20 +639,21 @@ Framework de 10 dimensões para validar se um processo está **coerente com axio
 
 **As 10 Dimensões:**
 
-| # | Dimensão | Definição | Weight | Threshold | Veto Power |
-|---|----------|-----------|--------|-----------|------------|
-| 1 | Truthfulness | Acurácia e confiabilidade dos outputs | 1.0 | 7.0 | YES |
-| 2 | Coherence | Consistência interna e lógica | 0.9 | 6.0 | NO |
-| 3 | Strategic Alignment | Suporta objetivos organizacionais | 0.9 | 6.0 | NO |
-| 4 | Operational Excellence | Eficiência, confiabilidade, documentação | 0.8 | 6.0 | NO |
-| 5 | Innovation Capacity | Habilidade de melhoria e adaptação | 0.7 | 5.0 | NO |
-| 6 | Risk Management | Identificação e mitigação de riscos | 0.8 | 6.0 | NO |
-| 7 | Resource Optimization | Uso eficiente de tempo/dinheiro/pessoas | 0.8 | 6.0 | NO |
-| 8 | Stakeholder Value | Valor entregue a todas as partes | 0.7 | 6.0 | NO |
-| 9 | Sustainability | Viabilidade a longo prazo | 0.7 | 6.0 | NO |
-| 10 | Adaptability | Capacidade de evolução | 0.6 | 5.0 | NO |
+| #   | Dimensão               | Definição                                | Weight | Threshold | Veto Power |
+| --- | ---------------------- | ---------------------------------------- | ------ | --------- | ---------- |
+| 1   | Truthfulness           | Acurácia e confiabilidade dos outputs    | 1.0    | 7.0       | YES        |
+| 2   | Coherence              | Consistência interna e lógica            | 0.9    | 6.0       | NO         |
+| 3   | Strategic Alignment    | Suporta objetivos organizacionais        | 0.9    | 6.0       | NO         |
+| 4   | Operational Excellence | Eficiência, confiabilidade, documentação | 0.8    | 6.0       | NO         |
+| 5   | Innovation Capacity    | Habilidade de melhoria e adaptação       | 0.7    | 5.0       | NO         |
+| 6   | Risk Management        | Identificação e mitigação de riscos      | 0.8    | 6.0       | NO         |
+| 7   | Resource Optimization  | Uso eficiente de tempo/dinheiro/pessoas  | 0.8    | 6.0       | NO         |
+| 8   | Stakeholder Value      | Valor entregue a todas as partes         | 0.7    | 6.0       | NO         |
+| 9   | Sustainability         | Viabilidade a longo prazo                | 0.7    | 6.0       | NO         |
+| 10  | Adaptability           | Capacidade de evolução                   | 0.6    | 5.0       | NO         |
 
 **Scoring:**
+
 ```yaml
 overall_score: (Σ(score_i × weight_i)) ÷ Σ(weight_i)
 
@@ -683,18 +702,18 @@ process_components:
 
 example_assessment:
   DNA_Extraction:
-    truthfulness: 8.5  # Consistent output
-    coherence: 8.0     # Follows YAML schema
-    strategic_alignment: 8.5  # Enables core mission
-    operational_excellence: 8.0  # Well-documented, 99.9% uptime
-    innovation_capacity: 7.0  # Templates can be enhanced
-    risk_management: 8.5  # Guardrails present
-    resource_optimization: 8.0  # 48% automated
-    stakeholder_value: 8.5  # Saves 3h per agent
-    sustainability: 7.5  # No custom code
-    adaptability: 7.5  # Config-based
+    truthfulness: 8.5 # Consistent output
+    coherence: 8.0 # Follows YAML schema
+    strategic_alignment: 8.5 # Enables core mission
+    operational_excellence: 8.0 # Well-documented, 99.9% uptime
+    innovation_capacity: 7.0 # Templates can be enhanced
+    risk_management: 8.5 # Guardrails present
+    resource_optimization: 8.0 # 48% automated
+    stakeholder_value: 8.5 # Saves 3h per agent
+    sustainability: 7.5 # No custom code
+    adaptability: 7.5 # Config-based
 
-    overall_score: 7.9  # PASS
+    overall_score: 7.9 # PASS
     recommendation: "Proceed to Phase 7"
 ```
 
@@ -710,33 +729,33 @@ example_assessment:
 
 **Os 3 Tipos de Quality Gates:**
 
-| Tipo | Executor | Velocidade | Uso | Exemplo |
-|------|----------|-----------|-----|---------|
-| **Automated** | Sistema/AI | <1 segundo | Deterministic checks | Field validation, calculations |
-| **Hybrid** | Sistema + Human | 1-5 minutos | AI prepara, humano aprova | Template generation review |
-| **Manual** | Human/Team | 1-8 horas | Judgment-based | Acceptance sign-off |
+| Tipo          | Executor        | Velocidade  | Uso                       | Exemplo                        |
+| ------------- | --------------- | ----------- | ------------------------- | ------------------------------ |
+| **Automated** | Sistema/AI      | <1 segundo  | Deterministic checks      | Field validation, calculations |
+| **Hybrid**    | Sistema + Human | 1-5 minutos | AI prepara, humano aprova | Template generation review     |
+| **Manual**    | Human/Team      | 1-8 horas   | Judgment-based            | Acceptance sign-off            |
 
 **Estrutura Completa de Quality Gate:**
 
 ```yaml
 quality_gate:
-  id: "QG-R02"                    # Unique identifier
+  id: "QG-R02" # Unique identifier
   name: "RICE Inputs Completeness"
   phase: "Runtime"
   workflow: "WF-R01"
   location: "Before RT-004"
-  type: "Automated"               # One of: Automated, Hybrid, Manual
-  risk_level: "Medium"            # Low, Medium, High, Critical
+  type: "Automated" # One of: Automated, Hybrid, Manual
+  risk_level: "Medium" # Low, Medium, High, Critical
 
   # TRIGGER DEFINITION
   trigger:
-    event: "field_change"         # What event activates gate
+    event: "field_change" # What event activates gate
     condition: "any_rice_field_updated"
 
   # ACCEPTANCE CRITERIA
   criteria:
     - check: "Reach field filled"
-      type: "not_empty"           # Type: not_empty, validation, boolean, threshold, etc
+      type: "not_empty" # Type: not_empty, validation, boolean, threshold, etc
       field_id: "a1f4fcb9-..."
       required: true
 
@@ -750,12 +769,12 @@ quality_gate:
       field_id: "056d774e-..."
       required: true
 
-  threshold: "100% fields filled"  # Pass condition
+  threshold: "100% fields filled" # Pass condition
 
   # EXECUTOR CONFIGURATION
   executor:
-    type: "automated"             # Or: hybrid, manual
-    agent: "ClickUp AI Field"      # Who/what validates
+    type: "automated" # Or: hybrid, manual
+    agent: "ClickUp AI Field" # Who/what validates
 
   # ACTIONS ON PASS/FAIL
   pass_action:
@@ -767,8 +786,8 @@ quality_gate:
     - "Display incomplete status"
     - "Log failure details"
 
-  sla: "<1 second"                # Service level agreement
-  guardrail: "GR-001"             # Linked guardrail (optional)
+  sla: "<1 second" # Service level agreement
+  guardrail: "GR-001" # Linked guardrail (optional)
 ```
 
 **5-Layer QG Taxonomy:**
@@ -856,12 +875,14 @@ gates:
 **Quando Usar:** Tasks requiring judgment, creativity, relationships
 
 **Characteristics:**
+
 - Cost: $$$ (expensive)
 - Speed: Slow (hours to days)
 - Judgment Required: YES
 - Can be automated: NO
 
 **Typical Tasks:**
+
 - Business value assessment
 - Technical estimation
 - Leadership decisions
@@ -904,12 +925,14 @@ gates:
 **Quando Usar:** Analysis, generation, pattern recognition
 
 **Characteristics:**
+
 - Cost: $$$$ (API calls)
 - Speed: Very Fast (seconds to minutes)
 - Judgment Required: NO (deterministic or guided)
 - Can be automated: YES (fully)
 
 **Typical Tasks:**
+
 - Code generation
 - Data analysis
 - Content generation
@@ -950,12 +973,14 @@ gates:
 **Quando Usar:** AI assists, human validates and directs
 
 **Characteristics:**
+
 - Cost: $$ (split cost)
 - Speed: Moderate (minutes to hours)
 - Judgment Required: BOTH
 - Can be automated: Partially (AI part yes, validation part no)
 
 **Typical Tasks:**
+
 - Code generation with review
 - Design + implementation (separate roles)
 - AI draft + human refinement
@@ -969,8 +994,8 @@ gates:
   executor_type: hybrid
   pattern: HO-EP-003
   assigned_to:
-    design: "@squad-creator:architect"  # AI designs automation logic
-    implement: "Admin"                     # Human implements in ClickUp
+    design: "@squad-creator:architect" # AI designs automation logic
+    implement: "Admin" # Human implements in ClickUp
   backup: "Tech Lead"
 
   rationale: "Automation logic requires AI design, implementation requires admin access"
@@ -978,8 +1003,8 @@ gates:
   risk: medium
 
   raci:
-    responsible: "@architect"  # Design lead
-    accountable: "Tech Lead"    # Overall accountability
+    responsible: "@architect" # Design lead
+    accountable: "Tech Lead" # Overall accountability
     consulted: ["Product Owner"]
     informed: ["Dev Team"]
 
@@ -999,12 +1024,14 @@ gates:
 **Quando Usar:** Deterministic tasks, file operations, API calls
 
 **Characteristics:**
+
 - Cost: $ (cheapest)
 - Speed: Very Fast (sub-second to seconds)
 - Judgment Required: NO
 - Can be automated: YES (100%)
 
 **Typical Tasks:**
+
 - Template application
 - Field calculations (formulas)
 - Validation (if/then rules)
@@ -1018,7 +1045,7 @@ gates:
   task_name: "Apply Agent Template"
   executor_type: worker
   pattern: HO-EP-004
-  assigned_to: "ClickUp Task Template"  # Or: automation system, worker process
+  assigned_to: "ClickUp Task Template" # Or: automation system, worker process
   backup: null
 
   rationale: "Template application is deterministic, no judgment"
@@ -1062,7 +1089,7 @@ gates:
 
 ```yaml
 coherence_levels:
-  coherent:  # 0.7 - 1.0
+  coherent: # 0.7 - 1.0
     description: "Statements align with observable data and actions"
     examples:
       - "Agent always extracts same axiomas from same input"
@@ -1070,7 +1097,7 @@ coherence_levels:
     action: "APPROVE"
     score_range: [0.7, 1.0]
 
-  inconsistent:  # 0.4 - 0.7
+  inconsistent: # 0.4 - 0.7
     description: "Statements contradict data without clear explanation"
     examples:
       - "Agent claims 'deterministic' but output varies"
@@ -1079,7 +1106,7 @@ coherence_levels:
     score_range: [0.4, 0.7]
     remediation: "Apply test period with revealing tasks"
 
-  incoherent:  # 0.0 - 0.4
+  incoherent: # 0.0 - 0.4
     description: "Deliberate misrepresentation detected"
     examples:
       - "Agent fabricates extraction data"
@@ -1109,9 +1136,9 @@ truthfulness_validation:
     threshold: "No false positives or negatives"
 
 scoring:
-  all_tests_pass: 0.95    # Coherent
-  1_test_fails: 0.65      # Inconsistent
-  2+_tests_fail: 0.35     # Incoherent
+  all_tests_pass: 0.95 # Coherent
+  1_test_fails: 0.65 # Inconsistent
+  2+_tests_fail: 0.35 # Incoherent
 ```
 
 ---
@@ -1166,13 +1193,13 @@ HO-CV-002-SC: "Agent-Squad Coherence Assessment"
 
 agents:
   - name: "@squad-creator:analyzer"
-    capability_alignment: 0.92  # DNA extraction ✓
-    accountability: 0.90        # Clear RACI ✓
-    backup: 0.85                # Fallback template ✓
-    escalation: 0.90            # QA review available ✓
-    pattern: 0.95               # Follows HO-EP-002 ✓
+    capability_alignment: 0.92 # DNA extraction ✓
+    accountability: 0.90 # Clear RACI ✓
+    backup: 0.85 # Fallback template ✓
+    escalation: 0.90 # QA review available ✓
+    pattern: 0.95 # Follows HO-EP-002 ✓
 
-    weighted_score: 0.91  # PASS
+    weighted_score: 0.91 # PASS
 ```
 
 ---
@@ -1181,26 +1208,26 @@ agents:
 
 ### Prioridade 1: CRÍTICO (Implementar Primeiro)
 
-| Pattern | Descrição | Fase | Esforço |
-|---------|-----------|------|---------|
-| **HO-TP-001** | 8-field task anatomy | 5 | 3h |
-| **HO-VC-001/002/003** | Veto conditions framework | 2-4 | 5h |
-| **HO-HE-001** | Future back-casting | 2 | 4h |
-| **HO-HE-002** | Coherence scan | 3 | 4h |
-| **HO-QG-001** | Quality gate pattern | 6 | 6h |
+| Pattern               | Descrição                 | Fase | Esforço |
+| --------------------- | ------------------------- | ---- | ------- |
+| **HO-TP-001**         | 8-field task anatomy      | 5    | 3h      |
+| **HO-VC-001/002/003** | Veto conditions framework | 2-4  | 5h      |
+| **HO-HE-001**         | Future back-casting       | 2    | 4h      |
+| **HO-HE-002**         | Coherence scan            | 3    | 4h      |
+| **HO-QG-001**         | Quality gate pattern      | 6    | 6h      |
 
 ### Prioridade 2: IMPORTANTE (Próximas)
 
-| Pattern | Descrição | Fase | Esforço |
-|---------|-----------|------|---------|
-| **HO-HE-003** | Automation tipping point | 4 | 4h |
-| **HO-AX-001** | Axioma validation | 6 | 8h |
-| **HO-EP-001 a 004** | Executor patterns | 3 | 6h |
+| Pattern             | Descrição                | Fase | Esforço |
+| ------------------- | ------------------------ | ---- | ------- |
+| **HO-HE-003**       | Automation tipping point | 4    | 4h      |
+| **HO-AX-001**       | Axioma validation        | 6    | 8h      |
+| **HO-EP-001 a 004** | Executor patterns        | 3    | 6h      |
 
 ### Prioridade 3: COMPLEMENTAR (Depois)
 
-| Pattern | Descrição | Uso |
-|---------|-----------|-----|
+| Pattern           | Descrição            | Uso                  |
+| ----------------- | -------------------- | -------------------- |
 | **HO-CV-001/002** | Coherence validation | Specific assessments |
 
 ---
@@ -1278,6 +1305,7 @@ Entrega final
 **Path:** `squads/squad-creator-pro/templates/handoff-insumos-tmpl.yaml`
 
 O Pedro Valério aceita insumos no formato:
+
 ```yaml
 handoff_type: INSUMOS_READY
 from: "@oalanicolas"
@@ -1285,13 +1313,13 @@ to: "@pedro-valerio"
 
 insumos:
   voice_dna:
-    signature_phrases: ["...", "..."]  # Mínimo 5
-    source_verified: true               # OBRIGATÓRIO
+    signature_phrases: ["...", "..."] # Mínimo 5
+    source_verified: true # OBRIGATÓRIO
   thinking_dna:
     frameworks: ["...", "..."]
     heuristics: ["...", "..."]
   quotes:
-    verified_count: 15                  # Mínimo 15
+    verified_count: 15 # Mínimo 15
 
 validation_gates:
   - all_sources_have_SOURCE_tag: true
@@ -1329,6 +1357,7 @@ Extraí **23 patterns reutilizáveis** do HybridOps squad:
 - **2 Coherence Validation** patterns
 
 **ADICIONAL (v1.2):**
+
 - **4 Modos do Pedro Valério** com mapeamento modo → pattern
 - **5 Mind Artifacts** COPIADOS para dentro do squad-creator (self-contained)
 - **Integração com workflow** squad-chief → oalanicolas → pedro-valerio
@@ -1340,12 +1369,12 @@ Todos estão **prontos para adaptação** ao squad-creator com minimal customiza
 
 ## CHANGELOG
 
-| Versão | Data | Mudanças |
-|--------|------|----------|
-| v1.2 | 2026-02-10 | Self-contained: COPIAR artifacts, zero refs externas |
-| v1.1 | 2026-02-10 | 4 Modos, Mind Artifacts, Workflow integration |
-| v1.0 | 2026-02-10 | Versão inicial - 23 patterns extraídos |
+| Versão | Data       | Mudanças                                             |
+| ------ | ---------- | ---------------------------------------------------- |
+| v1.2   | 2026-02-10 | Self-contained: COPIAR artifacts, zero refs externas |
+| v1.1   | 2026-02-10 | 4 Modos, Mind Artifacts, Workflow integration        |
+| v1.0   | 2026-02-10 | Versão inicial - 23 patterns extraídos               |
 
 ---
 
-*Documento atualizado: 2026-02-10 v1.2*
+_Documento atualizado: 2026-02-10 v1.2_

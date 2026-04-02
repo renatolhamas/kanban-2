@@ -39,7 +39,7 @@ existing_files:
   voice_dna: "outputs/minds/{mind_slug}/voice_dna.yaml"
   thinking_dna: "outputs/minds/{mind_slug}/thinking_dna.yaml"
   sources_inventory: "outputs/minds/{mind_slug}/sources_inventory.yaml"
-  agent_file: "squads/{squad}/agents/{mind_slug}.md"  # Se já tem agente
+  agent_file: "squads/{squad}/agents/{mind_slug}.md" # Se já tem agente
 ```
 
 ### 0.2 Snapshot Before
@@ -157,11 +157,11 @@ thinking_delta:
 
 ### 3.1 Merge Modes
 
-| Mode | Comportamento |
-|------|---------------|
-| **merge** | Adiciona novos elementos, preserva existentes |
-| **replace** | Substitui seções onde novo é significativamente melhor |
-| **selective** | Checkpoint por seção, usuário decide |
+| Mode          | Comportamento                                          |
+| ------------- | ------------------------------------------------------ |
+| **merge**     | Adiciona novos elementos, preserva existentes          |
+| **replace**   | Substitui seções onde novo é significativamente melhor |
+| **selective** | Checkpoint por seção, usuário decide                   |
 
 ### 3.2 Merge Rules
 
@@ -177,7 +177,7 @@ merge_rules:
 
   # NUNCA substituir sem validação
   protected:
-    - primary_framework  # Core identity
+    - primary_framework # Core identity
     - identity_statement
     - veto_heuristics
 
@@ -425,4 +425,4 @@ update_report:
 ---
 
 **Squad Architect | Update Mind v1.0**
-*"Evolution beats revolution. Preserve what works, add what's missing."*
+_"Evolution beats revolution. Preserve what works, add what's missing."_

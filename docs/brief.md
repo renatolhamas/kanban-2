@@ -22,7 +22,7 @@ O projeto se inicia com uma **Plataforma SaaS Multi-tenant de Gestão de Convers
 
 ### 2. Problem Statement
 
-O gerenciamento de WhatsApp em equipes sofre com a falta de sincronia. O modelo tradicional de "um número, uma pessoa" gera desalinhamento sobre quem está atendendo quem e em qual estágio a venda se encontra. 
+O gerenciamento de WhatsApp em equipes sofre com a falta de sincronia. O modelo tradicional de "um número, uma pessoa" gera desalinhamento sobre quem está atendendo quem e em qual estágio a venda se encontra.
 
 A inexistência de uma **pipeline compartilhada** resulta em leads duplicados, respostas esquecidas e falta de clareza sobre a produtividade do time. Soluções de mercado costumam ser restritivas ou complexas, dificultando a implementação de uma gestão visual simples (Kanban) aliada à automação de follow-up para equipes.
 
@@ -30,9 +30,10 @@ A inexistência de uma **pipeline compartilhada** resulta em leads duplicados, r
 
 ### 3. Proposed Solution
 
-A solução é um **Dashboard Colaborativo Multi-tenant** que separa a entidade **Dono (Tenant)** da entidade **Usuário (User)**. 
+A solução é um **Dashboard Colaborativo Multi-tenant** que separa a entidade **Dono (Tenant)** da entidade **Usuário (User)**.
 
 **Pilares Técnicos e Funcionais:**
+
 - **Kanban Compartilhado:** Visibilidade total para todos os atendentes do Tenant sobre as conversas ativas.
 - **Hierarquia de Acesso:** Definição básica de papéis (Owner vs. Attendant) para gestão de instâncias da Evolution API.
 - **Sincronização de Threads:** Uso de webhooks para garantir que qualquer ação tomada por um atendente reflita instantaneamente para os outros.
@@ -54,6 +55,7 @@ O sistema atende a estruturas organizacionais que buscam profissionalizar e esca
 O sucesso da plataforma será medido pela capacidade do **Tenant** de organizar o fluxo e otimizar a conversão de seus contatos.
 
 **Objetivos de Negócio (SMART):**
+
 1.  **Triagem Ativa (100%):** Garantir que todas as conversas que entram pelo "Funil Principal" sejam triadas (movidas para o funil/etapa adequada ou arquivadas) em até 24h.
 2.  **Redução de Lead Time:** Diminuir em 30% o tempo médio de permanência de um contato na primeira etapa do Funil Principal através de alertas visuais.
 3.  **Eficiência de Follow-up:** Aumentar em 50% o número de contatos que recebem follow-ups personalizados, automatizados via "Automatic Messages".
@@ -70,18 +72,21 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 **Recursos Incluídos (Must-Haves):**
 
 **🔐 Autenticação & Onboarding:**
+
 - **Página Register:** Cadastro de Owner com Email, Senha e Setup inicial da instância
 - **Página Login:** Autenticação via Supabase Cloud Auth com RLS funcionando
 - **RLS (Row Level Security):** Separação total de dados por `tenant_id`
 - **Perfil do Usuário:** Página "Profile" para alterar Nome e Senha do usuário logado
 
 **📋 Gestão de Kanbans (Funis/Pipelines):**
+
 - **CRUD de Kanbans:** Nome, Ordem (esquerda→direita via números), botões "Antes"/"Depois" para reordenação
 - **Kanban "Main":** Campo radio button — apenas UM kanban pode ser "Main" (funil principal)
 - **Criação Automática:** Kanban "Main" criado automaticamente no onboarding
 - **Novas Conversas:** Automáticamente roteadas para o Kanban "Main"
 
 **💬 Visualização Kanban (Home):**
+
 - **Página Home:** Kanban visual com colunas configuráveis
 - **Cards de Conversa:** Cada conversa é um "post-it" arrastável entre colunas
 - **Drag-and-drop:** Movimentação de conversas entre etapas dentro do mesmo Kanban
@@ -89,6 +94,7 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 - **Filtros:** "Conversas Ativas" vs "Arquivadas"
 
 **💬 Modal de Conversa (Chat):**
+
 - **Envio de Mensagens:** Texto e mídia (fotos, vídeos, áudios)
 - **Recebimento em Tempo Real:** Via webhooks da Evolution API v2
 - **Seletor de Kanban/Coluna:** Dropdown para transferir conversa entre Kanbans e colunas
@@ -97,6 +103,7 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 - **Arquivar Conversa:** Botão para encerrar/retirar conversa da visualização ativa
 
 **👥 Gestão de Contatos:**
+
 - **Página Contacts:** Tabela com colunas "Name", "Phone Number", "Actions"
 - **CRUD Completo:** Criar, ler, atualizar, deletar contatos
 - **Validação de Telefone:** Formato internacional começando com "+"
@@ -107,14 +114,17 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 **🔧 Página de Configurações:**
 
 **📱 Profile:**
+
 - Alterar Nome e Senha do usuário logado
 
 **🔌 Connection:**
+
 - Pairing com WhatsApp via QR Code (Evolution API v2)
 - Gerenciamento de instâncias da Evolution API
 - Sincronização de mensagens via webhooks em tempo real
 
 **📧 Automatic Messages:**
+
 - **Tabela:** Colunas "Name", "Actions"
 - **CRUD Completo:** Criar, editar, deletar mensagens automáticas
 - **Modal "Create Message":** Fields "Name" e "Message"
@@ -123,6 +133,7 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 - **Uso Manual ou Automático:** Podem ser selecionadas manualmente no chat ou disparadas automaticamente
 
 **🎨 Kanbans (Gerenciamento):**
+
 - **Tabela:** Colunas "Name", "Main" (radio button), "Actions"
 - **CRUD Completo:** Criar, editar, deletar Kanbans
 - **Modal "Create Kanban":** Fields "Name", "Order" (numeração) + botões "Antes"/"Depois"
@@ -130,6 +141,7 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 - **Radio Button "Main":** Apenas UM Kanban pode ser marcado como "Main"
 
 **🎛️ UI/UX Geral:**
+
 - **Ícone de Usuário:** Canto superior direito → leva para página "Profile"
 - **Botão Logout:** Botão vermelho com "X" ao lado do ícone de usuário
 - **Responsividade:** Design adaptado para desktop (MVP focado em desktop)
@@ -141,19 +153,23 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 O sistema utiliza uma hierarquia clara para garantir a autonomia do Cliente (Tenant) e a segurança dos dados.
 
 **Fluxo de Onboarding (MVP - Single User):**
+
 1.  **Página Register:** O usuário se cadastra preenchendo Email e Senha
 2.  **Criação do Tenant:** O backend cria automaticamente um registro na tabela `tenants` e vincula o usuário como **OWNER** deste novo ID
-3.  **Setup Inicial (Automático):** 
-   - Kanban "Main" criado automaticamente
-   - Usuário é redirecionado para "Configuration" → "Connection" para conectar Evolution API v2 via QR Code
-   - Após conexão bem-sucedida, acesso à página "Home" (Kanban)
+3.  **Setup Inicial (Automático):**
+
+- Kanban "Main" criado automaticamente
+- Usuário é redirecionado para "Configuration" → "Connection" para conectar Evolution API v2 via QR Code
+- Após conexão bem-sucedida, acesso à página "Home" (Kanban)
 
 **Fluxo Operacional (MVP):**
+
 - Owner tem acesso completo a todas as funcionalidades
 - Pode gerenciar Kanbans, Contatos, Mensagens Automáticas e Configurações
 - Pode visualizar e interagir com todas as conversas do WhatsApp
 
 **Roadmap - Gestão de Equipe (Fase 2):**
+
 - O Owner poderá criar usuários **Attendants** via "Team Management"
 - Attendants terão acesso ao Kanban e conversas (sujeito a RLS do Supabase)
 - Papéis: OWNER vs ATTENDANT com permissões granulares
@@ -178,19 +194,23 @@ A plataforma deve evoluir para um ecossistema completo de atendimento e intelig�
 A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**) e na comunicação em tempo real.
 
 **Stack Tecnológica:**
-*   **Frontend:** **Next.js** com **Tailwind CSS**. Estrutura componentizada para reutilização. Código em **English (Market Standard)**.
-*   **Backend & DB:** **Supabase Cloud (SaaS)**. Uso extensivo de **Row Level Security (RLS)** baseado em `tenant_id` para isolamento total de dados.
-*   **Autenticação:** Supabase Cloud Auth com JWT
-*   **Histórico de Mensagens:** Persistência total no **Supabase Cloud** com estrutura denormalizada para performance
-*   **Integração WhatsApp:** **Evolution API v2**
-   - Pairing via QR Code (sessão única por tenant)
-   - Recebimento de mensagens via webhooks em tempo real
-   - Sincronização bidirecional (envio e recebimento)
-*   **Mensagens Automáticas:** Sistema de agendamento para disparar mensagens em intervalos configurados por Kanban
-*   **Diretório do Sistema:** Todo o desenvolvimento mantido em `/SYSTEM`
-*   **Armazenamento de Mídias:** Supabase Cloud Storage para anexos de conversa (fotos, áudios, vídeos)
+
+- **Frontend:** **Next.js** com **Tailwind CSS**. Estrutura componentizada para reutilização. Código em **English (Market Standard)**.
+- **Backend & DB:** **Supabase Cloud (SaaS)**. Uso extensivo de **Row Level Security (RLS)** baseado em `tenant_id` para isolamento total de dados.
+- **Autenticação:** Supabase Cloud Auth com JWT
+- **Histórico de Mensagens:** Persistência total no **Supabase Cloud** com estrutura denormalizada para performance
+- **Integração WhatsApp:** **Evolution API v2**
+
+* Pairing via QR Code (sessão única por tenant)
+* Recebimento de mensagens via webhooks em tempo real
+* Sincronização bidirecional (envio e recebimento)
+
+- **Mensagens Automáticas:** Sistema de agendamento para disparar mensagens em intervalos configurados por Kanban
+- **Diretório do Sistema:** Todo o desenvolvimento mantido em `/SYSTEM`
+- **Armazenamento de Mídias:** Supabase Cloud Storage para anexos de conversa (fotos, áudios, vídeos)
 
 **Considerações de Design:**
+
 - **Validação de Telefone:** Formato internacional com "+" (E.164)
 - **RLS Policies:** Baseadas em `tenant_id` para garantir isolamento total entre tenants
 - **Webhooks Evolution API:** Validação de assinatura e processamento assíncrono
@@ -201,6 +221,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 ### 10. Tools & Infrastructure Access
 
 **Supabase Web (Cloud SaaS - Versão Paga):**
+
 - **Plataforma:** https://supabase.com/ (versão web hospedada, NÃO é a versão auto-hospedada gratuita)
 - **Documentação:** https://supabase.com/docs
 - **Acesso:** Via MCP (Model Context Protocol) para:
@@ -213,12 +234,14 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 - **Real-time:** Supabase Real-time Subscriptions para sincronização de conversas
 
 **Acesso MCP:**
+
 - O orquestrador (Antigravity/Atlas) possuirá acesso MCP configurado
 - Operações de DDL (Data Definition Language) executadas via MCP
 - Migrations e alterações de schema feitas via MCP durante desenvolvimento
 - Permitirá implementação rápida de mudanças no banco conforme novas features forem desenvolvidas
 
 **Alternativas Rejeitadas:**
+
 - ❌ Supabase Auto-hospedado (versão gratuita): Não será utilizado
 - ❌ Bancos de dados self-hosted: Não se aplica
 
@@ -227,23 +250,26 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 ### 12. Constraints & Assumptions
 
 **Restrições (Constraints):**
-*   **Versionamento da API:** Dependência estrita da **Evolution API v2**.
-*   **Plataforma Supabase:** Uso do **Supabase Web (Cloud SaaS)** — versão paga hospedada em https://supabase.com/
-*   **Interface Web-Only:** MVP focado em Dashboard para uso operacional de equipe.
+
+- **Versionamento da API:** Dependência estrita da **Evolution API v2**.
+- **Plataforma Supabase:** Uso do **Supabase Web (Cloud SaaS)** — versão paga hospedada em https://supabase.com/
+- **Interface Web-Only:** MVP focado em Dashboard para uso operacional de equipe.
 
 **Premissas (Assumptions):**
-*   **Infraestrutura Disponível:** O Cliente possui uma instância da **Evolution API v2** funcional.
-*   **Acesso MCP:** O orquestrador possui acesso MCP configurado para gerenciar Supabase Cloud.
-*   **Credenciais Supabase:** Acesso administrativo ao projeto Supabase Cloud via https://supabase.com/
+
+- **Infraestrutura Disponível:** O Cliente possui uma instância da **Evolution API v2** funcional.
+- **Acesso MCP:** O orquestrador possui acesso MCP configurado para gerenciar Supabase Cloud.
+- **Credenciais Supabase:** Acesso administrativo ao projeto Supabase Cloud via https://supabase.com/
 
 ---
 
 ### 13. Risks & Open Questions
 
 **Caminho de Pesquisa:**
-*   **Gerenciamento de Mídias (Supabase Cloud Storage):** Analisar o impacto no armazenamento ao persistir todas as fotos/áudios.
-*   **Limites de Cota:** Monitorar o volume de webhooks e requisições no **Supabase Cloud** conforme escala.
-*   **Custos Supabase:** Acompanhar custos da versão paga conforme volume de dados cresce.
+
+- **Gerenciamento de Mídias (Supabase Cloud Storage):** Analisar o impacto no armazenamento ao persistir todas as fotos/áudios.
+- **Limites de Cota:** Monitorar o volume de webhooks e requisições no **Supabase Cloud** conforme escala.
+- **Custos Supabase:** Acompanhar custos da versão paga conforme volume de dados cresce.
 
 ---
 
@@ -261,6 +287,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 Para que o MVP seja funcional e completo, os seguintes componentes devem estar implementados e integrados:
 
 **🔐 Autenticação & Onboarding:**
+
 - [ ] Página Register funcionando com validação
 - [ ] Página Login funcionando com RLS
 - [ ] Criação automática de Tenant no Register
@@ -268,12 +295,14 @@ Para que o MVP seja funcional e completo, os seguintes componentes devem estar i
 - [ ] Redirecionamento para "Configuration" → "Connection" após primeiro login
 
 **📱 Integração WhatsApp:**
+
 - [ ] Modal QR Code na página "Connection"
 - [ ] Recebimento de webhooks da Evolution API v2
 - [ ] Sincronização de mensagens em tempo real
 - [ ] Envio de mensagens via Evolution API
 
 **💬 Kanban & Conversas:**
+
 - [ ] Página Home com layout Kanban
 - [ ] Colunas e Kanbans listados corretamente
 - [ ] Drag-and-drop de conversas entre colunas
@@ -283,12 +312,14 @@ Para que o MVP seja funcional e completo, os seguintes componentes devem estar i
 - [ ] Recebimento de mensagens em tempo real
 
 **👥 Contatos:**
+
 - [ ] Página Contacts com CRUD completo
 - [ ] Validação de telefone (formato +)
 - [ ] Registro automático de contatos ao iniciar conversa
 - [ ] Modals Create/Edit Contact funcionando
 
 **🔧 Configurações:**
+
 - [ ] Página Profile para alterar Nome e Senha
 - [ ] Página Connection com QR Code
 - [ ] Página Automatic Messages com CRUD
@@ -296,6 +327,7 @@ Para que o MVP seja funcional e completo, os seguintes componentes devem estar i
 - [ ] Radio button "Main" funcionando (apenas 1 selecionável)
 
 **🎨 UI/UX:**
+
 - [ ] Ícone de usuário → Profile
 - [ ] Botão Logout (vermelho com X)
 - [ ] Design responsivo e consistente
@@ -307,27 +339,17 @@ Para que o MVP seja funcional e completo, os seguintes componentes devem estar i
 O próximo passo é realizar o **Forge Phase** (Implementação):
 
 **Fase 1 - Fundação:**
+
 1.  Setup da estrutura inicial do Next.js em `/SYSTEM` (pastas, componentes base)
 2.  Configuração do Schema do Supabase (Tables: tenants, users, kanbans, columns, conversations, contacts, automatic_messages, etc.)
 3.  Implementação de RLS policies por tenant_id
 
-**Fase 2 - Autenticação & Onboarding:**
-4.  Páginas Register e Login com Supabase Auth
-5.  Lógica de criação automática de Tenant e Kanban "Main"
-6.  Página Profile para alterar dados do usuário
+**Fase 2 - Autenticação & Onboarding:** 4. Páginas Register e Login com Supabase Auth 5. Lógica de criação automática de Tenant e Kanban "Main" 6. Página Profile para alterar dados do usuário
 
-**Fase 3 - Configuração & Integração:**
-7.  Página Connection com modal QR Code (Evolution API v2)
-8.  Páginas Kanbans, Contacts, Automatic Messages (CRUD completo)
+**Fase 3 - Configuração & Integração:** 7. Página Connection com modal QR Code (Evolution API v2) 8. Páginas Kanbans, Contacts, Automatic Messages (CRUD completo)
 
-**Fase 4 - Kanban & Chat:**
-9.  Página Home com layout Kanban, drag-and-drop
-10. Modal de conversa com Chat
-11. Seletor Kanban/Coluna no modal
+**Fase 4 - Kanban & Chat:** 9. Página Home com layout Kanban, drag-and-drop 10. Modal de conversa com Chat 11. Seletor Kanban/Coluna no modal
 
-**Fase 5 - Integração & Testes:**
-12. Webhooks da Evolution API v2 (recebimento de mensagens)
-13. Sincronização em tempo real (Supabase Real-time Subscriptions)
-14. Testes E2E: Register → Login → Configurar Kanban → Conectar WhatsApp → Usar Sistema
+**Fase 5 - Integração & Testes:** 12. Webhooks da Evolution API v2 (recebimento de mensagens) 13. Sincronização em tempo real (Supabase Real-time Subscriptions) 14. Testes E2E: Register → Login → Configurar Kanban → Conectar WhatsApp → Usar Sistema
 
 ---

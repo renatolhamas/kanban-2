@@ -1,95 +1,95 @@
 ---
 schema: 1
-story: '1.2'
+story: "1.2"
 gate: FAIL
-status_reason: 'Integration tests cannot execute due to Jest/TypeScript configuration issues. Password validation works (18/18), but auth endpoints and JWT flows cannot be verified. Critical: missing @types/jest and jest ESM support.'
+status_reason: "Integration tests cannot execute due to Jest/TypeScript configuration issues. Password validation works (18/18), but auth endpoints and JWT flows cannot be verified. Critical: missing @types/jest and jest ESM support."
 reviewer: Quinn (Test Architect)
-updated: '2026-04-02T13:40:00Z'
+updated: "2026-04-02T13:40:00Z"
 
 top_issues:
-  - id: 'TEST-001'
+  - id: "TEST-001"
     severity: high
-    finding: 'Missing @types/jest - TypeScript cannot recognize Jest globals (describe, it, expect)'
-    suggested_action: 'Run: npm install --save-dev @types/jest'
-    impact: 'Blocks all Jest test files from compiling/running'
+    finding: "Missing @types/jest - TypeScript cannot recognize Jest globals (describe, it, expect)"
+    suggested_action: "Run: npm install --save-dev @types/jest"
+    impact: "Blocks all Jest test files from compiling/running"
 
-  - id: 'TEST-002'
+  - id: "TEST-002"
     severity: high
     finding: 'Jest not configured for ESM modules - jose package (JWT) is ESM but Jest throws "Unexpected token export"'
-    suggested_action: 'Update jest.config.js to handle ESM or add transformIgnorePatterns for jose'
-    impact: 'Integration tests cannot execute, cannot verify auth endpoints'
+    suggested_action: "Update jest.config.js to handle ESM or add transformIgnorePatterns for jose"
+    impact: "Integration tests cannot execute, cannot verify auth endpoints"
 
-  - id: 'TEST-003'
+  - id: "TEST-003"
     severity: high
-    finding: 'Integration tests not executable - register.test.ts and login.test.ts blocked by Jest config'
-    suggested_action: 'After fixing Jest config: npm test -- app/api/auth/register/register.test.ts'
-    impact: 'Cannot verify register endpoint, JWT generation, tenant creation flow'
+    finding: "Integration tests not executable - register.test.ts and login.test.ts blocked by Jest config"
+    suggested_action: "After fixing Jest config: npm test -- app/api/auth/register/register.test.ts"
+    impact: "Cannot verify register endpoint, JWT generation, tenant creation flow"
 
-  - id: 'TEST-004'
+  - id: "TEST-004"
     severity: medium
-    finding: 'No performance tests for auth endpoints'
-    suggested_action: 'Add performance benchmarks for /api/auth/register and /api/auth/login (optional for MVP)'
-    impact: 'Unknown baseline for login/register latency'
+    finding: "No performance tests for auth endpoints"
+    suggested_action: "Add performance benchmarks for /api/auth/register and /api/auth/login (optional for MVP)"
+    impact: "Unknown baseline for login/register latency"
 
 test_results:
-  - name: 'lib/password.test.ts'
-    status: 'PASS'
-    count: '18/18'
-    details: 'All password validation tests passing'
+  - name: "lib/password.test.ts"
+    status: "PASS"
+    count: "18/18"
+    details: "All password validation tests passing"
 
-  - name: 'app/api/auth/register/register.test.ts'
-    status: 'BLOCKED'
-    error: 'Jest SyntaxError: Unexpected token export (jose module)'
-    details: 'Cannot execute - requires Jest ESM configuration'
+  - name: "app/api/auth/register/register.test.ts"
+    status: "BLOCKED"
+    error: "Jest SyntaxError: Unexpected token export (jose module)"
+    details: "Cannot execute - requires Jest ESM configuration"
 
-  - name: 'app/api/auth/login/login.test.ts'
-    status: 'BLOCKED'
+  - name: "app/api/auth/login/login.test.ts"
+    status: "BLOCKED"
     error: 'TypeScript compilation error: Cannot find name "describe"'
-    details: 'Cannot execute - requires @types/jest'
+    details: "Cannot execute - requires @types/jest"
 
-  - name: 'ESLint'
-    status: 'PASS'
-    details: '0 warnings/errors - code style compliant'
+  - name: "ESLint"
+    status: "PASS"
+    details: "0 warnings/errors - code style compliant"
 
 acceptance_criteria:
-  - id: 'AC-1'
-    criterion: 'Register endpoint accepts email, name, password with validation'
-    status: 'IMPLEMENTED'
+  - id: "AC-1"
+    criterion: "Register endpoint accepts email, name, password with validation"
+    status: "IMPLEMENTED"
     verified: false
-    notes: 'Code written but cannot be tested'
+    notes: "Code written but cannot be tested"
 
-  - id: 'AC-5'
-    criterion: 'Login endpoint validates credentials via Supabase Auth'
-    status: 'IMPLEMENTED'
+  - id: "AC-5"
+    criterion: "Login endpoint validates credentials via Supabase Auth"
+    status: "IMPLEMENTED"
     verified: false
-    notes: 'Code written but cannot be tested'
+    notes: "Code written but cannot be tested"
 
-  - id: 'AC-11'
-    criterion: 'JWT payload structure correct'
-    status: 'IMPLEMENTED'
+  - id: "AC-11"
+    criterion: "JWT payload structure correct"
+    status: "IMPLEMENTED"
     verified: false
-    notes: 'Code written but cannot be tested due to jose ESM issue'
+    notes: "Code written but cannot be tested due to jose ESM issue"
 
 quality_attributes:
-  code_quality: 'Good - ESLint passes, clear structure'
-  test_coverage: 'Incomplete - password validation OK, endpoints untested'
-  security: 'Assumed good - OWASP patterns visible, but not verified'
-  performance: 'Unknown - no baseline metrics'
-  maintainability: 'Good - well-documented dev notes'
+  code_quality: "Good - ESLint passes, clear structure"
+  test_coverage: "Incomplete - password validation OK, endpoints untested"
+  security: "Assumed good - OWASP patterns visible, but not verified"
+  performance: "Unknown - no baseline metrics"
+  maintainability: "Good - well-documented dev notes"
 
 recommendations:
-  - '[BLOCKING] Install @types/jest'
-  - '[BLOCKING] Configure Jest for ESM modules (jose dependency)'
-  - '[BLOCKING] Re-run integration tests after Jest fix'
-  - 'Add JWT signature verification test'
-  - 'Add cookie security header validation test'
-  - 'Add password hash validation test'
+  - "[BLOCKING] Install @types/jest"
+  - "[BLOCKING] Configure Jest for ESM modules (jose dependency)"
+  - "[BLOCKING] Re-run integration tests after Jest fix"
+  - "Add JWT signature verification test"
+  - "Add cookie security header validation test"
+  - "Add password hash validation test"
 
 next_steps:
-  - 'Return to @dev for Jest/TypeScript configuration fix'
-  - 'After fixes: npm install --save-dev @types/jest && npm test'
-  - 'Verify all 18 AC passing in integration tests'
-  - 'QA will perform re-review when tests are executable'
+  - "Return to @dev for Jest/TypeScript configuration fix"
+  - "After fixes: npm install --save-dev @types/jest && npm test"
+  - "Verify all 18 AC passing in integration tests"
+  - "QA will perform re-review when tests are executable"
 
 waiver:
   active: false

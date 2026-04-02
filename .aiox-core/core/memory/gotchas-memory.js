@@ -23,9 +23,9 @@
  * @version 1.0.0
  */
 
-const fs = require('fs');
-const path = require('path');
-const EventEmitter = require('events');
+const fs = require("fs");
+const path = require("path");
+const EventEmitter = require("events");
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              CONFIGURATION
@@ -33,17 +33,17 @@ const EventEmitter = require('events');
 
 const CONFIG = {
   // Output paths
-  gotchasJsonPath: '.aiox/gotchas.json',
-  gotchasMdPath: '.aiox/gotchas.md',
-  errorTrackingPath: '.aiox/error-tracking.json',
+  gotchasJsonPath: ".aiox/gotchas.json",
+  gotchasMdPath: ".aiox/gotchas.md",
+  errorTrackingPath: ".aiox/error-tracking.json",
 
   // Auto-capture settings
   repeatThreshold: 3, // Number of times error must repeat to become gotcha
   errorWindowMs: 24 * 60 * 60 * 1000, // 24 hours window for error counting
 
   // Version
-  version: '1.0.0',
-  schemaVersion: 'aiox-gotchas-memory-v1',
+  version: "1.0.0",
+  schemaVersion: "aiox-gotchas-memory-v1",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -54,22 +54,22 @@ const CONFIG = {
  * Gotcha categories (AC4)
  */
 const GotchaCategory = {
-  BUILD: 'build',
-  TEST: 'test',
-  LINT: 'lint',
-  RUNTIME: 'runtime',
-  INTEGRATION: 'integration',
-  SECURITY: 'security',
-  GENERAL: 'general',
+  BUILD: "build",
+  TEST: "test",
+  LINT: "lint",
+  RUNTIME: "runtime",
+  INTEGRATION: "integration",
+  SECURITY: "security",
+  GENERAL: "general",
 };
 
 /**
  * Severity levels (AC8)
  */
 const Severity = {
-  INFO: 'info',
-  WARNING: 'warning',
-  CRITICAL: 'critical',
+  INFO: "info",
+  WARNING: "warning",
+  CRITICAL: "critical",
 };
 
 /**
@@ -77,83 +77,83 @@ const Severity = {
  */
 const CATEGORY_KEYWORDS = {
   [GotchaCategory.BUILD]: [
-    'build',
-    'compile',
-    'webpack',
-    'vite',
-    'esbuild',
-    'rollup',
-    'bundle',
-    'transpile',
-    'babel',
-    'typescript',
-    'tsc',
-    'npm run build',
+    "build",
+    "compile",
+    "webpack",
+    "vite",
+    "esbuild",
+    "rollup",
+    "bundle",
+    "transpile",
+    "babel",
+    "typescript",
+    "tsc",
+    "npm run build",
   ],
   [GotchaCategory.TEST]: [
-    'test',
-    'jest',
-    'vitest',
-    'mocha',
-    'chai',
-    'expect',
-    'assert',
-    'mock',
-    'stub',
-    'spy',
-    'coverage',
-    'e2e',
-    'playwright',
-    'cypress',
+    "test",
+    "jest",
+    "vitest",
+    "mocha",
+    "chai",
+    "expect",
+    "assert",
+    "mock",
+    "stub",
+    "spy",
+    "coverage",
+    "e2e",
+    "playwright",
+    "cypress",
   ],
   [GotchaCategory.LINT]: [
-    'lint',
-    'eslint',
-    'prettier',
-    'stylelint',
-    'tslint',
-    'format',
-    'code style',
-    'indentation',
-    'semicolon',
-    'quotes',
+    "lint",
+    "eslint",
+    "prettier",
+    "stylelint",
+    "tslint",
+    "format",
+    "code style",
+    "indentation",
+    "semicolon",
+    "quotes",
   ],
   [GotchaCategory.RUNTIME]: [
-    'runtime',
-    'TypeError',
-    'ReferenceError',
-    'SyntaxError',
-    'null',
-    'undefined',
-    'crash',
-    'exception',
-    'stack trace',
+    "runtime",
+    "TypeError",
+    "ReferenceError",
+    "SyntaxError",
+    "null",
+    "undefined",
+    "crash",
+    "exception",
+    "stack trace",
   ],
   [GotchaCategory.INTEGRATION]: [
-    'api',
-    'http',
-    'fetch',
-    'axios',
-    'cors',
-    'webhook',
-    'database',
-    'postgres',
-    'mysql',
-    'mongodb',
-    'supabase',
-    'prisma',
+    "api",
+    "http",
+    "fetch",
+    "axios",
+    "cors",
+    "webhook",
+    "database",
+    "postgres",
+    "mysql",
+    "mongodb",
+    "supabase",
+    "prisma",
   ],
   [GotchaCategory.SECURITY]: [
-    'security',
-    'xss',
-    'csrf',
-    'injection',
-    'sql injection',
-    'auth',
-    'authentication',
-    'authorization',
-    'token',
-    'password',
+    "security",
+    "xss",
+    "csrf",
+    "injection",
+    "sql injection",
+    "auth",
+    "authentication",
+    "authorization",
+    "token",
+    "password",
   ],
 };
 
@@ -161,12 +161,12 @@ const CATEGORY_KEYWORDS = {
  * Events emitted by GotchasMemory
  */
 const Events = {
-  GOTCHA_ADDED: 'gotcha_added',
-  GOTCHA_REMOVED: 'gotcha_removed',
-  GOTCHA_RESOLVED: 'gotcha_resolved',
-  ERROR_TRACKED: 'error_tracked',
-  AUTO_CAPTURED: 'auto_captured',
-  CONTEXT_INJECTED: 'context_injected',
+  GOTCHA_ADDED: "gotcha_added",
+  GOTCHA_REMOVED: "gotcha_removed",
+  GOTCHA_RESOLVED: "gotcha_resolved",
+  ERROR_TRACKED: "error_tracked",
+  AUTO_CAPTURED: "auto_captured",
+  CONTEXT_INJECTED: "context_injected",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -221,7 +221,7 @@ class GotchasMemory extends EventEmitter {
    * @returns {Object} Created gotcha
    */
   addGotcha(gotchaData) {
-    const gotcha = this._createGotcha(gotchaData, 'manual');
+    const gotcha = this._createGotcha(gotchaData, "manual");
     this.gotchas.set(gotcha.id, gotcha);
     this._saveGotchas();
 
@@ -255,7 +255,9 @@ class GotchasMemory extends EventEmitter {
         lastSeen: now,
         samples: [],
         errorPattern: errorData.message,
-        category: this._detectCategory(errorData.message + ' ' + (errorData.stack || '')),
+        category: this._detectCategory(
+          errorData.message + " " + (errorData.stack || ""),
+        ),
       };
     }
 
@@ -314,7 +316,8 @@ class GotchasMemory extends EventEmitter {
     // Sort by severity (critical first), then by last occurrence
     const severityOrder = { critical: 0, warning: 1, info: 2 };
     gotchas.sort((a, b) => {
-      const severityDiff = (severityOrder[a.severity] || 2) - (severityOrder[b.severity] || 2);
+      const severityDiff =
+        (severityOrder[a.severity] || 2) - (severityOrder[b.severity] || 2);
       if (severityDiff !== 0) return severityDiff;
       return new Date(b.source.lastSeen) - new Date(a.source.lastSeen);
     });
@@ -347,7 +350,7 @@ class GotchasMemory extends EventEmitter {
 
       // Check keyword matches in description
       const gotchaKeywords = this._extractKeywords(
-        `${gotcha.title} ${gotcha.description} ${gotcha.workaround || ''}`,
+        `${gotcha.title} ${gotcha.description} ${gotcha.workaround || ""}`,
       );
       for (const keyword of gotchaKeywords) {
         if (descLower.includes(keyword)) {
@@ -360,7 +363,10 @@ class GotchasMemory extends EventEmitter {
         for (const gotchaFile of gotcha.relatedFiles) {
           const gotchaFileLower = gotchaFile.toLowerCase();
           for (const taskFile of filePaths) {
-            if (taskFile.includes(gotchaFileLower) || gotchaFileLower.includes(taskFile)) {
+            if (
+              taskFile.includes(gotchaFileLower) ||
+              gotchaFileLower.includes(taskFile)
+            ) {
               relevanceScore += 2;
             }
           }
@@ -404,18 +410,18 @@ class GotchasMemory extends EventEmitter {
    */
   formatForPrompt(gotchas) {
     if (!gotchas || gotchas.length === 0) {
-      return '';
+      return "";
     }
 
-    let prompt = '\n## Known Gotchas (Review Before Proceeding)\n\n';
+    let prompt = "\n## Known Gotchas (Review Before Proceeding)\n\n";
 
     for (const gotcha of gotchas) {
       const severityIcon =
         {
-          critical: '[CRITICAL]',
-          warning: '[WARNING]',
-          info: '[INFO]',
-        }[gotcha.severity] || '[INFO]';
+          critical: "[CRITICAL]",
+          warning: "[WARNING]",
+          info: "[INFO]",
+        }[gotcha.severity] || "[INFO]";
 
       prompt += `### ${severityIcon} ${gotcha.title}\n`;
       prompt += `${gotcha.description}\n`;
@@ -425,10 +431,10 @@ class GotchasMemory extends EventEmitter {
       }
 
       if (gotcha.relatedFiles && gotcha.relatedFiles.length > 0) {
-        prompt += `**Related Files:** ${gotcha.relatedFiles.join(', ')}\n`;
+        prompt += `**Related Files:** ${gotcha.relatedFiles.join(", ")}\n`;
       }
 
-      prompt += '\n';
+      prompt += "\n";
     }
 
     return prompt;
@@ -441,7 +447,7 @@ class GotchasMemory extends EventEmitter {
    * @param {string} [resolvedBy] - Who/what resolved it
    * @returns {Object|null} Updated gotcha or null if not found
    */
-  resolveGotcha(gotchaId, resolvedBy = 'manual') {
+  resolveGotcha(gotchaId, resolvedBy = "manual") {
     const gotcha = this.gotchas.get(gotchaId);
     if (!gotcha) {
       return null;
@@ -489,11 +495,11 @@ class GotchasMemory extends EventEmitter {
         gotcha.id,
         gotcha.title,
         gotcha.description,
-        gotcha.workaround || '',
+        gotcha.workaround || "",
         gotcha.category,
         ...(gotcha.relatedFiles || []),
       ]
-        .join(' ')
+        .join(" ")
         .toLowerCase();
 
       return searchText.includes(lowerQuery);
@@ -526,7 +532,9 @@ class GotchasMemory extends EventEmitter {
       bySource,
       trackedErrors: this.errorTracking.size,
       pendingAutoCapture: [...this.errorTracking.values()].filter(
-        (t) => t.count >= this.options.repeatThreshold - 1 && t.count < this.options.repeatThreshold,
+        (t) =>
+          t.count >= this.options.repeatThreshold - 1 &&
+          t.count < this.options.repeatThreshold,
       ).length,
     };
   }
@@ -576,7 +584,7 @@ class GotchasMemory extends EventEmitter {
       }
     }
 
-    md += '\n---\n\n';
+    md += "\n---\n\n";
 
     // Generate content by category
     for (const category of Object.values(GotchaCategory)) {
@@ -632,12 +640,13 @@ class GotchasMemory extends EventEmitter {
   _createGotcha(data, sourceType) {
     const now = new Date().toISOString();
     const category =
-      data.category || this._detectCategory(`${data.title || ''} ${data.description || ''}`);
+      data.category ||
+      this._detectCategory(`${data.title || ""} ${data.description || ""}`);
 
     return {
       id: data.id || this._generateId(),
-      title: data.title || 'Untitled Gotcha',
-      description: data.description || '',
+      title: data.title || "Untitled Gotcha",
+      description: data.description || "",
       category,
       severity: this._normalizeSeverity(data.severity),
       workaround: data.workaround || null,
@@ -680,14 +689,16 @@ class GotchasMemory extends EventEmitter {
         firstSeen: new Date(tracking.firstSeen).toISOString(),
         lastSeen: new Date(tracking.lastSeen).toISOString(),
       },
-      'auto_detected',
+      "auto_detected",
     );
 
     this.gotchas.set(gotcha.id, gotcha);
     this._saveGotchas();
 
     this.emit(Events.AUTO_CAPTURED, gotcha);
-    this._log(`Auto-captured gotcha: ${gotcha.title} (${tracking.count} occurrences)`);
+    this._log(
+      `Auto-captured gotcha: ${gotcha.title} (${tracking.count} occurrences)`,
+    );
 
     return gotcha;
   }
@@ -705,7 +716,10 @@ class GotchasMemory extends EventEmitter {
         }
       }
       // Also check description
-      if (gotcha.description && gotcha.description.includes(errorMessage.substring(0, 50))) {
+      if (
+        gotcha.description &&
+        gotcha.description.includes(errorMessage.substring(0, 50))
+      ) {
         return gotcha;
       }
     }
@@ -718,16 +732,16 @@ class GotchasMemory extends EventEmitter {
    */
   _generateTitleFromError(message) {
     // Extract the first meaningful part
-    const firstLine = message.split('\n')[0];
+    const firstLine = message.split("\n")[0];
     const cleaned = firstLine
-      .replace(/at .+/, '')
-      .replace(/Error:?\s*/i, '')
+      .replace(/at .+/, "")
+      .replace(/Error:?\s*/i, "")
       .trim();
 
     if (cleaned.length > 60) {
-      return cleaned.substring(0, 57) + '...';
+      return cleaned.substring(0, 57) + "...";
     }
-    return cleaned || 'Repeated Error';
+    return cleaned || "Repeated Error";
   }
 
   /**
@@ -737,10 +751,10 @@ class GotchasMemory extends EventEmitter {
   _extractErrorPattern(message) {
     // Remove specific values like line numbers, file paths, variable names
     return message
-      .split('\n')[0]
-      .replace(/\d+/g, 'N')
+      .split("\n")[0]
+      .replace(/\d+/g, "N")
       .replace(/["'].*?["']/g, '"X"')
-      .replace(/`.*?`/g, '`X`')
+      .replace(/`.*?`/g, "`X`")
       .substring(0, 100);
   }
 
@@ -784,11 +798,11 @@ class GotchasMemory extends EventEmitter {
   _normalizeSeverity(severity) {
     if (!severity) return Severity.WARNING;
 
-    const lower = (severity + '').toLowerCase();
-    if (lower === 'critical' || lower === 'high' || lower === 'error') {
+    const lower = (severity + "").toLowerCase();
+    if (lower === "critical" || lower === "high" || lower === "error") {
       return Severity.CRITICAL;
     }
-    if (lower === 'info' || lower === 'low') {
+    if (lower === "info" || lower === "low") {
       return Severity.INFO;
     }
     return Severity.WARNING;
@@ -801,7 +815,7 @@ class GotchasMemory extends EventEmitter {
   _extractKeywords(text) {
     return text
       .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, ' ')
+      .replace(/[^a-z0-9\s]/g, " ")
       .split(/\s+/)
       .filter((w) => w.length > 3);
   }
@@ -823,13 +837,13 @@ class GotchasMemory extends EventEmitter {
   _renderGotchaMarkdown(gotcha) {
     const severityIcon =
       {
-        critical: '**[CRITICAL]**',
-        warning: '**[WARNING]**',
-        info: '[INFO]',
-      }[gotcha.severity] || '';
+        critical: "**[CRITICAL]**",
+        warning: "**[WARNING]**",
+        info: "[INFO]",
+      }[gotcha.severity] || "";
 
     let md = `### ${gotcha.title}\n\n`;
-    md += `${severityIcon}${gotcha.resolved ? ' (RESOLVED)' : ''}\n\n`;
+    md += `${severityIcon}${gotcha.resolved ? " (RESOLVED)" : ""}\n\n`;
     md += `${gotcha.description}\n\n`;
 
     if (gotcha.workaround) {
@@ -837,13 +851,13 @@ class GotchasMemory extends EventEmitter {
     }
 
     if (gotcha.relatedFiles && gotcha.relatedFiles.length > 0) {
-      md += `**Related Files:** ${gotcha.relatedFiles.join(', ')}\n\n`;
+      md += `**Related Files:** ${gotcha.relatedFiles.join(", ")}\n\n`;
     }
 
     md += `**Source:** ${gotcha.source.type} (${gotcha.source.occurrences} occurrences)\n`;
     md += `**First Seen:** ${gotcha.source.firstSeen}\n\n`;
 
-    md += '---\n\n';
+    md += "---\n\n";
     return md;
   }
 
@@ -854,7 +868,7 @@ class GotchasMemory extends EventEmitter {
   _loadGotchas() {
     try {
       if (fs.existsSync(this.gotchasJsonPath)) {
-        const content = fs.readFileSync(this.gotchasJsonPath, 'utf-8');
+        const content = fs.readFileSync(this.gotchasJsonPath, "utf-8");
         const data = JSON.parse(content);
 
         if (data.gotchas && Array.isArray(data.gotchas)) {
@@ -864,7 +878,7 @@ class GotchasMemory extends EventEmitter {
         }
       }
     } catch (error) {
-      this._log(`Warning: Could not load gotchas: ${error.message}`, 'warn');
+      this._log(`Warning: Could not load gotchas: ${error.message}`, "warn");
     }
   }
 
@@ -881,12 +895,16 @@ class GotchasMemory extends EventEmitter {
       }
 
       // Save JSON
-      fs.writeFileSync(this.gotchasJsonPath, JSON.stringify(this.toJSON(), null, 2), 'utf-8');
+      fs.writeFileSync(
+        this.gotchasJsonPath,
+        JSON.stringify(this.toJSON(), null, 2),
+        "utf-8",
+      );
 
       // Save Markdown
-      fs.writeFileSync(this.gotchasMdPath, this.toMarkdown(), 'utf-8');
+      fs.writeFileSync(this.gotchasMdPath, this.toMarkdown(), "utf-8");
     } catch (error) {
-      this._log(`Error saving gotchas: ${error.message}`, 'error');
+      this._log(`Error saving gotchas: ${error.message}`, "error");
     }
   }
 
@@ -897,17 +915,20 @@ class GotchasMemory extends EventEmitter {
   _loadErrorTracking() {
     try {
       if (fs.existsSync(this.errorTrackingPath)) {
-        const content = fs.readFileSync(this.errorTrackingPath, 'utf-8');
+        const content = fs.readFileSync(this.errorTrackingPath, "utf-8");
         const data = JSON.parse(content);
 
-        if (data.errors && typeof data.errors === 'object') {
+        if (data.errors && typeof data.errors === "object") {
           for (const [hash, tracking] of Object.entries(data.errors)) {
             this.errorTracking.set(hash, tracking);
           }
         }
       }
     } catch (error) {
-      this._log(`Warning: Could not load error tracking: ${error.message}`, 'warn');
+      this._log(
+        `Warning: Could not load error tracking: ${error.message}`,
+        "warn",
+      );
     }
   }
 
@@ -928,9 +949,13 @@ class GotchasMemory extends EventEmitter {
         errors: Object.fromEntries(this.errorTracking),
       };
 
-      fs.writeFileSync(this.errorTrackingPath, JSON.stringify(data, null, 2), 'utf-8');
+      fs.writeFileSync(
+        this.errorTrackingPath,
+        JSON.stringify(data, null, 2),
+        "utf-8",
+      );
     } catch (error) {
-      this._log(`Error saving error tracking: ${error.message}`, 'error');
+      this._log(`Error saving error tracking: ${error.message}`, "error");
     }
   }
 
@@ -938,15 +963,15 @@ class GotchasMemory extends EventEmitter {
    * Log message
    * @private
    */
-  _log(message, level = 'info') {
+  _log(message, level = "info") {
     if (this.options.quiet) return;
 
     const prefix =
       {
-        info: '',
-        warn: '\x1b[33m[WARN]\x1b[0m ',
-        error: '\x1b[31m[ERROR]\x1b[0m ',
-      }[level] || '';
+        info: "",
+        warn: "\x1b[33m[WARN]\x1b[0m ",
+        error: "\x1b[31m[ERROR]\x1b[0m ",
+      }[level] || "";
 
     console.log(`${prefix}${message}`);
   }
@@ -961,7 +986,7 @@ class GotchasMemory extends EventEmitter {
   static async main() {
     const args = process.argv.slice(2);
 
-    if (args.includes('--help') || args.includes('-h')) {
+    if (args.includes("--help") || args.includes("-h")) {
       GotchasMemory.showHelp();
       process.exit(0);
     }
@@ -970,14 +995,14 @@ class GotchasMemory extends EventEmitter {
     const memory = new GotchasMemory(rootPath);
 
     // Parse command
-    const command = args[0] || 'list';
+    const command = args[0] || "list";
     const rest = args.slice(1);
 
     switch (command) {
-      case 'add': {
-        const title = rest.join(' ');
+      case "add": {
+        const title = rest.join(" ");
         if (!title) {
-          console.error('Error: Title required');
+          console.error("Error: Title required");
           process.exit(1);
         }
         const gotcha = memory.addGotcha({
@@ -988,17 +1013,17 @@ class GotchasMemory extends EventEmitter {
         break;
       }
 
-      case 'list': {
+      case "list": {
         const options = {};
-        if (rest.includes('--category')) {
-          const idx = rest.indexOf('--category');
+        if (rest.includes("--category")) {
+          const idx = rest.indexOf("--category");
           options.category = rest[idx + 1];
         }
-        if (rest.includes('--severity')) {
-          const idx = rest.indexOf('--severity');
+        if (rest.includes("--severity")) {
+          const idx = rest.indexOf("--severity");
           options.severity = rest[idx + 1];
         }
-        if (rest.includes('--unresolved')) {
+        if (rest.includes("--unresolved")) {
           options.unresolved = true;
         }
 
@@ -1006,43 +1031,47 @@ class GotchasMemory extends EventEmitter {
         console.log(`\n=== Gotchas (${gotchas.length}) ===\n`);
 
         for (const gotcha of gotchas) {
-          const status = gotcha.resolved ? '(RESOLVED)' : '';
-          console.log(`[${gotcha.severity.toUpperCase()}] ${gotcha.title} ${status}`);
+          const status = gotcha.resolved ? "(RESOLVED)" : "";
+          console.log(
+            `[${gotcha.severity.toUpperCase()}] ${gotcha.title} ${status}`,
+          );
           console.log(`  Category: ${gotcha.category}`);
           console.log(`  ID: ${gotcha.id}`);
-          console.log('');
+          console.log("");
         }
         break;
       }
 
-      case 'search': {
-        const query = rest.join(' ');
+      case "search": {
+        const query = rest.join(" ");
         if (!query) {
-          console.error('Error: Search query required');
+          console.error("Error: Search query required");
           process.exit(1);
         }
         const results = memory.search(query);
-        console.log(`\n=== Search Results for "${query}" (${results.length}) ===\n`);
+        console.log(
+          `\n=== Search Results for "${query}" (${results.length}) ===\n`,
+        );
 
         for (const gotcha of results) {
           console.log(`[${gotcha.severity.toUpperCase()}] ${gotcha.title}`);
           console.log(`  ${gotcha.description.substring(0, 80)}...`);
-          console.log('');
+          console.log("");
         }
         break;
       }
 
-      case 'stats': {
+      case "stats": {
         const stats = memory.getStatistics();
-        console.log('\n=== Gotchas Statistics ===\n');
+        console.log("\n=== Gotchas Statistics ===\n");
         console.log(JSON.stringify(stats, null, 2));
         break;
       }
 
-      case 'resolve': {
+      case "resolve": {
         const gotchaId = rest[0];
         if (!gotchaId) {
-          console.error('Error: Gotcha ID required');
+          console.error("Error: Gotcha ID required");
           process.exit(1);
         }
         const result = memory.resolveGotcha(gotchaId);
@@ -1055,17 +1084,17 @@ class GotchasMemory extends EventEmitter {
         break;
       }
 
-      case 'context': {
-        const taskDesc = rest.join(' ');
+      case "context": {
+        const taskDesc = rest.join(" ");
         if (!taskDesc) {
-          console.error('Error: Task description required');
+          console.error("Error: Task description required");
           process.exit(1);
         }
         const relevant = memory.getContextForTask(taskDesc);
         if (relevant.length > 0) {
           console.log(memory.formatForPrompt(relevant));
         } else {
-          console.log('No relevant gotchas found for this task.');
+          console.log("No relevant gotchas found for this task.");
         }
         break;
       }

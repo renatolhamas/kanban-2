@@ -9,13 +9,11 @@
 # Status: FASE 1 - Matriz pronta para implementação (FASE 2)
 
 ---
-
 # ==========================================
 # VALUES HIERARCHY (Filtros de Decisão)
 # ==========================================
 
 VALUES:
-
   clareza_radical:
     rank: 1
     score: 10.0
@@ -23,7 +21,6 @@ VALUES:
     quote: "Clareza é uma arma."
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 2
         step_name: "Classify Each Source"
@@ -85,7 +82,6 @@ VALUES:
     quote: "Quando não somos autênticos, adoecemos."
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 2
         step_name: "Classify Each Source"
@@ -138,7 +134,6 @@ VALUES:
     quote: "Educar não é preparar pro mundo real, é armar com fogos filosóficos."
 
     checkpoints:
-
       - task: "an-design-clone"
         step: 1
         step_name: "Define Contexts"
@@ -163,7 +158,6 @@ VALUES:
     filter: "Isso aumenta ou restringe liberdade?"
 
     checkpoints:
-
       - task: "an-extract-dna"
         step: "Phase 1"
         step_name: "Source Assessment"
@@ -179,7 +173,6 @@ VALUES:
     filter: "Isso permite evolução ou cria estagnação?"
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 3
         step_name: "Prioritize"
@@ -194,14 +187,12 @@ VALUES:
 # ==========================================
 
 OBSESSIONS:
-
   clareza_compreensao_profunda:
     intensity: 10
     status: "MASTER OBSESSION"
     essence: "Não é só saber, mas ter CLAREZA RADICAL sobre realidade"
 
     checkpoints:
-
       - task: "an-extract-framework"
         step: 3
         step_name: "Extract Framework"
@@ -253,7 +244,6 @@ OBSESSIONS:
     essence: "Construir sistemas para ganhar liberdade DAS estruturas"
 
     checkpoints:
-
       - task: "an-design-clone"
         step: 2
         step_name: "Decide Stages"
@@ -269,7 +259,6 @@ OBSESSIONS:
     essence: "Máximo impacto com mínimo esforço"
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 3
         step_name: "Prioritize"
@@ -293,13 +282,11 @@ OBSESSIONS:
 # ==========================================
 
 MODELS:
-
   pareto_ao_cubo:
     status: "SIGNATURE FRAMEWORK"
     formula: "20% → 4% → 0.8% = 51% dos resultados"
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 3
         step_name: "Prioritize"
@@ -341,7 +328,6 @@ MODELS:
     process: "Clareza? → Alinhado? → SE sim → age. SE não → rejeita."
 
     checkpoints:
-
       - task: "an-extract-dna"
         step: "Phase 5"
         step_name: "Generate Report"
@@ -383,7 +369,6 @@ MODELS:
     principle: "Cap downside, leave upside uncapped"
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 2
         step_name: "Classify Each Source"
@@ -407,7 +392,6 @@ MODELS:
     process: "Identifica assumptions → Desafia → Reconstrói de verdades verificadas"
 
     checkpoints:
-
       - task: "deconstruct"
         step: "complementares"
         step_name: "Revelar Frameworks"
@@ -431,7 +415,6 @@ MODELS:
     paradox: "Estrutura rígida → liberdade"
 
     checkpoints:
-
       - task: "an-design-clone"
         step: 3
         step_name: "Map Trinity per Stage"
@@ -447,13 +430,11 @@ MODELS:
 # ==========================================
 
 PARADOXES:
-
   freedom_through_structure:
     tension: "Buscador de liberdade + Construtor de sistemas rígidos"
     resolution: "Estrutura como ferramenta de libertação, não prisão"
 
     checkpoints:
-
       - task: "an-design-clone"
         step: 2
         step_name: "Decide Stages"
@@ -477,7 +458,6 @@ PARADOXES:
     mechanism: "Explora widely (caos) → destila para essência (clareza)"
 
     checkpoints:
-
       - task: "an-extract-dna"
         step: "Phase 2"
         step_name: "Layer Extraction"
@@ -501,7 +481,6 @@ PARADOXES:
     resolution: "Expert em PROCESSO, humilde sobre CONTEÚDO"
 
     checkpoints:
-
       - task: "an-extract-framework"
         step: 5
         step_name: "Validate Completeness"
@@ -525,7 +504,6 @@ PARADOXES:
     resolution: "Depth over breadth"
 
     checkpoints:
-
       - task: "an-assess-sources"
         step: 2
         step_name: "Classify Each Source"
@@ -663,14 +641,13 @@ coverage_matrix:
     total_checkpoints: 46
     tasks_covered: 10
     models_applied: 17
-    zero_coverage: []  # Todos os modelos têm pelo menos 1 checkpoint
+    zero_coverage: [] # Todos os modelos têm pelo menos 1 checkpoint
 
 # ==========================================
 # VETO CONDITIONS (da matriz)
 # ==========================================
 
 veto_conditions:
-
   V1_modelo_sem_checkpoint:
     trigger: "Modelo mental no agent.md sem checkpoint em nenhuma task"
     check: "coverage_matrix.models_coverage → zero = VETO"

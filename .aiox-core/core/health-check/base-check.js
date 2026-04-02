@@ -14,11 +14,11 @@
  * @enum {string}
  */
 const CheckSeverity = {
-  CRITICAL: 'CRITICAL',
-  HIGH: 'HIGH',
-  MEDIUM: 'MEDIUM',
-  LOW: 'LOW',
-  INFO: 'INFO',
+  CRITICAL: "CRITICAL",
+  HIGH: "HIGH",
+  MEDIUM: "MEDIUM",
+  LOW: "LOW",
+  INFO: "INFO",
 };
 
 /**
@@ -26,11 +26,11 @@ const CheckSeverity = {
  * @enum {string}
  */
 const CheckStatus = {
-  PASS: 'pass',
-  FAIL: 'fail',
-  WARNING: 'warning',
-  ERROR: 'error',
-  SKIPPED: 'skipped',
+  PASS: "pass",
+  FAIL: "fail",
+  WARNING: "warning",
+  ERROR: "error",
+  SKIPPED: "skipped",
 };
 
 /**
@@ -38,11 +38,11 @@ const CheckStatus = {
  * @enum {string}
  */
 const CheckDomain = {
-  PROJECT: 'project',
-  LOCAL: 'local',
-  REPOSITORY: 'repository',
-  DEPLOYMENT: 'deployment',
-  SERVICES: 'services',
+  PROJECT: "project",
+  LOCAL: "local",
+  REPOSITORY: "repository",
+  DEPLOYMENT: "deployment",
+  SERVICES: "services",
 };
 
 /**
@@ -64,18 +64,20 @@ class BaseCheck {
    */
   constructor(options) {
     if (new.target === BaseCheck) {
-      throw new Error('BaseCheck is abstract and cannot be instantiated directly');
+      throw new Error(
+        "BaseCheck is abstract and cannot be instantiated directly",
+      );
     }
 
     // Validate required options
-    if (!options.id) throw new Error('Check must have an id');
-    if (!options.name) throw new Error('Check must have a name');
-    if (!options.domain) throw new Error('Check must have a domain');
-    if (!options.severity) throw new Error('Check must have a severity');
+    if (!options.id) throw new Error("Check must have an id");
+    if (!options.name) throw new Error("Check must have a name");
+    if (!options.domain) throw new Error("Check must have a domain");
+    if (!options.severity) throw new Error("Check must have a severity");
 
     this.id = options.id;
     this.name = options.name;
-    this.description = options.description || '';
+    this.description = options.description || "";
     this.domain = options.domain;
     this.severity = options.severity;
     this.timeout = options.timeout || 5000;
@@ -91,7 +93,7 @@ class BaseCheck {
    * @returns {Promise<CheckResult>} Check result
    */
   async execute(_context) {
-    throw new Error('execute() must be implemented by subclass');
+    throw new Error("execute() must be implemented by subclass");
   }
 
   /**

@@ -13,7 +13,6 @@ last_updated: "2026-02-17"
 # ═══════════════════════════════════════════════════════════════
 
 scoring:
-
   breadth:
     weight: 25
     description: "Em quantas fontes/brands este pattern aparece?"
@@ -86,7 +85,8 @@ scoring:
       resilience:
         points: 5
         description: "Lida com conteudo edge-case"
-        edge_cases: [empty_content, very_long_text, overflow, missing_image, RTL]
+        edge_cases:
+          [empty_content, very_long_text, overflow, missing_image, RTL]
         evaluation: |
           5: Todos edge cases tratados
           3: 3+ tratados
@@ -232,7 +232,19 @@ lifecycle:
 # ═══════════════════════════════════════════════════════════════
 
 categories:
-  base: [button, input, textarea, badge, label, icon, avatar, toggle, checkbox, radio]
+  base:
+    [
+      button,
+      input,
+      textarea,
+      badge,
+      label,
+      icon,
+      avatar,
+      toggle,
+      checkbox,
+      radio,
+    ]
   core: [card, form-field, accordion, tabs, dropdown, select, dialog, popover]
   layout: [sidebar, header, footer, grid, container, stack, split-view]
   navigation: [menu, breadcrumb, pagination, stepper, nav-bar, drawer]

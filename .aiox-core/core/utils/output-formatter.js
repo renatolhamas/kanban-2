@@ -10,9 +10,9 @@
  * Performance Target: <50ms per output generation
  */
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Personalized Output Formatter
@@ -45,12 +45,19 @@ class PersonalizedOutputFormatter {
   _loadPersonaProfile() {
     try {
       if (!this.agent || !this.agent.id) {
-        console.warn('[OutputFormatter] Agent ID missing, using neutral profile');
+        console.warn(
+          "[OutputFormatter] Agent ID missing, using neutral profile",
+        );
         this.personaProfile = this._getNeutralProfile();
         return;
       }
 
-      const agentPath = path.join(process.cwd(), '.aiox-core', 'agents', `${this.agent.id}.md`);
+      const agentPath = path.join(
+        process.cwd(),
+        ".aiox-core",
+        "agents",
+        `${this.agent.id}.md`,
+      );
 
       if (!fs.existsSync(agentPath)) {
         console.warn(`[OutputFormatter] Agent file not found: ${agentPath}`);
@@ -58,24 +65,30 @@ class PersonalizedOutputFormatter {
         return;
       }
 
-      const content = fs.readFileSync(agentPath, 'utf8');
+      const content = fs.readFileSync(agentPath, "utf8");
       const yamlMatch = content.match(/```ya?ml\r?\n([\s\S]*?)\r?\n```/);
 
       if (!yamlMatch) {
-        console.warn('[OutputFormatter] No YAML block found in agent file');
+        console.warn("[OutputFormatter] No YAML block found in agent file");
         this.personaProfile = this._getNeutralProfile();
         return;
       }
 
       const agentConfig = yaml.load(yamlMatch[1]);
-      this.personaProfile = agentConfig.persona_profile || this._getNeutralProfile();
+      this.personaProfile =
+        agentConfig.persona_profile || this._getNeutralProfile();
 
       // Cache vocabulary for performance
       if (this.personaProfile.communication?.vocabulary) {
-        this.vocabularyCache.set(this.agent.id, this.personaProfile.communication.vocabulary);
+        this.vocabularyCache.set(
+          this.agent.id,
+          this.personaProfile.communication.vocabulary,
+        );
       }
     } catch (error) {
-      console.warn(`[OutputFormatter] Error loading persona_profile: ${error.message}`);
+      console.warn(
+        `[OutputFormatter] Error loading persona_profile: ${error.message}`,
+      );
       this.personaProfile = this._getNeutralProfile();
     }
   }
@@ -87,17 +100,17 @@ class PersonalizedOutputFormatter {
    */
   _getNeutralProfile() {
     return {
-      archetype: 'Agent',
+      archetype: "Agent",
       communication: {
-        tone: 'neutral',
-        emoji_frequency: 'low',
-        vocabulary: ['completar', 'executar', 'finalizar'],
+        tone: "neutral",
+        emoji_frequency: "low",
+        vocabulary: ["completar", "executar", "finalizar"],
         greeting_levels: {
-          minimal: 'Agent ready',
-          named: 'Agent ready',
-          archetypal: 'Agent ready',
+          minimal: "Agent ready",
+          named: "Agent ready",
+          archetypal: "Agent ready",
         },
-        signature_closing: '— Agent',
+        signature_closing: "— Agent",
       },
     };
   }
@@ -118,22 +131,24 @@ class PersonalizedOutputFormatter {
 
       const formatted = [
         header,
-        '',
-        '---',
-        '',
+        "",
+        "---",
+        "",
         status,
-        '',
+        "",
         output,
-        '',
+        "",
         metrics,
-        '',
-        '---',
+        "",
+        "---",
         signature,
-      ].join('\n');
+      ].join("\n");
 
       const duration = Number(process.hrtime.bigint() - startTime) / 1000000; // Convert to ms
       if (duration > 100) {
-        console.warn(`[OutputFormatter] Performance warning: ${duration.toFixed(2)}ms (target: <50ms)`);
+        console.warn(
+          `[OutputFormatter] Performance warning: ${duration.toFixed(2)}ms (target: <50ms)`,
+        );
       }
 
       return formatted;
@@ -150,14 +165,14 @@ class PersonalizedOutputFormatter {
    * @returns {string} Header markdown
    */
   buildFixedHeader() {
-    const agentName = this.agent?.name || this.agent?.id || 'Agent';
-    const archetype = this.personaProfile?.archetype || 'Agent';
-    const taskName = this.task?.name || 'task';
+    const agentName = this.agent?.name || this.agent?.id || "Agent";
+    const archetype = this.personaProfile?.archetype || "Agent";
+    const taskName = this.task?.name || "task";
     const startTime = this.results?.startTime || new Date().toISOString();
     const endTime = this.results?.endTime || new Date().toISOString();
-    const duration = this.results?.duration || '0s';
+    const duration = this.results?.duration || "0s";
     const tokensTotal = this.results?.tokens?.total || 0;
-    const tokensFormatted = tokensTotal.toLocaleString('en-US');
+    const tokensFormatted = tokensTotal.toLocaleString("en-US");
 
     return `## 📊 Task Execution Report
 
@@ -175,11 +190,11 @@ class PersonalizedOutputFormatter {
    * @returns {string} Status section markdown
    */
   buildPersonalizedStatus() {
-    const tone = this.personaProfile?.communication?.tone || 'neutral';
+    const tone = this.personaProfile?.communication?.tone || "neutral";
     const vocabulary = this.personaProfile?.communication?.vocabulary || [];
     const verb = this.selectVerbFromVocabulary(vocabulary);
     const message = this.generateSuccessMessage(tone, verb);
-    const statusIcon = this.results?.success !== false ? '✅' : '❌';
+    const statusIcon = this.results?.success !== false ? "✅" : "❌";
 
     return `### Status
 ${statusIcon} ${message}`;
@@ -190,7 +205,10 @@ ${statusIcon} ${message}`;
    * @returns {string} Output section markdown
    */
   buildOutput() {
-    const outputContent = this.results?.output || this.results?.content || 'Task completed successfully.';
+    const outputContent =
+      this.results?.output ||
+      this.results?.content ||
+      "Task completed successfully.";
 
     return `### Output
 ${outputContent}`;
@@ -203,8 +221,8 @@ ${outputContent}`;
   buildFixedMetrics() {
     const testsPassed = this.results?.tests?.passed || 0;
     const testsTotal = this.results?.tests?.total || 0;
-    const coverage = this.results?.coverage || 'N/A';
-    const lintStatus = this.results?.linting?.status || '✅ Clean';
+    const coverage = this.results?.coverage || "N/A";
+    const lintStatus = this.results?.linting?.status || "✅ Clean";
 
     return `### Metrics
 - Tests: ${testsPassed}/${testsTotal}
@@ -217,7 +235,8 @@ ${outputContent}`;
    * @returns {string} Signature markdown
    */
   buildSignature() {
-    const signature = this.personaProfile?.communication?.signature_closing || '— Agent';
+    const signature =
+      this.personaProfile?.communication?.signature_closing || "— Agent";
     return signature;
   }
 
@@ -228,7 +247,7 @@ ${outputContent}`;
    */
   selectVerbFromVocabulary(vocabulary) {
     if (!vocabulary || vocabulary.length === 0) {
-      return 'completar';
+      return "completar";
     }
 
     // Simple selection: use first verb (can be enhanced with context-aware selection)
@@ -245,19 +264,19 @@ ${outputContent}`;
     const verbPast = this._getPastTense(verb);
 
     switch (tone) {
-      case 'pragmatic':
+      case "pragmatic":
         return `Tá pronto! ${this._capitalize(verbPast)} com sucesso.`;
 
-      case 'empathetic':
+      case "empathetic":
         return `${this._capitalize(verbPast)} com cuidado e atenção aos detalhes.`;
 
-      case 'analytical':
+      case "analytical":
         return `${this._capitalize(verbPast)} rigorosamente. Todos os critérios validados.`;
 
-      case 'collaborative':
+      case "collaborative":
         return `${this._capitalize(verbPast)} e harmonizado. Todos os aspectos alinhados.`;
 
-      case 'neutral':
+      case "neutral":
       default:
         return `Task ${verbPast} successfully.`;
     }
@@ -271,15 +290,15 @@ ${outputContent}`;
    */
   _getPastTense(verb) {
     // Simple Portuguese past tense conversion
-    if (verb.endsWith('ar')) {
-      return verb.replace(/ar$/, 'ado');
-    } else if (verb.endsWith('er')) {
-      return verb.replace(/er$/, 'ido');
-    } else if (verb.endsWith('ir')) {
-      return verb.replace(/ir$/, 'ido');
-    } else if (verb.endsWith('or')) {
+    if (verb.endsWith("ar")) {
+      return verb.replace(/ar$/, "ado");
+    } else if (verb.endsWith("er")) {
+      return verb.replace(/er$/, "ido");
+    } else if (verb.endsWith("ir")) {
+      return verb.replace(/ir$/, "ido");
+    } else if (verb.endsWith("or")) {
       // Special case: construir -> construído (but we'll use simple form)
-      return verb.replace(/or$/, 'ido');
+      return verb.replace(/or$/, "ido");
     }
     return verb; // Fallback
   }

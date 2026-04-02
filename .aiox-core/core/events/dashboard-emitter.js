@@ -13,12 +13,13 @@
  * @module core/events/dashboard-emitter
  */
 
-const { randomUUID } = require('crypto');
-const fs = require('fs-extra');
-const path = require('path');
-const { DashboardEventType } = require('./types');
+const { randomUUID } = require("crypto");
+const fs = require("fs-extra");
+const path = require("path");
+const { DashboardEventType } = require("./types");
 
-const MONITOR_SERVER_URL = process.env.AIOX_MONITOR_URL || 'http://localhost:4001/events';
+const MONITOR_SERVER_URL =
+  process.env.AIOX_MONITOR_URL || "http://localhost:4001/events";
 const EMIT_TIMEOUT_MS = 500;
 
 /**
@@ -30,13 +31,18 @@ class DashboardEmitter {
   constructor() {
     this.sessionId = process.env.CLAUDE_CODE_SESSION_ID || randomUUID();
     this.projectRoot = process.cwd();
-    this.fallbackPath = path.join(this.projectRoot, '.aiox', 'dashboard', 'events.jsonl');
+    this.fallbackPath = path.join(
+      this.projectRoot,
+      ".aiox",
+      "dashboard",
+      "events.jsonl",
+    );
     this.currentAgent = null;
     this.currentStoryId = null;
     this.enabled = true;
 
     // Disable in test environment
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === "test") {
       this.enabled = false;
     }
   }
@@ -313,9 +319,9 @@ class DashboardEmitter {
 
     try {
       const response = await fetch(MONITOR_SERVER_URL, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           type: event.type,
@@ -346,7 +352,7 @@ class DashboardEmitter {
   async _writeToFile(event) {
     try {
       await fs.ensureDir(path.dirname(this.fallbackPath));
-      const line = JSON.stringify(event) + '\n';
+      const line = JSON.stringify(event) + "\n";
       await fs.appendFile(this.fallbackPath, line);
     } catch {
       // Silent failure

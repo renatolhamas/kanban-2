@@ -9,26 +9,32 @@
  *   4. Detect brand signature radius preferences
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const ROOT = process.cwd();
-const EXTRACTION_DIR = path.join(ROOT, 'workspace', 'domains', 'design-system', 'extraction');
-const MERGED_PATH = path.join(EXTRACTION_DIR, 'all-pages-merged.json');
-const OUTPUT_DIR = path.join(EXTRACTION_DIR, 'curated');
-const OUTPUT_PATH = path.join(OUTPUT_DIR, 'curated-radius.json');
+const EXTRACTION_DIR = path.join(
+  ROOT,
+  "workspace",
+  "domains",
+  "design-system",
+  "extraction",
+);
+const MERGED_PATH = path.join(EXTRACTION_DIR, "all-pages-merged.json");
+const OUTPUT_DIR = path.join(EXTRACTION_DIR, "curated");
+const OUTPUT_PATH = path.join(OUTPUT_DIR, "curated-radius.json");
 
 // ── Radius Buckets (Tailwind-compatible) ───────────────────────────────────
 
 const RADIUS_BUCKETS = [
-  { name: 'none', min: 0, max: 0, rem: '0' },
-  { name: 'sm', min: 1, max: 4, rem: '0.125rem' },
-  { name: 'md', min: 5, max: 8, rem: '0.375rem' },
-  { name: 'lg', min: 9, max: 12, rem: '0.5rem' },
-  { name: 'xl', min: 13, max: 16, rem: '0.75rem' },
-  { name: '2xl', min: 17, max: 24, rem: '1rem' },
-  { name: '3xl', min: 25, max: 40, rem: '1.5rem' },
-  { name: 'full', min: 41, max: Infinity, rem: '9999px' },
+  { name: "none", min: 0, max: 0, rem: "0" },
+  { name: "sm", min: 1, max: 4, rem: "0.125rem" },
+  { name: "md", min: 5, max: 8, rem: "0.375rem" },
+  { name: "lg", min: 9, max: 12, rem: "0.5rem" },
+  { name: "xl", min: 13, max: 16, rem: "0.75rem" },
+  { name: "2xl", min: 17, max: 24, rem: "1rem" },
+  { name: "3xl", min: 25, max: 40, rem: "1.5rem" },
+  { name: "full", min: 41, max: Infinity, rem: "9999px" },
 ];
 
 function findBucket(px) {
@@ -43,12 +49,14 @@ function findBucket(px) {
 // ── Main ───────────────────────────────────────────────────────────────────
 
 function main() {
-  console.log('=== BORDER RADIUS CURATION PIPELINE ===\n');
+  console.log("=== BORDER RADIUS CURATION PIPELINE ===\n");
 
-  const merged = JSON.parse(fs.readFileSync(MERGED_PATH, 'utf8'));
+  const merged = JSON.parse(fs.readFileSync(MERGED_PATH, "utf8"));
   const rawRadii = merged.radii || [];
 
-  console.log(`Input: ${rawRadii.length} unique radius values from ${merged.meta.pagesIncluded} pages`);
+  console.log(
+    `Input: ${rawRadii.length} unique radius values from ${merged.meta.pagesIncluded} pages`,
+  );
 
   // Build unique values
   const valueMap = new Map(); // px → count
@@ -81,10 +89,10 @@ function main() {
 
   for (const bucket of RADIUS_BUCKETS) {
     const values = bucketedRadii.get(bucket.name) || [];
-    if (values.length === 0 && bucket.name !== 'none') continue;
+    if (values.length === 0 && bucket.name !== "none") continue;
 
     // Special case for 'none' — always include
-    if (bucket.name === 'none' && values.length === 0) {
+    if (bucket.name === "none" && values.length === 0) {
       curatedRadii.push({
         name: `radius-${bucket.name}`,
         cssVar: `--radius-${bucket.name}`,
@@ -102,8 +110,11 @@ function main() {
     const canonical = values[0];
 
     // For 'full', always use 9999px
-    const finalPx = bucket.name === 'full' ? 9999 : canonical.px;
-    const finalRem = bucket.name === 'full' ? '9999px' : `${Math.round((finalPx / 16) * 1000) / 1000}rem`;
+    const finalPx = bucket.name === "full" ? 9999 : canonical.px;
+    const finalRem =
+      bucket.name === "full"
+        ? "9999px"
+        : `${Math.round((finalPx / 16) * 1000) / 1000}rem`;
 
     curatedRadii.push({
       name: `radius-${bucket.name}`,
@@ -118,12 +129,12 @@ function main() {
 
     if (values.length > 1) {
       decisions.push({
-        category: 'radius',
-        action: 'SELECT',
+        category: "radius",
+        action: "SELECT",
         items: values.map((v) => `${v.px}px (${v.count}x)`),
         result: `${finalPx}px`,
         reason: `Most used in ${bucket.name} bucket (${canonical.count} instances)`,
-        authority: 'DS-CURATION-PIPELINE-PROPOSAL §4.5 — harmonic scale',
+        authority: "DS-CURATION-PIPELINE-PROPOSAL §4.5 — harmonic scale",
       });
     }
   }
@@ -141,7 +152,8 @@ function main() {
     }));
 
   // Stats
-  const reduction = ((uniqueValues.length - curatedRadii.length) / uniqueValues.length) * 100;
+  const reduction =
+    ((uniqueValues.length - curatedRadii.length) / uniqueValues.length) * 100;
   const mappedUsage = curatedRadii.reduce((sum, r) => sum + r.count, 0);
   const coverage = totalUsage > 0 ? (mappedUsage / totalUsage) * 100 : 100;
 
@@ -149,17 +161,17 @@ function main() {
     before: uniqueValues.length,
     after: curatedRadii.length,
     reduction: `${Math.round(reduction * 10) / 10}%`,
-    target: '60%',
-    status: reduction >= 60 ? 'PASS' : reduction >= 40 ? 'CONDITIONAL' : 'FAIL',
+    target: "60%",
+    status: reduction >= 60 ? "PASS" : reduction >= 40 ? "CONDITIONAL" : "FAIL",
     coverage: `${Math.round(coverage * 10) / 10}%`,
   };
 
   const output = {
     meta: {
-      source: 'all-pages-merged.json',
+      source: "all-pages-merged.json",
       pagesIncluded: merged.meta.pagesIncluded,
       curatedAt: new Date().toISOString(),
-      algorithm: 'Harmonic scale bucketing + frequency selection',
+      algorithm: "Harmonic scale bucketing + frequency selection",
     },
     scores,
     scale: curatedRadii,
@@ -167,9 +179,12 @@ function main() {
     decisions,
     distribution: RADIUS_BUCKETS.map((b) => ({
       bucket: b.name,
-      range: `${b.min}-${b.max === Infinity ? '∞' : b.max}px`,
+      range: `${b.min}-${b.max === Infinity ? "∞" : b.max}px`,
       values: (bucketedRadii.get(b.name) || []).length,
-      totalUsage: (bucketedRadii.get(b.name) || []).reduce((sum, v) => sum + v.count, 0),
+      totalUsage: (bucketedRadii.get(b.name) || []).reduce(
+        (sum, v) => sum + v.count,
+        0,
+      ),
     })),
   };
 
@@ -179,12 +194,16 @@ function main() {
   console.log(`\n--- RESULTS ---`);
   console.log(`  Before: ${scores.before} values`);
   console.log(`  After:  ${scores.after} tokens`);
-  console.log(`  Reduction: ${scores.reduction} (target: ${scores.target}) → ${scores.status}`);
+  console.log(
+    `  Reduction: ${scores.reduction} (target: ${scores.target}) → ${scores.status}`,
+  );
   console.log(`  Coverage: ${scores.coverage}`);
-  console.log(`  Brand signature: ${brandSignature.map((b) => `${b.bucket}=${b.px}px(${b.percentage})`).join(', ')}`);
+  console.log(
+    `  Brand signature: ${brandSignature.map((b) => `${b.bucket}=${b.px}px(${b.percentage})`).join(", ")}`,
+  );
   console.log(`  Decisions logged: ${decisions.length}`);
   console.log(`\nOutput: ${OUTPUT_PATH}`);
-  console.log('=== DONE ===');
+  console.log("=== DONE ===");
 }
 
 main();

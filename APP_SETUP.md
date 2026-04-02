@@ -28,6 +28,7 @@ kanban.2/
 ## Installation
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
@@ -44,6 +45,7 @@ kanban.2/
 ## Development
 
 **Start dev server:**
+
 ```bash
 npm run dev
 ```
@@ -64,6 +66,7 @@ Visit `http://localhost:3000`
 This setup provides the foundation for Story 1.2 (Supabase Auth).
 
 **Next steps:**
+
 1. Implement auth endpoints (register, login, logout, profile)
 2. Create password validation utilities
 3. Setup JWT token handling

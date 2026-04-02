@@ -11,17 +11,17 @@
 
 ## Task Anatomy
 
-| Field | Value |
-|-------|-------|
-| **task_name** | Squad Fusion |
-| **status** | `active` |
-| **responsible_executor** | Hybrid (Worker + Agent + Human) |
-| **execution_type** | Multi-phase workflow |
-| **input** | Lista de squads fonte + nome do target |
-| **output** | Squad fusionado em `squads/{target_name}/` |
-| **acceptance_criteria** | Zero perda de componentes, zero duplicatas, quality score >= 8.0 |
-| **quality_gate** | SC_FUS_001 |
-| **estimated_duration** | YOLO: 15-30 min, QUALITY: 45-90 min |
+| Field                    | Value                                                            |
+| ------------------------ | ---------------------------------------------------------------- |
+| **task_name**            | Squad Fusion                                                     |
+| **status**               | `active`                                                         |
+| **responsible_executor** | Hybrid (Worker + Agent + Human)                                  |
+| **execution_type**       | Multi-phase workflow                                             |
+| **input**                | Lista de squads fonte + nome do target                           |
+| **output**               | Squad fusionado em `squads/{target_name}/`                       |
+| **acceptance_criteria**  | Zero perda de componentes, zero duplicatas, quality score >= 8.0 |
+| **quality_gate**         | SC_FUS_001                                                       |
+| **estimated_duration**   | YOLO: 15-30 min, QUALITY: 45-90 min                              |
 
 ---
 
@@ -251,7 +251,7 @@ phase_2_analysis:
     - detect_duplicates:
         method: "multi-criteria"
         criteria:
-          - name_similarity: 0.8  # Threshold
+          - name_similarity: 0.8 # Threshold
           - content_similarity: 0.7
           - purpose_match: true
         output: "duplicates.yaml"
@@ -325,7 +325,7 @@ phase_3_resolution:
         strategy:
           yolo:
             - prefer_newer: true
-            - prefer_longer: true  # More content = more complete
+            - prefer_longer: true # More content = more complete
             - merge_if_complementary: true
           quality:
             - present_options_to_human
@@ -604,27 +604,27 @@ squads/{target_name}/
 
 ### Duplicate Agents
 
-| Scenario | YOLO Strategy | QUALITY Strategy |
-|----------|---------------|------------------|
-| Same name, different content | Keep longer one | Human chooses |
-| Same purpose, different approach | Merge best parts | Human reviews merge |
-| Complementary specialties | Keep both, rename | Human confirms |
+| Scenario                         | YOLO Strategy     | QUALITY Strategy    |
+| -------------------------------- | ----------------- | ------------------- |
+| Same name, different content     | Keep longer one   | Human chooses       |
+| Same purpose, different approach | Merge best parts  | Human reviews merge |
+| Complementary specialties        | Keep both, rename | Human confirms      |
 
 ### Config Conflicts
 
-| Conflict Type | Resolution |
-|---------------|------------|
-| Different versions | Use higher version |
-| Different descriptions | Concatenate |
-| Different settings | Deep merge, prefer source A for conflicts |
+| Conflict Type          | Resolution                                |
+| ---------------------- | ----------------------------------------- |
+| Different versions     | Use higher version                        |
+| Different descriptions | Concatenate                               |
+| Different settings     | Deep merge, prefer source A for conflicts |
 
 ### Dependency Conflicts
 
-| Conflict Type | Resolution |
-|---------------|------------|
-| Same dependency, different versions | Use latest |
-| Circular dependencies | Break cycle, warn user |
-| Missing dependencies | Add to target, warn user |
+| Conflict Type                       | Resolution               |
+| ----------------------------------- | ------------------------ |
+| Same dependency, different versions | Use latest               |
+| Circular dependencies               | Break cycle, warn user   |
+| Missing dependencies                | Add to target, warn user |
 
 ---
 
@@ -797,6 +797,7 @@ handoff_to:
 ## Changelog
 
 ### v2.0.0 (2026-02-05)
+
 - Added 6-phase execution flow with checkpoints
 - Added quality gates (SC_FUS_001, SC_FUS_002, SC_FUS_003)
 - Added rollback procedure
@@ -807,6 +808,7 @@ handoff_to:
 - Expanded documentation
 
 ### v1.0.0 (2026-02-01)
+
 - Initial release with basic fusion capability
 
 ---

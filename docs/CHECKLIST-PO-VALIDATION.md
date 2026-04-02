@@ -11,18 +11,18 @@
 
 ## ✅ Validação Progress
 
-| Seção | Nome | Status | Last Decision |
-|-------|------|--------|----------------|
-| 1 | Project Setup & Initialization | ✅ APPROVED | Next.js padrão (/app na raiz) |
-| 2 | Infrastructure & Deployment | ✅ APPROVED | Vercel auto-deploy, Upstash Redis |
-| 3 | External Dependencies & Integrations | ✅ APPROVED | Resend (sem confirmação email), Sentry |
-| 4 | UI/UX Considerations | ✅ APPROVED | Architectural Ledger (DESIGN.md), Manrope, Shadcn/ui |
-| 5 | User/Agent Responsibility | ✅ APPROVED | Evolution self-hosted, Supabase Auth (sem Resend MVP) |
-| 6 | Feature Sequencing & Dependencies | ✅ APPROVED | 7 Épicas (1-Foundation, 2-Evo Phase1, 3-Kanban, 4-Evo Phase2, 5-Chat, 6-Settings, 7-Automação) |
-| 7 | Risk Management | ✅ APPROVED | Evolution v2.3.7 (GitHub watch), RLS all tables, Async webhooks |
-| 8 | MVP Scope Alignment | ✅ APPROVED | Kanban filtros (padrão Ativas), Automação manual, Reorder em Settings (setas) |
-| 9 | Documentation & Handoff | ✅ APPROVED | API.md, SETUP.md, ERD+Flows, in-app hints, comments only |
-| 10 | Post-MVP Considerations | ⏳ IN PROGRESS | — |
+| Seção | Nome                                 | Status         | Last Decision                                                                                  |
+| ----- | ------------------------------------ | -------------- | ---------------------------------------------------------------------------------------------- |
+| 1     | Project Setup & Initialization       | ✅ APPROVED    | Next.js padrão (/app na raiz)                                                                  |
+| 2     | Infrastructure & Deployment          | ✅ APPROVED    | Vercel auto-deploy, Upstash Redis                                                              |
+| 3     | External Dependencies & Integrations | ✅ APPROVED    | Resend (sem confirmação email), Sentry                                                         |
+| 4     | UI/UX Considerations                 | ✅ APPROVED    | Architectural Ledger (DESIGN.md), Manrope, Shadcn/ui                                           |
+| 5     | User/Agent Responsibility            | ✅ APPROVED    | Evolution self-hosted, Supabase Auth (sem Resend MVP)                                          |
+| 6     | Feature Sequencing & Dependencies    | ✅ APPROVED    | 7 Épicas (1-Foundation, 2-Evo Phase1, 3-Kanban, 4-Evo Phase2, 5-Chat, 6-Settings, 7-Automação) |
+| 7     | Risk Management                      | ✅ APPROVED    | Evolution v2.3.7 (GitHub watch), RLS all tables, Async webhooks                                |
+| 8     | MVP Scope Alignment                  | ✅ APPROVED    | Kanban filtros (padrão Ativas), Automação manual, Reorder em Settings (setas)                  |
+| 9     | Documentation & Handoff              | ✅ APPROVED    | API.md, SETUP.md, ERD+Flows, in-app hints, comments only                                       |
+| 10    | Post-MVP Considerations              | ⏳ IN PROGRESS | —                                                                                              |
 
 ---
 
@@ -357,7 +357,7 @@ Setup Instructions:
 
 Architecture Diagrams:
   ✅ ESCOLHA: (1) SIM — ERD + Flows
-  ✅ Deliverables: 
+  ✅ Deliverables:
     - /docs/architecture/ERD.md (database schema visual)
     - /docs/architecture/FLOWS.md (Evolution → DB → UI)
   ✅ Scope: Tenants, Users, Conversations, Messages, RLS
@@ -372,8 +372,7 @@ Knowledge Transfer:
   ✅ Rationale: MVP é pequeno, ADRs em Fase 2 quando complexidade crescer
   ✅ Policy: Confie em git blame + inline comments para contexto
 
-Documentation Artifacts (Post-MVP):
-  ✅ /docs/API.md (with curl examples)
+Documentation Artifacts (Post-MVP): ✅ /docs/API.md (with curl examples)
   ✅ /SETUP.md (step-by-step, prints, troubleshooting)
   ✅ /docs/architecture/ERD.md (database visual)
   ✅ /docs/architecture/FLOWS.md (system flows)
@@ -474,35 +473,35 @@ Status: ✅ APPROVED
 ✅ **Arquitetura técnica sólida** — Supabase RLS + Evolution API bem integrados  
 ✅ **MVP scope realista** — 7 épicas sequenciadas, 8-12 semanas estimado  
 ✅ **Documentação clara** — API.md, SETUP.md, ERD+Flows pós-MVP  
-✅ **Roadmap validado** — Fase 2+ bem estruturado, gates de sucesso definidos  
+✅ **Roadmap validado** — Fase 2+ bem estruturado, gates de sucesso definidos
 
 ### ⚠️ Pontos de Atenção (Não-blockers)
 
-| Ponto | Recomendação |
-|-------|-------------|
-| **Evolution API v2.3.7 dependency** | Monitor GitHub releases monthly; upgrade plan em Fase 2 |
-| **RLS enforcement crítica** | Security audit obrigatória pré-produção (@qa + @architect) |
-| **Performance < 2s** | Indexar conversations(tenant_id), messages(conversation_id) desde Day 1 |
-| **WhatsApp compliance** | Validar ToS com legal em Fase 2 (MVP assume risco calculado) |
+| Ponto                               | Recomendação                                                            |
+| ----------------------------------- | ----------------------------------------------------------------------- |
+| **Evolution API v2.3.7 dependency** | Monitor GitHub releases monthly; upgrade plan em Fase 2                 |
+| **RLS enforcement crítica**         | Security audit obrigatória pré-produção (@qa + @architect)              |
+| **Performance < 2s**                | Indexar conversations(tenant_id), messages(conversation_id) desde Day 1 |
+| **WhatsApp compliance**             | Validar ToS com legal em Fase 2 (MVP assume risco calculado)            |
 
 ### 📋 Próximos Passos (Agora)
 
-1. **Delegue para @pm *create-epic**
+1. **Delegue para @pm \*create-epic**
    - Input: PRD (validado ✅)
    - Output: EPIC-1 até EPIC-7 (estruturados)
    - Timeline: ~1-2 horas
 
-2. **Delegue para @sm *draft (per epic)**
+2. **Delegue para @sm \*draft (per epic)**
    - Input: EPICs (Morgan)
    - Output: Stories 1.1, 1.2, ... 7.4 (detalhadas)
    - Timeline: ~1 semana
 
-3. **@architect *design-review**
+3. **@architect \*design-review**
    - Input: Stories + PRD
    - Output: Architecture Decision Records (ADRs)
    - Timeline: ~2-3 dias
 
-4. **@dev *sprint-planning**
+4. **@dev \*sprint-planning**
    - Input: Stories (validadas) + ADRs
    - Output: Sprint 0-2 backlog
    - Timeline: Sprint 0 começa
@@ -531,22 +530,23 @@ Status: ✅ APPROVED
 **Resultado:** ✅ 8 divergências resolvidas, PRD atualizado
 
 ### Documento de Referência
+
 - **ALIGNMENT-CHANGES.md** — Diffs detalhados de todas as 8 mudanças aplicadas
 
 ### Status de Alinhamento
 
-| Item | Status | Validação |
-|------|--------|-----------|
-| Sprint 0-2 — `/app na raiz` | ✅ ALIGNED | Supabase MCP + Vercel padrão |
-| Tech Stack — Next.js API Routes | ✅ ALIGNED | Webhooks em `/app/api/` |
-| DnD Library — dnd-kit v8.0.0 | ✅ ALIGNED | Moderno, mantido, acessível |
-| Reordenação — Settings com setas | ✅ ALIGNED | Botões ↑↓, não drag-drop |
-| Design System — Architectural Ledger | ✅ ALIGNED | Cores/typo específicas |
-| Email Service — Mailgun Fase 2+ | ✅ ALIGNED | Removido do MVP |
-| Rate Limiting — Redis local VPS | ✅ ALIGNED | Zero custo, controle total |
-| Webhook Timeout — 5s + <500ms UX | ✅ ALIGNED | Arquitetura async clarificada |
+| Item                                 | Status     | Validação                     |
+| ------------------------------------ | ---------- | ----------------------------- |
+| Sprint 0-2 — `/app na raiz`          | ✅ ALIGNED | Supabase MCP + Vercel padrão  |
+| Tech Stack — Next.js API Routes      | ✅ ALIGNED | Webhooks em `/app/api/`       |
+| DnD Library — dnd-kit v8.0.0         | ✅ ALIGNED | Moderno, mantido, acessível   |
+| Reordenação — Settings com setas     | ✅ ALIGNED | Botões ↑↓, não drag-drop      |
+| Design System — Architectural Ledger | ✅ ALIGNED | Cores/typo específicas        |
+| Email Service — Mailgun Fase 2+      | ✅ ALIGNED | Removido do MVP               |
+| Rate Limiting — Redis local VPS      | ✅ ALIGNED | Zero custo, controle total    |
+| Webhook Timeout — 5s + <500ms UX     | ✅ ALIGNED | Arquitetura async clarificada |
 
 **PRD Status:** ✅ ALIGNED WITH VALIDATION (v1.1)  
-**Ready for:** Epic Creation (@pm *create-epic)
+**Ready for:** Epic Creation (@pm \*create-epic)
 
 ---

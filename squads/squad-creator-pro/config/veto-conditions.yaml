@@ -153,7 +153,7 @@ veto_engine:
       source_pattern: "HO-AX-001"
       thresholds:
         overall: 7.0
-        truthfulness: 7.0  # VETO power
+        truthfulness: 7.0 # VETO power
         per_dimension: 6.0
 
     SC_VC_010:
@@ -443,8 +443,19 @@ veto_engine:
     total_veto_conditions: 18
     pedro_valerio:
       count: 10
-      ids: ["SC_VC_001", "SC_VC_002", "SC_VC_003", "SC_VC_004", "SC_VC_005",
-            "SC_VC_006", "SC_VC_007", "SC_VC_008", "SC_VC_009", "SC_VC_010"]
+      ids:
+        [
+          "SC_VC_001",
+          "SC_VC_002",
+          "SC_VC_003",
+          "SC_VC_004",
+          "SC_VC_005",
+          "SC_VC_006",
+          "SC_VC_007",
+          "SC_VC_008",
+          "SC_VC_009",
+          "SC_VC_010",
+        ]
     oalanicolas:
       count: 8
       extraction_vetos:

@@ -6,9 +6,9 @@
  * detects conflicts, and generates consolidated reports.
  */
 
-const fs = require('fs');
-const path = require('path');
-const EventEmitter = require('events');
+const fs = require("fs");
+const path = require("path");
+const EventEmitter = require("events");
 
 class ResultAggregator extends EventEmitter {
   constructor(config = {}) {
@@ -16,7 +16,7 @@ class ResultAggregator extends EventEmitter {
 
     // Root path for reports
     this.rootPath = config.rootPath || process.cwd();
-    this.reportDir = config.reportDir || path.join(this.rootPath, 'plan');
+    this.reportDir = config.reportDir || path.join(this.rootPath, "plan");
 
     // Conflict detection settings
     this.detectConflicts = config.detectConflicts !== false;
@@ -50,9 +50,10 @@ class ResultAggregator extends EventEmitter {
     for (const result of results) {
       aggregation.tasks.push({
         taskId: result.taskId,
-        agentId: result.agentId || 'unknown',
+        agentId: result.agentId || "unknown",
         success: result.success,
-        filesModified: result.filesModified || this.extractFilesFromOutput(result.output),
+        filesModified:
+          result.filesModified || this.extractFilesFromOutput(result.output),
         duration: result.duration || 0,
         output: this.summarizeOutput(result.output || result.result?.output),
         error: result.error,
@@ -64,7 +65,7 @@ class ResultAggregator extends EventEmitter {
       aggregation.conflicts = this.detectFileConflicts(aggregation.tasks);
 
       if (aggregation.conflicts.length > 0) {
-        this.emit('conflicts_detected', {
+        this.emit("conflicts_detected", {
           waveIndex: aggregation.waveIndex,
           conflicts: aggregation.conflicts,
         });
@@ -90,7 +91,7 @@ class ResultAggregator extends EventEmitter {
       this.history.shift();
     }
 
-    this.emit('aggregation_complete', aggregation);
+    this.emit("aggregation_complete", aggregation);
 
     return aggregation;
   }
@@ -147,9 +148,13 @@ class ResultAggregator extends EventEmitter {
           conflicts.push({
             file,
             tasks: [existingTask.taskId, task.taskId],
-            type: 'concurrent_modification',
+            type: "concurrent_modification",
             severity: this.assessConflictSeverity(file),
-            resolution: this.suggestResolution(file, existingTask.taskId, task.taskId),
+            resolution: this.suggestResolution(
+              file,
+              existingTask.taskId,
+              task.taskId,
+            ),
           });
         } else {
           fileModifications.set(file, { taskId: task.taskId });
@@ -176,17 +181,17 @@ class ResultAggregator extends EventEmitter {
     ];
 
     if (criticalPatterns.some((p) => p.test(file))) {
-      return 'critical';
+      return "critical";
     }
 
     // High severity files
     const highPatterns = [/config/, /schema/, /migration/];
 
     if (highPatterns.some((p) => p.test(file))) {
-      return 'high';
+      return "high";
     }
 
-    return 'medium';
+    return "medium";
   }
 
   /**
@@ -197,15 +202,15 @@ class ResultAggregator extends EventEmitter {
    * @returns {string} - Resolution suggestion
    */
   suggestResolution(file, task1, task2) {
-    if (file.endsWith('.json')) {
+    if (file.endsWith(".json")) {
       return `Merge JSON changes from ${task1} and ${task2} manually`;
     }
 
-    if (file.includes('test') || file.includes('spec')) {
-      return 'Test files can usually be merged automatically';
+    if (file.includes("test") || file.includes("spec")) {
+      return "Test files can usually be merged automatically";
     }
 
-    return 'Review changes from both tasks and merge carefully';
+    return "Review changes from both tasks and merge carefully";
   }
 
   /**
@@ -228,7 +233,10 @@ class ResultAggregator extends EventEmitter {
       let match;
       while ((match = pattern.exec(output)) !== null) {
         const file = match[1];
-        if (!files.includes(file) && (file.includes('/') || file.includes('.'))) {
+        if (
+          !files.includes(file) &&
+          (file.includes("/") || file.includes("."))
+        ) {
           files.push(file);
         }
       }
@@ -243,11 +251,11 @@ class ResultAggregator extends EventEmitter {
    * @returns {string} - Summarized output
    */
   summarizeOutput(output) {
-    if (!output) return '';
+    if (!output) return "";
 
     // Take first 500 chars if too long
     if (output.length > 500) {
-      return output.substring(0, 500) + '... [truncated]';
+      return output.substring(0, 500) + "... [truncated]";
     }
 
     return output;
@@ -263,11 +271,15 @@ class ResultAggregator extends EventEmitter {
 
     for (const task of tasks) {
       // Check for partial success
-      if (task.success && task.output && task.output.toLowerCase().includes('warning')) {
+      if (
+        task.success &&
+        task.output &&
+        task.output.toLowerCase().includes("warning")
+      ) {
         warnings.push({
           taskId: task.taskId,
-          type: 'output_warning',
-          message: 'Task completed with warnings in output',
+          type: "output_warning",
+          message: "Task completed with warnings in output",
         });
       }
 
@@ -276,17 +288,20 @@ class ResultAggregator extends EventEmitter {
         // > 5 minutes
         warnings.push({
           taskId: task.taskId,
-          type: 'long_duration',
+          type: "long_duration",
           message: `Task took ${Math.round(task.duration / 1000)}s`,
         });
       }
 
       // Check for empty modifications
-      if (task.success && (!task.filesModified || task.filesModified.length === 0)) {
+      if (
+        task.success &&
+        (!task.filesModified || task.filesModified.length === 0)
+      ) {
         warnings.push({
           taskId: task.taskId,
-          type: 'no_files_modified',
-          message: 'Task succeeded but no files were modified',
+          type: "no_files_modified",
+          message: "Task succeeded but no files were modified",
         });
       }
     }
@@ -317,10 +332,12 @@ class ResultAggregator extends EventEmitter {
       totalTasks: tasks.length,
       successful,
       failed,
-      successRate: tasks.length > 0 ? Math.round((successful / tasks.length) * 100) : 100,
+      successRate:
+        tasks.length > 0 ? Math.round((successful / tasks.length) * 100) : 100,
       totalDuration,
       wallTime,
-      parallelEfficiency: wallTime > 0 ? (totalDuration / wallTime).toFixed(2) : 1,
+      parallelEfficiency:
+        wallTime > 0 ? (totalDuration / wallTime).toFixed(2) : 1,
       conflictCount: aggregation.conflicts.length,
       warningCount: aggregation.warnings.length,
       filesModified: uniqueFiles.length,
@@ -336,13 +353,21 @@ class ResultAggregator extends EventEmitter {
   calculateOverallMetrics(consolidated) {
     const allTasks = consolidated.allTasks;
     const successful = allTasks.filter((t) => t.success).length;
-    const totalDuration = allTasks.reduce((sum, t) => sum + (t.duration || 0), 0);
+    const totalDuration = allTasks.reduce(
+      (sum, t) => sum + (t.duration || 0),
+      0,
+    );
 
     // Calculate wave metrics
-    const waveSuccessRates = consolidated.waves.map((w) => w.metrics.successRate);
+    const waveSuccessRates = consolidated.waves.map(
+      (w) => w.metrics.successRate,
+    );
     const avgWaveSuccessRate =
       waveSuccessRates.length > 0
-        ? Math.round(waveSuccessRates.reduce((a, b) => a + b, 0) / waveSuccessRates.length)
+        ? Math.round(
+            waveSuccessRates.reduce((a, b) => a + b, 0) /
+              waveSuccessRates.length,
+          )
         : 100;
 
     return {
@@ -351,11 +376,15 @@ class ResultAggregator extends EventEmitter {
       successful,
       failed: allTasks.length - successful,
       overallSuccessRate:
-        allTasks.length > 0 ? Math.round((successful / allTasks.length) * 100) : 100,
+        allTasks.length > 0
+          ? Math.round((successful / allTasks.length) * 100)
+          : 100,
       avgWaveSuccessRate,
       totalDuration,
       totalConflicts: consolidated.allConflicts.length,
-      criticalConflicts: consolidated.allConflicts.filter((c) => c.severity === 'critical').length,
+      criticalConflicts: consolidated.allConflicts.filter(
+        (c) => c.severity === "critical",
+      ).length,
     };
   }
 
@@ -366,7 +395,8 @@ class ResultAggregator extends EventEmitter {
    * @returns {Promise<string>} - Report file path
    */
   async generateReport(aggregation, filename = null) {
-    const reportName = filename || `wave-results-${aggregation.waveIndex || 'all'}.json`;
+    const reportName =
+      filename || `wave-results-${aggregation.waveIndex || "all"}.json`;
     const reportPath = path.join(this.reportDir, reportName);
 
     // Ensure directory exists
@@ -378,7 +408,7 @@ class ResultAggregator extends EventEmitter {
     fs.writeFileSync(reportPath, JSON.stringify(aggregation, null, 2));
 
     // Also generate markdown summary
-    const mdPath = reportPath.replace('.json', '.md');
+    const mdPath = reportPath.replace(".json", ".md");
     fs.writeFileSync(mdPath, this.formatMarkdown(aggregation));
 
     return reportPath;
@@ -392,57 +422,59 @@ class ResultAggregator extends EventEmitter {
   formatMarkdown(aggregation) {
     const metrics = aggregation.metrics || aggregation.overallMetrics;
 
-    let md = '# Wave Results Report\n\n';
+    let md = "# Wave Results Report\n\n";
     md += `> **Generated:** ${aggregation.completedAt}\n`;
     md += `> **Success Rate:** ${metrics.successRate || metrics.overallSuccessRate}%\n\n`;
 
-    md += '## Summary\n\n';
-    md += '| Metric | Value |\n';
-    md += '|--------|-------|\n';
+    md += "## Summary\n\n";
+    md += "| Metric | Value |\n";
+    md += "|--------|-------|\n";
     md += `| Total Tasks | ${metrics.totalTasks} |\n`;
     md += `| Successful | ${metrics.successful} |\n`;
     md += `| Failed | ${metrics.failed} |\n`;
     md += `| Duration | ${Math.round(metrics.totalDuration / 1000)}s |\n`;
     md += `| Conflicts | ${metrics.conflictCount || metrics.totalConflicts || 0} |\n`;
-    md += `| Files Modified | ${metrics.filesModified || 'N/A'} |\n\n`;
+    md += `| Files Modified | ${metrics.filesModified || "N/A"} |\n\n`;
 
     // Tasks section
     if (aggregation.tasks && aggregation.tasks.length > 0) {
-      md += '## Tasks\n\n';
-      md += '| Task | Agent | Status | Duration |\n';
-      md += '|------|-------|--------|----------|\n';
+      md += "## Tasks\n\n";
+      md += "| Task | Agent | Status | Duration |\n";
+      md += "|------|-------|--------|----------|\n";
 
       for (const task of aggregation.tasks) {
-        const status = task.success ? '✅' : '❌';
-        const duration = task.duration ? `${Math.round(task.duration / 1000)}s` : '-';
+        const status = task.success ? "✅" : "❌";
+        const duration = task.duration
+          ? `${Math.round(task.duration / 1000)}s`
+          : "-";
         md += `| ${task.taskId} | ${task.agentId} | ${status} | ${duration} |\n`;
       }
-      md += '\n';
+      md += "\n";
     }
 
     // Conflicts section
     const conflicts = aggregation.conflicts || aggregation.allConflicts;
     if (conflicts && conflicts.length > 0) {
-      md += '## Conflicts\n\n';
+      md += "## Conflicts\n\n";
       for (const conflict of conflicts) {
         md += `### ${conflict.file}\n`;
         md += `- **Type:** ${conflict.type}\n`;
         md += `- **Severity:** ${conflict.severity}\n`;
-        md += `- **Tasks:** ${conflict.tasks.join(', ')}\n`;
+        md += `- **Tasks:** ${conflict.tasks.join(", ")}\n`;
         md += `- **Resolution:** ${conflict.resolution}\n\n`;
       }
     }
 
     // Warnings section
     if (aggregation.warnings && aggregation.warnings.length > 0) {
-      md += '## Warnings\n\n';
+      md += "## Warnings\n\n";
       for (const warning of aggregation.warnings) {
         md += `- **${warning.taskId}** [${warning.type}]: ${warning.message}\n`;
       }
-      md += '\n';
+      md += "\n";
     }
 
-    md += '---\n*Generated by AIOX Result Aggregator*\n';
+    md += "---\n*Generated by AIOX Result Aggregator*\n";
 
     return md;
   }
@@ -463,16 +495,17 @@ class ResultAggregator extends EventEmitter {
   formatStatus() {
     const history = this.getHistory(5);
 
-    let output = '📊 Result Aggregator Status\n';
-    output += '━'.repeat(40) + '\n\n';
+    let output = "📊 Result Aggregator Status\n";
+    output += "━".repeat(40) + "\n\n";
 
     output += `**Total Aggregations:** ${this.history.length}\n\n`;
 
     if (history.length > 0) {
-      output += '**Recent Aggregations:**\n';
+      output += "**Recent Aggregations:**\n";
       for (const entry of history) {
-        const icon = entry.success ? '✅' : '❌';
-        const conflicts = entry.conflicts > 0 ? ` (${entry.conflicts} conflicts)` : '';
+        const icon = entry.success ? "✅" : "❌";
+        const conflicts =
+          entry.conflicts > 0 ? ` (${entry.conflicts} conflicts)` : "";
         output += `  ${icon} Wave ${entry.waveIndex}${conflicts}\n`;
       }
     }

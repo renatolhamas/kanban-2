@@ -11,6 +11,7 @@
 > "It doesn't matter if someone is the best in the world if there's no documented process we can replicate."
 
 **Absolute Criterion:**
+
 ```
 "Is there sufficient documentation of this person's processes
 for an agent to replicate the method?"
@@ -25,22 +26,22 @@ for an agent to replicate the method?"
 
 ### Scoring System
 
-| Criterion | 0 | 1 | 2 | 3 |
-|-----------|---|---|---|---|
-| **Documented Framework** | Doesn't exist | Vaguely mentioned | Partially documented | Fully documented |
-| **Extractable Process** | No process | Loose tips | General steps | Clear step-by-step |
-| **Available Artifacts** | Nothing | Concepts only | Some templates | Templates + Checklists |
-| **Application Examples** | None | Mentions | Some cases | Detailed cases |
-| **Accessible Material** | Doesn't exist | Hard to find | Partially accessible | Easily accessible |
+| Criterion                | 0             | 1                 | 2                    | 3                      |
+| ------------------------ | ------------- | ----------------- | -------------------- | ---------------------- |
+| **Documented Framework** | Doesn't exist | Vaguely mentioned | Partially documented | Fully documented       |
+| **Extractable Process**  | No process    | Loose tips        | General steps        | Clear step-by-step     |
+| **Available Artifacts**  | Nothing       | Concepts only     | Some templates       | Templates + Checklists |
+| **Application Examples** | None          | Mentions          | Some cases           | Detailed cases         |
+| **Accessible Material**  | Doesn't exist | Hard to find      | Partially accessible | Easily accessible      |
 
 ### Thresholds
 
-| Total Score | Status | Action |
-|-------------|--------|--------|
-| 12-15 | ✅ PASS | Include in squad |
-| 10-11 | ⚠️ CONDITIONAL | Include with caveats |
-| 7-9 | ❌ FAIL | Seek alternative |
-| 0-6 | 🚫 HARD FAIL | Discard |
+| Total Score | Status         | Action               |
+| ----------- | -------------- | -------------------- |
+| 12-15       | ✅ PASS        | Include in squad     |
+| 10-11       | ⚠️ CONDITIONAL | Include with caveats |
+| 7-9         | ❌ FAIL        | Seek alternative     |
+| 0-6         | 🚫 HARD FAIL   | Discard              |
 
 **Minimum to pass: 10/15**
 
@@ -73,12 +74,12 @@ questions:
 
 ### Scoring:
 
-| Score | Criterion |
-|-------|----------|
-| 0 | No identifiable framework exists |
-| 1 | Has "approach" but no formal structure |
-| 2 | Framework exists, partially documented |
-| 3 | Framework with name, structure, and complete documentation |
+| Score | Criterion                                                  |
+| ----- | ---------------------------------------------------------- |
+| 0     | No identifiable framework exists                           |
+| 1     | Has "approach" but no formal structure                     |
+| 2     | Framework exists, partially documented                     |
+| 3     | Framework with name, structure, and complete documentation |
 
 ---
 
@@ -109,12 +110,12 @@ questions:
 
 ### Scoring:
 
-| Score | Criterion |
-|-------|----------|
-| 0 | No identifiable process |
-| 1 | Loose tips and principles, not sequential |
-| 2 | General process exists, but has gaps |
-| 3 | Complete and clear step-by-step process |
+| Score | Criterion                                 |
+| ----- | ----------------------------------------- |
+| 0     | No identifiable process                   |
+| 1     | Loose tips and principles, not sequential |
+| 2     | General process exists, but has gaps      |
+| 3     | Complete and clear step-by-step process   |
 
 ---
 
@@ -149,12 +150,12 @@ questions:
 
 ### Scoring:
 
-| Score | Criterion |
-|-------|----------|
-| 0 | No artifacts found |
-| 1 | Only concepts, no practical artifacts |
-| 2 | Some templates or checklists |
-| 3 | Templates + Checklists + Annotated examples |
+| Score | Criterion                                   |
+| ----- | ------------------------------------------- |
+| 0     | No artifacts found                          |
+| 1     | Only concepts, no practical artifacts       |
+| 2     | Some templates or checklists                |
+| 3     | Templates + Checklists + Annotated examples |
 
 ---
 
@@ -189,12 +190,12 @@ questions:
 
 ### Scoring:
 
-| Score | Criterion |
-|-------|----------|
-| 0 | No examples found |
-| 1 | Vague mentions without details |
-| 2 | Some documented cases |
-| 3 | Multiple detailed cases with analysis |
+| Score | Criterion                             |
+| ----- | ------------------------------------- |
+| 0     | No examples found                     |
+| 1     | Vague mentions without details        |
+| 2     | Some documented cases                 |
+| 3     | Multiple detailed cases with analysis |
 
 ---
 
@@ -229,12 +230,12 @@ questions:
 
 ### Scoring:
 
-| Score | Criterion |
-|-------|----------|
-| 0 | Material doesn't exist or is inaccessible |
-| 1 | Hard to find, little material |
-| 2 | Material exists but partially accessible |
-| 3 | Abundant easily accessible material |
+| Score | Criterion                                 |
+| ----- | ----------------------------------------- |
+| 0     | Material doesn't exist or is inaccessible |
+| 1     | Hard to find, little material             |
+| 2     | Material exists but partially accessible  |
+| 3     | Abundant easily accessible material       |
 
 ---
 
@@ -251,14 +252,14 @@ questions:
 
 ## Quick Score
 
-| Criterion | Score | Evidence |
-|----------|-------|----------|
-| Documented Framework | {0-3} | {source/link} |
-| Extractable Process | {0-3} | {source/link} |
-| Available Artifacts | {0-3} | {type found} |
-| Application Examples | {0-3} | {quantity} |
-| Accessible Material | {0-3} | {type/where} |
-| **TOTAL** | **{X}/15** | |
+| Criterion            | Score      | Evidence      |
+| -------------------- | ---------- | ------------- |
+| Documented Framework | {0-3}      | {source/link} |
+| Extractable Process  | {0-3}      | {source/link} |
+| Available Artifacts  | {0-3}      | {type found}  |
+| Application Examples | {0-3}      | {quantity}    |
+| Accessible Material  | {0-3}      | {type/where}  |
+| **TOTAL**            | **{X}/15** |               |
 
 ---
 
@@ -277,15 +278,19 @@ questions:
 ## Material Found
 
 ### Books
+
 - {title} - {where to find}
 
 ### Courses
+
 - {title} - {where to find}
 
 ### Articles/Transcripts
+
 - {title} - {link}
 
 ### Analyzable Examples
+
 - {description} - {where to find}
 
 ---

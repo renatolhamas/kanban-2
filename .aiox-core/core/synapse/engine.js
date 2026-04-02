@@ -10,8 +10,8 @@
  * @created Story SYN-6 - SynapseEngine Orchestrator + Output Formatter
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const {
   estimateContextPercent,
@@ -20,25 +20,25 @@ const {
   getTokenBudget,
   needsMemoryHints,
   needsHandoffWarning,
-} = require('./context/context-tracker');
-const { buildLayerContext } = require('./context/context-builder');
+} = require("./context/context-tracker");
+const { buildLayerContext } = require("./context/context-builder");
 
-const { formatSynapseRules } = require('./output/formatter');
-const { MemoryBridge } = require('./memory/memory-bridge');
+const { formatSynapseRules } = require("./output/formatter");
+const { MemoryBridge } = require("./memory/memory-bridge");
 
 // ---------------------------------------------------------------------------
 // Layer Imports (graceful — layers from SYN-4/SYN-5 may not exist yet)
 // ---------------------------------------------------------------------------
 
 const LAYER_MODULES = [
-  { path: './layers/l0-constitution', layer: 0, name: 'constitution' },
-  { path: './layers/l1-global', layer: 1, name: 'global' },
-  { path: './layers/l2-agent', layer: 2, name: 'agent' },
-  { path: './layers/l3-workflow', layer: 3, name: 'workflow' },
-  { path: './layers/l4-task', layer: 4, name: 'task' },
-  { path: './layers/l5-squad', layer: 5, name: 'squad' },
-  { path: './layers/l6-keyword', layer: 6, name: 'keyword' },
-  { path: './layers/l7-star-command', layer: 7, name: 'star-command' },
+  { path: "./layers/l0-constitution", layer: 0, name: "constitution" },
+  { path: "./layers/l1-global", layer: 1, name: "global" },
+  { path: "./layers/l2-agent", layer: 2, name: "agent" },
+  { path: "./layers/l3-workflow", layer: 3, name: "workflow" },
+  { path: "./layers/l4-task", layer: 4, name: "task" },
+  { path: "./layers/l5-squad", layer: 5, name: "squad" },
+  { path: "./layers/l6-keyword", layer: 6, name: "keyword" },
+  { path: "./layers/l7-star-command", layer: 7, name: "star-command" },
 ];
 
 /**
@@ -52,11 +52,17 @@ function loadLayerModule(modulePath) {
     return require(modulePath);
   } catch (err) {
     // Only silence MODULE_NOT_FOUND for the requested module
-    if (err.code === 'MODULE_NOT_FOUND' && err.message && err.message.includes(modulePath)) {
+    if (
+      err.code === "MODULE_NOT_FOUND" &&
+      err.message &&
+      err.message.includes(modulePath)
+    ) {
       return null;
     }
     // Surface unexpected errors (syntax, runtime, transitive missing deps)
-    console.warn(`[synapse:engine] Unexpected error loading ${modulePath}: ${err.message}`);
+    console.warn(
+      `[synapse:engine] Unexpected error loading ${modulePath}: ${err.message}`,
+    );
     return null;
   }
 }
@@ -86,7 +92,7 @@ class PipelineMetrics {
    * @param {string} name - Layer name
    */
   startLayer(name) {
-    this.layers[name] = { start: process.hrtime.bigint(), status: 'running' };
+    this.layers[name] = { start: process.hrtime.bigint(), status: "running" };
   }
 
   /**
@@ -98,13 +104,13 @@ class PipelineMetrics {
   endLayer(name, rulesCount) {
     const layer = this.layers[name];
     if (!layer) {
-      this.layers[name] = { status: 'ok', rules: rulesCount };
+      this.layers[name] = { status: "ok", rules: rulesCount };
       return;
     }
     const endTime = process.hrtime.bigint();
     layer.end = endTime;
     layer.duration = Number(endTime - layer.start) / 1e6;
-    layer.status = 'ok';
+    layer.status = "ok";
     layer.rules = rulesCount;
   }
 
@@ -115,7 +121,7 @@ class PipelineMetrics {
    * @param {string} reason - Why it was skipped
    */
   skipLayer(name, reason) {
-    this.layers[name] = { status: 'skipped', reason };
+    this.layers[name] = { status: "skipped", reason };
   }
 
   /**
@@ -133,7 +139,7 @@ class PipelineMetrics {
     }
     this.layers[name] = {
       ...existing,
-      status: 'error',
+      status: "error",
       error: error && error.message ? error.message : String(error),
     };
   }
@@ -153,12 +159,13 @@ class PipelineMetrics {
   getSummary() {
     const values = Object.values(this.layers);
     return {
-      total_ms: this.totalStart != null && this.totalEnd != null
-        ? Number(this.totalEnd - this.totalStart) / 1e6
-        : 0,
-      layers_loaded: values.filter(l => l.status === 'ok').length,
-      layers_skipped: values.filter(l => l.status === 'skipped').length,
-      layers_errored: values.filter(l => l.status === 'error').length,
+      total_ms:
+        this.totalStart != null && this.totalEnd != null
+          ? Number(this.totalEnd - this.totalStart) / 1e6
+          : 0,
+      layers_loaded: values.filter((l) => l.status === "ok").length,
+      layers_skipped: values.filter((l) => l.status === "skipped").length,
+      layers_errored: values.filter((l) => l.status === "error").length,
       total_rules: values.reduce((sum, l) => sum + (l.rules || 0), 0),
       per_layer: this.layers,
     };
@@ -178,7 +185,7 @@ const PIPELINE_TIMEOUT_MS = 100;
  * Set SYNAPSE_LEGACY_MODE=true to re-enable full 8-layer processing.
  */
 const DEFAULT_ACTIVE_LAYERS = [0, 1, 2];
-const LEGACY_MODE = process.env.SYNAPSE_LEGACY_MODE === 'true';
+const LEGACY_MODE = process.env.SYNAPSE_LEGACY_MODE === "true";
 
 /**
  * Orchestrates the 8-layer SYNAPSE context injection pipeline.
@@ -210,7 +217,9 @@ class SynapseEngine {
         try {
           this.layers.push(new LayerClass());
         } catch (err) {
-          console.warn(`[synapse:engine] Failed to instantiate layer ${mod.name}: ${err.message}`);
+          console.warn(
+            `[synapse:engine] Failed to instantiate layer ${mod.name}: ${err.message}`,
+          );
         }
       }
     }
@@ -232,7 +241,8 @@ class SynapseEngine {
    * @returns {Promise<{ xml: string, metrics: object }>}
    */
   async process(prompt, session, processConfig) {
-    const safeProcessConfig = (processConfig && typeof processConfig === 'object') ? processConfig : {};
+    const safeProcessConfig =
+      processConfig && typeof processConfig === "object" ? processConfig : {};
     const mergedConfig = { ...this.config, ...safeProcessConfig };
     const metrics = new PipelineMetrics();
     metrics.totalStart = process.hrtime.bigint();
@@ -251,7 +261,7 @@ class SynapseEngine {
       // Guard: no layer config (invalid bracket — should not happen)
       if (!layerConfig) {
         metrics.totalEnd = process.hrtime.bigint();
-        return { xml: '', metrics: metrics.getSummary() };
+        return { xml: "", metrics: metrics.getSummary() };
       }
       activeLayers = layerConfig.layers;
     } else {
@@ -276,12 +286,15 @@ class SynapseEngine {
       }
 
       // Check hard pipeline timeout (convert hrtime to ms for comparison)
-      if (Number(process.hrtime.bigint() - metrics.totalStart) / 1e6 > PIPELINE_TIMEOUT_MS) {
+      if (
+        Number(process.hrtime.bigint() - metrics.totalStart) / 1e6 >
+        PIPELINE_TIMEOUT_MS
+      ) {
         // Log remaining layers as skipped
         const remaining = this.layers.slice(this.layers.indexOf(layer));
         for (const r of remaining) {
           if (activeLayers.includes(r.layer) && !metrics.layers[r.name]) {
-            metrics.skipLayer(r.name, 'Pipeline timeout');
+            metrics.skipLayer(r.name, "Pipeline timeout");
           }
         }
         break;
@@ -305,21 +318,27 @@ class SynapseEngine {
         results.push(result);
         previousLayers.push(result);
       } else if (result === null || result === undefined) {
-        metrics.skipLayer(layer.name, 'Returned null');
+        metrics.skipLayer(layer.name, "Returned null");
       } else {
-        metrics.skipLayer(layer.name, 'Invalid result format');
+        metrics.skipLayer(layer.name, "Invalid result format");
       }
     }
 
     // 3. Memory bridge (SYN-10) — feature-gated MIS consumer
     if (needsMemoryHints(bracket)) {
       const hints = await this.memoryBridge.getMemoryHints(
-        (session && session.activeAgent) || (session && session.active_agent) || '',
+        (session && session.activeAgent) ||
+          (session && session.active_agent) ||
+          "",
         bracket,
         tokenBudget,
       );
       if (hints.length > 0) {
-        const memoryResult = { layer: 'memory', rules: hints, metadata: { layer: 'memory', source: 'memory' } };
+        const memoryResult = {
+          layer: "memory",
+          rules: hints,
+          metadata: { layer: "memory", source: "memory" },
+        };
         results.push(memoryResult);
         previousLayers.push(memoryResult);
       }
@@ -357,13 +376,15 @@ class SynapseEngine {
     try {
       const synapsePath = this.synapsePath;
       if (!synapsePath || !fs.existsSync(synapsePath)) return;
-      const metricsDir = path.join(synapsePath, 'metrics');
+      const metricsDir = path.join(synapsePath, "metrics");
       if (!fs.existsSync(metricsDir)) {
         fs.mkdirSync(metricsDir, { recursive: true });
       }
       // SYN-14: Calculate hook boot time if _hookBootTime was passed
       const hookBootTime = config && config._hookBootTime;
-      const hookBootMs = hookBootTime ? Number(process.hrtime.bigint() - hookBootTime) / 1e6 : 0;
+      const hookBootMs = hookBootTime
+        ? Number(process.hrtime.bigint() - hookBootTime) / 1e6
+        : 0;
       const data = {
         totalDuration: summary.total_ms,
         hookBootMs,
@@ -379,13 +400,14 @@ class SynapseEngine {
       for (const [name, info] of Object.entries(summary.per_layer)) {
         data.perLayer[name] = {
           duration: info.duration || 0,
-          status: info.status || 'unknown',
+          status: info.status || "unknown",
           rules: info.rules || 0,
         };
       }
       fs.writeFileSync(
-        path.join(metricsDir, 'hook-metrics.json'),
-        JSON.stringify(data, null, 2), 'utf8',
+        path.join(metricsDir, "hook-metrics.json"),
+        JSON.stringify(data, null, 2),
+        "utf8",
       );
     } catch {
       // Fire-and-forget: never block the hook pipeline

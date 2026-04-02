@@ -8,7 +8,7 @@
  * @created Story SYN-10 - Pro Memory Bridge (extracted from formatter.js)
  */
 
-'use strict';
+"use strict";
 
 /**
  * Estimate the number of tokens from a string.
@@ -19,7 +19,7 @@
  * @returns {number} Estimated token count
  */
 function estimateTokens(text) {
-  return Math.ceil((text || '').length / 4);
+  return Math.ceil((text || "").length / 4);
 }
 
 module.exports = { estimateTokens };

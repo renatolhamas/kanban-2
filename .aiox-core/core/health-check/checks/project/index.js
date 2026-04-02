@@ -9,14 +9,14 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const PackageJsonCheck = require('./package-json');
-const DependenciesCheck = require('./dependencies');
-const FrameworkConfigCheck = require('./framework-config');
-const NodeVersionCheck = require('./node-version');
-const AioxDirectoryCheck = require('./aiox-directory');
-const AgentConfigCheck = require('./agent-config');
-const TaskDefinitionsCheck = require('./task-definitions');
-const WorkflowDependenciesCheck = require('./workflow-dependencies');
+const PackageJsonCheck = require("./package-json");
+const DependenciesCheck = require("./dependencies");
+const FrameworkConfigCheck = require("./framework-config");
+const NodeVersionCheck = require("./node-version");
+const AioxDirectoryCheck = require("./aiox-directory");
+const AgentConfigCheck = require("./agent-config");
+const TaskDefinitionsCheck = require("./task-definitions");
+const WorkflowDependenciesCheck = require("./workflow-dependencies");
 
 /**
  * All project domain checks

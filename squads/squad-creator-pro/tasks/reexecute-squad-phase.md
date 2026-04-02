@@ -18,12 +18,12 @@ Reexecution must preserve recoverability.
 
 ## Inputs
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `squad_name` | string | Yes | Target squad |
-| `workflow_id` | string | Yes | Workflow to reexecute |
-| `phase_id` | string | Yes | Phase to rerun |
-| `reason` | text | Yes | Why rerun is required |
+| Parameter     | Type   | Required | Description           |
+| ------------- | ------ | -------- | --------------------- |
+| `squad_name`  | string | Yes      | Target squad          |
+| `workflow_id` | string | Yes      | Workflow to reexecute |
+| `phase_id`    | string | Yes      | Phase to rerun        |
+| `reason`      | text   | Yes      | Why rerun is required |
 
 ---
 

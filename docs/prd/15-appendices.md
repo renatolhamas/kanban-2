@@ -9,15 +9,15 @@
 
 ## 15.2 Glossary
 
-| Term | Definição |
-|------|-----------|
-| **Tenant** | Instância isolada de cliente/empresa; separação lógica via `tenant_id` |
-| **Kanban** | Pipeline/funil de vendas com colunas customizáveis |
-| **Conversation** | Thread de chat entre Owner/Attendant e um contato via WhatsApp |
-| **Automatic Message** | Template de mensagem pré-cadastrada para envio manual ou automático |
-| **RLS** | Row Level Security — política de segurança que filtra dados por tenant_id |
-| **Evolution API** | Gateway WhatsApp third-party; pairing + webhooks |
-| **E2E** | End-to-End (fluxo completo Register → Chat) |
+| Term                  | Definição                                                                 |
+| --------------------- | ------------------------------------------------------------------------- |
+| **Tenant**            | Instância isolada de cliente/empresa; separação lógica via `tenant_id`    |
+| **Kanban**            | Pipeline/funil de vendas com colunas customizáveis                        |
+| **Conversation**      | Thread de chat entre Owner/Attendant e um contato via WhatsApp            |
+| **Automatic Message** | Template de mensagem pré-cadastrada para envio manual ou automático       |
+| **RLS**               | Row Level Security — política de segurança que filtra dados por tenant_id |
+| **Evolution API**     | Gateway WhatsApp third-party; pairing + webhooks                          |
+| **E2E**               | End-to-End (fluxo completo Register → Chat)                               |
 
 ## 15.3 Related Documents
 

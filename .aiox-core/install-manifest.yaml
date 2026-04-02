@@ -1,5 +1,5 @@
 version: 5.0.3
-installed_at: '2026-04-02T10:22:01.291Z'
+installed_at: "2026-04-02T10:22:01.291Z"
 install_type: full
 files:
   - core\code-intel-client.js

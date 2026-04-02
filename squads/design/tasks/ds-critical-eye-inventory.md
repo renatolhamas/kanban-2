@@ -14,6 +14,7 @@ Scan `pattern-catalog.json` and group all variants by category. Detect new varia
 This is Step 1 of the Critical Eye workflow — the foundation that all subsequent scoring depends on.
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/critical-eye/cycle-{N}/inventory.json`
 - **format:** JSON — variants grouped by category with source cross-references
 - **consumed_by:** ds-critical-eye-score

@@ -10,6 +10,7 @@
 ## When to Use These Patterns
 
 Use pipeline patterns when your squad has:
+
 - **Multi-phase processing** — 3+ sequential steps that transform data
 - **Long-running operations** — minutes to hours per item
 - **Resume requirement** — need to pick up where you left off after crash/interruption
@@ -17,6 +18,7 @@ Use pipeline patterns when your squad has:
 - **Cost tracking** — need to know how much each phase/item costs
 
 **Do NOT use if:**
+
 - Your squad has simple request/response workflows (just use functions)
 - Operations take < 30 seconds per item
 - There's no need for resume or progress tracking
@@ -66,17 +68,17 @@ class PipelineState:
 
 ### Key Operations
 
-| Operation | What it does | When to call |
-|-----------|-------------|--------------|
-| `create_state(item_id, metadata, phases)` | Initialize with all phases as "pending" | Start of pipeline |
-| `start_phase(phase_num)` | Mark "in_progress", record timestamp | Before executing phase |
-| `complete_phase(phase_num, output, tokens, cost)` | Mark "completed", store output, update totals | After phase succeeds |
-| `fail_phase(phase_num, error)` | Mark "failed", record error | When phase fails |
-| `skip_phase(phase_num, reason)` | Mark "skipped" | When phase is not needed |
-| `reset_phase(phase_num)` | Reset to "pending" | For reprocessing |
-| `get_next_pending_phase()` | Find first "pending" phase | Resume logic |
-| `get_resume_phase()` | Last completed + 1 | Resume logic |
-| `save_state()` / `load_state()` | Persist to / load from JSON | Every state change |
+| Operation                                         | What it does                                  | When to call             |
+| ------------------------------------------------- | --------------------------------------------- | ------------------------ |
+| `create_state(item_id, metadata, phases)`         | Initialize with all phases as "pending"       | Start of pipeline        |
+| `start_phase(phase_num)`                          | Mark "in_progress", record timestamp          | Before executing phase   |
+| `complete_phase(phase_num, output, tokens, cost)` | Mark "completed", store output, update totals | After phase succeeds     |
+| `fail_phase(phase_num, error)`                    | Mark "failed", record error                   | When phase fails         |
+| `skip_phase(phase_num, reason)`                   | Mark "skipped"                                | When phase is not needed |
+| `reset_phase(phase_num)`                          | Reset to "pending"                            | For reprocessing         |
+| `get_next_pending_phase()`                        | Find first "pending" phase                    | Resume logic             |
+| `get_resume_phase()`                              | Last completed + 1                            | Resume logic             |
+| `save_state()` / `load_state()`                   | Persist to / load from JSON                   | Every state change       |
 
 ### Resume Pattern
 
@@ -106,12 +108,12 @@ for phase_num in range(resume_phase, total_phases):
 
 ### Anti-Patterns
 
-| Anti-Pattern | Why it's wrong | Correct approach |
-|-------------|---------------|-----------------|
-| Hardcoded phase enum | Can't reuse across squads | Use `str` status, define phases at init |
-| Save state only at end | Lose progress on crash | Save after EVERY phase |
-| Store outputs in memory only | Can't resume | Persist to disk + state JSON |
-| Phase names in state manager | Couples manager to domain | Pass phase definitions from consumer |
+| Anti-Pattern                 | Why it's wrong            | Correct approach                        |
+| ---------------------------- | ------------------------- | --------------------------------------- |
+| Hardcoded phase enum         | Can't reuse across squads | Use `str` status, define phases at init |
+| Save state only at end       | Lose progress on crash    | Save after EVERY phase                  |
+| Store outputs in memory only | Can't resume              | Persist to disk + state JSON            |
+| Phase names in state manager | Couples manager to domain | Pass phase definitions from consumer    |
 
 ---
 
@@ -185,12 +187,12 @@ tracker.stop()
 
 ### Anti-Patterns
 
-| Anti-Pattern | Why it's wrong | Correct approach |
-|-------------|---------------|-----------------|
-| Only rich, no fallback | Breaks in CI/CD | Factory with SimpleProgress |
-| Progress to stdout | Mixes with JSONL output | Use stderr for progress |
-| No ETA | User can't plan | Track elapsed, calculate remaining |
-| Hardcoded "books" | Can't reuse | `item_noun` parameter |
+| Anti-Pattern           | Why it's wrong          | Correct approach                   |
+| ---------------------- | ----------------------- | ---------------------------------- |
+| Only rich, no fallback | Breaks in CI/CD         | Factory with SimpleProgress        |
+| Progress to stdout     | Mixes with JSONL output | Use stderr for progress            |
+| No ETA                 | User can't plan         | Track elapsed, calculate remaining |
+| Hardcoded "books"      | Can't reuse             | `item_noun` parameter              |
 
 ---
 
@@ -290,12 +292,12 @@ phases = [
 
 ### Anti-Patterns
 
-| Anti-Pattern | Why it's wrong | Correct approach |
-|-------------|---------------|-----------------|
-| Hardcoded script paths | Couples runner to file layout | Handlers as callables |
-| All phases critical | One failure kills everything | Mark non-critical phases |
-| No timeout | Phase hangs forever | Timeout per phase |
-| No caching | Re-runs completed work | cache_check function |
+| Anti-Pattern           | Why it's wrong                | Correct approach         |
+| ---------------------- | ----------------------------- | ------------------------ |
+| Hardcoded script paths | Couples runner to file layout | Handlers as callables    |
+| All phases critical    | One failure kills everything  | Mark non-critical phases |
+| No timeout             | Phase hangs forever           | Timeout per phase        |
+| No caching             | Re-runs completed work        | cache_check function     |
 
 ---
 
@@ -340,6 +342,7 @@ phases = [
 ## Templates
 
 Scaffold templates are available at:
+
 - `templates/pipeline-state-tmpl.py` — PipelineState + PipelineStateManager
 - `templates/pipeline-progress-tmpl.py` — ProgressTracker + SimpleProgress + factory
 - `templates/pipeline-runner-tmpl.py` — PhaseRunner + PhaseDefinition

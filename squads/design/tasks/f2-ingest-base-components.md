@@ -34,15 +34,15 @@ Receber do usuario as especificacoes visuais dos componentes base do Figma (via 
 
 ```css
 /* Button — Default variant */
-background: #3B82F6;
-color: #FFFFFF;
+background: #3b82f6;
+color: #ffffff;
 border-radius: 8px;
 padding: 8px 16px;
 font-size: 14px;
 font-weight: 500;
 
 /* Button — Hover */
-background: #2563EB;
+background: #2563eb;
 
 /* Button — Disabled */
 opacity: 0.5;
@@ -80,19 +80,19 @@ Cole o CSS do Dev Mode do Figma para cada variante/estado:
 
 Para cada componente, extrair:
 
-| Propriedade | Valores por Estado |
-|---|---|
-| `background` | default, hover, focus, active, disabled |
-| `color` (text) | default, hover, focus, active, disabled |
-| `border` | color, width, style |
-| `border-radius` | valor |
-| `padding` | top, right, bottom, left |
-| `font-size` | valor |
-| `font-weight` | valor |
-| `line-height` | valor |
-| `box-shadow` | default, focus |
-| `opacity` | disabled |
-| `transition` | propriedade, duracao, easing |
+| Propriedade     | Valores por Estado                      |
+| --------------- | --------------------------------------- |
+| `background`    | default, hover, focus, active, disabled |
+| `color` (text)  | default, hover, focus, active, disabled |
+| `border`        | color, width, style                     |
+| `border-radius` | valor                                   |
+| `padding`       | top, right, bottom, left                |
+| `font-size`     | valor                                   |
+| `font-weight`   | valor                                   |
+| `line-height`   | valor                                   |
+| `box-shadow`    | default, focus                          |
+| `opacity`       | disabled                                |
+| `transition`    | propriedade, duracao, easing            |
 
 ### Step 3: Mapear para Tokens Semanticos
 
@@ -118,7 +118,7 @@ variants:
     border-radius: "var(--radius)"
     padding: "8px 16px"
   hover:
-    background: "oklch(0.55 0.214 259.815)"  # slightly darker primary
+    background: "oklch(0.55 0.214 259.815)" # slightly darker primary
   focus:
     ring: "var(--ring)"
     ring-offset: "2px"

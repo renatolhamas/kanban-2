@@ -12,22 +12,22 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const fsSync = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
 
-const LockManager = require('./lock-manager');
+const LockManager = require("./lock-manager");
 
 // Constants
 const STALE_SESSION_DAYS = 30;
 const STALE_SNAPSHOT_DAYS = 90;
-const SESSION_STATE_FILENAME = '.session-state.yaml';
-const ARCHIVE_DIR = '.aiox/archive/sessions';
-const SNAPSHOTS_DIR = '.aiox/snapshots';
-const SNAPSHOTS_INDEX = 'index.json';
+const SESSION_STATE_FILENAME = ".session-state.yaml";
+const ARCHIVE_DIR = ".aiox/archive/sessions";
+const SNAPSHOTS_DIR = ".aiox/snapshots";
+const SNAPSHOTS_INDEX = "index.json";
 
 /**
  * Cleanup result summary
@@ -51,8 +51,8 @@ class DataLifecycleManager {
    * @param {number} [options.staleSnapshotDays=90] - Days before snapshot is stale
    */
   constructor(projectRoot, options = {}) {
-    if (!projectRoot || typeof projectRoot !== 'string') {
-      throw new Error('projectRoot is required and must be a string');
+    if (!projectRoot || typeof projectRoot !== "string") {
+      throw new Error("projectRoot is required and must be a string");
     }
 
     this.projectRoot = projectRoot;
@@ -63,7 +63,9 @@ class DataLifecycleManager {
       ...options,
     };
 
-    this.lockManager = new LockManager(projectRoot, { debug: this.options.debug });
+    this.lockManager = new LockManager(projectRoot, {
+      debug: this.options.debug,
+    });
     this.archiveDir = path.join(projectRoot, ARCHIVE_DIR);
     this.snapshotsDir = path.join(projectRoot, SNAPSHOTS_DIR);
   }
@@ -119,17 +121,21 @@ class DataLifecycleManager {
    * @returns {Promise<number>} Number of sessions archived
    */
   async cleanupStaleSessions() {
-    const sessionPath = path.join(this.projectRoot, 'docs/stories', SESSION_STATE_FILENAME);
+    const sessionPath = path.join(
+      this.projectRoot,
+      "docs/stories",
+      SESSION_STATE_FILENAME,
+    );
 
     // Check if session state exists
     if (!fsSync.existsSync(sessionPath)) {
-      this._log('No session state file found');
+      this._log("No session state file found");
       return 0;
     }
 
     try {
       // Load and parse session state
-      const content = await fs.readFile(sessionPath, 'utf8');
+      const content = await fs.readFile(sessionPath, "utf8");
       let state;
       try {
         state = yaml.load(content);
@@ -139,7 +145,7 @@ class DataLifecycleManager {
       }
 
       if (!state?.session_state?.last_updated) {
-        this._log('Session state missing last_updated field');
+        this._log("Session state missing last_updated field");
         return 0;
       }
 
@@ -149,14 +155,16 @@ class DataLifecycleManager {
       const ageInDays = (now - lastUpdated) / (1000 * 60 * 60 * 24);
 
       if (ageInDays <= this.options.staleSessionDays) {
-        this._log(`Session state is ${Math.round(ageInDays)} days old (threshold: ${this.options.staleSessionDays})`);
+        this._log(
+          `Session state is ${Math.round(ageInDays)} days old (threshold: ${this.options.staleSessionDays})`,
+        );
         return 0;
       }
 
       // Archive the session
       await this._ensureDir(this.archiveDir);
 
-      const timestamp = lastUpdated.toISOString().split('T')[0];
+      const timestamp = lastUpdated.toISOString().split("T")[0];
       const archiveName = `session-state-${timestamp}.yaml`;
       const archivePath = path.join(this.archiveDir, archiveName);
 
@@ -181,7 +189,7 @@ class DataLifecycleManager {
   async cleanupStaleSnapshots() {
     // Check if snapshots directory exists
     if (!fsSync.existsSync(this.snapshotsDir)) {
-      this._log('No snapshots directory found');
+      this._log("No snapshots directory found");
       return 0;
     }
 
@@ -190,7 +198,9 @@ class DataLifecycleManager {
 
     try {
       const files = await fs.readdir(this.snapshotsDir);
-      const snapshotFiles = files.filter((f) => f.endsWith('.json') && f !== SNAPSHOTS_INDEX);
+      const snapshotFiles = files.filter(
+        (f) => f.endsWith(".json") && f !== SNAPSHOTS_INDEX,
+      );
 
       const now = new Date();
       const thresholdMs = this.options.staleSnapshotDays * 24 * 60 * 60 * 1000;
@@ -204,7 +214,7 @@ class DataLifecycleManager {
 
           if (ageMs > thresholdMs) {
             // Read snapshot metadata before removing
-            const content = await fs.readFile(filePath, 'utf8');
+            const content = await fs.readFile(filePath, "utf8");
             const snapshot = JSON.parse(content);
 
             // Record removal info
@@ -213,8 +223,8 @@ class DataLifecycleManager {
               removed_at: now.toISOString(),
               original_created: stats.mtime.toISOString(),
               age_days: Math.round(ageMs / (24 * 60 * 60 * 1000)),
-              epic_id: snapshot?.epic_id || 'unknown',
-              story_id: snapshot?.story_id || 'unknown',
+              epic_id: snapshot?.epic_id || "unknown",
+              story_id: snapshot?.story_id || "unknown",
             });
 
             // Remove the file
@@ -266,7 +276,7 @@ class DataLifecycleManager {
     // Load existing index if exists
     if (fsSync.existsSync(indexPath)) {
       try {
-        const content = await fs.readFile(indexPath, 'utf8');
+        const content = await fs.readFile(indexPath, "utf8");
         index = JSON.parse(content);
         if (!Array.isArray(index.removed_snapshots)) {
           index.removed_snapshots = [];
@@ -282,8 +292,10 @@ class DataLifecycleManager {
     index.last_cleanup = new Date().toISOString();
 
     // Write updated index
-    await fs.writeFile(indexPath, JSON.stringify(index, null, 2), 'utf8');
-    this._log(`Updated snapshots index with ${removedSnapshots.length} removed entries`);
+    await fs.writeFile(indexPath, JSON.stringify(index, null, 2), "utf8");
+    this._log(
+      `Updated snapshots index with ${removedSnapshots.length} removed entries`,
+    );
   }
 
   /**
@@ -302,7 +314,10 @@ class DataLifecycleManager {
    * @private
    */
   _logCleanupSummary(result) {
-    const hasCleanup = result.locksRemoved > 0 || result.sessionsArchived > 0 || result.snapshotsRemoved > 0;
+    const hasCleanup =
+      result.locksRemoved > 0 ||
+      result.sessionsArchived > 0 ||
+      result.snapshotsRemoved > 0;
 
     if (hasCleanup || this.options.debug) {
       const message = `🧹 Cleanup: ${result.locksRemoved} locks removidos, ${result.sessionsArchived} sessions arquivadas, ${result.snapshotsRemoved} snapshots removidos`;
@@ -310,7 +325,7 @@ class DataLifecycleManager {
     }
 
     if (result.errors.length > 0) {
-      console.log(`⚠️ Cleanup errors: ${result.errors.join(', ')}`);
+      console.log(`⚠️ Cleanup errors: ${result.errors.join(", ")}`);
     }
   }
 

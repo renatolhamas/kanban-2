@@ -9,8 +9,8 @@
  * @story 2.11 - MCP System Global
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 const {
   getGlobalAioxDir,
   getGlobalMcpDir,
@@ -18,13 +18,13 @@ const {
   getServersDir,
   getCacheDir,
   getCredentialsDir,
-} = require('./os-detector');
+} = require("./os-detector");
 
 /**
  * Default global config structure
  */
 const DEFAULT_CONFIG = {
-  version: '1.0',
+  version: "1.0",
   servers: {},
   defaults: {
     timeout: 30000,
@@ -37,44 +37,44 @@ const DEFAULT_CONFIG = {
  */
 const SERVER_TEMPLATES = {
   context7: {
-    type: 'sse',
-    url: 'https://mcp.context7.com/sse',
+    type: "sse",
+    url: "https://mcp.context7.com/sse",
     enabled: true,
   },
   exa: {
-    command: 'npx',
-    args: ['-y', 'exa-mcp-server'],
+    command: "npx",
+    args: ["-y", "exa-mcp-server"],
     env: {
-      EXA_API_KEY: '${EXA_API_KEY}',
+      EXA_API_KEY: "${EXA_API_KEY}",
     },
     enabled: true,
   },
   github: {
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-github'],
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-github"],
     env: {
-      GITHUB_TOKEN: '${GITHUB_TOKEN}',
+      GITHUB_TOKEN: "${GITHUB_TOKEN}",
     },
     enabled: true,
   },
   puppeteer: {
-    command: 'npx',
-    args: ['-y', '@anthropic-ai/mcp-server-puppeteer'],
+    command: "npx",
+    args: ["-y", "@anthropic-ai/mcp-server-puppeteer"],
     enabled: true,
   },
-  'desktop-commander': {
-    command: 'npx',
-    args: ['-y', '@anthropic-ai/mcp-server-desktop-commander'],
+  "desktop-commander": {
+    command: "npx",
+    args: ["-y", "@anthropic-ai/mcp-server-desktop-commander"],
     enabled: true,
   },
   filesystem: {
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-filesystem'],
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-filesystem"],
     enabled: true,
   },
   memory: {
-    command: 'npx',
-    args: ['-y', '@modelcontextprotocol/server-memory'],
+    command: "npx",
+    args: ["-y", "@modelcontextprotocol/server-memory"],
     enabled: true,
   },
 };
@@ -131,10 +131,10 @@ function createGlobalStructure() {
   }
 
   // Create .gitignore in credentials directory
-  const credentialsGitignore = path.join(getCredentialsDir(), '.gitignore');
+  const credentialsGitignore = path.join(getCredentialsDir(), ".gitignore");
   try {
     if (!fs.existsSync(credentialsGitignore)) {
-      fs.writeFileSync(credentialsGitignore, '*\n!.gitignore\n');
+      fs.writeFileSync(credentialsGitignore, "*\n!.gitignore\n");
       created.push(credentialsGitignore);
     }
   } catch (error) {
@@ -153,7 +153,7 @@ function createGlobalConfig(initialServers = {}) {
   const configPath = getGlobalConfigPath();
 
   if (fs.existsSync(configPath)) {
-    return { success: false, error: 'Config already exists', configPath };
+    return { success: false, error: "Config already exists", configPath };
   }
 
   const config = {
@@ -162,7 +162,7 @@ function createGlobalConfig(initialServers = {}) {
   };
 
   try {
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
     return { success: true, configPath };
   } catch (error) {
     return { success: false, error: error.message, configPath };
@@ -181,7 +181,7 @@ function readGlobalConfig() {
   }
 
   try {
-    const content = fs.readFileSync(configPath, 'utf8');
+    const content = fs.readFileSync(configPath, "utf8");
     return JSON.parse(content);
   } catch (error) {
     console.error(`Error reading global config: ${error.message}`);
@@ -198,7 +198,7 @@ function writeGlobalConfig(config) {
   const configPath = getGlobalConfigPath();
 
   try {
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf8');
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2), "utf8");
     return { success: true, configPath };
   } catch (error) {
     return { success: false, error: error.message };
@@ -215,19 +215,28 @@ function addServer(serverName, serverConfig = null) {
   const config = readGlobalConfig();
 
   if (!config) {
-    return { success: false, error: 'Global config not found. Run "aiox mcp setup" first.' };
+    return {
+      success: false,
+      error: 'Global config not found. Run "aiox mcp setup" first.',
+    };
   }
 
   // Use template if available and no config provided
   if (!serverConfig && SERVER_TEMPLATES[serverName]) {
     serverConfig = { ...SERVER_TEMPLATES[serverName] };
   } else if (!serverConfig) {
-    return { success: false, error: `No template available for "${serverName}". Provide server configuration.` };
+    return {
+      success: false,
+      error: `No template available for "${serverName}". Provide server configuration.`,
+    };
   }
 
   // Check if server already exists
   if (config.servers[serverName]) {
-    return { success: false, error: `Server "${serverName}" already exists in config.` };
+    return {
+      success: false,
+      error: `Server "${serverName}" already exists in config.`,
+    };
   }
 
   config.servers[serverName] = serverConfig;
@@ -240,7 +249,11 @@ function addServer(serverName, serverConfig = null) {
   // Also create individual server config file
   const serverFilePath = path.join(getServersDir(), `${serverName}.json`);
   try {
-    fs.writeFileSync(serverFilePath, JSON.stringify(serverConfig, null, 2), 'utf8');
+    fs.writeFileSync(
+      serverFilePath,
+      JSON.stringify(serverConfig, null, 2),
+      "utf8",
+    );
   } catch (error) {
     // Non-critical error, main config is updated
     console.warn(`Warning: Could not create server file: ${error.message}`);
@@ -258,11 +271,14 @@ function removeServer(serverName) {
   const config = readGlobalConfig();
 
   if (!config) {
-    return { success: false, error: 'Global config not found.' };
+    return { success: false, error: "Global config not found." };
   }
 
   if (!config.servers[serverName]) {
-    return { success: false, error: `Server "${serverName}" not found in config.` };
+    return {
+      success: false,
+      error: `Server "${serverName}" not found in config.`,
+    };
   }
 
   delete config.servers[serverName];
@@ -295,11 +311,14 @@ function setServerEnabled(serverName, enabled) {
   const config = readGlobalConfig();
 
   if (!config) {
-    return { success: false, error: 'Global config not found.' };
+    return { success: false, error: "Global config not found." };
   }
 
   if (!config.servers[serverName]) {
-    return { success: false, error: `Server "${serverName}" not found in config.` };
+    return {
+      success: false,
+      error: `Server "${serverName}" not found in config.`,
+    };
   }
 
   config.servers[serverName].enabled = enabled;
@@ -320,7 +339,7 @@ function listServers() {
 
   const servers = Object.entries(config.servers).map(([name, cfg]) => ({
     name,
-    type: cfg.type || 'command',
+    type: cfg.type || "command",
     enabled: cfg.enabled !== false,
     url: cfg.url,
     command: cfg.command,
@@ -329,7 +348,7 @@ function listServers() {
   return {
     servers,
     total: servers.length,
-    enabled: servers.filter(s => s.enabled).length,
+    enabled: servers.filter((s) => s.enabled).length,
   };
 }
 

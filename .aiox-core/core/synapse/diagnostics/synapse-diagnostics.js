@@ -13,16 +13,18 @@
  * @created Story SYN-13
  */
 
-'use strict';
+"use strict";
 
-const path = require('path');
-const { collectHookStatus } = require('./collectors/hook-collector');
-const { collectSessionStatus } = require('./collectors/session-collector');
-const { collectManifestIntegrity } = require('./collectors/manifest-collector');
-const { collectPipelineSimulation } = require('./collectors/pipeline-collector');
-const { collectUapBridgeStatus } = require('./collectors/uap-collector');
-const { formatReport } = require('./report-formatter');
-const { parseManifest } = require('../domain/domain-loader');
+const path = require("path");
+const { collectHookStatus } = require("./collectors/hook-collector");
+const { collectSessionStatus } = require("./collectors/session-collector");
+const { collectManifestIntegrity } = require("./collectors/manifest-collector");
+const {
+  collectPipelineSimulation,
+} = require("./collectors/pipeline-collector");
+const { collectUapBridgeStatus } = require("./collectors/uap-collector");
+const { formatReport } = require("./report-formatter");
+const { parseManifest } = require("../domain/domain-loader");
 
 /**
  * Safely execute a collector, returning an error object on failure.
@@ -35,7 +37,14 @@ function _safeCollect(name, fn) {
   try {
     return fn();
   } catch (error) {
-    return { error: true, collector: name, message: error.message, checks: [], fields: [], entries: [] };
+    return {
+      error: true,
+      collector: name,
+      message: error.message,
+      checks: [],
+      fields: [],
+      entries: [],
+    };
   }
 }
 
@@ -47,23 +56,34 @@ function _safeCollect(name, fn) {
  * @returns {{ hook, session, manifest, pipeline, uap }} Collector results
  */
 function _collectAll(projectRoot, options) {
-  if (!projectRoot || typeof projectRoot !== 'string') {
-    throw new Error('projectRoot is required and must be a string');
+  if (!projectRoot || typeof projectRoot !== "string") {
+    throw new Error("projectRoot is required and must be a string");
   }
 
-  const synapsePath = path.join(projectRoot, '.synapse');
-  const manifestPath = path.join(synapsePath, 'manifest');
+  const synapsePath = path.join(projectRoot, ".synapse");
+  const manifestPath = path.join(synapsePath, "manifest");
 
-  const hook = _safeCollect('hook', () => collectHookStatus(projectRoot));
-  const session = _safeCollect('session', () => collectSessionStatus(projectRoot, options.sessionId));
-  const manifest = _safeCollect('manifest', () => collectManifestIntegrity(projectRoot));
-  const parsedManifest = _safeCollect('parsedManifest', () => parseManifest(manifestPath));
+  const hook = _safeCollect("hook", () => collectHookStatus(projectRoot));
+  const session = _safeCollect("session", () =>
+    collectSessionStatus(projectRoot, options.sessionId),
+  );
+  const manifest = _safeCollect("manifest", () =>
+    collectManifestIntegrity(projectRoot),
+  );
+  const parsedManifest = _safeCollect("parsedManifest", () =>
+    parseManifest(manifestPath),
+  );
 
   const promptCount = session?.raw?.session?.prompt_count || 0;
-  const activeAgentId = session?.raw?.bridgeData?.id || session?.raw?.session?.active_agent?.id || null;
+  const activeAgentId =
+    session?.raw?.bridgeData?.id ||
+    session?.raw?.session?.active_agent?.id ||
+    null;
 
-  const pipeline = _safeCollect('pipeline', () => collectPipelineSimulation(promptCount, activeAgentId, parsedManifest));
-  const uap = _safeCollect('uap', () => collectUapBridgeStatus(projectRoot));
+  const pipeline = _safeCollect("pipeline", () =>
+    collectPipelineSimulation(promptCount, activeAgentId, parsedManifest),
+  );
+  const uap = _safeCollect("uap", () => collectUapBridgeStatus(projectRoot));
 
   return { hook, session, manifest, pipeline, uap };
 }

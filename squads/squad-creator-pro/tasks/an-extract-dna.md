@@ -22,20 +22,21 @@ Extrair o DNA Mental completo (8 camadas) de uma mente especifica, documentando 
 
 Para cada camada do DNA Mental, extrair patterns das fontes OURO:
 
-| Layer | Nome | O que extrair |
-|-------|------|---------------|
-| 1 | Behavioral Patterns | Como age, reage, aborda problemas |
-| 2 | Communication Style | Vocabulario, ritmo, estrutura de frase |
-| 3 | Routines & Habits | Padroes repetitivos, rituais |
-| 4 | Recognition Patterns | O que detecta rapido, red/green flags |
-| 5 | Mental Models | Frameworks de decisao, heuristicas |
-| 6 | Values Hierarchy | O que prioriza, o que rejeita |
-| 7 | Core Obsessions | Temas que volta sempre, batalhas |
-| 8 | Productive Paradoxes | Contradicoes que sao features |
+| Layer | Nome                 | O que extrair                          |
+| ----- | -------------------- | -------------------------------------- |
+| 1     | Behavioral Patterns  | Como age, reage, aborda problemas      |
+| 2     | Communication Style  | Vocabulario, ritmo, estrutura de frase |
+| 3     | Routines & Habits    | Padroes repetitivos, rituais           |
+| 4     | Recognition Patterns | O que detecta rapido, red/green flags  |
+| 5     | Mental Models        | Frameworks de decisao, heuristicas     |
+| 6     | Values Hierarchy     | O que prioriza, o que rejeita          |
+| 7     | Core Obsessions      | Temas que volta sempre, batalhas       |
+| 8     | Productive Paradoxes | Contradicoes que sao features          |
 
 ### Phase 3: Document Voice DNA
 
 Extrair e documentar:
+
 - Identity statement (1 frase que captura essencia)
 - Power words (5-10 com contexto)
 - Signature phrases (5-7 com quando usar)
@@ -47,6 +48,7 @@ Extrair e documentar:
 ### Phase 4: Document Thinking DNA
 
 Extrair e documentar:
+
 - Primary framework (o framework MESTRE da pessoa)
 - Secondary frameworks (3-6 complementares)
 - Diagnostic framework (perguntas + red/green flags)
@@ -63,21 +65,21 @@ dna_extraction_report:
   mind: "{nome}"
   date: "{data}"
   sources:
-    ouro: [{lista}]
-    bronze: [{lista}]
+    ouro: [{ lista }]
+    bronze: [{ lista }]
     curadoria_score: "{media}"
   voice_dna:
     identity: "{statement}"
-    power_words: [{lista}]
-    signature_phrases: [{lista}]
-    tone: {dimensions}
+    power_words: [{ lista }]
+    signature_phrases: [{ lista }]
+    tone: { dimensions }
   thinking_dna:
     primary_framework: "{nome + descricao}"
-    secondary_frameworks: [{lista}]
-    heuristics: [{lista com IDs}]
-    veto_conditions: [{lista}]
+    secondary_frameworks: [{ lista }]
+    heuristics: [{ lista com IDs }]
+    veto_conditions: [{ lista }]
   fidelity_estimate: "{%}"
-  next_steps: [{recomendacoes}]
+  next_steps: [{ recomendacoes }]
 ```
 
 ## Completion Criteria

@@ -3,6 +3,7 @@
 ## 3.1 Core Tables
 
 ### `tenants` — Multi-tenancy root
+
 ```sql
 CREATE TABLE tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -17,6 +18,7 @@ CREATE INDEX idx_tenants_subscription ON tenants(subscription_status);
 ```
 
 ### `users` — Owners and attendants
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -33,6 +35,7 @@ CREATE INDEX idx_users_tenant ON users(tenant_id);
 ```
 
 ### `kanbans` — Pipelines/funnels
+
 ```sql
 CREATE TABLE kanbans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -48,6 +51,7 @@ CREATE INDEX idx_kanbans_tenant_order ON kanbans(tenant_id, order_position);
 ```
 
 ### `columns` — Kanban stages
+
 ```sql
 CREATE TABLE columns (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,6 +65,7 @@ CREATE INDEX idx_columns_kanban_order ON columns(kanban_id, order_position);
 ```
 
 ### `contacts` — Contact directory
+
 ```sql
 CREATE TABLE contacts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -75,6 +80,7 @@ CREATE INDEX idx_contacts_tenant ON contacts(tenant_id);
 ```
 
 ### `conversations` — Contact-to-kanban links
+
 ```sql
 CREATE TABLE conversations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -94,6 +100,7 @@ CREATE INDEX idx_conversations_last_message ON conversations(last_message_at DES
 ```
 
 ### `messages` — Message history
+
 ```sql
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -108,6 +115,7 @@ CREATE INDEX idx_messages_conversation_created ON messages(conversation_id, crea
 ```
 
 ### `automatic_messages` — Message templates
+
 ```sql
 CREATE TABLE automatic_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -161,12 +169,12 @@ CREATE POLICY "conversations_update"
 
 ## 3.3 Indexes & Query Optimization
 
-| Index | Purpose | Query Pattern |
-|-------|---------|---------------|
-| `idx_conversations_tenant_status` | Filter active conversations per tenant | `SELECT * FROM conversations WHERE tenant_id = ? AND status = 'active'` |
-| `idx_messages_conversation_created` | Load message history, newest first | `SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at DESC` |
-| `idx_contacts_phone_tenant` | Prevent duplicate phone per tenant | `SELECT * FROM contacts WHERE phone = ? AND tenant_id = ?` |
-| `idx_kanbans_main_tenant` | Find "Main" kanban for auto-routing | `SELECT * FROM kanbans WHERE tenant_id = ? AND is_main = TRUE` |
-| `idx_conversations_kanban_column` | Load conversations for board render | `SELECT * FROM conversations WHERE kanban_id = ? AND column_id = ?` |
+| Index                               | Purpose                                | Query Pattern                                                               |
+| ----------------------------------- | -------------------------------------- | --------------------------------------------------------------------------- |
+| `idx_conversations_tenant_status`   | Filter active conversations per tenant | `SELECT * FROM conversations WHERE tenant_id = ? AND status = 'active'`     |
+| `idx_messages_conversation_created` | Load message history, newest first     | `SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at DESC` |
+| `idx_contacts_phone_tenant`         | Prevent duplicate phone per tenant     | `SELECT * FROM contacts WHERE phone = ? AND tenant_id = ?`                  |
+| `idx_kanbans_main_tenant`           | Find "Main" kanban for auto-routing    | `SELECT * FROM kanbans WHERE tenant_id = ? AND is_main = TRUE`              |
+| `idx_conversations_kanban_column`   | Load conversations for board render    | `SELECT * FROM conversations WHERE kanban_id = ? AND column_id = ?`         |
 
 ---

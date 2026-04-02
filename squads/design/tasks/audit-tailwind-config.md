@@ -91,11 +91,11 @@ Review Tailwind CSS v4 setup to guarantee @theme layering, content scanning, uti
 - Document class naming conventions (order: layout → size → spacing → typography → color → effect)
 - Track manual overrides (safelist patterns, arbitrary values) for future cleanup
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

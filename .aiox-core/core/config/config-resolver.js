@@ -23,13 +23,13 @@
  * @see docs/architecture/adr/adr-pro-002-configuration-hierarchy.md
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const yaml = require('js-yaml');
-const { deepMerge } = require('./merge-utils');
-const { interpolateEnvVars, lintEnvPatterns } = require('./env-interpolator');
-const { globalConfigCache } = require('./config-cache');
+const fs = require("fs");
+const path = require("path");
+const os = require("os");
+const yaml = require("js-yaml");
+const { deepMerge } = require("./merge-utils");
+const { interpolateEnvVars, lintEnvPatterns } = require("./env-interpolator");
+const { globalConfigCache } = require("./config-cache");
 
 // ---------------------------------------------------------------------------
 // JSON Schema validation (Story 12.2)
@@ -42,10 +42,10 @@ let _schemaCache = {};
  * Schema file mapping for each config level.
  */
 const SCHEMA_FILES = {
-  framework: 'framework-config.schema.json',
-  project: 'project-config.schema.json',
-  local: 'local-config.schema.json',
-  user: 'user-config.schema.json',
+  framework: "framework-config.schema.json",
+  project: "project-config.schema.json",
+  local: "local-config.schema.json",
+  user: "user-config.schema.json",
 };
 
 /**
@@ -55,8 +55,8 @@ const SCHEMA_FILES = {
  */
 function getAjvInstance() {
   if (!_ajvInstance) {
-    const Ajv = require('ajv');
-    const addFormats = require('ajv-formats');
+    const Ajv = require("ajv");
+    const addFormats = require("ajv-formats");
     _ajvInstance = new Ajv({ allErrors: true, strict: false });
     addFormats(_ajvInstance);
   }
@@ -74,13 +74,13 @@ function loadSchema(schemaFileName) {
     return _schemaCache[schemaFileName];
   }
 
-  const schemaPath = path.join(__dirname, 'schemas', schemaFileName);
+  const schemaPath = path.join(__dirname, "schemas", schemaFileName);
 
   try {
     if (!fs.existsSync(schemaPath)) {
       return null;
     }
-    const content = fs.readFileSync(schemaPath, 'utf8');
+    const content = fs.readFileSync(schemaPath, "utf8");
     const schema = JSON.parse(content);
     _schemaCache[schemaFileName] = schema;
     return schema;
@@ -119,7 +119,9 @@ function validateConfig(level, data, filePath) {
 
     if (!isValid && validate.errors) {
       for (const err of validate.errors) {
-        const field = err.instancePath ? err.instancePath.replace(/^\//, '') : err.params?.missingProperty || 'unknown';
+        const field = err.instancePath
+          ? err.instancePath.replace(/^\//, "")
+          : err.params?.missingProperty || "unknown";
         warnings.push(`${filePath} inválido: campo '${field}' ${err.message}`);
       }
     }
@@ -142,25 +144,25 @@ function clearSchemaCache() {
  * Standard config file paths relative to project root.
  */
 const CONFIG_FILES = {
-  framework: '.aiox-core/framework-config.yaml',
-  project: '.aiox-core/project-config.yaml',
-  pro: 'pro/pro-config.yaml',
-  local: '.aiox-core/local-config.yaml',
-  legacy: '.aiox-core/core-config.yaml',
-  user: path.join(os.homedir(), '.aiox', 'user-config.yaml'),
+  framework: ".aiox-core/framework-config.yaml",
+  project: ".aiox-core/project-config.yaml",
+  pro: "pro/pro-config.yaml",
+  local: ".aiox-core/local-config.yaml",
+  legacy: ".aiox-core/core-config.yaml",
+  user: path.join(os.homedir(), ".aiox", "user-config.yaml"),
 };
 
 /**
  * Level identifiers for debug/tracing.
  */
 const LEVELS = {
-  framework: 'L1',
-  project: 'L2',
-  pro: 'Pro',
-  app: 'L3',
-  local: 'L4',
-  user: 'L5',
-  legacy: 'Legacy',
+  framework: "L1",
+  project: "L2",
+  pro: "Pro",
+  app: "L3",
+  local: "L4",
+  user: "L5",
+  legacy: "Legacy",
 };
 
 // ---------------------------------------------------------------------------
@@ -182,7 +184,7 @@ function loadYaml(projectRoot, relativePath) {
       return { data: null, path: fullPath };
     }
 
-    const content = fs.readFileSync(fullPath, 'utf8');
+    const content = fs.readFileSync(fullPath, "utf8");
     const data = yaml.load(content) || {};
     return { data, path: fullPath };
   } catch (error) {
@@ -203,7 +205,7 @@ function loadYamlAbsolute(absolutePath) {
       return { data: null, path: absolutePath };
     }
 
-    const content = fs.readFileSync(absolutePath, 'utf8');
+    const content = fs.readFileSync(absolutePath, "utf8");
     const data = yaml.load(content) || {};
     return { data, path: absolutePath };
   } catch (_error) {
@@ -227,7 +229,9 @@ function loadYamlAbsolute(absolutePath) {
  */
 function isLegacyMode(projectRoot) {
   const hasLegacy = fs.existsSync(path.join(projectRoot, CONFIG_FILES.legacy));
-  const hasFramework = fs.existsSync(path.join(projectRoot, CONFIG_FILES.framework));
+  const hasFramework = fs.existsSync(
+    path.join(projectRoot, CONFIG_FILES.framework),
+  );
   return hasLegacy && !hasFramework;
 }
 
@@ -266,12 +270,16 @@ function loadLayeredConfig(projectRoot, options = {}) {
   if (l1.data) {
     const l1Lint = lintEnvPatterns(l1.data, CONFIG_FILES.framework);
     if (l1Lint.length > 0) {
-      warnings.push(...l1Lint.map(w => `[LINT] ${w}`));
+      warnings.push(...l1Lint.map((w) => `[LINT] ${w}`));
     }
     // Validate L1 against schema
-    const l1Validation = validateConfig('framework', l1.data, CONFIG_FILES.framework);
+    const l1Validation = validateConfig(
+      "framework",
+      l1.data,
+      CONFIG_FILES.framework,
+    );
     if (l1Validation.length > 0) {
-      warnings.push(...l1Validation.map(w => `[SCHEMA] ${w}`));
+      warnings.push(...l1Validation.map((w) => `[SCHEMA] ${w}`));
     }
   }
 
@@ -285,12 +293,16 @@ function loadLayeredConfig(projectRoot, options = {}) {
     // Lint L2 for env patterns
     const l2Lint = lintEnvPatterns(l2.data, CONFIG_FILES.project);
     if (l2Lint.length > 0) {
-      warnings.push(...l2Lint.map(w => `[LINT] ${w}`));
+      warnings.push(...l2Lint.map((w) => `[LINT] ${w}`));
     }
     // Validate L2 against schema
-    const l2Validation = validateConfig('project', l2.data, CONFIG_FILES.project);
+    const l2Validation = validateConfig(
+      "project",
+      l2.data,
+      CONFIG_FILES.project,
+    );
     if (l2Validation.length > 0) {
-      warnings.push(...l2Validation.map(w => `[SCHEMA] ${w}`));
+      warnings.push(...l2Validation.map((w) => `[SCHEMA] ${w}`));
     }
   }
 
@@ -305,7 +317,7 @@ function loadLayeredConfig(projectRoot, options = {}) {
 
   // L3: App (optional — only when appDir is specified)
   if (options.appDir) {
-    const appConfigPath = path.join(options.appDir, 'aiox-app.config.yaml');
+    const appConfigPath = path.join(options.appDir, "aiox-app.config.yaml");
     const l3 = loadYaml(projectRoot, appConfigPath);
     if (l3.data) {
       config = deepMerge(config, l3.data);
@@ -323,9 +335,9 @@ function loadLayeredConfig(projectRoot, options = {}) {
       trackSources(sources, l4.data, LEVELS.local, CONFIG_FILES.local);
     }
     // Validate L4 against schema
-    const l4Validation = validateConfig('local', l4.data, CONFIG_FILES.local);
+    const l4Validation = validateConfig("local", l4.data, CONFIG_FILES.local);
     if (l4Validation.length > 0) {
-      warnings.push(...l4Validation.map(w => `[SCHEMA] ${w}`));
+      warnings.push(...l4Validation.map((w) => `[SCHEMA] ${w}`));
     }
   }
 
@@ -337,9 +349,9 @@ function loadLayeredConfig(projectRoot, options = {}) {
       trackSources(sources, l5.data, LEVELS.user, CONFIG_FILES.user);
     }
     // Validate L5 against schema
-    const l5Validation = validateConfig('user', l5.data, CONFIG_FILES.user);
+    const l5Validation = validateConfig("user", l5.data, CONFIG_FILES.user);
     if (l5Validation.length > 0) {
-      warnings.push(...l5Validation.map(w => `[SCHEMA] ${w}`));
+      warnings.push(...l5Validation.map((w) => `[SCHEMA] ${w}`));
     }
   }
 
@@ -362,15 +374,16 @@ function loadLegacyConfig(projectRoot) {
     throw new Error(`Legacy config file not found: ${CONFIG_FILES.legacy}`);
   }
 
-  const suppressDeprecation = process.env.AIOX_SUPPRESS_DEPRECATION === 'true'
-    || process.env.AIOX_SUPPRESS_DEPRECATION === '1';
+  const suppressDeprecation =
+    process.env.AIOX_SUPPRESS_DEPRECATION === "true" ||
+    process.env.AIOX_SUPPRESS_DEPRECATION === "1";
 
   if (!suppressDeprecation) {
     warnings.push(
-      '[DEPRECATION] Monolithic core-config.yaml detected. '
-      + 'Run `aiox config migrate` to split into layered config files. '
-      + 'Monolithic format will be removed in v4.0.0. '
-      + 'Set AIOX_SUPPRESS_DEPRECATION=true to silence this warning.',
+      "[DEPRECATION] Monolithic core-config.yaml detected. " +
+        "Run `aiox config migrate` to split into layered config files. " +
+        "Monolithic format will be removed in v4.0.0. " +
+        "Set AIOX_SUPPRESS_DEPRECATION=true to silence this warning.",
     );
   }
 
@@ -390,13 +403,13 @@ function loadLegacyConfig(projectRoot) {
  * @param {string} file - Source file path
  * @param {string} [prefix] - Key prefix for nested tracking
  */
-function trackSources(sources, data, level, file, prefix = '') {
+function trackSources(sources, data, level, file, prefix = "") {
   if (!sources || !data) return;
 
   for (const [key, value] of Object.entries(data)) {
     const fullKey = prefix ? `${prefix}.${key}` : key;
 
-    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    if (value !== null && typeof value === "object" && !Array.isArray(value)) {
       // Track the object key itself
       sources[fullKey] = { level, file };
       // Recurse into nested objects
@@ -429,7 +442,7 @@ function trackSources(sources, data, level, file, prefix = '') {
  * @returns {boolean} result.legacy - Whether legacy mode was used
  */
 function resolveConfig(projectRoot, options = {}) {
-  const cacheKey = `resolved:${projectRoot}:${options.appDir || 'root'}:${options.debug ? 'debug' : 'std'}`;
+  const cacheKey = `resolved:${projectRoot}:${options.appDir || "root"}:${options.debug ? "debug" : "std"}`;
 
   // Check cache (unless explicitly skipped)
   if (!options.skipCache) {
@@ -453,7 +466,7 @@ function resolveConfig(projectRoot, options = {}) {
   result.config = interpolateEnvVars(result.config, { warnings: envWarnings });
 
   if (envWarnings.length > 0) {
-    result.warnings.push(...envWarnings.map(w => `[ENV] ${w}`));
+    result.warnings.push(...envWarnings.map((w) => `[ENV] ${w}`));
   }
 
   // Cache the result
@@ -475,27 +488,38 @@ function getConfigAtLevel(projectRoot, level, options = {}) {
   let relativePath;
 
   switch (level) {
-    case 'framework': case '1': case 'L1':
+    case "framework":
+    case "1":
+    case "L1":
       relativePath = CONFIG_FILES.framework;
       break;
-    case 'project': case '2': case 'L2':
+    case "project":
+    case "2":
+    case "L2":
       relativePath = CONFIG_FILES.project;
       break;
-    case 'pro': case 'Pro':
+    case "pro":
+    case "Pro":
       relativePath = CONFIG_FILES.pro;
       break;
-    case 'app': case '3': case 'L3':
+    case "app":
+    case "3":
+    case "L3":
       if (!options.appDir) return null;
-      relativePath = path.join(options.appDir, 'aiox-app.config.yaml');
+      relativePath = path.join(options.appDir, "aiox-app.config.yaml");
       break;
-    case 'local': case '4': case 'L4':
+    case "local":
+    case "4":
+    case "L4":
       relativePath = CONFIG_FILES.local;
       break;
-    case 'user': case '5': case 'L5': {
+    case "user":
+    case "5":
+    case "L5": {
       const { data } = loadYamlAbsolute(CONFIG_FILES.user);
       return data;
     }
-    case 'legacy':
+    case "legacy":
       relativePath = CONFIG_FILES.legacy;
       break;
     default:
@@ -513,7 +537,7 @@ function getConfigAtLevel(projectRoot, level, options = {}) {
 /**
  * Valid user profile values.
  */
-const VALID_USER_PROFILES = ['bob', 'advanced'];
+const VALID_USER_PROFILES = ["bob", "advanced"];
 
 /**
  * Ensure the ~/.aiox/ directory exists with secure permissions.
@@ -543,7 +567,7 @@ function setUserConfigValue(key, value) {
   let config = {};
   try {
     if (fs.existsSync(CONFIG_FILES.user)) {
-      const content = fs.readFileSync(CONFIG_FILES.user, 'utf8');
+      const content = fs.readFileSync(CONFIG_FILES.user, "utf8");
       config = yaml.load(content) || {};
     }
   } catch {
@@ -553,7 +577,7 @@ function setUserConfigValue(key, value) {
   config[key] = value;
 
   const yamlContent = yaml.dump(config, { lineWidth: -1 });
-  fs.writeFileSync(CONFIG_FILES.user, yamlContent, 'utf8');
+  fs.writeFileSync(CONFIG_FILES.user, yamlContent, "utf8");
 
   globalConfigCache.clear();
 
@@ -570,17 +594,17 @@ function toggleUserProfile() {
   let config = {};
   try {
     if (fs.existsSync(CONFIG_FILES.user)) {
-      const content = fs.readFileSync(CONFIG_FILES.user, 'utf8');
+      const content = fs.readFileSync(CONFIG_FILES.user, "utf8");
       config = yaml.load(content) || {};
     }
   } catch {
     config = {};
   }
 
-  const previous = config.user_profile || 'advanced';
-  const current = previous === 'bob' ? 'advanced' : 'bob';
+  const previous = config.user_profile || "advanced";
+  const current = previous === "bob" ? "advanced" : "bob";
 
-  setUserConfigValue('user_profile', current);
+  setUserConfigValue("user_profile", current);
 
   return { previous, current };
 }

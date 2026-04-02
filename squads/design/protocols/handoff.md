@@ -26,16 +26,19 @@ handoff:
 ## Intra-Squad Flows
 
 ### 1. DesignOps -> Design System Architecture
+
 `@dave-malouf -> @brad-frost`
 
 Use when operations diagnosis is complete and implementation starts.
 
 ### 2. Architecture -> Orchestration
+
 `@brad-frost -> @design-chief`
 
 Use when work requires staged rollout, review routing, or cross-squad coordination.
 
 ### 3. Adoption Narrative -> Ops/Architecture
+
 `@dan-mall -> @dave-malouf` and/or `@brad-frost`
 
 Use when buy-in is secured and execution plan must be formalized.
@@ -43,11 +46,13 @@ Use when buy-in is secured and execution plan must be formalized.
 ## Cross-Squad Flows
 
 ### 4. DS -> Brand
+
 `@design-chief -> /Brand`
 
 Use when request is logo, brand strategy, positioning, or pricing.
 
 ### 5. DS -> Content Visual
+
 `@design-chief -> /ContentVisual`
 
 Use when request is thumbnail, YouTube visuals, photography, or editing.

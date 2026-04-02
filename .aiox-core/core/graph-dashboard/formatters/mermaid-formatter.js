@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Format graph data as Mermaid diagram string.
@@ -11,14 +11,16 @@ function formatAsMermaid(graphData) {
   const edges = graphData.edges || [];
   const lines = [];
 
-  lines.push('graph TD');
+  lines.push("graph TD");
 
   const connectedNodes = new Set();
 
   for (const edge of edges) {
     const fromLabel = _escapeMermaid(edge.from);
     const toLabel = _escapeMermaid(edge.to);
-    lines.push(`  ${_safeId(edge.from)}["${fromLabel}"] --> ${_safeId(edge.to)}["${toLabel}"]`);
+    lines.push(
+      `  ${_safeId(edge.from)}["${fromLabel}"] --> ${_safeId(edge.to)}["${toLabel}"]`,
+    );
     connectedNodes.add(edge.from);
     connectedNodes.add(edge.to);
   }
@@ -30,7 +32,7 @@ function formatAsMermaid(graphData) {
     }
   }
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 /**
@@ -40,7 +42,7 @@ function formatAsMermaid(graphData) {
  * @private
  */
 function _safeId(id) {
-  return String(id).replace(/[^a-zA-Z0-9_-]/g, '_');
+  return String(id).replace(/[^a-zA-Z0-9_-]/g, "_");
 }
 
 /**
@@ -51,9 +53,9 @@ function _safeId(id) {
  */
 function _escapeMermaid(str) {
   return String(str)
-    .replace(/"/g, '&quot;')
-    .replace(/\[/g, '&#91;')
-    .replace(/\]/g, '&#93;');
+    .replace(/"/g, "&quot;")
+    .replace(/\[/g, "&#91;")
+    .replace(/\]/g, "&#93;");
 }
 
 module.exports = { formatAsMermaid, _safeId, _escapeMermaid };

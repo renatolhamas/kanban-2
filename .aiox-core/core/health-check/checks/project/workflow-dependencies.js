@@ -8,9 +8,9 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const fs = require("fs").promises;
+const path = require("path");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Workflow dependencies validation check
@@ -21,15 +21,15 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 class WorkflowDependenciesCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'project.workflow-dependencies',
-      name: 'Workflow Dependencies',
-      description: 'Verifies workflow dependencies are satisfied',
+      id: "project.workflow-dependencies",
+      name: "Workflow Dependencies",
+      description: "Verifies workflow dependencies are satisfied",
       domain: CheckDomain.PROJECT,
       severity: CheckSeverity.LOW,
       timeout: 5000,
       cacheable: true,
       healingTier: 0,
-      tags: ['aiox', 'workflows', 'dependencies'],
+      tags: ["aiox", "workflows", "dependencies"],
     });
   }
 
@@ -41,8 +41,8 @@ class WorkflowDependenciesCheck extends BaseCheck {
   async execute(context) {
     const projectRoot = context.projectRoot || process.cwd();
     const workflowPaths = [
-      path.join(projectRoot, '.aiox-core', 'development', 'workflows'),
-      path.join(projectRoot, '.aiox-core', 'infrastructure', 'workflows'),
+      path.join(projectRoot, ".aiox-core", "development", "workflows"),
+      path.join(projectRoot, ".aiox-core", "infrastructure", "workflows"),
     ];
 
     const workflows = [];
@@ -54,8 +54,8 @@ class WorkflowDependenciesCheck extends BaseCheck {
 
     // Scan task directories
     const taskPaths = [
-      path.join(projectRoot, '.aiox-core', 'development', 'tasks'),
-      path.join(projectRoot, '.aiox-core', 'infrastructure', 'tasks'),
+      path.join(projectRoot, ".aiox-core", "development", "tasks"),
+      path.join(projectRoot, ".aiox-core", "infrastructure", "tasks"),
     ];
 
     for (const taskPath of taskPaths) {
@@ -80,7 +80,7 @@ class WorkflowDependenciesCheck extends BaseCheck {
           availableWorkflows.add(workflowId);
 
           try {
-            const content = await fs.readFile(file, 'utf8');
+            const content = await fs.readFile(file, "utf8");
             const deps = this.extractDependencies(content);
 
             if (deps.tasks.length > 0 || deps.workflows.length > 0) {
@@ -100,7 +100,7 @@ class WorkflowDependenciesCheck extends BaseCheck {
     }
 
     if (workflows.length === 0) {
-      return this.pass('No workflows with dependencies found', {
+      return this.pass("No workflows with dependencies found", {
         details: {
           availableTasks: availableTasks.size,
           availableWorkflows: availableWorkflows.size,
@@ -114,7 +114,7 @@ class WorkflowDependenciesCheck extends BaseCheck {
         if (!availableTasks.has(taskDep)) {
           issues.push({
             workflow: workflow.id,
-            type: 'task',
+            type: "task",
             missing: taskDep,
           });
         }
@@ -124,7 +124,7 @@ class WorkflowDependenciesCheck extends BaseCheck {
         if (!availableWorkflows.has(workflowDep)) {
           issues.push({
             workflow: workflow.id,
-            type: 'workflow',
+            type: "workflow",
             missing: workflowDep,
           });
         }
@@ -134,23 +134,30 @@ class WorkflowDependenciesCheck extends BaseCheck {
     if (issues.length > 0) {
       const summary = issues
         .map((i) => `${i.workflow} -> missing ${i.type}: ${i.missing}`)
-        .join(', ');
+        .join(", ");
 
-      return this.warning(`${issues.length} workflow dependency issue(s) found`, {
-        recommendation: 'Create missing tasks/workflows or update workflow definitions',
-        details: {
-          issues,
-          summary,
+      return this.warning(
+        `${issues.length} workflow dependency issue(s) found`,
+        {
+          recommendation:
+            "Create missing tasks/workflows or update workflow definitions",
+          details: {
+            issues,
+            summary,
+          },
         },
-      });
+      );
     }
 
-    return this.pass(`All ${workflows.length} workflow dependencies satisfied`, {
-      details: {
-        workflows: workflows.map((w) => w.id),
-        availableTasks: availableTasks.size,
+    return this.pass(
+      `All ${workflows.length} workflow dependencies satisfied`,
+      {
+        details: {
+          workflows: workflows.map((w) => w.id),
+          availableTasks: availableTasks.size,
+        },
       },
-    });
+    );
   }
 
   /**
@@ -165,7 +172,10 @@ class WorkflowDependenciesCheck extends BaseCheck {
         const fullPath = path.join(dir, entry.name);
         if (entry.isDirectory()) {
           files.push(...(await this.findYamlFiles(fullPath)));
-        } else if (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml')) {
+        } else if (
+          entry.name.endsWith(".yaml") ||
+          entry.name.endsWith(".yml")
+        ) {
           files.push(fullPath);
         }
       }
@@ -183,7 +193,7 @@ class WorkflowDependenciesCheck extends BaseCheck {
     const deps = { tasks: [], workflows: [] };
 
     try {
-      const yaml = require('js-yaml');
+      const yaml = require("js-yaml");
       const parsed = yaml.load(content);
 
       if (parsed?.steps) {

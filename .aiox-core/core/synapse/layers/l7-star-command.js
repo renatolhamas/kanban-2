@@ -12,9 +12,9 @@
  * @created Story SYN-5 - Layer Processors L4-L7
  */
 
-const path = require('path');
-const { loadDomainFile } = require('../domain/domain-loader');
-const LayerProcessor = require('./layer-processor');
+const path = require("path");
+const { loadDomainFile } = require("../domain/domain-loader");
+const LayerProcessor = require("./layer-processor");
 
 /** Regex to detect star-commands in prompt */
 const STAR_COMMAND_REGEX = /\*([a-z][\w-]*)/gi;
@@ -30,7 +30,7 @@ const STAR_COMMAND_REGEX = /\*([a-z][\w-]*)/gi;
  */
 class L7StarCommandProcessor extends LayerProcessor {
   constructor() {
-    super({ name: 'star-command', layer: 7, timeout: 5 });
+    super({ name: "star-command", layer: 7, timeout: 5 });
   }
 
   /**
@@ -65,7 +65,7 @@ class L7StarCommandProcessor extends LayerProcessor {
     }
 
     // 2. Load commands domain file
-    const commandsFilePath = path.join(synapsePath, 'commands');
+    const commandsFilePath = path.join(synapsePath, "commands");
     const rawRules = loadDomainFile(commandsFilePath);
 
     if (!rawRules || rawRules.length === 0) {
@@ -150,7 +150,7 @@ class L7StarCommandProcessor extends LayerProcessor {
         }
         // If there's content after the header on the same line, include it
         const afterHeader = rule.substring(headerMatch[0].length).trim();
-        if (afterHeader && !afterHeader.endsWith(':')) {
+        if (afterHeader && !afterHeader.endsWith(":")) {
           blocks[currentCommand].push(afterHeader);
         }
         continue;

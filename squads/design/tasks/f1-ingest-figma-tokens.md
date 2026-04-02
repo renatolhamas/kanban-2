@@ -55,15 +55,15 @@ Para cada formato:
 
 Organizar tokens nas categorias:
 
-| Categoria | Exemplos |
-|-----------|----------|
-| `color` | Paletas, semanticos, brand colors |
-| `spacing` | Gaps, paddings, margins |
+| Categoria    | Exemplos                                               |
+| ------------ | ------------------------------------------------------ |
+| `color`      | Paletas, semanticos, brand colors                      |
+| `spacing`    | Gaps, paddings, margins                                |
 | `typography` | Font family, size, weight, line-height, letter-spacing |
-| `radius` | Border radius values |
-| `shadow` | Box shadows, drop shadows |
-| `opacity` | Alpha values |
-| `motion` | Duration, easing (se fornecido) |
+| `radius`     | Border radius values                                   |
+| `shadow`     | Box shadows, drop shadows                              |
+| `opacity`    | Alpha values                                           |
+| `motion`     | Duration, easing (se fornecido)                        |
 
 ### Step 4: Identificar Modos
 

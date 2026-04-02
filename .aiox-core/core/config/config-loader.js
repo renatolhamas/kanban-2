@@ -22,9 +22,9 @@
  * @deprecated Since Story PRO-4 - Use config-resolver.js for layered config resolution
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
 /**
  * Config cache with TTL
@@ -33,36 +33,121 @@ const configCache = {
   full: null,
   sections: {},
   lastLoad: null,
-  TTL: 5 * 60 * 1000,  // 5 minutes
+  TTL: 5 * 60 * 1000, // 5 minutes
 };
 
 /**
  * Agent requirements mapping (from agent-config-requirements.yaml)
  */
 const agentRequirements = {
-  dev: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations', 'pvMindContext', 'hybridOpsConfig'],
-  qa: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  po: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  pm: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading'],
-  sm: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  architect: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  analyst: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  'data-engineer': ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations', 'pvMindContext', 'hybridOpsConfig'],
-  devops: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  'aiox-master': ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'registry', 'expansionPacks', 'toolConfigurations'],
-  'ux-expert': ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
-  'db-sage': ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations', 'pvMindContext', 'hybridOpsConfig'],
-  security: ['frameworkDocsLocation', 'projectDocsLocation', 'devLoadAlwaysFiles', 'lazyLoading', 'toolConfigurations'],
+  dev: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+    "pvMindContext",
+    "hybridOpsConfig",
+  ],
+  qa: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  po: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  pm: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+  ],
+  sm: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  architect: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  analyst: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  "data-engineer": [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+    "pvMindContext",
+    "hybridOpsConfig",
+  ],
+  devops: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  "aiox-master": [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "registry",
+    "expansionPacks",
+    "toolConfigurations",
+  ],
+  "ux-expert": [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
+  "db-sage": [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+    "pvMindContext",
+    "hybridOpsConfig",
+  ],
+  security: [
+    "frameworkDocsLocation",
+    "projectDocsLocation",
+    "devLoadAlwaysFiles",
+    "lazyLoading",
+    "toolConfigurations",
+  ],
 };
 
 /**
  * Always-loaded sections (lightweight, needed by all)
  */
 const ALWAYS_LOADED = [
-  'frameworkDocsLocation',
-  'projectDocsLocation',
-  'devLoadAlwaysFiles',
-  'lazyLoading',
+  "frameworkDocsLocation",
+  "projectDocsLocation",
+  "devLoadAlwaysFiles",
+  "lazyLoading",
 ];
 
 /**
@@ -92,12 +177,12 @@ function isCacheValid() {
  * Loads full config file (used for initial load or cache refresh)
  */
 async function loadFullConfig() {
-  const configPath = path.join('.aiox-core', 'core-config.yaml');
+  const configPath = path.join(".aiox-core", "core-config.yaml");
 
   const startTime = Date.now();
 
   try {
-    const content = await fs.readFile(configPath, 'utf8');
+    const content = await fs.readFile(configPath, "utf8");
     const config = yaml.load(content);
 
     const loadTime = Date.now() - startTime;
@@ -105,7 +190,8 @@ async function loadFullConfig() {
     // Update performance metrics
     performanceMetrics.loads++;
     performanceMetrics.totalLoadTime += loadTime;
-    performanceMetrics.avgLoadTime = performanceMetrics.totalLoadTime / performanceMetrics.loads;
+    performanceMetrics.avgLoadTime =
+      performanceMetrics.totalLoadTime / performanceMetrics.loads;
 
     // Cache full config
     configCache.full = config;
@@ -113,7 +199,7 @@ async function loadFullConfig() {
 
     return config;
   } catch (error) {
-    console.error('Failed to load core-config.yaml:', error.message);
+    console.error("Failed to load core-config.yaml:", error.message);
     throw new Error(`Config load failed: ${error.message}`);
   }
 }
@@ -132,7 +218,7 @@ async function loadConfigSections(sections) {
     performanceMetrics.cacheHits++;
 
     const config = {};
-    sections.forEach(section => {
+    sections.forEach((section) => {
       if (configCache.full[section] !== undefined) {
         config[section] = configCache.full[section];
       }
@@ -147,7 +233,7 @@ async function loadConfigSections(sections) {
 
   // Extract requested sections
   const config = {};
-  sections.forEach(section => {
+  sections.forEach((section) => {
     if (fullConfig[section] !== undefined) {
       config[section] = fullConfig[section];
     }
@@ -171,7 +257,9 @@ async function loadAgentConfig(agentId) {
   // Get required sections for this agent
   const requiredSections = agentRequirements[agentId] || ALWAYS_LOADED;
 
-  console.log(`📦 Loading config for @${agentId} (${requiredSections.length} sections)...`);
+  console.log(
+    `📦 Loading config for @${agentId} (${requiredSections.length} sections)...`,
+  );
 
   const config = await loadConfigSections(requiredSections);
 
@@ -198,9 +286,9 @@ async function loadMinimalConfig() {
  * Preloads config into cache (useful for startup optimization)
  */
 async function preloadConfig() {
-  console.log('🔄 Preloading config into cache...');
+  console.log("🔄 Preloading config into cache...");
   await loadFullConfig();
-  console.log('✅ Config preloaded');
+  console.log("✅ Config preloaded");
 }
 
 /**
@@ -210,7 +298,7 @@ function clearCache() {
   configCache.full = null;
   configCache.sections = {};
   configCache.lastLoad = null;
-  console.log('🗑️ Config cache cleared');
+  console.log("🗑️ Config cache cleared");
 }
 
 /**
@@ -221,9 +309,13 @@ function clearCache() {
 function getPerformanceMetrics() {
   return {
     ...performanceMetrics,
-    cacheHitRate: performanceMetrics.loads > 0
-      ? ((performanceMetrics.cacheHits / performanceMetrics.loads) * 100).toFixed(1) + '%'
-      : '0%',
+    cacheHitRate:
+      performanceMetrics.loads > 0
+        ? (
+            (performanceMetrics.cacheHits / performanceMetrics.loads) *
+            100
+          ).toFixed(1) + "%"
+        : "0%",
     avgLoadTimeMs: Math.round(performanceMetrics.avgLoadTime),
   };
 }
@@ -240,7 +332,7 @@ async function validateAgentConfig(agentId) {
   const config = await loadFullConfig();
 
   const missingSections = requiredSections.filter(
-    section => config[section] === undefined,
+    (section) => config[section] === undefined,
   );
 
   return {

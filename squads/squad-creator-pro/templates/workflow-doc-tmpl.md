@@ -39,8 +39,8 @@ O workflow **{{workflow_name}}** {{workflow_description}}. Este workflow automat
 
 ### Tipos de Projeto Suportados
 
-| Tipo | Descrição | Exemplo |
-|------|-----------|---------|
+| Tipo         | Descrição       | Exemplo            |
+| ------------ | --------------- | ------------------ |
 | `{{tipo_1}}` | {{tipo_1_desc}} | {{tipo_1_example}} |
 | `{{tipo_2}}` | {{tipo_2_desc}} | {{tipo_2_example}} |
 | `{{tipo_3}}` | {{tipo_3_desc}} | {{tipo_3_example}} |
@@ -48,6 +48,7 @@ O workflow **{{workflow_name}}** {{workflow_description}}. Este workflow automat
 ### Quando Usar Este Workflow
 
 **USE este workflow para:**
+
 - {{use_case_1}}
 - {{use_case_2}}
 - {{use_case_3}}
@@ -55,8 +56,8 @@ O workflow **{{workflow_name}}** {{workflow_description}}. Este workflow automat
 
 **NÃO USE este workflow para:**
 
-| Situação | Alternativa |
-|----------|-------------|
+| Situação       | Alternativa       |
+| -------------- | ----------------- |
 | {{dont_use_1}} | {{alternative_1}} |
 | {{dont_use_2}} | {{alternative_2}} |
 | {{dont_use_3}} | {{alternative_3}} |
@@ -67,44 +68,44 @@ O workflow **{{workflow_name}}** {{workflow_description}}. Este workflow automat
 
 ### Arquivo de Definição do Workflow
 
-| Arquivo | Propósito |
-|---------|-----------|
-| `{{squad_path}}/workflows/{{workflow_file}}.yaml` | Definição YAML do workflow |
-| `.claude/commands/{{squad_name}}/workflows/{{workflow_file}}.yaml` | Comando Claude Code |
+| Arquivo                                                            | Propósito                  |
+| ------------------------------------------------------------------ | -------------------------- |
+| `{{squad_path}}/workflows/{{workflow_file}}.yaml`                  | Definição YAML do workflow |
+| `.claude/commands/{{squad_name}}/workflows/{{workflow_file}}.yaml` | Comando Claude Code        |
 
 ### Tasks Executadas pelo Workflow
 
-| Arquivo | Step | Propósito |
-|---------|------|-----------|
+| Arquivo                              | Step   | Propósito       |
+| ------------------------------------ | ------ | --------------- |
 | `{{squad_path}}/tasks/{{task_1}}.md` | Step 1 | {{task_1_desc}} |
 | `{{squad_path}}/tasks/{{task_2}}.md` | Step 2 | {{task_2_desc}} |
 | `{{squad_path}}/tasks/{{task_3}}.md` | Step 3 | {{task_3_desc}} |
 
 ### Agentes Envolvidos
 
-| Arquivo | Agente | Papel no Workflow |
-|---------|--------|-------------------|
-| `{{squad_path}}/agents/{{agent_1}}.md` | @{{agent_1}} | {{agent_1_role}} |
-| `{{squad_path}}/agents/{{agent_2}}.md` | @{{agent_2}} | {{agent_2_role}} |
+| Arquivo                                | Agente       | Papel no Workflow |
+| -------------------------------------- | ------------ | ----------------- |
+| `{{squad_path}}/agents/{{agent_1}}.md` | @{{agent_1}} | {{agent_1_role}}  |
+| `{{squad_path}}/agents/{{agent_2}}.md` | @{{agent_2}} | {{agent_2_role}}  |
 
 ### Checklists Utilizados
 
-| Arquivo | Step | Propósito |
-|---------|------|-----------|
+| Arquivo                                        | Step                 | Propósito            |
+| ---------------------------------------------- | -------------------- | -------------------- |
 | `{{squad_path}}/checklists/{{checklist_1}}.md` | {{checklist_1_step}} | {{checklist_1_desc}} |
 | `{{squad_path}}/checklists/{{checklist_2}}.md` | {{checklist_2_step}} | {{checklist_2_desc}} |
 
 ### Data Files Carregados
 
-| Arquivo | Step | Propósito |
-|---------|------|-----------|
+| Arquivo                               | Step            | Propósito       |
+| ------------------------------------- | --------------- | --------------- |
 | `{{squad_path}}/data/{{data_1}}.yaml` | {{data_1_step}} | {{data_1_desc}} |
 | `{{squad_path}}/data/{{data_2}}.yaml` | {{data_2_step}} | {{data_2_desc}} |
 
 ### Outputs Gerados
 
-| Arquivo | Destino | Descrição |
-|---------|---------|-----------|
+| Arquivo        | Destino             | Descrição         |
+| -------------- | ------------------- | ----------------- |
 | `{{output_1}}` | `{{output_1_path}}` | {{output_1_desc}} |
 | `{{output_2}}` | `{{output_2_path}}` | {{output_2_desc}} |
 
@@ -210,14 +211,14 @@ sequenceDiagram
 
 ### Step 1: {{step_1_nome}} (Fase 1)
 
-| Campo | Valor |
-|-------|-------|
-| **ID** | `{{step_1_id}}` |
-| **Fase** | 1 - {{fase_1_nome}} |
-| **Agente** | @{{step_1_agent}} ({{step_1_agent_persona}}) |
-| **Ação** | {{step_1_acao}} |
-| **Task** | `{{step_1_task}}.md` |
-| **Timeout** | {{step_1_timeout}} |
+| Campo       | Valor                                        |
+| ----------- | -------------------------------------------- |
+| **ID**      | `{{step_1_id}}`                              |
+| **Fase**    | 1 - {{fase_1_nome}}                          |
+| **Agente**  | @{{step_1_agent}} ({{step_1_agent_persona}}) |
+| **Ação**    | {{step_1_acao}}                              |
+| **Task**    | `{{step_1_task}}.md`                         |
+| **Timeout** | {{step_1_timeout}}                           |
 
 #### Descrição
 
@@ -225,17 +226,17 @@ sequenceDiagram
 
 #### Inputs
 
-| Input | Tipo | Origem | Obrigatório |
-|-------|------|--------|-------------|
-| `{{input_1_1}}` | {{input_1_1_type}} | {{input_1_1_origin}} | Sim |
-| `{{input_1_2}}` | {{input_1_2_type}} | {{input_1_2_origin}} | Não |
+| Input           | Tipo               | Origem               | Obrigatório |
+| --------------- | ------------------ | -------------------- | ----------- |
+| `{{input_1_1}}` | {{input_1_1_type}} | {{input_1_1_origin}} | Sim         |
+| `{{input_1_2}}` | {{input_1_2_type}} | {{input_1_2_origin}} | Não         |
 
 #### Outputs
 
-| Output | Tipo | Destino |
-|--------|------|---------|
-| `{{output_1_1}}` | {{output_1_1_type}} | {{output_1_1_dest}} |
-| `{{output_1_1_file}}` | arquivo | {{output_1_1_path}} |
+| Output                | Tipo                | Destino             |
+| --------------------- | ------------------- | ------------------- |
+| `{{output_1_1}}`      | {{output_1_1_type}} | {{output_1_1_dest}} |
+| `{{output_1_1_file}}` | arquivo             | {{output_1_1_path}} |
 
 #### Critérios de Sucesso
 
@@ -245,8 +246,8 @@ sequenceDiagram
 
 #### Veto Conditions
 
-| Trigger | Ação |
-|---------|------|
+| Trigger              | Ação                |
+| -------------------- | ------------------- |
 | {{veto_1_1_trigger}} | {{veto_1_1_action}} |
 | {{veto_1_2_trigger}} | {{veto_1_2_action}} |
 
@@ -261,14 +262,14 @@ sequenceDiagram
 
 ### Step 2: {{step_2_nome}} (Fase 2)
 
-| Campo | Valor |
-|-------|-------|
-| **ID** | `{{step_2_id}}` |
-| **Fase** | 2 - {{fase_2_nome}} |
+| Campo      | Valor                                        |
+| ---------- | -------------------------------------------- |
+| **ID**     | `{{step_2_id}}`                              |
+| **Fase**   | 2 - {{fase_2_nome}}                          |
 | **Agente** | @{{step_2_agent}} ({{step_2_agent_persona}}) |
-| **Ação** | {{step_2_acao}} |
-| **Task** | `{{step_2_task}}.md` |
-| **Requer** | `{{step_2_requires}}` |
+| **Ação**   | {{step_2_acao}}                              |
+| **Task**   | `{{step_2_task}}.md`                         |
+| **Requer** | `{{step_2_requires}}`                        |
 
 #### Descrição
 
@@ -276,15 +277,15 @@ sequenceDiagram
 
 #### Inputs
 
-| Input | Tipo | Origem | Obrigatório |
-|-------|------|--------|-------------|
-| `{{input_2_1}}` | {{input_2_1_type}} | {{input_2_1_origin}} | Sim |
-| `{{input_2_2}}` | {{input_2_2_type}} | Output do Step anterior | Sim |
+| Input           | Tipo               | Origem                  | Obrigatório |
+| --------------- | ------------------ | ----------------------- | ----------- |
+| `{{input_2_1}}` | {{input_2_1_type}} | {{input_2_1_origin}}    | Sim         |
+| `{{input_2_2}}` | {{input_2_2_type}} | Output do Step anterior | Sim         |
 
 #### Outputs
 
-| Output | Tipo | Destino |
-|--------|------|---------|
+| Output           | Tipo                | Destino             |
+| ---------------- | ------------------- | ------------------- |
 | `{{output_2_1}}` | {{output_2_1_type}} | {{output_2_1_dest}} |
 
 #### Critérios de Sucesso
@@ -302,14 +303,14 @@ sequenceDiagram
 
 ### Step 3: {{step_3_nome}} (Fase 3)
 
-| Campo | Valor |
-|-------|-------|
-| **ID** | `{{step_3_id}}` |
-| **Fase** | 3 - {{fase_3_nome}} |
+| Campo      | Valor                                        |
+| ---------- | -------------------------------------------- |
+| **ID**     | `{{step_3_id}}`                              |
+| **Fase**   | 3 - {{fase_3_nome}}                          |
 | **Agente** | @{{step_3_agent}} ({{step_3_agent_persona}}) |
-| **Ação** | {{step_3_acao}} |
-| **Task** | `{{step_3_task}}.md` |
-| **Requer** | `{{step_3_requires}}` |
+| **Ação**   | {{step_3_acao}}                              |
+| **Task**   | `{{step_3_task}}.md`                         |
+| **Requer** | `{{step_3_requires}}`                        |
 
 #### Descrição
 
@@ -317,14 +318,14 @@ sequenceDiagram
 
 #### Inputs
 
-| Input | Tipo | Origem | Obrigatório |
-|-------|------|--------|-------------|
-| `{{input_3_1}}` | {{input_3_1_type}} | {{input_3_1_origin}} | Sim |
+| Input           | Tipo               | Origem               | Obrigatório |
+| --------------- | ------------------ | -------------------- | ----------- |
+| `{{input_3_1}}` | {{input_3_1_type}} | {{input_3_1_origin}} | Sim         |
 
 #### Outputs
 
-| Output | Tipo | Destino |
-|--------|------|---------|
+| Output           | Tipo                | Destino             |
+| ---------------- | ------------------- | ------------------- |
 | `{{output_3_1}}` | {{output_3_1_type}} | {{output_3_1_dest}} |
 
 #### Critérios de Sucesso
@@ -336,14 +337,14 @@ sequenceDiagram
 
 ```yaml
 log: "{{step_3_success_log}}"
-next: {{step_3_next}}
+next: { { step_3_next } }
 ```
 
 #### On Failure
 
 ```yaml
 action: retry
-max_retries: {{step_3_max_retries}}
+max_retries: { { step_3_max_retries } }
 on_exhausted: escalate
 ```
 
@@ -353,22 +354,23 @@ on_exhausted: escalate
 
 ### @{{agent_1}} - {{agent_1_nome}} ({{agent_1_persona}})
 
-| Aspecto | Descrição |
-|---------|-----------|
-| **Ícone** | {{agent_1_icon}} |
-| **Arquétipo** | {{agent_1_archetype}} |
-| **Papel no Workflow** | {{agent_1_role}} |
-| **Foco** | {{agent_1_focus}} |
+| Aspecto               | Descrição                    |
+| --------------------- | ---------------------------- |
+| **Ícone**             | {{agent_1_icon}}             |
+| **Arquétipo**         | {{agent_1_archetype}}        |
+| **Papel no Workflow** | {{agent_1_role}}             |
+| **Foco**              | {{agent_1_focus}}            |
 | **Responsabilidades** | {{agent_1_responsibilities}} |
 
 **Ferramentas Utilizadas:**
 
-| Ferramenta | Propósito |
-|------------|-----------|
+| Ferramenta           | Propósito                  |
+| -------------------- | -------------------------- |
 | `{{agent_1_tool_1}}` | {{agent_1_tool_1_purpose}} |
 | `{{agent_1_tool_2}}` | {{agent_1_tool_2_purpose}} |
 
 **Comandos Relevantes:**
+
 - `*{{agent_1_cmd_1}}` - {{agent_1_cmd_1_desc}}
 - `*{{agent_1_cmd_2}}` - {{agent_1_cmd_2_desc}}
 
@@ -376,22 +378,23 @@ on_exhausted: escalate
 
 ### @{{agent_2}} - {{agent_2_nome}} ({{agent_2_persona}})
 
-| Aspecto | Descrição |
-|---------|-----------|
-| **Ícone** | {{agent_2_icon}} |
-| **Arquétipo** | {{agent_2_archetype}} |
-| **Papel no Workflow** | {{agent_2_role}} |
-| **Foco** | {{agent_2_focus}} |
+| Aspecto               | Descrição                    |
+| --------------------- | ---------------------------- |
+| **Ícone**             | {{agent_2_icon}}             |
+| **Arquétipo**         | {{agent_2_archetype}}        |
+| **Papel no Workflow** | {{agent_2_role}}             |
+| **Foco**              | {{agent_2_focus}}            |
 | **Responsabilidades** | {{agent_2_responsibilities}} |
 
 **Ferramentas Utilizadas:**
 
-| Ferramenta | Propósito |
-|------------|-----------|
+| Ferramenta           | Propósito                  |
+| -------------------- | -------------------------- |
 | `{{agent_2_tool_1}}` | {{agent_2_tool_1_purpose}} |
 | `{{agent_2_tool_2}}` | {{agent_2_tool_2_purpose}} |
 
 **Comandos Relevantes:**
+
 - `*{{agent_2_cmd_1}}` - {{agent_2_cmd_1_desc}}
 - `*{{agent_2_cmd_2}}` - {{agent_2_cmd_2_desc}}
 
@@ -423,12 +426,12 @@ graph TD
 
 ### Detalhamento das Tasks
 
-| Task | Arquivo | Agente | Propósito |
-|------|---------|--------|-----------|
-| {{task_1_name}} | `{{task_1}}.md` | @{{agent_1}} | {{task_1_purpose}} |
-| {{task_2_name}} | `{{task_2}}.md` | @{{agent_2}} | {{task_2_purpose}} |
+| Task             | Arquivo          | Agente       | Propósito           |
+| ---------------- | ---------------- | ------------ | ------------------- |
+| {{task_1_name}}  | `{{task_1}}.md`  | @{{agent_1}} | {{task_1_purpose}}  |
+| {{task_2_name}}  | `{{task_2}}.md`  | @{{agent_2}} | {{task_2_purpose}}  |
 | {{task_2a_name}} | `{{task_2a}}.md` | @{{agent_2}} | {{task_2a_purpose}} |
-| {{task_3_name}} | `{{task_3}}.md` | @{{agent_3}} | {{task_3_purpose}} |
+| {{task_3_name}}  | `{{task_3}}.md`  | @{{agent_3}} | {{task_3_purpose}}  |
 
 ---
 
@@ -450,16 +453,16 @@ graph TD
 
 ### Documentação Prerequisita
 
-| Documento | Local | Obrigatório |
-|-----------|-------|-------------|
-| {{doc_prereq_1}} | {{doc_prereq_1_path}} | Sim |
-| {{doc_prereq_2}} | {{doc_prereq_2_path}} | Sim |
-| {{doc_prereq_3}} | {{doc_prereq_3_path}} | Não |
+| Documento        | Local                 | Obrigatório |
+| ---------------- | --------------------- | ----------- |
+| {{doc_prereq_1}} | {{doc_prereq_1_path}} | Sim         |
+| {{doc_prereq_2}} | {{doc_prereq_2_path}} | Sim         |
+| {{doc_prereq_3}} | {{doc_prereq_3_path}} | Não         |
 
 ### Ferramentas Integradas
 
-| Ferramenta | Propósito | Agentes |
-|------------|-----------|---------|
+| Ferramenta   | Propósito          | Agentes           |
+| ------------ | ------------------ | ----------------- |
 | `{{tool_1}}` | {{tool_1_purpose}} | {{tool_1_agents}} |
 | `{{tool_2}}` | {{tool_2_purpose}} | {{tool_2_agents}} |
 | `{{tool_3}}` | {{tool_3_purpose}} | {{tool_3_agents}} |
@@ -470,16 +473,16 @@ graph TD
 
 ### Entradas do Workflow
 
-| Entrada | Tipo | Fonte | Obrigatório | Descrição |
-|---------|------|-------|-------------|-----------|
-| `{{entrada_1}}` | {{entrada_1_type}} | {{entrada_1_fonte}} | Sim | {{entrada_1_desc}} |
-| `{{entrada_2}}` | {{entrada_2_type}} | {{entrada_2_fonte}} | Não | {{entrada_2_desc}} |
-| `{{entrada_3}}` | {{entrada_3_type}} | {{entrada_3_fonte}} | Não | {{entrada_3_desc}} |
+| Entrada         | Tipo               | Fonte               | Obrigatório | Descrição          |
+| --------------- | ------------------ | ------------------- | ----------- | ------------------ |
+| `{{entrada_1}}` | {{entrada_1_type}} | {{entrada_1_fonte}} | Sim         | {{entrada_1_desc}} |
+| `{{entrada_2}}` | {{entrada_2_type}} | {{entrada_2_fonte}} | Não         | {{entrada_2_desc}} |
+| `{{entrada_3}}` | {{entrada_3_type}} | {{entrada_3_fonte}} | Não         | {{entrada_3_desc}} |
 
 ### Saídas do Workflow
 
-| Saída | Tipo | Destino | Descrição |
-|-------|------|---------|-----------|
+| Saída         | Tipo             | Destino             | Descrição        |
+| ------------- | ---------------- | ------------------- | ---------------- |
 | `{{saida_1}}` | {{saida_1_type}} | {{saida_1_destino}} | {{saida_1_desc}} |
 | `{{saida_2}}` | {{saida_2_type}} | {{saida_2_destino}} | {{saida_2_desc}} |
 | `{{saida_3}}` | {{saida_3_type}} | {{saida_3_destino}} | {{saida_3_desc}} |
@@ -487,17 +490,17 @@ graph TD
 ### Schema de Status (se aplicável)
 
 ```yaml
-workflowId: string              # ID do workflow
-status: enum                    # pending | in_progress | completed | stopped | escalated
-currentStep: string             # Step atual
-startedAt: ISO-8601             # Timestamp de início
-updatedAt: ISO-8601             # Última atualização
+workflowId: string # ID do workflow
+status: enum # pending | in_progress | completed | stopped | escalated
+currentStep: string # Step atual
+startedAt: ISO-8601 # Timestamp de início
+updatedAt: ISO-8601 # Última atualização
 
 history:
   - step: string
     completedAt: ISO-8601
     output: object
-    duration: number            # milliseconds
+    duration: number # milliseconds
 ```
 
 ---
@@ -528,8 +531,8 @@ flowchart TD
 
 ### Pontos de Decisão Detalhados
 
-| Ponto | Fase | Decisor | Critério | Resultado Positivo | Resultado Negativo |
-|-------|------|---------|----------|-------------------|-------------------|
+| Ponto       | Fase             | Decisor              | Critério             | Resultado Positivo   | Resultado Negativo   |
+| ----------- | ---------------- | -------------------- | -------------------- | -------------------- | -------------------- |
 | {{ponto_1}} | {{ponto_1_fase}} | @{{ponto_1_decisor}} | {{ponto_1_criterio}} | {{ponto_1_positivo}} | {{ponto_1_negativo}} |
 | {{ponto_2}} | {{ponto_2_fase}} | @{{ponto_2_decisor}} | {{ponto_2_criterio}} | {{ponto_2_positivo}} | {{ponto_2_negativo}} |
 
@@ -545,11 +548,11 @@ O workflow deve **HALT** e solicitar intervenção do usuário quando:
 
 ### Critérios de Escalação
 
-| Trigger | Razão | Ação |
-|---------|-------|------|
-| `{{escalation_trigger_1}}` | {{escalation_reason_1}} | Escalar com contexto |
-| `{{escalation_trigger_2}}` | {{escalation_reason_2}} | Escalar imediatamente |
-| `manual_escalate` | Usuário executou `*escalate` | Escalar sob demanda |
+| Trigger                    | Razão                        | Ação                  |
+| -------------------------- | ---------------------------- | --------------------- |
+| `{{escalation_trigger_1}}` | {{escalation_reason_1}}      | Escalar com contexto  |
+| `{{escalation_trigger_2}}` | {{escalation_reason_2}}      | Escalar imediatamente |
+| `manual_escalate`          | Usuário executou `*escalate` | Escalar sob demanda   |
 
 ---
 
@@ -560,21 +563,21 @@ O workflow deve **HALT** e solicitar intervenção do usuário quando:
 ```yaml
 config:
   # Limites de execução
-  maxIterations: {{max_iterations}}
-  timeout: {{timeout_ms}}           # milliseconds
+  maxIterations: { { max_iterations } }
+  timeout: { { timeout_ms } } # milliseconds
 
   # Localização de arquivos
-  outputPath: {{output_path}}
-  statusFile: {{status_file_path}}
+  outputPath: { { output_path } }
+  statusFile: { { status_file_path } }
 
   # Comportamento
-  mode: {{default_mode}}            # yolo | interactive | preflight
-  verbose: {{verbose}}
-  showProgress: {{show_progress}}
+  mode: { { default_mode } } # yolo | interactive | preflight
+  verbose: { { verbose } }
+  showProgress: { { show_progress } }
 
   # Retry configuration
-  maxRetries: {{max_retries}}
-  retryDelay: {{retry_delay}}       # milliseconds
+  maxRetries: { { max_retries } }
+  retryDelay: { { retry_delay } } # milliseconds
 ```
 
 ### Customização por Projeto
@@ -583,16 +586,16 @@ No arquivo `{{squad_path}}/config.yaml`:
 
 ```yaml
 workflows:
-  {{workflow_id}}:
-    maxIterations: {{custom_max_iterations}}
-    timeout: {{custom_timeout}}
-    outputPath: {{custom_output_path}}
+  { { workflow_id } }:
+    maxIterations: { { custom_max_iterations } }
+    timeout: { { custom_timeout } }
+    outputPath: { { custom_output_path } }
 ```
 
 ### Variáveis de Ambiente
 
-| Variável | Descrição | Default |
-|----------|-----------|---------|
+| Variável        | Descrição          | Default               |
+| --------------- | ------------------ | --------------------- |
 | `{{env_var_1}}` | {{env_var_1_desc}} | {{env_var_1_default}} |
 | `{{env_var_2}}` | {{env_var_2_desc}} | {{env_var_2_default}} |
 
@@ -652,14 +655,14 @@ best_for: Requisitos ambíguos e trabalho crítico
 
 ### Convenções
 
-| Aspecto | Convenção |
-|---------|-----------|
-| Trigger | `*{{workflow_trigger}}` ou automático |
-| Argumentos | Entre `{}` ou após espaço |
-| Paths | Relativos ao squad |
-| Data files | YAML format |
-| Task files | Markdown format |
-| Status tracking | JSON format |
+| Aspecto         | Convenção                             |
+| --------------- | ------------------------------------- |
+| Trigger         | `*{{workflow_trigger}}` ou automático |
+| Argumentos      | Entre `{}` ou após espaço             |
+| Paths           | Relativos ao squad                    |
+| Data files      | YAML format                           |
+| Task files      | Markdown format                       |
+| Status tracking | JSON format                           |
 
 ### Anti-Patterns a Evitar
 
@@ -680,11 +683,13 @@ Erro: {{error_1_message}}
 ```
 
 **Causas:**
+
 - {{error_1_causa_1}}
 - {{error_1_causa_2}}
 - {{error_1_causa_3}}
 
 **Solução:**
+
 1. {{error_1_solucao_1}}
 2. {{error_1_solucao_2}}
 3. {{error_1_solucao_3}}
@@ -698,10 +703,12 @@ Erro: {{error_2_message}}
 ```
 
 **Causas:**
+
 - {{error_2_causa_1}}
 - {{error_2_causa_2}}
 
 **Diagnóstico:**
+
 ```bash
 # {{error_2_diagnostico_1}}
 {{error_2_comando_1}}
@@ -711,6 +718,7 @@ Erro: {{error_2_message}}
 ```
 
 **Solução:**
+
 1. {{error_2_solucao_1}}
 2. {{error_2_solucao_2}}
 
@@ -723,10 +731,12 @@ Erro: {{error_3_message}}
 ```
 
 **Causas:**
+
 - {{error_3_causa_1}}
 - {{error_3_causa_2}}
 
 **Solução:**
+
 1. {{error_3_solucao_1}}
 2. {{error_3_solucao_2}}
 3. {{error_3_solucao_3}}
@@ -740,17 +750,20 @@ Erro: Workflow escalated - max iterations reached
 ```
 
 **Causas:**
+
 - Issues recorrentes não resolvidos
 - Critérios de sucesso muito restritivos
 - Problema subjacente não identificado
 
 **Diagnóstico:**
+
 ```bash
 # Ver histórico completo
 cat {{status_file_path}} | jq '.history'
 ```
 
 **Solução:**
+
 1. Analisar pattern de issues recorrentes
 2. Verificar se critérios estão claros
 3. Considerar aumentar maxIterations ou resolver manualmente
@@ -764,10 +777,12 @@ Erro: {{error_5_message}}
 ```
 
 **Causas:**
+
 - {{error_5_causa_1}}
 - {{error_5_causa_2}}
 
 **Solução:**
+
 1. {{error_5_solucao_1}}
 2. {{error_5_solucao_2}}
 3. Reiniciar workflow com `*{{workflow_trigger}} --reset`
@@ -776,11 +791,11 @@ Erro: {{error_5_message}}
 
 ### Logs e Diagnóstico
 
-| Arquivo | Local | Conteúdo |
-|---------|-------|----------|
-| Status File | `{{status_file_path}}` | Status atual do workflow |
+| Arquivo      | Local                   | Conteúdo                       |
+| ------------ | ----------------------- | ------------------------------ |
+| Status File  | `{{status_file_path}}`  | Status atual do workflow       |
 | Decision Log | `{{decision_log_path}}` | Decisões autônomas (modo YOLO) |
-| Output Files | `{{output_path}}` | Artefatos gerados |
+| Output Files | `{{output_path}}`       | Artefatos gerados              |
 
 ---
 
@@ -788,73 +803,73 @@ Erro: {{error_5_message}}
 
 ### Arquivos do Workflow
 
-| Arquivo | Caminho |
-|---------|---------|
+| Arquivo             | Caminho                                           |
+| ------------------- | ------------------------------------------------- |
 | Workflow Definition | `{{squad_path}}/workflows/{{workflow_file}}.yaml` |
-| Task 1 | `{{squad_path}}/tasks/{{task_1}}.md` |
-| Task 2 | `{{squad_path}}/tasks/{{task_2}}.md` |
-| Task 3 | `{{squad_path}}/tasks/{{task_3}}.md` |
-| Agent 1 | `{{squad_path}}/agents/{{agent_1}}.md` |
-| Agent 2 | `{{squad_path}}/agents/{{agent_2}}.md` |
+| Task 1              | `{{squad_path}}/tasks/{{task_1}}.md`              |
+| Task 2              | `{{squad_path}}/tasks/{{task_2}}.md`              |
+| Task 3              | `{{squad_path}}/tasks/{{task_3}}.md`              |
+| Agent 1             | `{{squad_path}}/agents/{{agent_1}}.md`            |
+| Agent 2             | `{{squad_path}}/agents/{{agent_2}}.md`            |
 
 ### Checklists
 
-| Checklist | Caminho |
-|-----------|---------|
+| Checklist            | Caminho                                        |
+| -------------------- | ---------------------------------------------- |
 | {{checklist_1_name}} | `{{squad_path}}/checklists/{{checklist_1}}.md` |
 | {{checklist_2_name}} | `{{squad_path}}/checklists/{{checklist_2}}.md` |
 
 ### Data Files
 
-| Data | Caminho |
-|------|---------|
+| Data            | Caminho                               |
+| --------------- | ------------------------------------- |
 | {{data_1_name}} | `{{squad_path}}/data/{{data_1}}.yaml` |
 | {{data_2_name}} | `{{squad_path}}/data/{{data_2}}.yaml` |
 
 ### Templates
 
-| Template | Caminho | Uso |
-|----------|---------|-----|
+| Template            | Caminho                                   | Uso                |
+| ------------------- | ----------------------------------------- | ------------------ |
 | {{template_1_name}} | `{{squad_path}}/templates/{{template_1}}` | {{template_1_uso}} |
 | {{template_2_name}} | `{{squad_path}}/templates/{{template_2}}` | {{template_2_uso}} |
 
 ### Documentação Relacionada
 
-| Documento | Caminho |
-|-----------|---------|
-| Squad README | `{{squad_path}}/README.md` |
-| Concepts | `{{squad_path}}/docs/CONCEPTS.md` |
-| FAQ | `{{squad_path}}/docs/FAQ.md` |
+| Documento    | Caminho                           |
+| ------------ | --------------------------------- |
+| Squad README | `{{squad_path}}/README.md`        |
+| Concepts     | `{{squad_path}}/docs/CONCEPTS.md` |
+| FAQ          | `{{squad_path}}/docs/FAQ.md`      |
 
 ---
 
 ## Resumo
 
-| Aspecto | Detalhes |
-|---------|----------|
-| **Total de Steps** | {{total_steps}} steps |
-| **Fases** | {{total_phases}} fases |
+| Aspecto                | Detalhes                            |
+| ---------------------- | ----------------------------------- |
+| **Total de Steps**     | {{total_steps}} steps               |
+| **Fases**              | {{total_phases}} fases              |
 | **Agentes Envolvidos** | {{total_agents}} (@{{agents_list}}) |
-| **Tasks Executadas** | {{total_tasks}} tasks |
-| **Checklists** | {{total_checklists}} checklists |
-| **Data Files** | {{total_data}} arquivos |
-| **Pontos de Decisão** | {{total_decisions}} decisões |
-| **Condições de HALT** | {{total_halts}} condições |
-| **Modos de Execução** | YOLO, Interactive, Pre-Flight |
+| **Tasks Executadas**   | {{total_tasks}} tasks               |
+| **Checklists**         | {{total_checklists}} checklists     |
+| **Data Files**         | {{total_data}} arquivos             |
+| **Pontos de Decisão**  | {{total_decisions}} decisões        |
+| **Condições de HALT**  | {{total_halts}} condições           |
+| **Modos de Execução**  | YOLO, Interactive, Pre-Flight       |
 
 ---
 
 ## Changelog
 
-| Versão | Data | Autor | Mudanças |
-|--------|------|-------|----------|
-| 1.0.0 | {{date}} | @{{creator}} | Documento inicial criado |
+| Versão | Data     | Autor        | Mudanças                 |
+| ------ | -------- | ------------ | ------------------------ |
+| 1.0.0  | {{date}} | @{{creator}} | Documento inicial criado |
 
 ---
 
-*{{signature_closing}}*
+_{{signature_closing}}_
 
 ---
 
-*Documentação gerada seguindo SC-DP-002 (Workflow Documentation)*
-*Padrão baseado em: docs/guides/aios-workflows/*
+_Documentação gerada seguindo SC-DP-002 (Workflow Documentation)_
+_Padrão baseado em: docs/guides/aios-workflows/_

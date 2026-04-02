@@ -10,6 +10,7 @@
 ---
 
 # Product Requirements Document (PRD)
+
 ## WhatsApp Kanban System - Collaborative Conversation Management Platform
 
 **Document Version:** 1.0  
@@ -39,13 +40,13 @@ O **WhatsApp Kanban System** é uma plataforma SaaS multi-tenant que revoluciona
 
 O gerenciamento de WhatsApp em equipes sofre com **falta de sincronia operacional** crítica:
 
-| Sintoma | Impacto |
-|---------|--------|
-| **"Um número, uma pessoa"** | Impossível atribuição dinâmica de conversas; desalinhamento sobre quem está atendendo |
+| Sintoma                                | Impacto                                                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **"Um número, uma pessoa"**            | Impossível atribuição dinâmica de conversas; desalinhamento sobre quem está atendendo             |
 | **Ausência de pipeline compartilhada** | Leads duplicados, respostas esquecidas, falta de clareza sobre qual etapa da venda o contato está |
-| **Sem visibilidade centralizada** | Managers não conseguem supervisionar produtividade; churn de vendas não é rastreável |
-| **Follow-ups manuais** | Alto custo operacional, inconsistência, oportunidades perdidas por falta de automação |
-| **Sem histórico estruturado** | Conhecimento corporativo disperso em conversas privadas (nem sempre documentadas) |
+| **Sem visibilidade centralizada**      | Managers não conseguem supervisionar produtividade; churn de vendas não é rastreável              |
+| **Follow-ups manuais**                 | Alto custo operacional, inconsistência, oportunidades perdidas por falta de automação             |
+| **Sem histórico estruturado**          | Conhecimento corporativo disperso em conversas privadas (nem sempre documentadas)                 |
 
 ### 2.2 Estado Atual do Mercado
 
@@ -104,16 +105,17 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 ### 4.1 Persona Primária: Owner (Dono/Gerente)
 
-| Atributo | Detalhe |
-|----------|---------|
-| **Título** | Dono do negócio, Gerente de vendas |
-| **Idade** | 28-55 anos |
-| **Setor** | E-commerce, Imóveis, Consultoria, Agências |
-| **Pain Points** | Falta de controle sobre pipeline; leads perdidos; equipe desalinhada |
-| **Necessidades** | Dashboard centralizado, automação, produtividade visível |
-| **Comportamento** | Busca soluções prontas, não quer complexidade; quer ROI rápido |
+| Atributo          | Detalhe                                                              |
+| ----------------- | -------------------------------------------------------------------- |
+| **Título**        | Dono do negócio, Gerente de vendas                                   |
+| **Idade**         | 28-55 anos                                                           |
+| **Setor**         | E-commerce, Imóveis, Consultoria, Agências                           |
+| **Pain Points**   | Falta de controle sobre pipeline; leads perdidos; equipe desalinhada |
+| **Necessidades**  | Dashboard centralizado, automação, produtividade visível             |
+| **Comportamento** | Busca soluções prontas, não quer complexidade; quer ROI rápido       |
 
 **Fluxo Típico:**
+
 1. Cadastra-se no sistema (Email + Senha)
 2. Conecta Evolution API (QR Code)
 3. Cria Kanbans (colunas do fluxo de vendas)
@@ -122,15 +124,16 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 ### 4.2 Persona Secundária: Attendant (Atendente)
 
-| Atributo | Detalhe |
-|----------|---------|
-| **Título** | Atendente, SDR, Vendedor |
-| **Idade** | 20-45 anos |
-| **Pain Points** | Conversa perdida, falta de contexto, desorganização |
-| **Necessidades** | Interface simples, saber em qual etapa está o cliente, automação de follow-up |
-| **Comportamento** | Usa sistema como ferramenta diária; quer feedback visual |
+| Atributo          | Detalhe                                                                       |
+| ----------------- | ----------------------------------------------------------------------------- |
+| **Título**        | Atendente, SDR, Vendedor                                                      |
+| **Idade**         | 20-45 anos                                                                    |
+| **Pain Points**   | Conversa perdida, falta de contexto, desorganização                           |
+| **Necessidades**  | Interface simples, saber em qual etapa está o cliente, automação de follow-up |
+| **Comportamento** | Usa sistema como ferramenta diária; quer feedback visual                      |
 
 **Fluxo Típico (Fase 2+):**
+
 1. Faz login (credenciais do Owner)
 2. Vê Kanban com conversas atribuídas
 3. Movimenta conversas entre colunas conforme progresso
@@ -143,11 +146,11 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 ### 5.1 Objetivos de Negócio (SMART)
 
-| Meta | Descrição | Timeline | KPI |
-|------|-----------|----------|-----|
-| **OKR 1: Triagem Ativa 100%** | Garantir que TODAS as conversas novas sejam triadas (movidas para etapa adequada ou arquivadas) em até 24h | 30 dias após MVP | % de conversas triadas / 24h ≥ 95% |
-| **OKR 2: Redução de Lead Time** | Reduzir tempo médio de permanência na primeira etapa em 30% através de alertas visuais/automação | 60 dias pós-launch | Dias em "Novo" reduzidos de X para 0.7X |
-| **OKR 3: Follow-up Automático** | Aumentar % de contatos que recebem follow-up personalizado em 50% | 45 dias pós-launch | % de conversas com follow-up automático ≥ 50% |
+| Meta                            | Descrição                                                                                                  | Timeline           | KPI                                           |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ | --------------------------------------------- |
+| **OKR 1: Triagem Ativa 100%**   | Garantir que TODAS as conversas novas sejam triadas (movidas para etapa adequada ou arquivadas) em até 24h | 30 dias após MVP   | % de conversas triadas / 24h ≥ 95%            |
+| **OKR 2: Redução de Lead Time** | Reduzir tempo médio de permanência na primeira etapa em 30% através de alertas visuais/automação           | 60 dias pós-launch | Dias em "Novo" reduzidos de X para 0.7X       |
+| **OKR 3: Follow-up Automático** | Aumentar % de contatos que recebem follow-up personalizado em 50%                                          | 45 dias pós-launch | % de conversas com follow-up automático ≥ 50% |
 
 ### 5.2 Métricas de Produto (North Star)
 
@@ -178,68 +181,71 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 #### 🔐 **Autenticação & Onboarding**
 
-| Feature | Descrição | Aceitação |
-|---------|-----------|-----------|
-| **Register Page** | Cadastro de Owner com Email, Senha, Setup inicial | Email validado, tenant criado automaticamente |
-| **Login Page** | Autenticação via Supabase Cloud Auth com RLS ativo | JWT válido, usuário redirecionado para Home ou Config |
-| **Row Level Security** | Políticas RLS por `tenant_id` | Nenhum vazamento inter-tenant em testes |
-| **Profile Page** | Editar Nome, Senha do usuário logado | Mudanças persistidas, validação de força de senha |
+| Feature                | Descrição                                          | Aceitação                                             |
+| ---------------------- | -------------------------------------------------- | ----------------------------------------------------- |
+| **Register Page**      | Cadastro de Owner com Email, Senha, Setup inicial  | Email validado, tenant criado automaticamente         |
+| **Login Page**         | Autenticação via Supabase Cloud Auth com RLS ativo | JWT válido, usuário redirecionado para Home ou Config |
+| **Row Level Security** | Políticas RLS por `tenant_id`                      | Nenhum vazamento inter-tenant em testes               |
+| **Profile Page**       | Editar Nome, Senha do usuário logado               | Mudanças persistidas, validação de força de senha     |
 
 #### 📋 **Gestão de Kanbans (Funis/Pipelines)**
 
-| Feature | Descrição | Aceitação |
-|---------|-----------|-----------|
-| **CRUD de Kanbans** | Criar, ler, atualizar, deletar pipelines com reordenação | Tabela em Settings com botões ↑↓ para reorder |
-| **Kanban "Main"** | Radio button — apenas UM kanban pode ser "Main" | Novas conversas roteadas automaticamente para "Main" |
-| **Criação Automática** | Kanban "Main" criado no onboarding | Owner não precisa criar manualmente |
-| **Ordem Customizável** | Reordenar kanbans em Settings | Botões ↑↓ para reorder; persistência no DB |
+| Feature                | Descrição                                                | Aceitação                                            |
+| ---------------------- | -------------------------------------------------------- | ---------------------------------------------------- |
+| **CRUD de Kanbans**    | Criar, ler, atualizar, deletar pipelines com reordenação | Tabela em Settings com botões ↑↓ para reorder        |
+| **Kanban "Main"**      | Radio button — apenas UM kanban pode ser "Main"          | Novas conversas roteadas automaticamente para "Main" |
+| **Criação Automática** | Kanban "Main" criado no onboarding                       | Owner não precisa criar manualmente                  |
+| **Ordem Customizável** | Reordenar kanbans em Settings                            | Botões ↑↓ para reorder; persistência no DB           |
 
 #### 💬 **Visualização Kanban (Home Page)**
 
-| Feature | Descrição | Aceitação |
-|---------|-----------|-----------|
-| **Kanban Board** | Layout visual com colunas (Novo, Qualificado, etc.) | Colunas renderizam com conversas |
-| **Cards de Conversa** | Cada conversa é um "post-it" com ID de contato + preview de última msg | Clicável para abrir modal Chat |
-| **Drag-and-drop** | Mover conversas entre colunas do mesmo Kanban | Posição persistida no DB |
-| **Seletor de Kanban** | Dropdown/tab para alternar entre diferentes Kanbans | Apenas um Kanban visualizado por vez |
-| **Filtros** | Toggle "Conversas Ativas" vs "Arquivadas" | Filtragem client-side ou server-side |
+| Feature               | Descrição                                                              | Aceitação                            |
+| --------------------- | ---------------------------------------------------------------------- | ------------------------------------ |
+| **Kanban Board**      | Layout visual com colunas (Novo, Qualificado, etc.)                    | Colunas renderizam com conversas     |
+| **Cards de Conversa** | Cada conversa é um "post-it" com ID de contato + preview de última msg | Clicável para abrir modal Chat       |
+| **Drag-and-drop**     | Mover conversas entre colunas do mesmo Kanban                          | Posição persistida no DB             |
+| **Seletor de Kanban** | Dropdown/tab para alternar entre diferentes Kanbans                    | Apenas um Kanban visualizado por vez |
+| **Filtros**           | Toggle "Conversas Ativas" vs "Arquivadas"                              | Filtragem client-side ou server-side |
 
 #### 💬 **Modal de Conversa (Chat)**
 
-| Feature | Descrição | Aceitação |
-|---------|-----------|-----------|
-| **Chat Bidimensional** | Histórico de mensagens (sent/received) com timestamp | Scroll infinito ou paginação |
-| **Envio de Mensagens** | Texto simples e mídia (fotos, vídeos, áudios) | Validação de tipo de arquivo, upload para Supabase Storage |
-| **Recebimento Real-time** | Webhooks da Evolution API v2 + Real-time Subscriptions | Mensagens aparecem em < 2s |
-| **Seletor Kanban/Coluna** | Dropdown para transferir conversa entre Kanbans e colunas | Formato: "Kanban - Coluna" alfabético |
-| **Automatic Messages** | Botão para selecionar e enviar mensagens pré-cadastradas | Mensagem enviada imediatamente |
-| **Arquivar Conversa** | Botão para encerrar/retirar de visualização ativa | Status "archived" no DB, removido de Home |
+| Feature                   | Descrição                                                 | Aceitação                                                  |
+| ------------------------- | --------------------------------------------------------- | ---------------------------------------------------------- |
+| **Chat Bidimensional**    | Histórico de mensagens (sent/received) com timestamp      | Scroll infinito ou paginação                               |
+| **Envio de Mensagens**    | Texto simples e mídia (fotos, vídeos, áudios)             | Validação de tipo de arquivo, upload para Supabase Storage |
+| **Recebimento Real-time** | Webhooks da Evolution API v2 + Real-time Subscriptions    | Mensagens aparecem em < 2s                                 |
+| **Seletor Kanban/Coluna** | Dropdown para transferir conversa entre Kanbans e colunas | Formato: "Kanban - Coluna" alfabético                      |
+| **Automatic Messages**    | Botão para selecionar e enviar mensagens pré-cadastradas  | Mensagem enviada imediatamente                             |
+| **Arquivar Conversa**     | Botão para encerrar/retirar de visualização ativa         | Status "archived" no DB, removido de Home                  |
 
 #### 👥 **Gestão de Contatos**
 
-| Feature | Descrição | Aceitação |
-|---------|-----------|-----------|
-| **Página Contacts** | Tabela com colunas "Name", "Phone Number", "Actions" | Paginação para 100+ contatos |
-| **CRUD Completo** | Criar, ler, atualizar, deletar contatos | Sem contactos duplicados (validação por telefone) |
-| **Validação Telefone** | Formato internacional com "+" (E.164: +5511987654321) | Regex stricto, erro claro se inválido |
-| **Modal Create Contact** | Form com Name, Number; validação inline | Salva em `contacts` table |
-| **Modal Edit Contact** | Mesmos fields; validação idêntica | Update sem criar duplicata |
-| **Auto-registro** | Contato gravado automaticamente ao receber primeira msg de WhatsApp | Se não existe, criar; se existe, update timestamp |
+| Feature                  | Descrição                                                           | Aceitação                                         |
+| ------------------------ | ------------------------------------------------------------------- | ------------------------------------------------- |
+| **Página Contacts**      | Tabela com colunas "Name", "Phone Number", "Actions"                | Paginação para 100+ contatos                      |
+| **CRUD Completo**        | Criar, ler, atualizar, deletar contatos                             | Sem contactos duplicados (validação por telefone) |
+| **Validação Telefone**   | Formato internacional com "+" (E.164: +5511987654321)               | Regex stricto, erro claro se inválido             |
+| **Modal Create Contact** | Form com Name, Number; validação inline                             | Salva em `contacts` table                         |
+| **Modal Edit Contact**   | Mesmos fields; validação idêntica                                   | Update sem criar duplicata                        |
+| **Auto-registro**        | Contato gravado automaticamente ao receber primeira msg de WhatsApp | Se não existe, criar; se existe, update timestamp |
 
 #### 🔧 **Página de Configurações**
 
 **Profile Subsection:**
+
 - [ ] Formulário para alterar Nome e Senha do Owner
 - [ ] Validação de força de senha (min. 8 chars, mix de maiúsc/minúsc/número)
 - [ ] Botão "Save" com feedback de sucesso/erro
 
 **Connection Subsection:**
+
 - [ ] Modal QR Code para pairing com WhatsApp (Evolution API v2)
 - [ ] Status de conexão (Conectado / Desconectado)
 - [ ] Botão "Reconectar" para gerar novo QR
 - [ ] Validação de webhook da Evolution API (confirmação de entrega)
 
 **Automatic Messages Subsection:**
+
 - [ ] Tabela com colunas "Name", "Message Preview", "Actions"
 - [ ] Modal "Create Message" com fields Name e Message
 - [ ] Modal "Edit Message" idêntico
@@ -248,6 +254,7 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 - [ ] Teste de envio manual
 
 **Kanbans Subsection:**
+
 - [ ] Tabela com colunas "Name", "Main" (radio), "Order", "Actions"
 - [ ] Modal "Create Kanban" com Name, Order (numeração)
 - [ ] Modal "Edit Kanban" idêntico
@@ -257,19 +264,20 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 #### 🎨 **UI/UX Geral**
 
-| Componente | Descrição |
-|-----------|-----------|
-| **Header** | Logo, título da página, ícone de usuário (canto superior direito) |
-| **User Icon Menu** | Dropdown com "Profile", "Logout" |
-| **Logout Button** | Botão vermelho com "X", destroi sessão JWT |
-| **Sidebar/Nav** | Links para Home, Contacts, Settings (subdivisions) |
-| **Design System** | Tailwind CSS com cores corporativas (primária, secundária, success, danger) |
-| **Responsividade** | Desktop-first MVP; mobile responsiveness **Fase 2+** |
-| **Acessibilidade** | Alt text em imagens, labels em inputs, contraste WCAG AA |
+| Componente         | Descrição                                                                   |
+| ------------------ | --------------------------------------------------------------------------- |
+| **Header**         | Logo, título da página, ícone de usuário (canto superior direito)           |
+| **User Icon Menu** | Dropdown com "Profile", "Logout"                                            |
+| **Logout Button**  | Botão vermelho com "X", destroi sessão JWT                                  |
+| **Sidebar/Nav**    | Links para Home, Contacts, Settings (subdivisions)                          |
+| **Design System**  | Tailwind CSS com cores corporativas (primária, secundária, success, danger) |
+| **Responsividade** | Desktop-first MVP; mobile responsiveness **Fase 2+**                        |
+| **Acessibilidade** | Alt text em imagens, labels em inputs, contraste WCAG AA                    |
 
 ### 6.3 Out of Scope (Será Roadmap)
 
 ❌ **Fase 2+:**
+
 - Multi-user (Attendants) com RLS granular
 - Notificações sonoras / push
 - Dashboards de performance por atendente
@@ -326,11 +334,11 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 ### 7.2 Modelo de Permissões (MVP)
 
-| Entidade | Permissões | Notas |
-|----------|-----------|-------|
-| **Owner** | Full access (todas as features) | Criado automaticamente no Register |
-| **Attendant** | RLS read/write limitado (Fase 2+) | N/A para MVP |
-| **Public** | Register + Login apenas | Sem acesso a dados de nenhum tenant |
+| Entidade      | Permissões                        | Notas                               |
+| ------------- | --------------------------------- | ----------------------------------- |
+| **Owner**     | Full access (todas as features)   | Criado automaticamente no Register  |
+| **Attendant** | RLS read/write limitado (Fase 2+) | N/A para MVP                        |
+| **Public**    | Register + Login apenas           | Sem acesso a dados de nenhum tenant |
 
 ### 7.3 RLS Policies (Enforcement)
 
@@ -380,19 +388,19 @@ CREATE POLICY "user_tenant_update" ON conversations
 
 ### 9.1 Stack Tecnológico
 
-| Camada | Tecnologia | Justificativa |
-|--------|-----------|--------------|
-| **Frontend** | Next.js 14+ | SSR, Vercel deployment, Tailwind CSS nativo |
-| **Design System** | "Architectural Ledger" (Tailwind + shadcn/ui) | Emerald/Navy/Surface colors, Manrope typography, WCAG AA |
-| **Backend & DB** | Supabase Cloud (PostgreSQL) | RLS nativo, Auth integrada, Real-time, SaaS sem ops |
-| **Auth** | Supabase Cloud Auth | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+) |
-| **Real-time** | Supabase Real-time Subscriptions | WebSocket para sync instantâneo |
-| **File Storage** | Supabase Cloud Storage | Mídias de conversa (fotos, vídeos, áudios) |
-| **WhatsApp Gateway** | Evolution API v2 | Pairing via QR, webhooks bidirecional, v2 stable |
-| **API Framework** | Next.js API Routes (/app/api/) | Auth middleware, CORS, RateLimit, Webhook validation |
-| **Rate Limiting** | Redis local (VPS) | 100 req/min per tenant, zero cost |
-| **Deployment** | Vercel (Frontend) + Supabase Cloud | Global CDN, auto-scaling, managed DB |
-| **Monitoring** | Sentry + Supabase Logs | Error tracking, performance APM |
+| Camada               | Tecnologia                                    | Justificativa                                            |
+| -------------------- | --------------------------------------------- | -------------------------------------------------------- |
+| **Frontend**         | Next.js 14+                                   | SSR, Vercel deployment, Tailwind CSS nativo              |
+| **Design System**    | "Architectural Ledger" (Tailwind + shadcn/ui) | Emerald/Navy/Surface colors, Manrope typography, WCAG AA |
+| **Backend & DB**     | Supabase Cloud (PostgreSQL)                   | RLS nativo, Auth integrada, Real-time, SaaS sem ops      |
+| **Auth**             | Supabase Cloud Auth                           | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+)                |
+| **Real-time**        | Supabase Real-time Subscriptions              | WebSocket para sync instantâneo                          |
+| **File Storage**     | Supabase Cloud Storage                        | Mídias de conversa (fotos, vídeos, áudios)               |
+| **WhatsApp Gateway** | Evolution API v2                              | Pairing via QR, webhooks bidirecional, v2 stable         |
+| **API Framework**    | Next.js API Routes (/app/api/)                | Auth middleware, CORS, RateLimit, Webhook validation     |
+| **Rate Limiting**    | Redis local (VPS)                             | 100 req/min per tenant, zero cost                        |
+| **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
+| **Monitoring**       | Sentry + Supabase Logs                        | Error tracking, performance APM                          |
 
 ### 9.2 Database Schema (Resumido)
 
@@ -489,6 +497,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 ### 9.3 Evolution API v2 Integration
 
 **Fluxo de Pairing:**
+
 1. Owner clica "Connect WhatsApp" em Settings/Connection
 2. Backend gera novo QR via Evolution API `/qr-code` endpoint
 3. Frontend mostra QR code em modal (tempo limitado, ex 60s)
@@ -498,6 +507,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 7. Webhooks começam a chegar em `/webhooks/messages`
 
 **Fluxo de Mensagens Recebidas:**
+
 ```
 Evolution API webhook → Backend /webhooks/messages
   ├─ Validar assinatura (HMAC-SHA256)
@@ -510,6 +520,7 @@ Evolution API webhook → Backend /webhooks/messages
 ```
 
 **Fluxo de Mensagens Enviadas:**
+
 ```
 Frontend (Chat modal) → POST /api/send-message
   ├─ Validar JWT + tenant_id
@@ -521,16 +532,16 @@ Frontend (Chat modal) → POST /api/send-message
 
 ### 9.4 Validações & Constraints
 
-| Validação | Local | Nível |
-|-----------|-------|-------|
-| Telefone E.164 | Frontend regex + Backend constraint | STRICT |
-| Email unique | Backend constraint + Frontend check | STRICT |
-| RLS tenant_id | Database policy | CRITICAL |
-| JWT validity | Backend middleware | CRITICAL |
-| Webhook signature | Backend HMAC validation | CRITICAL |
+| Validação          | Local                                            | Nível    |
+| ------------------ | ------------------------------------------------ | -------- |
+| Telefone E.164     | Frontend regex + Backend constraint              | STRICT   |
+| Email unique       | Backend constraint + Frontend check              | STRICT   |
+| RLS tenant_id      | Database policy                                  | CRITICAL |
+| JWT validity       | Backend middleware                               | CRITICAL |
+| Webhook signature  | Backend HMAC validation                          | CRITICAL |
 | Webhook processing | Backend async (return 200 OK <200ms, timeout 5s) | CRITICAL |
-| File size (mídia) | Frontend + Backend (max 50MB) | MEDIUM |
-| Rate limiting | Redis local (VPS) — 100 req/min per tenant | MEDIUM |
+| File size (mídia)  | Frontend + Backend (max 50MB)                    | MEDIUM   |
+| Rate limiting      | Redis local (VPS) — 100 req/min per tenant       | MEDIUM   |
 
 ---
 
@@ -538,24 +549,24 @@ Frontend (Chat modal) → POST /api/send-message
 
 ### 10.1 Restrições (Hard Constraints)
 
-| Restrição | Impacto |
-|-----------|--------|
-| **Evolution API v2 depency** | Qualquer breaking change na API quebra o sistema; versão fixa obrigatória |
-| **Supabase Cloud (SaaS)** | Sem self-hosted gratuito; cliente precisa pagar Supabase (dependência de crédito) |
-| **WhatsApp Business Account** | Cliente precisa ser aprovado pelo WhatsApp (não controlado por nós) |
-| **Redis local (VPS)** | Taxa de entrega depende de disponibilidade/uptime do Redis do desenvolvedor |
-| **Desktop-first MVP** | Mobile UI não será polida na Fase 1 |
-| **Sem SMS fallback** | Apenas WhatsApp; sem suporte a SMS |
+| Restrição                     | Impacto                                                                           |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| **Evolution API v2 depency**  | Qualquer breaking change na API quebra o sistema; versão fixa obrigatória         |
+| **Supabase Cloud (SaaS)**     | Sem self-hosted gratuito; cliente precisa pagar Supabase (dependência de crédito) |
+| **WhatsApp Business Account** | Cliente precisa ser aprovado pelo WhatsApp (não controlado por nós)               |
+| **Redis local (VPS)**         | Taxa de entrega depende de disponibilidade/uptime do Redis do desenvolvedor       |
+| **Desktop-first MVP**         | Mobile UI não será polida na Fase 1                                               |
+| **Sem SMS fallback**          | Apenas WhatsApp; sem suporte a SMS                                                |
 
 ### 10.2 Premissas (Assumptions)
 
-| Premissa | Validação |
-|----------|-----------|
-| Cliente possui instância Evolution API v2 ativa | Onboarding checklist |
-| Cliente tem acesso a projeto Supabase Cloud | Documentação de setup |
-| Banda larga estável (para webhooks) | N/A para MVP |
+| Premissa                                          | Validação                      |
+| ------------------------------------------------- | ------------------------------ |
+| Cliente possui instância Evolution API v2 ativa   | Onboarding checklist           |
+| Cliente tem acesso a projeto Supabase Cloud       | Documentação de setup          |
+| Banda larga estável (para webhooks)               | N/A para MVP                   |
 | Mínimo 2 atendentes por tenant (valor de produto) | Pesquisa de mercado pré-launch |
-| Contatos usam WhatsApp (obviamente) | Educação no GTM |
+| Contatos usam WhatsApp (obviamente)               | Educação no GTM                |
 
 ---
 
@@ -563,9 +574,10 @@ Frontend (Chat modal) → POST /api/send-message
 
 ### 11.1 Posicionamento
 
-**Slogan:** *"Kanban para WhatsApp. Síncrono, automatizado, colaborativo."*
+**Slogan:** _"Kanban para WhatsApp. Síncrono, automatizado, colaborativo."_
 
 **Unique Selling Points (USPs):**
+
 1. ✅ Interface Kanban dedicada para WhatsApp (não é CRM genérico)
 2. ✅ Colaboração em tempo real (não um-para-um)
 3. ✅ Automação de follow-up sem código (não precisa Zapier)
@@ -582,25 +594,25 @@ Frontend (Chat modal) → POST /api/send-message
 
 **Modelo:** SaaS subscription mensal por tenant
 
-| Plano | Preço | Limites | Público |
-|------|-------|---------|--------|
-| **Starter** | R$ 99/mês | 1 Kanban, 50 contatos, 1 Attendant* | Freelancers, 1-pessoa |
-| **Pro** | R$ 299/mês | 5 Kanbans, 500 contatos, 5 Attendants | Pequenas equipes (5-10 pessoas) |
-| **Enterprise** | Custom | Unlimited | 10+ atendentes, SLA, suporte |
+| Plano          | Preço      | Limites                               | Público                         |
+| -------------- | ---------- | ------------------------------------- | ------------------------------- |
+| **Starter**    | R$ 99/mês  | 1 Kanban, 50 contatos, 1 Attendant\*  | Freelancers, 1-pessoa           |
+| **Pro**        | R$ 299/mês | 5 Kanbans, 500 contatos, 5 Attendants | Pequenas equipes (5-10 pessoas) |
+| **Enterprise** | Custom     | Unlimited                             | 10+ atendentes, SLA, suporte    |
 
-*MVP = 1 user (Owner only), preço TBD na Fase 2
+\*MVP = 1 user (Owner only), preço TBD na Fase 2
 
 ---
 
 ## 12. Risks & Mitigation
 
-| Risco | Probabilidade | Impacto | Mitigação |
-|-------|--------------|--------|-----------|
-| Evolution API v2 breaking changes | Média | Alto | Monitorar changelog, versionar API, contract tests |
-| Custo Supabase cresce exponencial | Média | Médio | Rate limiting, otimizar queries, cache layer |
-| Compliance WhatsApp (ToS) | Baixa | Crítico | Legal review, terms of service, documentação clara |
-| Latência webhook > 2s (UX ruins) | Baixa | Médio | Async queues, database indexing, CDN strategy |
-| RLS misconfiguration (data leak) | Muito Baixa | Crítico | Security audit pré-produção, testes automatizados, Code Review rigorosa |
+| Risco                             | Probabilidade | Impacto | Mitigação                                                               |
+| --------------------------------- | ------------- | ------- | ----------------------------------------------------------------------- |
+| Evolution API v2 breaking changes | Média         | Alto    | Monitorar changelog, versionar API, contract tests                      |
+| Custo Supabase cresce exponencial | Média         | Médio   | Rate limiting, otimizar queries, cache layer                            |
+| Compliance WhatsApp (ToS)         | Baixa         | Crítico | Legal review, terms of service, documentação clara                      |
+| Latência webhook > 2s (UX ruins)  | Baixa         | Médio   | Async queues, database indexing, CDN strategy                           |
+| RLS misconfiguration (data leak)  | Muito Baixa   | Crítico | Security audit pré-produção, testes automatizados, Code Review rigorosa |
 
 ---
 
@@ -627,6 +639,7 @@ Frontend (Chat modal) → POST /api/send-message
 ## 14. Implementation Roadmap — 7 Epics (Sequenced)
 
 ### Sequência de Implementação
+
 ```
 Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 (Linear, sem dependencies cruzadas)
@@ -639,6 +652,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** Schema, Auth, Onboarding, RLS, Evolution API pairing setup
 
 **Stories:**
+
 - Story 1.1: Create schema (tenants, users, contacts, conversations, messages, columns)
 - Story 1.2: Supabase Auth (register, login, profile)
 - Story 1.3: Onboarding (tenant auto-create, default kanban "Main" com colunas padrão)
@@ -655,6 +669,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** Evolution API integration, webhook validation, manual testing
 
 **Stories:**
+
 - Story 2.1: Evolution API pairing (QR code)
 - Story 2.2: Webhook endpoint (/api/webhooks/messages)
 - Story 2.3: Webhook validation (HMAC-SHA256)
@@ -669,6 +684,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** Kanban visualization, drag-and-drop, contacts management
 
 **Stories:**
+
 - Story 3.1: Home page (Kanban board)
 - Story 3.2: Drag-and-drop (dnd-kit v8.0.0)
 - Story 3.3: Kanban CRUD em Settings
@@ -684,6 +700,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** End-to-end message flow, webhook → DB → UI
 
 **Stories:**
+
 - Story 4.1: Webhook → auto-register contacts
 - Story 4.2: Webhook → auto-create conversations
 - Story 4.3: Webhook → save messages to DB
@@ -699,6 +716,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** Real-time messaging, WebSocket subscriptions, chat interface
 
 **Stories:**
+
 - Story 5.1: Chat modal UI
 - Story 5.2: Message history pagination
 - Story 5.3: Real-time subscriptions (WebSocket)
@@ -715,6 +733,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** User configuration, kanbans, automatic messages, Evolution status
 
 **Stories:**
+
 - Story 6.1: Profile subsection (name, password)
 - Story 6.2: Connection subsection (Evolution status)
 - Story 6.3: Kanbans subsection (CRUD, reorder com setas ↑↓)
@@ -729,6 +748,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 **Objetivo:** Automatic Messages system, manual triggers, testing, polish
 
 **Stories:**
+
 - Story 7.1: Automatic Messages template system
 - Story 7.2: Manual trigger (botão em Chat)
 - Story 7.3: Message testing
@@ -740,15 +760,15 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ### Timeline Estimativa
 
-| Epic | Duration | Period |
-|------|----------|--------|
-| Epic 1 | 2-3 semanas | Semanas 1-3 |
-| Epic 2 | 1-2 semanas | Semanas 4-5 |
-| Epic 3 | 2 semanas | Semanas 6-7 |
-| Epic 4 | 2 semanas | Semanas 8-9 |
-| Epic 5 | 2 semanas | Semanas 10-11 |
-| Epic 6 | 1-2 semanas | Semanas 12-13 |
-| Epic 7 | 1 semana | Semanas 14 |
+| Epic            | Duration        | Period            |
+| --------------- | --------------- | ----------------- |
+| Epic 1          | 2-3 semanas     | Semanas 1-3       |
+| Epic 2          | 1-2 semanas     | Semanas 4-5       |
+| Epic 3          | 2 semanas       | Semanas 6-7       |
+| Epic 4          | 2 semanas       | Semanas 8-9       |
+| Epic 5          | 2 semanas       | Semanas 10-11     |
+| Epic 6          | 1-2 semanas     | Semanas 12-13     |
+| Epic 7          | 1 semana        | Semanas 14        |
 | **QA & Polish** | **1-2 semanas** | **Semanas 15-16** |
 
 **Total: 8-12 semanas** (MVP ready for beta)
@@ -757,10 +777,10 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ### Próximos Passos
 
-1. **@pm *create-epic** — Estruturar cada epic em EPIC-{ID}.md
-2. **@sm *draft** — Quebrar stories em AC detalhados
-3. **@architect *design-review** — Validar arquitetura
-4. **@dev *sprint-planning** — Iniciar Sprint 0
+1. **@pm \*create-epic** — Estruturar cada epic em EPIC-{ID}.md
+2. **@sm \*draft** — Quebrar stories em AC detalhados
+3. **@architect \*design-review** — Validar arquitetura
+4. **@dev \*sprint-planning** — Iniciar Sprint 0
 
 ---
 
@@ -775,15 +795,15 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ### 15.2 Glossary
 
-| Term | Definição |
-|------|-----------|
-| **Tenant** | Instância isolada de cliente/empresa; separação lógica via `tenant_id` |
-| **Kanban** | Pipeline/funil de vendas com colunas customizáveis |
-| **Conversation** | Thread de chat entre Owner/Attendant e um contato via WhatsApp |
-| **Automatic Message** | Template de mensagem pré-cadastrada para envio manual ou automático |
-| **RLS** | Row Level Security — política de segurança que filtra dados por tenant_id |
-| **Evolution API** | Gateway WhatsApp third-party; pairing + webhooks |
-| **E2E** | End-to-End (fluxo completo Register → Chat) |
+| Term                  | Definição                                                                 |
+| --------------------- | ------------------------------------------------------------------------- |
+| **Tenant**            | Instância isolada de cliente/empresa; separação lógica via `tenant_id`    |
+| **Kanban**            | Pipeline/funil de vendas com colunas customizáveis                        |
+| **Conversation**      | Thread de chat entre Owner/Attendant e um contato via WhatsApp            |
+| **Automatic Message** | Template de mensagem pré-cadastrada para envio manual ou automático       |
+| **RLS**               | Row Level Security — política de segurança que filtra dados por tenant_id |
+| **Evolution API**     | Gateway WhatsApp third-party; pairing + webhooks                          |
+| **E2E**               | End-to-End (fluxo completo Register → Chat)                               |
 
 ### 15.3 Related Documents
 
@@ -796,11 +816,11 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ## 16. Approval & Sign-Off
 
-| Papel | Nome | Data | Assinatura |
-|------|------|------|-----------|
-| Product Manager | Morgan (AIOX) | 2026-04-01 | ✅ |
-| Product Owner | Pax (AIOX) | 2026-04-01 | ✅ |
-| Technical Lead | (Pendente @architect review) | TBD | ⏳ |
+| Papel           | Nome                         | Data       | Assinatura |
+| --------------- | ---------------------------- | ---------- | ---------- |
+| Product Manager | Morgan (AIOX)                | 2026-04-01 | ✅         |
+| Product Owner   | Pax (AIOX)                   | 2026-04-01 | ✅         |
+| Technical Lead  | (Pendente @architect review) | TBD        | ⏳         |
 
 **Status:** ✅ APPROVED FOR EPIC BREAKDOWN (Validation checklist: `docs/CHECKLIST-PO-VALIDATION.md`)
 
@@ -818,6 +838,6 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 **Document Generated by:** Morgan (PM Agent - AIOX)  
 **Version Control:** GitOps in `/docs/prd.md`  
-**Last Updated:** 2026-04-01 14:45 UTC (Aligned with PO Validation Checklist — 8 divergences resolved)  
+**Last Updated:** 2026-04-01 14:45 UTC (Aligned with PO Validation Checklist — 8 divergences resolved)
 
-*Ready for epic breakdown and story development. Delegate epic creation to @pm *create-epic and story drafting to @sm.*
+*Ready for epic breakdown and story development. Delegate epic creation to @pm *create-epic and story drafting to @sm.\*

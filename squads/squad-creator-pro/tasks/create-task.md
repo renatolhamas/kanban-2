@@ -8,6 +8,7 @@
 **Quality Standard:** AIOS Level (300+ lines simple, 500+ lines complex)
 
 **Frameworks Used:**
+
 - `data/executor-decision-tree.md` → Executor assignment (Phase 0, Step 0.3) **← PRIMARY**
 - `data/executor-matrix-framework.md` → Executor profiles reference
 - `data/decision-heuristics-framework.md` → Quality gate logic (Phase 4)
@@ -20,6 +21,7 @@
 This task creates a single workflow task for an AIOS squad. The key insight: **every task must follow the Task Anatomy standard (8 fields) for consistency and quality**.
 
 **v2.0 Changes:**
+
 - Mandatory Task Anatomy (8 fields)
 - PHASE-based structure with checkpoints
 - Executor assignment using executor-matrix-framework
@@ -115,12 +117,12 @@ task_anatomy:
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `task_purpose` | string | Yes | What the task should accomplish | `"Generate sales page copy"` |
-| `task_name` | string | Yes | Human-readable name | `"Generate Sales Page"` |
-| `pack_name` | string | Yes | Target squad | `"copy"` |
-| `complexity` | enum | No | `"simple"` or `"complex"` | `"complex"` |
+| Parameter      | Type   | Required | Description                     | Example                      |
+| -------------- | ------ | -------- | ------------------------------- | ---------------------------- |
+| `task_purpose` | string | Yes      | What the task should accomplish | `"Generate sales page copy"` |
+| `task_name`    | string | Yes      | Human-readable name             | `"Generate Sales Page"`      |
+| `pack_name`    | string | Yes      | Target squad                    | `"copy"`                     |
+| `complexity`   | enum   | No       | `"simple"` or `"complex"`       | `"complex"`                  |
 
 ---
 
@@ -144,6 +146,7 @@ task_anatomy:
 **Apply: quality_standards.workflow_vs_task_decision**
 
 **Actions:**
+
 ```yaml
 classification_criteria:
   create_WORKFLOW_when:
@@ -164,6 +167,7 @@ classification_criteria:
 ```
 
 **Elicitation:**
+
 ```yaml
 elicit_classification:
   question: "Let's classify this operation. Tell me about it:"
@@ -182,6 +186,7 @@ elicit_classification:
 ### Step 0.2: Identify Target Pack
 
 **Actions:**
+
 ```yaml
 identify_pack:
   validation:
@@ -424,7 +429,7 @@ phase_0_output:
 
     guardrails:
       - "Timeout de review: 4h"
-      - "Escalation: @{squad-chief}"  # e.g., @{squad-name}-chief
+      - "Escalation: @{squad-chief}" # e.g., @{squad-name}-chief
       - "Feedback loop: ativo"
 
     fallback:
@@ -443,6 +448,7 @@ phase_0_output:
 ### Step 1.1: Define Field 1-2 (ID & Purpose)
 
 **Elicitation:**
+
 ```yaml
 elicit_identity:
   field_1_id:
@@ -465,6 +471,7 @@ elicit_identity:
 **Use result from Phase 0, Step 0.3**
 
 **Elicitation (confirmation):**
+
 ```yaml
 elicit_executor:
   present: "Based on analysis, I recommend: {executor}"
@@ -485,6 +492,7 @@ elicit_executor:
 ### Step 1.3: Define Field 4 (Inputs)
 
 **Elicitation:**
+
 ```yaml
 elicit_inputs:
   question: "What inputs does this task need?"
@@ -516,6 +524,7 @@ elicit_inputs:
 ### Step 1.4: Define Field 5 (Preconditions)
 
 **Elicitation:**
+
 ```yaml
 elicit_preconditions:
   question: "What must be true before this task can start?"
@@ -545,6 +554,7 @@ elicit_preconditions:
 ### Step 1.5: Define Field 6 (Steps)
 
 **Elicitation:**
+
 ```yaml
 elicit_steps:
   question: "Let's break down the workflow. What are the main steps?"
@@ -591,6 +601,7 @@ elicit_steps:
 ### Step 1.6: Define Field 7 (Outputs)
 
 **Elicitation:**
+
 ```yaml
 elicit_outputs:
   question: "What does this task produce?"
@@ -639,6 +650,7 @@ elicit_outputs:
 ### Step 1.7: Define Field 8 (Validation)
 
 **Elicitation:**
+
 ```yaml
 elicit_validation:
   question: "How do we know this task completed successfully?"
@@ -681,6 +693,7 @@ elicit_validation:
 ```
 
 **Checkpoint SC_ANA_001:**
+
 ```yaml
 heuristic_id: SC_ANA_001
 name: "Task Anatomy Complete"
@@ -709,6 +722,7 @@ criteria:
 **Apply: executor-matrix-framework.md**
 
 **Actions:**
+
 ```yaml
 design_guardrails:
   based_on_executor: "{executor}"
@@ -729,9 +743,9 @@ design_guardrails:
     Hybrid:
       - draft_quality: "AI must meet min threshold"
       - human_triggers:
-        - "confidence < 0.7"
-        - "novel scenario detected"
-        - "high-stakes output"
+          - "confidence < 0.7"
+          - "novel scenario detected"
+          - "high-stakes output"
       - approval_workflow: "Clear accept/revise/reject"
       - version_control: "Track all versions"
 
@@ -745,6 +759,7 @@ design_guardrails:
 ### Step 2.2: Set Checkpoints
 
 **Actions:**
+
 ```yaml
 set_checkpoints:
   for_complex_tasks:
@@ -763,7 +778,7 @@ set_checkpoints:
       - id: "CP-002"
         after_step: 6
         validation: "Draft meets quality threshold"
-        blocking: false  # Warning only
+        blocking: false # Warning only
 
   for_simple_tasks:
     checkpoints:
@@ -771,6 +786,7 @@ set_checkpoints:
 ```
 
 **Output (PHASE 2):**
+
 ```yaml
 phase_2_output:
   executor: "Hybrid"
@@ -797,6 +813,7 @@ phase_2_output:
 **Template:** `templates/task-tmpl.md`
 
 **Actions:**
+
 ```yaml
 generate_task:
   template: "templates/task-tmpl.md"
@@ -853,6 +870,7 @@ generate_task:
 ### Step 3.2: Add Usage Examples
 
 **Actions:**
+
 ```yaml
 add_examples:
   minimum: 1
@@ -873,6 +891,7 @@ add_examples:
 ### Step 3.3: Add Error Handling
 
 **Actions:**
+
 ```yaml
 add_error_handling:
   common_errors:
@@ -893,6 +912,7 @@ add_error_handling:
 ```
 
 **Output (PHASE 3):**
+
 ```yaml
 phase_3_output:
   task_file_content: "..."
@@ -912,6 +932,7 @@ phase_3_output:
 ### Step 4.1: Run Quality Gate SC_TSK_001
 
 **Actions:**
+
 ```yaml
 run_quality_gate:
   heuristic_id: SC_TSK_001
@@ -958,6 +979,7 @@ run_quality_gate:
 ### Step 4.2: Fix Blocking Issues
 
 **Actions:**
+
 ```yaml
 fix_blocking_issues:
   for_each_failure:
@@ -986,6 +1008,7 @@ fix_blocking_issues:
 ### Step 4.3: Save Task File
 
 **Actions:**
+
 ```yaml
 save_task:
   path: "squads/{pack_name}/tasks/{task_id}.md"
@@ -998,6 +1021,7 @@ save_task:
 ```
 
 **Output (PHASE 4):**
+
 ```yaml
 # Example output - values will vary based on your squad
 phase_4_output:
@@ -1018,6 +1042,7 @@ phase_4_output:
 ### Step 5.1: Present Task Summary
 
 **Actions:**
+
 ```yaml
 # Example output - values will vary based on your squad
 present_summary:
@@ -1039,15 +1064,16 @@ present_summary:
     status: "PASS"
 
   execution:
-    command: "*{command-name}"  # e.g., *generate-sales-page
-    agent: "@{squad-name}:{agent-name}"  # e.g., @copy:sales-page-writer
+    command: "*{command-name}" # e.g., *generate-sales-page
+    agent: "@{squad-name}:{agent-name}" # e.g., @copy:sales-page-writer
 ```
 
 ### Step 5.2: Document Integration
 
 **Actions:**
+
 ```yaml
-integration_notes:  # Example - replace with your squad agents
+integration_notes: # Example - replace with your squad agents
   agents_that_use:
     - "{agent-1}"
     - "{squad-name}-chief (orchestration)"
@@ -1071,17 +1097,18 @@ integration_notes:  # Example - replace with your squad agents
 
 ## Outputs
 
-| Output | Location | Description |
-|--------|----------|-------------|
-| Task File | `squads/{pack_name}/tasks/{task_id}.md` | Complete task definition |
-| Updated Agent | `squads/{pack_name}/agents/*.md` | Dependencies updated |
-| Updated README | `squads/{pack_name}/README.md` | Task added to list |
+| Output         | Location                                | Description              |
+| -------------- | --------------------------------------- | ------------------------ |
+| Task File      | `squads/{pack_name}/tasks/{task_id}.md` | Complete task definition |
+| Updated Agent  | `squads/{pack_name}/agents/*.md`        | Dependencies updated     |
+| Updated README | `squads/{pack_name}/README.md`          | Task added to list       |
 
 ---
 
 ## Validation Criteria (All Must Pass)
 
 ### Task Anatomy (8 Fields)
+
 - [ ] Field 1: ID defined (kebab-case, unique)
 - [ ] Field 2: Purpose clear and specific
 - [ ] Field 3: Executor assigned with rationale
@@ -1092,11 +1119,13 @@ integration_notes:  # Example - replace with your squad agents
 - [ ] Field 8: Validation criteria defined
 
 ### Quality
+
 - [ ] Lines >= 300 (simple) or >= 500 (complex)
 - [ ] SC_TSK_001 score >= 7.0
 - [ ] Examples >= 1
 
 ### Integration
+
 - [ ] Agent dependencies updated
 - [ ] README updated
 - [ ] Can be executed via command
@@ -1105,10 +1134,10 @@ integration_notes:  # Example - replace with your squad agents
 
 ## Heuristics Reference
 
-| Heuristic ID | Name | Where Applied | Blocking |
-|--------------|------|---------------|----------|
-| SC_ANA_001 | Task Anatomy Complete | Phase 1 | Yes |
-| SC_TSK_001 | Task Quality Gate | Phase 4 | Yes |
+| Heuristic ID | Name                  | Where Applied | Blocking |
+| ------------ | --------------------- | ------------- | -------- |
+| SC_ANA_001   | Task Anatomy Complete | Phase 1       | Yes      |
+| SC_TSK_001   | Task Quality Gate     | Phase 4       | Yes      |
 
 ---
 
@@ -1134,6 +1163,7 @@ error_handling:
 ## Integration with AIOS
 
 This task creates tasks that:
+
 - Follow Task Anatomy standard (8 fields)
 - Can be executed by agents via commands
 - Have appropriate executor assignments

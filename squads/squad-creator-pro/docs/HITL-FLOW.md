@@ -10,11 +10,11 @@
 
 ## Modos de Execução
 
-| Modo | Quando Usar | Interações | Qualidade Esperada |
-|------|-------------|------------|-------------------|
-| **🚀 YOLO** | Não tem materiais | Só aprovação final | 60-75% |
-| **💎 QUALITY** | Tem livros/PDFs/cursos | Coleta + Validação | 85-95% |
-| **🔀 HYBRID** | Materiais de alguns experts | Por expert | Variável |
+| Modo           | Quando Usar                 | Interações         | Qualidade Esperada |
+| -------------- | --------------------------- | ------------------ | ------------------ |
+| **🚀 YOLO**    | Não tem materiais           | Só aprovação final | 60-75%             |
+| **💎 QUALITY** | Tem livros/PDFs/cursos      | Coleta + Validação | 85-95%             |
+| **🔀 HYBRID**  | Materiais de alguns experts | Por expert         | Variável           |
 
 ---
 
@@ -163,15 +163,15 @@
 
 ## Checkpoints por Modo
 
-| Checkpoint | YOLO Min | YOLO Mod | QUALITY | HYBRID |
-|------------|----------|----------|---------|--------|
-| CP1: Minds | Auto | 🛑 | 🛑 | 🛑 |
-| CP_MAT: Materials | Skip | Skip | 🛑 | Per mind |
-| CP_SRC: Sources | Auto (≥10) | Auto (≥10) | 🛑 | Per mind |
-| CP_DNA: Validation | Auto (≥7) | Auto (≥7) | 🛑 if knows | 🛑 if knows |
-| CP_AGT: Smoke Test | Auto (pass) | Auto (pass) | 🛑 | Auto |
-| CP_ARCH: Architecture | Auto | 🛑 | 🛑 | 🛑 |
-| CP_FINAL: Approval | 🛑 | 🛑 | 🛑 | 🛑 |
+| Checkpoint            | YOLO Min    | YOLO Mod    | QUALITY     | HYBRID      |
+| --------------------- | ----------- | ----------- | ----------- | ----------- |
+| CP1: Minds            | Auto        | 🛑          | 🛑          | 🛑          |
+| CP_MAT: Materials     | Skip        | Skip        | 🛑          | Per mind    |
+| CP_SRC: Sources       | Auto (≥10)  | Auto (≥10)  | 🛑          | Per mind    |
+| CP_DNA: Validation    | Auto (≥7)   | Auto (≥7)   | 🛑 if knows | 🛑 if knows |
+| CP_AGT: Smoke Test    | Auto (pass) | Auto (pass) | 🛑          | Auto        |
+| CP_ARCH: Architecture | Auto        | 🛑          | 🛑          | 🛑          |
+| CP_FINAL: Approval    | 🛑          | 🛑          | 🛑          | 🛑          |
 
 **Legenda:** 🛑 = Para e pede input | Auto = Prossegue automaticamente
 
@@ -239,17 +239,17 @@ Mesmo em YOLO, o workflow PARA se:
 
 ## Trade-off Summary
 
-| Aspecto | YOLO | QUALITY |
-|---------|------|---------|
-| **Tempo** | 4-6h | 6-8h |
-| **Interações** | 1-2 | 5-8 |
-| **Fidelidade** | 60-75% | 85-95% |
-| **Voice DNA** | Aproximado | Preciso |
-| **Frameworks** | Públicos só | Completos |
+| Aspecto          | YOLO         | QUALITY    |
+| ---------------- | ------------ | ---------- |
+| **Tempo**        | 4-6h         | 6-8h       |
+| **Interações**   | 1-2          | 5-8        |
+| **Fidelidade**   | 60-75%       | 85-95%     |
+| **Voice DNA**    | Aproximado   | Preciso    |
+| **Frameworks**   | Públicos só  | Completos  |
 | **Contradições** | Podem faltar | Capturadas |
-| **Recomendado** | POC, testes | Produção |
+| **Recomendado**  | POC, testes  | Produção   |
 
 ---
 
 **Squad Architect | HITL Flow v2.0**
-*"YOLO first, quality when it matters"*
+_"YOLO first, quality when it matters"_

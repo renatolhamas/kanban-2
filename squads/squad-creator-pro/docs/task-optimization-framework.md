@@ -1,4 +1,5 @@
 # Task Optimization Framework
+
 ## Como tornar tasks Haiku-compatible
 
 > "Se precisa de reasoning é porque o processo está vago" - Pedro Valério
@@ -9,18 +10,18 @@
 
 **Pergunta central:** O que pode ser script e o que precisa de LLM?
 
-| Operação | Código (Script) | LLM |
-|----------|-----------------|-----|
-| Contar arquivos | ✅ `ls | wc -l` | ❌ |
-| Verificar se arquivo existe | ✅ `test -f` | ❌ |
-| Parse YAML/JSON | ✅ `yq`, `jq` | ❌ |
-| Grep por padrão | ✅ `grep -c` | ❌ |
-| Calcular porcentagem | ✅ `awk`, Python | ❌ |
-| Comparar strings | ✅ `diff`, `==` | ❌ |
+| Operação                     | Código (Script)      | LLM           |
+| ---------------------------- | -------------------- | ------------- | --- |
+| Contar arquivos              | ✅ `ls               | wc -l`        | ❌  |
+| Verificar se arquivo existe  | ✅ `test -f`         | ❌            |
+| Parse YAML/JSON              | ✅ `yq`, `jq`        | ❌            |
+| Grep por padrão              | ✅ `grep -c`         | ❌            |
+| Calcular porcentagem         | ✅ `awk`, Python     | ❌            |
+| Comparar strings             | ✅ `diff`, `==`      | ❌            |
 | Classificar tipo de conteúdo | ⚠️ Com regex simples | ✅ Se ambíguo |
-| Avaliar qualidade de texto | ❌ | ✅ |
-| Interpretar intenção | ❌ | ✅ |
-| Gerar texto criativo | ❌ | ✅ |
+| Avaliar qualidade de texto   | ❌                   | ✅            |
+| Interpretar intenção         | ❌                   | ✅            |
+| Gerar texto criativo         | ❌                   | ✅            |
 
 **Regra:** Se pode ser `if/else` com condições claras → SCRIPT
 
@@ -29,18 +30,21 @@
 ## 2. PERGUNTAS PARA CADA TASK
 
 ### 2.1 Identificação de Código
+
 - [ ] Quais operações são puramente I/O? (ler, escrever, listar)
 - [ ] Quais cálculos são aritméticos? (%, soma, média)
 - [ ] Quais verificações são binárias? (existe/não existe)
 - [ ] Quais padrões podem ser regex? (formato, estrutura)
 
 ### 2.2 Identificação de LLM
+
 - [ ] Onde precisa interpretar linguagem natural?
 - [ ] Onde precisa julgamento de qualidade?
 - [ ] Onde precisa criatividade?
 - [ ] Onde o contexto muda o significado?
 
 ### 2.3 Haiku vs Opus
+
 - [ ] A task tem classificação multi-sinal? → Opus
 - [ ] A task tem tie-breakers contextuais? → Opus
 - [ ] A task tem cascading decisions (A→B→C)? → Opus
@@ -53,6 +57,7 @@
 ## 3. TEMPLATE DE MELHORIA
 
 ### Antes (Vago - precisa Opus):
+
 ```yaml
 step: "Avaliar qualidade do clone"
 how: "Analisar se está bom"
@@ -60,6 +65,7 @@ score: "1-5 baseado em julgamento"
 ```
 
 ### Depois (Específico - funciona em Haiku):
+
 ```yaml
 step: "Avaliar qualidade do clone"
 how: |
@@ -85,22 +91,26 @@ score: "count(passed_checkpoints) / total_checkpoints"
 Para cada task, responder:
 
 ### Inputs
+
 - [ ] Os inputs são bem definidos? (path, type, format)
 - [ ] Há exemplos de input?
 - [ ] Há validação de input?
 
 ### Processamento
+
 - [ ] Cada step tem comando/ação específica?
 - [ ] "Verificar" está substituído por critério binário?
 - [ ] "Avaliar" está substituído por checklist?
 - [ ] "Analisar" está substituído por perguntas específicas?
 
 ### Outputs
+
 - [ ] O formato de output é template YAML/JSON?
 - [ ] Há exemplo de output completo?
 - [ ] Os campos são todos especificados?
 
 ### Scoring
+
 - [ ] Scoring é fórmula matemática?
 - [ ] Thresholds são números fixos?
 - [ ] Classificação é por faixas definidas?
@@ -112,11 +122,13 @@ Para cada task, responder:
 ### Padrão 1: "Avaliar qualidade" → Checkpoints binários
 
 **Antes:**
+
 ```
 Avaliar se o voice_dna está bem implementado (1-5)
 ```
 
 **Depois:**
+
 ```yaml
 voice_dna_quality:
   checkpoints:
@@ -131,11 +143,13 @@ voice_dna_quality:
 ### Padrão 2: "Classificar tipo" → Decision tree com ordem
 
 **Antes:**
+
 ```
 Detectar se é Expert, Pipeline ou Hybrid squad
 ```
 
 **Depois:**
+
 ```yaml
 type_detection:
   step_1: "count agents with voice_dna"
@@ -155,11 +169,13 @@ type_detection:
 ### Padrão 3: "Julgamento interpretativo" → Scoring Calibration
 
 **Antes:**
+
 ```
 Avaliar se o clone passa ou reprova
 ```
 
 **Depois:**
+
 ```yaml
 scoring_calibration:
   principle: "Score o que EXISTE, não o que falta"
@@ -200,12 +216,14 @@ Se Haiku erra a direção (PASS vs FAIL, tipo A vs tipo B), a task precisa de ma
 ## 8. EXEMPLO COMPLETO: an-fidelity-score
 
 ### Antes (v1.0 - Opus needed):
+
 ```
 Avaliar layer 1-5 baseado em julgamento
 Evidência: "como age, reage"
 ```
 
 ### Depois (v2.0 - Haiku compatible):
+
 ```yaml
 layer_1_behavioral_patterns:
   where_to_look: "persona:, behavioral_patterns:, modes:, states:"
@@ -224,6 +242,6 @@ layer_1_behavioral_patterns:
 
 ---
 
-*Framework Version: 1.0*
-*Author: @pedro-valerio*
-*Date: 2026-02-11*
+_Framework Version: 1.0_
+_Author: @pedro-valerio_
+_Date: 2026-02-11_

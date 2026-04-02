@@ -12,17 +12,20 @@ source_prd: docs/prd/14-implementation-roadmap-7-epics-sequenced.md
 # EPIC-1: FOUNDATION & AUTH
 
 ## Epic Goal
+
 Establish the complete technical foundation: database schema, authentication, tenant onboarding, RLS security, Evolution API integration, and webhook infrastructure.
 
 ## Epic Description
 
 **Existing System Context:**
+
 - No infrastructure exists yet (greenfield)
 - Supabase Cloud account provisioned (ready for schema)
 - Evolution API v2 credentials obtained (ready for pairing)
 - Frontend is Next.js (ready for auth flows)
 
 **Enhancement Details:**
+
 - Complete PostgreSQL schema (tenants, users, contacts, conversations, messages, columns)
 - Supabase Auth (register, login, profile management)
 - Tenant auto-creation with default "Main" kanban + standard columns
@@ -31,6 +34,7 @@ Establish the complete technical foundation: database schema, authentication, te
 - Webhook endpoint infrastructure for message ingestion
 
 **Success Criteria:**
+
 - Users can register/login and land in empty kanban dashboard
 - Each user is automatically assigned to a tenant with default kanban structure
 - RLS policies prevent cross-tenant data access
@@ -47,11 +51,13 @@ Establish the complete technical foundation: database schema, authentication, te
 Create complete PostgreSQL schema: tenants, users, contacts, conversations, messages, columns.
 
 **Executor Assignment:**
+
 - **Executor:** @data-engineer
 - **Quality Gate:** @architect
 - **Quality Gate Tools:** [schema_validation, foreign_key_integrity, performance_baseline]
 
 **Acceptance Criteria:**
+
 - [ ] `tenants` table: id, owner_id, created_at, updated_at
 - [ ] `users` table: id (via auth.uid), tenant_id, name, email, profile
 - [ ] `contacts` table: id, tenant_id, whatsapp_number (E.164), name, created_at
@@ -63,14 +69,17 @@ Create complete PostgreSQL schema: tenants, users, contacts, conversations, mess
 - [ ] Schema documented in `/docs/architecture/schema.md`
 
 **Integration Points:**
+
 - Supabase PostgreSQL
 - RLS policy layer (Story 1.4)
 - Evolution webhook data (Story 1.6)
 
 **Dependencies:**
+
 - None (foundational)
 
 **Risks:**
+
 - Primary: Schema design doesn't support multi-user Phase 2
 - Mitigation: Review schema with @architect, plan for user-level columns
 - Rollback: Database migration rollback, clear all data
@@ -83,11 +92,13 @@ Create complete PostgreSQL schema: tenants, users, contacts, conversations, mess
 Implement authentication: user registration, login, and profile management via Supabase Auth.
 
 **Executor Assignment:**
+
 - **Executor:** @dev
 - **Quality Gate:** @architect
 - **Quality Gate Tools:** [auth_security_review, password_validation, jwt_inspection]
 
 **Acceptance Criteria:**
+
 - [ ] User can sign up with email + password (password >= 8 chars, validation rules)
 - [ ] User can log in with email + password
 - [ ] JWT token generated and stored in secure httpOnly cookie
@@ -98,15 +109,18 @@ Implement authentication: user registration, login, and profile management via S
 - [ ] All auth endpoints follow Supabase best practices
 
 **Integration Points:**
+
 - Supabase Auth service
 - Next.js auth middleware
 - Frontend: Login/Signup forms
 - Session state management (Context or Zustand)
 
 **Dependencies:**
+
 - Story 1.1 (schema ready)
 
 **Risks:**
+
 - Primary: Credentials exposure or weak session handling
 - Mitigation: httpOnly cookies only, no localStorage tokens, token refresh strategy
 - Rollback: Disable auth endpoint, force session reset
@@ -119,11 +133,13 @@ Implement authentication: user registration, login, and profile management via S
 On user signup, automatically create tenant, default "Main" kanban, and standard column structure.
 
 **Executor Assignment:**
+
 - **Executor:** @dev
 - **Quality Gate:** @data-engineer
 - **Quality Gate Tools:** [data_consistency_check, rls_readiness_test, kanban_structure_validation]
 
 **Acceptance Criteria:**
+
 - [ ] After signup, new tenant row created with user as owner_id
 - [ ] Default kanban named "Main" created for tenant
 - [ ] Standard columns created: "Novo" → "Qualificado" → "Proposta" → "Vendido" → "Arquivado"
@@ -133,14 +149,17 @@ On user signup, automatically create tenant, default "Main" kanban, and standard
 - [ ] Duplicate signup prevention (same email → existing user login)
 
 **Integration Points:**
+
 - Story 1.1 (schema)
 - Story 1.2 (auth JWT)
 - Story 1.4 (RLS verification)
 
 **Dependencies:**
+
 - Story 1.2 (Auth must work)
 
 **Risks:**
+
 - Primary: Tenant/kanban not created, user stranded after login
 - Mitigation: Database transaction rollback on failure, error handling in onboarding flow
 - Rollback: Clear auto-created tenant, manual re-creation via support
@@ -153,11 +172,13 @@ On user signup, automatically create tenant, default "Main" kanban, and standard
 Define and test RLS policies to ensure each user can only access their tenant's data.
 
 **Executor Assignment:**
+
 - **Executor:** @data-engineer
 - **Quality Gate:** @dev
 - **Quality Gate Tools:** [rls_policy_audit, cross_tenant_attack_test, data_isolation_verification]
 
 **Acceptance Criteria:**
+
 - [ ] RLS policy on `tenants`: user can only select/read their own tenant
 - [ ] RLS policy on `users`: user can only select/read users in their tenant
 - [ ] RLS policy on `contacts`: select/update only from user's tenant
@@ -168,14 +189,17 @@ Define and test RLS policies to ensure each user can only access their tenant's 
 - [ ] Unit tests verify cross-tenant attack is impossible
 
 **Integration Points:**
+
 - Story 1.1 (schema)
 - Story 1.2 (JWT context with user ID)
 - Supabase RLS engine
 
 **Dependencies:**
+
 - Story 1.1, 1.2 (schema and auth in place)
 
 **Risks:**
+
 - Primary: RLS misconfiguration allows data leakage between tenants
 - Mitigation: Comprehensive security tests, penetration testing mindset
 - Rollback: Disable RLS temporarily (security risk), clear potentially exposed data
@@ -188,11 +212,13 @@ Define and test RLS policies to ensure each user can only access their tenant's 
 Integrate Evolution API v2 pairing flow: generate QR code, validate pairing, store instance credentials securely.
 
 **Executor Assignment:**
+
 - **Executor:** @dev
 - **Quality Gate:** @architect
 - **Quality Gate Tools:** [api_integration_review, secret_management_audit, error_handling_validation]
 
 **Acceptance Criteria:**
+
 - [ ] Pairing UI shows QR code generated from Evolution API
 - [ ] User can scan QR code with Evolution app on WhatsApp phone
 - [ ] After pairing, instance credentials stored securely (NOT in code, NOT in git)
@@ -202,15 +228,18 @@ Integrate Evolution API v2 pairing flow: generate QR code, validate pairing, sto
 - [ ] Documentation: `/docs/architecture/evolution-api.md`
 
 **Integration Points:**
+
 - Evolution API v2 (pairing endpoint)
 - Supabase Vault (secure secret storage) or environment variables
 - Next.js API route (`/api/evolution/pair`)
 - Settings page UI
 
 **Dependencies:**
+
 - Story 1.2 (auth must be working)
 
 **Risks:**
+
 - Primary: Credentials exposed or leaked in logs/client-side code
 - Mitigation: Server-side API calls only, use Supabase Vault, no console logs of secrets
 - Rollback: Revoke exposed credentials, re-pair new instance
@@ -223,11 +252,13 @@ Integrate Evolution API v2 pairing flow: generate QR code, validate pairing, sto
 Create webhook endpoint for Evolution API message ingestion, validate HMAC signature, prepare for DB storage (Story 4).
 
 **Executor Assignment:**
+
 - **Executor:** @dev
 - **Quality Gate:** @architect
 - **Quality Gate Tools:** [api_security_review, webhook_signature_validation, load_testing]
 
 **Acceptance Criteria:**
+
 - [ ] POST `/api/webhooks/messages` endpoint created in Next.js API route
 - [ ] Webhook validates HMAC-SHA256 signature (Evolution API requirement)
 - [ ] Invalid signatures rejected (403 Forbidden)
@@ -238,15 +269,18 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 - [ ] Ready for database integration (Phase 2 - Story 4)
 
 **Integration Points:**
+
 - Evolution API webhook sender
 - Next.js API routes
 - Request logging/monitoring
 - Phase 2: Story 4 (DB storage)
 
 **Dependencies:**
+
 - Story 1.5 (Evolution API credentials in place)
 
 **Risks:**
+
 - Primary: Webhook accepts invalid messages or is exploited for DoS
 - Mitigation: HMAC validation required, rate limiting (Phase 2), input sanitization
 - Rollback: Disable webhook endpoint, queue messages for manual re-processing
@@ -279,6 +313,7 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 ## Quality Assurance Strategy
 
 ### CodeRabbit Validation
+
 - **Schema Story:** Foreign key integrity, indexing strategy, performance baseline
 - **Auth Story:** Password rules, JWT payload, session handling, secure storage
 - **Onboarding Story:** Transaction safety, error handling, data consistency
@@ -287,11 +322,13 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 - **Webhook Story:** Signature validation, request parsing, error responses
 
 ### Specialized Expertise
+
 - @architect: Overall security design, API contracts, Evolution integration
 - @data-engineer: Schema design, RLS policies, data isolation verification
 - @dev: Implementation of auth flows, webhook handling, session management
 
 ### Quality Gates by Risk Level
+
 - **Schema Story:** CRITICAL → Pre-Commit + Pre-PR + Pre-Deployment audit
 - **Auth Story:** CRITICAL → Full security review + penetration testing mindset
 - **RLS Story:** CRITICAL → Pre-Deployment data isolation audit

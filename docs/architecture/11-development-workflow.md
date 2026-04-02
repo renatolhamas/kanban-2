@@ -29,6 +29,7 @@ npm run typecheck
 ## 11.2 Code Review Checklist
 
 Before marking complete, verify:
+
 - ✅ TypeScript compiles without errors (`npm run typecheck`)
 - ✅ Linting passes (`npm run lint`)
 - ✅ Tests pass (`npm test`)

@@ -11,19 +11,20 @@
  * @story 2.10 - Quality Gate Manager
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
-const { Layer1PreCommit } = require('./layer1-precommit');
-const { Layer2PRAutomation } = require('./layer2-pr-automation');
-const { Layer3HumanReview } = require('./layer3-human-review');
-const { HumanReviewOrchestrator } = require('./human-review-orchestrator');
-const { NotificationManager } = require('./notification-manager');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
+const { Layer1PreCommit } = require("./layer1-precommit");
+const { Layer2PRAutomation } = require("./layer2-pr-automation");
+const { Layer3HumanReview } = require("./layer3-human-review");
+const { HumanReviewOrchestrator } = require("./human-review-orchestrator");
+const { NotificationManager } = require("./notification-manager");
 
 /**
  * Default configuration path
  */
-const DEFAULT_CONFIG_PATH = '.aiox-core/core/quality-gates/quality-gate-config.yaml';
+const DEFAULT_CONFIG_PATH =
+  ".aiox-core/core/quality-gates/quality-gate-config.yaml";
 
 /**
  * Quality Gate Manager - Main orchestrator
@@ -40,8 +41,12 @@ class QualityGateManager {
       layer2: new Layer2PRAutomation(config.layer2 || {}),
       layer3: new Layer3HumanReview(config.layer3 || {}),
     };
-    this.humanReviewOrchestrator = new HumanReviewOrchestrator(config.humanReview || {});
-    this.notificationManager = new NotificationManager(config.notifications || {});
+    this.humanReviewOrchestrator = new HumanReviewOrchestrator(
+      config.humanReview || {},
+    );
+    this.notificationManager = new NotificationManager(
+      config.notifications || {},
+    );
     this.results = [];
     this.startTime = null;
     this.endTime = null;
@@ -54,7 +59,7 @@ class QualityGateManager {
    */
   static async load(configPath = DEFAULT_CONFIG_PATH) {
     try {
-      const content = await fs.readFile(configPath, 'utf8');
+      const content = await fs.readFile(configPath, "utf8");
       const config = yaml.load(content);
       return new QualityGateManager(config);
     } catch (_error) {
@@ -71,9 +76,9 @@ class QualityGateManager {
    */
   async runLayer(layerNum, context = {}) {
     const layerMap = {
-      1: 'layer1',
-      2: 'layer2',
-      3: 'layer3',
+      1: "layer1",
+      2: "layer2",
+      3: "layer3",
     };
 
     const layerKey = layerMap[layerNum];
@@ -124,8 +129,8 @@ class QualityGateManager {
     const { verbose = false } = context;
 
     if (verbose) {
-      console.log('\n🔍 Quality Gate Pipeline');
-      console.log('━'.repeat(50));
+      console.log("\n🔍 Quality Gate Pipeline");
+      console.log("━".repeat(50));
     }
 
     // Layer 1: Pre-commit
@@ -157,9 +162,10 @@ class QualityGateManager {
     this.endTime = Date.now();
 
     // Determine overall pass status
-    const signoffResult = l3Result.results?.find((r) => r.check === 'signoff');
+    const signoffResult = l3Result.results?.find((r) => r.check === "signoff");
     const allPassed = l1Result.pass && l2Result.pass;
-    const pendingReview = signoffResult && !signoffResult.signedOff && signoffResult.required;
+    const pendingReview =
+      signoffResult && !signoffResult.signedOff && signoffResult.required;
 
     return this.getOrchestratedResult(allPassed, pendingReview, context);
   }
@@ -174,20 +180,21 @@ class QualityGateManager {
     const { verbose = false } = context;
 
     if (verbose) {
-      console.log('\n━'.repeat(50));
-      console.log('❌ Layer 1 failed - fix before proceeding');
-      console.log('Pipeline stopped (fail-fast)');
+      console.log("\n━".repeat(50));
+      console.log("❌ Layer 1 failed - fix before proceeding");
+      console.log("Pipeline stopped (fail-fast)");
     }
 
     return {
       pass: false,
-      status: 'failed',
-      stoppedAt: 'layer1',
-      reason: 'fail-fast',
+      status: "failed",
+      stoppedAt: "layer1",
+      reason: "fail-fast",
       duration: this.getDuration(),
       layers: this.results,
       exitCode: 1,
-      message: 'Layer 1 failed - fix lint/test/typecheck errors before proceeding',
+      message:
+        "Layer 1 failed - fix lint/test/typecheck errors before proceeding",
     };
   }
 
@@ -201,19 +208,20 @@ class QualityGateManager {
     const { verbose = false } = context;
 
     if (verbose) {
-      console.log('\n━'.repeat(50));
-      console.log('⚠️ Layer 2 issues found - review required');
+      console.log("\n━".repeat(50));
+      console.log("⚠️ Layer 2 issues found - review required");
     }
 
     return {
       pass: false,
-      status: 'blocked',
-      stoppedAt: 'layer2',
-      reason: 'escalation',
+      status: "blocked",
+      stoppedAt: "layer2",
+      reason: "escalation",
       duration: this.getDuration(),
       layers: this.results,
       exitCode: 1,
-      message: 'Layer 2 found blocking issues - review and fix before proceeding',
+      message:
+        "Layer 2 found blocking issues - review and fix before proceeding",
     };
   }
 
@@ -230,23 +238,23 @@ class QualityGateManager {
     let status, message, exitCode;
 
     if (allPassed && !pendingReview) {
-      status = 'passed';
-      message = 'All quality gates passed';
+      status = "passed";
+      message = "All quality gates passed";
       exitCode = 0;
     } else if (allPassed && pendingReview) {
-      status = 'pending';
-      message = 'Quality gates passed - awaiting human review';
+      status = "pending";
+      message = "Quality gates passed - awaiting human review";
       exitCode = 0;
     } else {
-      status = 'failed';
-      message = 'Quality gates failed';
+      status = "failed";
+      message = "Quality gates failed";
       exitCode = 1;
     }
 
     if (verbose) {
-      console.log('\n━'.repeat(50));
-      const icon = status === 'passed' ? '✅' :
-        status === 'pending' ? '⏳' : '❌';
+      console.log("\n━".repeat(50));
+      const icon =
+        status === "passed" ? "✅" : status === "pending" ? "⏳" : "❌";
       console.log(`Result: ${icon} ${status.toUpperCase()}`);
       console.log(`Duration: ${this.formatDuration(this.getDuration())}`);
     }
@@ -266,10 +274,10 @@ class QualityGateManager {
    * @returns {Promise<Object>} Current status
    */
   async getStatus() {
-    const statusPath = this.config.status?.location || '.aiox/qa-status.json';
+    const statusPath = this.config.status?.location || ".aiox/qa-status.json";
 
     try {
-      const content = await fs.readFile(statusPath, 'utf8');
+      const content = await fs.readFile(statusPath, "utf8");
       const status = JSON.parse(content);
 
       return {
@@ -287,7 +295,7 @@ class QualityGateManager {
         layer2: null,
         layer3: null,
         signoffs: {},
-        overall: 'unknown',
+        overall: "unknown",
       };
     }
   }
@@ -298,12 +306,12 @@ class QualityGateManager {
    * @returns {string} Overall status
    */
   determineOverallStatus(status) {
-    if (!status.layer1) return 'not-started';
-    if (!status.layer1.pass) return 'layer1-failed';
-    if (!status.layer2) return 'layer1-complete';
-    if (!status.layer2.pass) return 'layer2-blocked';
-    if (!status.layer3) return 'layer2-complete';
-    return 'layer3-pending';
+    if (!status.layer1) return "not-started";
+    if (!status.layer1.pass) return "layer1-failed";
+    if (!status.layer2) return "layer1-complete";
+    if (!status.layer2.pass) return "layer2-blocked";
+    if (!status.layer3) return "layer2-complete";
+    return "layer3-pending";
   }
 
   /**
@@ -311,7 +319,7 @@ class QualityGateManager {
    * @returns {Promise<void>}
    */
   async saveStatus() {
-    const statusPath = this.config.status?.location || '.aiox/qa-status.json';
+    const statusPath = this.config.status?.location || ".aiox/qa-status.json";
 
     const status = {
       lastRun: new Date().toISOString(),
@@ -323,7 +331,7 @@ class QualityGateManager {
 
     // Preserve existing signoffs
     try {
-      const existing = JSON.parse(await fs.readFile(statusPath, 'utf8'));
+      const existing = JSON.parse(await fs.readFile(statusPath, "utf8"));
       status.signoffs = existing.signoffs || {};
       status.lastReviewerIndex = existing.lastReviewerIndex;
     } catch {
@@ -339,10 +347,13 @@ class QualityGateManager {
    * @param {string} storyId - Story identifier
    * @returns {Promise<string>} Report path
    */
-  async saveReport(storyId = 'unknown') {
-    const reportDir = this.config.reports?.location || '.aiox/qa-reports';
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const reportPath = path.join(reportDir, `qa-report-${storyId}-${timestamp}.json`);
+  async saveReport(storyId = "unknown") {
+    const reportDir = this.config.reports?.location || ".aiox/qa-reports";
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const reportPath = path.join(
+      reportDir,
+      `qa-report-${storyId}-${timestamp}.json`,
+    );
 
     const report = {
       storyId,
@@ -389,25 +400,29 @@ class QualityGateManager {
    * @returns {string} Formatted output
    */
   formatResults() {
-    const lines = ['', '🔍 Quality Gate Pipeline Results', '━'.repeat(50), ''];
+    const lines = ["", "🔍 Quality Gate Pipeline Results", "━".repeat(50), ""];
 
     this.results.forEach((layer, _index) => {
-      const icon = layer.pass ? '✅' : '❌';
-      lines.push(`${icon} ${layer.layer} - ${layer.pass ? 'PASSED' : 'FAILED'}`);
+      const icon = layer.pass ? "✅" : "❌";
+      lines.push(
+        `${icon} ${layer.layer} - ${layer.pass ? "PASSED" : "FAILED"}`,
+      );
 
       layer.results?.forEach((result) => {
-        const checkIcon = result.pass ? '✓' : '✗';
-        const skipped = result.skipped ? ' (skipped)' : '';
-        lines.push(`   ${checkIcon} ${result.check}: ${result.message}${skipped}`);
+        const checkIcon = result.pass ? "✓" : "✗";
+        const skipped = result.skipped ? " (skipped)" : "";
+        lines.push(
+          `   ${checkIcon} ${result.check}: ${result.message}${skipped}`,
+        );
       });
 
-      lines.push('');
+      lines.push("");
     });
 
-    lines.push('━'.repeat(50));
+    lines.push("━".repeat(50));
     lines.push(`Total Duration: ${this.formatDuration(this.getDuration())}`);
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -429,27 +444,32 @@ class QualityGateManager {
     const { verbose = false, changedFiles = [] } = prContext;
 
     if (verbose) {
-      console.log('\n🔍 3-Layer Quality Gate Orchestration');
-      console.log('━'.repeat(50));
-      console.log('Story 3.5: Human Review Orchestration (Layer 3)');
-      console.log('━'.repeat(50));
+      console.log("\n🔍 3-Layer Quality Gate Orchestration");
+      console.log("━".repeat(50));
+      console.log("Story 3.5: Human Review Orchestration (Layer 3)");
+      console.log("━".repeat(50));
     }
 
     // Layer 1: Pre-commit checks
-    if (verbose) console.log('\n📋 Phase 1: Running Layer 1 (Pre-commit)...');
+    if (verbose) console.log("\n📋 Phase 1: Running Layer 1 (Pre-commit)...");
     const l1Result = await this.runLayer1({ ...prContext, verbose });
     this.results.push(l1Result);
 
     if (!l1Result.pass) {
       this.endTime = Date.now();
       const blockResult = this.humanReviewOrchestrator.block(
-        { pass: false, layer: 'Layer 1', issues: this.extractIssues(l1Result), reason: 'Layer 1 failed' },
-        'layer1',
+        {
+          pass: false,
+          layer: "Layer 1",
+          issues: this.extractIssues(l1Result),
+          reason: "Layer 1 failed",
+        },
+        "layer1",
         this.startTime,
       );
 
       if (verbose) {
-        console.log('\n🚫 BLOCKED: Fix Layer 1 issues first');
+        console.log("\n🚫 BLOCKED: Fix Layer 1 issues first");
         blockResult.fixFirst?.forEach((fix) => {
           console.log(`  → ${fix.suggestion}`);
         });
@@ -466,20 +486,26 @@ class QualityGateManager {
     }
 
     // Layer 2: PR Automation
-    if (verbose) console.log('\n🤖 Phase 2: Running Layer 2 (PR Automation)...');
+    if (verbose)
+      console.log("\n🤖 Phase 2: Running Layer 2 (PR Automation)...");
     const l2Result = await this.runLayer2({ ...prContext, verbose });
     this.results.push(l2Result);
 
     if (!l2Result.pass) {
       this.endTime = Date.now();
       const blockResult = this.humanReviewOrchestrator.block(
-        { pass: false, layer: 'Layer 2', issues: this.extractIssues(l2Result), reason: 'Layer 2 failed' },
-        'layer2',
+        {
+          pass: false,
+          layer: "Layer 2",
+          issues: this.extractIssues(l2Result),
+          reason: "Layer 2 failed",
+        },
+        "layer2",
         this.startTime,
       );
 
       if (verbose) {
-        console.log('\n🚫 BLOCKED: Fix Layer 2 issues first');
+        console.log("\n🚫 BLOCKED: Fix Layer 2 issues first");
         blockResult.fixFirst?.forEach((fix) => {
           console.log(`  → ${fix.suggestion}`);
         });
@@ -497,15 +523,16 @@ class QualityGateManager {
 
     // Both layers passed - Request human review
     if (verbose) {
-      console.log('\n✅ Layers 1+2 PASSED');
-      console.log('\n👤 Phase 3: Requesting Human Review...');
+      console.log("\n✅ Layers 1+2 PASSED");
+      console.log("\n👤 Phase 3: Requesting Human Review...");
     }
 
-    const orchestrationResult = await this.humanReviewOrchestrator.orchestrateReview(
-      { ...prContext, changedFiles },
-      l1Result,
-      l2Result,
-    );
+    const orchestrationResult =
+      await this.humanReviewOrchestrator.orchestrateReview(
+        { ...prContext, changedFiles },
+        l1Result,
+        l2Result,
+      );
 
     // Run Layer 3 setup
     const l3Context = {
@@ -518,34 +545,44 @@ class QualityGateManager {
     this.endTime = Date.now();
 
     if (verbose) {
-      console.log('\n' + '━'.repeat(50));
-      console.log('📊 Orchestration Summary');
-      console.log('━'.repeat(50));
-      console.log('✅ Layer 1: PASSED');
-      console.log('✅ Layer 2: PASSED');
-      console.log(`⏳ Layer 3: ${orchestrationResult.reviewRequest ? 'HUMAN REVIEW REQUESTED' : 'PENDING'}`);
-      console.log(`\n📬 Review assigned to: ${orchestrationResult.reviewRequest?.reviewer || 'TBD'}`);
-      console.log(`⏱️ Estimated review time: ~${orchestrationResult.reviewRequest?.estimatedTime || 30} minutes`);
+      console.log("\n" + "━".repeat(50));
+      console.log("📊 Orchestration Summary");
+      console.log("━".repeat(50));
+      console.log("✅ Layer 1: PASSED");
+      console.log("✅ Layer 2: PASSED");
+      console.log(
+        `⏳ Layer 3: ${orchestrationResult.reviewRequest ? "HUMAN REVIEW REQUESTED" : "PENDING"}`,
+      );
+      console.log(
+        `\n📬 Review assigned to: ${orchestrationResult.reviewRequest?.reviewer || "TBD"}`,
+      );
+      console.log(
+        `⏱️ Estimated review time: ~${orchestrationResult.reviewRequest?.estimatedTime || 30} minutes`,
+      );
 
       if (orchestrationResult.reviewRequest?.focusAreas?.primary?.length > 0) {
-        console.log('\n🎯 Focus Areas:');
+        console.log("\n🎯 Focus Areas:");
         orchestrationResult.reviewRequest.focusAreas.primary.forEach((area) => {
           console.log(`  • ${area.area}: ${area.reason}`);
         });
       }
 
-      console.log(`\n⏭️ Skip: ${orchestrationResult.reviewRequest?.skipAreas?.join(', ') || 'syntax, formatting'}`);
-      console.log('\nTotal Duration: ' + this.formatDuration(this.getDuration()));
+      console.log(
+        `\n⏭️ Skip: ${orchestrationResult.reviewRequest?.skipAreas?.join(", ") || "syntax, formatting"}`,
+      );
+      console.log(
+        "\nTotal Duration: " + this.formatDuration(this.getDuration()),
+      );
     }
 
     return {
       pass: true,
-      status: 'pending_human_review',
+      status: "pending_human_review",
       duration: this.getDuration(),
       layers: this.results,
       reviewRequest: orchestrationResult.reviewRequest,
       exitCode: 0,
-      message: 'Layers 1+2 passed. Human review requested.',
+      message: "Layers 1+2 passed. Human review requested.",
     };
   }
 
@@ -564,7 +601,7 @@ class QualityGateManager {
         issues.push({
           check: result.check,
           message: result.message,
-          severity: result.issues?.critical > 0 ? 'CRITICAL' : 'HIGH',
+          severity: result.issues?.critical > 0 ? "CRITICAL" : "HIGH",
         });
       }
     });

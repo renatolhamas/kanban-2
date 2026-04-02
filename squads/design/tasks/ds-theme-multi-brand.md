@@ -80,11 +80,11 @@ Configure multi-brand token architecture enabling multiple brands to share the s
 - Every brand passes WCAG AA contrast validation
 - Token coverage is 100% for all brands
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

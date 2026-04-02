@@ -9,6 +9,7 @@
 ---
 
 ## Output Schema
+
 - **produces:** `outputs/design-system/{project}/accessibility/a11y-audit-report.json`
 - **format:** JSON data
 - **consumed_by:** contrast-matrix, focus-order-audit, aria-audit
@@ -16,6 +17,7 @@
 ## Overview
 
 Full accessibility audit combining:
+
 1. **Automated scanning** (axe-core rules via code analysis)
 2. **Manual inspection patterns** (focus order, ARIA usage, semantic HTML)
 3. **Contrast validation** (WCAG 2.2 + APCA)
@@ -26,12 +28,12 @@ Full accessibility audit combining:
 
 ## Input
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `path` | Yes | Directory or file to audit (e.g., `./app/components`) |
-| `--level` | No | WCAG level: `AA` (default) or `AAA` |
-| `--scope` | No | Scope: `full`, `color`, `keyboard`, `aria` (default: `full`) |
-| `--fix` | No | Auto-fix simple issues (missing alt, missing labels) |
+| Parameter | Required | Description                                                  |
+| --------- | -------- | ------------------------------------------------------------ |
+| `path`    | Yes      | Directory or file to audit (e.g., `./app/components`)        |
+| `--level` | No       | WCAG level: `AA` (default) or `AAA`                          |
+| `--scope` | No       | Scope: `full`, `color`, `keyboard`, `aria` (default: `full`) |
+| `--fix`   | No       | Auto-fix simple issues (missing alt, missing labels)         |
 
 ---
 
@@ -62,12 +64,12 @@ interface ContrastResult {
   foreground: string;
   background: string;
   ratio: number;
-  wcagAA_normal: boolean;   // ≥4.5:1
-  wcagAA_large: boolean;    // ≥3:1
-  wcagAAA_normal: boolean;  // ≥7:1
-  wcagAAA_large: boolean;   // ≥4.5:1
-  apca_Lc: number;          // APCA Lightness contrast
-  usage: string[];          // Where used
+  wcagAA_normal: boolean; // ≥4.5:1
+  wcagAA_large: boolean; // ≥3:1
+  wcagAAA_normal: boolean; // ≥7:1
+  wcagAAA_large: boolean; // ≥4.5:1
+  apca_Lc: number; // APCA Lightness contrast
+  usage: string[]; // Where used
 }
 ```
 
@@ -90,16 +92,17 @@ interface KeyboardAuditItem {
   file: string;
   line: number;
   issues: {
-    notFocusable: boolean;      // Missing tabIndex or not native interactive
-    noKeyHandler: boolean;       // onClick without onKeyDown
-    focusNotVisible: boolean;    // outline: none without replacement
-    trapDetected: boolean;       // Focus can't escape
+    notFocusable: boolean; // Missing tabIndex or not native interactive
+    noKeyHandler: boolean; // onClick without onKeyDown
+    focusNotVisible: boolean; // outline: none without replacement
+    trapDetected: boolean; // Focus can't escape
   };
-  severity: 'critical' | 'serious' | 'moderate' | 'minor';
+  severity: "critical" | "serious" | "moderate" | "minor";
 }
 ```
 
 **Critical Patterns to Detect:**
+
 1. `<div onClick>` without `role="button"` and `tabIndex={0}`
 2. `outline: none` or `outline: 0` without `:focus-visible` replacement
 3. Custom dropdowns without arrow key support
@@ -118,12 +121,12 @@ interface AriaAuditItem {
 }
 
 type AriaIssueType =
-  | 'invalid-role'           // Role doesn't exist
-  | 'missing-required-prop'  // role="slider" without aria-valuenow
-  | 'redundant-role'         // <button role="button">
-  | 'orphan-aria-label'      // aria-labelledby points to non-existent id
-  | 'missing-live-region'    // Dynamic content without aria-live
-  | 'wrong-aria-usage';      // aria-expanded on non-expandable element
+  | "invalid-role" // Role doesn't exist
+  | "missing-required-prop" // role="slider" without aria-valuenow
+  | "redundant-role" // <button role="button">
+  | "orphan-aria-label" // aria-labelledby points to non-existent id
+  | "missing-live-region" // Dynamic content without aria-live
+  | "wrong-aria-usage"; // aria-expanded on non-expandable element
 ```
 
 **Common ARIA Errors:**
@@ -140,7 +143,7 @@ type AriaIssueType =
 interface SemanticIssue {
   pattern: string;
   occurrences: number;
-  severity: 'critical' | 'serious' | 'moderate';
+  severity: "critical" | "serious" | "moderate";
   recommendation: string;
 }
 ```
@@ -171,13 +174,13 @@ interface SemanticIssue {
 
 ## Summary
 
-| Category | Issues | Critical | Serious | Moderate | Minor |
-|----------|--------|----------|---------|----------|-------|
-| Contrast | 12 | 3 | 5 | 4 | 0 |
-| Keyboard | 8 | 2 | 4 | 2 | 0 |
-| ARIA | 15 | 1 | 6 | 5 | 3 |
-| Semantic | 6 | 0 | 3 | 2 | 1 |
-| **Total** | **41** | **6** | **18** | **13** | **4** |
+| Category  | Issues | Critical | Serious | Moderate | Minor |
+| --------- | ------ | -------- | ------- | -------- | ----- |
+| Contrast  | 12     | 3        | 5       | 4        | 0     |
+| Keyboard  | 8      | 2        | 4       | 2        | 0     |
+| ARIA      | 15     | 1        | 6       | 5        | 3     |
+| Semantic  | 6      | 0        | 3       | 2        | 1     |
+| **Total** | **41** | **6**    | **18**  | **13**   | **4** |
 
 ## Compliance Score
 
@@ -202,11 +205,11 @@ interface SemanticIssue {
 ```markdown
 ## app/components/ui/Button.tsx
 
-| Line | Severity | Issue | Rule |
-|------|----------|-------|------|
-| 45 | Critical | Low contrast text | WCAG 1.4.3 |
-| 67 | Serious | Missing aria-label on icon button | WCAG 1.1.1 |
-| 89 | Moderate | Generic link text "click here" | WCAG 2.4.4 |
+| Line | Severity | Issue                             | Rule       |
+| ---- | -------- | --------------------------------- | ---------- |
+| 45   | Critical | Low contrast text                 | WCAG 1.4.3 |
+| 67   | Serious  | Missing aria-label on icon button | WCAG 1.1.1 |
+| 89   | Moderate | Generic link text "click here"    | WCAG 2.4.4 |
 ```
 
 ### 3. Contrast Matrix (if scope includes color)
@@ -214,12 +217,12 @@ interface SemanticIssue {
 ```markdown
 ## Color Contrast Matrix
 
-| Foreground | Background | Ratio | AA Normal | AA Large | Usage |
-|------------|------------|-------|-----------|----------|-------|
-| #1a1a1a | #ffffff | 16.1:1 | ✓ | ✓ | Body text |
-| #666666 | #ffffff | 5.7:1 | ✓ | ✓ | Secondary text |
-| #999999 | #ffffff | 2.8:1 | ✗ | ✗ | Placeholder |
-| #D4AF37 | #1a1a1a | 8.2:1 | ✓ | ✓ | Primary accent |
+| Foreground | Background | Ratio  | AA Normal | AA Large | Usage          |
+| ---------- | ---------- | ------ | --------- | -------- | -------------- |
+| #1a1a1a    | #ffffff    | 16.1:1 | ✓         | ✓        | Body text      |
+| #666666    | #ffffff    | 5.7:1  | ✓         | ✓        | Secondary text |
+| #999999    | #ffffff    | 2.8:1  | ✗         | ✗        | Placeholder    |
+| #D4AF37    | #1a1a1a    | 8.2:1  | ✓         | ✓        | Primary accent |
 ```
 
 ### 4. Fix Suggestions (Auto-Fixable)
@@ -243,11 +246,11 @@ interface SemanticIssue {
 
 ## Success Criteria
 
-| Metric | Target |
-|--------|--------|
-| Critical issues | 0 |
-| Serious issues | 0 |
-| AA compliance | 100% |
+| Metric               | Target         |
+| -------------------- | -------------- |
+| Critical issues      | 0              |
+| Serious issues       | 0              |
+| AA compliance        | 100%           |
 | Auto-fixable applied | All (if --fix) |
 
 ---
@@ -256,17 +259,17 @@ interface SemanticIssue {
 
 WCAG 2.2 added these criteria (check all):
 
-| Criterion | Level | Description |
-|-----------|-------|-------------|
-| 2.4.11 Focus Not Obscured (Minimum) | AA | Focused element not fully hidden |
-| 2.4.12 Focus Not Obscured (Enhanced) | AAA | Focused element not partially hidden |
-| 2.4.13 Focus Appearance | AAA | Focus indicator size/contrast |
-| 2.5.7 Dragging Movements | AA | Single pointer alternative to drag |
-| 2.5.8 Target Size (Minimum) | AA | 24x24px minimum target |
-| 3.2.6 Consistent Help | A | Help in consistent location |
-| 3.3.7 Redundant Entry | A | Don't re-ask same info |
-| 3.3.8 Accessible Authentication (Minimum) | AA | No cognitive function test |
-| 3.3.9 Accessible Authentication (Enhanced) | AAA | No object recognition |
+| Criterion                                  | Level | Description                          |
+| ------------------------------------------ | ----- | ------------------------------------ |
+| 2.4.11 Focus Not Obscured (Minimum)        | AA    | Focused element not fully hidden     |
+| 2.4.12 Focus Not Obscured (Enhanced)       | AAA   | Focused element not partially hidden |
+| 2.4.13 Focus Appearance                    | AAA   | Focus indicator size/contrast        |
+| 2.5.7 Dragging Movements                   | AA    | Single pointer alternative to drag   |
+| 2.5.8 Target Size (Minimum)                | AA    | 24x24px minimum target               |
+| 3.2.6 Consistent Help                      | A     | Help in consistent location          |
+| 3.3.7 Redundant Entry                      | A     | Don't re-ask same info               |
+| 3.3.8 Accessible Authentication (Minimum)  | AA    | No cognitive function test           |
+| 3.3.9 Accessible Authentication (Enhanced) | AAA   | No object recognition                |
 
 ---
 
@@ -330,11 +333,11 @@ a11y_audit:
 
 **Brad says:** "Accessibility isn't a feature. It's a quality bar. Zero critical issues or it doesn't ship."
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-accessibility-wcag-checklist.md`
 - `squads/design/checklists/ds-a11y-release-gate-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

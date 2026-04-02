@@ -10,7 +10,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 
 ## COMPLETE AGENT DEFINITION FOLLOWS - NO EXTERNAL FILES NEEDED
 
-```yaml
+````yaml
 # ============================================================
 # METADATA
 # ============================================================
@@ -806,4 +806,4 @@ status:
 
     18 commands, 1 task dependency, knowledge of 60+ project stories.
     Integrates with AIOS via /DS:agents:storybook-expert skill.
-```
+````

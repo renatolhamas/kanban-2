@@ -8,6 +8,7 @@
 **Quality Standard:** AIOS Level (300+ lines, valid YAML/MD)
 
 **Frameworks Used:**
+
 - `data/quality-dimensions-framework.md` → Template validation (Phase 3)
 
 ---
@@ -17,6 +18,7 @@
 This task creates output templates for AIOS squads. Templates define the structure and format of artifacts that agents and tasks produce.
 
 **v2.0 Changes:**
+
 - PHASE-based structure
 - Quality gate SC_TPL_001 must pass
 - Clear elicitation patterns
@@ -49,12 +51,12 @@ OUTPUT: Template file + Quality Gate PASS
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `template_name` | string | Yes | Human-readable name | `"Legal Contract"` |
-| `template_id` | string | Yes | kebab-case identifier | `"legal-contract"` |
-| `pack_name` | string | Yes | Target squad | `"legal"` |
-| `output_format` | enum | Yes | `md`, `yaml`, `json`, `html` | `"md"` |
+| Parameter       | Type   | Required | Description                  | Example            |
+| --------------- | ------ | -------- | ---------------------------- | ------------------ |
+| `template_name` | string | Yes      | Human-readable name          | `"Legal Contract"` |
+| `template_id`   | string | Yes      | kebab-case identifier        | `"legal-contract"` |
+| `pack_name`     | string | Yes      | Target squad                 | `"legal"`          |
+| `output_format` | enum   | Yes      | `md`, `yaml`, `json`, `html` | `"md"`             |
 
 ---
 
@@ -74,6 +76,7 @@ OUTPUT: Template file + Quality Gate PASS
 ### Step 0.1: Identify Target Pack
 
 **Actions:**
+
 ```yaml
 identify_pack:
   validation:
@@ -89,6 +92,7 @@ identify_pack:
 ### Step 0.2: Define Template Identity
 
 **Elicitation:**
+
 ```yaml
 elicit_identity:
   template_name:
@@ -120,6 +124,7 @@ elicit_identity:
 ### Step 0.3: Define Workflow Mode
 
 **Elicitation:**
+
 ```yaml
 elicit_mode:
   workflow_mode:
@@ -137,6 +142,7 @@ elicit_mode:
 ```
 
 **Output (PHASE 0):**
+
 ```yaml
 phase_0_output:
   pack_name: "legal"
@@ -156,6 +162,7 @@ phase_0_output:
 ### Step 1.1: Define Sections
 
 **Elicitation:**
+
 ```yaml
 elicit_sections:
   question: "What are the main sections of this template?"
@@ -171,6 +178,7 @@ elicit_sections:
 ```
 
 **Section Template:**
+
 ```yaml
 section_template:
   structure: |
@@ -189,6 +197,7 @@ section_template:
 ### Step 1.2: Configure Placeholders
 
 **Elicitation:**
+
 ```yaml
 elicit_placeholders:
   question: "What variable information needs to be filled in?"
@@ -206,6 +215,7 @@ elicit_placeholders:
 ```
 
 **Placeholder Documentation:**
+
 ```yaml
 placeholder_template:
   structure: |
@@ -220,6 +230,7 @@ placeholder_template:
 ### Step 1.3: Add Special Features
 
 **Check for special features:**
+
 ```yaml
 special_features:
   repeatable_sections:
@@ -250,6 +261,7 @@ special_features:
 ```
 
 **Output (PHASE 1):**
+
 ```yaml
 phase_1_output:
   sections_count: 8
@@ -270,6 +282,7 @@ phase_1_output:
 ### Step 2.1: Design Elicitation Flow
 
 **Elicitation:**
+
 ```yaml
 elicit_flow:
   flow_title:
@@ -286,6 +299,7 @@ elicit_flow:
 ### Step 2.2: Configure Options
 
 **For each elicitation section:**
+
 ```yaml
 elicit_options:
   template: |
@@ -314,6 +328,7 @@ elicit_options:
 ```
 
 **Output (PHASE 2):**
+
 ```yaml
 phase_2_output:
   elicitation_title: "Contract Generation Wizard"
@@ -332,6 +347,7 @@ phase_2_output:
 ### Step 3.1: Compile Template File
 
 **Actions:**
+
 ```yaml
 compile_template:
   sections:
@@ -349,6 +365,7 @@ compile_template:
 ### Step 3.2: Run Quality Gate SC_TPL_001
 
 **Actions:**
+
 ```yaml
 run_quality_gate:
   heuristic_id: SC_TPL_001
@@ -382,6 +399,7 @@ run_quality_gate:
 ### Step 3.3: Save Template File
 
 **Actions:**
+
 ```yaml
 save_template:
   path: "squads/{pack_name}/templates/{template_id}.yaml"
@@ -393,11 +411,12 @@ save_template:
 ```
 
 **Output (PHASE 3):**
+
 ```yaml
 phase_3_output:
   quality_score: 8.0/10
   blocking_requirements: "ALL PASS"
-  template_file: "squads/{squad-name}/templates/{template-name}.yaml"  # Example
+  template_file: "squads/{squad-name}/templates/{template-name}.yaml" # Example
   status: "PASS"
 ```
 
@@ -405,26 +424,29 @@ phase_3_output:
 
 ## Outputs
 
-| Output | Location | Description |
-|--------|----------|-------------|
-| Template File | `squads/{pack_name}/templates/{template_id}.yaml` | Complete template |
-| Updated README | `squads/{pack_name}/README.md` | Template added |
+| Output         | Location                                          | Description       |
+| -------------- | ------------------------------------------------- | ----------------- |
+| Template File  | `squads/{pack_name}/templates/{template_id}.yaml` | Complete template |
+| Updated README | `squads/{pack_name}/README.md`                    | Template added    |
 
 ---
 
 ## Validation Criteria (All Must Pass)
 
 ### Structure
+
 - [ ] Valid YAML syntax
 - [ ] All required metadata present
 - [ ] Output configuration complete
 
 ### Content
+
 - [ ] Sections well-structured
 - [ ] All placeholders documented
 - [ ] Elicitation flow clear (if interactive)
 
 ### Quality
+
 - [ ] Lines >= 200
 - [ ] SC_TPL_001 score >= 7.0
 - [ ] Examples provided
@@ -433,9 +455,9 @@ phase_3_output:
 
 ## Heuristics Reference
 
-| Heuristic ID | Name | Where Applied | Blocking |
-|--------------|------|---------------|----------|
-| SC_TPL_001 | Template Quality Gate | Phase 3 | Yes |
+| Heuristic ID | Name                  | Where Applied | Blocking |
+| ------------ | --------------------- | ------------- | -------- |
+| SC_TPL_001   | Template Quality Gate | Phase 3       | Yes      |
 
 ---
 
@@ -461,6 +483,7 @@ error_handling:
 ## Integration with AIOS
 
 This task creates templates that:
+
 - Follow AIOS template standards
 - Can be used by agents via tasks
 - Support interactive elicitation

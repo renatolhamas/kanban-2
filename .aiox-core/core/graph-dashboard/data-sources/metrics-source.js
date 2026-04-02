@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const { getClient, isCodeIntelAvailable } = require('../../code-intel');
+const { getClient, isCodeIntelAvailable } = require("../../code-intel");
 
 /**
  * Data source that provides cache and latency metrics from the code-intel client.
@@ -39,7 +39,7 @@ class MetricsSource {
           cacheHits: metrics.cacheHits || 0,
           cacheMisses: metrics.cacheMisses || 0,
           cacheHitRate: metrics.cacheHitRate || 0,
-          circuitBreakerState: metrics.circuitBreakerState || 'CLOSED',
+          circuitBreakerState: metrics.circuitBreakerState || "CLOSED",
           latencyLog: metrics.latencyLog || [],
           providerAvailable: true,
           activeProvider: metrics.activeProvider || null,
@@ -83,7 +83,7 @@ class MetricsSource {
       cacheHits: 0,
       cacheMisses: 0,
       cacheHitRate: 0,
-      circuitBreakerState: 'CLOSED',
+      circuitBreakerState: "CLOSED",
       latencyLog: [],
       providerAvailable: false,
       activeProvider: null,

@@ -137,13 +137,13 @@ inventory_template:
 
 ### Step 2: Scoring
 
-| Criterion | Weight | Ouro Threshold | Bronze Threshold |
-|-----------|--------|----------------|------------------|
-| Spontaneity | 0.9 | Unscripted | Scripted |
-| Depth | 0.8 | 2h+ or detailed | < 30min or surface |
-| Specificity | 0.8 | Answers real questions | Generic advice |
-| Recency | 0.6 | < 3 years | 3-5 years |
-| Primary source | 1.0 | Expert directly | Third party |
+| Criterion      | Weight | Ouro Threshold         | Bronze Threshold   |
+| -------------- | ------ | ---------------------- | ------------------ |
+| Spontaneity    | 0.9    | Unscripted             | Scripted           |
+| Depth          | 0.8    | 2h+ or detailed        | < 30min or surface |
+| Specificity    | 0.8    | Answers real questions | Generic advice     |
+| Recency        | 0.6    | < 3 years              | 3-5 years          |
+| Primary source | 1.0    | Expert directly        | Third party        |
 
 ### Step 3: Ratio Check
 
@@ -152,9 +152,9 @@ ratio_validation:
   calculate: "ouro_count / total_count"
 
   thresholds:
-    green: ">= 0.7"   # Proceed confidently
+    green: ">= 0.7" # Proceed confidently
     yellow: "0.6-0.7" # Proceed with caution
-    red: "< 0.6"      # VETO - curate more
+    red: "< 0.6" # VETO - curate more
 
   action_on_red:
     - "Search for more ouro sources"
@@ -195,12 +195,12 @@ warning_signals:
 
 ## Veto Conditions
 
-| Condition | Action | Recovery |
-|-----------|--------|----------|
-| ouro_ratio < 0.6 | VETO | Curate more ouro sources |
-| zero ouro sources | HARD VETO | Cannot proceed |
-| > 50% tier 2b | VETO | Eliminate low quality |
-| any tier 3 in final set | VETO | Remove immediately |
+| Condition               | Action    | Recovery                 |
+| ----------------------- | --------- | ------------------------ |
+| ouro_ratio < 0.6        | VETO      | Curate more ouro sources |
+| zero ouro sources       | HARD VETO | Cannot proceed           |
+| > 50% tier 2b           | VETO      | Eliminate low quality    |
+| any tier 3 in final set | VETO      | Remove immediately       |
 
 ---
 

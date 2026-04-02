@@ -5,21 +5,23 @@
 ## Links Rápidos
 
 ### Para Iniciantes
-| Doc | Descrição |
-|-----|-----------|
-| [POR-ONDE-COMECAR](docs/POR-ONDE-COMECAR.md) | **Leia primeiro** - Guia de navegação |
-| [FAQ](docs/FAQ.md) | Perguntas frequentes e glossário |
-| [TUTORIAL-COMPLETO](docs/TUTORIAL-COMPLETO.md) | Exemplo real passo a passo |
-| [QUICK-START](docs/QUICK-START.md) | Crie seu primeiro squad em 5 minutos |
+
+| Doc                                            | Descrição                             |
+| ---------------------------------------------- | ------------------------------------- |
+| [POR-ONDE-COMECAR](docs/POR-ONDE-COMECAR.md)   | **Leia primeiro** - Guia de navegação |
+| [FAQ](docs/FAQ.md)                             | Perguntas frequentes e glossário      |
+| [TUTORIAL-COMPLETO](docs/TUTORIAL-COMPLETO.md) | Exemplo real passo a passo            |
+| [QUICK-START](docs/QUICK-START.md)             | Crie seu primeiro squad em 5 minutos  |
 
 ### Referência
-| Doc | Descrição |
-|-----|-----------|
-| [CONCEPTS](docs/CONCEPTS.md) | Entenda DNA, Tiers, Quality Gates |
-| [COMMANDS](docs/COMMANDS.md) | Referência de todos os comandos |
-| [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) | Problemas comuns e soluções |
-| [ARCHITECTURE](docs/ARCHITECTURE-DIAGRAMS.md) | Diagramas de fluxo (Mermaid) |
-| [HITL-FLOW](docs/HITL-FLOW.md) | Human-in-the-Loop detalhado |
+
+| Doc                                           | Descrição                         |
+| --------------------------------------------- | --------------------------------- |
+| [CONCEPTS](docs/CONCEPTS.md)                  | Entenda DNA, Tiers, Quality Gates |
+| [COMMANDS](docs/COMMANDS.md)                  | Referência de todos os comandos   |
+| [TROUBLESHOOTING](docs/TROUBLESHOOTING.md)    | Problemas comuns e soluções       |
+| [ARCHITECTURE](docs/ARCHITECTURE-DIAGRAMS.md) | Diagramas de fluxo (Mermaid)      |
+| [HITL-FLOW](docs/HITL-FLOW.md)                | Human-in-the-Loop detalhado       |
 
 ---
 
@@ -28,6 +30,7 @@
 O Squad Creator gerencia os squads da sua instalação AIOS. Use o comando `*refresh-registry` para ver estatísticas atualizadas do seu ecossistema.
 
 **Características:**
+
 - Cria squads baseados em elite minds reais
 - Extrai Voice DNA e Thinking DNA automaticamente
 - Valida qualidade com quality gates rigorosos
@@ -148,13 +151,13 @@ O Squad Creator executa **pesquisa PROFUNDA e PARALELA** por ferramentas que pot
 
 ### O Que Cada Sub-Agente Pesquisa
 
-| Sub-Agente | Fontes | Exemplos |
-|------------|--------|----------|
-| **MCP Agent** | modelcontextprotocol/servers, glama.ai, GitHub topics | playwright, mcp-server-pdf |
-| **API Agent** | RapidAPI, PublicAPIs, ProgrammableWeb | SendGrid, SimilarWeb |
-| **CLI Agent** | awesome-cli-apps, brew, npm, pip | jq, lighthouse, httpie |
-| **Library Agent** | PyPI, npm, GitHub SDKs | langchain, pdfplumber |
-| **GitHub Agent** | topics, collections, awesome lists | swipe-file-analyzer |
+| Sub-Agente        | Fontes                                                | Exemplos                   |
+| ----------------- | ----------------------------------------------------- | -------------------------- |
+| **MCP Agent**     | modelcontextprotocol/servers, glama.ai, GitHub topics | playwright, mcp-server-pdf |
+| **API Agent**     | RapidAPI, PublicAPIs, ProgrammableWeb                 | SendGrid, SimilarWeb       |
+| **CLI Agent**     | awesome-cli-apps, brew, npm, pip                      | jq, lighthouse, httpie     |
+| **Library Agent** | PyPI, npm, GitHub SDKs                                | langchain, pdfplumber      |
+| **GitHub Agent**  | topics, collections, awesome lists                    | swipe-file-analyzer        |
 
 ### Avaliação por Tiers Relativos (v2.6)
 
@@ -176,13 +179,13 @@ NOTA: Não existe "stars >= 100 = bom"
 
 #### Dimensões Avaliadas (Todas Relativas)
 
-| Dimensão | O que mede | Como compara |
-|----------|------------|--------------|
-| **Social Proof** | Popularidade, comunidade, adoção | Percentil de stars, downloads, contributors |
-| **Security** | CVEs, deps, práticas | Percentil de vulnerabilidades (menos = melhor) |
-| **Maturity** | Idade, estabilidade, docs | Percentil de maturidade |
-| **RICE** | Reach×Impact×Confidence/Effort | Percentil do score RICE |
-| **WSJF** | Cost of Delay / Duration | Percentil de priorização |
+| Dimensão         | O que mede                       | Como compara                                   |
+| ---------------- | -------------------------------- | ---------------------------------------------- |
+| **Social Proof** | Popularidade, comunidade, adoção | Percentil de stars, downloads, contributors    |
+| **Security**     | CVEs, deps, práticas             | Percentil de vulnerabilidades (menos = melhor) |
+| **Maturity**     | Idade, estabilidade, docs        | Percentil de maturidade                        |
+| **RICE**         | Reach×Impact×Confidence/Effort   | Percentil do score RICE                        |
+| **WSJF**         | Cost of Delay / Duration         | Percentil de priorização                       |
 
 #### Flags (Atenção, não VETOs)
 
@@ -211,20 +214,20 @@ Comparação:
 
 ### Comandos
 
-| Comando | Descrição |
-|---------|-----------|
+| Comando                    | Descrição                              |
+| -------------------------- | -------------------------------------- |
 | `*discover-tools {domain}` | Executar deep discovery (5 sub-agents) |
-| `*show-tools` | Exibir registro global de tools |
-| `*add-tool {name}` | Adicionar tool às dependências |
+| `*show-tools`              | Exibir registro global de tools        |
+| `*add-tool {name}`         | Adicionar tool às dependências         |
 
 ### Arquivos
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `workflows/wf-discover-tools.yaml` | Workflow completo (900+ linhas) |
-| `data/tool-registry.yaml` | Catálogo global de tools |
-| `data/tool-evaluation-framework.md` | Framework RICE/WSJF/Security |
-| `tasks/discover-tools.md` | Task standalone (uso avulso) |
+| Arquivo                             | Descrição                       |
+| ----------------------------------- | ------------------------------- |
+| `workflows/wf-discover-tools.yaml`  | Workflow completo (900+ linhas) |
+| `data/tool-registry.yaml`           | Catálogo global de tools        |
+| `data/tool-evaluation-framework.md` | Framework RICE/WSJF/Security    |
+| `tasks/discover-tools.md`           | Task standalone (uso avulso)    |
 
 ### Outputs por Squad
 
@@ -239,13 +242,13 @@ squads/{pack}/
 
 ### Heuristics (5 Checkpoints)
 
-| Heuristic | Propósito | Critério | Notas |
-|-----------|-----------|----------|-------|
-| **SC_TLD_001** | Discovery Complete | 3+ agents, 5+ tools | Qualidade por ranking, não quantidade |
-| **SC_TLD_002** | Ranking Complete | Todos os tools têm tiers | Sem thresholds absolutos |
-| **SC_TLD_003** | Flags Identified | Flags checados | Para atenção humana, não VETOs |
-| **SC_TLD_004** | Cost Comparison | Paid vs OSS por tier | Sem ROI fixo |
-| **SC_TLD_005** | Matrix Generated | Quadrantes atribuídos | Todos os tools incluídos |
+| Heuristic      | Propósito          | Critério                 | Notas                                 |
+| -------------- | ------------------ | ------------------------ | ------------------------------------- |
+| **SC_TLD_001** | Discovery Complete | 3+ agents, 5+ tools      | Qualidade por ranking, não quantidade |
+| **SC_TLD_002** | Ranking Complete   | Todos os tools têm tiers | Sem thresholds absolutos              |
+| **SC_TLD_003** | Flags Identified   | Flags checados           | Para atenção humana, não VETOs        |
+| **SC_TLD_004** | Cost Comparison    | Paid vs OSS por tier     | Sem ROI fixo                          |
+| **SC_TLD_005** | Matrix Generated   | Quadrantes atribuídos    | Todos os tools incluídos              |
 
 ### Filosofia
 
@@ -257,13 +260,13 @@ squads/{pack}/
 
 O Squad Creator possui agentes especializados organizados por Tiers:
 
-| Tier | Agent | Especialidade | Quando Usar |
-|------|-------|---------------|-------------|
-| **0** | **squad-diagnostician** | Triagem & Routing | Ponto de entrada, diagnóstico de necessidades |
-| **Orch** | **squad-chief** | Orquestração geral | Criar squads completos, visão macro |
-| **1** | **oalanicolas** | Mind Cloning | Extrair DNA, curar fontes, validar fidelidade |
-| **1** | **pedro-valerio** | Process Design | Validar workflows, criar checklists, veto conditions |
-| **2** | **sop-extractor** | Extração de SOPs | Transcrições → SOPs estruturados |
+| Tier     | Agent                   | Especialidade      | Quando Usar                                          |
+| -------- | ----------------------- | ------------------ | ---------------------------------------------------- |
+| **0**    | **squad-diagnostician** | Triagem & Routing  | Ponto de entrada, diagnóstico de necessidades        |
+| **Orch** | **squad-chief**         | Orquestração geral | Criar squads completos, visão macro                  |
+| **1**    | **oalanicolas**         | Mind Cloning       | Extrair DNA, curar fontes, validar fidelidade        |
+| **1**    | **pedro-valerio**       | Process Design     | Validar workflows, criar checklists, veto conditions |
+| **2**    | **sop-extractor**       | Extração de SOPs   | Transcrições → SOPs estruturados                     |
 
 ### Divisão de Responsabilidades
 
@@ -320,24 +323,28 @@ O Squad Creator possui agentes especializados organizados por Tiers:
 ### Mind Cloning (MMOS-lite)
 
 Extrai o DNA de experts reais:
+
 - **Voice DNA**: Como comunicam (vocabulário, tom, histórias)
 - **Thinking DNA**: Como pensam (frameworks, heurísticas, decisões)
 
 ### YOLO Mode
 
 Roda automaticamente, para só quando dados faltam:
+
 - Sem materiais? Pesquisa web automática
 - Fidelidade: 60-75%
 
 ### QUALITY Mode
 
 Máxima fidelidade com materiais do usuário:
+
 - Livros, PDFs, transcrições
 - Fidelidade: 85-95%
 
 ### Smoke Tests
 
 3 testes obrigatórios para validar comportamento real:
+
 1. Conhecimento do domínio
 2. Tomada de decisão
 3. Resposta a objeções
@@ -368,13 +375,13 @@ Máxima fidelidade com materiais do usuário:
 
 ## Comandos Principais
 
-| Comando | Descrição |
-|---------|-----------|
-| `*create-squad` | Criar squad completo |
-| `*clone-mind {name}` | Clonar expert específico |
-| `*validate-squad {name}` | Validar squad existente |
-| `*update-mind {slug}` | Atualizar DNA existente |
-| `*quality-dashboard` | Ver métricas de qualidade |
+| Comando                  | Descrição                 |
+| ------------------------ | ------------------------- |
+| `*create-squad`          | Criar squad completo      |
+| `*clone-mind {name}`     | Clonar expert específico  |
+| `*validate-squad {name}` | Validar squad existente   |
+| `*update-mind {slug}`    | Atualizar DNA existente   |
+| `*quality-dashboard`     | Ver métricas de qualidade |
 
 **Referência completa:** [COMMANDS.md](docs/COMMANDS.md)
 
@@ -384,56 +391,56 @@ Máxima fidelidade com materiais do usuário:
 
 ### Criação
 
-| Comando | Descrição | Output |
-|---------|-----------|--------|
-| `*create-squad` | Criar squad completo (6 fases) | `squads/{name}/` |
-| `*clone-mind {name}` | Extrair Voice + Thinking DNA | `outputs/minds/{slug}/` |
-| `*create-agent` | Agent individual para squad | `agents/{name}.md` |
-| `*create-workflow` | Workflow multi-fase | `workflows/{name}.yaml` |
-| `*create-task` | Task atômica | `tasks/{name}.md` |
-| `*create-template` | Template de output | `templates/{name}.yaml` |
+| Comando              | Descrição                      | Output                  |
+| -------------------- | ------------------------------ | ----------------------- |
+| `*create-squad`      | Criar squad completo (6 fases) | `squads/{name}/`        |
+| `*clone-mind {name}` | Extrair Voice + Thinking DNA   | `outputs/minds/{slug}/` |
+| `*create-agent`      | Agent individual para squad    | `agents/{name}.md`      |
+| `*create-workflow`   | Workflow multi-fase            | `workflows/{name}.yaml` |
+| `*create-task`       | Task atômica                   | `tasks/{name}.md`       |
+| `*create-template`   | Template de output             | `templates/{name}.yaml` |
 
 ### Extração de DNA
 
-| Comando | Descrição | Foco |
-|---------|-----------|------|
-| `*extract-voice-dna` | Vocabulário, tom, histórias | Comunicação |
-| `*extract-thinking-dna` | Frameworks, heurísticas, decisões | Pensamento |
-| `*update-mind {slug}` | Atualizar DNA existente | Brownfield |
-| `*auto-acquire-sources` | Busca web automática | Research |
+| Comando                 | Descrição                         | Foco        |
+| ----------------------- | --------------------------------- | ----------- |
+| `*extract-voice-dna`    | Vocabulário, tom, histórias       | Comunicação |
+| `*extract-thinking-dna` | Frameworks, heurísticas, decisões | Pensamento  |
+| `*update-mind {slug}`   | Atualizar DNA existente           | Brownfield  |
+| `*auto-acquire-sources` | Busca web automática              | Research    |
 
 ### Validação
 
-| Comando | Descrição | Gate |
-|---------|-----------|------|
-| `*validate-squad {name}` | Validação completa (9 fases) | Blocking |
-| `*validate-agent {file}` | AIOS 6-level structure | SC_AGT_001 |
-| `*validate-task {file}` | Task Anatomy (8 campos) | - |
-| `*validate-workflow {file}` | Phases + checkpoints | - |
-| `*quality-dashboard {name}` | Métricas visuais | - |
+| Comando                     | Descrição                    | Gate       |
+| --------------------------- | ---------------------------- | ---------- |
+| `*validate-squad {name}`    | Validação completa (9 fases) | Blocking   |
+| `*validate-agent {file}`    | AIOS 6-level structure       | SC_AGT_001 |
+| `*validate-task {file}`     | Task Anatomy (8 campos)      | -          |
+| `*validate-workflow {file}` | Phases + checkpoints         | -          |
+| `*quality-dashboard {name}` | Métricas visuais             | -          |
 
 ### Analytics
 
-| Comando | Descrição |
-|---------|-----------|
-| `*list-squads` | Listar todos os squads |
-| `*show-registry` | Registro com gaps e referências |
-| `*squad-analytics` | Dashboard detalhado |
-| `*refresh-registry` | Escanear e atualizar registro |
+| Comando             | Descrição                       |
+| ------------------- | ------------------------------- |
+| `*list-squads`      | Listar todos os squads          |
+| `*show-registry`    | Registro com gaps e referências |
+| `*squad-analytics`  | Dashboard detalhado             |
+| `*refresh-registry` | Escanear e atualizar registro   |
 
 ---
 
 ## Conceitos Fundamentais
 
-| Conceito | Descrição |
-|----------|-----------|
-| **Mind** | Pessoa real com frameworks documentados |
-| **Agent** | Clone digital do mind |
-| **Voice DNA** | Como o expert comunica |
-| **Thinking DNA** | Como o expert pensa/decide |
-| **Tiers** | Níveis de agents (0=diagnóstico, 1=masters, etc.) |
-| **Quality Gates** | Checkpoints de validação |
-| **Fidelity** | % de similaridade com expert real |
+| Conceito          | Descrição                                         |
+| ----------------- | ------------------------------------------------- |
+| **Mind**          | Pessoa real com frameworks documentados           |
+| **Agent**         | Clone digital do mind                             |
+| **Voice DNA**     | Como o expert comunica                            |
+| **Thinking DNA**  | Como o expert pensa/decide                        |
+| **Tiers**         | Níveis de agents (0=diagnóstico, 1=masters, etc.) |
+| **Quality Gates** | Checkpoints de validação                          |
+| **Fidelity**      | % de similaridade com expert real                 |
 
 **Explicação detalhada:** [CONCEPTS.md](docs/CONCEPTS.md)
 
@@ -449,6 +456,7 @@ Máxima fidelidade com materiais do usuário:
 ### Tasks
 
 **Criação**
+
 - `create-squad.md` - Workflow completo de criação de squad (854 linhas)
 - `create-agent.md` - Criação individual de agent para squads (756 linhas)
 - `create-task.md` - Criação de task para workflows
@@ -456,6 +464,7 @@ Máxima fidelidade com materiais do usuário:
 - `extract-sop.md` - Extração de SOPs de transcrições (AIOS-ready)
 
 **Validação**
+
 - `validate-squad.md` - Validação granular de squad (795 linhas, 9 fases)
 
 ### Templates
@@ -484,14 +493,14 @@ Máxima fidelidade com materiais do usuário:
 
 Scripts Python para operações determinísticas (zero tokens LLM):
 
-| Script | Propósito | Tipo |
-|--------|-----------|------|
-| `sync-ide-command.py` | Sincroniza components para IDEs | Worker |
-| `validate-squad-structure.py` | Validação Phases 0-2 | Worker |
-| `refresh-registry.py` | Escaneia squads, gera JSON | Worker |
-| `squad-analytics.py` | Métricas e estatísticas | Worker |
-| `quality_gate.py` | Quality gates | Worker |
-| `yaml_validator.py` | Validação YAML | Worker |
+| Script                        | Propósito                       | Tipo   |
+| ----------------------------- | ------------------------------- | ------ |
+| `sync-ide-command.py`         | Sincroniza components para IDEs | Worker |
+| `validate-squad-structure.py` | Validação Phases 0-2            | Worker |
+| `refresh-registry.py`         | Escaneia squads, gera JSON      | Worker |
+| `squad-analytics.py`          | Métricas e estatísticas         | Worker |
+| `quality_gate.py`             | Quality gates                   | Worker |
+| `yaml_validator.py`           | Validação YAML                  | Worker |
 
 **Documentação completa:** [scripts/README.md](scripts/README.md)
 
@@ -519,23 +528,23 @@ O Squad Creator usa o **Executor Decision Tree** para otimizar custos:
 
 ### Tasks por Tipo de Executor
 
-| Task | Tipo | Script Worker |
-|------|------|---------------|
-| `sync-ide-command.md` | Worker | `sync-ide-command.py` |
-| `install-commands.md` | Worker | `sync-ide-command.py` |
-| `refresh-registry.md` | Hybrid | `refresh-registry.py` |
-| `squad-analytics.md` | Hybrid | `squad-analytics.py` |
-| `validate-squad.md` | Hybrid | `validate-squad-structure.py` |
-| `optimize.md` | Agent | (análise semântica) |
-| `create-squad.md` | Agent | (geração criativa) |
+| Task                  | Tipo   | Script Worker                 |
+| --------------------- | ------ | ----------------------------- |
+| `sync-ide-command.md` | Worker | `sync-ide-command.py`         |
+| `install-commands.md` | Worker | `sync-ide-command.py`         |
+| `refresh-registry.md` | Hybrid | `refresh-registry.py`         |
+| `squad-analytics.md`  | Hybrid | `squad-analytics.py`          |
+| `validate-squad.md`   | Hybrid | `validate-squad-structure.py` |
+| `optimize.md`         | Agent  | (análise semântica)           |
+| `create-squad.md`     | Agent  | (geração criativa)            |
 
 ### Economia
 
-| Métrica | Valor |
-|---------|-------|
-| Economia mensal | ~$45/mês |
-| Economia anual | ~$540/ano |
-| Tokens evitados | ~15M/mês |
+| Métrica         | Valor     |
+| --------------- | --------- |
+| Economia mensal | ~$45/mês  |
+| Economia anual  | ~$540/ano |
+| Tokens evitados | ~15M/mês  |
 
 **Referência:** [data/executor-decision-tree.md](data/executor-decision-tree.md)
 
@@ -562,6 +571,7 @@ O SOP Extractor transforma transcrições de reuniões em Procedimentos Operacio
 ### Propósito
 
 Extrair SOPs de reuniões gravadas onde alguém explicou um processo de negócio, produzindo:
+
 1. SOP completo seguindo padrão SC-PE-001 (11 partes)
 2. Análise de automação usando heurística PV_PM_001
 3. Blueprint de Squad AIOS pronto para criação imediata
@@ -571,19 +581,20 @@ Extrair SOPs de reuniões gravadas onde alguém explicou um processo de negócio
 
 Configure fontes de transcrição em `config/squad-config.yaml`:
 
-| Fonte | Tipo | Descrição |
-|-------|------|-----------|
-| `supabase` | banco de dados | Query na tabela `transcripts` (padrão) |
-| `local_file` | arquivo | Ler de `inputs/transcripts/` |
-| `api` | http | Buscar de API externa |
-| `direct` | inline | Passar transcrição como parâmetro |
+| Fonte        | Tipo           | Descrição                              |
+| ------------ | -------------- | -------------------------------------- |
+| `supabase`   | banco de dados | Query na tabela `transcripts` (padrão) |
+| `local_file` | arquivo        | Ler de `inputs/transcripts/`           |
+| `api`        | http           | Buscar de API externa                  |
+| `direct`     | inline         | Passar transcrição como parâmetro      |
 
 Para mudar fonte:
+
 ```yaml
 # config/squad-config.yaml
 data_sources:
   transcripts:
-    active_source: supabase  # ← mude aqui
+    active_source: supabase # ← mude aqui
 ```
 
 ### Workflow de Extração de SOP
@@ -607,13 +618,13 @@ data_sources:
 
 ### Funcionalidades Principais
 
-| Funcionalidade | Descrição |
-|----------------|-----------|
-| **Taxonomia Cognitiva** | Classifica cada passo: Percepção, Análise, Julgamento, Empatia, etc. |
-| **Tipos de Executor** | Atribui Human/Agent/Hybrid/Worker por passo |
-| **Análise de Automação** | Aplica PV_PM_001 (frequência × impacto × guardrails) |
-| **META-AXIOMAS** | Pontua processo em 10 dimensões de qualidade |
-| **Blueprint de Squad** | Gera agents, tasks, checkpoints, workflow YAML |
+| Funcionalidade           | Descrição                                                            |
+| ------------------------ | -------------------------------------------------------------------- |
+| **Taxonomia Cognitiva**  | Classifica cada passo: Percepção, Análise, Julgamento, Empatia, etc. |
+| **Tipos de Executor**    | Atribui Human/Agent/Hybrid/Worker por passo                          |
+| **Análise de Automação** | Aplica PV_PM_001 (frequência × impacto × guardrails)                 |
+| **META-AXIOMAS**         | Pontua processo em 10 dimensões de qualidade                         |
+| **Blueprint de Squad**   | Gera agents, tasks, checkpoints, workflow YAML                       |
 
 ### Padrões Utilizados
 
@@ -773,25 +784,25 @@ O Squad Creator já produziu **squads reais em produção**. Estes são exemplos
 
 ### Estatísticas do Ecossistema
 
-| Métrica | Valor |
-|---------|-------|
-| **Total de Squads** | 31+ |
-| **Total de Agents** | 206+ |
-| **Minds Clonados** | 60+ |
+| Métrica              | Valor    |
+| -------------------- | -------- |
+| **Total de Squads**  | 31+      |
+| **Total de Agents**  | 206+     |
+| **Minds Clonados**   | 60+      |
 | **Linhas de Código** | 100,000+ |
 
 ### Gold Standard: Squad Copy
 
 O squad `copy` é a referência de qualidade máxima:
 
-| Componente | Quantidade | Destaque |
-|------------|------------|----------|
-| **Agents** | 25 copywriters | Alex Hormozi (110KB), Ry Schwartz (2,207 linhas) |
-| **Tasks** | 70+ | Workflows completos de criação de copy |
-| **Workflows** | 13 | Mind cloning, validation, production |
-| **Templates** | 12+ | Headlines, emails, sales pages |
-| **Data** | 50+ | Swipe files, frameworks, heurísticas |
-| **Total** | 32,049 linhas | Maior squad do ecossistema |
+| Componente    | Quantidade     | Destaque                                         |
+| ------------- | -------------- | ------------------------------------------------ |
+| **Agents**    | 25 copywriters | Alex Hormozi (110KB), Ry Schwartz (2,207 linhas) |
+| **Tasks**     | 70+            | Workflows completos de criação de copy           |
+| **Workflows** | 13             | Mind cloning, validation, production             |
+| **Templates** | 12+            | Headlines, emails, sales pages                   |
+| **Data**      | 50+            | Swipe files, frameworks, heurísticas             |
+| **Total**     | 32,049 linhas  | Maior squad do ecossistema                       |
 
 ### Squads em Produção
 
@@ -848,7 +859,8 @@ thinking_dna:
     - name: Value Equation
       formula: "Value = (Dream Outcome × Perceived Likelihood) / (Time Delay × Effort)"
     - name: Grand Slam Offer
-      components: ["Dream Outcome", "Perception of Achievement", "Time", "Effort"]
+      components:
+        ["Dream Outcome", "Perception of Achievement", "Time", "Effort"]
 
 output_examples:
   - input: "Como precificar meu curso?"
@@ -871,23 +883,27 @@ output_examples:
 Este creator pode gerar squads para qualquer domínio:
 
 **Serviços Profissionais**
+
 - Pack de Assistente Jurídico
 - Pack de Contabilidade & Finanças
 - Pack de Imobiliário
 - Pack de Prática de Saúde
 
 **Criativo & Conteúdo**
+
 - Pack de Marketing de Conteúdo
 - Pack de Produção de Vídeo
 - Pack de Criação de Podcast
 - Pack de Escrita Criativa
 
 **Educação & Treinamento**
+
 - Pack de Design Curricular
 - Pack de Treinamento Corporativo
 - Pack de Criação de Curso Online
 
 **Pessoal & Estilo de Vida**
+
 - Pack de Desenvolvimento Pessoal
 - Pack de Fitness & Nutrição
 - Pack de Organização Doméstica
@@ -935,6 +951,7 @@ Este squad requer:
 **Sintoma:** `@squad-chief` não responde ou mostra erro
 
 **Soluções:**
+
 1. Verifique se o arquivo do agent existe: `ls squads/squad-creator-pro/agents/squad-chief.md`
 2. Cheque sintaxe YAML: Garanta que o bloco YAML está formatado corretamente
 3. Verifique se o squad está sincronizado: Cheque se `.claude/commands/squad-creator/` existe
@@ -948,6 +965,7 @@ Este squad requer:
 **Comportamento Esperado:** Agent deve IMEDIATAMENTE iniciar pesquisa quando domínio é mencionado.
 
 **Solução:**
+
 1. Diga explicitamente: "Inicie o mind-research-loop agora"
 2. Ou reinicie: `*exit` então reative `@squad-chief`
 
@@ -975,6 +993,7 @@ Este squad requer:
 **Sintoma:** Agent não encontra arquivo de task ao executar comando
 
 **Soluções:**
+
 1. Verifique se arquivo existe: `ls squads/squad-creator-pro/tasks/`
 2. Cheque se nome do arquivo corresponde à referência de dependência no YAML do agent
 3. Garanta que extensão do arquivo é `.md`
@@ -986,6 +1005,7 @@ Este squad requer:
 **Sintoma:** SOP extraído com partes faltando
 
 **Solução:** Valide contra SC-PE-001 (11 partes obrigatórias):
+
 1. Propósito
 2. Escopo
 3. Pré-condições

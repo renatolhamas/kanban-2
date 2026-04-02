@@ -8,27 +8,27 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const fs = require("fs").promises;
+const path = require("path");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Supported IDEs and their indicators
  */
 const IDE_INDICATORS = [
   {
-    name: 'VS Code',
-    directory: '.vscode',
-    files: ['settings.json', 'extensions.json'],
+    name: "VS Code",
+    directory: ".vscode",
+    files: ["settings.json", "extensions.json"],
   },
   {
-    name: 'JetBrains (IntelliJ/WebStorm)',
-    directory: '.idea',
-    files: ['workspace.xml'],
+    name: "JetBrains (IntelliJ/WebStorm)",
+    directory: ".idea",
+    files: ["workspace.xml"],
   },
   {
-    name: 'Cursor',
-    directory: '.cursor',
+    name: "Cursor",
+    directory: ".cursor",
     files: [],
   },
 ];
@@ -42,15 +42,15 @@ const IDE_INDICATORS = [
 class IdeDetectionCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'local.ide-detection',
-      name: 'IDE Detection',
-      description: 'Detects IDE/editor configuration',
+      id: "local.ide-detection",
+      name: "IDE Detection",
+      description: "Detects IDE/editor configuration",
       domain: CheckDomain.LOCAL,
       severity: CheckSeverity.INFO,
       timeout: 2000,
       cacheable: true,
       healingTier: 0,
-      tags: ['ide', 'editor', 'development'],
+      tags: ["ide", "editor", "development"],
     });
   }
 
@@ -90,14 +90,14 @@ class IdeDetectionCheck extends BaseCheck {
           detectedIdes.push(detected);
 
           // Validate VS Code settings
-          if (ide.name === 'VS Code') {
-            const settingsPath = path.join(dirPath, 'settings.json');
+          if (ide.name === "VS Code") {
+            const settingsPath = path.join(dirPath, "settings.json");
             try {
-              const content = await fs.readFile(settingsPath, 'utf8');
+              const content = await fs.readFile(settingsPath, "utf8");
               JSON.parse(content);
             } catch (error) {
               if (error instanceof SyntaxError) {
-                configIssues.push('VS Code settings.json has invalid JSON');
+                configIssues.push("VS Code settings.json has invalid JSON");
               }
             }
           }
@@ -108,12 +108,12 @@ class IdeDetectionCheck extends BaseCheck {
     }
 
     // Check for Claude Code config
-    const claudeDir = path.join(projectRoot, '.claude');
+    const claudeDir = path.join(projectRoot, ".claude");
     try {
       await fs.access(claudeDir);
       detectedIdes.push({
-        name: 'Claude Code',
-        directory: '.claude',
+        name: "Claude Code",
+        directory: ".claude",
         files: [],
       });
     } catch {
@@ -121,22 +121,28 @@ class IdeDetectionCheck extends BaseCheck {
     }
 
     if (detectedIdes.length === 0) {
-      return this.pass('No IDE configuration detected (using default settings)', {
-        details: { message: 'Project is IDE-agnostic' },
-      });
+      return this.pass(
+        "No IDE configuration detected (using default settings)",
+        {
+          details: { message: "Project is IDE-agnostic" },
+        },
+      );
     }
 
     if (configIssues.length > 0) {
-      return this.warning(`IDE configuration issues: ${configIssues.join(', ')}`, {
-        recommendation: 'Fix configuration files for better IDE integration',
-        details: {
-          detected: detectedIdes,
-          issues: configIssues,
+      return this.warning(
+        `IDE configuration issues: ${configIssues.join(", ")}`,
+        {
+          recommendation: "Fix configuration files for better IDE integration",
+          details: {
+            detected: detectedIdes,
+            issues: configIssues,
+          },
         },
-      });
+      );
     }
 
-    const ideNames = detectedIdes.map((i) => i.name).join(', ');
+    const ideNames = detectedIdes.map((i) => i.name).join(", ");
     return this.pass(`Detected IDE(s): ${ideNames}`, {
       details: { detected: detectedIdes },
     });

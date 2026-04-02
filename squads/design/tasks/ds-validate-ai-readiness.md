@@ -57,13 +57,13 @@ Validate that the design system has all required artifacts for AI agent consumpt
 - [ ] Registry validates against Shadcn schema
 - [ ] Overall readiness score >= 90%
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

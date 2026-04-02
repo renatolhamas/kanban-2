@@ -20,17 +20,18 @@
  * @version 1.0.0
  */
 
-const fs = require('fs');
-const path = require('path');
-const { EventEmitter } = require('events');
+const fs = require("fs");
+const path = require("path");
+const { EventEmitter } = require("events");
 
 // Import Epic 8.4 Build State Manager
-const { BuildStateManager } = require('./build-state-manager');
+const { BuildStateManager } = require("./build-state-manager");
 
 // Import Epic 5 Recovery System
 let RecoveryTracker;
 try {
-  RecoveryTracker = require('../../infrastructure/scripts/recovery-tracker').RecoveryTracker;
+  RecoveryTracker =
+    require("../../infrastructure/scripts/recovery-tracker").RecoveryTracker;
 } catch {
   RecoveryTracker = null;
 }
@@ -38,7 +39,7 @@ try {
 // Import Epic 8.2 Worktree Manager (Story 8.2 integration - AC8)
 let WorktreeManager;
 try {
-  WorktreeManager = require('../../infrastructure/scripts/worktree-manager');
+  WorktreeManager = require("../../infrastructure/scripts/worktree-manager");
 } catch {
   WorktreeManager = null;
 }
@@ -46,7 +47,7 @@ try {
 // Optional chalk for CLI output
 let chalk;
 try {
-  chalk = require('chalk');
+  chalk = require("chalk");
 } catch {
   chalk = {
     blue: (s) => s,
@@ -81,26 +82,26 @@ const DEFAULT_CONFIG = {
 };
 
 const BuildEvent = {
-  BUILD_STARTED: 'build_started', // AC7
-  SUBTASK_STARTED: 'subtask_started',
-  SUBTASK_COMPLETED: 'subtask_completed', // AC7
-  SUBTASK_FAILED: 'subtask_failed',
-  ITERATION_STARTED: 'iteration_started',
-  ITERATION_COMPLETED: 'iteration_completed',
-  SELF_CRITIQUE: 'self_critique',
-  VERIFICATION_STARTED: 'verification_started',
-  VERIFICATION_COMPLETED: 'verification_completed',
-  BUILD_FAILED: 'build_failed', // AC7
-  BUILD_SUCCESS: 'build_success', // AC7
-  BUILD_TIMEOUT: 'build_timeout',
-  BUILD_PAUSED: 'build_paused',
+  BUILD_STARTED: "build_started", // AC7
+  SUBTASK_STARTED: "subtask_started",
+  SUBTASK_COMPLETED: "subtask_completed", // AC7
+  SUBTASK_FAILED: "subtask_failed",
+  ITERATION_STARTED: "iteration_started",
+  ITERATION_COMPLETED: "iteration_completed",
+  SELF_CRITIQUE: "self_critique",
+  VERIFICATION_STARTED: "verification_started",
+  VERIFICATION_COMPLETED: "verification_completed",
+  BUILD_FAILED: "build_failed", // AC7
+  BUILD_SUCCESS: "build_success", // AC7
+  BUILD_TIMEOUT: "build_timeout",
+  BUILD_PAUSED: "build_paused",
 };
 
 const SubtaskResult = {
-  SUCCESS: 'success',
-  FAILED: 'failed',
-  TIMEOUT: 'timeout',
-  SKIPPED: 'skipped',
+  SUCCESS: "success",
+  FAILED: "failed",
+  TIMEOUT: "timeout",
+  SKIPPED: "skipped",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -160,7 +161,7 @@ class AutonomousBuildLoop extends EventEmitter {
    */
   async run(storyId, options = {}) {
     if (this.isRunning) {
-      throw new Error('Build loop is already running');
+      throw new Error("Build loop is already running");
     }
 
     this.isRunning = true;
@@ -169,7 +170,7 @@ class AutonomousBuildLoop extends EventEmitter {
 
     // Initialize state manager (AC6)
     this.stateManager = new BuildStateManager(storyId, {
-      planDir: options.planDir || path.join(process.cwd(), 'plan'),
+      planDir: options.planDir || path.join(process.cwd(), "plan"),
       rootPath: options.rootPath || process.cwd(),
       config: this.config,
     });
@@ -184,21 +185,23 @@ class AutonomousBuildLoop extends EventEmitter {
 
     // Initialize worktree manager (Story 8.2 - AC8)
     if (this.config.useWorktree && WorktreeManager) {
-      this.worktreeManager = new WorktreeManager(options.rootPath || process.cwd());
+      this.worktreeManager = new WorktreeManager(
+        options.rootPath || process.cwd(),
+      );
       try {
         const worktreeInfo = await this.worktreeManager.create(storyId);
         this.worktreePath = worktreeInfo.path;
-        this.log(`Created worktree at ${this.worktreePath}`, 'success');
+        this.log(`Created worktree at ${this.worktreePath}`, "success");
       } catch (error) {
         // Worktree might already exist
         const existing = await this.worktreeManager.get(storyId);
         if (existing) {
           this.worktreePath = existing.path;
-          this.log(`Using existing worktree at ${this.worktreePath}`, 'info');
+          this.log(`Using existing worktree at ${this.worktreePath}`, "info");
         } else {
           this.log(
             `Worktree creation failed: ${error.message}, continuing without isolation`,
-            'warn',
+            "warn",
           );
         }
       }
@@ -238,12 +241,16 @@ class AutonomousBuildLoop extends EventEmitter {
         this.stateManager.completeBuild();
 
         // Cleanup worktree on success (Story 8.2)
-        if (this.worktreeManager && this.worktreePath && this.config.worktreeCleanup) {
+        if (
+          this.worktreeManager &&
+          this.worktreePath &&
+          this.config.worktreeCleanup
+        ) {
           try {
             await this.worktreeManager.remove(storyId);
-            this.log(`Cleaned up worktree for ${storyId}`, 'success');
+            this.log(`Cleaned up worktree for ${storyId}`, "success");
           } catch (err) {
-            this.log(`Worktree cleanup failed: ${err.message}`, 'warn');
+            this.log(`Worktree cleanup failed: ${err.message}`, "warn");
           }
         }
 
@@ -254,7 +261,7 @@ class AutonomousBuildLoop extends EventEmitter {
           worktreePath: this.worktreePath,
         });
       } else {
-        this.stateManager.failBuild(result.error || 'Build failed');
+        this.stateManager.failBuild(result.error || "Build failed");
         this.emit(BuildEvent.BUILD_FAILED, {
           storyId,
           error: result.error,
@@ -300,7 +307,7 @@ class AutonomousBuildLoop extends EventEmitter {
           });
           return {
             success: false,
-            error: 'Global timeout exceeded',
+            error: "Global timeout exceeded",
             results,
           };
         }
@@ -312,7 +319,7 @@ class AutonomousBuildLoop extends EventEmitter {
           });
           return {
             success: false,
-            error: 'Build paused',
+            error: "Build paused",
             paused: true,
             results,
           };
@@ -325,7 +332,10 @@ class AutonomousBuildLoop extends EventEmitter {
         }
 
         // Execute subtask with retry loop
-        const subtaskResult = await this.executeSubtaskWithRetry(subtask, phase);
+        const subtaskResult = await this.executeSubtaskWithRetry(
+          subtask,
+          phase,
+        );
         results.push(subtaskResult);
 
         if (subtaskResult.status === SubtaskResult.SUCCESS) {
@@ -347,11 +357,12 @@ class AutonomousBuildLoop extends EventEmitter {
     }
 
     // Check if all subtasks completed
-    const allCompleted = this.stats.completedSubtasks >= this.stats.totalSubtasks;
+    const allCompleted =
+      this.stats.completedSubtasks >= this.stats.totalSubtasks;
 
     return {
       success: allCompleted,
-      error: allCompleted ? null : 'Not all subtasks completed',
+      error: allCompleted ? null : "Not all subtasks completed",
       results,
     };
   }
@@ -376,7 +387,11 @@ class AutonomousBuildLoop extends EventEmitter {
     let attempts = 0;
 
     // Retry loop (AC3)
-    for (let iteration = 1; iteration <= this.config.maxIterations; iteration++) {
+    for (
+      let iteration = 1;
+      iteration <= this.config.maxIterations;
+      iteration++
+    ) {
       attempts++;
       this.stats.totalIterations++;
 
@@ -386,7 +401,7 @@ class AutonomousBuildLoop extends EventEmitter {
           subtaskId: subtask.id,
           status: SubtaskResult.TIMEOUT,
           attempts,
-          error: 'Global timeout',
+          error: "Global timeout",
         };
       }
 
@@ -445,7 +460,7 @@ class AutonomousBuildLoop extends EventEmitter {
         }
 
         // Failed iteration
-        lastError = result.error || 'Unknown error';
+        lastError = result.error || "Unknown error";
         this.stats.failedIterations++;
 
         // Record failure
@@ -470,7 +485,10 @@ class AutonomousBuildLoop extends EventEmitter {
         });
 
         // Self-critique before retry
-        if (this.config.selfCritiqueEnabled && iteration < this.config.maxIterations) {
+        if (
+          this.config.selfCritiqueEnabled &&
+          iteration < this.config.maxIterations
+        ) {
           await this.performSelfCritique(subtask, result, iteration);
         }
       } catch (error) {
@@ -489,7 +507,7 @@ class AutonomousBuildLoop extends EventEmitter {
           });
         }
 
-        this.log(`Iteration ${iteration} error: ${lastError}`, 'error');
+        this.log(`Iteration ${iteration} error: ${lastError}`, "error");
       }
     }
 
@@ -536,7 +554,10 @@ class AutonomousBuildLoop extends EventEmitter {
     }
 
     // Default: simulate execution (for testing)
-    this.log(`Executing subtask ${subtask.id} (iteration ${iteration})`, 'info');
+    this.log(
+      `Executing subtask ${subtask.id} (iteration ${iteration})`,
+      "info",
+    );
 
     // Check for verification command
     if (subtask.verification && this.config.verificationEnabled) {
@@ -544,7 +565,7 @@ class AutonomousBuildLoop extends EventEmitter {
       if (!verifyResult.success) {
         return {
           success: false,
-          error: verifyResult.error || 'Verification failed',
+          error: verifyResult.error || "Verification failed",
         };
       }
     }
@@ -569,19 +590,19 @@ class AutonomousBuildLoop extends EventEmitter {
       // Different verification types
       const verification = subtask.verification;
 
-      if (verification.type === 'command') {
+      if (verification.type === "command") {
         // Run shell command
-        const { execSync } = require('child_process');
+        const { execSync } = require("child_process");
         execSync(verification.command, {
           timeout: this.config.subtaskTimeout,
-          stdio: 'pipe',
+          stdio: "pipe",
         });
-      } else if (verification.type === 'test') {
+      } else if (verification.type === "test") {
         // Run specific test
-        const { execSync } = require('child_process');
-        execSync(verification.testCommand || 'npm test', {
+        const { execSync } = require("child_process");
+        execSync(verification.testCommand || "npm test", {
           timeout: this.config.subtaskTimeout,
-          stdio: 'pipe',
+          stdio: "pipe",
         });
       }
 
@@ -628,7 +649,7 @@ class AutonomousBuildLoop extends EventEmitter {
     // Step 5.5: Predicted bugs, edge cases, error handling
     // Step 6.5: Pattern adherence, no hardcoded values, tests, docs
 
-    this.log(`Self-critique for ${subtask.id}: analyzing failure...`, 'info');
+    this.log(`Self-critique for ${subtask.id}: analyzing failure...`, "info");
 
     return critique;
   }
@@ -645,18 +666,32 @@ class AutonomousBuildLoop extends EventEmitter {
     // Try different plan locations
     const planPaths = [
       options.planPath,
-      path.join(process.cwd(), 'plan', 'implementation.yaml'),
-      path.join(process.cwd(), 'plan', 'implementation.json'),
-      path.join(process.cwd(), 'docs', 'stories', storyId, 'plan', 'implementation.yaml'),
-      path.join(process.cwd(), 'docs', 'stories', storyId, 'plan', 'implementation.json'),
+      path.join(process.cwd(), "plan", "implementation.yaml"),
+      path.join(process.cwd(), "plan", "implementation.json"),
+      path.join(
+        process.cwd(),
+        "docs",
+        "stories",
+        storyId,
+        "plan",
+        "implementation.yaml",
+      ),
+      path.join(
+        process.cwd(),
+        "docs",
+        "stories",
+        storyId,
+        "plan",
+        "implementation.json",
+      ),
     ].filter(Boolean);
 
     for (const planPath of planPaths) {
       if (fs.existsSync(planPath)) {
-        const content = fs.readFileSync(planPath, 'utf-8');
+        const content = fs.readFileSync(planPath, "utf-8");
 
-        if (planPath.endsWith('.yaml') || planPath.endsWith('.yml')) {
-          const yaml = require('js-yaml');
+        if (planPath.endsWith(".yaml") || planPath.endsWith(".yml")) {
+          const yaml = require("js-yaml");
           return yaml.load(content);
         }
 
@@ -694,7 +729,7 @@ class AutonomousBuildLoop extends EventEmitter {
   pause() {
     if (this.isRunning && !this.isPaused) {
       this.isPaused = true;
-      this.log('Build paused', 'warn');
+      this.log("Build paused", "warn");
     }
   }
 
@@ -707,18 +742,21 @@ class AutonomousBuildLoop extends EventEmitter {
    */
   async resume(storyId, options = {}) {
     if (this.isRunning) {
-      throw new Error('Build loop is already running');
+      throw new Error("Build loop is already running");
     }
 
     // Load state
     const stateManager = new BuildStateManager(storyId, {
-      planDir: options.planDir || path.join(process.cwd(), 'plan'),
+      planDir: options.planDir || path.join(process.cwd(), "plan"),
       rootPath: options.rootPath || process.cwd(),
     });
 
     const resumeContext = stateManager.resumeBuild();
 
-    this.log(`Resuming build from checkpoint: ${resumeContext.lastCheckpoint?.id}`, 'info');
+    this.log(
+      `Resuming build from checkpoint: ${resumeContext.lastCheckpoint?.id}`,
+      "info",
+    );
 
     // Run with existing state
     return this.run(storyId, {
@@ -735,7 +773,7 @@ class AutonomousBuildLoop extends EventEmitter {
     if (this.isRunning) {
       this.isRunning = false;
       this.isPaused = false;
-      this.log('Build stopped', 'warn');
+      this.log("Build stopped", "warn");
     }
   }
 
@@ -806,19 +844,19 @@ class AutonomousBuildLoop extends EventEmitter {
    * Log message
    * @private
    */
-  log(message, level = 'info') {
-    if (!this.config.verbose && level === 'debug') {
+  log(message, level = "info") {
+    if (!this.config.verbose && level === "debug") {
       return;
     }
 
     const prefix =
       {
-        info: chalk.blue('ℹ'),
-        warn: chalk.yellow('⚠'),
-        error: chalk.red('✗'),
-        success: chalk.green('✓'),
-        debug: chalk.gray('…'),
-      }[level] || '';
+        info: chalk.blue("ℹ"),
+        warn: chalk.yellow("⚠"),
+        error: chalk.red("✗"),
+        success: chalk.green("✓"),
+        debug: chalk.gray("…"),
+      }[level] || "";
 
     console.log(`${prefix} ${message}`);
   }
@@ -833,12 +871,16 @@ class AutonomousBuildLoop extends EventEmitter {
   formatStatus() {
     const lines = [];
 
-    lines.push('');
-    lines.push(chalk.bold('Autonomous Build Loop Status'));
-    lines.push('─'.repeat(50));
+    lines.push("");
+    lines.push(chalk.bold("Autonomous Build Loop Status"));
+    lines.push("─".repeat(50));
 
-    lines.push(`Running:    ${this.isRunning ? chalk.green('Yes') : chalk.gray('No')}`);
-    lines.push(`Paused:     ${this.isPaused ? chalk.yellow('Yes') : chalk.gray('No')}`);
+    lines.push(
+      `Running:    ${this.isRunning ? chalk.green("Yes") : chalk.gray("No")}`,
+    );
+    lines.push(
+      `Paused:     ${this.isPaused ? chalk.yellow("Yes") : chalk.gray("No")}`,
+    );
 
     if (this.currentSubtask) {
       lines.push(`Current:    ${chalk.cyan(this.currentSubtask)}`);
@@ -851,17 +893,19 @@ class AutonomousBuildLoop extends EventEmitter {
 
       lines.push(`Elapsed:    ${this.formatDuration(elapsed)}`);
       lines.push(
-        `Remaining:  ${remaining > 0 ? this.formatDuration(remaining) : chalk.red('TIMEOUT')}`,
+        `Remaining:  ${remaining > 0 ? this.formatDuration(remaining) : chalk.red("TIMEOUT")}`,
       );
     }
 
-    lines.push('');
-    lines.push(chalk.bold('Statistics'));
-    lines.push('─'.repeat(50));
+    lines.push("");
+    lines.push(chalk.bold("Statistics"));
+    lines.push("─".repeat(50));
 
     const progress =
       this.stats.totalSubtasks > 0
-        ? Math.round((this.stats.completedSubtasks / this.stats.totalSubtasks) * 100)
+        ? Math.round(
+            (this.stats.completedSubtasks / this.stats.totalSubtasks) * 100,
+          )
         : 0;
 
     lines.push(
@@ -872,9 +916,9 @@ class AutonomousBuildLoop extends EventEmitter {
     lines.push(
       `Iterations: ${this.stats.totalIterations} (${chalk.green(this.stats.successfulIterations)} ok, ${chalk.red(this.stats.failedIterations)} fail)`,
     );
-    lines.push('');
+    lines.push("");
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 }
 
@@ -885,19 +929,19 @@ class AutonomousBuildLoop extends EventEmitter {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
+  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     console.log(`
-${chalk.bold('Autonomous Build Loop')} - AIOX Coder Agent Loop (Story 8.1)
+${chalk.bold("Autonomous Build Loop")} - AIOX Coder Agent Loop (Story 8.1)
 
-${chalk.cyan('Usage:')}
+${chalk.cyan("Usage:")}
   autonomous-build-loop <command> <story-id> [options]
 
-${chalk.cyan('Commands:')}
+${chalk.cyan("Commands:")}
   run <story-id>        Run autonomous build
   resume <story-id>     Resume build from checkpoint
   status <story-id>     Show build status
 
-${chalk.cyan('Options:')}
+${chalk.cyan("Options:")}
   --max-iterations <n>  Max iterations per subtask (default: 10)
   --timeout <ms>        Global timeout in ms (default: 1800000)
   --no-self-critique    Disable self-critique steps
@@ -909,16 +953,16 @@ ${chalk.cyan('Options:')}
   --plan <path>         Path to implementation plan
   --help, -h            Show this help
 
-${chalk.cyan('Events Emitted:')} (AC7)
+${chalk.cyan("Events Emitted:")} (AC7)
   build_started, subtask_completed, build_failed, build_success
 
-${chalk.cyan('Examples:')}
+${chalk.cyan("Examples:")}
   autonomous-build-loop run STORY-42
   autonomous-build-loop run STORY-42 --max-iterations 5 --verbose
   autonomous-build-loop resume STORY-42
   autonomous-build-loop status STORY-42
 
-${chalk.cyan('Acceptance Criteria:')}
+${chalk.cyan("Acceptance Criteria:")}
   AC1: Located in .aiox-core/core/execution/
   AC2: Loop: load spec → create plan → execute → verify → retry/complete
   AC3: Maximum 10 iterations per subtask (configurable)
@@ -928,7 +972,7 @@ ${chalk.cyan('Acceptance Criteria:')}
   AC7: Events: build_started, subtask_completed, build_failed, build_success
   AC8: Integration with Epic 5 Recovery System
 `);
-    process.exit(args.includes('--help') || args.includes('-h') ? 0 : 1);
+    process.exit(args.includes("--help") || args.includes("-h") ? 0 : 1);
   }
 
   const command = args[0];
@@ -947,33 +991,33 @@ ${chalk.cyan('Acceptance Criteria:')}
   for (let i = 1; i < args.length; i++) {
     const arg = args[i];
 
-    if (arg === '--max-iterations') {
+    if (arg === "--max-iterations") {
       maxIterations = parseInt(args[++i], 10);
-    } else if (arg === '--timeout') {
+    } else if (arg === "--timeout") {
       timeout = parseInt(args[++i], 10);
-    } else if (arg === '--no-self-critique') {
+    } else if (arg === "--no-self-critique") {
       selfCritique = false;
-    } else if (arg === '--no-verification') {
+    } else if (arg === "--no-verification") {
       verification = false;
-    } else if (arg === '--pause-on-failure') {
+    } else if (arg === "--pause-on-failure") {
       pauseOnFailure = true;
-    } else if (arg === '--worktree') {
+    } else if (arg === "--worktree") {
       useWorktree = true;
-    } else if (arg === '--no-worktree-cleanup') {
+    } else if (arg === "--no-worktree-cleanup") {
       worktreeCleanup = false;
-    } else if (arg === '--verbose' || arg === '-v') {
+    } else if (arg === "--verbose" || arg === "-v") {
       verbose = true;
-    } else if (arg === '--plan') {
+    } else if (arg === "--plan") {
       planPath = args[++i];
-    } else if (!arg.startsWith('-')) {
+    } else if (!arg.startsWith("-")) {
       if (!storyId) {
         storyId = arg;
       }
     }
   }
 
-  if (!storyId && command !== 'help') {
-    console.error(chalk.red('Error: story-id is required'));
+  if (!storyId && command !== "help") {
+    console.error(chalk.red("Error: story-id is required"));
     process.exit(1);
   }
 
@@ -1008,14 +1052,20 @@ ${chalk.cyan('Acceptance Criteria:')}
       console.log(chalk.red(`  ✗ Subtask failed: ${e.subtaskId} - ${e.error}`)),
     );
     loop.on(BuildEvent.BUILD_SUCCESS, (e) =>
-      console.log(chalk.green(`\n✓ Build successful! Duration: ${loop.formatDuration(e.duration)}`)),
+      console.log(
+        chalk.green(
+          `\n✓ Build successful! Duration: ${loop.formatDuration(e.duration)}`,
+        ),
+      ),
     );
-    loop.on(BuildEvent.BUILD_FAILED, (e) => console.log(chalk.red(`\n✗ Build failed: ${e.error}`)));
+    loop.on(BuildEvent.BUILD_FAILED, (e) =>
+      console.log(chalk.red(`\n✗ Build failed: ${e.error}`)),
+    );
   }
 
   try {
     switch (command) {
-      case 'run': {
+      case "run": {
         const result = await loop.run(storyId, { planPath });
         console.log(loop.formatStatus());
         console.log(chalk.dim(JSON.stringify(result, null, 2)));
@@ -1023,14 +1073,14 @@ ${chalk.cyan('Acceptance Criteria:')}
         break;
       }
 
-      case 'resume': {
+      case "resume": {
         const result = await loop.resume(storyId, { planPath });
         console.log(loop.formatStatus());
         process.exit(result.success ? 0 : 1);
         break;
       }
 
-      case 'status': {
+      case "status": {
         const stateManager = new BuildStateManager(storyId);
         console.log(stateManager.formatStatus());
         break;

@@ -8,23 +8,23 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { execSync } = require('child_process');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const { execSync } = require("child_process");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Conventional commit prefixes
  */
 const COMMIT_PREFIXES = [
-  'feat',
-  'fix',
-  'docs',
-  'style',
-  'refactor',
-  'test',
-  'chore',
-  'build',
-  'ci',
-  'perf',
+  "feat",
+  "fix",
+  "docs",
+  "style",
+  "refactor",
+  "test",
+  "chore",
+  "build",
+  "ci",
+  "perf",
 ];
 
 /**
@@ -36,15 +36,15 @@ const COMMIT_PREFIXES = [
 class CommitHistoryCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'repository.commit-history',
-      name: 'Commit History',
-      description: 'Verifies commit history quality',
+      id: "repository.commit-history",
+      name: "Commit History",
+      description: "Verifies commit history quality",
       domain: CheckDomain.REPOSITORY,
       severity: CheckSeverity.INFO,
       timeout: 5000,
       cacheable: true,
       healingTier: 0,
-      tags: ['git', 'commits', 'quality'],
+      tags: ["git", "commits", "quality"],
     });
   }
 
@@ -58,19 +58,19 @@ class CommitHistoryCheck extends BaseCheck {
 
     try {
       // Get recent commits
-      const logOutput = execSync('git log --oneline -50', {
+      const logOutput = execSync("git log --oneline -50", {
         cwd: projectRoot,
-        encoding: 'utf8',
+        encoding: "utf8",
         windowsHide: true,
       });
 
       const commits = logOutput
         .trim()
-        .split('\n')
+        .split("\n")
         .filter((l) => l);
 
       if (commits.length === 0) {
-        return this.pass('No commits yet', {
+        return this.pass("No commits yet", {
           details: { commitCount: 0 },
         });
       }
@@ -97,7 +97,9 @@ class CommitHistoryCheck extends BaseCheck {
         if (message.length > 72) longMessages++;
       }
 
-      const conventionalPercent = Math.round((conventionalCount / commits.length) * 100);
+      const conventionalPercent = Math.round(
+        (conventionalCount / commits.length) * 100,
+      );
 
       const details = {
         analyzed: commits.length,
@@ -112,27 +114,33 @@ class CommitHistoryCheck extends BaseCheck {
       const issues = [];
 
       if (conventionalPercent < 50 && commits.length > 5) {
-        issues.push('Low conventional commit usage');
+        issues.push("Low conventional commit usage");
       }
 
       if (shortMessages > commits.length * 0.3) {
-        issues.push('Many commits have very short messages');
+        issues.push("Many commits have very short messages");
       }
 
       if (issues.length > 0) {
-        return this.warning(`Commit history could be improved: ${issues.join(', ')}`, {
-          recommendation:
-            'Use conventional commits (feat:, fix:, docs:, etc.) for better changelogs',
-          details,
-        });
+        return this.warning(
+          `Commit history could be improved: ${issues.join(", ")}`,
+          {
+            recommendation:
+              "Use conventional commits (feat:, fix:, docs:, etc.) for better changelogs",
+            details,
+          },
+        );
       }
 
-      return this.pass(`Commit history healthy (${conventionalPercent}% conventional)`, {
-        details,
-      });
+      return this.pass(
+        `Commit history healthy (${conventionalPercent}% conventional)`,
+        {
+          details,
+        },
+      );
     } catch (error) {
-      if (error.message.includes('does not have any commits')) {
-        return this.pass('No commits yet', { details: { commitCount: 0 } });
+      if (error.message.includes("does not have any commits")) {
+        return this.pass("No commits yet", { details: { commitCount: 0 } });
       }
       return this.error(`Commit history check failed: ${error.message}`, error);
     }

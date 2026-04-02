@@ -15,9 +15,9 @@
  * @see Story PRO-6 - License Key & Feature Gating System
  */
 
-'use strict';
+"use strict";
 
-const { featureGate, ProFeatureError } = require('../license');
+const { featureGate, ProFeatureError } = require("../license");
 
 /**
  * Premium Squads - Example pro module with feature gating.
@@ -38,7 +38,7 @@ class PremiumSquads {
   constructor() {
     // PATTERN 1: Hard requirement - throw if not available
     // Use this for features that cannot work without a license
-    featureGate.require('pro.squads.premium', 'Premium Squads');
+    featureGate.require("pro.squads.premium", "Premium Squads");
 
     this._initialized = true;
   }
@@ -49,12 +49,12 @@ class PremiumSquads {
    * @returns {string[]} Array of template names
    */
   listTemplates() {
-    const templates = ['basic', 'standard', 'advanced'];
+    const templates = ["basic", "standard", "advanced"];
 
     // PATTERN 2: Optional enhancement - check availability
     // Use this to enable additional features when licensed
-    if (featureGate.isAvailable('pro.squads.marketplace')) {
-      templates.push('marketplace-template-1', 'marketplace-template-2');
+    if (featureGate.isAvailable("pro.squads.marketplace")) {
+      templates.push("marketplace-template-1", "marketplace-template-2");
     }
 
     return templates;
@@ -70,7 +70,7 @@ class PremiumSquads {
   exportSquad(squadName) {
     // PATTERN 3: Per-method requirement
     // Use this when specific methods require additional features
-    featureGate.require('pro.squads.export', 'Squad Export');
+    featureGate.require("pro.squads.export", "Squad Export");
 
     return {
       name: squadName,
@@ -78,7 +78,7 @@ class PremiumSquads {
         /* squad configuration */
       },
       exportedAt: new Date().toISOString(),
-      exportedBy: 'AIOS Pro',
+      exportedBy: "AIOS Pro",
     };
   }
 
@@ -90,7 +90,7 @@ class PremiumSquads {
   hasCustomSquads() {
     // PATTERN 4: Feature availability check for conditional UI
     // Use this to show/hide UI elements based on license
-    return featureGate.isAvailable('pro.squads.custom');
+    return featureGate.isAvailable("pro.squads.custom");
   }
 }
 
@@ -105,11 +105,11 @@ class PremiumSquads {
  */
 function createPremiumSquad(config) {
   // Factory function pattern
-  featureGate.require('pro.squads.premium', 'Premium Squads');
+  featureGate.require("pro.squads.premium", "Premium Squads");
 
   return {
-    name: config.name || 'Unnamed Squad',
-    type: 'premium',
+    name: config.name || "Unnamed Squad",
+    type: "premium",
     config,
     createdAt: new Date().toISOString(),
   };
@@ -126,15 +126,15 @@ function createPremiumSquad(config) {
 function loadPremiumFeaturesIfAvailable() {
   // PATTERN 5: Conditional loading
   // Use this in core code to optionally enhance with pro features
-  if (!featureGate.isAvailable('pro.squads.premium')) {
+  if (!featureGate.isAvailable("pro.squads.premium")) {
     return null;
   }
 
   return {
     premiumSquads: new PremiumSquads(),
-    hasExport: featureGate.isAvailable('pro.squads.export'),
-    hasCustom: featureGate.isAvailable('pro.squads.custom'),
-    hasMarketplace: featureGate.isAvailable('pro.squads.marketplace'),
+    hasExport: featureGate.isAvailable("pro.squads.export"),
+    hasCustom: featureGate.isAvailable("pro.squads.custom"),
+    hasMarketplace: featureGate.isAvailable("pro.squads.marketplace"),
   };
 }
 

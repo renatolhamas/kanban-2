@@ -1,84 +1,85 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { PasswordInput } from './PasswordInput'
-import { FormError } from './FormError'
-import { validatePassword } from '@/lib/password'
+import { useState } from "react";
+import { PasswordInput } from "./PasswordInput";
+import { FormError } from "./FormError";
+import { validatePassword } from "@/lib/password";
 
 interface RegisterFormProps {
-  onSubmit?: (email: string, name: string, password: string) => Promise<void>
+  onSubmit?: (email: string, name: string, password: string) => Promise<void>;
 }
 
 export function RegisterForm({ onSubmit }: RegisterFormProps) {
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
-  const passwordValidation = validatePassword(password)
-  const passwordsMatch = password === confirmPassword && password.length > 0
+  const passwordValidation = validatePassword(password);
+  const passwordsMatch = password === confirmPassword && password.length > 0;
   const isFormValid =
     email &&
     name &&
     password &&
     confirmPassword &&
     passwordValidation.valid &&
-    passwordsMatch
+    passwordsMatch;
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
 
     // Client-side validation
     if (!email) {
-      setError('Email is required')
-      return
+      setError("Email is required");
+      return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address')
-      return
+      setError("Please enter a valid email address");
+      return;
     }
 
     if (!name) {
-      setError('Name is required')
-      return
+      setError("Name is required");
+      return;
     }
 
     if (!passwordValidation.valid) {
-      setError(passwordValidation.errors.join('; '))
-      return
+      setError(passwordValidation.errors.join("; "));
+      return;
     }
 
     if (!passwordsMatch) {
-      setError('Passwords do not match')
-      return
+      setError("Passwords do not match");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     try {
       if (onSubmit) {
-        await onSubmit(email, name, password)
-        // Only set success if no error was thrown
-        setSuccess(true)
-        setEmail('')
-        setName('')
-        setPassword('')
-        setConfirmPassword('')
+        await onSubmit(email, name, password);
+        // Only set success if the submission didn't throw an error
+        setSuccess(true);
+        setEmail("");
+        setName("");
+        setPassword("");
+        setConfirmPassword("");
       }
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Registration failed'
-      setError(errorMsg)
+      const errorMsg =
+        err instanceof Error ? err.message : "Registration failed";
+      setError(errorMsg);
       // Ensure success is false if any error occurred
-      setSuccess(false)
+      setSuccess(false);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   if (success) {
     return (
@@ -86,7 +87,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         <p className="text-green-700 font-semibold">Registration successful!</p>
         <p className="text-sm text-green-600 mt-1">Redirecting to setup...</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -94,10 +95,15 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       {error && <FormError message={error} />}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Email
         </label>
         <input
+          id="email"
+          name="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -108,10 +114,15 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Full Name
         </label>
         <input
+          id="name"
+          name="name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -122,6 +133,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       </div>
 
       <PasswordInput
+        id="password"
+        name="password"
         value={password}
         onChange={setPassword}
         label="Password"
@@ -130,17 +143,22 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Confirm Password
         </label>
         <input
+          id="confirmPassword"
+          name="confirmPassword"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm password"
           className={`
             w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${!passwordsMatch && confirmPassword ? 'border-red-500' : 'border-gray-300'}
+            ${!passwordsMatch && confirmPassword ? "border-red-500" : "border-gray-300"}
           `}
           disabled={loading}
         />
@@ -154,21 +172,22 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         disabled={!isFormValid || loading}
         className={`
           w-full py-2 rounded-lg font-semibold text-white transition
-          ${isFormValid && !loading
-            ? 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-            : 'bg-gray-400 cursor-not-allowed'
+          ${
+            isFormValid && !loading
+              ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+              : "bg-gray-400 cursor-not-allowed"
           }
         `}
       >
-        {loading ? 'Creating account...' : 'Register'}
+        {loading ? "Creating account..." : "Register"}
       </button>
 
       <p className="text-center text-sm text-gray-600">
-        Already have an account?{' '}
+        Already have an account?{" "}
         <a href="/login" className="text-blue-600 hover:underline">
           Login here
         </a>
       </p>
     </form>
-  )
+  );
 }

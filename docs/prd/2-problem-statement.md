@@ -4,13 +4,13 @@
 
 O gerenciamento de WhatsApp em equipes sofre com **falta de sincronia operacional** crítica:
 
-| Sintoma | Impacto |
-|---------|--------|
-| **"Um número, uma pessoa"** | Impossível atribuição dinâmica de conversas; desalinhamento sobre quem está atendendo |
+| Sintoma                                | Impacto                                                                                           |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **"Um número, uma pessoa"**            | Impossível atribuição dinâmica de conversas; desalinhamento sobre quem está atendendo             |
 | **Ausência de pipeline compartilhada** | Leads duplicados, respostas esquecidas, falta de clareza sobre qual etapa da venda o contato está |
-| **Sem visibilidade centralizada** | Managers não conseguem supervisionar produtividade; churn de vendas não é rastreável |
-| **Follow-ups manuais** | Alto custo operacional, inconsistência, oportunidades perdidas por falta de automação |
-| **Sem histórico estruturado** | Conhecimento corporativo disperso em conversas privadas (nem sempre documentadas) |
+| **Sem visibilidade centralizada**      | Managers não conseguem supervisionar produtividade; churn de vendas não é rastreável              |
+| **Follow-ups manuais**                 | Alto custo operacional, inconsistência, oportunidades perdidas por falta de automação             |
+| **Sem histórico estruturado**          | Conhecimento corporativo disperso em conversas privadas (nem sempre documentadas)                 |
 
 ## 2.2 Estado Atual do Mercado
 

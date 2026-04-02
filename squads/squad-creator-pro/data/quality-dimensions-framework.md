@@ -10,6 +10,7 @@ Framework for evaluating squad outputs using multi-dimensional quality scoring.
 ## 1. Overview
 
 A comprehensive quality assessment uses 10 standardized dimensions. Each dimension has:
+
 - **Weight:** Relative importance (0.0-1.0)
 - **Threshold:** Minimum acceptable score
 - **Veto Power:** Whether low score blocks progress
@@ -28,7 +29,7 @@ quality_dimensions:
   scoring:
     overall_threshold: 7.0
     minimum_per_dimension: 6.0
-    veto_on_failure: false  # Default to REVIEW, not VETO
+    veto_on_failure: false # Default to REVIEW, not VETO
 
   dimensions:
     1_accuracy:
@@ -111,6 +112,7 @@ quality_dimensions:
 **Definition:** Correctness verified by data/evidence.
 
 **Scoring Criteria:**
+
 - 9-10: All claims verified, zero errors
 - 7-8: Minor inaccuracies, easily corrected
 - 5-6: Some unverified claims, needs review
@@ -118,6 +120,7 @@ quality_dimensions:
 - 1-2: Fundamentally incorrect
 
 **Red Flags:**
+
 - Claims without supporting evidence
 - Contradictions within the output
 - Outdated or incorrect data
@@ -127,6 +130,7 @@ quality_dimensions:
 **Definition:** Internal consistency and alignment.
 
 **Scoring Criteria:**
+
 - 9-10: Perfect internal consistency
 - 7-8: Minor inconsistencies, easily reconciled
 - 5-6: Some logical gaps
@@ -134,6 +138,7 @@ quality_dimensions:
 - 1-2: Incoherent
 
 **Red Flags:**
+
 - Statements contradict each other
 - Logic gaps in reasoning
 - Disconnected sections
@@ -143,6 +148,7 @@ quality_dimensions:
 **Definition:** Connection to goals and vision.
 
 **Scoring Criteria:**
+
 - 9-10: Directly enables strategic goals
 - 7-8: Clearly supports strategy
 - 5-6: Neutral, neither helps nor hinders
@@ -150,6 +156,7 @@ quality_dimensions:
 - 1-2: Contradicts strategic direction
 
 **Red Flags:**
+
 - No clear connection to objectives
 - Works against stated goals
 - Short-term focus at expense of long-term
@@ -159,6 +166,7 @@ quality_dimensions:
 **Definition:** Process quality and efficiency.
 
 **Scoring Criteria:**
+
 - 9-10: Optimal process, best practices
 - 7-8: Well-designed, minor improvements possible
 - 5-6: Functional but inefficient
@@ -166,6 +174,7 @@ quality_dimensions:
 - 1-2: Broken or missing processes
 
 **Red Flags:**
+
 - Manual work that should be automated
 - Missing documentation
 - Inconsistent execution
@@ -175,6 +184,7 @@ quality_dimensions:
 **Definition:** Ability to create novel solutions.
 
 **Scoring Criteria:**
+
 - 9-10: Breakthrough innovation
 - 7-8: Creative improvements
 - 5-6: Standard solutions
@@ -182,6 +192,7 @@ quality_dimensions:
 - 1-2: No innovation
 
 **Red Flags:**
+
 - Copy-paste solutions without adaptation
 - Ignoring new tools/methods
 - Resistance to improvement
@@ -191,6 +202,7 @@ quality_dimensions:
 **Definition:** Identification and mitigation of risks.
 
 **Scoring Criteria:**
+
 - 9-10: All risks identified and mitigated
 - 7-8: Major risks addressed
 - 5-6: Some risks identified, partial mitigation
@@ -198,6 +210,7 @@ quality_dimensions:
 - 1-2: No risk consideration
 
 **Red Flags:**
+
 - No contingency plans
 - Ignoring known risks
 - Single points of failure
@@ -207,6 +220,7 @@ quality_dimensions:
 **Definition:** Efficient use of time, money, people.
 
 **Scoring Criteria:**
+
 - 9-10: Optimal resource allocation
 - 7-8: Efficient with minor waste
 - 5-6: Acceptable efficiency
@@ -214,6 +228,7 @@ quality_dimensions:
 - 1-2: Grossly inefficient
 
 **Red Flags:**
+
 - Redundant work
 - Over-engineering
 - Under-utilization of available resources
@@ -223,6 +238,7 @@ quality_dimensions:
 **Definition:** Value delivered to all parties.
 
 **Scoring Criteria:**
+
 - 9-10: Exceptional value for all stakeholders
 - 7-8: Good value, meets expectations
 - 5-6: Minimal viable value
@@ -230,6 +246,7 @@ quality_dimensions:
 - 1-2: No clear value
 
 **Red Flags:**
+
 - Ignoring key stakeholder needs
 - Unbalanced value distribution
 - No clear benefit articulation
@@ -239,6 +256,7 @@ quality_dimensions:
 **Definition:** Long-term viability.
 
 **Scoring Criteria:**
+
 - 9-10: Built for perpetuity
 - 7-8: Sustainable with maintenance
 - 5-6: Medium-term viability
@@ -246,6 +264,7 @@ quality_dimensions:
 - 1-2: Not sustainable
 
 **Red Flags:**
+
 - Technical debt accumulation
 - Dependency on unsustainable resources
 - No maintenance plan
@@ -255,6 +274,7 @@ quality_dimensions:
 **Definition:** Ability to respond to change.
 
 **Scoring Criteria:**
+
 - 9-10: Highly flexible, easy to modify
 - 7-8: Adaptable with reasonable effort
 - 5-6: Some flexibility
@@ -262,6 +282,7 @@ quality_dimensions:
 - 1-2: Inflexible, locked in
 
 **Red Flags:**
+
 - Hardcoded assumptions
 - No extension points
 - Tightly coupled components
@@ -289,7 +310,7 @@ quality_assessment:
 
     # ... repeat for all 10 dimensions
 
-  overall_score: number  # Weighted average
+  overall_score: number # Weighted average
   pass_threshold: 7.0
   status: "PASS | FAIL | REVIEW"
 
@@ -331,7 +352,7 @@ Adjust weights based on domain:
 
 ```yaml
 weights_override:
-  accuracy: 1.0        # Code must work
+  accuracy: 1.0 # Code must work
   operational_excellence: 0.9
   risk_management: 0.9
   sustainability: 0.8
@@ -341,7 +362,7 @@ weights_override:
 
 ```yaml
 weights_override:
-  stakeholder_value: 1.0  # Must resonate with audience
+  stakeholder_value: 1.0 # Must resonate with audience
   innovation_capacity: 0.9
   coherence: 0.9
 ```
@@ -367,7 +388,7 @@ checkpoint:
   type: "quality_dimensions"
   phase: "final"
 
-  dimensions_to_evaluate: "all"  # or specific list
+  dimensions_to_evaluate: "all" # or specific list
 
   thresholds:
     overall: 7.0
@@ -402,4 +423,4 @@ tracking:
 
 ---
 
-*AIOS Quality Dimensions Framework v1.0*
+_AIOS Quality Dimensions Framework v1.0_

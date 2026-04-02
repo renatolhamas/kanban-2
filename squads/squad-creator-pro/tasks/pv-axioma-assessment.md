@@ -1,4 +1,4 @@
-# Task: Axioma Assessment (*axioma-assessment)
+# Task: Axioma Assessment (\*axioma-assessment)
 
 > Pedro Valério | Loaded on-demand when `*axioma-assessment {process}` is invoked
 
@@ -25,18 +25,18 @@ Read `squads/squad-creator-pro/data/pv-meta-axiomas.yaml`
 
 Score 0-10 for each of the 10 dimensions:
 
-| # | Dimension | Weight | Threshold | Veto? |
-|---|-----------|--------|-----------|-------|
-| 1 | Verdade (Truthfulness) | 1.0 | 7.0 | YES |
-| 2 | Coerência (Coherence) | 0.9 | 6.0 | no |
-| 3 | Alinhamento Estratégico | 0.9 | 6.0 | no |
-| 4 | Excelência Operacional | 0.8 | 6.0 | no |
-| 5 | Capacidade de Inovação | 0.7 | 5.0 | no |
-| 6 | Gestão de Riscos | 0.8 | 6.0 | no |
-| 7 | Otimização de Recursos | 0.8 | 6.0 | no |
-| 8 | Valor para Stakeholders | 0.7 | 6.0 | no |
-| 9 | Sustentabilidade | 0.7 | 6.0 | no |
-| 10 | Adaptabilidade | 0.6 | 5.0 | no |
+| #   | Dimension               | Weight | Threshold | Veto? |
+| --- | ----------------------- | ------ | --------- | ----- |
+| 1   | Verdade (Truthfulness)  | 1.0    | 7.0       | YES   |
+| 2   | Coerência (Coherence)   | 0.9    | 6.0       | no    |
+| 3   | Alinhamento Estratégico | 0.9    | 6.0       | no    |
+| 4   | Excelência Operacional  | 0.8    | 6.0       | no    |
+| 5   | Capacidade de Inovação  | 0.7    | 5.0       | no    |
+| 6   | Gestão de Riscos        | 0.8    | 6.0       | no    |
+| 7   | Otimização de Recursos  | 0.8    | 6.0       | no    |
+| 8   | Valor para Stakeholders | 0.7    | 6.0       | no    |
+| 9   | Sustentabilidade        | 0.7    | 6.0       | no    |
+| 10  | Adaptabilidade          | 0.6    | 5.0       | no    |
 
 ### 3. Calculate Overall Score
 
@@ -61,7 +61,7 @@ axioma_assessment:
       recommendations: ["melhorias"]
     # ... all 10
 
-  overall_score: X.X  # weighted average
+  overall_score: X.X # weighted average
   pass_threshold: 7.0
   status: "PASS | FAIL | REVIEW"
   veto_triggered: true/false

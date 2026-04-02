@@ -12,15 +12,15 @@ Validar que a extração de conhecimento está completa e com qualidade suficien
 
 ### Checklist Obrigatório
 
-| # | Critério | Threshold | Status | Evidência |
-|---|----------|-----------|--------|-----------|
-| 1 | Citações diretas com `[SOURCE: página/minuto]` | ≥ 15 | [ ] | |
-| 2 | Signature phrases verificáveis | ≥ 5 | [ ] | |
-| 3 | Thinking DNA com decision architecture | Mapeada | [ ] | |
-| 4 | Heuristics com contexto (QUANDO aplicar) | Cada uma | [ ] | |
-| 5 | Anti-patterns documentados do EXPERT | Não genéricos | [ ] | |
-| 6 | Conceitos marcados como "inferido" | Zero | [ ] | |
-| 7 | Pareto ao Cubo aplicado (0,8% identificado) | Documentado | [ ] | |
+| #   | Critério                                       | Threshold     | Status | Evidência |
+| --- | ---------------------------------------------- | ------------- | ------ | --------- |
+| 1   | Citações diretas com `[SOURCE: página/minuto]` | ≥ 15          | [ ]    |           |
+| 2   | Signature phrases verificáveis                 | ≥ 5           | [ ]    |           |
+| 3   | Thinking DNA com decision architecture         | Mapeada       | [ ]    |           |
+| 4   | Heuristics com contexto (QUANDO aplicar)       | Cada uma      | [ ]    |           |
+| 5   | Anti-patterns documentados do EXPERT           | Não genéricos | [ ]    |           |
+| 6   | Conceitos marcados como "inferido"             | Zero          | [ ]    |           |
+| 7   | Pareto ao Cubo aplicado (0,8% identificado)    | Documentado   | [ ]    |           |
 
 ---
 
@@ -29,15 +29,18 @@ Validar que a extração de conhecimento está completa e com qualidade suficien
 ### 1. Citações Diretas (≥ 15)
 
 **O que conta como citação:**
+
 - Frase exata do expert com fonte
 - Formato: `"{frase}" [SOURCE: livro p.123]` ou `[SOURCE: podcast 45:30]`
 
 **O que NÃO conta:**
+
 - Paráfrase sem fonte
 - "O expert acredita que..." sem citação
 - Inferências
 
 **Como verificar:**
+
 ```bash
 # Contar citações no documento
 grep -c "\[SOURCE:" {arquivo}
@@ -46,32 +49,38 @@ grep -c "\[SOURCE:" {arquivo}
 ### 2. Signature Phrases (≥ 5)
 
 **O que conta:**
+
 - Frases que o expert repete consistentemente
 - Bordões, mantras, expressões características
 - Devem aparecer em múltiplas fontes
 
 **Exemplo:**
+
 - Hormozi: "If you're not embarrassed by the first version..."
 - Naval: "Specific knowledge cannot be taught"
 
 **Como verificar:**
+
 - Buscar padrões repetidos em diferentes fontes
 - Confirmar que não é frase genérica do campo
 
 ### 3. Thinking DNA com Decision Architecture
 
 **Deve conter:**
+
 - Como o expert decide (pipeline de decisão)
 - Quando aplica cada framework
 - Weights/prioridades entre critérios
 
 **Não pode ser:**
+
 - Lista genérica de "boas práticas"
 - Frameworks do campo sem adaptação do expert
 
 ### 4. Heuristics com Contexto
 
 **Formato correto:**
+
 ```yaml
 - id: "EX001"
   name: "Regra do X"
@@ -81,6 +90,7 @@ grep -c "\[SOURCE:" {arquivo}
 ```
 
 **Formato errado:**
+
 ```yaml
 - "Sempre faça X" (sem contexto)
 - "É importante Y" (sem trigger)
@@ -89,28 +99,33 @@ grep -c "\[SOURCE:" {arquivo}
 ### 5. Anti-Patterns do EXPERT
 
 **Deve ser:**
+
 - O que ESTE expert especificamente evita
 - Com justificativa do expert
 - Com [SOURCE:]
 
 **Não pode ser:**
+
 - "Best practices" genéricas do campo
 - "Erros comuns" sem citação do expert
 
 ### 6. Zero Inferências Não Marcadas
 
 **Buscar e eliminar:**
+
 - Conceitos sem [SOURCE:]
 - Afirmações sobre "o que o expert pensa" sem citação
 - Generalizações sem evidência
 
 **Se precisar inferir:**
+
 - Marcar explicitamente: `[INFERRED] - needs validation`
 - Não entregar para PV com inferências
 
 ### 7. Pareto ao Cubo Aplicado
 
 **Deve documentar:**
+
 - 0,8% do expert (genialidade única)
 - O que diferencia este expert de outros
 - Core do core
@@ -144,15 +159,15 @@ grep -c "\[SOURCE:" {arquivo}
 
 ## Se Falhar: Ações por Item
 
-| Item | Se FAIL | Ação |
-|------|---------|------|
-| 1. Citações < 15 | Voltar para sources | Buscar mais entrevistas/podcasts |
-| 2. Phrases < 5 | Analisar mais conteúdo | Procurar padrões repetidos |
-| 3. Decision arch faltando | Extrair mais | Focar em "como decide" |
-| 4. Heuristics sem contexto | Adicionar | Documentar QUANDO aplicar |
-| 5. Anti-patterns genéricos | Especificar | Buscar citações do expert |
-| 6. Inferências presentes | Remover ou validar | Buscar [SOURCE:] ou deletar |
-| 7. 0,8% não identificado | Aplicar find-0.8 | Executar task find-0.8.md |
+| Item                       | Se FAIL                | Ação                             |
+| -------------------------- | ---------------------- | -------------------------------- |
+| 1. Citações < 15           | Voltar para sources    | Buscar mais entrevistas/podcasts |
+| 2. Phrases < 5             | Analisar mais conteúdo | Procurar padrões repetidos       |
+| 3. Decision arch faltando  | Extrair mais           | Focar em "como decide"           |
+| 4. Heuristics sem contexto | Adicionar              | Documentar QUANDO aplicar        |
+| 5. Anti-patterns genéricos | Especificar            | Buscar citações do expert        |
+| 6. Inferências presentes   | Remover ou validar     | Buscar [SOURCE:] ou deletar      |
+| 7. 0,8% não identificado   | Aplicar find-0.8       | Executar task find-0.8.md        |
 
 ---
 
@@ -164,46 +179,46 @@ grep -c "\[SOURCE:" {arquivo}
 ## Checklist Results
 
 | # | Critério | Result | Count/Evidence |
-|---|----------|--------|----------------|
-| 1 | Citações [SOURCE:] | ✅/❌ | {número} |
-| 2 | Signature phrases | ✅/❌ | {número} |
-| 3 | Decision architecture | ✅/❌ | {sim/não} |
-| 4 | Heuristics contextualizadas | ✅/❌ | {número} |
-| 5 | Anti-patterns específicos | ✅/❌ | {número} |
-| 6 | Zero inferências | ✅/❌ | {número encontradas} |
-| 7 | Pareto ao Cubo | ✅/❌ | {sim/não} |
+  |---|----------|--------|----------------|
+  | 1 | Citações [SOURCE:] | ✅/❌ | {número} |
+  | 2 | Signature phrases | ✅/❌ | {número} |
+  | 3 | Decision architecture | ✅/❌ | {sim/não} |
+  | 4 | Heuristics contextualizadas | ✅/❌ | {número} |
+  | 5 | Anti-patterns específicos | ✅/❌ | {número} |
+  | 6 | Zero inferências | ✅/❌ | {número encontradas} |
+  | 7 | Pareto ao Cubo | ✅/❌ | {sim/não} |
 
-## Gate Decision
+  ## Gate Decision
 
-**Status:** PASS / FAIL
+  **Status:** PASS / FAIL
 
-**Se FAIL - Gaps identificados:**
-1. {gap_1}
-2. {gap_2}
+  **Se FAIL - Gaps identificados:**
+  1. {gap_1}
+  2. {gap_2}
 
-**Próxima ação:**
-- {ação para corrigir}
+  **Próxima ação:**
+  - {ação para corrigir}
 
-## Se PASS - Handoff Package
+  ## Se PASS - Handoff Package
 
-**Artefatos prontos para @pedro-valerio:**
-- [ ] {expert}_dna.yaml
-- [ ] frameworks/*.md
-- [ ] heuristics.yaml
-- [ ] source-index.yaml
+  **Artefatos prontos para @pedro-valerio:**
+  - [ ] {expert}_dna.yaml
+  - [ ] frameworks/*.md
+  - [ ] heuristics.yaml
+  - [ ] source-index.yaml
 ```
 
 ---
 
 ## Completion Criteria
 
-| Critério | Status |
-|----------|--------|
-| Todos 7 itens do checklist verificados | [ ] |
-| Evidência documentada para cada item | [ ] |
-| Se FAIL: gaps identificados e ação definida | [ ] |
-| Se PASS: handoff package listado | [ ] |
+| Critério                                    | Status |
+| ------------------------------------------- | ------ |
+| Todos 7 itens do checklist verificados      | [ ]    |
+| Evidência documentada para cada item        | [ ]    |
+| Se FAIL: gaps identificados e ação definida | [ ]    |
+| Se PASS: handoff package listado            | [ ]    |
 
 ---
 
-*"PV não pode operacionalizar inferências. Só entrega com 15+ citações verificáveis."*
+_"PV não pode operacionalizar inferências. Só entrega com 15+ citações verificáveis."_

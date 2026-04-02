@@ -10,28 +10,48 @@
  */
 const COMPLEXITY_INDICATORS = {
   simple: {
-    keywords: ['format', 'fix typo', 'rename', 'simple', 'quick', 'minor', 'lint'],
+    keywords: [
+      "format",
+      "fix typo",
+      "rename",
+      "simple",
+      "quick",
+      "minor",
+      "lint",
+    ],
     patterns: [/add\s+console\.log/i, /fix\s+import/i, /update\s+version/i],
     maxLines: 50,
   },
   medium: {
-    keywords: ['implement', 'add feature', 'create', 'update', 'modify', 'refactor'],
+    keywords: [
+      "implement",
+      "add feature",
+      "create",
+      "update",
+      "modify",
+      "refactor",
+    ],
     patterns: [/add\s+function/i, /create\s+component/i, /implement\s+\w+/i],
     maxLines: 200,
   },
   complex: {
     keywords: [
-      'architecture',
-      'design',
-      'security',
-      'optimize',
-      'performance',
-      'complex',
-      'system',
-      'integration',
-      'migrate',
+      "architecture",
+      "design",
+      "security",
+      "optimize",
+      "performance",
+      "complex",
+      "system",
+      "integration",
+      "migrate",
     ],
-    patterns: [/design\s+system/i, /security\s+review/i, /architect/i, /optimize/i],
+    patterns: [
+      /design\s+system/i,
+      /security\s+review/i,
+      /architect/i,
+      /optimize/i,
+    ],
     minLines: 200,
   },
 };
@@ -50,28 +70,29 @@ class TaskComplexityClassifier {
    * @returns {Object} Classification result
    */
   classify(task) {
-    const description = (task.description || '').toLowerCase();
+    const description = (task.description || "").toLowerCase();
     const files = task.files || [];
     const criteria = task.acceptanceCriteria || [];
 
     const scores = {
-      simple: this._scoreLevel('simple', description, files, criteria),
-      medium: this._scoreLevel('medium', description, files, criteria),
-      complex: this._scoreLevel('complex', description, files, criteria),
+      simple: this._scoreLevel("simple", description, files, criteria),
+      medium: this._scoreLevel("medium", description, files, criteria),
+      complex: this._scoreLevel("complex", description, files, criteria),
     };
 
     // Calculate weighted score (0-1, higher = more complex)
-    const weightedScore = scores.simple * 0 + scores.medium * 0.5 + scores.complex * 1;
+    const weightedScore =
+      scores.simple * 0 + scores.medium * 0.5 + scores.complex * 1;
 
     const totalScore = scores.simple + scores.medium + scores.complex;
     const normalizedScore = totalScore > 0 ? weightedScore / totalScore : 0.5;
 
     // Determine level
-    let level = 'medium';
+    let level = "medium";
     if (normalizedScore < this.thresholds.simple) {
-      level = 'simple';
+      level = "simple";
     } else if (normalizedScore > this.thresholds.complex) {
-      level = 'complex';
+      level = "complex";
     }
 
     return {
@@ -101,12 +122,12 @@ class TaskComplexityClassifier {
     }
 
     // Check file count
-    if (level === 'simple' && files.length <= 2) score += 1;
-    if (level === 'complex' && files.length >= 5) score += 2;
+    if (level === "simple" && files.length <= 2) score += 1;
+    if (level === "complex" && files.length >= 5) score += 2;
 
     // Check criteria count
-    if (level === 'simple' && criteria.length <= 3) score += 1;
-    if (level === 'complex' && criteria.length >= 7) score += 2;
+    if (level === "simple" && criteria.length <= 3) score += 1;
+    if (level === "complex" && criteria.length >= 7) score += 2;
 
     return score;
   }

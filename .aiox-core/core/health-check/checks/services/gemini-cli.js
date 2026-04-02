@@ -9,11 +9,11 @@
  * @story GEMINI-INT Story 1 - Gemini CLI Health Check & Detection
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const os = require('os');
-const { execSync } = require('child_process');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const fs = require("fs").promises;
+const path = require("path");
+const os = require("os");
+const { execSync } = require("child_process");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Gemini CLI check
@@ -24,15 +24,15 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 class GeminiCliCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'services.gemini-cli',
-      name: 'Gemini CLI',
-      description: 'Verifies Gemini CLI installation and configuration',
+      id: "services.gemini-cli",
+      name: "Gemini CLI",
+      description: "Verifies Gemini CLI installation and configuration",
       domain: CheckDomain.SERVICES,
       severity: CheckSeverity.LOW,
       timeout: 5000,
       cacheable: true,
       healingTier: 0,
-      tags: ['gemini', 'google', 'ai', 'cli'],
+      tags: ["gemini", "google", "ai", "cli"],
     });
   }
 
@@ -60,8 +60,8 @@ class GeminiCliCheck extends BaseCheck {
 
     // Check if gemini is installed
     try {
-      const version = execSync('gemini --version', {
-        encoding: 'utf8',
+      const version = execSync("gemini --version", {
+        encoding: "utf8",
         timeout: 5000,
         windowsHide: true,
       }).trim();
@@ -75,12 +75,14 @@ class GeminiCliCheck extends BaseCheck {
     // Check authentication status
     if (details.installed) {
       try {
-        const authStatus = execSync('gemini auth status 2>&1', {
-          encoding: 'utf8',
+        const authStatus = execSync("gemini auth status 2>&1", {
+          encoding: "utf8",
           timeout: 5000,
           windowsHide: true,
         });
-        details.authenticated = !authStatus.toLowerCase().includes('not authenticated');
+        details.authenticated = !authStatus
+          .toLowerCase()
+          .includes("not authenticated");
       } catch {
         details.authenticated = false;
       }
@@ -88,13 +90,13 @@ class GeminiCliCheck extends BaseCheck {
 
     // Check project .gemini directory
     try {
-      const geminiDir = path.join(projectRoot, '.gemini');
+      const geminiDir = path.join(projectRoot, ".gemini");
       await fs.access(geminiDir);
       details.projectConfig = true;
 
       // Check for rules.md (AIOX rules)
       try {
-        await fs.access(path.join(geminiDir, 'rules.md'));
+        await fs.access(path.join(geminiDir, "rules.md"));
         details.hasProjectRules = true;
       } catch {
         details.hasProjectRules = false;
@@ -102,8 +104,8 @@ class GeminiCliCheck extends BaseCheck {
 
       // Check for settings.json (hooks, extensions config)
       try {
-        const settingsPath = path.join(geminiDir, 'settings.json');
-        const settingsContent = await fs.readFile(settingsPath, 'utf8');
+        const settingsPath = path.join(geminiDir, "settings.json");
+        const settingsContent = await fs.readFile(settingsPath, "utf8");
         const settings = JSON.parse(settingsContent);
 
         // Check for hooks configuration
@@ -122,9 +124,9 @@ class GeminiCliCheck extends BaseCheck {
 
       // Check for AIOX agents
       try {
-        const agentsDir = path.join(geminiDir, 'rules', 'AIOX', 'agents');
+        const agentsDir = path.join(geminiDir, "rules", "AIOX", "agents");
         const agentFiles = await fs.readdir(agentsDir);
-        details.aioxAgents = agentFiles.filter((f) => f.endsWith('.md')).length;
+        details.aioxAgents = agentFiles.filter((f) => f.endsWith(".md")).length;
       } catch {
         details.aioxAgents = 0;
       }
@@ -134,14 +136,16 @@ class GeminiCliCheck extends BaseCheck {
 
     // Check global config (~/.gemini or similar)
     try {
-      const globalGeminiDir = path.join(homeDir, '.gemini');
+      const globalGeminiDir = path.join(homeDir, ".gemini");
       await fs.access(globalGeminiDir);
       details.globalConfig = true;
 
       // Check global settings
       try {
-        const globalSettingsPath = path.join(globalGeminiDir, 'settings.json');
-        const globalSettings = JSON.parse(await fs.readFile(globalSettingsPath, 'utf8'));
+        const globalSettingsPath = path.join(globalGeminiDir, "settings.json");
+        const globalSettings = JSON.parse(
+          await fs.readFile(globalSettingsPath, "utf8"),
+        );
 
         if (globalSettings.previewFeatures === true) {
           details.features.previewFeatures = true;
@@ -156,11 +160,14 @@ class GeminiCliCheck extends BaseCheck {
     // Check for installed extensions
     if (details.installed) {
       try {
-        const extensionsList = execSync('gemini extensions list --output-format json 2>/dev/null', {
-          encoding: 'utf8',
-          timeout: 10000,
-          windowsHide: true,
-        });
+        const extensionsList = execSync(
+          "gemini extensions list --output-format json 2>/dev/null",
+          {
+            encoding: "utf8",
+            timeout: 10000,
+            windowsHide: true,
+          },
+        );
         const extensions = JSON.parse(extensionsList);
         if (Array.isArray(extensions)) {
           details.features.extensions = extensions.map((e) => e.name || e);
@@ -172,7 +179,7 @@ class GeminiCliCheck extends BaseCheck {
 
     // Not using Gemini CLI
     if (!details.installed && !details.projectConfig && !details.globalConfig) {
-      return this.pass('Gemini CLI not detected (not using Gemini CLI)', {
+      return this.pass("Gemini CLI not detected (not using Gemini CLI)", {
         details,
       });
     }
@@ -182,55 +189,59 @@ class GeminiCliCheck extends BaseCheck {
 
     // Check for issues
     if (details.installed && !details.authenticated) {
-      issues.push('Not authenticated');
+      issues.push("Not authenticated");
     }
 
     if (!details.projectConfig) {
-      warnings.push('No project-level .gemini directory');
+      warnings.push("No project-level .gemini directory");
     }
 
     if (details.projectConfig && !details.hasProjectRules) {
-      warnings.push('Project .gemini/rules.md not found');
+      warnings.push("Project .gemini/rules.md not found");
     }
 
     if (details.projectConfig && details.aioxAgents === 0) {
-      warnings.push('No AIOX agents installed for Gemini CLI');
+      warnings.push("No AIOX agents installed for Gemini CLI");
     }
 
     if (!details.features.previewFeatures) {
-      warnings.push('Preview features not enabled (needed for Gemini 3)');
+      warnings.push("Preview features not enabled (needed for Gemini 3)");
     }
 
     // Return result based on severity
     if (issues.length > 0) {
-      return this.warning(`Gemini CLI needs attention: ${issues.join(', ')}`, {
-        recommendation: issues.includes('Not authenticated')
-          ? 'Run `gemini` to authenticate with your Google account'
-          : 'Run `npx aiox-core install` and select Gemini CLI',
+      return this.warning(`Gemini CLI needs attention: ${issues.join(", ")}`, {
+        recommendation: issues.includes("Not authenticated")
+          ? "Run `gemini` to authenticate with your Google account"
+          : "Run `npx aiox-core install` and select Gemini CLI",
         details: { ...details, issues, warnings },
       });
     }
 
     if (warnings.length > 0) {
-      return this.warning(`Gemini CLI configuration incomplete: ${warnings.join(', ')}`, {
-        recommendation: 'Run `npx aiox-core install` and select Gemini CLI',
-        details: { ...details, warnings },
-      });
+      return this.warning(
+        `Gemini CLI configuration incomplete: ${warnings.join(", ")}`,
+        {
+          recommendation: "Run `npx aiox-core install` and select Gemini CLI",
+          details: { ...details, warnings },
+        },
+      );
     }
 
     // Build success message
     const parts = [];
     if (details.installed) parts.push(`CLI v${details.version}`);
-    if (details.authenticated) parts.push('authenticated');
-    if (details.projectConfig) parts.push('project config');
-    if (details.features.previewFeatures) parts.push('preview features');
-    if (details.features.hooks) parts.push(`${details.features.hookEvents.length} hooks`);
+    if (details.authenticated) parts.push("authenticated");
+    if (details.projectConfig) parts.push("project config");
+    if (details.features.previewFeatures) parts.push("preview features");
+    if (details.features.hooks)
+      parts.push(`${details.features.hookEvents.length} hooks`);
     if (details.features.extensions.length > 0) {
       parts.push(`${details.features.extensions.length} extensions`);
     }
     if (details.aioxAgents > 0) parts.push(`${details.aioxAgents} AIOX agents`);
 
-    return this.pass(`Gemini CLI configured (${parts.join(', ')})`, {
+    return this.pass(`Gemini CLI configured (${parts.join(", ")})`, {
       details,
     });
   }

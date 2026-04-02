@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 const COLORS = {
-  green: '\x1b[32m',
-  red: '\x1b[31m',
-  yellow: '\x1b[33m',
-  reset: '\x1b[0m',
+  green: "\x1b[32m",
+  red: "\x1b[31m",
+  yellow: "\x1b[33m",
+  reset: "\x1b[0m",
 };
 
 const CB_FAILURE_THRESHOLD = 5;
@@ -27,7 +27,7 @@ function renderStatus(metricsData, options = {}) {
   lines.push(_renderCacheEntries(metricsData));
   lines.push(_renderUptime());
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 /**
@@ -37,7 +37,7 @@ function renderStatus(metricsData, options = {}) {
  * @private
  */
 function _renderHeader(isTTY) {
-  const separator = isTTY ? '\u2500'.repeat(27) : '-'.repeat(27);
+  const separator = isTTY ? "\u2500".repeat(27) : "-".repeat(27);
   return `Provider Status\n${separator}`;
 }
 
@@ -59,9 +59,9 @@ function _renderProviderLine(data, isTTY) {
   }
 
   if (isActive) {
-    return ' Code Graph MCP: [ACTIVE]';
+    return " Code Graph MCP: [ACTIVE]";
   }
-  return ' Code Graph MCP: [OFFLINE]';
+  return " Code Graph MCP: [OFFLINE]";
 }
 
 /**
@@ -72,9 +72,9 @@ function _renderProviderLine(data, isTTY) {
  * @private
  */
 function _renderCircuitBreaker(data, isTTY) {
-  const state = data.circuitBreakerState || 'CLOSED';
+  const state = data.circuitBreakerState || "CLOSED";
 
-  if (isTTY && state === 'HALF-OPEN') {
+  if (isTTY && state === "HALF-OPEN") {
     return ` Circuit Breaker: ${COLORS.yellow}${state}${COLORS.reset}`;
   }
 
@@ -110,7 +110,7 @@ function _renderCacheEntries(data) {
  * @private
  */
 function _renderUptime() {
-  return ' Uptime: session';
+  return " Uptime: session";
 }
 
 module.exports = {

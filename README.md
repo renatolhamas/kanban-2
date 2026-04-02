@@ -8,6 +8,7 @@
 WhatsApp Kanban System — Uma plataforma SaaS multi-tenant para gestão colaborativa de conversas no WhatsApp com interface Kanban.
 
 **Stack:**
+
 - Frontend: Next.js + Tailwind CSS
 - Backend: Supabase Cloud (PostgreSQL + Auth + RLS)
 - Integration: Evolution API v2
@@ -28,4 +29,4 @@ Environment configured via AIOX bootstrap.
 
 ---
 
-*Project initialized with Synkra AIOX Framework*
+_Project initialized with Synkra AIOX Framework_

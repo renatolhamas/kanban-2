@@ -68,7 +68,7 @@ evaluation:
     enum_exact_match: true
 
   reasoning:
-    minimum_justifications: 8  # Uma por campo
+    minimum_justifications: 8 # Uma por campo
     requires_evidence: true
 
   format:

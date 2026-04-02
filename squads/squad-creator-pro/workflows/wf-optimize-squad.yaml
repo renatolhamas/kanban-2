@@ -85,7 +85,16 @@ inputs:
 
     - name: focus
       type: enum
-      values: ["all", "tasks", "checklists", "templates", "agents", "workflows", "data"]
+      values:
+        [
+          "all",
+          "tasks",
+          "checklists",
+          "templates",
+          "agents",
+          "workflows",
+          "data",
+        ]
       default: "all"
       description: "Focar em um tipo específico de artefato"
 
@@ -300,7 +309,6 @@ artifact_optimization_map:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 phases:
-
   # ─────────────────────────────────────────────────────────────────────────────
   # PHASE 0: INVENTORY
   # ─────────────────────────────────────────────────────────────────────────────

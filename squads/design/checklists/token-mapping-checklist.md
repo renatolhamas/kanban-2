@@ -103,5 +103,5 @@
 **Contraste: 16/16 PASS (WCAG AA)**
 **Verdict: PASS**
 
-*Validado em: 2026-02-21*
-*Validado por: Foundations Pipeline — f1-qa-foundations*
+_Validado em: 2026-02-21_
+_Validado por: Foundations Pipeline — f1-qa-foundations_

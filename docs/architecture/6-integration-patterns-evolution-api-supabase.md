@@ -39,73 +39,72 @@
 ```
 
 **Code example:**
+
 ```typescript
 // /api/webhooks/messages
-import { validateWebhookSignature } from '@/lib/api/webhook-validator';
+import { validateWebhookSignature } from "@/lib/api/webhook-validator";
 
 export async function POST(req: Request) {
-  const signature = req.headers.get('X-Signature');
+  const signature = req.headers.get("X-Signature");
   const body = await req.text();
-  
+
   // Validate
   if (!validateWebhookSignature(body, signature)) {
-    return Response.json({ error: 'Invalid signature' }, { status: 401 });
+    return Response.json({ error: "Invalid signature" }, { status: 401 });
   }
-  
+
   const event = JSON.parse(body);
   const { phone, message, media_url } = event.data;
-  
+
   // 1. Find or create contact
   let contact = await supabase
-    .from('contacts')
-    .select('*')
-    .eq('phone', phone)
+    .from("contacts")
+    .select("*")
+    .eq("phone", phone)
     .single();
-  
+
   if (!contact) {
     contact = await supabase
-      .from('contacts')
+      .from("contacts")
       .insert({ phone, tenant_id })
       .single();
   }
-  
+
   // 2. Find or create conversation
   let conversation = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('contact_id', contact.id)
+    .from("conversations")
+    .select("*")
+    .eq("contact_id", contact.id)
     .single();
-  
+
   if (!conversation) {
     // Auto-route to "Main" kanban
     const mainKanban = await supabase
-      .from('kanbans')
-      .select('*')
-      .eq('is_main', true)
+      .from("kanbans")
+      .select("*")
+      .eq("is_main", true)
       .single();
-    
+
     conversation = await supabase
-      .from('conversations')
+      .from("conversations")
       .insert({
         contact_id: contact.id,
         kanban_id: mainKanban.id,
         column_id: mainKanban.columns[0].id, // First column
-        wa_phone: phone
+        wa_phone: phone,
       })
       .single();
   }
-  
+
   // 3. Save message
-  await supabase
-    .from('messages')
-    .insert({
-      conversation_id: conversation.id,
-      sender_type: 'contact',
-      content: message,
-      media_url,
-      media_type: event.data.media_type
-    });
-  
+  await supabase.from("messages").insert({
+    conversation_id: conversation.id,
+    sender_type: "contact",
+    content: message,
+    media_url,
+    media_type: event.data.media_type,
+  });
+
   // 4. Supabase Real-time broadcasts automatically
   return Response.json({ ok: true });
 }

@@ -10,13 +10,13 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
-const { spawn, execSync } = require('child_process');
-const fs = require('fs').promises;
-const fsSync = require('fs');
-const path = require('path');
-const os = require('os');
+const { spawn, execSync } = require("child_process");
+const fs = require("fs").promises;
+const fsSync = require("fs");
+const path = require("path");
+const os = require("os");
 
 // Constants
 const POLL_INTERVAL_MS = 500;
@@ -30,11 +30,11 @@ const RETRY_DELAY_MS = 1000;
  * @enum {string}
  */
 const ENVIRONMENT_TYPE = {
-  NATIVE_TERMINAL: 'NATIVE_TERMINAL',
-  VSCODE: 'VSCODE',
-  SSH: 'SSH',
-  DOCKER: 'DOCKER',
-  CI: 'CI',
+  NATIVE_TERMINAL: "NATIVE_TERMINAL",
+  VSCODE: "VSCODE",
+  SSH: "SSH",
+  DOCKER: "DOCKER",
+  CI: "CI",
 };
 
 /**
@@ -61,42 +61,46 @@ function detectEnvironment() {
   // 1. CI/CD detection (Task 1.5)
   // Check common CI environment variables
   if (
-    process.env.CI === 'true' ||
-    process.env.GITHUB_ACTIONS === 'true' ||
-    process.env.GITLAB_CI === 'true' ||
+    process.env.CI === "true" ||
+    process.env.GITHUB_ACTIONS === "true" ||
+    process.env.GITLAB_CI === "true" ||
     process.env.JENKINS_URL ||
-    process.env.TRAVIS === 'true' ||
-    process.env.CIRCLECI === 'true' ||
-    process.env.BUILDKITE === 'true' ||
-    process.env.AZURE_PIPELINES === 'true' ||
-    process.env.TF_BUILD === 'True'
+    process.env.TRAVIS === "true" ||
+    process.env.CIRCLECI === "true" ||
+    process.env.BUILDKITE === "true" ||
+    process.env.AZURE_PIPELINES === "true" ||
+    process.env.TF_BUILD === "True"
   ) {
     return {
       type: ENVIRONMENT_TYPE.CI,
       supportsVisualTerminal: false,
-      reason: 'CI/CD environment detected (headless)',
+      reason: "CI/CD environment detected (headless)",
     };
   }
 
   // 2. Docker container detection (Task 1.4)
   // Check for /.dockerenv file or cgroup indicators
   try {
-    if (fsSync.existsSync('/.dockerenv')) {
+    if (fsSync.existsSync("/.dockerenv")) {
       return {
         type: ENVIRONMENT_TYPE.DOCKER,
         supportsVisualTerminal: false,
-        reason: 'Docker container detected (/.dockerenv exists)',
+        reason: "Docker container detected (/.dockerenv exists)",
       };
     }
 
     // Check cgroup for docker/containerd/kubepods
-    if (fsSync.existsSync('/proc/1/cgroup')) {
-      const cgroup = fsSync.readFileSync('/proc/1/cgroup', 'utf8');
-      if (cgroup.includes('docker') || cgroup.includes('containerd') || cgroup.includes('kubepods')) {
+    if (fsSync.existsSync("/proc/1/cgroup")) {
+      const cgroup = fsSync.readFileSync("/proc/1/cgroup", "utf8");
+      if (
+        cgroup.includes("docker") ||
+        cgroup.includes("containerd") ||
+        cgroup.includes("kubepods")
+      ) {
         return {
           type: ENVIRONMENT_TYPE.DOCKER,
           supportsVisualTerminal: false,
-          reason: 'Container detected via cgroup',
+          reason: "Container detected via cgroup",
         };
       }
     }
@@ -105,17 +109,21 @@ function detectEnvironment() {
   }
 
   // 3. SSH session detection (Task 1.3)
-  if (process.env.SSH_CLIENT || process.env.SSH_TTY || process.env.SSH_CONNECTION) {
+  if (
+    process.env.SSH_CLIENT ||
+    process.env.SSH_TTY ||
+    process.env.SSH_CONNECTION
+  ) {
     return {
       type: ENVIRONMENT_TYPE.SSH,
       supportsVisualTerminal: false,
-      reason: 'SSH session detected (no display available)',
+      reason: "SSH session detected (no display available)",
     };
   }
 
   // 4. VS Code integrated terminal detection (Task 1.2)
   if (
-    process.env.TERM_PROGRAM === 'vscode' ||
+    process.env.TERM_PROGRAM === "vscode" ||
     process.env.VSCODE_PID ||
     process.env.VSCODE_CWD ||
     process.env.VSCODE_GIT_IPC_HANDLE
@@ -123,7 +131,7 @@ function detectEnvironment() {
     return {
       type: ENVIRONMENT_TYPE.VSCODE,
       supportsVisualTerminal: false,
-      reason: 'VS Code integrated terminal detected',
+      reason: "VS Code integrated terminal detected",
     };
   }
 
@@ -131,7 +139,7 @@ function detectEnvironment() {
   return {
     type: ENVIRONMENT_TYPE.NATIVE_TERMINAL,
     supportsVisualTerminal: true,
-    reason: 'Native terminal environment',
+    reason: "Native terminal environment",
   };
 }
 
@@ -140,7 +148,7 @@ function detectEnvironment() {
  * @type {Object}
  */
 const DEFAULT_OPTIONS = {
-  params: '',
+  params: "",
   context: null,
   timeout: DEFAULT_TIMEOUT_MS,
   outputDir: os.tmpdir(),
@@ -172,7 +180,7 @@ const DEFAULT_OPTIONS = {
  * @returns {string} Absolute path to pm.sh
  */
 function getScriptPath() {
-  return path.join(__dirname, '../../scripts/pm.sh');
+  return path.join(__dirname, "../../scripts/pm.sh");
 }
 
 /**
@@ -182,12 +190,12 @@ function getScriptPath() {
  * @throws {Error} If arguments are invalid
  */
 function validateArgs(agent, task) {
-  if (!agent || typeof agent !== 'string') {
-    throw new Error('Agent ID is required and must be a string');
+  if (!agent || typeof agent !== "string") {
+    throw new Error("Agent ID is required and must be a string");
   }
 
-  if (!task || typeof task !== 'string') {
-    throw new Error('Task is required and must be a string');
+  if (!task || typeof task !== "string") {
+    throw new Error("Task is required and must be a string");
   }
 
   // Validate agent format (should be alphanumeric with optional hyphen)
@@ -212,14 +220,14 @@ function validateArgs(agent, task) {
  */
 async function createContextFile(context, outputDir = os.tmpdir()) {
   if (!context) {
-    return '';
+    return "";
   }
 
   // Validate context structure
   const validatedContext = {
-    story: context.story || '',
+    story: context.story || "",
     files: Array.isArray(context.files) ? context.files : [],
-    instructions: context.instructions || '',
+    instructions: context.instructions || "",
     metadata: context.metadata || {},
     createdAt: new Date().toISOString(),
   };
@@ -239,9 +247,13 @@ async function createContextFile(context, outputDir = os.tmpdir()) {
  * @returns {Promise<string>} Output content
  * @throws {Error} If timeout exceeded
  */
-async function pollForOutput(outputFile, timeout = DEFAULT_TIMEOUT_MS, debug = false) {
+async function pollForOutput(
+  outputFile,
+  timeout = DEFAULT_TIMEOUT_MS,
+  debug = false,
+) {
   const startTime = Date.now();
-  const lockFile = outputFile.replace('output', 'lock');
+  const lockFile = outputFile.replace("output", "lock");
 
   if (debug) {
     console.log(`[TerminalSpawner] Polling for output: ${outputFile}`);
@@ -254,23 +266,27 @@ async function pollForOutput(outputFile, timeout = DEFAULT_TIMEOUT_MS, debug = f
       await fs.access(lockFile);
       // Lock still exists, wait and retry
       if (debug) {
-        console.log(`[TerminalSpawner] Lock exists, waiting ${POLL_INTERVAL_MS}ms...`);
+        console.log(
+          `[TerminalSpawner] Lock exists, waiting ${POLL_INTERVAL_MS}ms...`,
+        );
       }
       await sleep(POLL_INTERVAL_MS);
     } catch {
       // Lock gone, agent finished - read output
       if (debug) {
-        console.log('[TerminalSpawner] Lock removed, reading output...');
+        console.log("[TerminalSpawner] Lock removed, reading output...");
       }
 
       try {
-        const output = await fs.readFile(outputFile, 'utf8');
+        const output = await fs.readFile(outputFile, "utf8");
         return output;
       } catch (readError) {
         if (debug) {
-          console.log(`[TerminalSpawner] Output file not found: ${readError.message}`);
+          console.log(
+            `[TerminalSpawner] Output file not found: ${readError.message}`,
+          );
         }
-        return 'No output captured';
+        return "No output captured";
       }
     }
   }
@@ -315,11 +331,11 @@ async function spawnInline(agent, task, options = {}) {
   const startTime = Date.now();
 
   if (opts.debug) {
-    console.log('[TerminalSpawner] Using inline spawn (no visual terminal)');
+    console.log("[TerminalSpawner] Using inline spawn (no visual terminal)");
   }
 
   // Create context file if needed
-  let contextPath = '';
+  let contextPath = "";
   if (opts.context) {
     contextPath = await createContextFile(opts.context, opts.outputDir);
     if (opts.debug) {
@@ -333,7 +349,7 @@ async function spawnInline(agent, task, options = {}) {
     args.push(opts.params);
   }
   if (contextPath) {
-    args.push('--context', contextPath);
+    args.push("--context", contextPath);
   }
 
   const scriptPath = getScriptPath();
@@ -348,21 +364,21 @@ async function spawnInline(agent, task, options = {}) {
     const errorChunks = [];
 
     // Spawn the process inline with piped stdout/stderr (Task 2.2)
-    const child = spawn('bash', [scriptPath, ...args], {
+    const child = spawn("bash", [scriptPath, ...args], {
       env: {
         ...process.env,
-        AIOX_DEBUG: opts.debug ? 'true' : 'false',
+        AIOX_DEBUG: opts.debug ? "true" : "false",
         AIOX_OUTPUT_DIR: opts.outputDir,
-        AIOX_INLINE_MODE: 'true', // Signal to pm.sh that we're running inline
+        AIOX_INLINE_MODE: "true", // Signal to pm.sh that we're running inline
       },
-      stdio: ['ignore', 'pipe', 'pipe'],
+      stdio: ["ignore", "pipe", "pipe"],
     });
 
     // Register child process for cleanup on parent exit (Task 3.4)
     registerChildProcess(child);
 
     // Capture stdout
-    child.stdout.on('data', (data) => {
+    child.stdout.on("data", (data) => {
       outputChunks.push(data);
       if (opts.debug) {
         process.stdout.write(data);
@@ -370,7 +386,7 @@ async function spawnInline(agent, task, options = {}) {
     });
 
     // Capture stderr
-    child.stderr.on('data', (data) => {
+    child.stderr.on("data", (data) => {
       errorChunks.push(data);
       if (opts.debug) {
         process.stderr.write(data);
@@ -379,7 +395,7 @@ async function spawnInline(agent, task, options = {}) {
 
     // Set timeout
     const timeoutId = setTimeout(() => {
-      child.kill('SIGTERM');
+      child.kill("SIGTERM");
       const duration = Date.now() - startTime;
 
       // Cleanup context file
@@ -389,15 +405,15 @@ async function spawnInline(agent, task, options = {}) {
 
       resolve({
         success: false,
-        output: Buffer.concat(outputChunks).toString('utf8'),
-        outputFile: '',
+        output: Buffer.concat(outputChunks).toString("utf8"),
+        outputFile: "",
         duration,
         error: `Timeout after ${opts.timeout}ms`,
       });
     }, opts.timeout);
 
     // Handle process completion
-    child.on('close', async (code) => {
+    child.on("close", async (code) => {
       clearTimeout(timeoutId);
       const duration = Date.now() - startTime;
 
@@ -406,18 +422,18 @@ async function spawnInline(agent, task, options = {}) {
         fs.unlink(contextPath).catch(() => {});
       }
 
-      const stdout = Buffer.concat(outputChunks).toString('utf8').trim();
-      const stderr = Buffer.concat(errorChunks).toString('utf8');
+      const stdout = Buffer.concat(outputChunks).toString("utf8").trim();
+      const stderr = Buffer.concat(errorChunks).toString("utf8");
 
       if (code === 0) {
         // pm.sh returns the output file path in stdout
         // Read the actual output from that file
         let output = stdout;
-        const outputFilePath = stdout.split('\n').pop()?.trim();
+        const outputFilePath = stdout.split("\n").pop()?.trim();
 
-        if (outputFilePath && outputFilePath.endsWith('.md')) {
+        if (outputFilePath && outputFilePath.endsWith(".md")) {
           try {
-            output = await fs.readFile(outputFilePath, 'utf8');
+            output = await fs.readFile(outputFilePath, "utf8");
             // Cleanup the output file after reading
             await fs.unlink(outputFilePath).catch(() => {});
           } catch {
@@ -429,14 +445,14 @@ async function spawnInline(agent, task, options = {}) {
         resolve({
           success: true,
           output,
-          outputFile: outputFilePath || '',
+          outputFile: outputFilePath || "",
           duration,
         });
       } else {
         resolve({
           success: false,
           output: stdout,
-          outputFile: '',
+          outputFile: "",
           duration,
           error: stderr || `Process exited with code ${code}`,
         });
@@ -444,7 +460,7 @@ async function spawnInline(agent, task, options = {}) {
     });
 
     // Handle spawn errors
-    child.on('error', (error) => {
+    child.on("error", (error) => {
       clearTimeout(timeoutId);
       const duration = Date.now() - startTime;
 
@@ -455,8 +471,8 @@ async function spawnInline(agent, task, options = {}) {
 
       resolve({
         success: false,
-        output: Buffer.concat(outputChunks).toString('utf8'),
-        outputFile: '',
+        output: Buffer.concat(outputChunks).toString("utf8"),
+        outputFile: "",
         duration,
         error: error.message,
       });
@@ -503,17 +519,21 @@ async function spawnAgent(agent, task, options = {}) {
   const environment = detectEnvironment();
 
   if (opts.debug) {
-    console.log(`[TerminalSpawner] Environment: ${environment.type} (${environment.reason})`);
+    console.log(
+      `[TerminalSpawner] Environment: ${environment.type} (${environment.reason})`,
+    );
   }
 
   // If environment doesn't support visual terminal, use inline spawn directly
   if (!environment.supportsVisualTerminal) {
-    console.log(`⚠️ Terminal visual indisponível. Executando inline. [${environment.reason}]`);
+    console.log(
+      `⚠️ Terminal visual indisponível. Executando inline. [${environment.reason}]`,
+    );
     return spawnInline(agent, task, opts);
   }
 
   // Create context file if needed (Task 2.2)
-  let contextPath = '';
+  let contextPath = "";
   if (opts.context) {
     contextPath = await createContextFile(opts.context, opts.outputDir);
     if (opts.debug) {
@@ -527,7 +547,7 @@ async function spawnAgent(agent, task, options = {}) {
     args.push(opts.params);
   }
   if (contextPath) {
-    args.push('--context', contextPath);
+    args.push("--context", contextPath);
   }
 
   // Get script path
@@ -544,18 +564,20 @@ async function spawnAgent(agent, task, options = {}) {
     try {
       if (opts.debug) {
         console.log(`[TerminalSpawner] Attempt ${attempt}/${opts.retries}`);
-        console.log(`[TerminalSpawner] Executing: bash ${scriptPath} ${args.join(' ')}`);
+        console.log(
+          `[TerminalSpawner] Executing: bash ${scriptPath} ${args.join(" ")}`,
+        );
       }
 
       // Execute pm.sh
       const env = {
         ...process.env,
-        AIOX_DEBUG: opts.debug ? 'true' : 'false',
+        AIOX_DEBUG: opts.debug ? "true" : "false",
         AIOX_OUTPUT_DIR: opts.outputDir,
       };
 
-      const result = execSync(`bash "${scriptPath}" ${args.join(' ')}`, {
-        encoding: 'utf8',
+      const result = execSync(`bash "${scriptPath}" ${args.join(" ")}`, {
+        encoding: "utf8",
         timeout: opts.timeout,
         env,
       });
@@ -586,7 +608,9 @@ async function spawnAgent(agent, task, options = {}) {
     } catch (error) {
       lastError = error;
       if (opts.debug) {
-        console.log(`[TerminalSpawner] Attempt ${attempt} failed: ${error.message}`);
+        console.log(
+          `[TerminalSpawner] Attempt ${attempt} failed: ${error.message}`,
+        );
       }
 
       if (attempt < opts.retries) {
@@ -596,7 +620,9 @@ async function spawnAgent(agent, task, options = {}) {
   }
 
   // Fallback to inline spawn if visual terminal fails (Story 12.10 - Task 2.3)
-  console.log('⚠️ Terminal visual falhou. Tentando execução inline como fallback...');
+  console.log(
+    "⚠️ Terminal visual falhou. Tentando execução inline como fallback...",
+  );
 
   // Cleanup context file before retry with inline
   if (contextPath) {
@@ -607,7 +633,7 @@ async function spawnAgent(agent, task, options = {}) {
   const inlineResult = await spawnInline(agent, task, opts);
 
   if (inlineResult.success) {
-    console.log('✅ Execução inline bem-sucedida.');
+    console.log("✅ Execução inline bem-sucedida.");
     return inlineResult;
   }
 
@@ -616,10 +642,10 @@ async function spawnAgent(agent, task, options = {}) {
 
   return {
     success: false,
-    output: inlineResult.output || '',
-    outputFile: '',
+    output: inlineResult.output || "",
+    outputFile: "",
     duration,
-    error: `Visual spawn failed: ${lastError?.message || 'Unknown'}. Inline fallback also failed: ${inlineResult.error || 'Unknown'}`,
+    error: `Visual spawn failed: ${lastError?.message || "Unknown"}. Inline fallback also failed: ${inlineResult.error || "Unknown"}`,
   };
 }
 
@@ -629,7 +655,7 @@ async function spawnAgent(agent, task, options = {}) {
  */
 function isSpawnerAvailable() {
   const platform = process.platform;
-  return ['darwin', 'linux', 'win32'].includes(platform);
+  return ["darwin", "linux", "win32"].includes(platform);
 }
 
 /**
@@ -638,14 +664,14 @@ function isSpawnerAvailable() {
  */
 function getPlatform() {
   switch (process.platform) {
-    case 'darwin':
-      return 'macos';
-    case 'linux':
-      return 'linux';
-    case 'win32':
-      return 'windows';
+    case "darwin":
+      return "macos";
+    case "linux":
+      return "linux";
+    case "win32":
+      return "windows";
     default:
-      return 'unknown';
+      return "unknown";
   }
 }
 
@@ -663,7 +689,10 @@ async function cleanupOldFiles(outputDir = os.tmpdir(), maxAgeMs = 3600000) {
   try {
     const files = await fs.readdir(outputDir);
     const aioxFiles = files.filter(
-      (f) => f.startsWith('aiox-output-') || f.startsWith('aiox-lock-') || f.startsWith('aiox-context-'),
+      (f) =>
+        f.startsWith("aiox-output-") ||
+        f.startsWith("aiox-lock-") ||
+        f.startsWith("aiox-context-"),
     );
 
     for (const file of aioxFiles) {
@@ -695,16 +724,52 @@ async function cleanupOldFiles(outputDir = os.tmpdir(), maxAgeMs = 3600000) {
  */
 const OS_COMPATIBILITY_MATRIX = {
   must_pass: [
-    { os: 'macOS Sonoma', arch: 'arm64', docker: 'Docker Desktop', description: 'Apple Silicon' },
-    { os: 'macOS Sonoma', arch: 'x64', docker: 'Docker Desktop', description: 'Intel' },
-    { os: 'Windows 11', arch: 'x64', docker: 'Docker Desktop', wsl: 'Ubuntu 22.04', description: 'WSL2' },
-    { os: 'Ubuntu 22.04', arch: 'x64', docker: 'Docker Engine', description: 'Native Linux' },
+    {
+      os: "macOS Sonoma",
+      arch: "arm64",
+      docker: "Docker Desktop",
+      description: "Apple Silicon",
+    },
+    {
+      os: "macOS Sonoma",
+      arch: "x64",
+      docker: "Docker Desktop",
+      description: "Intel",
+    },
+    {
+      os: "Windows 11",
+      arch: "x64",
+      docker: "Docker Desktop",
+      wsl: "Ubuntu 22.04",
+      description: "WSL2",
+    },
+    {
+      os: "Ubuntu 22.04",
+      arch: "x64",
+      docker: "Docker Engine",
+      description: "Native Linux",
+    },
   ],
   should_pass: [
-    { os: 'Windows 10', arch: 'x64', wsl: 'Ubuntu', description: 'WSL2' },
-    { os: 'macOS Ventura', arch: 'arm64', docker: 'Docker Desktop', description: 'Previous macOS' },
-    { os: 'macOS Ventura', arch: 'x64', docker: 'Docker Desktop', description: 'Previous macOS Intel' },
-    { os: 'Ubuntu 24.04', arch: 'x64', docker: 'Docker Engine', description: 'Latest Ubuntu' },
+    { os: "Windows 10", arch: "x64", wsl: "Ubuntu", description: "WSL2" },
+    {
+      os: "macOS Ventura",
+      arch: "arm64",
+      docker: "Docker Desktop",
+      description: "Previous macOS",
+    },
+    {
+      os: "macOS Ventura",
+      arch: "x64",
+      docker: "Docker Desktop",
+      description: "Previous macOS Intel",
+    },
+    {
+      os: "Ubuntu 24.04",
+      arch: "x64",
+      docker: "Docker Engine",
+      description: "Latest Ubuntu",
+    },
   ],
 };
 
@@ -738,7 +803,7 @@ const OS_COMPATIBILITY_MATRIX = {
  * @returns {Object} System information
  */
 function getSystemInfo() {
-  const { execSync } = require('child_process');
+  const { execSync } = require("child_process");
 
   // Get OS info
   const platform = os.platform();
@@ -746,33 +811,42 @@ function getSystemInfo() {
   const arch = os.arch();
 
   // Get OS name
-  let osName = 'Unknown';
-  if (platform === 'darwin') {
+  let osName = "Unknown";
+  if (platform === "darwin") {
     try {
-      const swVers = execSync('sw_vers -productName 2>/dev/null', { encoding: 'utf8' }).trim();
-      const swVersion = execSync('sw_vers -productVersion 2>/dev/null', { encoding: 'utf8' }).trim();
+      const swVers = execSync("sw_vers -productName 2>/dev/null", {
+        encoding: "utf8",
+      }).trim();
+      const swVersion = execSync("sw_vers -productVersion 2>/dev/null", {
+        encoding: "utf8",
+      }).trim();
       osName = `${swVers} ${swVersion}`;
     } catch {
       osName = `macOS ${release}`;
     }
-  } else if (platform === 'linux') {
+  } else if (platform === "linux") {
     try {
-      const lsbRelease = execSync('lsb_release -d 2>/dev/null || cat /etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d= -f2 | tr -d \'"\'', { encoding: 'utf8' }).trim();
-      osName = lsbRelease.replace('Description:\t', '') || `Linux ${release}`;
+      const lsbRelease = execSync(
+        "lsb_release -d 2>/dev/null || cat /etc/os-release 2>/dev/null | grep PRETTY_NAME | cut -d= -f2 | tr -d '\"'",
+        { encoding: "utf8" },
+      ).trim();
+      osName = lsbRelease.replace("Description:\t", "") || `Linux ${release}`;
     } catch {
       osName = `Linux ${release}`;
     }
-  } else if (platform === 'win32') {
+  } else if (platform === "win32") {
     osName = `Windows ${release}`;
   }
 
   // Get shell
-  const shell = process.env.SHELL || process.env.ComSpec || 'unknown';
+  const shell = process.env.SHELL || process.env.ComSpec || "unknown";
 
   // Get Docker version
-  let dockerVersion = 'not installed';
+  let dockerVersion = "not installed";
   try {
-    dockerVersion = execSync('docker --version 2>/dev/null', { encoding: 'utf8' }).trim();
+    dockerVersion = execSync("docker --version 2>/dev/null", {
+      encoding: "utf8",
+    }).trim();
   } catch {
     // Docker not available
   }
@@ -801,17 +875,17 @@ function generateCompatibilityReport(testResults = []) {
   const environment = detectEnvironment();
 
   // Calculate summary
-  const passed = testResults.filter((t) => t.result === 'pass').length;
-  const failed = testResults.filter((t) => t.result === 'fail').length;
-  const skipped = testResults.filter((t) => t.result === 'skip').length;
+  const passed = testResults.filter((t) => t.result === "pass").length;
+  const failed = testResults.filter((t) => t.result === "fail").length;
+  const skipped = testResults.filter((t) => t.result === "skip").length;
   const total = testResults.length;
 
   // Determine matrix classification
-  const matchesMustPass = OS_COMPATIBILITY_MATRIX.must_pass.some(
-    (m) => systemInfo.os_name.toLowerCase().includes(m.os.toLowerCase().split(' ')[0]),
+  const matchesMustPass = OS_COMPATIBILITY_MATRIX.must_pass.some((m) =>
+    systemInfo.os_name.toLowerCase().includes(m.os.toLowerCase().split(" ")[0]),
   );
-  const matchesShouldPass = OS_COMPATIBILITY_MATRIX.should_pass.some(
-    (m) => systemInfo.os_name.toLowerCase().includes(m.os.toLowerCase().split(' ')[0]),
+  const matchesShouldPass = OS_COMPATIBILITY_MATRIX.should_pass.some((m) =>
+    systemInfo.os_name.toLowerCase().includes(m.os.toLowerCase().split(" ")[0]),
   );
 
   return {
@@ -822,7 +896,11 @@ function generateCompatibilityReport(testResults = []) {
       supportsVisualTerminal: environment.supportsVisualTerminal,
       reason: environment.reason,
     },
-    matrixClassification: matchesMustPass ? 'must_pass' : matchesShouldPass ? 'should_pass' : 'not_in_matrix',
+    matrixClassification: matchesMustPass
+      ? "must_pass"
+      : matchesShouldPass
+        ? "should_pass"
+        : "not_in_matrix",
     tests: testResults,
     summary: {
       total,
@@ -841,52 +919,57 @@ function generateCompatibilityReport(testResults = []) {
  */
 function formatCompatibilityReport(report) {
   const lines = [
-    '═══════════════════════════════════════════════════════════════',
-    '                 AIOX Terminal Spawner Compatibility Report     ',
-    '═══════════════════════════════════════════════════════════════',
-    '',
+    "═══════════════════════════════════════════════════════════════",
+    "                 AIOX Terminal Spawner Compatibility Report     ",
+    "═══════════════════════════════════════════════════════════════",
+    "",
     `Generated: ${report.generatedAt}`,
-    '',
-    '── System Information ──────────────────────────────────────────',
+    "",
+    "── System Information ──────────────────────────────────────────",
     `  OS:           ${report.system.os_name}`,
     `  Version:      ${report.system.os_version}`,
     `  Architecture: ${report.system.architecture}`,
     `  Shell:        ${report.system.shell}`,
     `  Docker:       ${report.system.docker_version}`,
     `  Node.js:      ${report.system.node_version}`,
-    '',
-    '── Environment Detection ───────────────────────────────────────',
+    "",
+    "── Environment Detection ───────────────────────────────────────",
     `  Type:         ${report.environment.type}`,
-    `  Visual Term:  ${report.environment.supportsVisualTerminal ? 'Yes' : 'No'}`,
+    `  Visual Term:  ${report.environment.supportsVisualTerminal ? "Yes" : "No"}`,
     `  Reason:       ${report.environment.reason}`,
-    '',
+    "",
     `  Matrix Class: ${report.matrixClassification.toUpperCase()}`,
-    '',
+    "",
   ];
 
   if (report.tests.length > 0) {
-    lines.push('── Test Results ────────────────────────────────────────────────');
+    lines.push(
+      "── Test Results ────────────────────────────────────────────────",
+    );
     for (const test of report.tests) {
-      const icon = test.result === 'pass' ? '✅' : test.result === 'fail' ? '❌' : '⏭️';
-      const duration = test.duration ? ` (${test.duration}ms)` : '';
+      const icon =
+        test.result === "pass" ? "✅" : test.result === "fail" ? "❌" : "⏭️";
+      const duration = test.duration ? ` (${test.duration}ms)` : "";
       lines.push(`  ${icon} ${test.testName}${duration}`);
       if (test.failureReason) {
         lines.push(`     └─ ${test.failureReason}`);
       }
     }
-    lines.push('');
+    lines.push("");
   }
 
-  lines.push('── Summary ─────────────────────────────────────────────────────');
+  lines.push(
+    "── Summary ─────────────────────────────────────────────────────",
+  );
   lines.push(`  Total:   ${report.summary.total}`);
   lines.push(`  Passed:  ${report.summary.passed}`);
   lines.push(`  Failed:  ${report.summary.failed}`);
   lines.push(`  Skipped: ${report.summary.skipped}`);
   lines.push(`  Rate:    ${report.summary.passRate}%`);
-  lines.push('');
-  lines.push('═══════════════════════════════════════════════════════════════');
+  lines.push("");
+  lines.push("═══════════════════════════════════════════════════════════════");
 
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 // ============================================
@@ -927,7 +1010,7 @@ function unregisterLockFile(lockPath) {
  */
 function registerChildProcess(child) {
   activeChildProcesses.add(child);
-  child.on('close', () => {
+  child.on("close", () => {
     activeChildProcesses.delete(child);
   });
 }
@@ -955,7 +1038,7 @@ function cleanupLocks() {
 function terminateChildProcesses() {
   for (const child of activeChildProcesses) {
     try {
-      child.kill('SIGTERM');
+      child.kill("SIGTERM");
     } catch {
       // Ignore if already dead
     }
@@ -979,31 +1062,31 @@ if (!process._terminalSpawnerCleanupRegistered) {
   process._terminalSpawnerCleanupRegistered = true;
 
   // Normal exit
-  process.on('exit', () => cleanupHandler('exit'));
+  process.on("exit", () => cleanupHandler("exit"));
 
   // Ctrl+C
-  process.on('SIGINT', () => {
-    cleanupHandler('SIGINT');
+  process.on("SIGINT", () => {
+    cleanupHandler("SIGINT");
     process.exit(1);
   });
 
   // Termination signal (kill command)
-  process.on('SIGTERM', () => {
-    cleanupHandler('SIGTERM');
+  process.on("SIGTERM", () => {
+    cleanupHandler("SIGTERM");
     process.exit(1);
   });
 
   // Uncaught exception (try to cleanup before crash)
-  process.on('uncaughtException', (error) => {
-    console.error('[TerminalSpawner] Uncaught exception:', error);
-    cleanupHandler('uncaughtException');
+  process.on("uncaughtException", (error) => {
+    console.error("[TerminalSpawner] Uncaught exception:", error);
+    cleanupHandler("uncaughtException");
     process.exit(1);
   });
 
   // Unhandled promise rejection
-  process.on('unhandledRejection', (reason) => {
-    console.error('[TerminalSpawner] Unhandled rejection:', reason);
-    cleanupHandler('unhandledRejection');
+  process.on("unhandledRejection", (reason) => {
+    console.error("[TerminalSpawner] Unhandled rejection:", reason);
+    cleanupHandler("unhandledRejection");
     process.exit(1);
   });
 }

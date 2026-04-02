@@ -18,10 +18,10 @@
  * @version 1.0.0
  */
 
-const fs = require('fs-extra');
-const path = require('path');
-const EventEmitter = require('events');
-const { getDashboardEmitter } = require('../events');
+const fs = require("fs-extra");
+const path = require("path");
+const EventEmitter = require("events");
+const { getDashboardEmitter } = require("../events");
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              NOTIFICATION TYPES (AC7)
@@ -31,12 +31,12 @@ const { getDashboardEmitter } = require('../events');
  * Notification types for dashboard
  */
 const NotificationType = {
-  INFO: 'info',
-  SUCCESS: 'success',
-  WARNING: 'warning',
-  ERROR: 'error',
-  BLOCKED: 'blocked',
-  COMPLETE: 'complete',
+  INFO: "info",
+  SUCCESS: "success",
+  WARNING: "warning",
+  ERROR: "error",
+  BLOCKED: "blocked",
+  COMPLETE: "complete",
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -63,9 +63,9 @@ class DashboardIntegration extends EventEmitter {
     this.updateInterval = options.updateInterval ?? 5000;
 
     // Paths
-    this.dashboardDir = path.join(this.projectRoot, '.aiox', 'dashboard');
-    this.statusPath = path.join(this.dashboardDir, 'status.json');
-    this.logsDir = path.join(this.projectRoot, '.aiox', 'logs');
+    this.dashboardDir = path.join(this.projectRoot, ".aiox", "dashboard");
+    this.statusPath = path.join(this.dashboardDir, "status.json");
+    this.logsDir = path.join(this.projectRoot, ".aiox", "logs");
 
     // State
     this.history = [];
@@ -99,7 +99,7 @@ class DashboardIntegration extends EventEmitter {
       }, this.updateInterval);
     }
 
-    this.emit('started');
+    this.emit("started");
   }
 
   /**
@@ -111,7 +111,7 @@ class DashboardIntegration extends EventEmitter {
       this.updateTimer = null;
     }
     this.isRunning = false;
-    this.emit('stopped');
+    this.emit("stopped");
   }
 
   /**
@@ -123,35 +123,36 @@ class DashboardIntegration extends EventEmitter {
     const emitter = getDashboardEmitter();
 
     // State changes
-    orch.on('stateChange', async (data) => {
+    orch.on("stateChange", async (data) => {
       await this.updateStatus();
-      this.emit('statusUpdate', { type: 'stateChange', data });
+      this.emit("statusUpdate", { type: "stateChange", data });
 
       // Emit story status change to dashboard
       if (orch.storyId) {
         emitter.emitStoryStatusChange(
           orch.storyId,
-          data.previousState || 'unknown',
+          data.previousState || "unknown",
           data.newState,
           orch.getProgressPercentage?.() || 0,
         );
       }
 
       // Notification for blocked state (AC7)
-      if (data.newState === 'blocked') {
+      if (data.newState === "blocked") {
         this.addNotification({
           type: NotificationType.BLOCKED,
-          title: 'Pipeline Blocked',
-          message: data.context?.reason || 'Pipeline execution has been blocked',
+          title: "Pipeline Blocked",
+          message:
+            data.context?.reason || "Pipeline execution has been blocked",
           timestamp: new Date().toISOString(),
         });
       }
 
       // Notification for complete state (AC7)
-      if (data.newState === 'complete') {
+      if (data.newState === "complete") {
         this.addNotification({
           type: NotificationType.COMPLETE,
-          title: 'Pipeline Complete',
+          title: "Pipeline Complete",
           message: `Story ${orch.storyId} completed successfully`,
           timestamp: new Date().toISOString(),
         });
@@ -159,9 +160,9 @@ class DashboardIntegration extends EventEmitter {
     });
 
     // Epic start
-    orch.on('epicStart', async (data) => {
+    orch.on("epicStart", async (data) => {
       await this.updateStatus();
-      this.emit('statusUpdate', { type: 'epicStart', data });
+      this.emit("statusUpdate", { type: "epicStart", data });
 
       // Emit command start for epic execution
       const epicConfig = orch.constructor.EPIC_CONFIG || {};
@@ -170,10 +171,10 @@ class DashboardIntegration extends EventEmitter {
     });
 
     // Epic complete (AC5)
-    orch.on('epicComplete', async (data) => {
+    orch.on("epicComplete", async (data) => {
       // Add to history
       this.addToHistory({
-        type: 'epicComplete',
+        type: "epicComplete",
         epicNum: data.epicNum,
         result: data.result,
         gateResult: data.gateResult,
@@ -181,60 +182,74 @@ class DashboardIntegration extends EventEmitter {
       });
 
       await this.updateStatus();
-      this.emit('statusUpdate', { type: 'epicComplete', data });
+      this.emit("statusUpdate", { type: "epicComplete", data });
 
       // Emit command complete for epic execution
       const epicConfig = orch.constructor.EPIC_CONFIG || {};
       const epicName = epicConfig[data.epicNum]?.name || `Epic ${data.epicNum}`;
-      emitter.emitCommandComplete(epicName, data.duration_ms || 0, true, data.result);
+      emitter.emitCommandComplete(
+        epicName,
+        data.duration_ms || 0,
+        true,
+        data.result,
+      );
     });
 
     // Epic failed (AC5)
-    orch.on('epicFailed', async (data) => {
+    orch.on("epicFailed", async (data) => {
       this.addToHistory({
-        type: 'epicFailed',
+        type: "epicFailed",
         epicNum: data.epicNum,
         error: data.error,
         timestamp: new Date().toISOString(),
       });
 
       await this.updateStatus();
-      this.emit('statusUpdate', { type: 'epicFailed', data });
+      this.emit("statusUpdate", { type: "epicFailed", data });
 
       // Emit command error for epic execution
       const epicConfig = orch.constructor.EPIC_CONFIG || {};
       const epicName = epicConfig[data.epicNum]?.name || `Epic ${data.epicNum}`;
-      emitter.emitCommandError(epicName, data.error?.message || 'Epic execution failed', data.duration_ms);
+      emitter.emitCommandError(
+        epicName,
+        data.error?.message || "Epic execution failed",
+        data.duration_ms,
+      );
 
       // Add error notification
       this.addNotification({
         type: NotificationType.ERROR,
         title: `Epic ${data.epicNum} Failed`,
-        message: data.error?.message || 'Epic execution failed',
+        message: data.error?.message || "Epic execution failed",
         timestamp: new Date().toISOString(),
       });
     });
 
     // Agent activation (for agent systems that use orchestrator)
-    orch.on('agentActivated', async (data) => {
+    orch.on("agentActivated", async (data) => {
       emitter.emitAgentActivated(data.agentId, data.agentName, data.persona);
     });
 
     // Agent deactivation
-    orch.on('agentDeactivated', async (data) => {
+    orch.on("agentDeactivated", async (data) => {
       emitter.emitAgentDeactivated(data.agentId, data.agentName, data.reason);
     });
 
     // Command execution (for task/command systems)
-    orch.on('commandStart', async (data) => {
+    orch.on("commandStart", async (data) => {
       emitter.emitCommandStart(data.command, data.args);
     });
 
-    orch.on('commandComplete', async (data) => {
-      emitter.emitCommandComplete(data.command, data.duration_ms, data.success, data.result);
+    orch.on("commandComplete", async (data) => {
+      emitter.emitCommandComplete(
+        data.command,
+        data.duration_ms,
+        data.success,
+        data.result,
+      );
     });
 
-    orch.on('commandError', async (data) => {
+    orch.on("commandError", async (data) => {
       emitter.emitCommandError(data.command, data.error, data.duration_ms);
     });
   }
@@ -250,9 +265,9 @@ class DashboardIntegration extends EventEmitter {
     try {
       await fs.ensureDir(this.dashboardDir);
       await fs.writeJson(this.statusPath, status, { spaces: 2 });
-      this.emit('statusUpdated', status);
+      this.emit("statusUpdated", status);
     } catch (error) {
-      this._emitSafeError({ type: 'statusUpdate', error });
+      this._emitSafeError({ type: "statusUpdate", error });
     }
 
     return status;
@@ -265,13 +280,15 @@ class DashboardIntegration extends EventEmitter {
    * @param {Object} payload
    */
   _emitSafeError(payload) {
-    if (this.listenerCount('error') > 0) {
-      this.emit('error', payload);
+    if (this.listenerCount("error") > 0) {
+      this.emit("error", payload);
       return;
     }
 
-    const message = payload?.error?.message || 'unknown dashboard error';
-    console.warn(`[DashboardIntegration] ${payload?.type || 'error'}: ${message}`);
+    const message = payload?.error?.message || "unknown dashboard error";
+    console.warn(
+      `[DashboardIntegration] ${payload?.type || "error"}: ${message}`,
+    );
   }
 
   /**
@@ -282,19 +299,22 @@ class DashboardIntegration extends EventEmitter {
     const orch = this.orchestrator;
     if (!orch) return {};
 
-    const storyId = orch.storyId || 'current';
+    const storyId = orch.storyId || "current";
     const currentEpic = orch.executionState.currentEpic;
 
     // Get epic name
     const epicConfig = orch.constructor.EPIC_CONFIG || {};
-    const epicName = currentEpic && epicConfig[currentEpic] ? epicConfig[currentEpic].name : null;
+    const epicName =
+      currentEpic && epicConfig[currentEpic]
+        ? epicConfig[currentEpic].name
+        : null;
 
     // Build per-epic progress
     const epicProgress = {};
     for (const [num, epic] of Object.entries(orch.executionState.epics)) {
-      if (epic.status === 'completed') {
+      if (epic.status === "completed") {
         epicProgress[`epic${num}`] = 100;
-      } else if (epic.status === 'in_progress') {
+      } else if (epic.status === "in_progress") {
         epicProgress[`epic${num}`] = 50; // Estimate 50% for in-progress
       } else {
         epicProgress[`epic${num}`] = 0;
@@ -332,7 +352,7 @@ class DashboardIntegration extends EventEmitter {
           })),
 
           // Status flags
-          blocked: orch.state === 'blocked',
+          blocked: orch.state === "blocked",
 
           // Logs path (AC6)
           logsPath: this._getLogsPath(),
@@ -430,7 +450,7 @@ class DashboardIntegration extends EventEmitter {
     };
 
     this.notifications.push(notif);
-    this.emit('notification', notif);
+    this.emit("notification", notif);
 
     // Keep last 50 notifications
     if (this.notifications.length > 50) {
@@ -495,7 +515,7 @@ class DashboardIntegration extends EventEmitter {
         return await fs.readJson(this.statusPath);
       }
     } catch (error) {
-      this.emit('error', { type: 'readStatus', error });
+      this.emit("error", { type: "readStatus", error });
     }
     return null;
   }

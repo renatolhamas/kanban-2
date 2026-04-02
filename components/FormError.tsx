@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
 interface FormErrorProps {
-  message?: string
-  errors?: string[]
+  message?: string;
+  errors?: string[];
 }
 
 export function FormError({ message, errors }: FormErrorProps) {
   if (!message && (!errors || errors.length === 0)) {
-    return null
+    return null;
   }
 
   return (
@@ -24,5 +24,5 @@ export function FormError({ message, errors }: FormErrorProps) {
         </ul>
       )}
     </div>
-  )
+  );
 }

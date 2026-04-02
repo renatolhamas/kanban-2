@@ -12,6 +12,7 @@
 Add new variant, size, or feature to existing component without breaking compatibility. Maintains consistency with design system patterns.
 
 ## Input Schema
+
 - **requires:** Output from `ds-build-component`
 - **format:** TypeScript source (existing component)
 - **location:** `outputs/design-system/{project}/components/{Component}/`
@@ -44,7 +45,7 @@ Add new variant, size, or feature to existing component without breaking compati
 
 ## Failure Handling
 
-- **Component not found:** If target component file does not exist at expected path, abort with "Component {ComponentName} not found at {path}. Verify component name and run *build first if component does not exist."
+- **Component not found:** If target component file does not exist at expected path, abort with "Component {ComponentName} not found at {path}. Verify component name and run \*build first if component does not exist."
 - **Breaking API change detected:** If new variant requires changing existing prop types (e.g., string to union), abort with "Proposed change breaks backward compatibility: {change}. Add new prop instead of modifying existing."
 - **Token missing for new variant:** If new variant requires design token that does not exist in tokens file, abort with "Token {tokenName} not found for {variantName} variant. Add token to tokens.yaml before extending component."
 - **Existing variant tests failing:** If adding new variant causes existing tests to fail, abort with "{N} existing tests failing after extension: {list}. Fix regressions before proceeding—new variant must not break existing functionality."
@@ -81,11 +82,11 @@ Warning variant uses:
 - Test existing variants still work
 - Document migration if API changes
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

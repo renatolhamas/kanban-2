@@ -20,13 +20,13 @@ The SOP Extraction Process transforms meeting transcripts into structured, autom
 
 ### Key Patterns Used
 
-| Pattern | Name | Purpose |
-|---------|------|---------|
-| SC-PE-001 | SOP Extraction Standard | 11-part SOP structure |
-| SC-CK-001 | SOP Validation Checklist | Quality gates before handoff |
-| HO-TP-001 | Task Anatomy | 8-field task structure |
-| HO-EP-001-004 | Executor Types | Human/Agent/Hybrid/Worker |
-| PV_PM_001 | Automation Tipping Point | When to automate decision |
+| Pattern       | Name                     | Purpose                      |
+| ------------- | ------------------------ | ---------------------------- |
+| SC-PE-001     | SOP Extraction Standard  | 11-part SOP structure        |
+| SC-CK-001     | SOP Validation Checklist | Quality gates before handoff |
+| HO-TP-001     | Task Anatomy             | 8-field task structure       |
+| HO-EP-001-004 | Executor Types           | Human/Agent/Hybrid/Worker    |
+| PV_PM_001     | Automation Tipping Point | When to automate decision    |
 
 ---
 
@@ -66,7 +66,7 @@ The SOP Extraction Process transforms meeting transcripts into structured, autom
 ```yaml
 data_sources:
   transcripts:
-    active_source: supabase  # ← change this to switch sources
+    active_source: supabase # ← change this to switch sources
 
     sources:
       supabase:
@@ -97,15 +97,15 @@ data_sources:
 
 ```yaml
 transcript:
-  transcript_id: string       # Required
-  transcript_content: string  # Required
-  transcript_source: string   # Optional: "meeting", "interview", "audio"
-  transcript_url: string      # Optional: original source
+  transcript_id: string # Required
+  transcript_content: string # Required
+  transcript_source: string # Optional: "meeting", "interview", "audio"
+  transcript_url: string # Optional: original source
   transcript_duration: number # Optional: seconds
   transcript_participants: [] # Optional: speaker names
-  transcript_date: date       # Optional: when recorded
+  transcript_date: date # Optional: when recorded
   transcript_language: string # Optional: ISO code
-  transcript_metadata: {}     # Optional: custom data
+  transcript_metadata: {} # Optional: custom data
 ```
 
 ---
@@ -127,24 +127,24 @@ transcript:
 
 **Transcript Signals to Detect:**
 
-| Signal Type | Keywords | Example |
-|-------------|----------|---------|
-| **Sequence** | "first", "then", "after", "next", "finally" | "First I open the system, then I check..." |
-| **Decision** | "if", "when", "depends", "unless", "otherwise" | "If the client is premium, we prioritize..." |
-| **Precondition** | "before", "must have", "requires", "need to" | "Before starting, I need access to..." |
-| **Heuristic** | "usually", "generally", "most of the time" | "Usually we wait 24 hours..." |
-| **Exception** | "except", "unless", "but if", "special case" | "Except when it's urgent..." |
-| **Implicit** | "always do", "we just", "obviously" | "We obviously check the CRM first..." |
+| Signal Type      | Keywords                                       | Example                                      |
+| ---------------- | ---------------------------------------------- | -------------------------------------------- |
+| **Sequence**     | "first", "then", "after", "next", "finally"    | "First I open the system, then I check..."   |
+| **Decision**     | "if", "when", "depends", "unless", "otherwise" | "If the client is premium, we prioritize..." |
+| **Precondition** | "before", "must have", "requires", "need to"   | "Before starting, I need access to..."       |
+| **Heuristic**    | "usually", "generally", "most of the time"     | "Usually we wait 24 hours..."                |
+| **Exception**    | "except", "unless", "but if", "special case"   | "Except when it's urgent..."                 |
+| **Implicit**     | "always do", "we just", "obviously"            | "We obviously check the CRM first..."        |
 
 **Red Flags to Mark:**
 
-| Red Flag | Meaning | Action |
-|----------|---------|--------|
+| Red Flag                 | Meaning                    | Action                                       |
+| ------------------------ | -------------------------- | -------------------------------------------- |
 | "depends on who does it" | Non-standardized variation | Document variation, flag for standardization |
-| "we figure it out" | Undocumented exception | Add to gaps, request clarification |
-| "[name] knows how" | Single point of failure | Flag as risk, document knowledge |
-| "this is rare" | Exception becoming rule | Verify frequency, may need process |
-| "always been this way" | Potentially obsolete | Question necessity, validate |
+| "we figure it out"       | Undocumented exception     | Add to gaps, request clarification           |
+| "[name] knows how"       | Single point of failure    | Flag as risk, document knowledge             |
+| "this is rare"           | Exception becoming rule    | Verify frequency, may need process           |
+| "always been this way"   | Potentially obsolete       | Question necessity, validate                 |
 
 ---
 
@@ -171,17 +171,17 @@ transcript:
 
 **Task Anatomy Fields (HO-TP-001):**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `task_name` | string | ✓ | Verb + Object format (e.g., "Verify customer status") |
-| `status` | enum | ✓ | pending, in_progress, review, completed, blocked |
-| `responsible_executor` | string | ✓ | @agent reference or role name |
-| `execution_type` | enum | ✓ | Human, Agent, Hybrid, Worker |
-| `estimated_time` | duration | ✓ | With unit: 5m, 2h, 1d |
-| `input` | array | ✓ | ≥1 item required |
-| `output` | array | ✓ | ≥1 item required |
-| `action_items` | array | ✓ | Atomic steps to complete task |
-| `acceptance_criteria` | array | ✓ | How to verify success |
+| Field                  | Type     | Required | Description                                           |
+| ---------------------- | -------- | -------- | ----------------------------------------------------- |
+| `task_name`            | string   | ✓        | Verb + Object format (e.g., "Verify customer status") |
+| `status`               | enum     | ✓        | pending, in_progress, review, completed, blocked      |
+| `responsible_executor` | string   | ✓        | @agent reference or role name                         |
+| `execution_type`       | enum     | ✓        | Human, Agent, Hybrid, Worker                          |
+| `estimated_time`       | duration | ✓        | With unit: 5m, 2h, 1d                                 |
+| `input`                | array    | ✓        | ≥1 item required                                      |
+| `output`               | array    | ✓        | ≥1 item required                                      |
+| `action_items`         | array    | ✓        | Atomic steps to complete task                         |
+| `acceptance_criteria`  | array    | ✓        | How to verify success                                 |
 
 ---
 
@@ -202,27 +202,27 @@ transcript:
 
 **Cognitive Taxonomy:**
 
-| Type | Description | Automatable? | Executor |
-|------|-------------|--------------|----------|
-| **Perception** | Identify patterns in data | ✅ Yes | Agent (vision, NLP) |
-| **Memory/Retrieval** | Fetch known information | ✅ Yes | Worker (query) |
-| **Analysis** | Decompose, compare, evaluate | ✅ Yes | Agent |
-| **Synthesis** | Combine information into new whole | ✅ Yes | Agent |
-| **Judgment** | Decide with incomplete information | ⚠️ Partial | Hybrid |
-| **Creativity** | Generate genuinely novel output | ⚠️ Partial | Hybrid |
-| **Empathy** | Understand others' emotional state | ❌ No | Human |
-| **Negotiation** | Influence others' decisions | ❌ No | Human |
-| **Accountability** | Assume consequences | ❌ No | Human |
-| **Ethics** | Decide between conflicting values | ❌ No | Human |
+| Type                 | Description                        | Automatable? | Executor            |
+| -------------------- | ---------------------------------- | ------------ | ------------------- |
+| **Perception**       | Identify patterns in data          | ✅ Yes       | Agent (vision, NLP) |
+| **Memory/Retrieval** | Fetch known information            | ✅ Yes       | Worker (query)      |
+| **Analysis**         | Decompose, compare, evaluate       | ✅ Yes       | Agent               |
+| **Synthesis**        | Combine information into new whole | ✅ Yes       | Agent               |
+| **Judgment**         | Decide with incomplete information | ⚠️ Partial   | Hybrid              |
+| **Creativity**       | Generate genuinely novel output    | ⚠️ Partial   | Hybrid              |
+| **Empathy**          | Understand others' emotional state | ❌ No        | Human               |
+| **Negotiation**      | Influence others' decisions        | ❌ No        | Human               |
+| **Accountability**   | Assume consequences                | ❌ No        | Human               |
+| **Ethics**           | Decide between conflicting values  | ❌ No        | Human               |
 
 **Executor Assignment Rules:**
 
-| Executor | When to Use | Examples |
-|----------|-------------|----------|
-| **Human** | Irreversible decisions, negotiation, empathy, accountability | Fire someone, negotiate contract, handle complaint |
-| **Agent** | Large volume analysis, content generation, classification, patterns | Summarize 100 docs, categorize leads, draft responses |
-| **Hybrid** | Medium risk, needs human "sanity check" | Draft important email (AI writes, human reviews) |
-| **Worker** | 100% deterministic, no ambiguity, repetitive | Move file, call API, format date, send notification |
+| Executor   | When to Use                                                         | Examples                                              |
+| ---------- | ------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Human**  | Irreversible decisions, negotiation, empathy, accountability        | Fire someone, negotiate contract, handle complaint    |
+| **Agent**  | Large volume analysis, content generation, classification, patterns | Summarize 100 docs, categorize leads, draft responses |
+| **Hybrid** | Medium risk, needs human "sanity check"                             | Draft important email (AI writes, human reviews)      |
+| **Worker** | 100% deterministic, no ambiguity, repetitive                        | Move file, call API, format date, send notification   |
 
 ---
 
@@ -272,11 +272,11 @@ Reason: [why]
 
 **Heuristic Translation:**
 
-| Original Quote | Translation |
-|----------------|-------------|
-| "usually we wait 24h" | IF time_since_contact < 24h THEN wait ELSE proceed |
-| "depends on the client size" | IF client.revenue > X THEN priority = HIGH |
-| "when it feels right" | [NEEDS CLARIFICATION] → Add to gaps |
+| Original Quote               | Translation                                        |
+| ---------------------------- | -------------------------------------------------- |
+| "usually we wait 24h"        | IF time_since_contact < 24h THEN wait ELSE proceed |
+| "depends on the client size" | IF client.revenue > X THEN priority = HIGH         |
+| "when it feels right"        | [NEEDS CLARIFICATION] → Add to gaps                |
 
 ---
 
@@ -307,25 +307,25 @@ Reason: [why]
 
 **PV_PM_001 Decision Matrix:**
 
-| Frequency | Impact | Automatability | Decision |
-|-----------|--------|----------------|----------|
-| High (>4x/mo) | High | High | **AUTOMATE** |
-| High (>4x/mo) | High | Low | **DELEGATE** (specialized human) |
-| High (>4x/mo) | Low | High | **AUTOMATE** (efficiency) |
-| Low (<2x/mo) | High | Any | **KEEP_MANUAL** (risk doesn't justify) |
-| Low (<2x/mo) | Low | Any | **ELIMINATE** (question necessity) |
-| Any | Any | No guardrails | **VETO** (never automate without safeguards) |
+| Frequency     | Impact | Automatability | Decision                                     |
+| ------------- | ------ | -------------- | -------------------------------------------- |
+| High (>4x/mo) | High   | High           | **AUTOMATE**                                 |
+| High (>4x/mo) | High   | Low            | **DELEGATE** (specialized human)             |
+| High (>4x/mo) | Low    | High           | **AUTOMATE** (efficiency)                    |
+| Low (<2x/mo)  | High   | Any            | **KEEP_MANUAL** (risk doesn't justify)       |
+| Low (<2x/mo)  | Low    | Any            | **ELIMINATE** (question necessity)           |
+| Any           | Any    | No guardrails  | **VETO** (never automate without safeguards) |
 
 **Mandatory Guardrails:**
 
-| Guardrail | Apply To | Implementation |
-|-----------|----------|----------------|
-| **Loop Prevention** | Repetitive tasks | Deduplication + max_iterations |
-| **Idempotency** | Tasks with side-effects | Input hash → skip if identical |
-| **Audit Trail** | All tasks | Structured log per execution |
-| **Escape Route** | Critical tasks | manual_override flag available |
-| **Retry Logic** | External integrations | Exponential backoff (3 attempts) |
-| **Rollback** | Destructive tasks | Snapshot before execution |
+| Guardrail           | Apply To                | Implementation                   |
+| ------------------- | ----------------------- | -------------------------------- |
+| **Loop Prevention** | Repetitive tasks        | Deduplication + max_iterations   |
+| **Idempotency**     | Tasks with side-effects | Input hash → skip if identical   |
+| **Audit Trail**     | All tasks               | Structured log per execution     |
+| **Escape Route**    | Critical tasks          | manual_override flag available   |
+| **Retry Logic**     | External integrations   | Exponential backoff (3 attempts) |
+| **Rollback**        | Destructive tasks       | Snapshot before execution        |
 
 ---
 
@@ -353,20 +353,21 @@ Reason: [why]
 
 **META-AXIOMAS Dimensions:**
 
-| # | Dimension | Weight | Threshold | Description |
-|---|-----------|--------|-----------|-------------|
-| 1 | **Truthfulness** | 1.0 | 7.0 | Process described accurately? (VETO if <7) |
-| 2 | **Coherence** | 0.9 | 6.0 | Steps align logically? |
-| 3 | **Strategic Alignment** | 0.9 | 6.0 | Serves business goals? |
-| 4 | **Operational Excellence** | 0.8 | 6.0 | Is it efficient? |
-| 5 | **Innovation Capacity** | 0.7 | 5.0 | Can it evolve? |
-| 6 | **Risk Management** | 0.8 | 6.0 | Risks addressed? |
-| 7 | **Resource Optimization** | 0.8 | 6.0 | Is it lean? |
-| 8 | **Stakeholder Value** | 0.7 | 6.0 | Serves users? |
-| 9 | **Sustainability** | 0.7 | 6.0 | Maintainable? |
-| 10 | **Adaptability** | 0.6 | 5.0 | Handles change? |
+| #   | Dimension                  | Weight | Threshold | Description                                |
+| --- | -------------------------- | ------ | --------- | ------------------------------------------ |
+| 1   | **Truthfulness**           | 1.0    | 7.0       | Process described accurately? (VETO if <7) |
+| 2   | **Coherence**              | 0.9    | 6.0       | Steps align logically?                     |
+| 3   | **Strategic Alignment**    | 0.9    | 6.0       | Serves business goals?                     |
+| 4   | **Operational Excellence** | 0.8    | 6.0       | Is it efficient?                           |
+| 5   | **Innovation Capacity**    | 0.7    | 5.0       | Can it evolve?                             |
+| 6   | **Risk Management**        | 0.8    | 6.0       | Risks addressed?                           |
+| 7   | **Resource Optimization**  | 0.8    | 6.0       | Is it lean?                                |
+| 8   | **Stakeholder Value**      | 0.7    | 6.0       | Serves users?                              |
+| 9   | **Sustainability**         | 0.7    | 6.0       | Maintainable?                              |
+| 10  | **Adaptability**           | 0.6    | 5.0       | Handles change?                            |
 
 **Thresholds:**
+
 - Overall Score: ≥7.0 to proceed
 - Per Dimension: ≥6.0 (except Innovation/Adaptability: ≥5.0)
 - Truthfulness: VETO if <7.0
@@ -487,12 +488,12 @@ squad_blueprint:
 
 **Gap Categories:**
 
-| Category | Marker | Impact | Action |
-|----------|--------|--------|--------|
-| **Inferred** | `[INFERRED]` | Medium | Validate with process owner |
-| **Missing** | `[MISSING]` | High | Request clarification |
-| **Ambiguous** | `[AMBIGUOUS]` | Medium | List interpretations, ask |
-| **Red Flag** | `[RED FLAG]` | High | Document risk, recommend mitigation |
+| Category      | Marker        | Impact | Action                              |
+| ------------- | ------------- | ------ | ----------------------------------- |
+| **Inferred**  | `[INFERRED]`  | Medium | Validate with process owner         |
+| **Missing**   | `[MISSING]`   | High   | Request clarification               |
+| **Ambiguous** | `[AMBIGUOUS]` | Medium | List interpretations, ask           |
+| **Red Flag**  | `[RED FLAG]`  | High   | Document risk, recommend mitigation |
 
 **Gap Report Format:**
 
@@ -500,18 +501,21 @@ squad_blueprint:
 ## Gap Report
 
 ### Critical Gaps (Block Automation)
-| Gap | Impact | Question | Priority |
-|-----|--------|----------|----------|
-| [description] | Blocks automation | [question] | High |
+
+| Gap           | Impact            | Question   | Priority |
+| ------------- | ----------------- | ---------- | -------- |
+| [description] | Blocks automation | [question] | High     |
 
 ### Medium Gaps (Reduce Quality)
-| Gap | Impact | Question | Priority |
-|-----|--------|----------|----------|
-| [description] | Reduces quality | [question] | Medium |
+
+| Gap           | Impact          | Question   | Priority |
+| ------------- | --------------- | ---------- | -------- |
+| [description] | Reduces quality | [question] | Medium   |
 
 ### Red Flags (Risks)
-| Flag | Risk | Mitigation | Owner |
-|------|------|------------|-------|
+
+| Flag          | Risk   | Mitigation       | Owner |
+| ------------- | ------ | ---------------- | ----- |
 | [description] | [risk] | [recommendation] | [who] |
 ```
 
@@ -547,25 +551,25 @@ squad_blueprint:
 
 **Validation Checklist (SC-CK-001):**
 
-| Category | Criteria | Threshold |
-|----------|----------|-----------|
-| Structure | All 11 parts present | 11/11 |
-| Task Anatomy | 8 fields per step | 100% |
-| Executor Classification | All steps assigned | 100% |
-| Cognitive Analysis | All steps classified | 100% |
-| Decision Rules | All "if/depends" captured | 100% |
-| Guardrails | Defined for automated steps | 100% |
-| META-AXIOMAS | Overall score | ≥7.0 |
-| Squad Blueprint | Complete and valid | 100% |
-| Gaps | All documented with questions | 100% |
+| Category                | Criteria                      | Threshold |
+| ----------------------- | ----------------------------- | --------- |
+| Structure               | All 11 parts present          | 11/11     |
+| Task Anatomy            | 8 fields per step             | 100%      |
+| Executor Classification | All steps assigned            | 100%      |
+| Cognitive Analysis      | All steps classified          | 100%      |
+| Decision Rules          | All "if/depends" captured     | 100%      |
+| Guardrails              | Defined for automated steps   | 100%      |
+| META-AXIOMAS            | Overall score                 | ≥7.0      |
+| Squad Blueprint         | Complete and valid            | 100%      |
+| Gaps                    | All documented with questions | 100%      |
 
 **Validation Decision:**
 
-| Decision | Criteria | Next Step |
-|----------|----------|-----------|
-| **APPROVE** | All thresholds met | Handoff to create-squad |
-| **REVIEW** | Some thresholds below | Human review required |
-| **REJECT** | Critical gaps | Re-extraction needed |
+| Decision    | Criteria              | Next Step               |
+| ----------- | --------------------- | ----------------------- |
+| **APPROVE** | All thresholds met    | Handoff to create-squad |
+| **REVIEW**  | Some thresholds below | Human review required   |
+| **REJECT**  | Critical gaps         | Re-extraction needed    |
 
 ---
 
@@ -613,20 +617,20 @@ squads/[process-name]/
 
 ## Summary Table
 
-| Phase | Step | Input | Output | Actor |
-|-------|------|-------|--------|-------|
-| 1 | Data Source | Config | Normalized transcript | System |
-| 2 | Structure | Transcript | Steps, roles, tools | @sop-extractor |
-| 3 | Task Anatomy | Steps | 8-field tasks | @sop-extractor |
-| 4 | Cognitive | Steps | Executor types | @sop-extractor |
-| 5 | Decision Rules | Transcript | IF/THEN rules | @sop-extractor |
-| 6 | Automation | Steps | PV_PM_001 decisions | @sop-extractor |
-| 7 | Quality | Process | META-AXIOMAS score | @sop-extractor |
-| 8 | Blueprint | All above | Squad YAML | @sop-extractor |
-| 9 | Gaps | All above | Gap report | @sop-extractor |
-| 10 | Assembly | All above | SOP document | @sop-extractor |
-| 11 | Validation | SOP | APPROVE/REVIEW/REJECT | Human + SC-CK-001 |
-| 12 | Handoff | Approved SOP | Working squad | @squad-chief |
+| Phase | Step           | Input        | Output                | Actor             |
+| ----- | -------------- | ------------ | --------------------- | ----------------- |
+| 1     | Data Source    | Config       | Normalized transcript | System            |
+| 2     | Structure      | Transcript   | Steps, roles, tools   | @sop-extractor    |
+| 3     | Task Anatomy   | Steps        | 8-field tasks         | @sop-extractor    |
+| 4     | Cognitive      | Steps        | Executor types        | @sop-extractor    |
+| 5     | Decision Rules | Transcript   | IF/THEN rules         | @sop-extractor    |
+| 6     | Automation     | Steps        | PV_PM_001 decisions   | @sop-extractor    |
+| 7     | Quality        | Process      | META-AXIOMAS score    | @sop-extractor    |
+| 8     | Blueprint      | All above    | Squad YAML            | @sop-extractor    |
+| 9     | Gaps           | All above    | Gap report            | @sop-extractor    |
+| 10    | Assembly       | All above    | SOP document          | @sop-extractor    |
+| 11    | Validation     | SOP          | APPROVE/REVIEW/REJECT | Human + SC-CK-001 |
+| 12    | Handoff        | Approved SOP | Working squad         | @squad-chief      |
 
 ---
 
@@ -659,16 +663,16 @@ squads/[process-name]/
 
 ## Related Documents
 
-| Document | Location | Purpose |
-|----------|----------|---------|
-| SOP Template | `templates/pop-extractor-prompt.md` | SC-PE-001 structure |
-| Extraction Task | `tasks/extract-sop.md` | Workflow definition |
-| Validation Checklist | `checklists/sop-validation.md` | Quality gates |
-| Agent Definition | `agents/sop-extractor.md` | @sop-extractor persona |
-| Squad Config | `config/squad-config.yaml` | Data sources & settings |
+| Document             | Location                            | Purpose                 |
+| -------------------- | ----------------------------------- | ----------------------- |
+| SOP Template         | `templates/pop-extractor-prompt.md` | SC-PE-001 structure     |
+| Extraction Task      | `tasks/extract-sop.md`              | Workflow definition     |
+| Validation Checklist | `checklists/sop-validation.md`      | Quality gates           |
+| Agent Definition     | `agents/sop-extractor.md`           | @sop-extractor persona  |
+| Squad Config         | `config/squad-config.yaml`          | Data sources & settings |
 
 ---
 
 **Pattern Compliance:** SC-DOC-001 ✓ | SC-PE-001 ✓ | HO-TP-001 ✓ | PV_PM_001 ✓
 
-*Generated by Squad Creator Documentation System*
+_Generated by Squad Creator Documentation System_

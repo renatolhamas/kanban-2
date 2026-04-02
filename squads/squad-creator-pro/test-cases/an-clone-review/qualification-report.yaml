@@ -29,13 +29,13 @@ qualification_report:
     details:
       playbook: "5/5"
       framework: "5/5"
-      swipe_file: "1/5"  # Major difference
+      swipe_file: "1/5" # Major difference
       total: "11/15"
 
   comparison:
-    trinity_match: 78.6%  # 11/14
+    trinity_match: 78.6% # 11/14
     fidelity_match: 100%
-    verdict_match: false  # SOLID vs NEEDS_WORK
+    verdict_match: false # SOLID vs NEEDS_WORK
 
   analysis:
     root_cause: |
@@ -53,7 +53,7 @@ qualification_report:
     qualified: false
     reason: "MTQ_VC_004 - Verdict mismatch (SOLID vs NEEDS_WORK)"
     veto_triggered: true
-    quality_percentage: "78.6%"  # Trinity match (11/14)
+    quality_percentage: "78.6%" # Trinity match (11/14)
     final_status: "OPUS REQUIRED"
 
   recommendation:

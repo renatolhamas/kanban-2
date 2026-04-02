@@ -11,12 +11,14 @@
 > **Nota:** Este documento usa copywriting como exemplo ilustrativo. Substitua pelo seu domínio e experts relevantes.
 
 **Specialists:**
+
 - **@oalanicolas** → Invoke for DNA extraction (Voice DNA, Thinking DNA, source curation)
   - Use `*extract-dna {specialist}` for complete DNA Mental™ extraction
   - Use `*assess-sources` to classify sources as ouro vs bronze
   - Consult when agent voice feels generic or inauthentic
 
 **Frameworks Used:**
+
 - `data/tier-system-framework.md` → Agent tier classification (Phase 2)
 - `data/quality-dimensions-framework.md` → Agent validation (Phase 4)
 - `data/decision-heuristics-framework.md` → Quality gate logic (Phase 4)
@@ -28,6 +30,7 @@
 This task creates a single high-quality agent based on researched methodologies from an elite mind. The key insight: **agents created without research are weak and generic**.
 
 **v2.0 Changes:**
+
 - Mandatory research check before creation
 - PHASE-based structure with checkpoints
 - Quality gate SC_AGT_001 must pass
@@ -67,13 +70,13 @@ OUTPUT: Agent file + Quality Gate PASS
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `agent_purpose` | string | Yes | What the agent should do | `"Create sales pages"` |
-| `domain` | string | Yes | Domain/area of expertise | `"copywriting"` |
-| `specialist_slug` | string | No | If based on human expert (snake_case) | `"gary_halbert"` |
-| `specialist_name` | string | No | Human-readable name | `"Gary Halbert"` |
-| `pack_name` | string | Yes | Target squad | `"copy"` |
+| Parameter         | Type   | Required | Description                           | Example                |
+| ----------------- | ------ | -------- | ------------------------------------- | ---------------------- |
+| `agent_purpose`   | string | Yes      | What the agent should do              | `"Create sales pages"` |
+| `domain`          | string | Yes      | Domain/area of expertise              | `"copywriting"`        |
+| `specialist_slug` | string | No       | If based on human expert (snake_case) | `"gary_halbert"`       |
+| `specialist_name` | string | No       | Human-readable name                   | `"Gary Halbert"`       |
+| `pack_name`       | string | Yes      | Target squad                          | `"copy"`               |
 
 ---
 
@@ -95,6 +98,7 @@ OUTPUT: Agent file + Quality Gate PASS
 ### Step 0.1: Identify Target Pack
 
 **Actions:**
+
 ```yaml
 identify_pack:
   validation:
@@ -108,6 +112,7 @@ identify_pack:
 ```
 
 **Decision Point:**
+
 ```
 IF pack_name provided AND pack exists:
     → PROCEED
@@ -120,6 +125,7 @@ ELSE:
 ### Step 0.2: Classify Agent Type
 
 **Actions:**
+
 ```yaml
 classify_agent_type:
   if_specialist_provided:
@@ -134,6 +140,7 @@ classify_agent_type:
 ```
 
 **Output (PHASE 0):**
+
 ```yaml
 # Example output - values will vary based on your squad
 phase_0_output:
@@ -143,7 +150,7 @@ phase_0_output:
   specialist:
     slug: "{expert_slug}"
     name: "{Expert Name}"
-  agent_id: "{expert-slug}"  # derived
+  agent_id: "{expert-slug}" # derived
 ```
 
 ---
@@ -159,6 +166,7 @@ phase_0_output:
 **Condition:** Only if `agent_type == "specialist_based"`
 
 **Actions:**
+
 ```yaml
 check_local_knowledge:
   search_paths:
@@ -183,6 +191,7 @@ check_local_knowledge:
 ```
 
 **Decision Point:**
+
 ```
 IF coverage >= 70%:
     → "Sufficient local material. Supplement gaps only."
@@ -198,6 +207,7 @@ ELSE:
 ### Step 1.2: Generate Research Prompt
 
 **Actions:**
+
 ```yaml
 generate_research_prompt:
   template: "templates/research-prompt-tmpl.md"
@@ -216,6 +226,7 @@ generate_research_prompt:
 ```
 
 **Example Research Prompt:**
+
 ```yaml
 research_prompt:
   subject: "Gary Halbert's Sales Page Methodology"
@@ -240,6 +251,7 @@ research_prompt:
 ### Step 1.3: Execute Deep Research
 
 **Actions:**
+
 ```yaml
 execute_research:
   method: "WebSearch + Local Synthesis"
@@ -255,7 +267,7 @@ execute_research:
     min_unique_sources: 5
     min_lines_extracted: 500
     requires_primary_sources: true
-    max_inference_ratio: 0.20  # 80%+ must be cited
+    max_inference_ratio: 0.20 # 80%+ must be cited
 
   output:
     file: "docs/research/{specialist_slug}-{purpose}-research.md"
@@ -267,6 +279,7 @@ execute_research:
 ```
 
 **Checkpoint SC_RES_002:**
+
 ```yaml
 heuristic_id: SC_RES_002
 name: "Agent Research Quality"
@@ -283,6 +296,7 @@ veto_conditions:
 ```
 
 **Output (PHASE 1):**
+
 ```yaml
 phase_1_output:
   research_file: "docs/research/gary_halbert-sales-page-research.md"
@@ -303,6 +317,7 @@ phase_1_output:
 ### Step 2.1: Extract Framework from Research
 
 **Actions:**
+
 ```yaml
 extract_framework:
   sections_to_extract:
@@ -345,6 +360,7 @@ extract_framework:
 **Apply: tier-system-framework.md**
 
 **Actions:**
+
 ```yaml
 classify_tier:
   decision_tree:
@@ -376,6 +392,7 @@ classify_tier:
 ### Step 2.3: Define Persona
 
 **Actions:**
+
 ```yaml
 define_persona:
   agent_identity:
@@ -398,6 +415,7 @@ define_persona:
 ```
 
 **Output (PHASE 2):**
+
 ```yaml
 phase_2_output:
   core_principles: 7
@@ -422,6 +440,7 @@ phase_2_output:
 **Template:** `templates/agent-tmpl.md`
 
 **Actions:**
+
 ```yaml
 generate_agent:
   template: "templates/agent-tmpl.md"
@@ -472,6 +491,7 @@ generate_agent:
 ### Step 3.2: Apply Voice DNA
 
 **Actions:**
+
 ```yaml
 apply_voice_dna:
   ensure_consistency:
@@ -488,6 +508,7 @@ apply_voice_dna:
 ### Step 3.3: Add Completion Criteria
 
 **Actions:**
+
 ```yaml
 add_completion_criteria:
   per_task_type:
@@ -507,6 +528,7 @@ add_completion_criteria:
 ```
 
 **Output (PHASE 3):**
+
 ```yaml
 phase_3_output:
   agent_file_content: "..."
@@ -528,6 +550,7 @@ phase_3_output:
 **Checklist:** `checklists/agent-quality-gate.md`
 
 **Actions:**
+
 ```yaml
 run_quality_gate:
   heuristic_id: SC_AGT_001
@@ -562,6 +585,7 @@ run_quality_gate:
 ```
 
 **Decision Point:**
+
 ```
 IF all blocking requirements pass AND score >= 7.0:
     → PROCEED to Step 4.3
@@ -573,6 +597,7 @@ ELSE:
 ### Step 4.2: Fix Blocking Issues
 
 **Actions:**
+
 ```yaml
 fix_blocking_issues:
   for_each_failure:
@@ -603,6 +628,7 @@ fix_blocking_issues:
 ### Step 4.3: Save Agent File
 
 **Actions:**
+
 ```yaml
 save_agent:
   path: "squads/{pack_name}/agents/{agent_id}.md"
@@ -615,6 +641,7 @@ save_agent:
 ```
 
 **Output (PHASE 4):**
+
 ```yaml
 # Example output - values will vary based on your squad
 phase_4_output:
@@ -635,6 +662,7 @@ phase_4_output:
 ### Step 5.1: Present Agent Summary
 
 **Actions:**
+
 ```yaml
 # Example output - values will vary based on your squad
 present_summary:
@@ -651,7 +679,7 @@ present_summary:
     voice_dna: "Complete"
 
   activation:
-    command: "@{squad-name}:{agent-name}"  # e.g., "@{squad-name}:{agent-name}"
+    command: "@{squad-name}:{agent-name}" # e.g., "@{squad-name}:{agent-name}"
     example: "{example task for this agent}"
 
   commands:
@@ -663,6 +691,7 @@ present_summary:
 ### Step 5.2: Document Next Steps
 
 **Actions:**
+
 ```yaml
 next_steps:
   recommended:
@@ -685,23 +714,25 @@ next_steps:
 
 ## Outputs
 
-| Output | Location | Description |
-|--------|----------|-------------|
-| Agent File | `squads/{pack_name}/agents/{agent_id}.md` | Complete agent definition |
-| Research File | `docs/research/{specialist_slug}-{purpose}-research.md` | Research documentation |
-| Updated README | `squads/{pack_name}/README.md` | Agent added to list |
-| Updated Config | `squads/{pack_name}/config.yaml` | Agent registered |
+| Output         | Location                                                | Description               |
+| -------------- | ------------------------------------------------------- | ------------------------- |
+| Agent File     | `squads/{pack_name}/agents/{agent_id}.md`               | Complete agent definition |
+| Research File  | `docs/research/{specialist_slug}-{purpose}-research.md` | Research documentation    |
+| Updated README | `squads/{pack_name}/README.md`                          | Agent added to list       |
+| Updated Config | `squads/{pack_name}/config.yaml`                        | Agent registered          |
 
 ---
 
 ## Validation Criteria (All Must Pass)
 
 ### Structure
+
 - [ ] Agent file created at correct location
 - [ ] YAML block is valid
 - [ ] All 6 levels present
 
 ### Content
+
 - [ ] Lines >= 300
 - [ ] voice_dna complete with vocabulary
 - [ ] output_examples >= 3
@@ -710,11 +741,13 @@ next_steps:
 - [ ] handoff_to defined
 
 ### Quality
+
 - [ ] SC_AGT_001 score >= 7.0
 - [ ] Research traceable
 - [ ] Tier assigned
 
 ### Integration
+
 - [ ] README.md updated
 - [ ] config.yaml updated
 - [ ] Dependencies exist or noted
@@ -723,10 +756,10 @@ next_steps:
 
 ## Heuristics Reference
 
-| Heuristic ID | Name | Where Applied | Blocking |
-|--------------|------|---------------|----------|
-| SC_RES_002 | Agent Research Quality | Phase 1 | Yes |
-| SC_AGT_001 | Agent Quality Gate | Phase 4 | Yes |
+| Heuristic ID | Name                   | Where Applied | Blocking |
+| ------------ | ---------------------- | ------------- | -------- |
+| SC_RES_002   | Agent Research Quality | Phase 1       | Yes      |
+| SC_AGT_001   | Agent Quality Gate     | Phase 4       | Yes      |
 
 ---
 
@@ -754,6 +787,7 @@ error_handling:
 ## Integration with AIOS
 
 This task creates agents that:
+
 - Follow AIOS agent definition standards (6 levels)
 - Can be activated with @pack:agent-id syntax
 - Integrate with memory layer

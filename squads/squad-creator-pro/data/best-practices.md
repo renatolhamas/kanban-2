@@ -14,13 +14,13 @@ Este documento define **18 padroes avancados** que devem ser considerados como r
 
 ### Metricas de Maturidade
 
-| Dimensao | Padrao AIOS | Minimo | Recomendado |
-|----------|-------------|--------|-------------|
-| Estrutura de Tasks | 8 campos obrigatorios | 5 campos | 8 campos |
-| Quality Gates | Gates formais | 2 gates | 10+ gates |
-| Heuristicas | Codificadas com pesos | 0 | 3+ |
-| Padroes nomeados | Prefixo-xxx | 0 | 10+ |
-| Executors tipados | 4 tipos (H/A/Hy/W) | 2 tipos | 4 tipos |
+| Dimensao           | Padrao AIOS           | Minimo   | Recomendado |
+| ------------------ | --------------------- | -------- | ----------- |
+| Estrutura de Tasks | 8 campos obrigatorios | 5 campos | 8 campos    |
+| Quality Gates      | Gates formais         | 2 gates  | 10+ gates   |
+| Heuristicas        | Codificadas com pesos | 0        | 3+          |
+| Padroes nomeados   | Prefixo-xxx           | 0        | 10+         |
+| Executors tipados  | 4 tipos (H/A/Hy/W)    | 2 tipos  | 4 tipos     |
 
 ---
 
@@ -34,31 +34,43 @@ Este documento define **18 padroes avancados** que devem ser considerados como r
 task_anatomy:
   required_fields: 9
   fields:
-    - task_name          # Formato: "Verbo + Objeto"
-    - status             # Enum: pending|in_progress|completed
-    - responsible_executor  # Quem executa
-    - execution_type     # Enum: Human|Agent|Hybrid|Worker
-    - estimated_time     # Formato: "Xh" ou "X-Yh"
-    - input              # Array de inputs necessarios
-    - output             # Array de outputs produzidos
-    - action_items       # Passos de execucao
+    - task_name # Formato: "Verbo + Objeto"
+    - status # Enum: pending|in_progress|completed
+    - responsible_executor # Quem executa
+    - execution_type # Enum: Human|Agent|Hybrid|Worker
+    - estimated_time # Formato: "Xh" ou "X-Yh"
+    - input # Array de inputs necessarios
+    - output # Array de outputs produzidos
+    - action_items # Passos de execucao
     - acceptance_criteria # Criterios de aceite
 ```
 
 **Por que funciona:**
+
 - Elimina ambiguidade sobre o que a task faz
 - Permite automacao de validacao
 - Facilita handoff entre executores
 - Torna tasks auditaveis
 
 **Aplicacao em novos squads:**
+
 ```yaml
 # Em config.yaml do squad
 task_standards:
   enforce_anatomy: true
   validator: HO-TP-001
   fields:
-    required: [task_name, status, responsible_executor, execution_type, input, output, action_items, acceptance_criteria]
+    required:
+      [
+        task_name,
+        status,
+        responsible_executor,
+        execution_type,
+        input,
+        output,
+        action_items,
+        acceptance_criteria,
+      ]
     optional: [estimated_time, dependencies, templates, quality_gate]
 ```
 
@@ -68,12 +80,12 @@ task_standards:
 
 **Principio:** Classificar formalmente QUEM executa cada tarefa.
 
-| Tipo | ID | Caracteristicas | Custo | Velocidade | Quando Usar |
-|------|-----|----------------|-------|------------|-------------|
-| Human | HO-EP-001 | Julgamento, criatividade, relacionamentos | $$$ | Lenta | Decisoes criticas, negociacoes |
-| Agent (AI) | HO-EP-002 | Analise, geracao, reconhecimento de padroes | $$$$ | Rapida | Analise de dados, geracao de conteudo |
-| Hybrid | HO-EP-003 | AI assiste, humano valida | $$ | Moderada | Revisoes, aprovacoes assistidas |
-| Worker | HO-EP-004 | Deterministico, APIs, file ops | $ | Muito rapida | Automacoes, integrações |
+| Tipo       | ID        | Caracteristicas                             | Custo | Velocidade   | Quando Usar                           |
+| ---------- | --------- | ------------------------------------------- | ----- | ------------ | ------------------------------------- |
+| Human      | HO-EP-001 | Julgamento, criatividade, relacionamentos   | $$$   | Lenta        | Decisoes criticas, negociacoes        |
+| Agent (AI) | HO-EP-002 | Analise, geracao, reconhecimento de padroes | $$$$  | Rapida       | Analise de dados, geracao de conteudo |
+| Hybrid     | HO-EP-003 | AI assiste, humano valida                   | $$    | Moderada     | Revisoes, aprovacoes assistidas       |
+| Worker     | HO-EP-004 | Deterministico, APIs, file ops              | $     | Muito rapida | Automacoes, integrações               |
 
 **Matriz de Decisao:**
 
@@ -88,6 +100,7 @@ executor_selection:
 ```
 
 **Aplicacao em novos squads:**
+
 ```yaml
 # Em cada task definition
 - id: "analyze-content"
@@ -95,7 +108,7 @@ executor_selection:
     type: Agent
     pattern: HO-EP-002
     rationale: "Analise de padroes em grande volume de dados"
-    fallback: Hybrid  # Se AI falhar, humano assume
+    fallback: Hybrid # Se AI falhar, humano assume
 ```
 
 ---
@@ -107,11 +120,11 @@ executor_selection:
 ```yaml
 pattern_library:
   categories:
-    TP: Task Patterns      # HO-TP-001, HO-TP-002...
-    EP: Executor Patterns  # HO-EP-001, HO-EP-002...
-    PP: Process Patterns   # HO-PP-001, HO-PP-002...
+    TP: Task Patterns # HO-TP-001, HO-TP-002...
+    EP: Executor Patterns # HO-EP-001, HO-EP-002...
+    PP: Process Patterns # HO-PP-001, HO-PP-002...
     IP: Integration Patterns # HO-IP-001, HO-IP-002...
-    AP: Automation Patterns  # HO-AP-001, HO-AP-002...
+    AP: Automation Patterns # HO-AP-001, HO-AP-002...
     DP: Documentation Patterns # HO-DP-001, HO-DP-002...
 
   naming_convention:
@@ -121,16 +134,18 @@ pattern_library:
 ```
 
 **Beneficios:**
+
 - Consistencia em todo o squad
 - Facilita auditoria e compliance
 - Permite validacao automatizada
 - Documentacao auto-referenciavel
 
 **Aplicacao em novos squads:**
+
 ```yaml
 # Em config.yaml do squad
 pattern_library:
-  prefix: "MM"  # MMOS example
+  prefix: "MM" # MMOS example
   categories:
     - id: TP
       name: "Task Patterns"
@@ -151,16 +166,16 @@ pattern_library:
 ```yaml
 quality_gate_anatomy:
   required_fields:
-    - id            # QG-X.Y formato
-    - name          # Nome descritivo
-    - phase         # Fase do workflow
-    - placement     # entry|transition|exit
-    - type          # manual|automated|hybrid|external
-    - severity      # blocking|warning|info
-    - criteria      # Array de criterios
-    - executor      # Quem valida
-    - pass_action   # O que fazer se passar
-    - fail_action   # O que fazer se falhar
+    - id # QG-X.Y formato
+    - name # Nome descritivo
+    - phase # Fase do workflow
+    - placement # entry|transition|exit
+    - type # manual|automated|hybrid|external
+    - severity # blocking|warning|info
+    - criteria # Array de criterios
+    - executor # Quem valida
+    - pass_action # O que fazer se passar
+    - fail_action # O que fazer se falhar
 ```
 
 **Exemplo Real (QG-1.1B - Briefing Completeness):**
@@ -211,12 +226,12 @@ quality_gate:
 
 **Tipos de Gate por Fase:**
 
-| Fase | Gate Type | Severity | Exemplo |
-|------|-----------|----------|---------|
-| Entry | automated | blocking | Validar dados minimos |
-| Transition | hybrid | blocking | AI analisa + humano valida |
-| Exit | manual | blocking | Aprovacao final |
-| Exception | automated | warning | Alerta de erro |
+| Fase       | Gate Type | Severity | Exemplo                    |
+| ---------- | --------- | -------- | -------------------------- |
+| Entry      | automated | blocking | Validar dados minimos      |
+| Transition | hybrid    | blocking | AI analisa + humano valida |
+| Exit       | manual    | blocking | Aprovacao final            |
+| Exception  | automated | warning  | Alerta de erro             |
 
 ---
 
@@ -226,15 +241,15 @@ quality_gate:
 
 ```yaml
 workflow_config:
-  checkpoint_policy: always_active  # Nunca pular QGs
+  checkpoint_policy: always_active # Nunca pular QGs
 
   checkpoint_modes:
     always_active: "Todo checkpoint DEVE passar"
     skip_on_override: "Pode pular com aprovacao manual"
     advisory: "Apenas alerta, nao bloqueia"
 
-  fail_fast: true  # Para no primeiro erro
-  allow_manual_override: false  # Sem bypass
+  fail_fast: true # Para no primeiro erro
+  allow_manual_override: false # Sem bypass
 ```
 
 ---
@@ -249,7 +264,7 @@ axioma_validator:
     - name: "Truthfulness"
       weight: 1.0
       threshold: 7.0
-      veto_power: true  # Se falhar, BLOQUEIA
+      veto_power: true # Se falhar, BLOQUEIA
 
     - name: "Coherence"
       weight: 0.9
@@ -298,12 +313,13 @@ axioma_validator:
 
   scoring:
     scale: 0-10
-    pass_threshold: 7.0  # Media ponderada
-    minimum_per_dimension: 6.0  # Nenhuma abaixo disso
+    pass_threshold: 7.0 # Media ponderada
+    minimum_per_dimension: 6.0 # Nenhuma abaixo disso
 ```
 
 **Aplicacao em novos squads:**
 Criar versao simplificada com 5 dimensoes core:
+
 - Truthfulness (veto)
 - Coherence
 - Strategic Alignment
@@ -321,7 +337,7 @@ Criar versao simplificada com 5 dimensoes core:
 ```yaml
 heuristic_anatomy:
   metadata:
-    id: "PV_XX_001"  # {Persona}_{Categoria}_{Numero}
+    id: "PV_XX_001" # {Persona}_{Categoria}_{Numero}
     name: "Nome descritivo"
     type: "Decision Heuristic"
     phase: 3
@@ -337,7 +353,7 @@ heuristic_anatomy:
     thresholds:
       dimension_1: 0.7
       dimension_2: 0.6
-      dimension_3: null  # Context-dependent
+      dimension_3: null # Context-dependent
 
     veto_conditions:
       - condition: "dimension_1 < 0.7"
@@ -369,8 +385,8 @@ heuristic_anatomy:
 
 ```yaml
 weights:
-  end_state_vision: 0.9  # Visao de longo prazo
-  market_signals: 0.1    # Sinais de mercado
+  end_state_vision: 0.9 # Visao de longo prazo
+  market_signals: 0.1 # Sinais de mercado
 
 thresholds:
   high_priority: 0.8
@@ -389,7 +405,7 @@ veto_conditions:
 
 ```yaml
 weights:
-  truthfulness_coherence: 1.0  # VETO power
+  truthfulness_coherence: 1.0 # VETO power
   system_adherence_potential: 0.8
   technical_skill: 0.3
 
@@ -443,7 +459,7 @@ workflow_structure:
 
   wave_anatomy:
     name: "Wave Name"
-    day: "D1-D2"  # Timeline
+    day: "D1-D2" # Timeline
     execution: parallel | sequential | mixed
     sync_point: "all_complete | any_complete | meeting_complete"
     depends_on: previous_wave
@@ -535,13 +551,13 @@ product_variants:
   net-new-basic:
     name: "Net New Basic"
     waves: [1, 2, 3, 4, 5, 7, 8, 9]
-    skip_waves: [6]  # No creator contracting
+    skip_waves: [6] # No creator contracting
     video_count: 4
     sla_days: 14
 
   creators-p:
     name: "Creators P"
-    waves: [1, 2, 3, 4, 5, 6, 7, 8, 9]  # All waves
+    waves: [1, 2, 3, 4, 5, 6, 7, 8, 9] # All waves
     video_count: 6
     creator_count: 3
     sla_days: 14
@@ -592,9 +608,14 @@ class ClickUpManager {
   // Task Anatomy validation
   validateTaskAnatomy(task) {
     const required = [
-      'task_name', 'status', 'responsible_executor',
-      'execution_type', 'input', 'output',
-      'action_items', 'acceptance_criteria'
+      "task_name",
+      "status",
+      "responsible_executor",
+      "execution_type",
+      "input",
+      "output",
+      "action_items",
+      "acceptance_criteria",
     ];
     // ...
   }
@@ -615,22 +636,22 @@ class ClickUpManager {
 ```yaml
 custom_field_catalog:
   # Identification Fields
-  'ttcx-id':
-    type: 'short_text'
-    list: 'Projetos'
-    category: 'identification'
+  "ttcx-id":
+    type: "short_text"
+    list: "Projetos"
+    category: "identification"
 
   # Status Fields
-  'Status Creator':
-    type: 'drop_down'
-    options: ['APROVADO', 'REPROVADO', 'RENOVADO']
-    category: 'status'
+  "Status Creator":
+    type: "drop_down"
+    options: ["APROVADO", "REPROVADO", "RENOVADO"]
+    category: "status"
 
   # Task Anatomy Fields
-  'Executor Type':
-    type: 'drop_down'
-    options: ['Human', 'Agent', 'Hybrid', 'Worker']
-    category: 'task_anatomy'
+  "Executor Type":
+    type: "drop_down"
+    options: ["Human", "Agent", "Hybrid", "Worker"]
+    category: "task_anatomy"
 ```
 
 ---
@@ -722,8 +743,8 @@ pack:
 
 # Pattern Library
 pattern_library:
-  prefix: "{PREFIX}"  # 2-3 letters
-  patterns: []  # Populated as patterns are created
+  prefix: "{PREFIX}" # 2-3 letters
+  patterns: [] # Populated as patterns are created
 
 # Task Standards
 task_standards:
@@ -816,7 +837,7 @@ task:
 quality_gate:
   id: "QG-{phase}.{sequence}"
   name: "{Gate Name}"
-  phase: {number}
+  phase: { number }
   placement: "entry | transition | exit"
   type: "manual | automated | hybrid | external"
   severity: "blocking | warning | info"
@@ -825,7 +846,7 @@ quality_gate:
     - check: "{description}"
       type: "threshold | presence | enum | count"
       field: "{field_name}"
-      value: {threshold}
+      value: { threshold }
       operator: ">= | == | contains"
       weight: 0.X
 
@@ -836,8 +857,8 @@ quality_gate:
 
   executor:
     type: "{gate_type}"
-    ai_agent: "{agent_name}"  # if hybrid
-    human_review: "{role}"    # if hybrid/manual
+    ai_agent: "{agent_name}" # if hybrid
+    human_review: "{role}" # if hybrid/manual
 
   pass_action:
     - "{action_1}"
@@ -873,7 +894,7 @@ changelog_rule:
 
   file_location:
     pattern: "tasks/CHANGELOG-{task-name}.md"
-    alternative: "tasks/CHANGELOG.md"  # Se houver apenas 1 task principal
+    alternative: "tasks/CHANGELOG.md" # Se houver apenas 1 task principal
 
   reference_format: |
     ## Changelog
@@ -882,12 +903,14 @@ changelog_rule:
 ```
 
 **Rationale:**
+
 - Changelogs longos poluem o documento principal
 - Facilita tracking de mudanças ao longo do tempo
 - Permite versionamento independente do changelog
 - Melhora legibilidade da task
 
 **Validacao:**
+
 - Check ID: `T3-DOC-CL` no validate-squad.md
 - Severity: WARNING (não bloqueia)
 
@@ -902,17 +925,17 @@ readme_requirements:
   id: "HO-DP-002"
 
   required_sections:
-    - "## Overview"           # O que o squad faz
-    - "## Quick Start"        # Como começar
-    - "## Commands"           # Lista de comandos
-    - "## Architecture"       # Diagrama ou descrição
+    - "## Overview" # O que o squad faz
+    - "## Quick Start" # Como começar
+    - "## Commands" # Lista de comandos
+    - "## Architecture" # Diagrama ou descrição
 
   recommended_sections:
-    - "## Prerequisites"      # Dependências
-    - "## Configuration"      # Opções de config
-    - "## Examples"           # Exemplos de uso
-    - "## Troubleshooting"    # Problemas comuns
-    - "## Changelog"          # Histórico (inline OK para README)
+    - "## Prerequisites" # Dependências
+    - "## Configuration" # Opções de config
+    - "## Examples" # Exemplos de uso
+    - "## Troubleshooting" # Problemas comuns
+    - "## Changelog" # Histórico (inline OK para README)
 ```
 
 ---
@@ -944,6 +967,7 @@ task_backlog_rule:
 ```
 
 **Rationale:**
+
 - Cada TaskCreate/TaskUpdate consome tokens e latência
 - Backlog não ajuda contexto em tasks sequenciais simples
 - Benefício só existe quando há tracking real necessário
@@ -982,5 +1006,5 @@ task_backlog_rule:
 
 ---
 
-*AIOS Squad Creator Best Practices v2.0*
-*Squad-Creator Reference v1.0.0*
+_AIOS Squad Creator Best Practices v2.0_
+_Squad-Creator Reference v1.0.0_

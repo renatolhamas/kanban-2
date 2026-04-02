@@ -14,6 +14,7 @@ Apply lifecycle transition rules to all ranked variants. Auto-transitions execut
 All decisions are logged to the append-only `canonical-decisions.json` for full traceability.
 
 ## Output Schema
+
 - **produces:**
   - `outputs/design-system/critical-eye/cycle-{N}/decisions.json` — executed auto-transitions
   - `outputs/design-system/critical-eye/cycle-{N}/proposals.json` — checkpoint proposals for design-chief

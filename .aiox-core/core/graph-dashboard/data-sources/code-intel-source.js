@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const { getClient, isCodeIntelAvailable } = require('../../code-intel');
-const { RegistryLoader } = require('../../ids/registry-loader');
+const { getClient, isCodeIntelAvailable } = require("../../code-intel");
+const { RegistryLoader } = require("../../ids/registry-loader");
 
 /**
  * Data source that provides normalized graph data from code-intel
@@ -13,10 +13,10 @@ const { RegistryLoader } = require('../../ids/registry-loader');
  * @returns {string} 'scripts/task' | 'scripts/engine' | 'scripts/infra'
  */
 function _classifyScript(filePath) {
-  if (filePath.includes('/development/scripts/')) return 'scripts/task';
-  if (filePath.includes('/core/')) return 'scripts/engine';
-  if (filePath.includes('/infrastructure/')) return 'scripts/infra';
-  return 'scripts/task';
+  if (filePath.includes("/development/scripts/")) return "scripts/task";
+  if (filePath.includes("/core/")) return "scripts/engine";
+  if (filePath.includes("/infrastructure/")) return "scripts/infra";
+  return "scripts/task";
 }
 
 /**
@@ -26,15 +26,15 @@ function _classifyScript(filePath) {
  * @returns {string} Refined category
  */
 function _detectCategory(baseCategory, filePath) {
-  const path = (filePath || '').toLowerCase();
+  const path = (filePath || "").toLowerCase();
 
-  if (path.includes('/checklists/')) return 'checklists';
-  if (path.includes('/workflows/')) return 'workflows';
-  if (path.includes('/utils/')) return 'utils';
-  if (path.includes('/data/')) return 'data';
-  if (path.includes('/tools/')) return 'tools';
+  if (path.includes("/checklists/")) return "checklists";
+  if (path.includes("/workflows/")) return "workflows";
+  if (path.includes("/utils/")) return "utils";
+  if (path.includes("/data/")) return "data";
+  if (path.includes("/tools/")) return "tools";
 
-  if (baseCategory === 'scripts' || path.includes('/scripts/')) {
+  if (baseCategory === "scripts" || path.includes("/scripts/")) {
     return _classifyScript(path);
   }
 
@@ -68,8 +68,8 @@ class CodeIntelSource {
     try {
       if (isCodeIntelAvailable()) {
         const client = getClient();
-        const deps = await client.analyzeDependencies('.');
-        result = this._wrap(this._normalizeDeps(deps), 'code-intel', false);
+        const deps = await client.analyzeDependencies(".");
+        result = this._wrap(this._normalizeDeps(deps), "code-intel", false);
       } else {
         result = this._getRegistryFallback();
       }
@@ -106,9 +106,9 @@ class CodeIntelSource {
     try {
       const loader = new RegistryLoader();
       const registry = loader.load();
-      return this._wrap(this._registryToTree(registry), 'registry', true);
+      return this._wrap(this._registryToTree(registry), "registry", true);
     } catch (_err) {
-      return this._wrap({ nodes: [], edges: [] }, 'registry', true);
+      return this._wrap({ nodes: [], edges: [] }, "registry", true);
     }
   }
 
@@ -142,13 +142,16 @@ class CodeIntelSource {
         nodes.push({
           id,
           label: dep.label || dep.name || id,
-          type: dep.type || 'unknown',
-          path: dep.path || '',
-          category: _detectCategory(dep.category || dep.type || 'other', dep.path || ''),
+          type: dep.type || "unknown",
+          path: dep.path || "",
+          category: _detectCategory(
+            dep.category || dep.type || "other",
+            dep.path || "",
+          ),
         });
 
         for (const target of dep.dependencies || dep.deps || []) {
-          edges.push({ from: id, to: target, type: 'depends' });
+          edges.push({ from: id, to: target, type: "depends" });
         }
       }
 
@@ -156,12 +159,12 @@ class CodeIntelSource {
     }
 
     // Flat object with dependencies property
-    if (deps.dependencies && typeof deps.dependencies === 'object') {
+    if (deps.dependencies && typeof deps.dependencies === "object") {
       return this._normalizeDeps(
         Object.entries(deps.dependencies).map(([key, val]) => ({
           id: key,
-          ...((typeof val === 'object' && val) || {}),
-        }))
+          ...((typeof val === "object" && val) || {}),
+        })),
       );
     }
 
@@ -179,24 +182,26 @@ class CodeIntelSource {
     const edges = [];
     const edgeSet = new Set();
 
-    for (const [category, entities] of Object.entries(registry.entities || {})) {
-      if (!entities || typeof entities !== 'object') continue;
+    for (const [category, entities] of Object.entries(
+      registry.entities || {},
+    )) {
+      if (!entities || typeof entities !== "object") continue;
 
       for (const [entityId, entity] of Object.entries(entities)) {
         nodes.push({
           id: entityId,
           label: entityId,
           type: entity.type || category,
-          path: entity.path || '',
-          category: _detectCategory(category, entity.path || ''),
-          lifecycle: entity.lifecycle || 'production',  // NOG-16C: pass lifecycle for graph filtering
+          path: entity.path || "",
+          category: _detectCategory(category, entity.path || ""),
+          lifecycle: entity.lifecycle || "production", // NOG-16C: pass lifecycle for graph filtering
         });
 
         for (const dep of entity.dependencies || []) {
           const edgeKey = `${entityId}->depends->${dep}`;
           if (!edgeSet.has(edgeKey)) {
             edgeSet.add(edgeKey);
-            edges.push({ from: entityId, to: dep, type: 'depends' });
+            edges.push({ from: entityId, to: dep, type: "depends" });
           }
         }
 
@@ -204,7 +209,7 @@ class CodeIntelSource {
           const edgeKey = `${consumer}->uses->${entityId}`;
           if (!edgeSet.has(edgeKey)) {
             edgeSet.add(edgeKey);
-            edges.push({ from: consumer, to: entityId, type: 'uses' });
+            edges.push({ from: consumer, to: entityId, type: "uses" });
           }
         }
       }

@@ -88,16 +88,16 @@ AN_KE_005:
 
 ## Decision Matrix
 
-| Task Type | Deterministic? | Recommended Approach |
-|-----------|----------------|---------------------|
-| Extract ID from text | Yes | Regex |
-| Validate email format | Yes | Regex |
-| Sum/aggregate data | Yes | SQL |
-| Filter by criteria | Yes | SQL/code |
-| Generate creative copy | No | LLM |
-| Summarize long text | No | LLM |
-| Answer open question | No | LLM |
-| Transform data format | Yes | Code |
+| Task Type              | Deterministic? | Recommended Approach |
+| ---------------------- | -------------- | -------------------- |
+| Extract ID from text   | Yes            | Regex                |
+| Validate email format  | Yes            | Regex                |
+| Sum/aggregate data     | Yes            | SQL                  |
+| Filter by criteria     | Yes            | SQL/code             |
+| Generate creative copy | No             | LLM                  |
+| Summarize long text    | No             | LLM                  |
+| Answer open question   | No             | LLM                  |
+| Transform data format  | Yes            | Code                 |
 
 ## ETL First Sub-Pattern
 

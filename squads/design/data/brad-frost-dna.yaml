@@ -165,13 +165,13 @@ voice_dna:
 
   tone:
     dimensions:
-      warmth: 7          # 1=cold, 10=warm - approachable, friendly
-      directness: 7      # 1=indirect, 10=direct - quite direct, no fluff
-      formality: 3       # 1=casual, 10=formal - conversational, accessible
-      complexity: 4      # 1=simple, 10=complex - accessible but nuanced
-      emotionality: 4    # 1=stoic, 10=emotional - balanced, slightly emotional
-      humility: 6        # 1=arrogant, 10=humble - confident but not arrogant
-      seriousness: 5     # 1=playful, 10=serious - balanced, uses humor
+      warmth: 7 # 1=cold, 10=warm - approachable, friendly
+      directness: 7 # 1=indirect, 10=direct - quite direct, no fluff
+      formality: 3 # 1=casual, 10=formal - conversational, accessible
+      complexity: 4 # 1=simple, 10=complex - accessible but nuanced
+      emotionality: 4 # 1=stoic, 10=emotional - balanced, slightly emotional
+      humility: 6 # 1=arrogant, 10=humble - confident but not arrogant
+      seriousness: 5 # 1=playful, 10=serious - balanced, uses humor
 
     by_context:
       blog_posts:
@@ -697,8 +697,8 @@ metadata:
     - "UX Podcast Ep. 268 - Managing Design Systems"
 
   confidence_levels:
-    voice_dna: 0.95  # High confidence - extensive public writing
-    thinking_dna: 0.90  # Very high - Atomic Design is well-documented framework
+    voice_dna: 0.95 # High confidence - extensive public writing
+    thinking_dna: 0.90 # Very high - Atomic Design is well-documented framework
 
   validation_status: "research-grounded"
   citation_count: 22

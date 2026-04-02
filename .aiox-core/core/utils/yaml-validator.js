@@ -6,42 +6,42 @@
  * @migrated Story 2.2 - Core Module Creation
  */
 
-const yaml = require('js-yaml');
-const fs = require('fs-extra');
+const yaml = require("js-yaml");
+const fs = require("fs-extra");
 
 class YAMLValidator {
   constructor() {
     this.validationRules = {
       agent: {
-        required: ['agent', 'persona', 'commands'],
-        optional: ['dependencies', 'security', 'customization'],
+        required: ["agent", "persona", "commands"],
+        optional: ["dependencies", "security", "customization"],
         structure: {
           agent: {
-            required: ['name', 'id', 'title', 'icon', 'whenToUse'],
-            optional: ['customization'],
+            required: ["name", "id", "title", "icon", "whenToUse"],
+            optional: ["customization"],
           },
           persona: {
-            required: ['role', 'style', 'identity', 'focus'],
+            required: ["role", "style", "identity", "focus"],
             optional: [],
           },
         },
       },
       manifest: {
-        required: ['bundle', 'agents'],
-        optional: ['workflows'],
+        required: ["bundle", "agents"],
+        optional: ["workflows"],
         structure: {
           bundle: {
-            required: ['name', 'icon', 'description'],
+            required: ["name", "icon", "description"],
             optional: [],
           },
         },
       },
       workflow: {
-        required: ['workflow', 'stages'],
-        optional: ['transitions', 'resources', 'validation'],
+        required: ["workflow", "stages"],
+        optional: ["transitions", "resources", "validation"],
         structure: {
           workflow: {
-            required: ['id', 'name', 'description', 'type', 'scope'],
+            required: ["id", "name", "description", "type", "scope"],
             optional: [],
           },
         },
@@ -52,7 +52,7 @@ class YAMLValidator {
   /**
    * Validate YAML content
    */
-  async validate(content, type = 'general') {
+  async validate(content, type = "general") {
     const results = {
       valid: true,
       errors: [],
@@ -66,24 +66,23 @@ class YAMLValidator {
         schema: yaml.SAFE_SCHEMA,
         onWarning: (warning) => {
           results.warnings.push({
-            type: 'yaml_warning',
+            type: "yaml_warning",
             message: warning.toString(),
           });
         },
       });
 
       // Type-specific validation
-      if (type !== 'general' && this.validationRules[type]) {
+      if (type !== "general" && this.validationRules[type]) {
         this.validateStructure(results.parsed, type, results);
       }
 
       // General validations
       this.validateGeneral(results.parsed, results);
-
     } catch (error) {
       results.valid = false;
       results.errors.push({
-        type: 'parse_error',
+        type: "parse_error",
         message: error.message,
         line: error.mark ? error.mark.line : null,
         column: error.mark ? error.mark.column : null,
@@ -96,9 +95,9 @@ class YAMLValidator {
   /**
    * Validate YAML file
    */
-  async validateFile(filePath, type = 'general') {
+  async validateFile(filePath, type = "general") {
     try {
-      const content = await fs.readFile(filePath, 'utf8');
+      const content = await fs.readFile(filePath, "utf8");
       const results = await this.validate(content, type);
       results.filePath = filePath;
       return results;
@@ -106,10 +105,12 @@ class YAMLValidator {
       return {
         valid: false,
         filePath,
-        errors: [{
-          type: 'file_error',
-          message: `Could not read file: ${error.message}`,
-        }],
+        errors: [
+          {
+            type: "file_error",
+            message: `Could not read file: ${error.message}`,
+          },
+        ],
       };
     }
   }
@@ -125,7 +126,7 @@ class YAMLValidator {
       if (!Object.hasOwn(data, field)) {
         results.valid = false;
         results.errors.push({
-          type: 'missing_required',
+          type: "missing_required",
           field,
           message: `Missing required field: ${field}`,
         });
@@ -136,12 +137,7 @@ class YAMLValidator {
     if (rules.structure) {
       for (const [field, fieldRules] of Object.entries(rules.structure)) {
         if (data[field]) {
-          this.validateFieldStructure(
-            data[field],
-            field,
-            fieldRules,
-            results,
-          );
+          this.validateFieldStructure(data[field], field, fieldRules, results);
         }
       }
     }
@@ -155,7 +151,7 @@ class YAMLValidator {
     for (const field of Object.keys(data)) {
       if (!allKnownFields.includes(field)) {
         results.warnings.push({
-          type: 'unknown_field',
+          type: "unknown_field",
           field,
           message: `Unknown field: ${field}`,
         });
@@ -172,7 +168,7 @@ class YAMLValidator {
       if (!Object.hasOwn(data, subfield)) {
         results.valid = false;
         results.errors.push({
-          type: 'missing_required',
+          type: "missing_required",
           field: `${fieldName}.${subfield}`,
           message: `Missing required field: ${fieldName}.${subfield}`,
         });
@@ -193,30 +189,30 @@ class YAMLValidator {
       // Check for null/undefined
       if (value === null || value === undefined) {
         results.warnings.push({
-          type: 'null_value',
+          type: "null_value",
           field: fullPath,
           message: `Null or undefined value at ${fullPath}`,
         });
       }
 
       // Type-specific checks
-      if (key === 'id' || key === 'name') {
-        if (typeof value !== 'string' || value.trim() === '') {
+      if (key === "id" || key === "name") {
+        if (typeof value !== "string" || value.trim() === "") {
           results.errors.push({
-            type: 'invalid_type',
+            type: "invalid_type",
             field: fullPath,
             message: `${fullPath} must be a non-empty string`,
           });
         }
       }
 
-      if (key === 'icon' && typeof value === 'string') {
+      if (key === "icon" && typeof value === "string") {
         // Check if it's a valid emoji or icon string
         if (value.length === 0) {
           results.warnings.push({
-            type: 'empty_icon',
+            type: "empty_icon",
             field: fullPath,
-            message: 'Icon field is empty',
+            message: "Icon field is empty",
           });
         }
       }
@@ -231,11 +227,11 @@ class YAMLValidator {
     try {
       JSON.stringify(data);
     } catch (error) {
-      if (error.message.includes('circular')) {
+      if (error.message.includes("circular")) {
         results.valid = false;
         results.errors.push({
-          type: 'circular_reference',
-          message: 'Circular reference detected in YAML structure',
+          type: "circular_reference",
+          message: "Circular reference detected in YAML structure",
         });
       }
     }
@@ -244,7 +240,7 @@ class YAMLValidator {
     const maxDepth = this.getMaxDepth(data);
     if (maxDepth > 10) {
       results.warnings.push({
-        type: 'deep_nesting',
+        type: "deep_nesting",
         depth: maxDepth,
         message: `Deep nesting detected (${maxDepth} levels)`,
       });
@@ -255,13 +251,13 @@ class YAMLValidator {
    * Get maximum depth of object
    */
   getMaxDepth(obj, currentDepth = 0) {
-    if (typeof obj !== 'object' || obj === null) {
+    if (typeof obj !== "object" || obj === null) {
       return currentDepth;
     }
 
     let maxDepth = currentDepth;
     for (const value of Object.values(obj)) {
-      if (typeof value === 'object') {
+      if (typeof value === "object") {
         const depth = this.getMaxDepth(value, currentDepth + 1);
         maxDepth = Math.max(maxDepth, depth);
       }
@@ -273,7 +269,7 @@ class YAMLValidator {
   /**
    * Fix common YAML issues
    */
-  async autoFix(content, type = 'general') {
+  async autoFix(content, type = "general") {
     let fixed = content;
 
     // Fix common indentation issues
@@ -298,7 +294,7 @@ class YAMLValidator {
    * @returns {string} Fixed YAML content
    */
   fixIndentation(content) {
-    const lines = content.split('\n');
+    const lines = content.split("\n");
     const fixedLines = [];
     const indentStack = [0];
     let currentLevel = 0;
@@ -308,47 +304,55 @@ class YAMLValidator {
       const trimmed = line.trim();
 
       // Skip empty lines and comments
-      if (!trimmed || trimmed.startsWith('#')) {
+      if (!trimmed || trimmed.startsWith("#")) {
         fixedLines.push(line);
         continue;
       }
 
       // Handle list items
-      if (trimmed.startsWith('-')) {
+      if (trimmed.startsWith("-")) {
         const baseIndent = indentStack[indentStack.length - 1];
-        fixedLines.push(' '.repeat(baseIndent) + trimmed);
+        fixedLines.push(" ".repeat(baseIndent) + trimmed);
 
         // If list item has a key-value pair, prepare for nested content
-        if (trimmed.includes(':') && !trimmed.endsWith(':')) {
+        if (trimmed.includes(":") && !trimmed.endsWith(":")) {
           const afterDash = trimmed.substring(1).trim();
-          if (afterDash.includes(':')) {
+          if (afterDash.includes(":")) {
             currentLevel = baseIndent + 2;
           }
         }
       }
       // Handle key-value pairs
-      else if (trimmed.includes(':')) {
+      else if (trimmed.includes(":")) {
         // Pop stack until we find the right level
-        while (indentStack.length > 1 &&
-               line.length - line.trimStart().length < indentStack[indentStack.length - 1]) {
+        while (
+          indentStack.length > 1 &&
+          line.length - line.trimStart().length <
+            indentStack[indentStack.length - 1]
+        ) {
           indentStack.pop();
         }
 
         currentLevel = indentStack[indentStack.length - 1];
-        fixedLines.push(' '.repeat(currentLevel) + trimmed);
+        fixedLines.push(" ".repeat(currentLevel) + trimmed);
 
         // If this opens a new block, push new indent level
-        if (trimmed.endsWith(':') || (i + 1 < lines.length && lines[i + 1].trim() &&
-            lines[i + 1].length - lines[i + 1].trimStart().length > currentLevel)) {
+        if (
+          trimmed.endsWith(":") ||
+          (i + 1 < lines.length &&
+            lines[i + 1].trim() &&
+            lines[i + 1].length - lines[i + 1].trimStart().length >
+              currentLevel)
+        ) {
           indentStack.push(currentLevel + 2);
         }
       } else {
         // Regular content line
-        fixedLines.push(' '.repeat(currentLevel) + trimmed);
+        fixedLines.push(" ".repeat(currentLevel) + trimmed);
       }
     }
 
-    return fixedLines.join('\n');
+    return fixedLines.join("\n");
   }
 
   /**
@@ -368,9 +372,9 @@ class YAMLValidator {
   generateReport(validation) {
     const report = [];
 
-    report.push('YAML Validation Report');
-    report.push('=====================');
-    report.push(`Valid: ${validation.valid ? '✅ Yes' : '❌ No'}`);
+    report.push("YAML Validation Report");
+    report.push("=====================");
+    report.push(`Valid: ${validation.valid ? "✅ Yes" : "❌ No"}`);
 
     if (validation.errors.length > 0) {
       report.push(`\nErrors (${validation.errors.length}):`);
@@ -389,7 +393,7 @@ class YAMLValidator {
       }
     }
 
-    return report.join('\n');
+    return report.join("\n");
   }
 }
 
@@ -399,7 +403,7 @@ class YAMLValidator {
  * @param {string} type - Type of YAML (agent, manifest, workflow, general)
  * @returns {Object} Validation result { valid: boolean, error?: string }
  */
-async function validateYAML(content, type = 'general') {
+async function validateYAML(content, type = "general") {
   const validator = new YAMLValidator();
   const result = await validator.validate(content, type);
   return {

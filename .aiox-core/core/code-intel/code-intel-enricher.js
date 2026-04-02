@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * CodeIntelEnricher — Composite capabilities built on top of primitive capabilities.
@@ -41,8 +41,10 @@ class CodeIntelEnricher {
 
       const allRefs = results.flatMap((r) => r.references || []);
       const avgComplexity =
-        results.reduce((sum, r) => sum + ((r.complexity && r.complexity.score) || 0), 0) /
-        (results.length || 1);
+        results.reduce(
+          (sum, r) => sum + ((r.complexity && r.complexity.score) || 0),
+          0,
+        ) / (results.length || 1);
 
       return {
         references: allRefs,
@@ -66,7 +68,7 @@ class CodeIntelEnricher {
     try {
       const [refs, codebase] = await Promise.all([
         this._client.findReferences(description, options),
-        this._client.analyzeCodebase(options.path || '.', options),
+        this._client.analyzeCodebase(options.path || ".", options),
       ]);
 
       if (!refs && !codebase) return null;
@@ -118,11 +120,11 @@ class CodeIntelEnricher {
       if (!refs) return null;
 
       return refs.filter((ref) => {
-        const file = (ref.file || '').toLowerCase();
+        const file = (ref.file || "").toLowerCase();
         return (
-          file.includes('test') ||
-          file.includes('spec') ||
-          file.includes('__tests__')
+          file.includes("test") ||
+          file.includes("spec") ||
+          file.includes("__tests__")
         );
       });
     } catch {
@@ -137,7 +139,7 @@ class CodeIntelEnricher {
    * @param {string} [path] - Root path (defaults to '.')
    * @returns {Promise<{codebase: Object, stats: Object}|null>}
    */
-  async describeProject(path = '.') {
+  async describeProject(path = ".") {
     try {
       const [codebase, stats] = await Promise.all([
         this._client.analyzeCodebase(path),

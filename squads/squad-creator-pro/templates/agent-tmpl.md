@@ -111,10 +111,10 @@ command_loader:
   "*{{command_1}}":
     description: "{{command_description}}"
     requires:
-      - "tasks/{{task_file_1}}.md"        # MUST load before executing
+      - "tasks/{{task_file_1}}.md" # MUST load before executing
     optional:
-      - "data/{{data_file}}.md"           # Load if needed
-      - "checklists/{{checklist}}.md"     # Load for validation
+      - "data/{{data_file}}.md" # Load if needed
+      - "checklists/{{checklist}}.md" # Load for validation
     output_format: "{{expected_output}}"
 
   "*{{command_2}}":
@@ -133,11 +133,11 @@ command_loader:
   # Standard commands (no external files needed)
   "*help":
     description: "Show available commands"
-    requires: []  # Uses inline commands list
+    requires: [] # Uses inline commands list
 
   "*chat-mode":
     description: "Open conversation mode"
-    requires: []  # Uses inline persona/frameworks
+    requires: [] # Uses inline persona/frameworks
 
   "*exit":
     description: "Exit agent"
@@ -188,13 +188,13 @@ dependencies:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 agent:
-  name: "{{agent_name}}"                    # Human readable name
-  id: "{{agent_id}}"                        # kebab-case identifier
-  title: "{{agent_title}}"                  # Professional title/role
-  icon: "{{icon}}"                          # Single emoji
-  tier: {{tier}}                            # 1-3 (1=fundamental, 2=specialist, 3=niche)
-  era: "{{era}}"                            # e.g., "Classic (1970-2000)", "Modern (2000-present)"
-  whenToUse: "{{when_to_use}}"              # Clear guidance on when to activate this agent
+  name: "{{agent_name}}" # Human readable name
+  id: "{{agent_id}}" # kebab-case identifier
+  title: "{{agent_title}}" # Professional title/role
+  icon: "{{icon}}" # Single emoji
+  tier: { { tier } } # 1-3 (1=fundamental, 2=specialist, 3=niche)
+  era: "{{era}}" # e.g., "Classic (1970-2000)", "Modern (2000-present)"
+  whenToUse: "{{when_to_use}}" # Clear guidance on when to activate this agent
 
 metadata:
   version: "1.0.0"
@@ -205,15 +205,15 @@ metadata:
 
   # Optional: For specialist agents based on real people
   psychometric_profile:
-    disc: "{{disc_profile}}"                # e.g., "D80/I85/S25/C40"
-    enneagram: "{{enneagram}}"              # e.g., "7w8"
-    mbti: "{{mbti}}"                        # e.g., "ESTP"
+    disc: "{{disc_profile}}" # e.g., "D80/I85/S25/C40"
+    enneagram: "{{enneagram}}" # e.g., "7w8"
+    mbti: "{{mbti}}" # e.g., "ESTP"
 
 persona:
-  role: "{{role_description}}"              # What they do professionally
-  style: "{{communication_style}}"          # How they communicate
-  identity: "{{identity_statement}}"        # Who they are
-  focus: "{{primary_focus}}"                # What they prioritize
+  role: "{{role_description}}" # What they do professionally
+  style: "{{communication_style}}" # How they communicate
+  identity: "{{identity_statement}}" # Who they are
+  focus: "{{primary_focus}}" # What they prioritize
   background: |
     {{detailed_background}}
     # 3-5 paragraphs covering:
@@ -241,7 +241,7 @@ core_principles:
   - "{{principle_5}}"
 
 operational_frameworks:
-  total_frameworks: {{count}}
+  total_frameworks: { { count } }
   source: "{{primary_source}}"
 
   # FRAMEWORK 1: Primary Methodology
@@ -291,12 +291,12 @@ commands:
   - name: help
     visibility: [full, quick, key]
     description: "Show all available commands"
-    loader: null  # No external file needed
+    loader: null # No external file needed
 
   - name: "{{primary_command}}"
     visibility: [full, quick]
     description: "{{primary_command_description}}"
-    loader: "tasks/{{primary_task}}.md"  # Links to command_loader
+    loader: "tasks/{{primary_task}}.md" # Links to command_loader
 
   # Phase/Step Commands
   - name: "{{phase_command}}"
@@ -340,22 +340,22 @@ voice_dna:
 
   sentence_starters:
     # Patterns for beginning sentences by context
-    authority: "{{pattern}}"              # e.g., "Here's the thing..."
-    teaching: "{{pattern}}"               # e.g., "The key insight is..."
-    challenging: "{{pattern}}"            # e.g., "Most people get this wrong..."
-    encouraging: "{{pattern}}"            # e.g., "You're on the right track..."
-    transitioning: "{{pattern}}"          # e.g., "Now that we've covered X..."
+    authority: "{{pattern}}" # e.g., "Here's the thing..."
+    teaching: "{{pattern}}" # e.g., "The key insight is..."
+    challenging: "{{pattern}}" # e.g., "Most people get this wrong..."
+    encouraging: "{{pattern}}" # e.g., "You're on the right track..."
+    transitioning: "{{pattern}}" # e.g., "Now that we've covered X..."
 
   metaphors:
     # Domain-specific metaphors the agent uses
-    {{metaphor_key_1}}: "{{metaphor_description}}"
-    {{metaphor_key_2}}: "{{metaphor_description}}"
-    {{metaphor_key_3}}: "{{metaphor_description}}"
+    { { metaphor_key_1 } }: "{{metaphor_description}}"
+    { { metaphor_key_2 } }: "{{metaphor_description}}"
+    { { metaphor_key_3 } }: "{{metaphor_description}}"
 
   vocabulary:
     always_use:
       # Terms that define this agent's expertise
-      - "{{term_1}}"  # with brief explanation if needed
+      - "{{term_1}}" # with brief explanation if needed
       - "{{term_2}}"
       - "{{term_3}}"
       - "{{term_4}}"
@@ -363,24 +363,24 @@ voice_dna:
 
     never_use:
       # Terms that contradict the agent's philosophy
-      - "{{term_1}}"  # why to avoid
+      - "{{term_1}}" # why to avoid
       - "{{term_2}}"
       - "{{term_3}}"
 
   sentence_structure:
     pattern: "{{typical_sentence_pattern}}"
     example: "{{example_sentence}}"
-    rhythm: "{{rhythm_description}}"      # e.g., "Short. Punchy. Direct."
+    rhythm: "{{rhythm_description}}" # e.g., "Short. Punchy. Direct."
 
   behavioral_states:
     # Different modes the agent operates in
-    {{state_1}}:
+    { { state_1 } }:
       trigger: "{{what_triggers_this_state}}"
       output: "{{what_agent_produces}}"
       duration: "{{typical_duration}}"
       signals: ["{{signal_1}}", "{{signal_2}}"]
 
-    {{state_2}}:
+    { { state_2 } }:
       trigger: "{{what_triggers_this_state}}"
       output: "{{what_agent_produces}}"
       duration: "{{typical_duration}}"
@@ -452,20 +452,20 @@ completion_criteria:
   # Clear definition of when work is DONE
 
   task_done_when:
-    {{task_type_1}}:
+    { { task_type_1 } }:
       - "{{criterion_1}}"
       - "{{criterion_2}}"
       - "{{criterion_3}}"
 
-    {{task_type_2}}:
+    { { task_type_2 } }:
       - "{{criterion_1}}"
       - "{{criterion_2}}"
 
   handoff_to:
     # When to pass work to another agent
-    {{scenario_1}}: "{{agent_id}}"
-    {{scenario_2}}: "{{agent_id}}"
-    {{scenario_3}}: "{{agent_id}}"
+    { { scenario_1 } }: "{{agent_id}}"
+    { { scenario_2 } }: "{{agent_id}}"
+    { { scenario_3 } }: "{{agent_id}}"
 
   validation_checklist:
     - "{{validation_item_1}}"
@@ -549,8 +549,8 @@ integration:
       - "{{agent_id}} ({{reason}})"
 
   synergies:
-    {{agent_id}}: "{{how_they_work_together}}"
-    {{agent_id}}: "{{how_they_work_together}}"
+    { { agent_id } }: "{{how_they_work_together}}"
+    { { agent_id } }: "{{how_they_work_together}}"
 
 activation:
   greeting: |
@@ -600,10 +600,12 @@ Before finalizing any agent, validate against these requirements:
 ### Domain-Specific
 
 **For Copy/Legal/Storytelling agents:**
+
 - [ ] `authority_proof_arsenal` is complete
 - [ ] `persona.background` has detailed history
 
 **For Dev/Design agents:**
+
 - [ ] Code/visual examples included in `output_examples`
 - [ ] Integration patterns documented
 
@@ -636,13 +638,13 @@ Before finalizing any agent, validate against these requirements:
 
 ### Key Differences from Previous Architecture
 
-| Aspect | Old (Copy-only) | New (Hybrid Loader) |
-|--------|-----------------|---------------------|
-| Loading | LLM discretion | Explicit mapping |
-| Commands | Simple list | With loader reference |
+| Aspect         | Old (Copy-only)     | New (Hybrid Loader)           |
+| -------------- | ------------------- | ----------------------------- |
+| Loading        | LLM discretion      | Explicit mapping              |
+| Commands       | Simple list         | With loader reference         |
 | Task execution | Hope LLM reads file | MANDATORY read before execute |
-| Failure mode | Silent skip | Explicit error |
-| Enforcement | Instruction text | command_loader config |
+| Failure mode   | Silent skip         | Explicit error                |
+| Enforcement    | Instruction text    | command_loader config         |
 
 ---
 

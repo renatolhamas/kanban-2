@@ -1,4 +1,4 @@
-# Task: Process Audit (*audit)
+# Task: Process Audit (\*audit)
 
 > Pedro Valério | Loaded on-demand when `*audit {squad}` is invoked
 
@@ -19,6 +19,7 @@ TOTAL MÁXIMO: ~10k tokens
 ```
 
 **NUNCA:**
+
 - Ler TODOS os agents de uma vez
 - Ler DNA files sem pedido explícito
 - Ler mais de 3 arquivos por fase
@@ -30,10 +31,10 @@ TOTAL MÁXIMO: ~10k tokens
 
 ## Parâmetros
 
-| Flag | Comportamento |
-|------|---------------|
+| Flag      | Comportamento                          |
+| --------- | -------------------------------------- |
 | (default) | 3-Phase Staged - sample representativo |
-| `--all` | Audit 100% em batches de 3 agents |
+| `--all`   | Audit 100% em batches de 3 agents      |
 
 ---
 
@@ -49,6 +50,7 @@ wc -l squads/{squad}/agents/*.md | tail -1  # total lines
 ```
 
 **Mostrar estimativa:**
+
 ```
 ⚠️ FULL AUDIT MODE
 
@@ -85,6 +87,7 @@ Batch 2/N: agent-4, agent-5, agent-6
 ### Step 3: Consolidate
 
 Após todos os batches:
+
 - Consolidar findings
 - Gerar report final com 100% coverage
 
@@ -104,9 +107,11 @@ wc -l squads/{squad}/agents/*.md  # Conta linhas por agent
 ```
 
 **Ler APENAS:**
+
 - `config.yaml` (estrutura do squad)
 
 **Output Phase 1:**
+
 ```yaml
 squad_overview:
   name: "{squad}"
@@ -127,28 +132,33 @@ squad_overview:
 **Objetivo:** Identificar padrões com AMOSTRA representativa.
 
 **Ler APENAS (máximo 3 arquivos):**
+
 - 1 agent PEQUENO (< 200 linhas)
 - 1 agent MÉDIO (200-400 linhas)
 - 1 workflow principal (se existir)
 
 **Aplicar Diagnostic Framework na amostra:**
+
 - "Se o executor não ler as instruções, o que acontece?"
 - "Se o executor tentar pular um passo, consegue?"
 - "Se o executor errar, o sistema detecta automaticamente?"
 
 **Check Red Flags:**
+
 - [ ] Processo depende de boa vontade do executor
 - [ ] Instruções fora do sistema
 - [ ] Caminhos errados possíveis mas "não recomendados"
 - [ ] Sem veto conditions
 
 **Check Green Flags:**
+
 - [ ] Veto conditions bloqueiam caminhos errados
 - [ ] Checklist inline na própria task
 - [ ] Handoff rules definidos
 - [ ] Smoke tests especificados
 
 **Output Phase 2:**
+
 ```yaml
 sample_analysis:
   agents_sampled: ["{small}", "{medium}"]
@@ -176,6 +186,7 @@ sample_analysis:
 **Trigger:** Usuário pede análise específica.
 
 **Comandos:**
+
 - `*audit {squad} agent:{name}` - Auditar 1 agent específico
 - `*audit {squad} workflow:{name}` - Auditar 1 workflow específico
 - `*audit {squad} dna` - Verificar DNA files
@@ -183,6 +194,7 @@ sample_analysis:
 **Ler APENAS o arquivo pedido.**
 
 **Output Phase 3:**
+
 ```yaml
 deep_dive:
   target: "{agent/workflow name}"

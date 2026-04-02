@@ -7,6 +7,7 @@
 **Mode:** Audit → Plan → Execute (with dry-run option)
 
 **Core Philosophy:**
+
 ```
 Squads evolve. Standards improve. Old squads need upgrades.
 This task brings legacy squads up to current quality standards
@@ -14,6 +15,7 @@ without breaking what already works.
 ```
 
 **Frameworks Used:**
+
 - `checklists/agent-quality-gate.md` → Agent validation (800+ lines, 6 levels)
 - `checklists/task-anatomy-checklist.md` → Task validation (8 fields)
 - `checklists/squad-checklist.md` → Squad-level validation
@@ -59,21 +61,21 @@ OUTPUT: Upgrade Report + Updated Components
 
 ## Inputs
 
-| Parameter | Type | Required | Description | Example |
-|-----------|------|----------|-------------|---------|
-| `squad_name` | string | Yes | Name of squad to upgrade | `"copy"`, `"legal"` |
-| `mode` | enum | No | Execution mode | `audit`, `plan`, `execute`, `auto` |
-| `focus` | enum | No | Focus area | `agents`, `tasks`, `workflows`, `all` |
-| `dry_run` | bool | No | Preview changes without applying | `true`, `false` |
+| Parameter    | Type   | Required | Description                      | Example                               |
+| ------------ | ------ | -------- | -------------------------------- | ------------------------------------- |
+| `squad_name` | string | Yes      | Name of squad to upgrade         | `"copy"`, `"legal"`                   |
+| `mode`       | enum   | No       | Execution mode                   | `audit`, `plan`, `execute`, `auto`    |
+| `focus`      | enum   | No       | Focus area                       | `agents`, `tasks`, `workflows`, `all` |
+| `dry_run`    | bool   | No       | Preview changes without applying | `true`, `false`                       |
 
 ### Mode Descriptions
 
-| Mode | Description | User Interaction |
-|------|-------------|------------------|
-| `audit` | Only generate gap report, no changes | None (read-only) |
-| `plan` | Generate report + upgrade plan | Review plan |
-| `execute` | Execute plan with confirmations | Confirm each change |
-| `auto` | Execute all upgrades automatically | Minimal |
+| Mode      | Description                          | User Interaction    |
+| --------- | ------------------------------------ | ------------------- |
+| `audit`   | Only generate gap report, no changes | None (read-only)    |
+| `plan`    | Generate report + upgrade plan       | Review plan         |
+| `execute` | Execute plan with confirmations      | Confirm each change |
+| `auto`    | Execute all upgrades automatically   | Minimal             |
 
 ---
 
@@ -160,6 +162,7 @@ workflow_metadata:
 ```
 
 **Phase 0 Output:**
+
 ```yaml
 inventory:
   squad: "copy"
@@ -295,7 +298,17 @@ task_gaps:
   checks:
     - id: "T-001"
       check: "Has all 8 required fields"
-      fields: ["task_name", "status", "responsible_executor", "execution_type", "input", "output", "action_items", "acceptance_criteria"]
+      fields:
+        [
+          "task_name",
+          "status",
+          "responsible_executor",
+          "execution_type",
+          "input",
+          "output",
+          "action_items",
+          "acceptance_criteria",
+        ]
       weight: blocking
 
     - id: "T-002"
@@ -429,6 +442,7 @@ gap_report_format:
 ```
 
 **Phase 1 Output:**
+
 ```
 📊 GAP ANALYSIS REPORT: copy
 
@@ -499,7 +513,7 @@ upgrade_plan:
   phases:
     - phase: 1
       name: "Critical Fixes"
-      components:  # Example - replace with your squad components
+      components: # Example - replace with your squad components
         - file: "agents/{agent-1}.md"
           upgrades:
             - "Add ACTIVATION-NOTICE at top"
@@ -518,17 +532,17 @@ upgrade_plan:
 
     - phase: 2
       name: "Required Sections"
-      components:  # Example - replace with your squad components
+      components: # Example - replace with your squad components
         - file: "agents/{agent-2}.md"
           upgrades:
             - "Add output_examples section (3+ examples)"
             - "Expand voice_dna.vocabulary"
           effort: "1h"
-          auto_applicable: false  # Needs research
+          auto_applicable: false # Needs research
 
     - phase: 3
       name: "Quality Polish"
-      components:  # Example - replace with your squad components
+      components: # Example - replace with your squad components
         - file: "agents/{agent-3}.md"
           upgrades:
             - "Add metaphors to voice_dna"
@@ -622,7 +636,7 @@ auto_upgrades:
       - action_items: [] (empty array)
       - acceptance_criteria: [] (empty array)
     safe: true
-    requires_review: true  # User should fill in values
+    requires_review: true # User should fill in values
 
   convert_to_array:
     when: "input/output is string instead of array"
@@ -714,6 +728,7 @@ upgrade_execution:
 ```
 
 **Phase 3 Output:**
+
 ```
 ✅ UPGRADES APPLIED
 
@@ -776,7 +791,7 @@ upgrade_report:
       medium: N
       low: N
 
-  components_upgraded:  # Example - your results will vary
+  components_upgraded: # Example - your results will vary
     - file: "agents/{agent-1}.md"
       before: "5.2/10"
       after: "8.0/10"
@@ -784,7 +799,7 @@ upgrade_report:
         - "Added Hybrid Loader structure"
         - "Added command_loader"
 
-  remaining_todos:  # Example - your results will vary
+  remaining_todos: # Example - your results will vary
     - file: "agents/{agent-2}.md"
       todo: "Add output_examples (marked with TODO)"
     - file: "agents/old-agent.md"
@@ -805,12 +820,12 @@ upgrade_report:
 
 ## Outputs
 
-| Output | Location | Description |
-|--------|----------|-------------|
-| Gap Report | Console + `{squad}/docs/gap-report-{date}.md` | Full gap analysis |
-| Upgrade Plan | Console | Prioritized upgrade plan |
-| Upgrade Report | `{squad}/docs/upgrade-report-{date}.md` | Post-upgrade summary |
-| Backups | `{squad}/.backup/` | Original files before upgrade |
+| Output         | Location                                      | Description                   |
+| -------------- | --------------------------------------------- | ----------------------------- |
+| Gap Report     | Console + `{squad}/docs/gap-report-{date}.md` | Full gap analysis             |
+| Upgrade Plan   | Console                                       | Prioritized upgrade plan      |
+| Upgrade Report | `{squad}/docs/upgrade-report-{date}.md`       | Post-upgrade summary          |
+| Backups        | `{squad}/.backup/`                            | Original files before upgrade |
 
 ---
 
@@ -888,17 +903,17 @@ handoff_to:
 
 ## Related
 
-| Command | Purpose |
-|---------|---------|
-| `*validate-squad {name}` | Full validation (run after upgrade) |
-| `*extract-voice-dna {name}` | Research voice DNA for agent |
-| `*refresh-registry` | Update registry after upgrades |
+| Command                     | Purpose                             |
+| --------------------------- | ----------------------------------- |
+| `*validate-squad {name}`    | Full validation (run after upgrade) |
+| `*extract-voice-dna {name}` | Research voice DNA for agent        |
+| `*refresh-registry`         | Update registry after upgrades      |
 
-| Reference | File |
-|-----------|------|
-| Agent Quality Gate | `checklists/agent-quality-gate.md` |
-| Task Anatomy | `checklists/task-anatomy-checklist.md` |
-| Squad Checklist | `checklists/squad-checklist.md` |
+| Reference          | File                                   |
+| ------------------ | -------------------------------------- |
+| Agent Quality Gate | `checklists/agent-quality-gate.md`     |
+| Task Anatomy       | `checklists/task-anatomy-checklist.md` |
+| Squad Checklist    | `checklists/squad-checklist.md`        |
 
 ---
 

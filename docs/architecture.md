@@ -23,17 +23,17 @@
 
 ### 1.1 Why These Technologies?
 
-| Layer | Technology | Why | Alternatives Rejected |
-|-------|-----------|-----|----------------------|
-| **Frontend** | Next.js 14+ | SSR for fast initial page loads, Vercel native deployment, built-in API routes, edge middleware | React + separate backend (overhead), Remix (less mature), Nuxt (harder hiring) |
-| **Styling** | Tailwind CSS + shadcn/ui | Component library with design tokens, zero-overhead CSS, WCAG AA compliant components | Material-UI (heavy), Chakra UI (slower builds), custom CSS (maintenance burden) |
-| **Backend** | Supabase Cloud (PostgreSQL) | Native RLS for multi-tenancy, Auth built-in, Real-time Subscriptions, SaaS (zero ops), ~$35/month scaling | Firebase (vendor lock-in, expensive at scale), Self-hosted Postgres (ops burden), DynamoDB (no RLS) |
-| **Real-time** | Supabase WebSocket | Native integration with database changes, < 100ms latency, scales to 10k+ concurrent | Socket.io (extra infra), Pusher (expensive $), custom polling (high load) |
-| **Webhooks** | Evolution API v2 | Stable, mature, pinned version prevents breaking changes, HMAC-SHA256 validation | WhatsApp Cloud API (stricter rate limits, approval process) |
-| **File Storage** | Supabase Storage (S3 compatible) | Integrated with auth, RLS-like folder policies, ~$5/GB/month, fast uploads | Cloudinary (vendor lock, cost), Firebase Storage (cold data expensive) |
-| **Rate Limiting** | Redis (local VPS) | ~$5/month on small VPS, zero additional cost, sub-millisecond latency | Upstash (extra network RTT), Redis Cloud (unnecessary cost) |
-| **Monitoring** | Sentry + Supabase Logs | Error tracking + transaction tracing, ~$30/month free tier, native PostgreSQL logging | LogRocket (expensive), Datadog (enterprise pricing), CloudWatch (AWS-only) |
-| **Deployment** | Vercel (frontend) + Supabase Cloud (backend) | Global CDN, auto-scaling, zero-downtime deploys, 99.99% SLA | Self-hosted (maintenance), Heroku (deprecating), Railway (less mature) |
+| Layer             | Technology                                   | Why                                                                                                       | Alternatives Rejected                                                                               |
+| ----------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Frontend**      | Next.js 14+                                  | SSR for fast initial page loads, Vercel native deployment, built-in API routes, edge middleware           | React + separate backend (overhead), Remix (less mature), Nuxt (harder hiring)                      |
+| **Styling**       | Tailwind CSS + shadcn/ui                     | Component library with design tokens, zero-overhead CSS, WCAG AA compliant components                     | Material-UI (heavy), Chakra UI (slower builds), custom CSS (maintenance burden)                     |
+| **Backend**       | Supabase Cloud (PostgreSQL)                  | Native RLS for multi-tenancy, Auth built-in, Real-time Subscriptions, SaaS (zero ops), ~$35/month scaling | Firebase (vendor lock-in, expensive at scale), Self-hosted Postgres (ops burden), DynamoDB (no RLS) |
+| **Real-time**     | Supabase WebSocket                           | Native integration with database changes, < 100ms latency, scales to 10k+ concurrent                      | Socket.io (extra infra), Pusher (expensive $), custom polling (high load)                           |
+| **Webhooks**      | Evolution API v2                             | Stable, mature, pinned version prevents breaking changes, HMAC-SHA256 validation                          | WhatsApp Cloud API (stricter rate limits, approval process)                                         |
+| **File Storage**  | Supabase Storage (S3 compatible)             | Integrated with auth, RLS-like folder policies, ~$5/GB/month, fast uploads                                | Cloudinary (vendor lock, cost), Firebase Storage (cold data expensive)                              |
+| **Rate Limiting** | Redis (local VPS)                            | ~$5/month on small VPS, zero additional cost, sub-millisecond latency                                     | Upstash (extra network RTT), Redis Cloud (unnecessary cost)                                         |
+| **Monitoring**    | Sentry + Supabase Logs                       | Error tracking + transaction tracing, ~$30/month free tier, native PostgreSQL logging                     | LogRocket (expensive), Datadog (enterprise pricing), CloudWatch (AWS-only)                          |
+| **Deployment**    | Vercel (frontend) + Supabase Cloud (backend) | Global CDN, auto-scaling, zero-downtime deploys, 99.99% SLA                                               | Self-hosted (maintenance), Heroku (deprecating), Railway (less mature)                              |
 
 ### 1.2 Color Palette & Typography (Architectural Ledger)
 
@@ -242,6 +242,7 @@ kanban.2/
 ### 3.1 Core Tables
 
 #### `tenants` — Multi-tenancy root
+
 ```sql
 CREATE TABLE tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -256,6 +257,7 @@ CREATE INDEX idx_tenants_subscription ON tenants(subscription_status);
 ```
 
 #### `users` — Owners and attendants
+
 ```sql
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -272,6 +274,7 @@ CREATE INDEX idx_users_tenant ON users(tenant_id);
 ```
 
 #### `kanbans` — Pipelines/funnels
+
 ```sql
 CREATE TABLE kanbans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -287,6 +290,7 @@ CREATE INDEX idx_kanbans_tenant_order ON kanbans(tenant_id, order_position);
 ```
 
 #### `columns` — Kanban stages
+
 ```sql
 CREATE TABLE columns (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -300,6 +304,7 @@ CREATE INDEX idx_columns_kanban_order ON columns(kanban_id, order_position);
 ```
 
 #### `contacts` — Contact directory
+
 ```sql
 CREATE TABLE contacts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -314,6 +319,7 @@ CREATE INDEX idx_contacts_tenant ON contacts(tenant_id);
 ```
 
 #### `conversations` — Contact-to-kanban links
+
 ```sql
 CREATE TABLE conversations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -333,6 +339,7 @@ CREATE INDEX idx_conversations_last_message ON conversations(last_message_at DES
 ```
 
 #### `messages` — Message history
+
 ```sql
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -347,6 +354,7 @@ CREATE INDEX idx_messages_conversation_created ON messages(conversation_id, crea
 ```
 
 #### `automatic_messages` — Message templates
+
 ```sql
 CREATE TABLE automatic_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -400,13 +408,13 @@ CREATE POLICY "conversations_update"
 
 ### 3.3 Indexes & Query Optimization
 
-| Index | Purpose | Query Pattern |
-|-------|---------|---------------|
-| `idx_conversations_tenant_status` | Filter active conversations per tenant | `SELECT * FROM conversations WHERE tenant_id = ? AND status = 'active'` |
-| `idx_messages_conversation_created` | Load message history, newest first | `SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at DESC` |
-| `idx_contacts_phone_tenant` | Prevent duplicate phone per tenant | `SELECT * FROM contacts WHERE phone = ? AND tenant_id = ?` |
-| `idx_kanbans_main_tenant` | Find "Main" kanban for auto-routing | `SELECT * FROM kanbans WHERE tenant_id = ? AND is_main = TRUE` |
-| `idx_conversations_kanban_column` | Load conversations for board render | `SELECT * FROM conversations WHERE kanban_id = ? AND column_id = ?` |
+| Index                               | Purpose                                | Query Pattern                                                               |
+| ----------------------------------- | -------------------------------------- | --------------------------------------------------------------------------- |
+| `idx_conversations_tenant_status`   | Filter active conversations per tenant | `SELECT * FROM conversations WHERE tenant_id = ? AND status = 'active'`     |
+| `idx_messages_conversation_created` | Load message history, newest first     | `SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at DESC` |
+| `idx_contacts_phone_tenant`         | Prevent duplicate phone per tenant     | `SELECT * FROM contacts WHERE phone = ? AND tenant_id = ?`                  |
+| `idx_kanbans_main_tenant`           | Find "Main" kanban for auto-routing    | `SELECT * FROM kanbans WHERE tenant_id = ? AND is_main = TRUE`              |
+| `idx_conversations_kanban_column`   | Load conversations for board render    | `SELECT * FROM conversations WHERE kanban_id = ? AND column_id = ?`         |
 
 ---
 
@@ -415,10 +423,12 @@ CREATE POLICY "conversations_update"
 ### 4.1 Page Structure & User Flows
 
 #### Authentication Pages (No Sidebar Layout)
+
 - **`/register`**: Email, password (8+ chars, mixed case + number), name. POST to `/api/auth/register`. On success → redirect to `/settings/connection`.
 - **`/login`**: Email, password. POST to `/api/auth/login`. On success → redirect to `/` (home). Store JWT in `httpOnly` cookie.
 
 #### Protected Pages (With Sidebar Layout)
+
 - **`/` (Home/Kanban Board)**: Main canvas. Displays selected kanban's columns and conversations. Drag-and-drop reorder. Click card → open `<ChatModal>`.
 - **`/contacts`**: Contacts directory with CRUD. Search, pagination, inline error validation.
 - **`/settings`**: Tabbed interface with Profile, Connection, Automatic Messages, Kanbans subsections.
@@ -493,29 +503,31 @@ CREATE POLICY "conversations_update"
 ### 4.3 State Management Strategy
 
 **For MVP (minimal):**
+
 - Auth state: Context API (`AuthContext`) — user, tenant_id, JWT
 - Form state: React hooks (`useState`, custom `useForm` hook)
 - Real-time subscriptions: Custom hooks (`useConversations`, `useMessages`) with Supabase listeners
 - No Zustand/Redux needed for MVP
 
 **Real-time subscription example:**
+
 ```typescript
 // Hook: useConversations
 export function useConversations(kanbanId: string) {
   const [conversations, setConversations] = useState([]);
-  
+
   useEffect(() => {
     const subscription = supabase
-      .from('conversations')
-      .on('*', (payload) => {
+      .from("conversations")
+      .on("*", (payload) => {
         // Refresh conversations on any change
         loadConversations();
       })
       .subscribe();
-    
+
     return () => supabase.removeSubscription(subscription);
   }, [kanbanId]);
-  
+
   return conversations;
 }
 ```
@@ -534,20 +546,20 @@ All `/api/*` routes are protected by:
 
 ```typescript
 // /api/conversations/route.ts (example)
-import { auth } from '@/lib/middleware/auth';
-import { tenantIsolation } from '@/lib/middleware/tenant-isolation';
+import { auth } from "@/lib/middleware/auth";
+import { tenantIsolation } from "@/lib/middleware/tenant-isolation";
 
 export async function GET(req: Request) {
   // Run middleware
   const user = await auth(req);
   const { tenantId } = await tenantIsolation(req, user);
-  
+
   // Query database with tenant isolation
   const conversations = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('tenant_id', tenantId);
-  
+    .from("conversations")
+    .select("*")
+    .eq("tenant_id", tenantId);
+
   return Response.json(conversations);
 }
 ```
@@ -555,6 +567,7 @@ export async function GET(req: Request) {
 ### 5.2 API Route Groups
 
 #### **Auth Routes** (`/api/auth/*`)
+
 - `POST /api/auth/register` — Create tenant + user + "Main" kanban + columns
 - `POST /api/auth/login` — Validate email/password; return JWT (httpOnly cookie)
 - `POST /api/auth/logout` — Destroy session
@@ -562,6 +575,7 @@ export async function GET(req: Request) {
 - `GET /api/auth/me` — Return current user & tenant info
 
 #### **Conversations** (`/api/conversations/*`)
+
 - `GET /api/conversations` — List conversations for tenant (paginated)
 - `GET /api/conversations/[id]` — Get single conversation
 - `PATCH /api/conversations/[id]/column` — Move conversation to column (drag-drop)
@@ -569,17 +583,20 @@ export async function GET(req: Request) {
 - `DELETE /api/conversations/[id]` — Hard delete
 
 #### **Messages** (`/api/messages/*`)
+
 - `POST /api/messages/send` — Send message via Evolution API + save to DB
 - `GET /api/messages?conversation_id=...` — Get message history (paginated, newest first)
 - `POST /api/messages/send-automatic` — Send automatic message template
 
 #### **Contacts** (`/api/contacts/*`)
+
 - `GET /api/contacts` — List contacts (paginated)
 - `POST /api/contacts` — Create contact
 - `PATCH /api/contacts/[id]` — Update contact
 - `DELETE /api/contacts/[id]` — Delete contact
 
 #### **Kanbans** (`/api/kanbans/*`)
+
 - `GET /api/kanbans` — List all kanbans for tenant
 - `POST /api/kanbans` — Create kanban (auto-create columns)
 - `PATCH /api/kanbans/[id]` — Update kanban name/order
@@ -587,6 +604,7 @@ export async function GET(req: Request) {
 - `DELETE /api/kanbans/[id]` — Delete kanban (if not in use)
 
 #### **Automatic Messages** (`/api/automatic-messages/*`)
+
 - `GET /api/automatic-messages` — List templates
 - `POST /api/automatic-messages` — Create template
 - `PATCH /api/automatic-messages/[id]` — Update template
@@ -594,12 +612,14 @@ export async function GET(req: Request) {
 - `POST /api/automatic-messages/[id]/test` — Send test message
 
 #### **Settings** (`/api/settings/*`)
+
 - `PATCH /api/settings/profile` — Update user name/password
 - `GET /api/settings/connection-status` — Evolution API connection status
 - `POST /api/settings/qr-code` — Generate new QR code from Evolution API
 - `POST /api/settings/reconnect` — Force reconnect to WhatsApp
 
 #### **Webhooks** (`/api/webhooks/*`)
+
 - `POST /api/webhooks/messages` — Evolution API webhook for new messages
 - `POST /api/webhooks/connection` — Evolution API webhook for connection status changes
 
@@ -646,73 +666,72 @@ export async function GET(req: Request) {
 ```
 
 **Code example:**
+
 ```typescript
 // /api/webhooks/messages
-import { validateWebhookSignature } from '@/lib/api/webhook-validator';
+import { validateWebhookSignature } from "@/lib/api/webhook-validator";
 
 export async function POST(req: Request) {
-  const signature = req.headers.get('X-Signature');
+  const signature = req.headers.get("X-Signature");
   const body = await req.text();
-  
+
   // Validate
   if (!validateWebhookSignature(body, signature)) {
-    return Response.json({ error: 'Invalid signature' }, { status: 401 });
+    return Response.json({ error: "Invalid signature" }, { status: 401 });
   }
-  
+
   const event = JSON.parse(body);
   const { phone, message, media_url } = event.data;
-  
+
   // 1. Find or create contact
   let contact = await supabase
-    .from('contacts')
-    .select('*')
-    .eq('phone', phone)
+    .from("contacts")
+    .select("*")
+    .eq("phone", phone)
     .single();
-  
+
   if (!contact) {
     contact = await supabase
-      .from('contacts')
+      .from("contacts")
       .insert({ phone, tenant_id })
       .single();
   }
-  
+
   // 2. Find or create conversation
   let conversation = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('contact_id', contact.id)
+    .from("conversations")
+    .select("*")
+    .eq("contact_id", contact.id)
     .single();
-  
+
   if (!conversation) {
     // Auto-route to "Main" kanban
     const mainKanban = await supabase
-      .from('kanbans')
-      .select('*')
-      .eq('is_main', true)
+      .from("kanbans")
+      .select("*")
+      .eq("is_main", true)
       .single();
-    
+
     conversation = await supabase
-      .from('conversations')
+      .from("conversations")
       .insert({
         contact_id: contact.id,
         kanban_id: mainKanban.id,
         column_id: mainKanban.columns[0].id, // First column
-        wa_phone: phone
+        wa_phone: phone,
       })
       .single();
   }
-  
+
   // 3. Save message
-  await supabase
-    .from('messages')
-    .insert({
-      conversation_id: conversation.id,
-      sender_type: 'contact',
-      content: message,
-      media_url,
-      media_type: event.data.media_type
-    });
-  
+  await supabase.from("messages").insert({
+    conversation_id: conversation.id,
+    sender_type: "contact",
+    content: message,
+    media_url,
+    media_type: event.data.media_type,
+  });
+
   // 4. Supabase Real-time broadcasts automatically
   return Response.json({ ok: true });
 }
@@ -799,15 +818,15 @@ JWT Payload:
 Evolution API signs all webhooks with `X-Signature` header using HMAC-SHA256:
 
 ```typescript
-import crypto from 'crypto';
+import crypto from "crypto";
 
-export function validateWebhookSignature(body: string, signature: string): boolean {
+export function validateWebhookSignature(
+  body: string,
+  signature: string,
+): boolean {
   const secret = process.env.EVOLUTION_WEBHOOK_SECRET;
-  const hash = crypto
-    .createHmac('sha256', secret)
-    .update(body)
-    .digest('hex');
-  
+  const hash = crypto.createHmac("sha256", secret).update(body).digest("hex");
+
   return crypto.timingSafeEqual(Buffer.from(hash), Buffer.from(signature));
 }
 ```
@@ -840,7 +859,7 @@ Every row in a tenant-scoped table has `tenant_id`. Supabase RLS policies extrac
 interface User {
   id: UUID;
   email: string;
-  role: 'owner' | 'attendant';
+  role: "owner" | "attendant";
 }
 
 async function getUser(id: UUID): Promise<User> {
@@ -848,34 +867,35 @@ async function getUser(id: UUID): Promise<User> {
 }
 
 // ❌ Avoid
-const getUser = (id) => { // Missing type annotation
+const getUser = (id) => {
+  // Missing type annotation
   // ...
 };
 ```
 
 ### 8.2 File Naming Conventions
 
-| Category | Pattern | Example |
-|----------|---------|---------|
-| Components | PascalCase + `.tsx` | `KanbanBoard.tsx` |
-| Hooks | `use` prefix + camelCase | `useConversations.ts` |
-| Utilities | camelCase + `.ts` | `formatPhone.ts` |
-| API routes | kebab-case + `route.ts` | `/conversations/[id]/route.ts` |
-| Types | PascalCase (same as interface) | `User.ts` → `export interface User {}` |
+| Category   | Pattern                        | Example                                |
+| ---------- | ------------------------------ | -------------------------------------- |
+| Components | PascalCase + `.tsx`            | `KanbanBoard.tsx`                      |
+| Hooks      | `use` prefix + camelCase       | `useConversations.ts`                  |
+| Utilities  | camelCase + `.ts`              | `formatPhone.ts`                       |
+| API routes | kebab-case + `route.ts`        | `/conversations/[id]/route.ts`         |
+| Types      | PascalCase (same as interface) | `User.ts` → `export interface User {}` |
 
 ### 8.3 Imports Organization
 
 ```typescript
 // 1. External packages
-import React, { useState, useEffect } from 'react';
-import { supabase } from '@supabase/auth-helpers-nextjs';
+import React, { useState, useEffect } from "react";
+import { supabase } from "@supabase/auth-helpers-nextjs";
 
 // 2. Absolute imports (@/*)
-import { useAuth } from '@/hooks/useAuth';
-import { User } from '@/lib/types/database';
+import { useAuth } from "@/hooks/useAuth";
+import { User } from "@/lib/types/database";
 
 // 3. Relative imports
-import { Header } from '../layout/Header';
+import { Header } from "../layout/Header";
 ```
 
 ### 8.4 Error Handling Pattern
@@ -914,11 +934,11 @@ interface KanbanBoardProps {
 
 export function KanbanBoard({ kanbanId, onCardClick }: KanbanBoardProps) {
   const [columns, setColumns] = useState<Column[]>([]);
-  
+
   useEffect(() => {
     // Load data
   }, [kanbanId]);
-  
+
   return (
     <div className="kanban-board">
       {/* JSX */}
@@ -933,32 +953,32 @@ export function KanbanBoard({ kanbanId, onCardClick }: KanbanBoardProps) {
 
 ### 9.1 Frontend Optimization
 
-| Strategy | Implementation | Target |
-|----------|----------------|--------|
-| **Code splitting** | Next.js dynamic imports for modals | Reduce initial bundle by 20% |
-| **Lazy loading** | `IntersectionObserver` for message history | < 3s page load |
-| **Image optimization** | Next.js `<Image>` component | Auto-resize, WebP format |
-| **Caching** | React Query / SWR for API responses | Stale-while-revalidate |
-| **CSS minification** | Tailwind CSS purge unused styles | < 50KB gzipped CSS |
+| Strategy               | Implementation                             | Target                       |
+| ---------------------- | ------------------------------------------ | ---------------------------- |
+| **Code splitting**     | Next.js dynamic imports for modals         | Reduce initial bundle by 20% |
+| **Lazy loading**       | `IntersectionObserver` for message history | < 3s page load               |
+| **Image optimization** | Next.js `<Image>` component                | Auto-resize, WebP format     |
+| **Caching**            | React Query / SWR for API responses        | Stale-while-revalidate       |
+| **CSS minification**   | Tailwind CSS purge unused styles           | < 50KB gzipped CSS           |
 
 ### 9.2 Database Optimization
 
-| Strategy | Implementation | Metric |
-|----------|----------------|--------|
-| **Connection pooling** | Supabase built-in | < 100ms query latency |
-| **Indexes on hot tables** | Foreign keys + common filters | Conversations by tenant+status |
-| **Pagination** | `LIMIT 50 OFFSET` for tables | Load 50 records at a time |
-| **Real-time filtering** | Client-side WHERE clauses | Reduce bandwidth |
-| **N+1 prevention** | Always `SELECT *` with JOINs | Fetch related data in one query |
+| Strategy                  | Implementation                | Metric                          |
+| ------------------------- | ----------------------------- | ------------------------------- |
+| **Connection pooling**    | Supabase built-in             | < 100ms query latency           |
+| **Indexes on hot tables** | Foreign keys + common filters | Conversations by tenant+status  |
+| **Pagination**            | `LIMIT 50 OFFSET` for tables  | Load 50 records at a time       |
+| **Real-time filtering**   | Client-side WHERE clauses     | Reduce bandwidth                |
+| **N+1 prevention**        | Always `SELECT *` with JOINs  | Fetch related data in one query |
 
 ### 9.3 API Optimization
 
-| Strategy | Implementation |
-|----------|----------------|
-| **Response compression** | Gzip (Next.js built-in) |
-| **Rate limiting** | Redis 100 req/min per tenant |
-| **Webhook timeout** | 5s (return 200 OK immediately, process async) |
-| **Connection pooling** | Supabase + Evolution API token caching |
+| Strategy                 | Implementation                                |
+| ------------------------ | --------------------------------------------- |
+| **Response compression** | Gzip (Next.js built-in)                       |
+| **Rate limiting**        | Redis 100 req/min per tenant                  |
+| **Webhook timeout**      | 5s (return 200 OK immediately, process async) |
+| **Connection pooling**   | Supabase + Evolution API token caching        |
 
 ---
 
@@ -1044,12 +1064,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-      
+
       - run: npm install
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test
-      
+
       - uses: vercel/action@v4
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -1103,6 +1123,7 @@ npm run typecheck
 ### 11.2 Code Review Checklist
 
 Before marking complete, verify:
+
 - ✅ TypeScript compiles without errors (`npm run typecheck`)
 - ✅ Linting passes (`npm run lint`)
 - ✅ Tests pass (`npm test`)
@@ -1115,14 +1136,14 @@ Before marking complete, verify:
 
 ## 12. Appendix: Technology Justification Summary
 
-| Technology | Why Not Alternatives |
-|-----------|----------------------|
-| **Next.js 14** | Not Remix (less hiring pool), not SvelteKit (smaller ecosystem), not Astro (poor state management) |
-| **Supabase** | Not Firebase (lock-in + cost), not self-hosted (ops burden), not DynamoDB (no RLS) |
-| **Tailwind + shadcn** | Not Material-UI (heavy), not Chakra (slower builds), not custom CSS (maintenance) |
-| **Evolution API v2** | Not WhatsApp Cloud API (stricter approvals), not Twilio (expensive ~$1/msg) |
-| **Vercel** | Not Heroku (deprecating), not Railway (immature), not self-hosted (ops burden) |
-| **Redis local** | Not Upstash (network latency), not Redis Cloud (cost) |
+| Technology            | Why Not Alternatives                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------- |
+| **Next.js 14**        | Not Remix (less hiring pool), not SvelteKit (smaller ecosystem), not Astro (poor state management) |
+| **Supabase**          | Not Firebase (lock-in + cost), not self-hosted (ops burden), not DynamoDB (no RLS)                 |
+| **Tailwind + shadcn** | Not Material-UI (heavy), not Chakra (slower builds), not custom CSS (maintenance)                  |
+| **Evolution API v2**  | Not WhatsApp Cloud API (stricter approvals), not Twilio (expensive ~$1/msg)                        |
+| **Vercel**            | Not Heroku (deprecating), not Railway (immature), not self-hosted (ops burden)                     |
+| **Redis local**       | Not Upstash (network latency), not Redis Cloud (cost)                                              |
 
 ---
 

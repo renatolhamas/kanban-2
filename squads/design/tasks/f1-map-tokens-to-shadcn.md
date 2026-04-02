@@ -25,44 +25,44 @@ Todas estas variaveis DEVEM ter mapeamento:
 
 ### Core (obrigatorio)
 
-| CSS Variable | Descricao | Padrao Light | Padrao Dark |
-|---|---|---|---|
-| `--background` | Fundo da pagina | oklch(1 0 0) | oklch(0.145 0 0) |
-| `--foreground` | Texto principal | oklch(0.145 0 0) | oklch(0.985 0 0) |
-| `--card` | Fundo de cards | oklch(1 0 0) | oklch(0.205 0 0) |
-| `--card-foreground` | Texto em cards | oklch(0.145 0 0) | oklch(0.985 0 0) |
-| `--popover` | Fundo de popovers | oklch(1 0 0) | oklch(0.205 0 0) |
-| `--popover-foreground` | Texto em popovers | oklch(0.145 0 0) | oklch(0.985 0 0) |
-| `--primary` | Cor primaria | oklch(0.205 0 0) | oklch(0.922 0 0) |
-| `--primary-foreground` | Texto sobre primaria | oklch(0.985 0 0) | oklch(0.205 0 0) |
-| `--secondary` | Cor secundaria | oklch(0.97 0 0) | oklch(0.269 0 0) |
-| `--secondary-foreground` | Texto sobre secundaria | oklch(0.205 0 0) | oklch(0.985 0 0) |
-| `--muted` | Fundo atenuado | oklch(0.97 0 0) | oklch(0.269 0 0) |
-| `--muted-foreground` | Texto atenuado | oklch(0.556 0 0) | oklch(0.708 0 0) |
-| `--accent` | Cor de destaque | oklch(0.97 0 0) | oklch(0.269 0 0) |
-| `--accent-foreground` | Texto sobre destaque | oklch(0.205 0 0) | oklch(0.985 0 0) |
-| `--destructive` | Cor de erro/perigo | oklch(0.577 0.245 27.325) | oklch(0.704 0.191 22.216) |
-| `--border` | Cor de bordas | oklch(0.922 0 0) | oklch(1 0 0 / 10%) |
-| `--input` | Borda de inputs | oklch(0.922 0 0) | oklch(1 0 0 / 15%) |
-| `--ring` | Focus ring | oklch(0.708 0 0) | oklch(0.556 0 0) |
-| `--radius` | Radius base | 0.625rem | (same) |
+| CSS Variable             | Descricao              | Padrao Light              | Padrao Dark               |
+| ------------------------ | ---------------------- | ------------------------- | ------------------------- |
+| `--background`           | Fundo da pagina        | oklch(1 0 0)              | oklch(0.145 0 0)          |
+| `--foreground`           | Texto principal        | oklch(0.145 0 0)          | oklch(0.985 0 0)          |
+| `--card`                 | Fundo de cards         | oklch(1 0 0)              | oklch(0.205 0 0)          |
+| `--card-foreground`      | Texto em cards         | oklch(0.145 0 0)          | oklch(0.985 0 0)          |
+| `--popover`              | Fundo de popovers      | oklch(1 0 0)              | oklch(0.205 0 0)          |
+| `--popover-foreground`   | Texto em popovers      | oklch(0.145 0 0)          | oklch(0.985 0 0)          |
+| `--primary`              | Cor primaria           | oklch(0.205 0 0)          | oklch(0.922 0 0)          |
+| `--primary-foreground`   | Texto sobre primaria   | oklch(0.985 0 0)          | oklch(0.205 0 0)          |
+| `--secondary`            | Cor secundaria         | oklch(0.97 0 0)           | oklch(0.269 0 0)          |
+| `--secondary-foreground` | Texto sobre secundaria | oklch(0.205 0 0)          | oklch(0.985 0 0)          |
+| `--muted`                | Fundo atenuado         | oklch(0.97 0 0)           | oklch(0.269 0 0)          |
+| `--muted-foreground`     | Texto atenuado         | oklch(0.556 0 0)          | oklch(0.708 0 0)          |
+| `--accent`               | Cor de destaque        | oklch(0.97 0 0)           | oklch(0.269 0 0)          |
+| `--accent-foreground`    | Texto sobre destaque   | oklch(0.205 0 0)          | oklch(0.985 0 0)          |
+| `--destructive`          | Cor de erro/perigo     | oklch(0.577 0.245 27.325) | oklch(0.704 0.191 22.216) |
+| `--border`               | Cor de bordas          | oklch(0.922 0 0)          | oklch(1 0 0 / 10%)        |
+| `--input`                | Borda de inputs        | oklch(0.922 0 0)          | oklch(1 0 0 / 15%)        |
+| `--ring`                 | Focus ring             | oklch(0.708 0 0)          | oklch(0.556 0 0)          |
+| `--radius`               | Radius base            | 0.625rem                  | (same)                    |
 
 ### Chart (manter default se Figma nao fornecer)
 
-| CSS Variable | Descricao |
-|---|---|
+| CSS Variable                    | Descricao           |
+| ------------------------------- | ------------------- |
 | `--chart-1` through `--chart-5` | Cores para graficos |
 
 ### Sidebar (manter default se Figma nao fornecer)
 
-| CSS Variable | Descricao |
-|---|---|
-| `--sidebar` | Fundo do sidebar |
-| `--sidebar-foreground` | Texto do sidebar |
-| `--sidebar-primary` / `--sidebar-primary-foreground` | Itens ativos |
-| `--sidebar-accent` / `--sidebar-accent-foreground` | Hover/destaque |
-| `--sidebar-border` | Bordas do sidebar |
-| `--sidebar-ring` | Focus ring do sidebar |
+| CSS Variable                                         | Descricao             |
+| ---------------------------------------------------- | --------------------- |
+| `--sidebar`                                          | Fundo do sidebar      |
+| `--sidebar-foreground`                               | Texto do sidebar      |
+| `--sidebar-primary` / `--sidebar-primary-foreground` | Itens ativos          |
+| `--sidebar-accent` / `--sidebar-accent-foreground`   | Hover/destaque        |
+| `--sidebar-border`                                   | Bordas do sidebar     |
+| `--sidebar-ring`                                     | Focus ring do sidebar |
 
 ## Execution Steps
 
@@ -96,10 +96,10 @@ Todos os valores de cor devem ser convertidos para formato OKLch:
 
 Tokens que o Figma tem mas o shadcn nao:
 
-| Token Figma | CSS Variable Proposta | Nota |
-|---|---|---|
+| Token Figma        | CSS Variable Proposta                | Nota     |
+| ------------------ | ------------------------------------ | -------- |
 | `feedback/warning` | `--warning` / `--warning-foreground` | Extensao |
-| `feedback/info` | `--info` / `--info-foreground` | Extensao |
+| `feedback/info`    | `--info` / `--info-foreground`       | Extensao |
 | `feedback/success` | `--success` / `--success-foreground` | Extensao |
 
 Extensoes devem seguir o padrao shadcn: `--{role}` + `--{role}-foreground`.
@@ -108,10 +108,10 @@ Extensoes devem seguir o padrao shadcn: `--{role}` + `--{role}-foreground`.
 
 Produzir tabela completa:
 
-| Figma Token | CSS Variable | Tailwind Utility | Light Value | Dark Value |
-|---|---|---|---|---|
-| brand/primary | --primary | bg-primary | oklch(...) | oklch(...) |
-| ... | ... | ... | ... | ... |
+| Figma Token   | CSS Variable | Tailwind Utility | Light Value | Dark Value |
+| ------------- | ------------ | ---------------- | ----------- | ---------- |
+| brand/primary | --primary    | bg-primary       | oklch(...)  | oklch(...) |
+| ...           | ...          | ...              | ...         | ...        |
 
 ### Step 5: Validar Completude
 

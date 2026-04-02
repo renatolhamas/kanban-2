@@ -17,11 +17,13 @@ type: reference
 ## When to Create
 
 ✅ Create when:
+
 - Gate verdict is **FAIL** (blocking issues)
 - Gate verdict is **CONCERNS** with actionable fixes
 - Multiple structured issues need @dev handoff
 
 ❌ Don't create when:
+
 - Gate verdict is **PASS**
 - Gate verdict is **WAIVED**
 
@@ -43,7 +45,7 @@ type: reference
 qa:
   qaLocation: docs/qa
   fixRequestLocation: docs/fix_request
-  fixRequestNaming: 'QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md'
+  fixRequestNaming: "QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md"
 ```
 
 **Rule:** `.claude/rules/qa-fix-request-standard.md`
@@ -57,7 +59,7 @@ When creating fix request, update story's **QA Results** section:
 
 Gate: FAIL → docs/qa/gates/{epic}.{story}-{slug}.yml
 
-**Fix Request:** docs/fix_request/QA-FIX_REQUEST-{YYYY-MM-DD}_{story-id}.md
+**Fix Request:** docs/fix*request/QA-FIX_REQUEST-{YYYY-MM-DD}*{story-id}.md
 ```
 
 ## Established 2026-04-02

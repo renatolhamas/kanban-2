@@ -43,15 +43,15 @@ JWT Payload:
 Evolution API signs all webhooks with `X-Signature` header using HMAC-SHA256:
 
 ```typescript
-import crypto from 'crypto';
+import crypto from "crypto";
 
-export function validateWebhookSignature(body: string, signature: string): boolean {
+export function validateWebhookSignature(
+  body: string,
+  signature: string,
+): boolean {
   const secret = process.env.EVOLUTION_WEBHOOK_SECRET;
-  const hash = crypto
-    .createHmac('sha256', secret)
-    .update(body)
-    .digest('hex');
-  
+  const hash = crypto.createHmac("sha256", secret).update(body).digest("hex");
+
   return crypto.timingSafeEqual(Buffer.from(hash), Buffer.from(signature));
 }
 ```

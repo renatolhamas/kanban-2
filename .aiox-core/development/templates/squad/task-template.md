@@ -1,5 +1,5 @@
 ---
-task: {{COMPONENTNAME}}
+task: { { COMPONENTNAME } }
 responsavel: "@{{AGENTID}}"
 responsavel_type: Agent
 atomic_layer: Task
@@ -31,11 +31,12 @@ Checklist:
 {{DESCRIPTION}}
 
 {{#IF STORYID}}
+
 ## Story Reference
 
 - **Story:** {{STORYID}}
 - **Squad:** {{SQUADNAME}}
-{{/IF}}
+  {{/IF}}
 
 ## Pre-Conditions
 
@@ -50,6 +51,7 @@ pre-conditions:
 ```
 
 {{#IF CODE_INTEL_AVAILABLE}}
+
 ## Code Intelligence Duplicate Check
 
 > Auto-check when code intelligence provider is available.
@@ -59,8 +61,13 @@ pre-conditions:
 Before proceeding, verify no similar task already exists:
 
 ```javascript
-const { checkDuplicateArtefact } = require('.aiox-core/core/code-intel/helpers/creation-helper');
-const result = await checkDuplicateArtefact('{{COMPONENTNAME}}', '{{DESCRIPTION}}');
+const {
+  checkDuplicateArtefact,
+} = require(".aiox-core/core/code-intel/helpers/creation-helper");
+const result = await checkDuplicateArtefact(
+  "{{COMPONENTNAME}}",
+  "{{DESCRIPTION}}",
+);
 if (result) {
   console.warn(result.warning);
   // Advisory: "Similar task exists: {task-name}. Consider extending instead of creating."
@@ -68,7 +75,7 @@ if (result) {
 ```
 
 - **Duplicates Found:** {{DUPLICATE_WARNING}}
-{{/IF}}
+  {{/IF}}
 
 ## Execution Steps
 
@@ -76,7 +83,7 @@ if (result) {
 
 ```javascript
 // Implementation here
-const { Dependency } = require('./path/to/dependency');
+const { Dependency } = require("./path/to/dependency");
 
 async function step1() {
   // Step 1 logic
@@ -143,4 +150,4 @@ tags:
 
 ---
 
-*Task definition created by squad-creator*
+_Task definition created by squad-creator_

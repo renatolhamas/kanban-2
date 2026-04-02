@@ -9,28 +9,38 @@
  *   4. Replace hardcoded colors with token references
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const ROOT = process.cwd();
-const EXTRACTION_DIR = path.join(ROOT, 'workspace', 'domains', 'design-system', 'extraction');
-const MERGED_PATH = path.join(EXTRACTION_DIR, 'all-pages-merged.json');
-const OUTPUT_DIR = path.join(EXTRACTION_DIR, 'curated');
-const OUTPUT_PATH = path.join(OUTPUT_DIR, 'curated-shadows.json');
+const EXTRACTION_DIR = path.join(
+  ROOT,
+  "workspace",
+  "domains",
+  "design-system",
+  "extraction",
+);
+const MERGED_PATH = path.join(EXTRACTION_DIR, "all-pages-merged.json");
+const OUTPUT_DIR = path.join(EXTRACTION_DIR, "curated");
+const OUTPUT_PATH = path.join(OUTPUT_DIR, "curated-shadows.json");
 
 // ── Depth Buckets ──────────────────────────────────────────────────────────
 
 const DEPTH_BUCKETS = [
-  { name: 'xs', min: 0, max: 3, description: 'hover states, subtle elevation' },
-  { name: 'sm', min: 4, max: 8, description: 'cards resting' },
-  { name: 'md', min: 9, max: 15, description: 'cards elevated, dropdowns' },
-  { name: 'lg', min: 16, max: 25, description: 'dialogs, popovers' },
-  { name: 'xl', min: 26, max: 50, description: 'modals, overlays' },
-  { name: '2xl', min: 51, max: Infinity, description: 'maximum elevation' },
+  { name: "xs", min: 0, max: 3, description: "hover states, subtle elevation" },
+  { name: "sm", min: 4, max: 8, description: "cards resting" },
+  { name: "md", min: 9, max: 15, description: "cards elevated, dropdowns" },
+  { name: "lg", min: 16, max: 25, description: "dialogs, popovers" },
+  { name: "xl", min: 26, max: 50, description: "modals, overlays" },
+  { name: "2xl", min: 51, max: Infinity, description: "maximum elevation" },
 ];
 
 function calculateDepthScore(shadow) {
-  return Math.abs(shadow.offsetX || 0) + Math.abs(shadow.offsetY || 0) + (shadow.blurRadius || 0);
+  return (
+    Math.abs(shadow.offsetX || 0) +
+    Math.abs(shadow.offsetY || 0) +
+    (shadow.blurRadius || 0)
+  );
 }
 
 function findBucket(depthScore) {
@@ -45,12 +55,12 @@ function findBucket(depthScore) {
 // ── Shadow to CSS ──────────────────────────────────────────────────────────
 
 function shadowToCSS(shadow) {
-  const inset = shadow.type === 'INNER_SHADOW' ? 'inset ' : '';
+  const inset = shadow.type === "INNER_SHADOW" ? "inset " : "";
   const ox = shadow.offsetX || 0;
   const oy = shadow.offsetY || 0;
   const blur = shadow.blurRadius || 0;
   const spread = shadow.spread || 0;
-  const color = shadow.color || 'rgba(0,0,0,0.1)';
+  const color = shadow.color || "rgba(0,0,0,0.1)";
 
   return `${inset}${ox}px ${oy}px ${blur}px ${spread}px ${color}`;
 }
@@ -58,16 +68,18 @@ function shadowToCSS(shadow) {
 // ── Main ───────────────────────────────────────────────────────────────────
 
 function main() {
-  console.log('=== SHADOW CURATION PIPELINE ===\n');
+  console.log("=== SHADOW CURATION PIPELINE ===\n");
 
-  const merged = JSON.parse(fs.readFileSync(MERGED_PATH, 'utf8'));
+  const merged = JSON.parse(fs.readFileSync(MERGED_PATH, "utf8"));
   const rawShadows = merged.shadows || [];
 
-  console.log(`Input: ${rawShadows.length} unique shadows from ${merged.meta.pagesIncluded} pages`);
+  console.log(
+    `Input: ${rawShadows.length} unique shadows from ${merged.meta.pagesIncluded} pages`,
+  );
 
   // Separate drop shadows vs inner shadows
-  const dropShadows = rawShadows.filter((s) => s.type === 'DROP_SHADOW');
-  const innerShadows = rawShadows.filter((s) => s.type === 'INNER_SHADOW');
+  const dropShadows = rawShadows.filter((s) => s.type === "DROP_SHADOW");
+  const innerShadows = rawShadows.filter((s) => s.type === "INNER_SHADOW");
 
   console.log(`  Drop shadows: ${dropShadows.length}`);
   console.log(`  Inner shadows: ${innerShadows.length}`);
@@ -117,7 +129,7 @@ function main() {
       css: shadowToCSS(selected),
       tokenizedCSS: shadowToCSS({
         ...selected,
-        color: 'var(--color-shadow)',
+        color: "var(--color-shadow)",
       }),
       depthScore: selected.depthScore,
       count: selected.count,
@@ -126,12 +138,12 @@ function main() {
 
     if (shadows.length > 1) {
       decisions.push({
-        category: 'shadow',
-        action: 'SELECT',
+        category: "shadow",
+        action: "SELECT",
         items: shadows.map((s) => shadowToCSS(s)),
         result: shadowToCSS(selected),
         reason: `Most used in ${bucket.name} bucket (${selected.count} instances, ${shadows.length} candidates)`,
-        authority: 'DS-CURATION-PIPELINE-PROPOSAL §4.4 — depth bucketing',
+        authority: "DS-CURATION-PIPELINE-PROPOSAL §4.4 — depth bucketing",
       });
     }
   }
@@ -142,9 +154,9 @@ function main() {
     innerShadows.sort((a, b) => (b.count || 0) - (a.count || 0));
     const topInner = innerShadows[0];
     curatedInnerShadows.push({
-      name: 'shadow-inner',
-      cssVar: '--shadow-inner',
-      description: 'inner shadow (inset)',
+      name: "shadow-inner",
+      cssVar: "--shadow-inner",
+      description: "inner shadow (inset)",
       value: {
         type: topInner.type,
         offsetX: topInner.offsetX,
@@ -160,24 +172,25 @@ function main() {
 
   // Stats
   const totalAfter = curatedShadows.length + curatedInnerShadows.length;
-  const reduction = ((rawShadows.length - totalAfter) / rawShadows.length) * 100;
+  const reduction =
+    ((rawShadows.length - totalAfter) / rawShadows.length) * 100;
 
   const scores = {
     before: rawShadows.length,
     after: totalAfter,
     reduction: `${Math.round(reduction * 10) / 10}%`,
-    target: '70%',
-    status: reduction >= 70 ? 'PASS' : reduction >= 50 ? 'CONDITIONAL' : 'FAIL',
+    target: "70%",
+    status: reduction >= 70 ? "PASS" : reduction >= 50 ? "CONDITIONAL" : "FAIL",
     buckets_used: curatedShadows.length,
     inner_shadows: curatedInnerShadows.length,
   };
 
   const output = {
     meta: {
-      source: 'all-pages-merged.json',
+      source: "all-pages-merged.json",
       pagesIncluded: merged.meta.pagesIncluded,
       curatedAt: new Date().toISOString(),
-      algorithm: 'Depth-level bucketing + frequency selection',
+      algorithm: "Depth-level bucketing + frequency selection",
     },
     scores,
     shadows: curatedShadows,
@@ -185,7 +198,7 @@ function main() {
     decisions,
     depthDistribution: DEPTH_BUCKETS.map((b) => ({
       bucket: b.name,
-      range: `${b.min}-${b.max === Infinity ? '∞' : b.max}`,
+      range: `${b.min}-${b.max === Infinity ? "∞" : b.max}`,
       count: (bucketedShadows.get(b.name) || []).length,
     })),
   };
@@ -195,14 +208,20 @@ function main() {
 
   console.log(`\n--- RESULTS ---`);
   console.log(`  Before: ${scores.before} shadows`);
-  console.log(`  After:  ${scores.after} tokens (${scores.buckets_used} drop + ${scores.inner_shadows} inner)`);
-  console.log(`  Reduction: ${scores.reduction} (target: ${scores.target}) → ${scores.status}`);
+  console.log(
+    `  After:  ${scores.after} tokens (${scores.buckets_used} drop + ${scores.inner_shadows} inner)`,
+  );
+  console.log(
+    `  Reduction: ${scores.reduction} (target: ${scores.target}) → ${scores.status}`,
+  );
   for (const s of curatedShadows) {
-    console.log(`    ${s.name}: depth=${s.depthScore}, used=${s.count}x, candidates=${s.candidatesInBucket}`);
+    console.log(
+      `    ${s.name}: depth=${s.depthScore}, used=${s.count}x, candidates=${s.candidatesInBucket}`,
+    );
   }
   console.log(`  Decisions logged: ${decisions.length}`);
   console.log(`\nOutput: ${OUTPUT_PATH}`);
-  console.log('=== DONE ===');
+  console.log("=== DONE ===");
 }
 
 main();

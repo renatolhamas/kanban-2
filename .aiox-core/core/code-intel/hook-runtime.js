@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const path = require('path');
-const { RegistryProvider } = require('./providers/registry-provider');
+const path = require("path");
+const { RegistryProvider } = require("./providers/registry-provider");
 
 /** Cached provider instance (survives across hook invocations in same process). */
 let _provider = null;
@@ -43,9 +43,9 @@ async function resolveCodeIntel(filePath, cwd) {
     // Normalize to relative path (registry uses relative paths)
     let relativePath = filePath;
     if (path.isAbsolute(filePath)) {
-      relativePath = path.relative(cwd, filePath).replace(/\\/g, '/');
+      relativePath = path.relative(cwd, filePath).replace(/\\/g, "/");
     } else {
-      relativePath = filePath.replace(/\\/g, '/');
+      relativePath = filePath.replace(/\\/g, "/");
     }
 
     // Run all three queries in parallel
@@ -56,7 +56,8 @@ async function resolveCodeIntel(filePath, cwd) {
     ]);
 
     // Treat empty dependency graph as no data
-    const hasUsefulDeps = dependencies && dependencies.nodes && dependencies.nodes.length > 0;
+    const hasUsefulDeps =
+      dependencies && dependencies.nodes && dependencies.nodes.length > 0;
 
     // If nothing found at all, try searching by the file basename
     if (!definition && !references && !hasUsefulDeps) {
@@ -102,15 +103,16 @@ function formatAsXml(intel, filePath) {
   // At least one piece of data must exist
   if (!entity && !references && !dependencies) return null;
 
-  const lines = ['<code-intel-context>'];
+  const lines = ["<code-intel-context>"];
   lines.push(`  <target-file>${escapeXml(filePath)}</target-file>`);
 
   // Entity definition
   if (entity) {
-    lines.push('  <existing-entity>');
+    lines.push("  <existing-entity>");
     if (entity.file) lines.push(`    <path>${escapeXml(entity.file)}</path>`);
-    if (entity.context) lines.push(`    <purpose>${escapeXml(entity.context)}</purpose>`);
-    lines.push('  </existing-entity>');
+    if (entity.context)
+      lines.push(`    <purpose>${escapeXml(entity.context)}</purpose>`);
+    lines.push("  </existing-entity>");
   }
 
   // References
@@ -127,13 +129,13 @@ function formatAsXml(intel, filePath) {
 
     lines.push(`  <referenced-by count="${uniqueRefs.length}">`);
     for (const ref of uniqueRefs.slice(0, 15)) {
-      const ctx = ref.context ? ` context="${escapeXml(ref.context)}"` : '';
+      const ctx = ref.context ? ` context="${escapeXml(ref.context)}"` : "";
       lines.push(`    <ref file="${escapeXml(ref.file)}"${ctx} />`);
     }
     if (uniqueRefs.length > 15) {
       lines.push(`    <!-- ...and ${uniqueRefs.length - 15} more -->`);
     }
-    lines.push('  </referenced-by>');
+    lines.push("  </referenced-by>");
   }
 
   // Dependencies
@@ -142,17 +144,17 @@ function formatAsXml(intel, filePath) {
     const depNodes = dependencies.nodes.slice(1);
     lines.push(`  <dependencies count="${depNodes.length}">`);
     for (const dep of depNodes.slice(0, 10)) {
-      const layer = dep.layer ? ` layer="${dep.layer}"` : '';
+      const layer = dep.layer ? ` layer="${dep.layer}"` : "";
       lines.push(`    <dep name="${escapeXml(dep.name)}"${layer} />`);
     }
     if (depNodes.length > 10) {
       lines.push(`    <!-- ...and ${depNodes.length - 10} more -->`);
     }
-    lines.push('  </dependencies>');
+    lines.push("  </dependencies>");
   }
 
-  lines.push('</code-intel-context>');
-  return lines.join('\n');
+  lines.push("</code-intel-context>");
+  return lines.join("\n");
 }
 
 /**
@@ -161,12 +163,12 @@ function formatAsXml(intel, filePath) {
  * @returns {string}
  */
 function escapeXml(str) {
-  if (!str) return '';
+  if (!str) return "";
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 /**

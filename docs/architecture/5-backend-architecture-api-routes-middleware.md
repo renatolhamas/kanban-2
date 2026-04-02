@@ -10,20 +10,20 @@ All `/api/*` routes are protected by:
 
 ```typescript
 // /api/conversations/route.ts (example)
-import { auth } from '@/lib/middleware/auth';
-import { tenantIsolation } from '@/lib/middleware/tenant-isolation';
+import { auth } from "@/lib/middleware/auth";
+import { tenantIsolation } from "@/lib/middleware/tenant-isolation";
 
 export async function GET(req: Request) {
   // Run middleware
   const user = await auth(req);
   const { tenantId } = await tenantIsolation(req, user);
-  
+
   // Query database with tenant isolation
   const conversations = await supabase
-    .from('conversations')
-    .select('*')
-    .eq('tenant_id', tenantId);
-  
+    .from("conversations")
+    .select("*")
+    .eq("tenant_id", tenantId);
+
   return Response.json(conversations);
 }
 ```
@@ -31,6 +31,7 @@ export async function GET(req: Request) {
 ## 5.2 API Route Groups
 
 ### **Auth Routes** (`/api/auth/*`)
+
 - `POST /api/auth/register` — Create tenant + user + "Main" kanban + columns
 - `POST /api/auth/login` — Validate email/password; return JWT (httpOnly cookie)
 - `POST /api/auth/logout` — Destroy session
@@ -38,6 +39,7 @@ export async function GET(req: Request) {
 - `GET /api/auth/me` — Return current user & tenant info
 
 ### **Conversations** (`/api/conversations/*`)
+
 - `GET /api/conversations` — List conversations for tenant (paginated)
 - `GET /api/conversations/[id]` — Get single conversation
 - `PATCH /api/conversations/[id]/column` — Move conversation to column (drag-drop)
@@ -45,17 +47,20 @@ export async function GET(req: Request) {
 - `DELETE /api/conversations/[id]` — Hard delete
 
 ### **Messages** (`/api/messages/*`)
+
 - `POST /api/messages/send` — Send message via Evolution API + save to DB
 - `GET /api/messages?conversation_id=...` — Get message history (paginated, newest first)
 - `POST /api/messages/send-automatic` — Send automatic message template
 
 ### **Contacts** (`/api/contacts/*`)
+
 - `GET /api/contacts` — List contacts (paginated)
 - `POST /api/contacts` — Create contact
 - `PATCH /api/contacts/[id]` — Update contact
 - `DELETE /api/contacts/[id]` — Delete contact
 
 ### **Kanbans** (`/api/kanbans/*`)
+
 - `GET /api/kanbans` — List all kanbans for tenant
 - `POST /api/kanbans` — Create kanban (auto-create columns)
 - `PATCH /api/kanbans/[id]` — Update kanban name/order
@@ -63,6 +68,7 @@ export async function GET(req: Request) {
 - `DELETE /api/kanbans/[id]` — Delete kanban (if not in use)
 
 ### **Automatic Messages** (`/api/automatic-messages/*`)
+
 - `GET /api/automatic-messages` — List templates
 - `POST /api/automatic-messages` — Create template
 - `PATCH /api/automatic-messages/[id]` — Update template
@@ -70,12 +76,14 @@ export async function GET(req: Request) {
 - `POST /api/automatic-messages/[id]/test` — Send test message
 
 ### **Settings** (`/api/settings/*`)
+
 - `PATCH /api/settings/profile` — Update user name/password
 - `GET /api/settings/connection-status` — Evolution API connection status
 - `POST /api/settings/qr-code` — Generate new QR code from Evolution API
 - `POST /api/settings/reconnect` — Force reconnect to WhatsApp
 
 ### **Webhooks** (`/api/webhooks/*`)
+
 - `POST /api/webhooks/messages` — Evolution API webhook for new messages
 - `POST /api/webhooks/connection` — Evolution API webhook for connection status changes
 

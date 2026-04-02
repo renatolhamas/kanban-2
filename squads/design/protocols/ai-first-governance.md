@@ -7,6 +7,7 @@ Prevent research drift, contradictory claims, and non-canonical references by en
 ## Mandatory Rules
 
 1. Canonical Source Hierarchy
+
 - `workspace/system/*` for global policy/governance.
 - `workspace/ui/registry.json` for component distribution truth.
 - `workspace/domains/design-system/*` for DS metadata and glossary.
@@ -14,6 +15,7 @@ Prevent research drift, contradictory claims, and non-canonical references by en
 - `docs/research/*` is supporting evidence, never final source of truth.
 
 2. Evidence Contract
+
 - Every recommendation must include explicit evidence pointers:
   - artifact path
   - status (`implemented`, `partial`, `concept`)
@@ -21,10 +23,12 @@ Prevent research drift, contradictory claims, and non-canonical references by en
 - If evidence is missing, mark as `assumption` and do not present as fact.
 
 3. Contradiction Guard
+
 - Never claim completion if any dependency is `partial` or `concept`.
 - If two artifacts conflict, prefer canonical source hierarchy and log conflict.
 
 4. Research-to-Execution Handshake
+
 - Before proposing execution, map:
   - `Existing` (what already exists)
   - `Gap` (what is missing)
@@ -32,6 +36,7 @@ Prevent research drift, contradictory claims, and non-canonical references by en
 - Output must include unresolved items explicitly.
 
 5. Language for Status Claims
+
 - Use only:
   - `Implemented`
   - `Partially implemented`
@@ -53,4 +58,3 @@ governance_check:
   contradictions_found: []
   unresolved_items: []
 ```
-

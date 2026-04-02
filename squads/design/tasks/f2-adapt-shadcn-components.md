@@ -121,12 +121,14 @@ Para cada componente adaptado:
 ## Button — Changelog
 
 ### Visual Changes
+
 - Increased border-radius from rounded-md to rounded-lg
 - Added transition-all duration-200 for smoother hover
 - Changed shadow-xs to shadow-sm for more depth
 - outline variant: border → border-2
 
 ### Preserved
+
 - All 6 variants (default, destructive, outline, secondary, ghost, link)
 - All 4 sizes (default, sm, lg, icon)
 - Radix Slot composition

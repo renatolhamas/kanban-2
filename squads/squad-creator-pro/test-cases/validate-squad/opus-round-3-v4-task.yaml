@@ -10,9 +10,9 @@ test_metadata:
   round: 3
   task_version: "4.0.0"
   previous_rounds:
-    - round: 1 (haiku, task v3.3.0)  # 6.5/10, 41% quality vs opus
-    - round: 2 (haiku, task v3.3.1)  # 7.02/10, 74% quality vs opus
-    - baseline (opus, task v3.3.0)   # 7.89/10, 100% baseline
+    - round: 1 (haiku, task v3.3.0) # 6.5/10, 41% quality vs opus
+    - round: 2 (haiku, task v3.3.1) # 7.02/10, 74% quality vs opus
+    - baseline (opus, task v3.3.0) # 7.89/10, 100% baseline
   change_tested: "GAP ZERO fix - mandatory script execution before LLM analysis"
   script_version: "validate-squad.sh v2.0"
 
@@ -25,7 +25,7 @@ execution:
   followed_v4_instructions: true
   script_ran_first: true
   preflight_generated: true
-  manual_ls_grep_wc: false  # LLM did NOT collect data manually
+  manual_ls_grep_wc: false # LLM did NOT collect data manually
 
 # ============================================================
 # SCRIPT OUTPUT (deterministic)

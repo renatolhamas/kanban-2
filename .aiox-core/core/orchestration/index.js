@@ -12,37 +12,52 @@
  * @version 1.1.0
  */
 
-const WorkflowOrchestrator = require('./workflow-orchestrator');
-const SubagentPromptBuilder = require('./subagent-prompt-builder');
-const ContextManager = require('./context-manager');
-const ChecklistRunner = require('./checklist-runner');
-const ParallelExecutor = require('./parallel-executor');
+const WorkflowOrchestrator = require("./workflow-orchestrator");
+const SubagentPromptBuilder = require("./subagent-prompt-builder");
+const ContextManager = require("./context-manager");
+const ChecklistRunner = require("./checklist-runner");
+const ParallelExecutor = require("./parallel-executor");
 
 // V3.1 Components
-const TechStackDetector = require('./tech-stack-detector');
-const ConditionEvaluator = require('./condition-evaluator');
-const SkillDispatcher = require('./skill-dispatcher');
-const executionProfileResolver = require('./execution-profile-resolver');
+const TechStackDetector = require("./tech-stack-detector");
+const ConditionEvaluator = require("./condition-evaluator");
+const SkillDispatcher = require("./skill-dispatcher");
+const executionProfileResolver = require("./execution-profile-resolver");
 
 // Epic 0: Master Orchestrator (ADE)
-const MasterOrchestrator = require('./master-orchestrator');
-const { RecoveryHandler, RecoveryStrategy, RecoveryResult } = require('./recovery-handler');
-const { GateEvaluator, GateVerdict, DEFAULT_GATE_CONFIG } = require('./gate-evaluator');
+const MasterOrchestrator = require("./master-orchestrator");
+const {
+  RecoveryHandler,
+  RecoveryStrategy,
+  RecoveryResult,
+} = require("./recovery-handler");
+const {
+  GateEvaluator,
+  GateVerdict,
+  DEFAULT_GATE_CONFIG,
+} = require("./gate-evaluator");
 
 // Story 0.7: Agent Invoker
-const { AgentInvoker, SUPPORTED_AGENTS, InvocationStatus } = require('./agent-invoker');
+const {
+  AgentInvoker,
+  SUPPORTED_AGENTS,
+  InvocationStatus,
+} = require("./agent-invoker");
 
 // Story 0.8: Dashboard Integration
-const { DashboardIntegration, NotificationType } = require('./dashboard-integration');
+const {
+  DashboardIntegration,
+  NotificationType,
+} = require("./dashboard-integration");
 
 // Story 0.9: CLI Commands
-const cliCommands = require('./cli-commands');
+const cliCommands = require("./cli-commands");
 
 // Story 11.1: Executor Assignment (Projeto Bob)
-const ExecutorAssignment = require('./executor-assignment');
+const ExecutorAssignment = require("./executor-assignment");
 
 // Story 11.2: Terminal Spawner (Projeto Bob)
-const TerminalSpawner = require('./terminal-spawner');
+const TerminalSpawner = require("./terminal-spawner");
 
 // Story 11.3: Workflow Executor (Projeto Bob)
 const {
@@ -51,14 +66,14 @@ const {
   executeDevelopmentCycle,
   PhaseStatus,
   CheckpointDecision,
-} = require('./workflow-executor');
+} = require("./workflow-executor");
 
 // Story 11.4: Surface Checker (Projeto Bob)
 const {
   SurfaceChecker,
   createSurfaceChecker,
   shouldSurface,
-} = require('./surface-checker');
+} = require("./surface-checker");
 
 // Story 11.5: Session State Persistence (Projeto Bob)
 const {
@@ -72,7 +87,7 @@ const {
   SESSION_STATE_VERSION,
   SESSION_STATE_FILENAME,
   CRASH_THRESHOLD_MINUTES,
-} = require('./session-state');
+} = require("./session-state");
 
 // Story 11.6: Observability Panel (Projeto Bob)
 const {
@@ -84,11 +99,11 @@ const {
   PanelRenderer,
   BOX,
   STATUS,
-} = require('../ui');
+} = require("../ui");
 
 // Story 12.3: Bob Orchestrator (Projeto Bob)
-const { BobOrchestrator, ProjectState } = require('./bob-orchestrator');
-const LockManager = require('./lock-manager');
+const { BobOrchestrator, ProjectState } = require("./bob-orchestrator");
+const LockManager = require("./lock-manager");
 
 // Story 12.5: Data Lifecycle Manager (Projeto Bob)
 const {
@@ -97,7 +112,7 @@ const {
   runStartupCleanup,
   STALE_SESSION_DAYS,
   STALE_SNAPSHOT_DAYS,
-} = require('./data-lifecycle-manager');
+} = require("./data-lifecycle-manager");
 
 // Story 12.4: Epic Context Accumulator (Projeto Bob)
 const {
@@ -111,7 +126,7 @@ const {
   hasFileOverlap,
   TOKEN_LIMIT,
   HARD_CAP_PER_STORY,
-} = require('./epic-context-accumulator');
+} = require("./epic-context-accumulator");
 
 // Story 12.6: Bob Status Writer (Projeto Bob)
 const {
@@ -120,13 +135,13 @@ const {
   BOB_STATUS_VERSION,
   DEFAULT_PIPELINE_STAGES,
   createDefaultBobStatus,
-} = require('./bob-status-writer');
+} = require("./bob-status-writer");
 
 // Story 12.7: Message Formatter (Educational Mode)
 const {
   MessageFormatter,
   createMessageFormatter,
-} = require('./message-formatter');
+} = require("./message-formatter");
 
 // Story 12.8: Brownfield Handler (Projeto Bob)
 const {
@@ -134,7 +149,7 @@ const {
   BrownfieldPhase,
   PostDiscoveryChoice,
   PhaseFailureAction,
-} = require('./brownfield-handler');
+} = require("./brownfield-handler");
 
 // Story 12.13: Greenfield Handler (Projeto Bob)
 const {
@@ -143,7 +158,7 @@ const {
   PhaseFailureAction: GreenfieldPhaseFailureAction,
   DEFAULT_GREENFIELD_INDICATORS,
   PHASE_1_SEQUENCE,
-} = require('./greenfield-handler');
+} = require("./greenfield-handler");
 
 module.exports = {
   // Main orchestrators

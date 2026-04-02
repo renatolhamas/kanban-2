@@ -1,7 +1,7 @@
 ---
 name: qa
-description: 'Use for comprehensive test architecture review, quality gate decisions, and code improvement. Provides thorough analysis including requirements traceability, risk assessment, and test strategy. Advisory only - teams choose their quality bar.'
-tools: ['read', 'edit', 'search', 'execute']
+description: "Use for comprehensive test architecture review, quality gate decisions, and code improvement. Provides thorough analysis including requirements traceability, risk assessment, and test strategy. Advisory only - teams choose their quality bar."
+tools: ["read", "edit", "search", "execute"]
 ---
 
 # ✅ Quinn Agent (@qa)
@@ -41,4 +41,5 @@ Use `*` prefix for commands:
 **I collaborate with:**
 
 ---
-*AIOX Agent - Synced from .aiox-core/development/agents/qa.md*
+
+_AIOX Agent - Synced from .aiox-core/development/agents/qa.md_

@@ -22,12 +22,24 @@
       "type": "object",
       "required": ["name", "id", "title", "icon"],
       "properties": {
-        "name": { "type": "string", "description": "Agent persona name (e.g., Dex, Quinn)" },
-        "id": { "type": "string", "description": "Agent identifier (e.g., dev, qa)" },
+        "name": {
+          "type": "string",
+          "description": "Agent persona name (e.g., Dex, Quinn)"
+        },
+        "id": {
+          "type": "string",
+          "description": "Agent identifier (e.g., dev, qa)"
+        },
         "title": { "type": "string", "description": "Agent role title" },
         "icon": { "type": "string", "description": "Emoji icon for agent" },
-        "whenToUse": { "type": "string", "description": "When to use this agent" },
-        "customization": { "type": ["object", "null"], "description": "Custom overrides" }
+        "whenToUse": {
+          "type": "string",
+          "description": "When to use this agent"
+        },
+        "customization": {
+          "type": ["object", "null"],
+          "description": "Custom overrides"
+        }
       }
     },
     "persona_profile": {
@@ -39,7 +51,10 @@
           "type": "object",
           "properties": {
             "tone": { "type": "string" },
-            "emoji_frequency": { "type": "string", "enum": ["minimal", "low", "medium", "high"] },
+            "emoji_frequency": {
+              "type": "string",
+              "enum": ["minimal", "low", "medium", "high"]
+            },
             "vocabulary": { "type": "array", "items": { "type": "string" } },
             "greeting_levels": { "type": "object" },
             "signature_closing": { "type": "string" }
@@ -61,10 +76,7 @@
       "type": "array",
       "description": "Available commands for this agent",
       "items": {
-        "oneOf": [
-          { "type": "object" },
-          { "type": "string" }
-        ]
+        "oneOf": [{ "type": "object" }, { "type": "string" }]
       }
     },
     "dependencies": {
@@ -91,21 +103,48 @@
           "type": "object",
           "description": "Spec Pipeline capabilities (Epic 3)",
           "properties": {
-            "canGather": { "type": "boolean", "description": "@pm - gather requirements" },
-            "canAssess": { "type": "boolean", "description": "@architect - assess complexity" },
-            "canResearch": { "type": "boolean", "description": "@analyst - research dependencies" },
-            "canWrite": { "type": "boolean", "description": "@pm - write spec" },
-            "canCritique": { "type": "boolean", "description": "@qa - critique spec" }
+            "canGather": {
+              "type": "boolean",
+              "description": "@pm - gather requirements"
+            },
+            "canAssess": {
+              "type": "boolean",
+              "description": "@architect - assess complexity"
+            },
+            "canResearch": {
+              "type": "boolean",
+              "description": "@analyst - research dependencies"
+            },
+            "canWrite": {
+              "type": "boolean",
+              "description": "@pm - write spec"
+            },
+            "canCritique": {
+              "type": "boolean",
+              "description": "@qa - critique spec"
+            }
           }
         },
         "execution": {
           "type": "object",
           "description": "Execution Engine capabilities (Epic 4)",
           "properties": {
-            "canCreatePlan": { "type": "boolean", "description": "@architect - create implementation plan" },
-            "canCreateContext": { "type": "boolean", "description": "@architect - create project context" },
-            "canExecute": { "type": "boolean", "description": "@dev - execute subtasks" },
-            "canVerify": { "type": "boolean", "description": "@dev, @qa - verify subtasks" },
+            "canCreatePlan": {
+              "type": "boolean",
+              "description": "@architect - create implementation plan"
+            },
+            "canCreateContext": {
+              "type": "boolean",
+              "description": "@architect - create project context"
+            },
+            "canExecute": {
+              "type": "boolean",
+              "description": "@dev - execute subtasks"
+            },
+            "canVerify": {
+              "type": "boolean",
+              "description": "@dev, @qa - verify subtasks"
+            },
             "selfCritique": {
               "type": "object",
               "properties": {
@@ -119,8 +158,14 @@
           "type": "object",
           "description": "Recovery System capabilities (Epic 5)",
           "properties": {
-            "canTrack": { "type": "boolean", "description": "@dev - track attempts" },
-            "canRollback": { "type": "boolean", "description": "@dev - rollback changes" },
+            "canTrack": {
+              "type": "boolean",
+              "description": "@dev - track attempts"
+            },
+            "canRollback": {
+              "type": "boolean",
+              "description": "@dev - rollback changes"
+            },
             "maxAttempts": { "type": "integer", "default": 3 },
             "stuckDetection": { "type": "boolean" }
           }

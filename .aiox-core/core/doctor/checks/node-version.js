@@ -7,16 +7,16 @@
  * @story INS-4.1
  */
 
-const name = 'node-version';
+const name = "node-version";
 
 async function run() {
-  const version = process.version.replace('v', '');
-  const [major] = version.split('.').map(Number);
+  const version = process.version.replace("v", "");
+  const [major] = version.split(".").map(Number);
 
   if (major >= 18) {
     return {
       check: name,
-      status: 'PASS',
+      status: "PASS",
       message: `Node.js ${process.version}`,
       fixCommand: null,
     };
@@ -24,9 +24,9 @@ async function run() {
 
   return {
     check: name,
-    status: 'FAIL',
+    status: "FAIL",
     message: `Node.js ${process.version} (requires >= 18.0.0)`,
-    fixCommand: 'nvm install 20 && nvm use 20',
+    fixCommand: "nvm install 20 && nvm use 20",
   };
 }
 

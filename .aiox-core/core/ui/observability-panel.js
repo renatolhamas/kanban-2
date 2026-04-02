@@ -17,17 +17,17 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
-const { PanelRenderer } = require('./panel-renderer');
+const { PanelRenderer } = require("./panel-renderer");
 
 /**
  * Panel modes
  * @enum {string}
  */
 const PanelMode = {
-  MINIMAL: 'minimal',
-  DETAILED: 'detailed',
+  MINIMAL: "minimal",
+  DETAILED: "detailed",
 };
 
 /**
@@ -35,12 +35,12 @@ const PanelMode = {
  * @enum {string}
  */
 const PipelineStage = {
-  PRD: 'PRD',
-  EPIC: 'Epic',
-  STORY: 'Story',
-  DEV: 'Dev',
-  QA: 'QA',
-  PUSH: 'Push',
+  PRD: "PRD",
+  EPIC: "Epic",
+  STORY: "Story",
+  DEV: "Dev",
+  QA: "QA",
+  PUSH: "Push",
 };
 
 /**
@@ -55,7 +55,7 @@ function createDefaultState() {
     pipeline: {
       stages: Object.values(PipelineStage),
       current_stage: null,
-      story_progress: '0/0',
+      story_progress: "0/0",
       completed_stages: [],
     },
 
@@ -145,9 +145,10 @@ class ObservabilityPanel {
    * @returns {void}
    */
   render() {
-    const output = this.state.mode === PanelMode.DETAILED
-      ? this.renderer.renderDetailed(this.state)
-      : this.renderer.renderMinimal(this.state);
+    const output =
+      this.state.mode === PanelMode.DETAILED
+        ? this.renderer.renderDetailed(this.state)
+        : this.renderer.renderMinimal(this.state);
 
     this.clearPanel();
     process.stdout.write(output);
@@ -174,11 +175,17 @@ class ObservabilityPanel {
     }
 
     if (updates.current_agent) {
-      this.state.current_agent = { ...this.state.current_agent, ...updates.current_agent };
+      this.state.current_agent = {
+        ...this.state.current_agent,
+        ...updates.current_agent,
+      };
     }
 
     if (updates.active_terminals) {
-      this.state.active_terminals = { ...this.state.active_terminals, ...updates.active_terminals };
+      this.state.active_terminals = {
+        ...this.state.active_terminals,
+        ...updates.active_terminals,
+      };
     }
 
     if (updates.tradeoffs) {
@@ -305,9 +312,10 @@ class ObservabilityPanel {
    * @returns {string} Current mode after toggle
    */
   toggleMode() {
-    this.state.mode = this.state.mode === PanelMode.MINIMAL
-      ? PanelMode.DETAILED
-      : PanelMode.MINIMAL;
+    this.state.mode =
+      this.state.mode === PanelMode.MINIMAL
+        ? PanelMode.DETAILED
+        : PanelMode.MINIMAL;
     return this.state.mode;
   }
 
@@ -330,7 +338,7 @@ class ObservabilityPanel {
     const now = Date.now();
 
     const formatDuration = (ms) => {
-      if (!ms || ms < 0) return '0s';
+      if (!ms || ms < 0) return "0s";
       const seconds = Math.floor(ms / 1000);
       const minutes = Math.floor(seconds / 60);
       const hours = Math.floor(minutes / 60);
@@ -347,10 +355,10 @@ class ObservabilityPanel {
     return {
       story: this.state.elapsed.story_start
         ? formatDuration(now - this.state.elapsed.story_start)
-        : '--',
+        : "--",
       session: this.state.elapsed.session_start
         ? formatDuration(now - this.state.elapsed.session_start)
-        : '--',
+        : "--",
     };
   }
 

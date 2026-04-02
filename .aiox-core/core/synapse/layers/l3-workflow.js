@@ -12,9 +12,9 @@
  * @created Story SYN-4 - Layer Processors L0-L3
  */
 
-const path = require('path');
-const { loadDomainFile } = require('../domain/domain-loader');
-const LayerProcessor = require('./layer-processor');
+const path = require("path");
+const { loadDomainFile } = require("../domain/domain-loader");
+const LayerProcessor = require("./layer-processor");
 
 /**
  * L3 Workflow Processor
@@ -26,7 +26,7 @@ const LayerProcessor = require('./layer-processor');
  */
 class L3WorkflowProcessor extends LayerProcessor {
   constructor() {
-    super({ name: 'workflow', layer: 3, timeout: 15 });
+    super({ name: "workflow", layer: 3, timeout: 15 });
   }
 
   /**
@@ -56,8 +56,9 @@ class L3WorkflowProcessor extends LayerProcessor {
     }
 
     // 2. Find domain with matching workflowTrigger
-    const domainKey = Object.keys(manifest.domains || {})
-      .find(k => manifest.domains[k].workflowTrigger === workflowId);
+    const domainKey = Object.keys(manifest.domains || {}).find(
+      (k) => manifest.domains[k].workflowTrigger === workflowId,
+    );
 
     if (!domainKey) {
       return null;

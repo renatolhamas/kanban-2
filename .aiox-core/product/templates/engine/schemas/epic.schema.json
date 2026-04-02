@@ -79,7 +79,14 @@
           },
           "status": {
             "type": "string",
-            "enum": ["Draft", "Ready", "In Progress", "In Review", "Blocked", "Done"]
+            "enum": [
+              "Draft",
+              "Ready",
+              "In Progress",
+              "In Review",
+              "Blocked",
+              "Done"
+            ]
           }
         }
       },

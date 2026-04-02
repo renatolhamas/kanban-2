@@ -14,10 +14,10 @@
  * @created Story SYN-5 - Layer Processors L4-L7
  */
 
-const fs = require('fs');
-const path = require('path');
-const { parseManifest, loadDomainFile } = require('../domain/domain-loader');
-const LayerProcessor = require('./layer-processor');
+const fs = require("fs");
+const path = require("path");
+const { parseManifest, loadDomainFile } = require("../domain/domain-loader");
+const LayerProcessor = require("./layer-processor");
 
 /** Cache TTL in milliseconds (60 seconds) */
 const CACHE_TTL_MS = 60000;
@@ -33,7 +33,7 @@ const CACHE_TTL_MS = 60000;
  */
 class L5SquadProcessor extends LayerProcessor {
   constructor() {
-    super({ name: 'squad', layer: 5, timeout: 20 });
+    super({ name: "squad", layer: 5, timeout: 20 });
   }
 
   /**
@@ -61,7 +61,7 @@ class L5SquadProcessor extends LayerProcessor {
 
     // 1. Resolve squads/ directory (sibling of .synapse/)
     const projectRoot = path.dirname(synapsePath);
-    const squadsDir = path.join(projectRoot, 'squads');
+    const squadsDir = path.join(projectRoot, "squads");
 
     // Graceful: missing squads/ directory
     if (!fs.existsSync(squadsDir)) {
@@ -69,8 +69,8 @@ class L5SquadProcessor extends LayerProcessor {
     }
 
     // 2. Check cache
-    const cacheDir = path.join(synapsePath, 'cache');
-    const cachePath = path.join(cacheDir, 'squad-manifests.json');
+    const cacheDir = path.join(synapsePath, "cache");
+    const cachePath = path.join(cacheDir, "squad-manifests.json");
     const cachedData = this._readCache(cachePath);
 
     // 3. Discover squads (from cache or scan)
@@ -97,8 +97,11 @@ class L5SquadProcessor extends LayerProcessor {
     const squadNames = Object.keys(squadManifests);
     if (activeSquadName && squadManifests[activeSquadName]) {
       this._loadSquadDomains(
-        activeSquadName, squadManifests[activeSquadName],
-        squadsDir, allRules, domainsLoaded,
+        activeSquadName,
+        squadManifests[activeSquadName],
+        squadsDir,
+        allRules,
+        domainsLoaded,
       );
     }
 
@@ -106,8 +109,11 @@ class L5SquadProcessor extends LayerProcessor {
     for (const squadName of squadNames) {
       if (squadName === activeSquadName) continue;
       this._loadSquadDomains(
-        squadName, squadManifests[squadName],
-        squadsDir, allRules, domainsLoaded,
+        squadName,
+        squadManifests[squadName],
+        squadsDir,
+        allRules,
+        domainsLoaded,
       );
     }
 
@@ -137,15 +143,16 @@ class L5SquadProcessor extends LayerProcessor {
    */
   _loadSquadDomains(squadName, manifest, squadsDir, allRules, domainsLoaded) {
     const squadUpper = squadName.toUpperCase();
-    const squadSynapsePath = path.join(squadsDir, squadName, '.synapse');
+    const squadSynapsePath = path.join(squadsDir, squadName, ".synapse");
 
     // Check merge mode from {SQUAD}_EXTENDS key
     const extendsKey = `${squadUpper}_EXTENDS`;
-    const mergeMode = manifest.domains?.[extendsKey]?.file || 'extend';
-    const resolvedMerge = ['extend', 'override', 'none'].includes(mergeMode)
-      ? mergeMode : 'extend';
+    const mergeMode = manifest.domains?.[extendsKey]?.file || "extend";
+    const resolvedMerge = ["extend", "override", "none"].includes(mergeMode)
+      ? mergeMode
+      : "extend";
 
-    if (resolvedMerge === 'none') {
+    if (resolvedMerge === "none") {
       return; // Squad opted out of rule injection
     }
 
@@ -156,7 +163,10 @@ class L5SquadProcessor extends LayerProcessor {
       const namespacedKey = `${squadUpper}_${domainKey}`;
       const domainFile = domain.file
         ? path.join(squadSynapsePath, domain.file)
-        : path.join(squadSynapsePath, domainKey.toLowerCase().replace(/_/g, '-'));
+        : path.join(
+            squadSynapsePath,
+            domainKey.toLowerCase().replace(/_/g, "-"),
+          );
 
       const rules = loadDomainFile(domainFile);
       if (rules && rules.length > 0) {
@@ -175,9 +185,9 @@ class L5SquadProcessor extends LayerProcessor {
    */
   _readCache(cachePath) {
     try {
-      const raw = fs.readFileSync(cachePath, 'utf8');
+      const raw = fs.readFileSync(cachePath, "utf8");
       const cached = JSON.parse(raw);
-      if (cached.timestamp && (Date.now() - cached.timestamp) < CACHE_TTL_MS) {
+      if (cached.timestamp && Date.now() - cached.timestamp < CACHE_TTL_MS) {
         return cached;
       }
       return null; // Stale
@@ -199,10 +209,13 @@ class L5SquadProcessor extends LayerProcessor {
       if (!fs.existsSync(cacheDir)) {
         fs.mkdirSync(cacheDir, { recursive: true });
       }
-      fs.writeFileSync(cachePath, JSON.stringify({
-        timestamp: Date.now(),
-        manifests,
-      }));
+      fs.writeFileSync(
+        cachePath,
+        JSON.stringify({
+          timestamp: Date.now(),
+          manifests,
+        }),
+      );
     } catch (_error) {
       // Graceful: cache write failure is non-fatal
     }
@@ -228,7 +241,12 @@ class L5SquadProcessor extends LayerProcessor {
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
 
-      const manifestPath = path.join(squadsDir, entry.name, '.synapse', 'manifest');
+      const manifestPath = path.join(
+        squadsDir,
+        entry.name,
+        ".synapse",
+        "manifest",
+      );
       if (!fs.existsSync(manifestPath)) continue;
 
       const parsed = parseManifest(manifestPath);

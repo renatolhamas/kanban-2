@@ -108,14 +108,16 @@ Analyzing squad...
 ### Step 1: Validate Squad Exists
 
 ```javascript
-const { SquadLoader } = require('../scripts/squad/squad-loader');
+const { SquadLoader } = require("../scripts/squad/squad-loader");
 const loader = new SquadLoader();
 
-const squadPath = path.join('./squads', squadName);
+const squadPath = path.join("./squads", squadName);
 const exists = await loader.squadExists(squadName);
 
 if (!exists) {
-  throw new Error(`Squad "${squadName}" not found. Use *list-squads to see available squads.`);
+  throw new Error(
+    `Squad "${squadName}" not found. Use *list-squads to see available squads.`,
+  );
 }
 ```
 
@@ -130,15 +132,15 @@ const overview = {
   version: manifest.version,
   author: manifest.author,
   license: manifest.license,
-  aioxMinVersion: manifest.aiox?.minVersion || 'N/A',
-  description: manifest.description
+  aioxMinVersion: manifest.aiox?.minVersion || "N/A",
+  description: manifest.description,
 };
 ```
 
 ### Step 3: Inventory Components
 
 ```javascript
-const { SquadAnalyzer } = require('../scripts/squad/squad-analyzer');
+const { SquadAnalyzer } = require("../scripts/squad/squad-analyzer");
 const analyzer = new SquadAnalyzer();
 
 const inventory = await analyzer.inventoryComponents(squadPath);
@@ -186,21 +188,26 @@ const suggestions = analyzer.generateSuggestions(inventory, coverage);
 ### Step 6: Format and Display Report
 
 ```javascript
-const report = analyzer.formatReport({
-  overview,
-  inventory,
-  coverage,
-  suggestions
-}, outputFormat);
+const report = analyzer.formatReport(
+  {
+    overview,
+    inventory,
+    coverage,
+    suggestions,
+  },
+  outputFormat,
+);
 
-if (outputFormat === 'console') {
+if (outputFormat === "console") {
   console.log(report);
-} else if (outputFormat === 'markdown') {
-  const outputPath = path.join(squadPath, 'ANALYSIS.md');
+} else if (outputFormat === "markdown") {
+  const outputPath = path.join(squadPath, "ANALYSIS.md");
   await fs.writeFile(outputPath, report);
   console.log(`Analysis saved to: ${outputPath}`);
-} else if (outputFormat === 'json') {
-  console.log(JSON.stringify({ overview, inventory, coverage, suggestions }, null, 2));
+} else if (outputFormat === "json") {
+  console.log(
+    JSON.stringify({ overview, inventory, coverage, suggestions }, null, 2),
+  );
 }
 ```
 
@@ -312,4 +319,4 @@ tags:
 
 ---
 
-*Task definition for *analyze-squad command*
+*Task definition for *analyze-squad command\*

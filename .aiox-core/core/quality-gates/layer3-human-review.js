@@ -11,10 +11,10 @@
  * @story 2.10 - Quality Gate Manager
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const { BaseLayer } = require('./base-layer');
-const { ChecklistGenerator } = require('./checklist-generator');
+const fs = require("fs").promises;
+const path = require("path");
+const { BaseLayer } = require("./base-layer");
+const { ChecklistGenerator } = require("./checklist-generator");
 
 /**
  * Layer 3: Human Review
@@ -26,10 +26,10 @@ class Layer3HumanReview extends BaseLayer {
    * @param {Object} config - Layer 3 configuration
    */
   constructor(config = {}) {
-    super('Layer 3: Human Review', config);
+    super("Layer 3: Human Review", config);
     this.requireSignoff = config.requireSignoff !== false;
-    this.assignmentStrategy = config.assignmentStrategy || 'auto';
-    this.defaultReviewer = config.defaultReviewer || '@architect';
+    this.assignmentStrategy = config.assignmentStrategy || "auto";
+    this.defaultReviewer = config.defaultReviewer || "@architect";
     this.checklistConfig = config.checklist || {};
     this.signoffConfig = config.signoff || {};
     this.checklistGenerator = new ChecklistGenerator(this.checklistConfig);
@@ -48,18 +48,18 @@ class Layer3HumanReview extends BaseLayer {
 
     if (!this.enabled) {
       this.addResult({
-        check: 'layer3',
+        check: "layer3",
         pass: true,
         skipped: true,
-        message: 'Layer 3 disabled',
+        message: "Layer 3 disabled",
       });
       this.stopTimer();
       return this.getSummary();
     }
 
     if (verbose) {
-      console.log('\n👤 Layer 3: Human Review');
-      console.log('━'.repeat(50));
+      console.log("\n👤 Layer 3: Human Review");
+      console.log("━".repeat(50));
     }
 
     // Generate review checklist
@@ -78,8 +78,10 @@ class Layer3HumanReview extends BaseLayer {
 
     if (verbose) {
       const summary = this.getSummary();
-      const icon = signoffResult.signedOff ? '✅' : '⏳';
-      console.log(`\n${icon} Layer 3 ${signoffResult.signedOff ? 'SIGNED OFF' : 'PENDING'} (${this.formatDuration(summary.duration)})`);
+      const icon = signoffResult.signedOff ? "✅" : "⏳";
+      console.log(
+        `\n${icon} Layer 3 ${signoffResult.signedOff ? "SIGNED OFF" : "PENDING"} (${this.formatDuration(summary.duration)})`,
+      );
     }
 
     return this.getSummary();
@@ -94,7 +96,7 @@ class Layer3HumanReview extends BaseLayer {
     const { verbose = false, storyId = null, changedFiles = [] } = context;
 
     if (verbose) {
-      console.log('  📋 Generating review checklist...');
+      console.log("  📋 Generating review checklist...");
     }
 
     try {
@@ -105,7 +107,7 @@ class Layer3HumanReview extends BaseLayer {
       });
 
       const result = {
-        check: 'checklist',
+        check: "checklist",
         pass: true,
         items: checklist.items.length,
         checklist,
@@ -125,7 +127,7 @@ class Layer3HumanReview extends BaseLayer {
       return result;
     } catch (error) {
       return {
-        check: 'checklist',
+        check: "checklist",
         pass: false,
         error: error.message,
         message: `Checklist error: ${error.message}`,
@@ -142,26 +144,26 @@ class Layer3HumanReview extends BaseLayer {
     const { verbose = false, changedFiles = [] } = context;
 
     if (verbose) {
-      console.log('  👤 Assigning reviewer...');
+      console.log("  👤 Assigning reviewer...");
     }
 
     try {
       let reviewer;
 
       switch (this.assignmentStrategy) {
-        case 'auto':
+        case "auto":
           reviewer = await this.autoAssignReviewer(changedFiles);
           break;
-        case 'round-robin':
+        case "round-robin":
           reviewer = await this.roundRobinAssign();
           break;
-        case 'manual':
+        case "manual":
         default:
           reviewer = this.defaultReviewer;
       }
 
       const result = {
-        check: 'assignment',
+        check: "assignment",
         pass: true,
         reviewer,
         strategy: this.assignmentStrategy,
@@ -175,7 +177,7 @@ class Layer3HumanReview extends BaseLayer {
       return result;
     } catch (error) {
       return {
-        check: 'assignment',
+        check: "assignment",
         pass: true, // Don't block on assignment errors
         reviewer: this.defaultReviewer,
         error: error.message,
@@ -192,14 +194,14 @@ class Layer3HumanReview extends BaseLayer {
   async autoAssignReviewer(changedFiles = []) {
     // Mapping of file patterns to reviewers
     const reviewerMapping = {
-      'docs/architecture/': '@architect',
-      'docs/stories/': '@sm',
-      'docs/prd/': '@po',
-      '.aiox-core/agents/': '@aiox-master',
-      '.aiox-core/core/': '@architect',
-      'tests/': '@qa',
-      'src/': '@dev',
-      '.github/': '@devops',
+      "docs/architecture/": "@architect",
+      "docs/stories/": "@sm",
+      "docs/prd/": "@po",
+      ".aiox-core/agents/": "@aiox-master",
+      ".aiox-core/core/": "@architect",
+      "tests/": "@qa",
+      "src/": "@dev",
+      ".github/": "@devops",
     };
 
     // Count matches for each reviewer
@@ -207,7 +209,10 @@ class Layer3HumanReview extends BaseLayer {
 
     changedFiles.forEach((file) => {
       Object.entries(reviewerMapping).forEach(([pattern, reviewer]) => {
-        if (file.includes(pattern.replace(/\//g, path.sep)) || file.includes(pattern)) {
+        if (
+          file.includes(pattern.replace(/\//g, path.sep)) ||
+          file.includes(pattern)
+        ) {
           reviewerScores[reviewer] = (reviewerScores[reviewer] || 0) + 1;
         }
       });
@@ -223,11 +228,11 @@ class Layer3HumanReview extends BaseLayer {
    * @returns {Promise<string>} Assigned reviewer
    */
   async roundRobinAssign() {
-    const reviewers = ['@architect', '@qa', '@dev', '@sm'];
-    const statusPath = '.aiox/qa-status.json';
+    const reviewers = ["@architect", "@qa", "@dev", "@sm"];
+    const statusPath = ".aiox/qa-status.json";
 
     try {
-      const status = JSON.parse(await fs.readFile(statusPath, 'utf8'));
+      const status = JSON.parse(await fs.readFile(statusPath, "utf8"));
       const lastIndex = status.lastReviewerIndex || 0;
       const nextIndex = (lastIndex + 1) % reviewers.length;
 
@@ -250,15 +255,15 @@ class Layer3HumanReview extends BaseLayer {
     const { verbose = false, storyId = null } = context;
 
     if (verbose) {
-      console.log('  ✍️ Checking sign-off status...');
+      console.log("  ✍️ Checking sign-off status...");
     }
 
     try {
-      const statusPath = '.aiox/qa-status.json';
+      const statusPath = ".aiox/qa-status.json";
       let status = {};
 
       try {
-        status = JSON.parse(await fs.readFile(statusPath, 'utf8'));
+        status = JSON.parse(await fs.readFile(statusPath, "utf8"));
       } catch {
         // No status file yet
       }
@@ -272,11 +277,13 @@ class Layer3HumanReview extends BaseLayer {
 
         if (!isExpired) {
           if (verbose) {
-            console.log(`  ✓ Signed off by ${signoff.reviewer} at ${new Date(signoff.timestamp).toLocaleString()}`);
+            console.log(
+              `  ✓ Signed off by ${signoff.reviewer} at ${new Date(signoff.timestamp).toLocaleString()}`,
+            );
           }
 
           return {
-            check: 'signoff',
+            check: "signoff",
             pass: true,
             signedOff: true,
             reviewer: signoff.reviewer,
@@ -287,19 +294,21 @@ class Layer3HumanReview extends BaseLayer {
       }
 
       if (verbose) {
-        console.log('  ⏳ Awaiting sign-off');
+        console.log("  ⏳ Awaiting sign-off");
       }
 
       return {
-        check: 'signoff',
+        check: "signoff",
         pass: !this.requireSignoff, // Pass if sign-off not required
         signedOff: false,
         required: this.requireSignoff,
-        message: this.requireSignoff ? 'Awaiting sign-off' : 'Sign-off optional',
+        message: this.requireSignoff
+          ? "Awaiting sign-off"
+          : "Sign-off optional",
       };
     } catch (error) {
       return {
-        check: 'signoff',
+        check: "signoff",
         pass: !this.requireSignoff,
         signedOff: false,
         error: error.message,
@@ -315,11 +324,11 @@ class Layer3HumanReview extends BaseLayer {
    * @returns {Promise<Object>} Sign-off result
    */
   async recordSignoff(storyId, reviewer) {
-    const statusPath = '.aiox/qa-status.json';
+    const statusPath = ".aiox/qa-status.json";
     let status = {};
 
     try {
-      status = JSON.parse(await fs.readFile(statusPath, 'utf8'));
+      status = JSON.parse(await fs.readFile(statusPath, "utf8"));
     } catch {
       // Create new status file
     }

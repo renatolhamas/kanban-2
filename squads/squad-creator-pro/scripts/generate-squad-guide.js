@@ -21,11 +21,11 @@
  * @location squads/squad-creator-pro/scripts/
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const yaml = require('js-yaml');
+const fs = require("fs").promises;
+const path = require("path");
+const yaml = require("js-yaml");
 
-const SQUADS_PATH = './squads';
+const SQUADS_PATH = "./squads";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // YAML EXTRACTION
@@ -79,7 +79,7 @@ function parseYamlBlocks(rawBlocks) {
     try {
       const preprocessed = preprocessYaml(block);
       const doc = yaml.load(preprocessed);
-      if (doc && typeof doc === 'object') {
+      if (doc && typeof doc === "object") {
         parsed.push(doc);
       }
     } catch (e) {
@@ -129,12 +129,12 @@ function extractAgentInfoFromRaw(rawBlocks) {
     const getIcon = agentSection.match(/^\s+icon:\s*(.+)/m);
 
     if (getName) {
-      const clean = (v) => v.trim().replace(/^["']|["']$/g, '');
+      const clean = (v) => v.trim().replace(/^["']|["']$/g, "");
       return {
         name: clean(getName[1]),
-        id: getId ? clean(getId[1]) : '',
-        title: getTitle ? clean(getTitle[1]) : '',
-        icon: getIcon ? getIcon[1].trim() : '',
+        id: getId ? clean(getId[1]) : "",
+        title: getTitle ? clean(getTitle[1]) : "",
+        icon: getIcon ? getIcon[1].trim() : "",
       };
     }
   }
@@ -154,24 +154,24 @@ async function loadAgentData(squadName, agentName) {
     process.cwd(),
     SQUADS_PATH,
     squadName,
-    'agents',
+    "agents",
     `${agentName}.md`,
   );
-  const content = await fs.readFile(agentPath, 'utf8');
+  const content = await fs.readFile(agentPath, "utf8");
   const rawBlocks = extractAllYamlBlocks(content);
   const parsedBlocks = parseYamlBlocks(rawBlocks);
 
   // agent key may fail YAML parsing (loose formatting in core_beliefs etc.)
   // Use regex fallback if not found via standard parsing.
   const agent =
-    findKey(parsedBlocks, 'agent') || extractAgentInfoFromRaw(rawBlocks);
+    findKey(parsedBlocks, "agent") || extractAgentInfoFromRaw(rawBlocks);
 
   return {
     agent,
-    commands: findKey(parsedBlocks, 'commands'),
-    modes: findKey(parsedBlocks, 'modes'),
-    command_categories: findKey(parsedBlocks, 'command_categories'),
-    command_aliases_ptbr: findKey(parsedBlocks, 'command_aliases_ptbr'),
+    commands: findKey(parsedBlocks, "commands"),
+    modes: findKey(parsedBlocks, "modes"),
+    command_categories: findKey(parsedBlocks, "command_categories"),
+    command_aliases_ptbr: findKey(parsedBlocks, "command_aliases_ptbr"),
   };
 }
 
@@ -190,7 +190,7 @@ async function loadAgentData(squadName, agentName) {
  * @returns {{command: string, description: string}|null}
  */
 function parseCommandString(str) {
-  if (typeof str !== 'string') return null;
+  if (typeof str !== "string") return null;
 
   // Match: *command-name {optional params} - Description
   const match = str.match(/^(\*\S+(?:\s+\{[^}]+\})*)\s+-\s+(.+)$/);
@@ -201,7 +201,7 @@ function parseCommandString(str) {
   // Fallback: just extract the command name
   const cmdMatch = str.match(/^(\*\S+)/);
   if (cmdMatch) {
-    return { command: cmdMatch[1], description: '' };
+    return { command: cmdMatch[1], description: "" };
   }
 
   return null;
@@ -217,10 +217,10 @@ function parseCommandString(str) {
 function parseObjectCommands(arr) {
   if (!Array.isArray(arr)) return [];
   return arr
-    .filter((cmd) => cmd && typeof cmd === 'object' && cmd.name)
+    .filter((cmd) => cmd && typeof cmd === "object" && cmd.name)
     .map((cmd) => ({
-      command: cmd.name.startsWith('*') ? cmd.name : `*${cmd.name}`,
-      description: cmd.description || '',
+      command: cmd.name.startsWith("*") ? cmd.name : `*${cmd.name}`,
+      description: cmd.description || "",
     }));
 }
 
@@ -236,7 +236,7 @@ function parseObjectCommands(arr) {
  * @returns {string} Markdown table
  */
 function generateCommandTable(commands, startNumber) {
-  let table = '| # | Comando | Descrição |\n|---|---------|-----------|';
+  let table = "| # | Comando | Descrição |\n|---|---------|-----------|";
   commands.forEach((cmd, i) => {
     table += `\n| ${startNumber + i} | \`${cmd.command}\` | ${cmd.description} |`;
   });
@@ -302,21 +302,21 @@ function generateSquadChiefCommands(data, startNumber) {
 
   // Parse all commands from string array
   const allParsed = rawCommands
-    .filter((cmd) => typeof cmd === 'string' && cmd.startsWith('*'))
+    .filter((cmd) => typeof cmd === "string" && cmd.startsWith("*"))
     .map(parseCommandString)
     .filter(Boolean);
 
   // Build lookup by base command name (without params)
   const cmdMap = new Map();
   for (const cmd of allParsed) {
-    const baseName = cmd.command.split(' ')[0];
+    const baseName = cmd.command.split(" ")[0];
     if (!cmdMap.has(baseName)) {
       cmdMap.set(baseName, cmd);
     }
   }
 
   const categories = data.command_categories;
-  let output = '';
+  let output = "";
   let currentNum = startNumber;
 
   if (categories) {
@@ -329,7 +329,7 @@ function generateSquadChiefCommands(data, startNumber) {
       if (catCommands.length > 0) {
         output += `\n**${category.display}**\n`;
         output += generateCommandTable(catCommands, currentNum);
-        output += '\n';
+        output += "\n";
         currentNum += catCommands.length;
       }
     }
@@ -367,13 +367,13 @@ function generatePedroValerioCommands(data, startNumber) {
   const { commands: visibilityCommands, modes } = data;
   const parsedVisibility = parseObjectCommands(visibilityCommands);
 
-  let output = '';
+  let output = "";
   let currentNum = startNumber;
   const usedCommandBases = new Set();
 
   if (modes) {
     for (const [, mode] of Object.entries(modes)) {
-      const prefix = mode.prefix || '';
+      const prefix = mode.prefix || "";
       const modeCommands = [];
 
       // Extract commands from mode.commands (strings with params + descriptions)
@@ -382,7 +382,7 @@ function generatePedroValerioCommands(data, startNumber) {
           const parsed = parseCommandString(cmdStr);
           if (parsed) {
             modeCommands.push(parsed);
-            usedCommandBases.add(parsed.command.split(' ')[0]);
+            usedCommandBases.add(parsed.command.split(" ")[0]);
           }
         }
       }
@@ -398,11 +398,11 @@ function generatePedroValerioCommands(data, startNumber) {
       }
 
       if (modeCommands.length > 0) {
-        const displayName = (mode.name || '').toUpperCase();
-        const prefixDisplay = prefix ? ` (\`${prefix}*\`)` : '';
+        const displayName = (mode.name || "").toUpperCase();
+        const prefixDisplay = prefix ? ` (\`${prefix}*\`)` : "";
         output += `\n**${displayName}${prefixDisplay}**\n`;
         output += generateCommandTable(modeCommands, currentNum);
-        output += '\n';
+        output += "\n";
         currentNum += modeCommands.length;
       }
     }
@@ -413,9 +413,9 @@ function generatePedroValerioCommands(data, startNumber) {
     (cmd) => !usedCommandBases.has(cmd.command),
   );
   if (remaining.length > 0) {
-    output += '\n**CRIAÇÃO & AUDITORIA**\n';
+    output += "\n**CRIAÇÃO & AUDITORIA**\n";
     output += generateCommandTable(remaining, currentNum);
-    output += '\n';
+    output += "\n";
     currentNum += remaining.length;
   }
 
@@ -433,12 +433,12 @@ function generatePedroValerioCommands(data, startNumber) {
  * @returns {string} Markdown table or empty string
  */
 function generateAliasesSection(aliases) {
-  if (!Array.isArray(aliases)) return '';
+  if (!Array.isArray(aliases)) return "";
 
   const rows = [];
   let num = 1;
   for (const alias of aliases) {
-    if (typeof alias !== 'string') continue;
+    if (typeof alias !== "string") continue;
     const match = alias.match(/^\*(\S+)\s*->\s*\*(\S+)$/);
     if (match) {
       rows.push(`| ${num} | \`*${match[1]}\` | → \`*${match[2]}\` |`);
@@ -446,8 +446,12 @@ function generateAliasesSection(aliases) {
     }
   }
 
-  if (rows.length === 0) return '';
-  return '| # | Alias PT-BR | Comando Original |\n|---|-------------|-----------------|' + '\n' + rows.join('\n');
+  if (rows.length === 0) return "";
+  return (
+    "| # | Alias PT-BR | Comando Original |\n|---|-------------|-----------------|" +
+    "\n" +
+    rows.join("\n")
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -463,22 +467,22 @@ function generateAliasesSection(aliases) {
 async function generateSquadGuide(squadName) {
   // Load all 3 agents in parallel
   const [chiefData, alanData, pedroData] = await Promise.all([
-    loadAgentData(squadName, 'squad-chief'),
-    loadAgentData(squadName, 'oalanicolas'),
-    loadAgentData(squadName, 'pedro-valerio'),
+    loadAgentData(squadName, "squad-chief"),
+    loadAgentData(squadName, "oalanicolas"),
+    loadAgentData(squadName, "pedro-valerio"),
   ]);
 
   const parts = [];
 
   // ── Title ──
-  parts.push('🎨 SQUAD CREATOR — Guia Completo & Menu de Comandos');
+  parts.push("🎨 SQUAD CREATOR — Guia Completo & Menu de Comandos");
 
   // ── Conceptual Sections ──
   parts.push(generateConceptualSections());
 
   // ── Squad Chief Commands ──
   const chiefAgent = chiefData.agent || {};
-  const chiefLabel = chiefAgent.name || 'Squad Chief';
+  const chiefLabel = chiefAgent.name || "Squad Chief";
   const chiefResult = generateSquadChiefCommands(chiefData, 1);
   parts.push(
     `## 100% Comandos — @squad-chief (${chiefLabel})\n${chiefResult.output}`,
@@ -486,7 +490,7 @@ async function generateSquadGuide(squadName) {
 
   // ── oalanicolas Commands ──
   const alanAgent = alanData.agent || {};
-  const alanLabel = alanAgent.name || 'oalanicolas';
+  const alanLabel = alanAgent.name || "oalanicolas";
   const alanResult = generateOalanicolasCommands(
     alanData,
     chiefResult.nextNumber,
@@ -497,7 +501,7 @@ async function generateSquadGuide(squadName) {
 
   // ── pedro-valerio Commands ──
   const pedroAgent = pedroData.agent || {};
-  const pedroLabel = pedroAgent.name || 'pedro-valerio';
+  const pedroLabel = pedroAgent.name || "pedro-valerio";
   const pedroResult = generatePedroValerioCommands(
     pedroData,
     alanResult.nextNumber,
@@ -515,10 +519,10 @@ async function generateSquadGuide(squadName) {
   // ── Footer ──
   const totalCommands = pedroResult.nextNumber - 1;
   parts.push(
-    `## Resumo & Próximo Passo\n\n| Métrica | Valor |\n|---------|-------|\n| Comandos totais | **${totalCommands}** |\n| Agentes no squad | **3** (@squad-chief, @oalanicolas, @pedro-valerio) |\n| Aliases PT-BR | **${chiefData.command_aliases_ptbr ? chiefData.command_aliases_ptbr.filter(a => a.includes('->')).length : 0}** |\n\nDigite o **número** ou o **comando** para executar. Qual domínio você quer transformar em squad?`,
+    `## Resumo & Próximo Passo\n\n| Métrica | Valor |\n|---------|-------|\n| Comandos totais | **${totalCommands}** |\n| Agentes no squad | **3** (@squad-chief, @oalanicolas, @pedro-valerio) |\n| Aliases PT-BR | **${chiefData.command_aliases_ptbr ? chiefData.command_aliases_ptbr.filter((a) => a.includes("->")).length : 0}** |\n\nDigite o **número** ou o **comando** para executar. Qual domínio você quer transformar em squad?`,
   );
 
-  return parts.join('\n\n');
+  return parts.join("\n\n");
 }
 
 /**
@@ -526,7 +530,7 @@ async function generateSquadGuide(squadName) {
  * @returns {string}
  */
 function generateFallbackGuide() {
-  return '🎨 Squad Architect — Guide\n\nType *help to see available commands.';
+  return "🎨 Squad Architect — Guide\n\nType *help to see available commands.";
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -538,7 +542,7 @@ if (require.main === module) {
 
   if (!squadName) {
     console.error(
-      'Usage: node generate-squad-guide.js <squad-name>\n\nExample:\n  node generate-squad-guide.js squad-creator',
+      "Usage: node generate-squad-guide.js <squad-name>\n\nExample:\n  node generate-squad-guide.js squad-creator",
     );
     process.exit(1);
   }
@@ -549,7 +553,7 @@ if (require.main === module) {
       process.exit(0);
     })
     .catch((error) => {
-      console.error('Error:', error.message);
+      console.error("Error:", error.message);
       console.log(generateFallbackGuide());
       process.exit(1);
     });

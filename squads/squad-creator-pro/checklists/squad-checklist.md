@@ -33,14 +33,14 @@ Before validating, determine the squad type:
 
 ### Detection Criteria
 
-| Signal | Expert | Pipeline | Hybrid |
-|--------|--------|----------|--------|
-| Multiple agents with distinct personas | ✅ | ❌ | ⚠️ |
-| Single orchestrator + many tasks | ❌ | ✅ | ❌ |
-| Sequential phase execution | ⚠️ | ✅ | ✅ |
-| Mind clones (real people) | ✅ | ❌ | ❌ |
-| Heuristic-based validation | ❌ | ⚠️ | ✅ |
-| Process automation focus | ❌ | ❌ | ✅ |
+| Signal                                 | Expert | Pipeline | Hybrid |
+| -------------------------------------- | ------ | -------- | ------ |
+| Multiple agents with distinct personas | ✅     | ❌       | ⚠️     |
+| Single orchestrator + many tasks       | ❌     | ✅       | ❌     |
+| Sequential phase execution             | ⚠️     | ✅       | ✅     |
+| Mind clones (real people)              | ✅     | ❌       | ❌     |
+| Heuristic-based validation             | ❌     | ⚠️       | ✅     |
+| Process automation focus               | ❌     | ❌       | ✅     |
 
 ### Auto-Detection Rules
 
@@ -134,13 +134,13 @@ cross_reference_checks:
     severity: WARNING
 ```
 
-| Check | Status | Missing References |
-|-------|--------|-------------------|
-| Handoff targets | [ ] PASS [ ] FAIL | ___ |
-| Task references | [ ] PASS [ ] FAIL | ___ |
-| Template references | [ ] PASS [ ] WARN | ___ |
-| Checklist references | [ ] PASS [ ] WARN | ___ |
-| Data file references | [ ] PASS [ ] WARN | ___ |
+| Check                | Status            | Missing References |
+| -------------------- | ----------------- | ------------------ |
+| Handoff targets      | [ ] PASS [ ] FAIL | \_\_\_             |
+| Task references      | [ ] PASS [ ] FAIL | \_\_\_             |
+| Template references  | [ ] PASS [ ] WARN | \_\_\_             |
+| Checklist references | [ ] PASS [ ] WARN | \_\_\_             |
+| Data file references | [ ] PASS [ ] WARN | \_\_\_             |
 
 ### 1.6 Security Scan (BLOCKING)
 
@@ -157,7 +157,7 @@ api_key_checks:
     pattern: "(api[_-]?key|apikey)\\s*[:=]\\s*['\"][^'\"]{20,}"
     examples:
       - "api_key: 'sk-1234567890abcdef1234567890'"
-      - "apiKey = \"AIzaSyD-1234567890abcdef\""
+      - 'apiKey = "AIzaSyD-1234567890abcdef"'
     severity: BLOCKING
 
   - id: "SEC-002"
@@ -165,7 +165,7 @@ api_key_checks:
     pattern: "(secret|password|passwd|pwd)\\s*[:=]\\s*['\"][^'\"]{8,}"
     examples:
       - "secret: 'mySecretPassword123'"
-      - "password = \"admin123456\""
+      - 'password = "admin123456"'
     severity: BLOCKING
 
   - id: "SEC-003"
@@ -326,14 +326,14 @@ find . -name ".env*" -o -name "*.pem" -o -name "*.key" -o -name "credentials*.js
 
 #### Security Scan Results
 
-| Category | Check IDs | Status | Findings |
-|----------|-----------|--------|----------|
-| API Keys & Tokens | SEC-001 to SEC-004 | [ ] PASS [ ] FAIL | ___ |
-| Cloud Credentials | SEC-005 to SEC-008 | [ ] PASS [ ] FAIL | ___ |
-| Private Keys | SEC-009 to SEC-010 | [ ] PASS [ ] FAIL | ___ |
-| Database URLs | SEC-011 to SEC-012 | [ ] PASS [ ] FAIL | ___ |
-| Sensitive Files | SEC-013 to SEC-015 | [ ] PASS [ ] FAIL | ___ |
-| Code Vulnerabilities | SEC-016 to SEC-018 | [ ] PASS [ ] WARN | ___ |
+| Category             | Check IDs          | Status            | Findings |
+| -------------------- | ------------------ | ----------------- | -------- |
+| API Keys & Tokens    | SEC-001 to SEC-004 | [ ] PASS [ ] FAIL | \_\_\_   |
+| Cloud Credentials    | SEC-005 to SEC-008 | [ ] PASS [ ] FAIL | \_\_\_   |
+| Private Keys         | SEC-009 to SEC-010 | [ ] PASS [ ] FAIL | \_\_\_   |
+| Database URLs        | SEC-011 to SEC-012 | [ ] PASS [ ] FAIL | \_\_\_   |
+| Sensitive Files      | SEC-013 to SEC-015 | [ ] PASS [ ] FAIL | \_\_\_   |
+| Code Vulnerabilities | SEC-016 to SEC-018 | [ ] PASS [ ] WARN | \_\_\_   |
 
 #### False Positive Handling
 
@@ -341,18 +341,18 @@ find . -name ".env*" -o -name "*.pem" -o -name "*.key" -o -name "credentials*.js
 allowed_patterns:
   description: "Patterns that look like secrets but are OK"
   examples:
-    - "api_key: \"{{API_KEY}}\"  # Placeholder"
-    - "api_key: \"$API_KEY\"     # Environment variable"
+    - 'api_key: "{{API_KEY}}"  # Placeholder'
+    - 'api_key: "$API_KEY"     # Environment variable'
     - "api_key: process.env.API_KEY  # Runtime lookup"
-    - "password: \"********\"   # Masked"
+    - 'password: "********"   # Masked'
     - "# Example: api_key = 'your-key-here'  # In comments"
 
   ignore_patterns:
-    - "\\{\\{.*\\}\\}"  # Mustache/Jinja placeholders
-    - "\\$[A-Z_]+"      # Shell variables
+    - "\\{\\{.*\\}\\}" # Mustache/Jinja placeholders
+    - "\\$[A-Z_]+" # Shell variables
     - "process\\.env\\." # Node.js env
-    - "os\\.environ"    # Python env
-    - "ENV\\["          # Ruby env
+    - "os\\.environ" # Python env
+    - "ENV\\[" # Ruby env
 ```
 
 **IMPORTANT:** Any BLOCKING security failure = immediate VETO (V5), regardless of other scores.
@@ -378,9 +378,9 @@ Minimum thresholds based on gold standard analysis.
 formula: checklists / tasks_over_500_lines >= 0.3 (30%)
 ```
 
-| Count complex tasks (>500 lines) | ___ |
-| Count checklists | ___ |
-| Ratio | ___% |
+| Count complex tasks (>500 lines) | **_ |
+| Count checklists | _** |
+| Ratio | \_\_\_% |
 | Status | [ ] PASS (>=30%) | [ ] FAIL |
 
 ### 2.2 Orphan Task Detection
@@ -395,11 +395,11 @@ check: |
     - If neither: ORPHAN
 ```
 
-| Total tasks | ___ |
-| Orphan tasks | ___ |
+| Total tasks | **_ |
+| Orphan tasks | _** |
 | Status | [ ] PASS (0 orphans) | [ ] WARN (1-2) | [ ] FAIL (3+) |
 
-**List orphans:** _______________
+**List orphans:** ******\_\_\_******
 
 ### 2.3 Pipeline Phase Coverage (Pipeline squads only)
 
@@ -412,9 +412,9 @@ check: |
     - Does phase have defined output?
 ```
 
-| Total phases | ___ |
-| Phases with tasks | ___ |
-| Coverage | ___% |
+| Total phases | **_ |
+| Phases with tasks | _** |
+| Coverage | \_\_\_% |
 | Status | [ ] PASS (100%) | [ ] FAIL |
 
 ### 2.4 Data File Usage
@@ -428,12 +428,12 @@ check: |
     - If not: UNUSED
 ```
 
-| Total data files | ___ |
-| Referenced files | ___ |
-| Usage ratio | ___% |
+| Total data files | **_ |
+| Referenced files | _** |
+| Usage ratio | \_\_\_% |
 | Status | [ ] PASS (>=50%) | [ ] WARN (<50%) |
 
-**Unused files:** _______________
+**Unused files:** ******\_\_\_******
 
 ### Tier 2 Result
 
@@ -454,28 +454,29 @@ Score each dimension 0-10, then apply weights.
 
 #### Evaluation Criteria
 
-| Criterion | Points | Evidence |
-|-----------|--------|----------|
-| Has explicit input/output examples | 0-3 | ___ |
-| Has anti-patterns section | 0-2 | ___ |
-| Has measurable success criteria | 0-2 | ___ |
-| Instructions are step-by-step | 0-2 | ___ |
-| No vague language ("verify", "ensure") | 0-1 | ___ |
+| Criterion                              | Points | Evidence |
+| -------------------------------------- | ------ | -------- |
+| Has explicit input/output examples     | 0-3    | \_\_\_   |
+| Has anti-patterns section              | 0-2    | \_\_\_   |
+| Has measurable success criteria        | 0-2    | \_\_\_   |
+| Instructions are step-by-step          | 0-2    | \_\_\_   |
+| No vague language ("verify", "ensure") | 0-1    | \_\_\_   |
 
 #### Sampling Method
 
 Evaluate 3 representative tasks:
-1. Most complex task (highest lines): _______________
-2. Entry/main task: _______________
-3. Random task: _______________
 
-| Task | Examples | Anti-patterns | Success Criteria | Steps | Clarity | Total |
-|------|----------|---------------|------------------|-------|---------|-------|
-| ___ | /3 | /2 | /2 | /2 | /1 | /10 |
-| ___ | /3 | /2 | /2 | /2 | /1 | /10 |
-| ___ | /3 | /2 | /2 | /2 | /1 | /10 |
+1. Most complex task (highest lines): ******\_\_\_******
+2. Entry/main task: ******\_\_\_******
+3. Random task: ******\_\_\_******
 
-**Prompt Quality Score:** ___ / 10
+| Task   | Examples | Anti-patterns | Success Criteria | Steps | Clarity | Total |
+| ------ | -------- | ------------- | ---------------- | ----- | ------- | ----- |
+| \_\_\_ | /3       | /2            | /2               | /2    | /1      | /10   |
+| \_\_\_ | /3       | /2            | /2               | /2    | /1      | /10   |
+| \_\_\_ | /3       | /2            | /2               | /2    | /1      | /10   |
+
+**Prompt Quality Score:** \_\_\_ / 10
 
 ### 3.2 Pipeline Coherence (25%)
 
@@ -483,13 +484,13 @@ Evaluate 3 representative tasks:
 
 #### Evaluation Criteria
 
-| Criterion | Points | Evidence |
-|-----------|--------|----------|
-| Phase N output = Phase N+1 input | 0-3 | ___ |
-| No sequence collisions | 0-2 | ___ |
-| Checkpoints at critical gates | 0-2 | ___ |
-| Failure handling defined | 0-2 | ___ |
-| Dependencies explicit | 0-1 | ___ |
+| Criterion                        | Points | Evidence |
+| -------------------------------- | ------ | -------- |
+| Phase N output = Phase N+1 input | 0-3    | \_\_\_   |
+| No sequence collisions           | 0-2    | \_\_\_   |
+| Checkpoints at critical gates    | 0-2    | \_\_\_   |
+| Failure handling defined         | 0-2    | \_\_\_   |
+| Dependencies explicit            | 0-1    | \_\_\_   |
 
 #### Coherence Checks
 
@@ -507,14 +508,14 @@ check_checkpoints:
   - "Are there quality gates before final output?"
 ```
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| Output→Input chain valid | [ ] Yes [ ] No | ___ |
-| No sequence collisions | [ ] Yes [ ] No | ___ |
-| Checkpoints present | [ ] Yes [ ] No | ___ |
-| Failure handling defined | [ ] Yes [ ] No | ___ |
+| Check                    | Status         | Notes  |
+| ------------------------ | -------------- | ------ |
+| Output→Input chain valid | [ ] Yes [ ] No | \_\_\_ |
+| No sequence collisions   | [ ] Yes [ ] No | \_\_\_ |
+| Checkpoints present      | [ ] Yes [ ] No | \_\_\_ |
+| Failure handling defined | [ ] Yes [ ] No | \_\_\_ |
 
-**Pipeline Coherence Score:** ___ / 10
+**Pipeline Coherence Score:** \_\_\_ / 10
 
 ### 3.3 Checklist Actionability (25%)
 
@@ -522,17 +523,18 @@ check_checkpoints:
 
 #### Evaluation Criteria
 
-| Criterion | Points | Evidence |
-|-----------|--------|----------|
-| Items are measurable (not "verify X") | 0-3 | ___ |
-| Has scoring/grading system | 0-2 | ___ |
-| Has pass/fail thresholds | 0-2 | ___ |
-| Has auto-correction guidance | 0-2 | ___ |
-| Covers edge cases | 0-1 | ___ |
+| Criterion                             | Points | Evidence |
+| ------------------------------------- | ------ | -------- |
+| Items are measurable (not "verify X") | 0-3    | \_\_\_   |
+| Has scoring/grading system            | 0-2    | \_\_\_   |
+| Has pass/fail thresholds              | 0-2    | \_\_\_   |
+| Has auto-correction guidance          | 0-2    | \_\_\_   |
+| Covers edge cases                     | 0-1    | \_\_\_   |
 
 #### Actionability Tests
 
 For each checklist item, ask:
+
 1. "Can I answer this with YES/NO without interpretation?"
 2. "Is there a specific threshold (number, percentage)?"
 3. "If I fail, do I know what to fix?"
@@ -541,22 +543,22 @@ For each checklist item, ask:
 
 ```yaml
 bad_checklist_items:
-  - "Verify quality is good"  # Subjective
-  - "Ensure completeness"  # Vague
-  - "Check for errors"  # No threshold
+  - "Verify quality is good" # Subjective
+  - "Ensure completeness" # Vague
+  - "Check for errors" # No threshold
 
 good_checklist_items:
-  - "Score >= 85 on quality rubric"  # Measurable
-  - "All 8 required fields present"  # Specific
-  - "Zero critical errors (see error-types.md)"  # Defined
+  - "Score >= 85 on quality rubric" # Measurable
+  - "All 8 required fields present" # Specific
+  - "Zero critical errors (see error-types.md)" # Defined
 ```
 
 | Checklist | Measurable | Scoring | Thresholds | Correction | Total |
-|-----------|------------|---------|------------|------------|-------|
-| ___ | /3 | /2 | /2 | /2 | /10 |
-| ___ | /3 | /2 | /2 | /2 | /10 |
+| --------- | ---------- | ------- | ---------- | ---------- | ----- |
+| \_\_\_    | /3         | /2      | /2         | /2         | /10   |
+| \_\_\_    | /3         | /2      | /2         | /2         | /10   |
 
-**Checklist Actionability Score:** ___ / 10
+**Checklist Actionability Score:** \_\_\_ / 10
 
 ### 3.4 Documentation Completeness (25%)
 
@@ -564,17 +566,17 @@ good_checklist_items:
 
 #### Evaluation Criteria
 
-| Criterion | Points | Evidence |
-|-----------|--------|----------|
-| README explains purpose clearly | 0-2 | ___ |
-| Getting started guide present | 0-2 | ___ |
-| Commands documented with examples | 0-2 | ___ |
-| Architecture/flow diagram present | 0-1 | ___ |
-| Changelog maintained | 0-1 | ___ |
-| Error handling documented | 0-1 | ___ |
-| Dependencies listed | 0-1 | ___ |
+| Criterion                         | Points | Evidence |
+| --------------------------------- | ------ | -------- |
+| README explains purpose clearly   | 0-2    | \_\_\_   |
+| Getting started guide present     | 0-2    | \_\_\_   |
+| Commands documented with examples | 0-2    | \_\_\_   |
+| Architecture/flow diagram present | 0-1    | \_\_\_   |
+| Changelog maintained              | 0-1    | \_\_\_   |
+| Error handling documented         | 0-1    | \_\_\_   |
+| Dependencies listed               | 0-1    | \_\_\_   |
 
-**Documentation Score:** ___ / 10
+**Documentation Score:** \_\_\_ / 10
 
 ### Tier 3 Calculation
 
@@ -605,11 +607,11 @@ Requirements vary by squad type. Only complete the relevant section.
 - [ ] `vocabulary.always_use` has 5+ terms
 - [ ] `vocabulary.never_use` has 3+ terms
 
-| Agent | voice_dna | starters | metaphors | vocab | Score |
-|-------|-----------|----------|-----------|-------|-------|
-| ___ | [ ] | [ ] | [ ] | [ ] | /4 |
-| ___ | [ ] | [ ] | [ ] | [ ] | /4 |
-| ___ | [ ] | [ ] | [ ] | [ ] | /4 |
+| Agent  | voice_dna | starters | metaphors | vocab | Score |
+| ------ | --------- | -------- | --------- | ----- | ----- |
+| \_\_\_ | [ ]       | [ ]      | [ ]       | [ ]   | /4    |
+| \_\_\_ | [ ]       | [ ]      | [ ]       | [ ]   | /4    |
+| \_\_\_ | [ ]       | [ ]      | [ ]       | [ ]   | /4    |
 
 #### 4A.2 Objection Algorithms (REQUIRED for Expert)
 
@@ -618,10 +620,10 @@ Requirements vary by squad type. Only complete the relevant section.
 - [ ] Each objection has: trigger, diagnosis, response
 - [ ] Responses are domain-specific (not generic)
 
-| Agent | Has section | Count | Quality | Score |
-|-------|-------------|-------|---------|-------|
-| ___ | [ ] | ___ | /5 | /10 |
-| ___ | [ ] | ___ | /5 | /10 |
+| Agent  | Has section | Count  | Quality | Score |
+| ------ | ----------- | ------ | ------- | ----- |
+| \_\_\_ | [ ]         | \_\_\_ | /5      | /10   |
+| \_\_\_ | [ ]         | \_\_\_ | /5      | /10   |
 
 #### 4A.3 Output Examples (REQUIRED for Expert)
 
@@ -635,7 +637,7 @@ Requirements vary by squad type. Only complete the relevant section.
 - [ ] Tier assignments documented
 - [ ] Orchestrator/Chief agent defined
 
-**Expert Squad Score:** ___ / 10
+**Expert Squad Score:** \_\_\_ / 10
 
 ---
 
@@ -651,10 +653,10 @@ Requirements vary by squad type. Only complete the relevant section.
 - [ ] Phase dependencies explicit
 
 | Phase | Task exists | Output defined | Dependencies | Score |
-|-------|-------------|----------------|--------------|-------|
-| 0 | [ ] | [ ] | [ ] | /3 |
-| 1 | [ ] | [ ] | [ ] | /3 |
-| ... | [ ] | [ ] | [ ] | /3 |
+| ----- | ----------- | -------------- | ------------ | ----- |
+| 0     | [ ]         | [ ]            | [ ]          | /3    |
+| 1     | [ ]         | [ ]            | [ ]          | /3    |
+| ...   | [ ]         | [ ]            | [ ]          | /3    |
 
 #### 4B.2 Phase Checkpoints (REQUIRED for Pipeline)
 
@@ -662,10 +664,10 @@ Requirements vary by squad type. Only complete the relevant section.
 - [ ] Quality gates defined (blocker phases)
 - [ ] Rework rules specified (what happens on failure)
 
-| Checkpoint | Phase | Type | Rework rule | Score |
-|------------|-------|------|-------------|-------|
-| ___ | ___ | [ ] human [ ] auto | [ ] Yes | /3 |
-| ___ | ___ | [ ] human [ ] auto | [ ] Yes | /3 |
+| Checkpoint | Phase  | Type               | Rework rule | Score |
+| ---------- | ------ | ------------------ | ----------- | ----- |
+| \_\_\_     | \_\_\_ | [ ] human [ ] auto | [ ] Yes     | /3    |
+| \_\_\_     | \_\_\_ | [ ] human [ ] auto | [ ] Yes     | /3    |
 
 #### 4B.3 Orchestrator Completeness
 
@@ -693,76 +695,76 @@ A bash script that can execute the entire pipeline autonomously, without human i
 
 **Required Features:**
 
-| Feature | Description | Check |
-|---------|-------------|-------|
-| Script exists | `scripts/{squad}.sh` or similar | [ ] |
-| Input params | Accepts target/slug as argument | [ ] |
-| Help docs | `--help` flag with usage examples | [ ] |
-| State mgmt | Persists state to JSON/YAML file | [ ] |
-| Progress | Shows current phase/status | [ ] |
-| Logging | Writes to `logs/` directory | [ ] |
-| Resume | Can continue from last checkpoint | [ ] |
+| Feature       | Description                       | Check |
+| ------------- | --------------------------------- | ----- |
+| Script exists | `scripts/{squad}.sh` or similar   | [ ]   |
+| Input params  | Accepts target/slug as argument   | [ ]   |
+| Help docs     | `--help` flag with usage examples | [ ]   |
+| State mgmt    | Persists state to JSON/YAML file  | [ ]   |
+| Progress      | Shows current phase/status        | [ ]   |
+| Logging       | Writes to `logs/` directory       | [ ]   |
+| Resume        | Can continue from last checkpoint | [ ]   |
 
 **Optional but Recommended:**
 
-| Feature | Description | Check |
-|---------|-------------|-------|
-| Metrics | Collects execution metrics (JSONL) | [ ] |
-| Parallel exec | Runs independent phases in parallel | [ ] |
-| A/B testing | Can compare model outputs | [ ] |
-| Dashboard | Visual progress display | [ ] |
+| Feature       | Description                         | Check |
+| ------------- | ----------------------------------- | ----- |
+| Metrics       | Collects execution metrics (JSONL)  | [ ]   |
+| Parallel exec | Runs independent phases in parallel | [ ]   |
+| A/B testing   | Can compare model outputs           | [ ]   |
+| Dashboard     | Visual progress display             | [ ]   |
 
 **Automation Script Checklist:**
 
 ```yaml
 script_validation:
   location: "scripts/{name}.sh"
-  minimum_features: 5  # of 7 required
+  minimum_features: 5 # of 7 required
 
   checks:
     - id: "AUTO-001"
       check: "Script accepts positional arguments"
-      pattern: '$1, $2, ${1:-default}'
+      pattern: "$1, $2, ${1:-default}"
 
     - id: "AUTO-002"
       check: "Has --help documentation"
-      pattern: '--help | -h | show_help'
+      pattern: "--help | -h | show_help"
 
     - id: "AUTO-003"
       check: "Creates/reads state file"
-      pattern: 'state.json | STATE_FILE'
+      pattern: "state.json | STATE_FILE"
 
     - id: "AUTO-004"
       check: "Shows progress during execution"
-      pattern: 'echo | printf | tput'
+      pattern: "echo | printf | tput"
 
     - id: "AUTO-005"
       check: "Logs to file"
-      pattern: 'LOG_FILE | tee | >> *.log'
+      pattern: "LOG_FILE | tee | >> *.log"
 
     - id: "AUTO-006"
       check: "Can resume from failure"
-      pattern: 'brownfield | resume | continue'
+      pattern: "brownfield | resume | continue"
 
     - id: "AUTO-007"
       check: "Handles errors gracefully"
-      pattern: 'set -e | trap | || true'
+      pattern: "set -e | trap | || true"
 ```
 
 **Scoring:**
 
-| Features Present | Score |
-|------------------|-------|
-| 7/7 required | 10/10 |
-| 6/7 required | 8/10 |
-| 5/7 required | 7/10 (minimum pass) |
-| <5 required | FAIL |
+| Features Present | Score               |
+| ---------------- | ------------------- |
+| 7/7 required     | 10/10               |
+| 6/7 required     | 8/10                |
+| 5/7 required     | 7/10 (minimum pass) |
+| <5 required      | FAIL                |
 
 **Note:** If pipeline has <8 phases, this section is OPTIONAL (nice-to-have).
 
-**Automation Score:** ___ / 10
+**Automation Score:** \_\_\_ / 10
 
-**Pipeline Squad Score:** ___ / 10
+**Pipeline Squad Score:** \_\_\_ / 10
 
 ---
 
@@ -785,15 +787,15 @@ script_validation:
 
 #### 4C.3 Heuristic Validation (REQUIRED for Hybrid)
 
-- [ ] Heuristics defined with IDs (e.g., PV_*, SC_*)
+- [ ] Heuristics defined with IDs (e.g., PV*\*, SC*\*)
 - [ ] Each heuristic has: trigger, evaluation, threshold
 - [ ] VETO conditions explicit
 - [ ] Fallback behavior defined
 
-| Heuristic | ID | Threshold | VETO power | Score |
-|-----------|-----|-----------|------------|-------|
-| ___ | ___ | ___ | [ ] | /5 |
-| ___ | ___ | ___ | [ ] | /5 |
+| Heuristic | ID     | Threshold | VETO power | Score |
+| --------- | ------ | --------- | ---------- | ----- |
+| \_\_\_    | \_\_\_ | \_\_\_    | [ ]        | /5    |
+| \_\_\_    | \_\_\_ | \_\_\_    | [ ]        | /5    |
 
 #### 4C.4 Process Standards
 
@@ -801,7 +803,7 @@ script_validation:
 - [ ] BPMN or equivalent notation used
 - [ ] Integration points documented
 
-**Hybrid Squad Score:** ___ / 10
+**Hybrid Squad Score:** \_\_\_ / 10
 
 ---
 
@@ -809,7 +811,7 @@ script_validation:
 
 **Squad Type:** [ ] Expert | [ ] Pipeline | [ ] Hybrid
 
-**Contextual Score:** ___ / 10
+**Contextual Score:** \_\_\_ / 10
 
 ---
 
@@ -842,7 +844,7 @@ These conditions **override scores** and force rejection:
 - [ ] **VH1:** No heuristic validation defined
 - [ ] **VH2:** Missing fallback behavior
 
-**Veto Triggered:** [ ] None | [ ] V___: _______________
+**Veto Triggered:** [ ] None | [ ] V**\_: ******\_********
 
 ---
 
@@ -875,13 +877,13 @@ calculation:
 
 ## VALIDATION SUMMARY
 
-| Tier | Status | Score/Notes |
-|------|--------|-------------|
-| 1. Structure | [ ] PASS [ ] FAIL | ___ |
-| 2. Coverage | [ ] PASS [ ] FAIL | ___ |
-| 3. Quality | ___ / 10 | ___ |
-| 4. Contextual | ___ / 10 | ___ |
-| **Final** | ___ / 10 | ___ |
+| Tier          | Status            | Score/Notes |
+| ------------- | ----------------- | ----------- |
+| 1. Structure  | [ ] PASS [ ] FAIL | \_\_\_      |
+| 2. Coverage   | [ ] PASS [ ] FAIL | \_\_\_      |
+| 3. Quality    | \_\_\_ / 10       | \_\_\_      |
+| 4. Contextual | \_\_\_ / 10       | \_\_\_      |
+| **Final**     | \_\_\_ / 10       | \_\_\_      |
 
 ### Result
 
@@ -893,17 +895,17 @@ calculation:
 
 ### Issues Found
 
-| Priority | Issue | Recommendation |
-|----------|-------|----------------|
-| CRITICAL | ___ | ___ |
-| HIGH | ___ | ___ |
-| MEDIUM | ___ | ___ |
+| Priority | Issue  | Recommendation |
+| -------- | ------ | -------------- |
+| CRITICAL | \_\_\_ | \_\_\_         |
+| HIGH     | \_\_\_ | \_\_\_         |
+| MEDIUM   | \_\_\_ | \_\_\_         |
 
 ### Strengths
 
-1. ___
-2. ___
-3. ___
+1. ***
+2. ***
+3. ***
 
 ---
 
@@ -927,30 +929,30 @@ Based on analysis of Copy, MMOS, HybridOps, Books squads.
 
 ### File Count Benchmarks
 
-| Type | Agents | Tasks | Checklists | Templates |
-|------|--------|-------|------------|-----------|
-| Expert (Copy) | 22 | 73 | 31 | 30 |
-| Pipeline (MMOS) | 9 | 76 | 17 | 63 |
-| Pipeline (Books) | 1 | 19 | 2 | 1 |
-| Hybrid (HybridOps) | 9 | 12 | 1 | 2 |
+| Type               | Agents | Tasks | Checklists | Templates |
+| ------------------ | ------ | ----- | ---------- | --------- |
+| Expert (Copy)      | 22     | 73    | 31         | 30        |
+| Pipeline (MMOS)    | 9      | 76    | 17         | 63        |
+| Pipeline (Books)   | 1      | 19    | 2          | 1         |
+| Hybrid (HybridOps) | 9      | 12    | 1          | 2         |
 
 ### Line Count Benchmarks
 
-| Component | Minimum | Good | Excellent |
-|-----------|---------|------|-----------|
-| Expert Agent | 300 | 800 | 1200+ |
-| Orchestrator Agent | 300 | 500 | 700+ |
-| Complex Task | 300 | 500 | 800+ |
-| Simple Task | 100 | 200 | 300+ |
-| Checklist | 100 | 300 | 500+ |
+| Component          | Minimum | Good | Excellent |
+| ------------------ | ------- | ---- | --------- |
+| Expert Agent       | 300     | 800  | 1200+     |
+| Orchestrator Agent | 300     | 500  | 700+      |
+| Complex Task       | 300     | 500  | 800+      |
+| Simple Task        | 100     | 200  | 300+      |
+| Checklist          | 100     | 300  | 500+      |
 
 ### Ratio Benchmarks
 
-| Ratio | Expert | Pipeline | Hybrid |
-|-------|--------|----------|--------|
-| Agent:Task | 1:3-4 | 1:5-10 | 1:1-2 |
-| Checklist:ComplexTask | 40%+ | 20%+ | 10%+ |
-| Data file usage | 80%+ | 60%+ | 80%+ |
+| Ratio                 | Expert | Pipeline | Hybrid |
+| --------------------- | ------ | -------- | ------ |
+| Agent:Task            | 1:3-4  | 1:5-10   | 1:1-2  |
+| Checklist:ComplexTask | 40%+   | 20%+     | 10%+   |
+| Data file usage       | 80%+   | 60%+     | 80%+   |
 
 ---
 
@@ -958,29 +960,29 @@ Based on analysis of Copy, MMOS, HybridOps, Books squads.
 
 ### Pipeline Coherence Issues
 
-| Issue | Detection | Fix |
-|-------|-----------|-----|
-| Orphan task | Not in workflow or agent | Add to workflow or remove |
-| Sequence collision | Multiple tasks same number | Renumber sequentially |
-| Output/input mismatch | Phase N output ≠ Phase N+1 input | Align file paths/formats |
-| Missing checkpoint | No validation before final | Add quality gate |
+| Issue                 | Detection                        | Fix                       |
+| --------------------- | -------------------------------- | ------------------------- |
+| Orphan task           | Not in workflow or agent         | Add to workflow or remove |
+| Sequence collision    | Multiple tasks same number       | Renumber sequentially     |
+| Output/input mismatch | Phase N output ≠ Phase N+1 input | Align file paths/formats  |
+| Missing checkpoint    | No validation before final       | Add quality gate          |
 
 ### Prompt Quality Issues
 
-| Issue | Detection | Fix |
-|-------|-----------|-----|
-| Vague instructions | "Ensure quality" | Add specific criteria |
-| No examples | No input/output samples | Add 2-3 concrete examples |
-| No anti-patterns | Missing "don't do" | Add 5+ anti-patterns |
-| No success criteria | No measurable outcome | Add threshold/checklist |
+| Issue               | Detection               | Fix                       |
+| ------------------- | ----------------------- | ------------------------- |
+| Vague instructions  | "Ensure quality"        | Add specific criteria     |
+| No examples         | No input/output samples | Add 2-3 concrete examples |
+| No anti-patterns    | Missing "don't do"      | Add 5+ anti-patterns      |
+| No success criteria | No measurable outcome   | Add threshold/checklist   |
 
 ### Checklist Issues
 
-| Issue | Detection | Fix |
-|-------|-----------|-----|
-| Subjective items | "Verify good quality" | Make measurable |
-| No scoring | Just checkboxes | Add point system |
-| No correction | Items fail, now what? | Add fix guidance |
+| Issue            | Detection             | Fix              |
+| ---------------- | --------------------- | ---------------- |
+| Subjective items | "Verify good quality" | Make measurable  |
+| No scoring       | Just checkboxes       | Add point system |
+| No correction    | Items fail, now what? | Add fix guidance |
 
 ---
 

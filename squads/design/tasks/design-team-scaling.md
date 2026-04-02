@@ -16,23 +16,26 @@ This task guides strategic planning for scaling a design team from current state
 ## Malouf Framework Reference
 
 ### Scaling Phases
-| Phase | Size | Name | Key Focus |
-|-------|------|------|-----------|
-| 1 | 0-5 | Founding | Establish credibility, first wins |
-| 2 | 5-15 | Building | Standardize, build foundations |
-| 3 | 15-50 | Scaling | Scale processes, build management |
-| 4 | 50-150 | Optimizing | Efficiency, centers of excellence |
-| 5 | 150+ | Enterprise | Multi-BU coordination, global |
+
+| Phase | Size   | Name       | Key Focus                         |
+| ----- | ------ | ---------- | --------------------------------- |
+| 1     | 0-5    | Founding   | Establish credibility, first wins |
+| 2     | 5-15   | Building   | Standardize, build foundations    |
+| 3     | 15-50  | Scaling    | Scale processes, build management |
+| 4     | 50-150 | Optimizing | Efficiency, centers of excellence |
+| 5     | 150+   | Enterprise | Multi-BU coordination, global     |
 
 ### Team Topologies
-| Topology | Description | Best For |
-|----------|-------------|----------|
-| Centralized | All designers in one team | <20 designers, consistency priority |
-| Embedded | Designers sit in product teams | Speed priority, deep product knowledge |
-| Federated | Embedded with dotted line to design | 50+ designers, balance consistency/speed |
-| Hybrid | Mix based on function | Large, complex orgs, specialized needs |
+
+| Topology    | Description                         | Best For                                 |
+| ----------- | ----------------------------------- | ---------------------------------------- |
+| Centralized | All designers in one team           | <20 designers, consistency priority      |
+| Embedded    | Designers sit in product teams      | Speed priority, deep product knowledge   |
+| Federated   | Embedded with dotted line to design | 50+ designers, balance consistency/speed |
+| Hybrid      | Mix based on function               | Large, complex orgs, specialized needs   |
 
 ### Scaling Principles
+
 1. Systems before headcount
 2. Hire one level ahead
 3. Document before scaling
@@ -372,13 +375,13 @@ template: |
 
 Monitor these indicators that scaling is going wrong:
 
-| Phase | Warning Sign | Action |
-|-------|--------------|--------|
-| Building | Quality inconsistent | Slow down, standardize |
-| Scaling | Managers overwhelmed | Add management layer |
-| Scaling | Communication breaking | Increase rituals |
-| Optimizing | Innovation slowing | Reduce bureaucracy |
-| Enterprise | Ivory tower forming | Increase autonomy |
+| Phase      | Warning Sign           | Action                 |
+| ---------- | ---------------------- | ---------------------- |
+| Building   | Quality inconsistent   | Slow down, standardize |
+| Scaling    | Managers overwhelmed   | Add management layer   |
+| Scaling    | Communication breaking | Increase rituals       |
+| Optimizing | Innovation slowing     | Reduce bureaucracy     |
+| Enterprise | Ivory tower forming    | Increase autonomy      |
 
 ## Related Tasks
 
@@ -391,17 +394,18 @@ Monitor these indicators that scaling is going wrong:
 
 Use `checklists/design-team-health-checklist.md` to monitor team health during scaling.
 
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 
 ## Process Guards
+
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
+
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

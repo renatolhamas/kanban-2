@@ -1,231 +1,241 @@
 template:
-  id: squad-readme-template-v1
-  name: Squad README
-  version: 1.0
-  output:
-    format: markdown
-    filename: README.md
-    title: "{{pack_name}} README"
+id: squad-readme-template-v1
+name: Squad README
+version: 1.0
+output:
+format: markdown
+filename: README.md
+title: "{{pack_name}} README"
 
 workflow:
-  mode: interactive
-  elicitation: advanced-elicitation
-  custom_elicitation:
-    title: "README Documentation Elicitation"
-    sections:
-      - id: documentation-depth
-        options:
-          - "Minimal README - Basic overview and usage only"
-          - "Standard README - Full documentation with examples"
-          - "Comprehensive README - Complete guide with integration details"
+mode: interactive
+elicitation: advanced-elicitation
+custom_elicitation:
+title: "README Documentation Elicitation"
+sections: - id: documentation-depth
+options: - "Minimal README - Basic overview and usage only" - "Standard README - Full documentation with examples" - "Comprehensive README - Complete guide with integration details"
 
 sections:
-  - id: initial-setup
-    instruction: |
-      Initial Setup for README Generation
 
-      Gather information about the squad:
-      - Pack name and purpose
-      - Target users and use cases
-      - Main features and capabilities
-      - Example workflows
-      - Installation requirements
+- id: initial-setup
+  instruction: |
+  Initial Setup for README Generation
 
-      Output file location: `squads/{{pack_name}}/README.md`
+  Gather information about the squad:
+  - Pack name and purpose
+  - Target users and use cases
+  - Main features and capabilities
+  - Example workflows
+  - Installation requirements
 
-  - id: header
-    title: Header Section
-    instruction: Generate pack title and brief description
+  Output file location: `squads/{{pack_name}}/README.md`
+
+- id: header
+  title: Header Section
+  instruction: Generate pack title and brief description
+  template: |
+
+  # {{pack_title}}
+
+  ## Overview
+
+  {{pack_overview}}
+
+- id: purpose
+  title: Purpose Section
+  instruction: Explain why this squad exists and what problems it solves
+  template: |
+
+  ## Purpose
+
+  This squad {{pack_purpose}}
+
+  {{purpose_details}}
+
+- id: when-to-use
+  title: When to Use
+  instruction: List specific scenarios when users should activate this pack
+  template: |
+
+  ## When to Use This Pack
+
+  Use {{pack_name}} when you want to:
+
+  {{use_cases}}
+
+- id: whats-included
+  title: What's Included
+  instruction: |
+  List all components included in the pack:
+  - Agents (with brief description)
+  - Tasks (with brief description)
+  - Templates (with brief description)
+  - Checklists (with brief description)
+  - Data/Knowledge bases (with brief description)
     template: |
-      # {{pack_title}}
 
-      ## Overview
+  ## What's Included
 
-      {{pack_overview}}
+  ### Agents
 
-  - id: purpose
-    title: Purpose Section
-    instruction: Explain why this squad exists and what problems it solves
-    template: |
-      ## Purpose
+  {{agent_list}}
 
-      This squad {{pack_purpose}}
+  ### Tasks
 
-      {{purpose_details}}
+  {{task_list}}
 
-  - id: when-to-use
-    title: When to Use
-    instruction: List specific scenarios when users should activate this pack
-    template: |
-      ## When to Use This Pack
+  ### Templates
 
-      Use {{pack_name}} when you want to:
+  {{template_list}}
 
-      {{use_cases}}
+  ### Checklists
 
-  - id: whats-included
-    title: What's Included
-    instruction: |
-      List all components included in the pack:
-      - Agents (with brief description)
-      - Tasks (with brief description)
-      - Templates (with brief description)
-      - Checklists (with brief description)
-      - Data/Knowledge bases (with brief description)
-    template: |
-      ## What's Included
+  {{checklist_list}}
 
-      ### Agents
+  ### Data
 
-      {{agent_list}}
+  {{data_list}}
 
-      ### Tasks
+- id: installation
+  title: Installation Instructions
+  template: |
 
-      {{task_list}}
+  ## Installation
 
-      ### Templates
+  To install this squad, run:
 
-      {{template_list}}
+  ```bash
+  npm run install:squad {{pack_name}}
+  ```
 
-      ### Checklists
+  Or manually:
 
-      {{checklist_list}}
+  ```bash
+  node tools/install-squad.js {{pack_name}}
+  ```
 
-      ### Data
-
-      {{data_list}}
-
-  - id: installation
-    title: Installation Instructions
-    template: |
-      ## Installation
-
-      To install this squad, run:
-
-      ```bash
-      npm run install:squad {{pack_name}}
-      ```
-
-      Or manually:
-
-      ```bash
-      node tools/install-squad.js {{pack_name}}
-      ```
-
-  - id: usage-examples
-    title: Usage Examples
-    instruction: |
-      Create 2-3 concrete usage examples showing:
-      - How to activate agents
-      - How to use commands
-      - Expected workflows
-      - Sample outputs
+- id: usage-examples
+  title: Usage Examples
+  instruction: |
+  Create 2-3 concrete usage examples showing:
+  - How to activate agents
+  - How to use commands
+  - Expected workflows
+  - Sample outputs
     elicit: true
     template: |
-      ## Usage Examples
 
-      {{usage_examples}}
+  ## Usage Examples
 
-  - id: pack-structure
-    title: Pack Structure
-    instruction: Show the directory structure of the pack
-    template: |
-      ## Pack Structure
+  {{usage_examples}}
 
-      ```
-      squads/{{pack_name}}/
-      ├── agents/                          # Domain-specific agents
-      {{agents_structure}}
-      ├── checklists/                      # Validation checklists
-      {{checklists_structure}}
-      ├── config.yaml                      # Pack configuration
-      ├── data/                           # Knowledge bases
-      {{data_structure}}
-      ├── README.md                       # Pack documentation
-      ├── tasks/                          # Workflow tasks
-      {{tasks_structure}}
-      └── templates/                      # Output templates
-      {{templates_structure}}
-      ```
+- id: pack-structure
+  title: Pack Structure
+  instruction: Show the directory structure of the pack
+  template: |
 
-  - id: key-features
-    title: Key Features
-    instruction: Highlight 3-5 distinguishing features of this pack
-    template: |
-      ## Key Features
+  ## Pack Structure
 
-      {{key_features}}
+  ```
+  squads/{{pack_name}}/
+  ├── agents/                          # Domain-specific agents
+  {{agents_structure}}
+  ├── checklists/                      # Validation checklists
+  {{checklists_structure}}
+  ├── config.yaml                      # Pack configuration
+  ├── data/                           # Knowledge bases
+  {{data_structure}}
+  ├── README.md                       # Pack documentation
+  ├── tasks/                          # Workflow tasks
+  {{tasks_structure}}
+  └── templates/                      # Output templates
+  {{templates_structure}}
+  ```
 
-  - id: integration
-    title: Integration with Core AIOS
-    instruction: Explain how this pack integrates with AIOS framework
-    template: |
-      ## Integration with Core AIOS
+- id: key-features
+  title: Key Features
+  instruction: Highlight 3-5 distinguishing features of this pack
+  template: |
 
-      {{pack_name}} integrates seamlessly with:
+  ## Key Features
 
-      {{integration_details}}
+  {{key_features}}
 
-  - id: getting-started
-    title: Getting Started Guide
-    instruction: Provide step-by-step guide for first-time users
-    template: |
-      ## Getting Started
+- id: integration
+  title: Integration with Core AIOS
+  instruction: Explain how this pack integrates with AIOS framework
+  template: |
 
-      {{getting_started_steps}}
+  ## Integration with Core AIOS
 
-  - id: best-practices
-    title: Best Practices
-    condition: Standard or Comprehensive README
-    template: |
-      ## Best Practices
+  {{pack_name}} integrates seamlessly with:
 
-      {{best_practices}}
+  {{integration_details}}
 
-  - id: customization
-    title: Customization
-    condition: Standard or Comprehensive README
-    template: |
-      ## Customization
+- id: getting-started
+  title: Getting Started Guide
+  instruction: Provide step-by-step guide for first-time users
+  template: |
 
-      You can customize this squad by:
+  ## Getting Started
 
-      {{customization_options}}
+  {{getting_started_steps}}
 
-  - id: dependencies
-    title: Dependencies
-    template: |
-      ## Dependencies
+- id: best-practices
+  title: Best Practices
+  condition: Standard or Comprehensive README
+  template: |
 
-      This squad requires:
+  ## Best Practices
 
-      - Core AIOS-FULLSTACK framework
-      {{additional_dependencies}}
+  {{best_practices}}
 
-  - id: support
-    title: Support & Community
-    condition: Comprehensive README
-    template: |
-      ## Support & Community
+- id: customization
+  title: Customization
+  condition: Standard or Comprehensive README
+  template: |
 
-      - **Documentation**: See `docs/squads.md` for detailed guides
-      - **Examples**: Browse `squads/` for reference implementations
-      - **Issues**: Report problems via GitHub issues
-      - **Contributions**: Submit PRs with improvements
+  ## Customization
 
-  - id: version-history
-    title: Version History
-    template: |
-      ## Version History
+  You can customize this squad by:
 
-      - **v{{version}}** - {{version_description}}
+  {{customization_options}}
 
-  - id: footer
-    title: Footer
-    template: |
-      ---
+- id: dependencies
+  title: Dependencies
+  template: |
 
-      **Ready to {{pack_tagline}}? Let's get started! 🚀**
+  ## Dependencies
 
-      _Version: {{version}}_
-      _Compatible with: AIOS-FULLSTACK v4+_
+  This squad requires:
+  - Core AIOS-FULLSTACK framework
+    {{additional_dependencies}}
+
+- id: support
+  title: Support & Community
+  condition: Comprehensive README
+  template: |
+
+  ## Support & Community
+  - **Documentation**: See `docs/squads.md` for detailed guides
+  - **Examples**: Browse `squads/` for reference implementations
+  - **Issues**: Report problems via GitHub issues
+  - **Contributions**: Submit PRs with improvements
+
+- id: version-history
+  title: Version History
+  template: |
+
+  ## Version History
+  - **v{{version}}** - {{version_description}}
+
+- id: footer
+  title: Footer
+  template: |
+
+  ***
+
+  **Ready to {{pack_tagline}}? Let's get started! 🚀**
+
+  _Version: {{version}}_
+  _Compatible with: AIOS-FULLSTACK v4+_

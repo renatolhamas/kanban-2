@@ -8,8 +8,8 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { execSync } = require('child_process');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const { execSync } = require("child_process");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Size threshold for warnings (5MB)
@@ -30,15 +30,15 @@ const ERROR_SIZE_MB = 50;
 class LargeFilesCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'repository.large-files',
-      name: 'Large Files',
-      description: 'Checks for large files in the repository',
+      id: "repository.large-files",
+      name: "Large Files",
+      description: "Checks for large files in the repository",
       domain: CheckDomain.REPOSITORY,
       severity: CheckSeverity.MEDIUM,
       timeout: 30000,
       cacheable: true,
       healingTier: 3, // Manual - needs git-lfs or removal
-      tags: ['git', 'files', 'size'],
+      tags: ["git", "files", "size"],
     });
   }
 
@@ -56,14 +56,14 @@ class LargeFilesCheck extends BaseCheck {
 
       try {
         // Get all tracked files with sizes
-        const output = execSync('git ls-files -z', {
+        const output = execSync("git ls-files -z", {
           cwd: projectRoot,
-          encoding: 'utf8',
+          encoding: "utf8",
           maxBuffer: 50 * 1024 * 1024,
           windowsHide: true,
         });
 
-        const files = output.split('\0').filter((f) => f);
+        const files = output.split("\0").filter((f) => f);
 
         // Check sizes (batch for performance)
         for (const file of files.slice(0, 1000)) {
@@ -71,13 +71,13 @@ class LargeFilesCheck extends BaseCheck {
           try {
             const _sizeOutput = execSync(`git ls-files -s "${file}"`, {
               cwd: projectRoot,
-              encoding: 'utf8',
+              encoding: "utf8",
               windowsHide: true,
             });
 
             // Get actual file size from working tree
-            const fs = require('fs');
-            const path = require('path');
+            const fs = require("fs");
+            const path = require("path");
             const filePath = path.join(projectRoot, file);
 
             try {
@@ -118,7 +118,8 @@ class LargeFilesCheck extends BaseCheck {
         return this.fail(
           `Found ${veryLarge.length} very large file(s) (>${ERROR_SIZE_MB}MB) in repository`,
           {
-            recommendation: 'Consider using Git LFS for large files or removing them',
+            recommendation:
+              "Consider using Git LFS for large files or removing them",
             healable: false,
             healingTier: 3,
             details: {
@@ -131,16 +132,20 @@ class LargeFilesCheck extends BaseCheck {
       }
 
       if (largeFiles.length > 0) {
-        return this.warning(`Found ${largeFiles.length} large file(s) (>${WARNING_SIZE_MB}MB)`, {
-          recommendation: 'Review if large files should be tracked by Git LFS',
-          details: {
-            ...details,
-            files: largeFiles.slice(0, 10),
+        return this.warning(
+          `Found ${largeFiles.length} large file(s) (>${WARNING_SIZE_MB}MB)`,
+          {
+            recommendation:
+              "Review if large files should be tracked by Git LFS",
+            details: {
+              ...details,
+              files: largeFiles.slice(0, 10),
+            },
           },
-        });
+        );
       }
 
-      return this.pass('No unusually large files found', { details });
+      return this.pass("No unusually large files found", { details });
     } catch (error) {
       return this.error(`Large files check failed: ${error.message}`, error);
     }
@@ -153,7 +158,8 @@ class LargeFilesCheck extends BaseCheck {
   formatSize(bytes) {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    if (bytes < 1024 * 1024 * 1024)
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   }
 
@@ -162,18 +168,19 @@ class LargeFilesCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: 'large-files-guide',
-      action: 'manual',
-      manualGuide: 'Handle large files in Git',
+      name: "large-files-guide",
+      action: "manual",
+      manualGuide: "Handle large files in Git",
       steps: [
-        'Install Git LFS: git lfs install',
+        "Install Git LFS: git lfs install",
         'Track large file types: git lfs track "*.zip" "*.tar.gz"',
-        'Add .gitattributes to git',
-        'Or remove large files from history: git filter-repo --path <file> --invert-paths',
-        'Force push if needed (coordinate with team)',
+        "Add .gitattributes to git",
+        "Or remove large files from history: git filter-repo --path <file> --invert-paths",
+        "Force push if needed (coordinate with team)",
       ],
-      documentation: 'https://git-lfs.com/',
-      warning: 'Removing files from history rewrites history - coordinate with your team',
+      documentation: "https://git-lfs.com/",
+      warning:
+        "Removing files from history rewrites history - coordinate with your team",
     };
   }
 }

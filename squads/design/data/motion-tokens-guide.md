@@ -12,13 +12,13 @@
 
 How long an animation takes.
 
-| Token | Value | Use Case |
-|-------|-------|----------|
-| `duration.instant` | `0ms` | Immediate state changes (checkbox toggle) |
-| `duration.fast` | `100ms` | Micro-interactions (hover, focus ring) |
-| `duration.normal` | `200ms` | Standard transitions (color, opacity) |
-| `duration.moderate` | `300ms` | Medium transitions (expand, slide) |
-| `duration.slow` | `400ms` | Larger animations (modal enter, drawer) |
+| Token                 | Value   | Use Case                                     |
+| --------------------- | ------- | -------------------------------------------- |
+| `duration.instant`    | `0ms`   | Immediate state changes (checkbox toggle)    |
+| `duration.fast`       | `100ms` | Micro-interactions (hover, focus ring)       |
+| `duration.normal`     | `200ms` | Standard transitions (color, opacity)        |
+| `duration.moderate`   | `300ms` | Medium transitions (expand, slide)           |
+| `duration.slow`       | `400ms` | Larger animations (modal enter, drawer)      |
 | `duration.deliberate` | `600ms` | Full-page transitions, complex orchestration |
 
 **Rule of thumb:** The bigger the element, the longer the duration. A button hover = fast. A page transition = deliberate.
@@ -27,15 +27,16 @@ How long an animation takes.
 
 How an animation accelerates/decelerates.
 
-| Token | Cubic Bezier | Use Case |
-|-------|-------------|----------|
-| `easing.standard` | `[0.4, 0, 0.2, 1]` | Default for most transitions |
-| `easing.entrance` | `[0, 0, 0.2, 1]` | Elements entering the viewport |
-| `easing.exit` | `[0.4, 0, 1, 1]` | Elements leaving the viewport |
-| `easing.emphasized` | `[0.2, 0, 0, 1]` | Attention-grabbing, primary actions |
-| `easing.linear` | `[0, 0, 1, 1]` | Progress bars, continuous motion |
+| Token               | Cubic Bezier       | Use Case                            |
+| ------------------- | ------------------ | ----------------------------------- |
+| `easing.standard`   | `[0.4, 0, 0.2, 1]` | Default for most transitions        |
+| `easing.entrance`   | `[0, 0, 0.2, 1]`   | Elements entering the viewport      |
+| `easing.exit`       | `[0.4, 0, 1, 1]`   | Elements leaving the viewport       |
+| `easing.emphasized` | `[0.2, 0, 0, 1]`   | Attention-grabbing, primary actions |
+| `easing.linear`     | `[0, 0, 1, 1]`     | Progress bars, continuous motion    |
 
 **W3C DTCG format:**
+
 ```json
 {
   "easing": {
@@ -52,18 +53,18 @@ How an animation accelerates/decelerates.
 
 Semantic motion patterns combining duration + easing.
 
-| Action | Duration | Easing | Description |
-|--------|----------|--------|-------------|
-| `enter` | moderate | entrance | Element appears in view |
-| `exit` | normal | exit | Element leaves view |
-| `expand` | moderate | standard | Container grows (accordion, dropdown) |
-| `collapse` | normal | standard | Container shrinks |
-| `fade-in` | normal | entrance | Opacity 0 → 1 |
-| `fade-out` | fast | exit | Opacity 1 → 0 |
-| `slide-in` | moderate | entrance | Element slides into position |
-| `slide-out` | normal | exit | Element slides out |
-| `scale-up` | normal | emphasized | Element scales from small to full |
-| `scale-down` | fast | exit | Element scales from full to small |
+| Action       | Duration | Easing     | Description                           |
+| ------------ | -------- | ---------- | ------------------------------------- |
+| `enter`      | moderate | entrance   | Element appears in view               |
+| `exit`       | normal   | exit       | Element leaves view                   |
+| `expand`     | moderate | standard   | Container grows (accordion, dropdown) |
+| `collapse`   | normal   | standard   | Container shrinks                     |
+| `fade-in`    | normal   | entrance   | Opacity 0 → 1                         |
+| `fade-out`   | fast     | exit       | Opacity 1 → 0                         |
+| `slide-in`   | moderate | entrance   | Element slides into position          |
+| `slide-out`  | normal   | exit       | Element slides out                    |
+| `scale-up`   | normal   | emphasized | Element scales from small to full     |
+| `scale-down` | fast     | exit       | Element scales from full to small     |
 
 ---
 
@@ -88,8 +89,9 @@ Semantic motion patterns combining duration + easing.
 
 /* Usage */
 .modal-enter {
-  transition: opacity var(--motion-duration-moderate) var(--motion-easing-entrance),
-              transform var(--motion-duration-moderate) var(--motion-easing-entrance);
+  transition:
+    opacity var(--motion-duration-moderate) var(--motion-easing-entrance),
+    transform var(--motion-duration-moderate) var(--motion-easing-entrance);
 }
 ```
 
@@ -120,7 +122,8 @@ Semantic motion patterns combining duration + easing.
 @media (prefers-reduced-motion: reduce) {
   .modal-enter {
     /* Keep opacity (low-motion), remove transform (high-motion) */
-    transition: opacity var(--motion-duration-fast) var(--motion-easing-standard);
+    transition: opacity var(--motion-duration-fast)
+      var(--motion-easing-standard);
     transform: none;
   }
 }
@@ -128,23 +131,25 @@ Semantic motion patterns combining duration + easing.
 
 ### What to Reduce vs. Remove
 
-| Keep (reduced) | Remove |
-|----------------|--------|
+| Keep (reduced)      | Remove                     |
+| ------------------- | -------------------------- |
 | Opacity transitions | Bouncing/spring animations |
-| Color changes | Parallax scrolling |
-| Simple fades | Auto-playing animations |
-| State indicators | Decorative motion |
+| Color changes       | Parallax scrolling         |
+| Simple fades        | Auto-playing animations    |
+| State indicators    | Decorative motion          |
 
 ---
 
 ## Testing Motion
 
 ### Visual Regression
+
 - Capture before/after states (not mid-animation)
 - Test both motion-enabled and reduced-motion states
 - Validate duration tokens match implementation
 
 ### Accessibility Audit
+
 - [ ] prefers-reduced-motion respected on ALL animated elements
 - [ ] No animation causes seizure risk (3 flashes/second max)
 - [ ] Motion is not the only way to convey information
@@ -152,7 +157,9 @@ Semantic motion patterns combining duration + easing.
 - [ ] Animation does not block interaction
 
 ### Reference: Razorpay Blade DS
+
 Blade DS provides a production-grade reference implementation with:
+
 - Consistent duration/easing token scale
 - Shared motion primitives across components
 - prefers-reduced-motion handling on every animated component
@@ -164,13 +171,13 @@ Blade DS provides a production-grade reference implementation with:
 
 Every animation MUST serve at least one of these purposes. If it serves none, remove it.
 
-| Purpose | Definition | Example |
-|---------|-----------|---------|
-| **Orient** | Help users understand spatial relationships | Page transitions showing view hierarchy |
-| **Direct Attention** | Guide focus to important elements | Notification badge animating in |
-| **Show Causality** | Demonstrate cause-and-effect | Button press triggering visible action |
-| **Provide Feedback** | Confirm user actions and system state | Loading spinner, success checkmark |
-| **Express Brand** | Communicate brand personality through motion | Custom easing curves, signature transitions |
+| Purpose              | Definition                                   | Example                                     |
+| -------------------- | -------------------------------------------- | ------------------------------------------- |
+| **Orient**           | Help users understand spatial relationships  | Page transitions showing view hierarchy     |
+| **Direct Attention** | Guide focus to important elements            | Notification badge animating in             |
+| **Show Causality**   | Demonstrate cause-and-effect                 | Button press triggering visible action      |
+| **Provide Feedback** | Confirm user actions and system state        | Loading spinner, success checkmark          |
+| **Express Brand**    | Communicate brand personality through motion | Custom easing curves, signature transitions |
 
 ### UI Choreography (Val Head)
 
@@ -183,12 +190,12 @@ Every animation MUST serve at least one of these purposes. If it serves none, re
 
 ### CSS vs JavaScript Decision (Val Head)
 
-| Use CSS | Use JavaScript |
-|---------|---------------|
-| Simple state transitions (hover, focus) | Chaining 3+ animations |
-| Single property changes | Runtime-dynamic values |
-| Performance-critical (compositor thread) | Physics-based / spring easing |
-| Declarative, predictable | Complex orchestration (staggered lists) |
+| Use CSS                                  | Use JavaScript                          |
+| ---------------------------------------- | --------------------------------------- |
+| Simple state transitions (hover, focus)  | Chaining 3+ animations                  |
+| Single property changes                  | Runtime-dynamic values                  |
+| Performance-critical (compositor thread) | Physics-based / spring easing           |
+| Declarative, predictable                 | Complex orchestration (staggered lists) |
 
 ### Motion Audit Process (Val Head)
 

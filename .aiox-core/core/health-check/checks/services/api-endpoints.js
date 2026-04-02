@@ -8,15 +8,20 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const https = require('https');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const https = require("https");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Common development API endpoints to check
  */
 const COMMON_ENDPOINTS = [
-  { name: 'npm Registry', host: 'registry.npmjs.org', path: '/', critical: true },
-  { name: 'GitHub API', host: 'api.github.com', path: '/', critical: false },
+  {
+    name: "npm Registry",
+    host: "registry.npmjs.org",
+    path: "/",
+    critical: true,
+  },
+  { name: "GitHub API", host: "api.github.com", path: "/", critical: false },
 ];
 
 /**
@@ -28,15 +33,15 @@ const COMMON_ENDPOINTS = [
 class ApiEndpointsCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'services.api-endpoints',
-      name: 'API Endpoints',
-      description: 'Verifies external API endpoint connectivity',
+      id: "services.api-endpoints",
+      name: "API Endpoints",
+      description: "Verifies external API endpoint connectivity",
       domain: CheckDomain.SERVICES,
       severity: CheckSeverity.LOW,
       timeout: 15000,
       cacheable: false, // Network state can change
       healingTier: 3, // Manual - network issues
-      tags: ['api', 'network', 'connectivity'],
+      tags: ["api", "network", "connectivity"],
     });
   }
 
@@ -52,16 +57,19 @@ class ApiEndpointsCheck extends BaseCheck {
 
     for (const endpoint of COMMON_ENDPOINTS) {
       try {
-        const responseTime = await this.checkEndpoint(endpoint.host, endpoint.path);
+        const responseTime = await this.checkEndpoint(
+          endpoint.host,
+          endpoint.path,
+        );
         results.push({
           name: endpoint.name,
-          status: 'ok',
+          status: "ok",
           responseTime: `${responseTime}ms`,
         });
       } catch (error) {
         const failure = {
           name: endpoint.name,
-          status: 'failed',
+          status: "failed",
           error: error.message,
         };
         results.push(failure);
@@ -81,20 +89,27 @@ class ApiEndpointsCheck extends BaseCheck {
 
     // Critical endpoint failure
     if (criticalFailures.length > 0) {
-      return this.fail(`Critical API endpoint(s) unreachable: ${criticalFailures.join(', ')}`, {
-        recommendation: 'Check network connection and firewall settings',
-        healable: false,
-        healingTier: 3,
-        details,
-      });
+      return this.fail(
+        `Critical API endpoint(s) unreachable: ${criticalFailures.join(", ")}`,
+        {
+          recommendation: "Check network connection and firewall settings",
+          healable: false,
+          healingTier: 3,
+          details,
+        },
+      );
     }
 
     // Non-critical failures
     if (failures.length > 0) {
-      return this.warning(`Some API endpoints unreachable: ${failures.join(', ')}`, {
-        recommendation: 'Non-critical services unavailable - some features may not work',
-        details,
-      });
+      return this.warning(
+        `Some API endpoints unreachable: ${failures.join(", ")}`,
+        {
+          recommendation:
+            "Non-critical services unavailable - some features may not work",
+          details,
+        },
+      );
     }
 
     return this.pass(`All ${COMMON_ENDPOINTS.length} API endpoints reachable`, {
@@ -114,10 +129,10 @@ class ApiEndpointsCheck extends BaseCheck {
         {
           host,
           path: urlPath,
-          method: 'HEAD',
+          method: "HEAD",
           timeout: 5000,
           headers: {
-            'User-Agent': 'AIOX-HealthCheck/1.0',
+            "User-Agent": "AIOX-HealthCheck/1.0",
           },
         },
         (res) => {
@@ -134,10 +149,10 @@ class ApiEndpointsCheck extends BaseCheck {
         },
       );
 
-      req.on('error', reject);
-      req.on('timeout', () => {
+      req.on("error", reject);
+      req.on("timeout", () => {
         req.destroy();
-        reject(new Error('Timeout'));
+        reject(new Error("Timeout"));
       });
 
       req.end();
@@ -149,15 +164,15 @@ class ApiEndpointsCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: 'api-connectivity-guide',
-      action: 'manual',
-      manualGuide: 'Troubleshoot API connectivity',
+      name: "api-connectivity-guide",
+      action: "manual",
+      manualGuide: "Troubleshoot API connectivity",
       steps: [
-        'Check your internet connection',
-        'Verify you can access these URLs in a browser',
-        'Check if you are behind a corporate proxy',
-        'Configure proxy settings if needed',
-        'Check firewall settings',
+        "Check your internet connection",
+        "Verify you can access these URLs in a browser",
+        "Check if you are behind a corporate proxy",
+        "Configure proxy settings if needed",
+        "Check firewall settings",
       ],
     };
   }

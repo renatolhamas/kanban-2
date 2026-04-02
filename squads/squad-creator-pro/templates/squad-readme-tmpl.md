@@ -22,8 +22,8 @@
 
 ## Agents
 
-| Agent | Ícone | Papel | Comandos Principais |
-|-------|-------|-------|---------------------|
+| Agent           | Ícone            | Papel             | Comandos Principais                        |
+| --------------- | ---------------- | ----------------- | ------------------------------------------ |
 | @{{agent_1_id}} | {{agent_1_icon}} | {{agent_1_papel}} | `*{{agent_1_cmd_1}}`, `*{{agent_1_cmd_2}}` |
 | @{{agent_2_id}} | {{agent_2_icon}} | {{agent_2_papel}} | `*{{agent_2_cmd_1}}`, `*{{agent_2_cmd_2}}` |
 
@@ -84,8 +84,8 @@ Agent: {{example_output}}
 
 ## Workflows Disponíveis
 
-| Workflow | Arquivo | Trigger | Descrição |
-|----------|---------|---------|-----------|
+| Workflow            | Arquivo                         | Trigger                   | Descrição           |
+| ------------------- | ------------------------------- | ------------------------- | ------------------- |
 | {{workflow_1_name}} | `workflows/{{workflow_1}}.yaml` | `*{{workflow_1_trigger}}` | {{workflow_1_desc}} |
 | {{workflow_2_name}} | `workflows/{{workflow_2}}.yaml` | `*{{workflow_2_trigger}}` | {{workflow_2_desc}} |
 
@@ -95,16 +95,16 @@ Agent: {{example_output}}
 
 ### @{{agent_1_id}}
 
-| Comando | Descrição |
-|---------|-----------|
-| `*{{cmd_1}}` | {{cmd_1_desc}} |
-| `*{{cmd_2}}` | {{cmd_2_desc}} |
-| `*help` | Lista todos os comandos |
+| Comando      | Descrição               |
+| ------------ | ----------------------- |
+| `*{{cmd_1}}` | {{cmd_1_desc}}          |
+| `*{{cmd_2}}` | {{cmd_2_desc}}          |
+| `*help`      | Lista todos os comandos |
 
 ### @{{agent_2_id}}
 
-| Comando | Descrição |
-|---------|-----------|
+| Comando      | Descrição      |
+| ------------ | -------------- |
 | `*{{cmd_3}}` | {{cmd_3_desc}} |
 | `*{{cmd_4}}` | {{cmd_4_desc}} |
 
@@ -112,8 +112,8 @@ Agent: {{example_output}}
 
 ## Veto Conditions
 
-| Trigger | Ação | Agent |
-|---------|------|-------|
+| Trigger            | Ação              | Agent             |
+| ------------------ | ----------------- | ----------------- |
 | {{veto_1_trigger}} | {{veto_1_action}} | @{{veto_1_agent}} |
 | {{veto_2_trigger}} | {{veto_2_action}} | @{{veto_2_agent}} |
 
@@ -121,12 +121,12 @@ Agent: {{example_output}}
 
 ## Documentação Completa
 
-| Documento | Descrição | Caminho |
-|-----------|-----------|---------|
-| Agent Flows | Como cada agent funciona | `docs/` |
-| Workflow Docs | Documentação de workflows | `docs/` |
-| Concepts | Conceitos fundamentais | `docs/CONCEPTS.md` |
-| FAQ | Perguntas frequentes | `docs/FAQ.md` |
+| Documento     | Descrição                 | Caminho            |
+| ------------- | ------------------------- | ------------------ |
+| Agent Flows   | Como cada agent funciona  | `docs/`            |
+| Workflow Docs | Documentação de workflows | `docs/`            |
+| Concepts      | Conceitos fundamentais    | `docs/CONCEPTS.md` |
+| FAQ           | Perguntas frequentes      | `docs/FAQ.md`      |
 
 ---
 
@@ -134,14 +134,14 @@ Agent: {{example_output}}
 
 ### Com Outros Squads
 
-| Squad | Tipo | Descrição |
-|-------|------|-----------|
+| Squad                   | Tipo                   | Descrição              |
+| ----------------------- | ---------------------- | ---------------------- |
 | {{integration_squad_1}} | {{integration_type_1}} | {{integration_desc_1}} |
 
 ### Com Ferramentas
 
-| Ferramenta | Uso |
-|------------|-----|
+| Ferramenta | Uso            |
+| ---------- | -------------- |
 | {{tool_1}} | {{tool_1_uso}} |
 | {{tool_2}} | {{tool_2_uso}} |
 
@@ -149,9 +149,9 @@ Agent: {{example_output}}
 
 ## Changelog
 
-| Data | Versão | Mudanças |
-|------|--------|----------|
-| {{date}} | 1.0.0 | Release inicial |
+| Data     | Versão | Mudanças        |
+| -------- | ------ | --------------- |
+| {{date}} | 1.0.0  | Release inicial |
 
 ---
 
@@ -166,5 +166,5 @@ Para contribuir com este squad:
 
 ---
 
-*Squad criado seguindo SC-DP-003 (Squad README)*
-*"{{squad_motto}}"*
+_Squad criado seguindo SC-DP-003 (Squad README)_
+_"{{squad_motto}}"_

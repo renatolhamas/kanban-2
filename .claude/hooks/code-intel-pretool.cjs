@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict';
+"use strict";
 
 /**
  * Code-Intel PreToolUse Hook — Auto-injects code intelligence context
@@ -15,10 +15,10 @@
  * @module code-intel-pretool-hook
  */
 
-const path = require('path');
+const path = require("path");
 
 /** Tools that trigger code-intel injection. */
-const TARGET_TOOLS = new Set(['Write', 'Edit']);
+const TARGET_TOOLS = new Set(["Write", "Edit"]);
 
 /** Safety timeout (ms) — defense-in-depth. */
 const HOOK_TIMEOUT_MS = 4000;
@@ -29,13 +29,18 @@ const HOOK_TIMEOUT_MS = 4000;
  */
 function readStdin() {
   return new Promise((resolve, reject) => {
-    let data = '';
-    process.stdin.setEncoding('utf8');
-    process.stdin.on('error', (e) => reject(e));
-    process.stdin.on('data', (chunk) => { data += chunk; });
-    process.stdin.on('end', () => {
-      try { resolve(JSON.parse(data)); }
-      catch (e) { reject(e); }
+    let data = "";
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("error", (e) => reject(e));
+    process.stdin.on("data", (chunk) => {
+      data += chunk;
+    });
+    process.stdin.on("end", () => {
+      try {
+        resolve(JSON.parse(data));
+      } catch (e) {
+        reject(e);
+      }
     });
   });
 }
@@ -61,7 +66,15 @@ async function main() {
 
   // Load hook-runtime (lazy — only when we actually need it)
   const { resolveCodeIntel, formatAsXml } = require(
-    path.join(__dirname, '..', '..', '.aios-core', 'core', 'code-intel', 'hook-runtime.js'),
+    path.join(
+      __dirname,
+      "..",
+      "..",
+      ".aios-core",
+      "core",
+      "code-intel",
+      "hook-runtime.js",
+    ),
   );
 
   const intel = await resolveCodeIntel(filePath, cwd);
@@ -77,7 +90,7 @@ async function main() {
 
   const flushed = process.stdout.write(output);
   if (!flushed) {
-    await new Promise((resolve) => process.stdout.once('drain', resolve));
+    await new Promise((resolve) => process.stdout.once("drain", resolve));
   }
 }
 

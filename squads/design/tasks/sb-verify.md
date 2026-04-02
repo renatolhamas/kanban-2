@@ -7,16 +7,16 @@
 
 ## Task Anatomy
 
-| Field | Value |
-|-------|-------|
-| **task_name** | Verify Storybook Setup |
-| **status** | `pending` |
-| **responsible_executor** | @storybook-expert |
-| **execution_type** | `Agent` |
-| **input** | Project with Storybook configured, all stories written |
-| **output** | Verification report (PASS/FAIL per check) |
-| **action_items** | 6 steps |
-| **acceptance_criteria** | 6 criteria |
+| Field                    | Value                                                  |
+| ------------------------ | ------------------------------------------------------ |
+| **task_name**            | Verify Storybook Setup                                 |
+| **status**               | `pending`                                              |
+| **responsible_executor** | @storybook-expert                                      |
+| **execution_type**       | `Agent`                                                |
+| **input**                | Project with Storybook configured, all stories written |
+| **output**               | Verification report (PASS/FAIL per check)              |
+| **action_items**         | 6 steps                                                |
+| **acceptance_criteria**  | 6 criteria                                             |
 
 ## Overview
 
@@ -52,6 +52,7 @@ npm run typecheck
 - [ ] No errors in `src/components/ui/*.tsx` component files
 
 If errors found:
+
 - Fix all errors
 - Re-run typecheck
 - Document fixes applied
@@ -66,6 +67,7 @@ npm run lint
 - [ ] No warnings in story files (warnings acceptable in other files)
 
 If errors found:
+
 - Fix all lint errors in story and config files
 - Re-run lint
 - Document fixes applied
@@ -82,6 +84,7 @@ npm run build-storybook
 - [ ] Build size is reasonable (log total size)
 
 If build fails:
+
 - Check error output for specific file/component
 - Fix the issue (usually import errors or missing dependencies)
 - Re-run build
@@ -113,6 +116,7 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:6006
 - [ ] Kill dev server after verification
 
 **If browser testing available (Playwright MCP):**
+
 - [ ] Navigate to localhost:6006
 - [ ] Verify sidebar shows all component categories
 - [ ] Click on 3-5 random stories to verify they render
@@ -126,16 +130,17 @@ Produce final report:
 ```markdown
 ## Storybook Verification Report
 
-| Check | Status | Details |
-|-------|--------|---------|
-| TypeScript | {PASS/FAIL} | {error count} errors |
-| Lint | {PASS/FAIL} | {error count} errors |
-| Build | {PASS/FAIL} | {build size} |
-| Story Coverage | {PASS/FAIL} | {stories}/{components} ({ratio}%) |
-| Dev Server | {PASS/FAIL} | HTTP {status_code} |
-| Theme Toggle | {PASS/FAIL/SKIPPED} | {details} |
+| Check          | Status              | Details                           |
+| -------------- | ------------------- | --------------------------------- |
+| TypeScript     | {PASS/FAIL}         | {error count} errors              |
+| Lint           | {PASS/FAIL}         | {error count} errors              |
+| Build          | {PASS/FAIL}         | {build size}                      |
+| Story Coverage | {PASS/FAIL}         | {stories}/{components} ({ratio}%) |
+| Dev Server     | {PASS/FAIL}         | HTTP {status_code}                |
+| Theme Toggle   | {PASS/FAIL/SKIPPED} | {details}                         |
 
 ### Summary
+
 - **Overall Status:** {PASS/FAIL}
 - **Components:** {total_components}
 - **Stories:** {total_stories}
@@ -155,18 +160,21 @@ Produce final report:
 ## Error Handling
 
 ### TypeCheck Fails After Stories Written
+
 - **Trigger:** Type errors in story files
 - **Detection:** Step 1 typecheck exit code != 0
 - **Recovery:** Parse error output, fix each story file, re-run
 - **Prevention:** sb-generate-all-stories should catch these
 
 ### Build Fails
+
 - **Trigger:** Storybook build compilation error
 - **Detection:** Step 3 build exit code != 0
 - **Recovery:** Parse build error, fix specific file, re-run
 - **Prevention:** If typecheck passes, build usually succeeds
 
 ### Dev Server Wont Start
+
 - **Trigger:** Port 6006 already in use, or config error
 - **Detection:** Step 5 server doesnt respond
 - **Recovery:** Kill process on 6006 (`lsof -ti:6006 | xargs kill`), retry
@@ -183,11 +191,11 @@ Produce final report:
 
 ## Handoff
 
-| Attribute | Value |
-|-----------|-------|
-| **Next Task** | None (terminal task) |
-| **Trigger** | All acceptance criteria met |
-| **Executor** | Returns to user |
+| Attribute     | Value                       |
+| ------------- | --------------------------- |
+| **Next Task** | None (terminal task)        |
+| **Trigger**   | All acceptance criteria met |
+| **Executor**  | Returns to user             |
 
 ### Handoff Package
 

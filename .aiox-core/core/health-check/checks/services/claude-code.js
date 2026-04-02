@@ -8,11 +8,11 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require('fs').promises;
-const path = require('path');
-const os = require('os');
-const { execSync } = require('child_process');
-const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
+const fs = require("fs").promises;
+const path = require("path");
+const os = require("os");
+const { execSync } = require("child_process");
+const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 
 /**
  * Claude Code check
@@ -23,15 +23,15 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 class ClaudeCodeCheck extends BaseCheck {
   constructor() {
     super({
-      id: 'services.claude-code',
-      name: 'Claude Code',
-      description: 'Verifies Claude Code CLI configuration',
+      id: "services.claude-code",
+      name: "Claude Code",
+      description: "Verifies Claude Code CLI configuration",
       domain: CheckDomain.SERVICES,
       severity: CheckSeverity.LOW,
       timeout: 3000,
       cacheable: true,
       healingTier: 0,
-      tags: ['claude', 'ai', 'cli'],
+      tags: ["claude", "ai", "cli"],
     });
   }
 
@@ -53,8 +53,8 @@ class ClaudeCodeCheck extends BaseCheck {
 
     // Check if claude is installed
     try {
-      const version = execSync('claude --version', {
-        encoding: 'utf8',
+      const version = execSync("claude --version", {
+        encoding: "utf8",
         timeout: 5000,
         windowsHide: true,
       }).trim();
@@ -67,13 +67,13 @@ class ClaudeCodeCheck extends BaseCheck {
 
     // Check project .claude directory
     try {
-      const claudeDir = path.join(projectRoot, '.claude');
+      const claudeDir = path.join(projectRoot, ".claude");
       await fs.access(claudeDir);
       details.projectConfig = true;
 
       // Check for CLAUDE.md
       try {
-        await fs.access(path.join(claudeDir, 'CLAUDE.md'));
+        await fs.access(path.join(claudeDir, "CLAUDE.md"));
         details.hasProjectInstructions = true;
       } catch {
         details.hasProjectInstructions = false;
@@ -84,7 +84,7 @@ class ClaudeCodeCheck extends BaseCheck {
 
     // Check global config
     try {
-      const globalConfig = path.join(homeDir, '.claude.json');
+      const globalConfig = path.join(homeDir, ".claude.json");
       await fs.access(globalConfig);
       details.globalConfig = true;
     } catch {
@@ -93,7 +93,7 @@ class ClaudeCodeCheck extends BaseCheck {
 
     // Check for global CLAUDE.md
     try {
-      const globalClaudeMd = path.join(homeDir, '.claude', 'CLAUDE.md');
+      const globalClaudeMd = path.join(homeDir, ".claude", "CLAUDE.md");
       await fs.access(globalClaudeMd);
       details.hasGlobalInstructions = true;
     } catch {
@@ -101,7 +101,7 @@ class ClaudeCodeCheck extends BaseCheck {
     }
 
     if (!details.installed && !details.projectConfig && !details.globalConfig) {
-      return this.pass('Claude Code not detected (not using Claude Code)', {
+      return this.pass("Claude Code not detected (not using Claude Code)", {
         details,
       });
     }
@@ -109,26 +109,30 @@ class ClaudeCodeCheck extends BaseCheck {
     const issues = [];
 
     if (!details.projectConfig) {
-      issues.push('No project-level .claude directory');
+      issues.push("No project-level .claude directory");
     }
 
     if (details.projectConfig && !details.hasProjectInstructions) {
-      issues.push('Project .claude/CLAUDE.md not found');
+      issues.push("Project .claude/CLAUDE.md not found");
     }
 
     if (issues.length > 0) {
-      return this.warning(`Claude Code configuration incomplete: ${issues.join(', ')}`, {
-        recommendation: 'Add .claude/CLAUDE.md for project-specific instructions',
-        details: { ...details, issues },
-      });
+      return this.warning(
+        `Claude Code configuration incomplete: ${issues.join(", ")}`,
+        {
+          recommendation:
+            "Add .claude/CLAUDE.md for project-specific instructions",
+          details: { ...details, issues },
+        },
+      );
     }
 
     const parts = [];
     if (details.installed) parts.push(`CLI v${details.version}`);
-    if (details.projectConfig) parts.push('project config');
-    if (details.globalConfig) parts.push('global config');
+    if (details.projectConfig) parts.push("project config");
+    if (details.globalConfig) parts.push("global config");
 
-    return this.pass(`Claude Code configured (${parts.join(', ')})`, {
+    return this.pass(`Claude Code configured (${parts.join(", ")})`, {
       details,
     });
   }

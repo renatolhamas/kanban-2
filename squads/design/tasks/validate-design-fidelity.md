@@ -8,6 +8,7 @@
 ## Overview
 
 This task scans code for design token violations:
+
 - Hardcoded colors instead of tokens/variables
 - Hardcoded spacing instead of scale values
 - Incorrect token usage
@@ -32,11 +33,13 @@ grep -rn --include="*.tsx" --include="*.ts" --include="*.css" \
 ```
 
 **Violations to flag:**
+
 - `bg-[#D4AF37]` → Should use `bg-studio-primary` or `bg-[var(--primary-color)]`
 - `text-[#0A0A0F]` → Should use `text-background` or `bg-studio-bg`
 - `border-[#111116]` → Should use `border-studio-card-bg`
 
 **Allowed patterns:**
+
 - `hsl(var(--...))` - CSS variable reference
 - `var(--...)` - CSS variable reference
 - Comments with `// token:` or `// color:`
@@ -53,11 +56,13 @@ grep -rn --include="*.tsx" \
 ```
 
 **Violations to flag:**
+
 - `p-[12px]` → Should use `p-3` (spacing.3 = 12px)
 - `gap-[24px]` → Should use `gap-6` (spacing.6 = 24px)
 - `w-[400px]` → Should use `w-[25rem]` or semantic width
 
 **Allowed:**
+
 - Responsive breakpoint values
 - One-off layout constraints with comment
 
@@ -75,6 +80,7 @@ For each component file, check:
 ```
 
 **Check pattern:**
+
 ```bash
 # Find Button components and check their classes
 grep -A 20 "const Button" {path}/**/*.tsx | grep -E "className|class="
@@ -92,6 +98,7 @@ For each color pair found:
    - UI components: < 3.0:1
 
 **Common violations:**
+
 - `text-muted` on `bg-surface` → Check contrast
 - `text-secondary` on `bg-elevated` → Check contrast
 
@@ -103,28 +110,29 @@ Output format:
 # Design Fidelity Report
 
 ## Summary
+
 - Files scanned: {count}
 - Violations found: {count}
 - Severity: {HIGH|MEDIUM|LOW}
 
 ## Hardcoded Colors ({count})
 
-| File | Line | Value | Should Be |
-|------|------|-------|-----------|
-| Button.tsx | 23 | #D4AF37 | studio-primary |
-| Card.tsx | 45 | #111116 | studio-card-bg |
+| File       | Line | Value   | Should Be      |
+| ---------- | ---- | ------- | -------------- |
+| Button.tsx | 23   | #D4AF37 | studio-primary |
+| Card.tsx   | 45   | #111116 | studio-card-bg |
 
 ## Hardcoded Spacing ({count})
 
-| File | Line | Value | Should Be |
-|------|------|-------|-----------|
-| Modal.tsx | 12 | p-[24px] | p-6 |
+| File      | Line | Value    | Should Be |
+| --------- | ---- | -------- | --------- |
+| Modal.tsx | 12   | p-[24px] | p-6       |
 
 ## Contrast Violations ({count})
 
-| File | Foreground | Background | Ratio | Required |
-|------|------------|------------|-------|----------|
-| Badge.tsx | #71717A | #1a1a1f | 3.2:1 | 4.5:1 |
+| File      | Foreground | Background | Ratio | Required |
+| --------- | ---------- | ---------- | ----- | -------- |
+| Badge.tsx | #71717A    | #1a1a1f    | 3.2:1 | 4.5:1    |
 
 ## Recommendations
 
@@ -139,13 +147,14 @@ If `--fix` flag provided:
 
 ```typescript
 // Before
-className="bg-[#D4AF37] text-[#0A0A0F]"
+className = "bg-[#D4AF37] text-[#0A0A0F]";
 
 // After
-className="bg-studio-primary text-studio-bg"
+className = "bg-studio-primary text-studio-bg";
 ```
 
 **Auto-fix mapping:**
+
 ```yaml
 "#D4AF37": "studio-primary"
 "#B8962E": "studio-primary-dark"
@@ -198,12 +207,12 @@ When delegating to subagents, include:
 
 > **GATE: Fidelity Acceptance** — Final quality gate before component is marked complete
 
-| Metric | Threshold | Action if FAIL |
-|--------|-----------|----------------|
-| Visual match | >= 95% pixel similarity | Identify divergent areas, fix token references or CSS specificity |
-| Token usage | 100% (zero hardcoded values) | Replace every hardcoded value with token reference |
-| Accessibility | WCAG AA pass (4.5:1 text, 3:1 UI) | Fix contrast issues using closest compliant token color |
-| Responsive | All breakpoints match design | Add missing media queries or container queries |
+| Metric        | Threshold                         | Action if FAIL                                                    |
+| ------------- | --------------------------------- | ----------------------------------------------------------------- |
+| Visual match  | >= 95% pixel similarity           | Identify divergent areas, fix token references or CSS specificity |
+| Token usage   | 100% (zero hardcoded values)      | Replace every hardcoded value with token reference                |
+| Accessibility | WCAG AA pass (4.5:1 text, 3:1 UI) | Fix contrast issues using closest compliant token color           |
+| Responsive    | All breakpoints match design      | Add missing media queries or container queries                    |
 
 **Rework rule:** If visual match < 85%, the component likely has structural issues — return to *build or *refactor-plan rather than patching CSS.
 
@@ -213,10 +222,10 @@ When delegating to subagents, include:
 - `squads/design/checklists/design-fidelity-checklist.md` - Manual verification
 - `component-visual-spec-tmpl.md` - Component specs
 
-
 ## Related Checklists
 
 - `squads/design/checklists/design-fidelity-checklist.md`
 
 ## Process Guards
+
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

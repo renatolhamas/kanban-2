@@ -7,16 +7,16 @@
 
 ## Task Anatomy
 
-| Field | Value |
-|-------|-------|
-| **task_name** | Scan Brownfield Components |
-| **status** | `pending` |
-| **responsible_executor** | @storybook-expert |
-| **execution_type** | `Agent` |
-| **input** | Source codebase path, file extensions, exclusion patterns |
-| **output** | Component inventory JSON with classification and dependency map |
-| **action_items** | 7 steps |
-| **acceptance_criteria** | 5 criteria |
+| Field                    | Value                                                           |
+| ------------------------ | --------------------------------------------------------------- |
+| **task_name**            | Scan Brownfield Components                                      |
+| **status**               | `pending`                                                       |
+| **responsible_executor** | @storybook-expert                                               |
+| **execution_type**       | `Agent`                                                         |
+| **input**                | Source codebase path, file extensions, exclusion patterns       |
+| **output**               | Component inventory JSON with classification and dependency map |
+| **action_items**         | 7 steps                                                         |
+| **acceptance_criteria**  | 5 criteria                                                      |
 
 ## Overview
 
@@ -78,7 +78,10 @@ Works on ANY React/Next.js codebase — source and target can be the same projec
       "exports": ["GlassCard", "GlassCardHeader", "GlassCardContent"],
       "props": {
         "GlassCard": {
-          "variant": { "type": "union", "values": ["default", "elevated", "flat"] },
+          "variant": {
+            "type": "union",
+            "values": ["default", "elevated", "flat"]
+          },
           "className": { "type": "string", "optional": true }
         }
       },
@@ -141,6 +144,7 @@ find {source_path} -type f \( -name "*.tsx" -o -name "*.jsx" \) \
 ```
 
 For each file, determine if it exports a React component by checking for:
+
 - `export function {Name}` or `export const {Name}` with JSX return
 - `export default function` with JSX return
 - `React.forwardRef` usage
@@ -151,21 +155,25 @@ For each file, determine if it exports a React component by checking for:
 For each component file, extract:
 
 **3a. Exports:**
+
 - Named exports: `export { Button, ButtonProps }`
 - Default exports: `export default Button`
 - Sub-component exports: `DialogTrigger`, `DialogContent`, etc.
 
 **3b. Props Interface:**
+
 - TypeScript interfaces/types for props
 - CVA variants (if using class-variance-authority)
 - Default prop values
 
 **3c. Dependencies:**
+
 - Internal imports: other components from the same project
 - External imports: npm packages (Radix, etc.)
 - Context dependencies: providers, hooks that need wrapping
 
 **3d. Complexity Indicators:**
+
 - Lines of code
 - Number of hooks used
 - Number of internal dependencies
@@ -177,15 +185,16 @@ For each component file, extract:
 
 Apply atomic design classification heuristics:
 
-| Level | Heuristics | Examples |
-|-------|-----------|----------|
-| **Atom** | No internal component deps, single responsibility, <80 LOC, 0-2 props | Button, Badge, Avatar, Input, Label, Separator, Skeleton |
-| **Molecule** | Uses 2-3 atoms, single purpose, <150 LOC | InputWithLabel, CardHeader, NavItem, SearchBar |
-| **Organism** | Uses multiple molecules/atoms, section-level, distinct business function | AgentCard, KanbanColumn, ChatContainer, Sidebar |
-| **Template** | Layout skeleton, defines content areas, no business logic | AppLayout, DashboardLayout, AuthLayout |
-| **Page** | Full page, connects to data, has routing context | AgentExplorer, KanbanBoard, DashboardPage |
+| Level        | Heuristics                                                               | Examples                                                 |
+| ------------ | ------------------------------------------------------------------------ | -------------------------------------------------------- |
+| **Atom**     | No internal component deps, single responsibility, <80 LOC, 0-2 props    | Button, Badge, Avatar, Input, Label, Separator, Skeleton |
+| **Molecule** | Uses 2-3 atoms, single purpose, <150 LOC                                 | InputWithLabel, CardHeader, NavItem, SearchBar           |
+| **Organism** | Uses multiple molecules/atoms, section-level, distinct business function | AgentCard, KanbanColumn, ChatContainer, Sidebar          |
+| **Template** | Layout skeleton, defines content areas, no business logic                | AppLayout, DashboardLayout, AuthLayout                   |
+| **Page**     | Full page, connects to data, has routing context                         | AgentExplorer, KanbanBoard, DashboardPage                |
 
 **Classification Algorithm:**
+
 ```
 IF internal_deps == 0 AND loc < 80 → atom
 ELIF internal_deps <= 3 AND loc < 150 → molecule
@@ -198,6 +207,7 @@ ELSE → organism (default)
 ### Step 5: Detect Existing Stories
 
 Check if each component already has a `.stories.tsx` file:
+
 - Co-located: `{component}.stories.tsx` next to component
 - Separate dir: `stories/{component}.stories.tsx`
 - Legacy: `__stories__/{component}.stories.tsx`
@@ -224,6 +234,7 @@ This determines migration order: atoms first (no deps), then molecules (depend o
 Based on inventory + dependency graph, produce phased migration plan:
 
 **Phase ordering rules:**
+
 1. Components with 0 internal deps first (atoms)
 2. Components whose ALL deps are already migrated (molecules)
 3. Continue up the dependency tree (organisms → templates → pages)
@@ -237,15 +248,18 @@ Based on inventory + dependency graph, produce phased migration plan:
 # Brownfield Migration Plan
 
 ## Phase 1: Atoms & Primitives (18 components)
+
 Priority: CRITICAL — foundation for all other components
 
-| Component | File | Deps | Depended By | Complexity |
-|-----------|------|------|-------------|------------|
-| Button | src/ui/button.tsx | 0 | 42 | 2 |
-| Badge | src/ui/badge.tsx | 0 | 15 | 1 |
+| Component | File              | Deps | Depended By | Complexity |
+| --------- | ----------------- | ---- | ----------- | ---------- |
+| Button    | src/ui/button.tsx | 0    | 42          | 2          |
+| Badge     | src/ui/badge.tsx  | 0    | 15          | 1          |
+
 ...
 
 ## Phase 2: Molecules (25 components)
+
 Priority: HIGH — compose atoms into reusable patterns
 ...
 ```
@@ -261,18 +275,21 @@ Priority: HIGH — compose atoms into reusable patterns
 ## Error Handling
 
 ### Circular Dependencies
+
 - **Trigger:** Component A imports B, B imports A
 - **Detection:** Graph cycle detection during Step 6
 - **Recovery:** Flag circular pair, classify both at same phase level, note in migration_notes
 - **Prevention:** Common in brownfield — expected, not a blocker
 
 ### Non-Component Files in Scan
+
 - **Trigger:** File exports hooks, utils, types but no React component
 - **Detection:** Step 2 JSX/component detection
 - **Recovery:** Skip file, do not include in component inventory
 - **Prevention:** Filter by component export patterns
 
 ### Very Large Codebases (500+ files)
+
 - **Trigger:** Scan takes too long or produces unwieldy output
 - **Detection:** File count > 500 in Step 1
 - **Recovery:** Use `scan_mode=components-only` to focus on component directories
@@ -281,21 +298,24 @@ Priority: HIGH — compose atoms into reusable patterns
 ## Dependencies
 
 ### Depends On (Upstream)
+
 - None (entry point task)
 
 ### Required By (Downstream)
+
 - `sb-brownfield-migrate` - Migrate Brownfield Components
   - Uses output: component_inventory, migration_plan, dependency_graph
 
 ## Handoff
 
-| Attribute | Value |
-|-----------|-------|
-| **Next Task** | `sb-brownfield-migrate` |
-| **Trigger** | Inventory and migration plan generated |
-| **Executor** | @storybook-expert |
+| Attribute     | Value                                  |
+| ------------- | -------------------------------------- |
+| **Next Task** | `sb-brownfield-migrate`                |
+| **Trigger**   | Inventory and migration plan generated |
+| **Executor**  | @storybook-expert                      |
 
 ### Handoff Package
+
 - **component_inventory**: Full JSON inventory
 - **migration_plan**: Phased markdown plan
 - **dependency_graph**: Component dependency tree

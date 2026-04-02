@@ -5,18 +5,23 @@
  * @version 1.0.0
  */
 
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-const yaml = require('js-yaml');
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const yaml = require("js-yaml");
 
 /**
  * Default storage path for learned patterns
  * @type {string}
  */
-const DEFAULT_STORAGE_PATH = path.join(__dirname, '../../..', 'data', 'learned-patterns.yaml');
+const DEFAULT_STORAGE_PATH = path.join(
+  __dirname,
+  "../../..",
+  "data",
+  "learned-patterns.yaml",
+);
 
 /**
  * Default maximum number of patterns
@@ -35,10 +40,10 @@ const DEFAULT_PRUNE_THRESHOLD = 0.9;
  * @type {Object}
  */
 const PATTERN_STATUS = {
-  PENDING: 'pending',
-  ACTIVE: 'active',
-  PROMOTED: 'promoted',
-  DEPRECATED: 'deprecated',
+  PENDING: "pending",
+  ACTIVE: "active",
+  PROMOTED: "promoted",
+  DEPRECATED: "deprecated",
 };
 
 /**
@@ -57,7 +62,7 @@ class PatternStore {
     this.storagePath = options.storagePath || DEFAULT_STORAGE_PATH;
     this.maxPatterns = options.maxPatterns || DEFAULT_MAX_PATTERNS;
     this.pruneThreshold = options.pruneThreshold || DEFAULT_PRUNE_THRESHOLD;
-    this.pruneStrategy = options.pruneStrategy || 'oldest_low_occurrence';
+    this.pruneStrategy = options.pruneStrategy || "oldest_low_occurrence";
     this._cache = null;
     this._cacheTime = null;
   }
@@ -88,12 +93,13 @@ class PatternStore {
       const totalOccurrences = existing.occurrences;
       const newSuccessRate = normalizedPattern.successRate || 1.0;
       existing.successRate =
-        (existing.successRate * (totalOccurrences - 1) + newSuccessRate) / totalOccurrences;
+        (existing.successRate * (totalOccurrences - 1) + newSuccessRate) /
+        totalOccurrences;
 
       data.patterns[existingIndex] = existing;
 
       this._save(data);
-      return { action: 'updated', pattern: existing };
+      return { action: "updated", pattern: existing };
     }
 
     // Add new pattern
@@ -105,7 +111,7 @@ class PatternStore {
     }
 
     this._save(data);
-    return { action: 'created', pattern: normalizedPattern };
+    return { action: "created", pattern: normalizedPattern };
   }
 
   /**
@@ -170,17 +176,20 @@ class PatternStore {
     let totalOccurrences = 0;
 
     for (const pattern of patterns) {
-      statusCounts[pattern.status || 'pending']++;
+      statusCounts[pattern.status || "pending"]++;
       totalSuccessRate += pattern.successRate || 0;
       totalOccurrences += pattern.occurrences || 1;
     }
 
-    const avgSuccessRate = patterns.length > 0 ? totalSuccessRate / patterns.length : 0;
+    const avgSuccessRate =
+      patterns.length > 0 ? totalSuccessRate / patterns.length : 0;
 
     return {
       totalPatterns: patterns.length,
       maxPatterns: this.maxPatterns,
-      utilizationPercent: Math.round((patterns.length / this.maxPatterns) * 100),
+      utilizationPercent: Math.round(
+        (patterns.length / this.maxPatterns) * 100,
+      ),
       statusCounts: statusCounts,
       avgSuccessRate: Math.round(avgSuccessRate * 100) / 100,
       totalOccurrences: totalOccurrences,
@@ -209,11 +218,11 @@ class PatternStore {
 
     // Sort patterns for pruning
     let sorted;
-    if (strategy === 'lowest_success_rate') {
+    if (strategy === "lowest_success_rate") {
       sorted = [...data.patterns].sort((a, b) => {
         // Keep promoted/active patterns
-        if (a.status === 'promoted' || a.status === 'active') return -1;
-        if (b.status === 'promoted' || b.status === 'active') return 1;
+        if (a.status === "promoted" || a.status === "active") return -1;
+        if (b.status === "promoted" || b.status === "active") return 1;
         // Then by success rate
         return (b.successRate || 0) - (a.successRate || 0);
       });
@@ -221,11 +230,11 @@ class PatternStore {
       // oldest_low_occurrence (default)
       sorted = [...data.patterns].sort((a, b) => {
         // Keep promoted patterns
-        if (a.status === 'promoted') return -1;
-        if (b.status === 'promoted') return 1;
+        if (a.status === "promoted") return -1;
+        if (b.status === "promoted") return 1;
         // Keep active patterns
-        if (a.status === 'active') return -1;
-        if (b.status === 'active') return 1;
+        if (a.status === "active") return -1;
+        if (b.status === "active") return 1;
         // Then by occurrences (higher = keep)
         if ((a.occurrences || 1) !== (b.occurrences || 1)) {
           return (b.occurrences || 1) - (a.occurrences || 1);
@@ -257,7 +266,7 @@ class PatternStore {
     const pattern = data.patterns.find((p) => p.id === patternId);
 
     if (!pattern) {
-      return { success: false, error: 'Pattern not found' };
+      return { success: false, error: "Pattern not found" };
     }
 
     const validStatuses = Object.values(PATTERN_STATUS);
@@ -290,7 +299,9 @@ class PatternStore {
   getActivePatterns() {
     const data = this._load();
     return data.patterns.filter(
-      (p) => p.status === PATTERN_STATUS.ACTIVE || p.status === PATTERN_STATUS.PROMOTED,
+      (p) =>
+        p.status === PATTERN_STATUS.ACTIVE ||
+        p.status === PATTERN_STATUS.PROMOTED,
     );
   }
 
@@ -304,7 +315,7 @@ class PatternStore {
     const index = data.patterns.findIndex((p) => p.id === patternId);
 
     if (index < 0) {
-      return { success: false, error: 'Pattern not found' };
+      return { success: false, error: "Pattern not found" };
     }
 
     data.patterns.splice(index, 1);
@@ -326,7 +337,7 @@ class PatternStore {
 
     try {
       if (fs.existsSync(this.storagePath)) {
-        const content = fs.readFileSync(this.storagePath, 'utf8');
+        const content = fs.readFileSync(this.storagePath, "utf8");
         const data = yaml.load(content) || {};
         data.patterns = data.patterns || [];
         this._cache = data;
@@ -334,11 +345,11 @@ class PatternStore {
         return data;
       }
     } catch (error) {
-      console.warn('[PatternStore] Failed to load:', error.message);
+      console.warn("[PatternStore] Failed to load:", error.message);
     }
 
     // Return empty structure
-    const empty = { version: '1.0', patterns: [] };
+    const empty = { version: "1.0", patterns: [] };
     this._cache = empty;
     this._cacheTime = Date.now();
     return empty;
@@ -363,13 +374,13 @@ class PatternStore {
       }
 
       const content = yaml.dump(data, { indent: 2, lineWidth: 120 });
-      fs.writeFileSync(this.storagePath, content, 'utf8');
+      fs.writeFileSync(this.storagePath, content, "utf8");
 
       // Invalidate cache
       this._cache = data;
       this._cacheTime = Date.now();
     } catch (error) {
-      console.error('[PatternStore] Failed to save:', error.message);
+      console.error("[PatternStore] Failed to save:", error.message);
       throw error;
     }
   }
@@ -419,8 +430,8 @@ class PatternStore {
     if (!seq1 || !seq2) return 0;
 
     // Check for subsequence match
-    const joined1 = seq1.join('|');
-    const joined2 = seq2.join('|');
+    const joined1 = seq1.join("|");
+    const joined2 = seq2.join("|");
 
     if (joined2.includes(joined1) || joined1.includes(joined2)) {
       return 0.9;
@@ -449,7 +460,12 @@ class PatternStore {
     // Then by occurrences, then by last seen
     data.patterns.sort((a, b) => {
       // Status priority
-      const statusPriority = { promoted: 3, active: 2, pending: 1, deprecated: 0 };
+      const statusPriority = {
+        promoted: 3,
+        active: 2,
+        pending: 1,
+        deprecated: 0,
+      };
       const aPriority = statusPriority[a.status] || 0;
       const bPriority = statusPriority[b.status] || 0;
 

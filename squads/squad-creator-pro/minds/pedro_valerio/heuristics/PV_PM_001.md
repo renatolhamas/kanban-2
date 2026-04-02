@@ -21,13 +21,13 @@ PV_PM_001:
     task_systemic_impact: 0.9
     task_automatability: 0.8
     task_frequency: 0.7
-    guardrails_present: 1.0  # VETO power
+    guardrails_present: 1.0 # VETO power
 
   thresholds:
-    systemic_impact: 0.6  # For primary time allocation
-    automatability: 0.5   # For immediate removal from agenda
-    frequency: "2x per month"  # Minimum for automation justification
-    standardization: 0.7  # Process must be standardized
+    systemic_impact: 0.6 # For primary time allocation
+    automatability: 0.5 # For immediate removal from agenda
+    frequency: "2x per month" # Minimum for automation justification
+    standardization: 0.7 # Process must be standardized
 
   veto_conditions:
     - condition: "guardrails_missing = true"
@@ -81,13 +81,13 @@ automation_mandate:
 
 ## Automation Readiness Criteria
 
-| Criterion | Weight | Threshold | Description |
-|-----------|--------|-----------|-------------|
-| Task Frequency | 0.7 | >2x/month | How often does this task occur? |
-| Systemic Impact | 0.9 | ≥0.6 | Impact on long-term system creation |
-| Automatability | 0.8 | ≥0.5 | How easily can this be automated? |
-| Standardization | 0.7 | ≥0.7 | Is the process well-defined? |
-| Guardrails Present | 1.0 | Required | Safety mechanisms in place? |
+| Criterion          | Weight | Threshold | Description                         |
+| ------------------ | ------ | --------- | ----------------------------------- |
+| Task Frequency     | 0.7    | >2x/month | How often does this task occur?     |
+| Systemic Impact    | 0.9    | ≥0.6      | Impact on long-term system creation |
+| Automatability     | 0.8    | ≥0.5      | How easily can this be automated?   |
+| Standardization    | 0.7    | ≥0.7      | Is the process well-defined?        |
+| Guardrails Present | 1.0    | Required  | Safety mechanisms in place?         |
 
 ## Guardrails Requirements
 
@@ -120,6 +120,7 @@ performance:
 ## Failure Modes
 
 ### Over-Automation
+
 - **Trigger:** Automating everything without considering human judgment needs
 - **Manifestation:** Critical decisions made by automation that require nuance
 - **Detection:** Quality issues in outputs, edge cases mishandled
@@ -127,6 +128,7 @@ performance:
 - **Prevention:** Always evaluate if task requires human judgment
 
 ### Under-Automation
+
 - **Trigger:** Fear of complexity or change resistance
 - **Manifestation:** Manual repetitive work continues despite clear automation opportunity
 - **Detection:** Team burnout, inconsistent outputs, scaling bottlenecks
@@ -136,6 +138,7 @@ performance:
 ## Behavioral Evidence
 
 **Example:** Building integrated lifestyle (home, office, leisure in same location)
+
 - **Context:** Life and daily routine planning
 - **Information Available:** "Commute" task has zero systemic impact and cannot be automated
 - **Heuristic Application:** Task 'commute' has systemic impact = 0, not automatable, so must be ELIMINATED. Task 'being with children' has high family system impact.
@@ -176,14 +179,14 @@ checkpoint:
 
 ## Automation Decision Matrix
 
-| Frequency | Impact | Automatability | Decision |
-|-----------|--------|----------------|----------|
-| High (>4x/month) | High | High | **AUTOMATE** immediately |
-| High | High | Low | **DELEGATE** with training |
-| High | Low | High | **AUTOMATE** (efficiency) |
-| Low (<2x/month) | High | Any | **KEEP_MANUAL** (judgment needed) |
-| Low | Low | Any | **ELIMINATE** |
-| Any | Any | Any (no guardrails) | **VETO** - add guardrails first |
+| Frequency        | Impact | Automatability      | Decision                          |
+| ---------------- | ------ | ------------------- | --------------------------------- |
+| High (>4x/month) | High   | High                | **AUTOMATE** immediately          |
+| High             | High   | Low                 | **DELEGATE** with training        |
+| High             | Low    | High                | **AUTOMATE** (efficiency)         |
+| Low (<2x/month)  | High   | Any                 | **KEEP_MANUAL** (judgment needed) |
+| Low              | Low    | Any                 | **ELIMINATE**                     |
+| Any              | Any    | Any (no guardrails) | **VETO** - add guardrails first   |
 
 ---
 

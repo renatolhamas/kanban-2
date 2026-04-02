@@ -274,33 +274,39 @@ completion_criteria:
 ### Antes de entregar o clone, verificar:
 
 #### Voice DNA
+
 - [ ] 5+ sentence_starters por categoria (diagnosis, correction, teaching)
 - [ ] 3+ metaphors com `use_when` e `source`
 - [ ] `always_use` e `never_use` vocabulary completos
 - [ ] Todas as frases têm `[SOURCE: página/minuto]`
 
 #### Thinking DNA
+
 - [ ] 3+ frameworks operacionalizáveis
 - [ ] Cada framework tem `implementation_checklist`
 - [ ] 5+ core principles com `application`
 
 #### Signature Phrases
+
 - [ ] 20+ frases totais
 - [ ] Organizadas por tier (core, diagnostic, correction)
 - [ ] Cada frase tem `use_case` específico
 - [ ] Todas têm `[SOURCE:]`
 
 #### Objection Algorithms
+
 - [ ] 3+ objeções comuns mapeadas
 - [ ] Cada uma tem `algorithm` com steps
 - [ ] Output format definido
 
 #### Output Examples
+
 - [ ] 3+ exemplos completos
 - [ ] Mostram formatação típica do agent
 - [ ] Incluem métricas quando relevante
 
 #### Integration
+
 - [ ] `handoff_to` definido para outros agents
 - [ ] `commands` específicos do domínio
 - [ ] `whenToUse` claro e específico
@@ -309,20 +315,21 @@ completion_criteria:
 
 ## Métricas de Qualidade
 
-| Métrica | Mínimo | Ideal (Brad/Dave) |
-|---------|--------|-------------------|
-| Linhas totais | 800 | 2000+ |
-| Signature phrases | 15 | 30+ |
-| Frameworks | 3 | 7+ |
-| Objection algorithms | 3 | 5+ |
-| Output examples | 3 | 5+ |
-| Citações com [SOURCE:] | 15 | 50+ |
+| Métrica                | Mínimo | Ideal (Brad/Dave) |
+| ---------------------- | ------ | ----------------- |
+| Linhas totais          | 800    | 2000+             |
+| Signature phrases      | 15     | 30+               |
+| Frameworks             | 3      | 7+                |
+| Objection algorithms   | 3      | 5+                |
+| Output examples        | 3      | 5+                |
+| Citações com [SOURCE:] | 15     | 50+               |
 
 ---
 
 ## Diferenças por Tier
 
 ### Tier 0 - Philosophy (Rams, Vignelli)
+
 ```yaml
 propósito: "Quality gates, princípios fundamentais"
 output_type: "Crítica, avaliação, validação"
@@ -331,6 +338,7 @@ handoff_pattern: "Valida → passa para Tier 1 implementar"
 ```
 
 ### Tier 1 - Execution (Brad, Dan, Jina, Nathan)
+
 ```yaml
 propósito: "Criar, construir, implementar"
 output_type: "Componentes, tokens, workflows, specs"
@@ -339,6 +347,7 @@ handoff_pattern: "Implementa → pode pedir validação Tier 0"
 ```
 
 ### Tier 2 - Specialist (Dave)
+
 ```yaml
 propósito: "Escalar, governar, medir"
 output_type: "Métricas, estruturas, processos"
@@ -348,5 +357,5 @@ handoff_pattern: "Estrutura → passa para Tier 1 executar"
 
 ---
 
-*Template v1.0 - Extraído de brad-frost.md e dave-malouf.md*
-*Criado por: @oalanicolas*
+_Template v1.0 - Extraído de brad-frost.md e dave-malouf.md_
+_Criado por: @oalanicolas_

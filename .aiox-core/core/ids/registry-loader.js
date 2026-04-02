@@ -1,14 +1,22 @@
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml');
-const crypto = require('crypto');
+const fs = require("fs");
+const path = require("path");
+const yaml = require("js-yaml");
+const crypto = require("crypto");
 
-const DEFAULT_REGISTRY_PATH = path.resolve(__dirname, '../../data/entity-registry.yaml');
+const DEFAULT_REGISTRY_PATH = path.resolve(
+  __dirname,
+  "../../data/entity-registry.yaml",
+);
 
 const EMPTY_REGISTRY = {
-  metadata: { version: '1.0.0', lastUpdated: null, entityCount: 0, checksumAlgorithm: 'sha256' },
+  metadata: {
+    version: "1.0.0",
+    lastUpdated: null,
+    entityCount: 0,
+    checksumAlgorithm: "sha256",
+  },
   entities: {},
   categories: [],
 };
@@ -30,20 +38,24 @@ class RegistryLoader {
     this._keywordIndex = null;
 
     if (!fs.existsSync(this._registryPath)) {
-      console.info(`[IDS] Registry file not found at ${this._registryPath}. Returning empty registry.`);
+      console.info(
+        `[IDS] Registry file not found at ${this._registryPath}. Returning empty registry.`,
+      );
       this._registry = structuredClone(EMPTY_REGISTRY);
       return this._registry;
     }
 
     let content;
     try {
-      content = fs.readFileSync(this._registryPath, 'utf8');
+      content = fs.readFileSync(this._registryPath, "utf8");
     } catch (err) {
-      throw new Error(`[IDS] Failed to read registry at ${this._registryPath}: ${err.message}`);
+      throw new Error(
+        `[IDS] Failed to read registry at ${this._registryPath}: ${err.message}`,
+      );
     }
 
     if (!content || !content.trim()) {
-      console.info('[IDS] Registry file is empty. Returning empty registry.');
+      console.info("[IDS] Registry file is empty. Returning empty registry.");
       this._registry = structuredClone(EMPTY_REGISTRY);
       return this._registry;
     }
@@ -51,7 +63,9 @@ class RegistryLoader {
     try {
       this._registry = yaml.load(content);
     } catch (err) {
-      throw new Error(`[IDS] Failed to parse registry at ${this._registryPath}: ${err.message}`);
+      throw new Error(
+        `[IDS] Failed to parse registry at ${this._registryPath}: ${err.message}`,
+      );
     }
 
     if (!this._registry || !this._registry.entities) {
@@ -76,7 +90,7 @@ class RegistryLoader {
   _getAllEntities() {
     this._ensureLoaded();
 
-    const cacheKey = '__allEntities';
+    const cacheKey = "__allEntities";
     if (this._cache.has(cacheKey)) {
       return this._cache.get(cacheKey);
     }
@@ -85,7 +99,7 @@ class RegistryLoader {
     const entities = this._registry.entities || {};
 
     for (const [category, categoryEntities] of Object.entries(entities)) {
-      if (!categoryEntities || typeof categoryEntities !== 'object') continue;
+      if (!categoryEntities || typeof categoryEntities !== "object") continue;
       for (const [entityId, entityData] of Object.entries(categoryEntities)) {
         result.push({ id: entityId, category, ...entityData });
       }
@@ -227,7 +241,8 @@ class RegistryLoader {
       return this._cache.get(cacheKey);
     }
 
-    const entity = this._getAllEntities().find((e) => e.id === entityId) || null;
+    const entity =
+      this._getAllEntities().find((e) => e.id === entityId) || null;
     this._cache.set(cacheKey, entity);
     return entity;
   }
@@ -298,11 +313,13 @@ class RegistryLoader {
 
     try {
       const content = fs.readFileSync(filePath);
-      const hash = crypto.createHash('sha256').update(content).digest('hex');
-      const expected = entity.checksum.replace('sha256:', '');
+      const hash = crypto.createHash("sha256").update(content).digest("hex");
+      const expected = entity.checksum.replace("sha256:", "");
       return hash === expected;
     } catch (err) {
-      throw new Error(`[IDS] Failed to verify checksum for ${entityId}: ${err.message}`);
+      throw new Error(
+        `[IDS] Failed to verify checksum for ${entityId}: ${err.message}`,
+      );
     }
   }
 }

@@ -13,9 +13,9 @@
  * @created Story SYN-4 - Layer Processors L0-L3
  */
 
-const path = require('path');
-const { loadDomainFile } = require('../domain/domain-loader');
-const LayerProcessor = require('./layer-processor');
+const path = require("path");
+const { loadDomainFile } = require("../domain/domain-loader");
+const LayerProcessor = require("./layer-processor");
 
 /**
  * L1 Global Processor
@@ -27,7 +27,7 @@ const LayerProcessor = require('./layer-processor');
  */
 class L1GlobalProcessor extends LayerProcessor {
   constructor() {
-    super({ name: 'global', layer: 1, timeout: 10 });
+    super({ name: "global", layer: 1, timeout: 10 });
   }
 
   /**
@@ -48,16 +48,18 @@ class L1GlobalProcessor extends LayerProcessor {
     const { synapsePath, manifest } = config;
 
     // Resolve file paths from manifest or use defaults
-    const globalDomain = this._findDomain(manifest, 'GLOBAL');
-    const contextDomain = this._findDomain(manifest, 'CONTEXT');
+    const globalDomain = this._findDomain(manifest, "GLOBAL");
+    const contextDomain = this._findDomain(manifest, "CONTEXT");
 
-    const globalFile = globalDomain && globalDomain.file
-      ? path.join(synapsePath, globalDomain.file)
-      : path.join(synapsePath, 'global');
+    const globalFile =
+      globalDomain && globalDomain.file
+        ? path.join(synapsePath, globalDomain.file)
+        : path.join(synapsePath, "global");
 
-    const contextFile = contextDomain && contextDomain.file
-      ? path.join(synapsePath, contextDomain.file)
-      : path.join(synapsePath, 'context');
+    const contextFile =
+      contextDomain && contextDomain.file
+        ? path.join(synapsePath, contextDomain.file)
+        : path.join(synapsePath, "context");
 
     // Load rules from both domain files
     const globalRules = loadDomainFile(globalFile);
@@ -72,8 +74,8 @@ class L1GlobalProcessor extends LayerProcessor {
     }
 
     const sources = [];
-    if (globalRules.length > 0) sources.push('global');
-    if (contextRules.length > 0) sources.push('context');
+    if (globalRules.length > 0) sources.push("global");
+    if (contextRules.length > 0) sources.push("context");
 
     return {
       rules,
@@ -93,8 +95,9 @@ class L1GlobalProcessor extends LayerProcessor {
    * @private
    */
   _findDomain(manifest, name) {
-    const key = Object.keys(manifest.domains || {})
-      .find(k => k.toUpperCase() === name.toUpperCase());
+    const key = Object.keys(manifest.domains || {}).find(
+      (k) => k.toUpperCase() === name.toUpperCase(),
+    );
     return key ? manifest.domains[key] : null;
   }
 }

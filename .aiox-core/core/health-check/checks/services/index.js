@@ -9,11 +9,11 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const McpIntegrationCheck = require('./mcp-integration');
-const GithubCliCheck = require('./github-cli');
-const ClaudeCodeCheck = require('./claude-code');
-const GeminiCliCheck = require('./gemini-cli');
-const ApiEndpointsCheck = require('./api-endpoints');
+const McpIntegrationCheck = require("./mcp-integration");
+const GithubCliCheck = require("./github-cli");
+const ClaudeCodeCheck = require("./claude-code");
+const GeminiCliCheck = require("./gemini-cli");
+const ApiEndpointsCheck = require("./api-endpoints");
 
 /**
  * All services domain checks

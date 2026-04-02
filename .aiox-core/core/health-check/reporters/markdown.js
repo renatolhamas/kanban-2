@@ -9,38 +9,38 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { CheckStatus, CheckSeverity } = require('../base-check');
+const { CheckStatus, CheckSeverity } = require("../base-check");
 
 /**
  * Status emojis for Markdown
  */
 const statusEmoji = {
-  pass: '✅',
-  fail: '❌',
-  warning: '⚠️',
-  error: '🔴',
-  skipped: '⏭️',
+  pass: "✅",
+  fail: "❌",
+  warning: "⚠️",
+  error: "🔴",
+  skipped: "⏭️",
 };
 
 /**
  * Severity badges
  */
 const severityBadge = {
-  CRITICAL: '🔴 CRITICAL',
-  HIGH: '🟠 HIGH',
-  MEDIUM: '🟡 MEDIUM',
-  LOW: '🔵 LOW',
-  INFO: 'ℹ️ INFO',
+  CRITICAL: "🔴 CRITICAL",
+  HIGH: "🟠 HIGH",
+  MEDIUM: "🟡 MEDIUM",
+  LOW: "🔵 LOW",
+  INFO: "ℹ️ INFO",
 };
 
 /**
  * Health status badges
  */
 const healthBadge = {
-  healthy: '🟢 Healthy',
-  degraded: '🟡 Degraded',
-  warning: '🟠 Warning',
-  critical: '🔴 Critical',
+  healthy: "🟢 Healthy",
+  degraded: "🟡 Degraded",
+  warning: "🟠 Warning",
+  critical: "🔴 Critical",
 };
 
 /**
@@ -110,7 +110,7 @@ class MarkdownReporter {
     // Footer
     sections.push(this.generateFooter(config));
 
-    return sections.join('\n\n');
+    return sections.join("\n\n");
   }
 
   /**
@@ -120,7 +120,7 @@ class MarkdownReporter {
   generateHeader(timestamp, config) {
     const date = new Date(timestamp).toLocaleDateString();
     const time = new Date(timestamp).toLocaleTimeString();
-    const mode = config?.mode || 'quick';
+    const mode = config?.mode || "quick";
 
     return `# AIOX Health Check Report
 
@@ -135,7 +135,9 @@ class MarkdownReporter {
   generateSummary(scores, checkResults) {
     const { score, status, issuesCount } = scores.overall;
     const totalChecks = checkResults.length;
-    const passedChecks = checkResults.filter((r) => r.status === CheckStatus.PASS).length;
+    const passedChecks = checkResults.filter(
+      (r) => r.status === CheckStatus.PASS,
+    ).length;
 
     return `## Overall Health
 
@@ -152,10 +154,10 @@ class MarkdownReporter {
    */
   generateDomainBreakdown(scores) {
     const lines = [
-      '## Domain Breakdown',
-      '',
-      '| Domain | Score | Status | Checks |',
-      '|--------|-------|--------|--------|',
+      "## Domain Breakdown",
+      "",
+      "| Domain | Score | Status | Checks |",
+      "|--------|-------|--------|--------|",
     ];
 
     for (const [domain, domainScore] of Object.entries(scores.domains)) {
@@ -167,7 +169,7 @@ class MarkdownReporter {
       lines.push(`| ${domainName} | ${score}% | ${badge} | ${checks} |`);
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -175,7 +177,7 @@ class MarkdownReporter {
    * @private
    */
   generateIssuesSection(issues) {
-    const lines = ['## Issues Found', ''];
+    const lines = ["## Issues Found", ""];
 
     // Group by severity
     const bySeverity = this.groupBySeverity(issues);
@@ -189,20 +191,20 @@ class MarkdownReporter {
       const severityIssues = bySeverity[severity];
       if (!severityIssues || severityIssues.length === 0) continue;
 
-      lines.push(`### ${severityBadge[severity]}`, '');
+      lines.push(`### ${severityBadge[severity]}`, "");
 
       for (const issue of severityIssues) {
-        const emoji = statusEmoji[issue.status] || '•';
+        const emoji = statusEmoji[issue.status] || "•";
         lines.push(`- ${emoji} **${issue.name}**`);
         lines.push(`  - ${issue.message}`);
         if (issue.recommendation) {
           lines.push(`  - 💡 *${issue.recommendation}*`);
         }
-        lines.push('');
+        lines.push("");
       }
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -211,17 +213,17 @@ class MarkdownReporter {
    */
   generateAutoFixedSection(fixed) {
     const lines = [
-      '## Auto-Fixed Issues',
-      '',
-      '| Check | Action | Result |',
-      '|-------|--------|--------|',
+      "## Auto-Fixed Issues",
+      "",
+      "| Check | Action | Result |",
+      "|-------|--------|--------|",
     ];
 
     for (const fix of fixed) {
       lines.push(`| ${fix.checkId} | ${fix.action} | ✅ ${fix.message} |`);
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -230,19 +232,21 @@ class MarkdownReporter {
    */
   generateTechDebtSection(techDebt) {
     const lines = [
-      '## Technical Debt',
-      '',
-      '> These items are not critical but should be addressed when possible.',
-      '',
-      '| Item | Domain | Severity | Description |',
-      '|------|--------|----------|-------------|',
+      "## Technical Debt",
+      "",
+      "> These items are not critical but should be addressed when possible.",
+      "",
+      "| Item | Domain | Severity | Description |",
+      "|------|--------|----------|-------------|",
     ];
 
     for (const item of techDebt) {
-      lines.push(`| ${item.name} | ${item.domain} | ${item.severity} | ${item.description} |`);
+      lines.push(
+        `| ${item.name} | ${item.domain} | ${item.severity} | ${item.description} |`,
+      );
     }
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -251,26 +255,26 @@ class MarkdownReporter {
    */
   generateAllChecksSection(checkResults) {
     const lines = [
-      '## All Checks',
-      '',
-      '<details>',
-      '<summary>Click to expand full check list</summary>',
-      '',
-      '| Check | Domain | Severity | Status | Duration |',
-      '|-------|--------|----------|--------|----------|',
+      "## All Checks",
+      "",
+      "<details>",
+      "<summary>Click to expand full check list</summary>",
+      "",
+      "| Check | Domain | Severity | Status | Duration |",
+      "|-------|--------|----------|--------|----------|",
     ];
 
     for (const result of checkResults) {
-      const emoji = statusEmoji[result.status] || '•';
-      const duration = result.duration ? `${result.duration}ms` : '-';
+      const emoji = statusEmoji[result.status] || "•";
+      const duration = result.duration ? `${result.duration}ms` : "-";
       lines.push(
         `| ${result.name} | ${result.domain} | ${result.severity} | ${emoji} ${result.status} | ${duration} |`,
       );
     }
 
-    lines.push('', '</details>');
+    lines.push("", "</details>");
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -291,7 +295,7 @@ class MarkdownReporter {
    */
   groupBySeverity(issues) {
     return issues.reduce((acc, issue) => {
-      const severity = issue.severity || 'MEDIUM';
+      const severity = issue.severity || "MEDIUM";
       if (!acc[severity]) acc[severity] = [];
       acc[severity].push(issue);
       return acc;

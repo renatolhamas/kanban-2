@@ -14,30 +14,30 @@ No execution agent may create new governance artifacts (rules, tokens specs, pro
 
 ### Governance Agents (Create Rules)
 
-| Agent | Owns | Creates |
-|-------|------|---------|
-| @design-chief | Orchestration, routing | Quality gate definitions, routing rules |
-| @dave-malouf | DesignOps, process | Maturity models, scaling protocols, operational checklists |
-| @dan-mall | Adoption, stakeholder | Adoption frameworks, narrative guidelines |
+| Agent         | Owns                   | Creates                                                    |
+| ------------- | ---------------------- | ---------------------------------------------------------- |
+| @design-chief | Orchestration, routing | Quality gate definitions, routing rules                    |
+| @dave-malouf  | DesignOps, process     | Maturity models, scaling protocols, operational checklists |
+| @dan-mall     | Adoption, stakeholder  | Adoption frameworks, narrative guidelines                  |
 
 ### Execution Agents (Use Rules)
 
-| Agent | Owns | Uses |
-|-------|------|------|
-| @brad-frost | Architecture, components | Token specs, component matrix, WCAG checklists |
-| @nano-banana-generator | Visual support | Visual spec templates, brand tokens |
+| Agent                  | Owns                     | Uses                                           |
+| ---------------------- | ------------------------ | ---------------------------------------------- |
+| @brad-frost            | Architecture, components | Token specs, component matrix, WCAG checklists |
+| @nano-banana-generator | Visual support           | Visual spec templates, brand tokens            |
 
 ## Artifact Ownership
 
-| Artifact Type | Owner (Governance) | Consumer (Execution) |
-|---------------|-------------------|---------------------|
-| Token specifications | @design-chief | @brad-frost |
-| Component matrix | @dave-malouf | @brad-frost |
-| WCAG checklists | @dave-malouf | @brad-frost |
-| Prompt injection templates | @design-chief | All agents |
-| Registry schema | @design-chief | @brad-frost |
-| Handoff protocols | @dave-malouf | All agents |
-| Visual specs | @design-chief | @nano-banana-generator |
+| Artifact Type              | Owner (Governance) | Consumer (Execution)   |
+| -------------------------- | ------------------ | ---------------------- |
+| Token specifications       | @design-chief      | @brad-frost            |
+| Component matrix           | @dave-malouf       | @brad-frost            |
+| WCAG checklists            | @dave-malouf       | @brad-frost            |
+| Prompt injection templates | @design-chief      | All agents             |
+| Registry schema            | @design-chief      | @brad-frost            |
+| Handoff protocols          | @dave-malouf       | All agents             |
+| Visual specs               | @design-chief      | @nano-banana-generator |
 
 ## Decision Escalation
 

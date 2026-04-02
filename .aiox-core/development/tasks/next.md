@@ -72,6 +72,7 @@ pre-conditions:
 ## Implementation Steps
 
 ### Step 1: Check Help Flag
+
 ```javascript
 if (args.help) {
   displayHelp();
@@ -80,34 +81,40 @@ if (args.help) {
 ```
 
 ### Step 2: Build Context
+
 ```javascript
-const SuggestionEngine = require('.aiox-core/workflow-intelligence/engine/suggestion-engine');
+const SuggestionEngine = require(".aiox-core/workflow-intelligence/engine/suggestion-engine");
 const engine = new SuggestionEngine();
 
 // Build context from multiple sources
 const context = await engine.buildContext({
-  storyOverride: args.story,    // Explicit story path (optional)
-  autoDetect: true              // Auto-detect from session/git
+  storyOverride: args.story, // Explicit story path (optional)
+  autoDetect: true, // Auto-detect from session/git
 });
 ```
 
 ### Step 3: Runtime-First Deterministic Recommendation (Preferred)
+
 ```javascript
-const { WorkflowStateManager } = require('.aiox-core/development/scripts/workflow-state-manager');
+const {
+  WorkflowStateManager,
+} = require(".aiox-core/development/scripts/workflow-state-manager");
 const manager = new WorkflowStateManager();
 
 const runtimeNext = manager.getNextActionRecommendation(
   {
-    story_status: context.projectState?.storyStatus || 'unknown',
-    qa_status: context.projectState?.qaStatus || 'unknown',
-    ci_status: context.projectState?.ciStatus || 'unknown',
-    has_uncommitted_changes: context.projectState?.hasUncommittedChanges || false,
+    story_status: context.projectState?.storyStatus || "unknown",
+    qa_status: context.projectState?.qaStatus || "unknown",
+    ci_status: context.projectState?.ciStatus || "unknown",
+    has_uncommitted_changes:
+      context.projectState?.hasUncommittedChanges || false,
   },
-  { story: args.story || context.storyPath || '' },
+  { story: args.story || context.storyPath || "" },
 );
 ```
 
 ### Step 4: Get WIS Suggestions (Fallback / enrichment)
+
 ```javascript
 const result = await engine.suggestNext(context);
 
@@ -123,22 +130,25 @@ const result = await engine.suggestNext(context);
 ```
 
 ### Step 5: Format Output
+
 ```javascript
-const formatter = require('.aiox-core/workflow-intelligence/engine/output-formatter');
+const formatter = require(".aiox-core/workflow-intelligence/engine/output-formatter");
 
 const runtimeSuggestion = {
   command: runtimeNext.command,
-  args: '',
+  args: "",
   description: runtimeNext.rationale,
   confidence: runtimeNext.confidence,
   priority: 1,
 };
 const mergedSuggestions = [runtimeSuggestion, ...(result.suggestions || [])];
-const displaySuggestions = args.all ? mergedSuggestions : mergedSuggestions.slice(0, 3);
+const displaySuggestions = args.all
+  ? mergedSuggestions
+  : mergedSuggestions.slice(0, 3);
 
 // Display formatted output
 formatter.displaySuggestions({
-  workflow: result.workflow || 'runtime_first',
+  workflow: result.workflow || "runtime_first",
   currentState: runtimeNext.state,
   confidence: runtimeNext.confidence,
   suggestions: displaySuggestions,
@@ -182,6 +192,7 @@ Workflow detection uses:
 ## Output Format
 
 ### Standard Output
+
 ```
 🧭 Workflow: story_development
 📍 State: in_development (confidence: 92%)
@@ -195,6 +206,7 @@ Type a number to execute, or press Enter to continue manually.
 ```
 
 ### Low Confidence Output
+
 ```
 🧭 Workflow: unknown
 📍 State: uncertain (confidence: 35%)
@@ -207,6 +219,7 @@ Possible next steps (uncertain):
 ```
 
 ### No Workflow Match
+
 ```
 🧭 Workflow: none detected
 📍 State: N/A
@@ -242,14 +255,15 @@ post-conditions:
 
 ## Error Handling
 
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| WIS module not found | Missing dependency | Fallback to generic suggestions |
-| Session state corrupt | Invalid JSON | Clear session, show warning |
-| Story path invalid | File doesn't exist | Warning, use auto-detect |
-| No workflow match | Unknown command pattern | Show "unable to determine" message |
+| Error                 | Cause                   | Resolution                         |
+| --------------------- | ----------------------- | ---------------------------------- |
+| WIS module not found  | Missing dependency      | Fallback to generic suggestions    |
+| Session state corrupt | Invalid JSON            | Clear session, show warning        |
+| Story path invalid    | File doesn't exist      | Warning, use auto-detect           |
+| No workflow match     | Unknown command pattern | Show "unable to determine" message |
 
 **Error Recovery Strategy:**
+
 ```javascript
 try {
   const result = await engine.suggestNext(context);

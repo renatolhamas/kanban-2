@@ -9,32 +9,32 @@
 
 ### Temas e Contexto
 
-| Propriedade | Valor |
-|---|---|
-| **Tema primario** | Dark-first (componentes desenhados sobre `surface/950` #101010) |
-| **Paleta** | Monocromatica — branco/preto para primary, sem brand colors em estados default |
-| **Feedback colors** | Khewra=destructive, Midori=success, Sahara=warning, Atmos=info |
+| Propriedade         | Valor                                                                          |
+| ------------------- | ------------------------------------------------------------------------------ |
+| **Tema primario**   | Dark-first (componentes desenhados sobre `surface/950` #101010)                |
+| **Paleta**          | Monocromatica — branco/preto para primary, sem brand colors em estados default |
+| **Feedback colors** | Khewra=destructive, Midori=success, Sahara=warning, Atmos=info                 |
 
 ### Size Scale (consistente em todos os componentes)
 
-| Size | Height | Icon Size | Font Size | Figma Token |
-|---|---|---|---|---|
-| **Tiny** | 24px | 16px | 12px | `spacing/24`, `font/size/4xs` |
-| **Mini** | 32px (btn 24px) | 20px | 12px | `spacing/32`, `font/size/4xs` |
-| **Small** | 32px (btn) / 48px (input) | 24px | 14px | `spacing/32`/`spacing/48`, `font/size/2xs` |
-| **Medium** | 40px (btn) / 64px (input) | 32px | 16px | `spacing/40`/`spacing/64`, `font/size/3xs` |
-| **Large** | 48px (btn) / 80px (input) | 32px | 16px | `spacing/48`/`spacing/80`, `font/size/3xs` |
+| Size       | Height                    | Icon Size | Font Size | Figma Token                                |
+| ---------- | ------------------------- | --------- | --------- | ------------------------------------------ |
+| **Tiny**   | 24px                      | 16px      | 12px      | `spacing/24`, `font/size/4xs`              |
+| **Mini**   | 32px (btn 24px)           | 20px      | 12px      | `spacing/32`, `font/size/4xs`              |
+| **Small**  | 32px (btn) / 48px (input) | 24px      | 14px      | `spacing/32`/`spacing/48`, `font/size/2xs` |
+| **Medium** | 40px (btn) / 64px (input) | 32px      | 16px      | `spacing/40`/`spacing/64`, `font/size/3xs` |
+| **Large**  | 48px (btn) / 80px (input) | 32px      | 16px      | `spacing/48`/`spacing/80`, `font/size/3xs` |
 
 ### State Pattern (consistente em todos os componentes)
 
-| State | Visual Change |
-|---|---|
-| **Default** | Base appearance |
-| **Hover** | Background alpha increases (e.g. 10% → 20%), cursor pointer |
-| **Focus** | White outline ring, `border: 2px solid white`, `inset: -4px`, `border-radius: radius/max` (buttons) or `radius/md` (inputs) |
-| **Pressed** | Background alpha decreases slightly or darkens |
-| **Filled** | (Inputs only) White text, clear icon appears |
-| **Disabled** | `opacity: 0.2` (buttons) or `opacity: 0.5` (inputs), `pointer-events: none` |
+| State        | Visual Change                                                                                                               |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **Default**  | Base appearance                                                                                                             |
+| **Hover**    | Background alpha increases (e.g. 10% → 20%), cursor pointer                                                                 |
+| **Focus**    | White outline ring, `border: 2px solid white`, `inset: -4px`, `border-radius: radius/max` (buttons) or `radius/md` (inputs) |
+| **Pressed**  | Background alpha decreases slightly or darkens                                                                              |
+| **Filled**   | (Inputs only) White text, clear icon appears                                                                                |
+| **Disabled** | `opacity: 0.2` (buttons) or `opacity: 0.5` (inputs), `pointer-events: none`                                                 |
 
 ### Focus Ring Pattern
 
@@ -61,21 +61,21 @@ border-radius: var(--radius/md, 16px);
 
 ### Variants
 
-| Variant | Figma Name | Background | Text Color | Border | Font |
-|---|---|---|---|---|---|
-| **Primary** | `type=primary` | `rgba(255,255,255,0.9)` | `var(--color/surface/950, #101010)` | none | Outfit Medium, uppercase, tracking 0.5px |
-| **Secondary** | `type=secondary` | transparent | `rgba(255,255,255,0.9)` | `2px solid rgba(255,255,255,0.3)` | Outfit Medium, uppercase, tracking 0.5px |
-| **Tertiary** | `type=tertiary` | `rgba(255,255,255,0.1)` | `rgba(255,255,255,0.8)` | none | Inter Medium, normal case |
-| **Quarter** (Ghost) | `type=quarter` | transparent | `rgba(255,255,255,0.8)` | none | Inter Medium, normal case |
+| Variant             | Figma Name       | Background              | Text Color                          | Border                            | Font                                     |
+| ------------------- | ---------------- | ----------------------- | ----------------------------------- | --------------------------------- | ---------------------------------------- |
+| **Primary**         | `type=primary`   | `rgba(255,255,255,0.9)` | `var(--color/surface/950, #101010)` | none                              | Outfit Medium, uppercase, tracking 0.5px |
+| **Secondary**       | `type=secondary` | transparent             | `rgba(255,255,255,0.9)`             | `2px solid rgba(255,255,255,0.3)` | Outfit Medium, uppercase, tracking 0.5px |
+| **Tertiary**        | `type=tertiary`  | `rgba(255,255,255,0.1)` | `rgba(255,255,255,0.8)`             | none                              | Inter Medium, normal case                |
+| **Quarter** (Ghost) | `type=quarter`   | transparent             | `rgba(255,255,255,0.8)`             | none                              | Inter Medium, normal case                |
 
 ### Sizes
 
-| Size | Height | Padding | Font Size | Icon Size | Line Height |
-|---|---|---|---|---|---|
-| **Mini** | 24px | `px-[12px]` | 12px (`font/size/4xs`) | 20px | 16px |
-| **Small** | 32px | `px-[12px]` | 14px (`font/size/2xs`) | 24px | 16px |
-| **Medium** | 40px | `px-[12px]` | 16px (`font/size/3xs`) | 32px | 16px |
-| **Large** | 48px | `px-[12px]` | 16px (`font/size/3xs`) | 32px | 16px |
+| Size       | Height | Padding     | Font Size              | Icon Size | Line Height |
+| ---------- | ------ | ----------- | ---------------------- | --------- | ----------- |
+| **Mini**   | 24px   | `px-[12px]` | 12px (`font/size/4xs`) | 20px      | 16px        |
+| **Small**  | 32px   | `px-[12px]` | 14px (`font/size/2xs`) | 24px      | 16px        |
+| **Medium** | 40px   | `px-[12px]` | 16px (`font/size/3xs`) | 32px      | 16px        |
+| **Large**  | 48px   | `px-[12px]` | 16px (`font/size/3xs`) | 32px      | 16px        |
 
 ### States (Primary variant)
 
@@ -83,7 +83,7 @@ border-radius: var(--radius/md, 16px);
 default:
   background: "rgba(255,255,255,0.9)"
   color: "var(--color/surface/950, #101010)"
-  border-radius: "100px"  # pill shape (radius/max)
+  border-radius: "100px" # pill shape (radius/max)
   padding: "0 12px"
   font-family: "Outfit"
   font-weight: 500
@@ -91,7 +91,7 @@ default:
   letter-spacing: "0.5px"
 
 hover:
-  background: "var(--color/surface/white, #FFFFFF)"  # full white
+  background: "var(--color/surface/white, #FFFFFF)" # full white
   cursor: "pointer"
 
 focus:
@@ -101,7 +101,7 @@ focus:
   ring-radius: "var(--radius/max, 9999px)"
 
 pressed:
-  background: "rgba(255,255,255,0.7)"  # slightly dimmer
+  background: "rgba(255,255,255,0.7)" # slightly dimmer
 
 disabled:
   background: "rgba(255,255,255,0.9)"
@@ -179,16 +179,16 @@ disabled:
 
 ### Token Mapping
 
-| Figma Value | CSS Variable | Notes |
-|---|---|---|
-| `rgba(255,255,255,0.9)` | `--primary` (dark mode) | Primary button bg |
-| `var(--color/surface/950)` | `--primary-foreground` (dark mode) | Primary button text |
-| `rgba(255,255,255,0.3)` border | `--border` | Secondary button outline |
-| `rgba(255,255,255,0.1)` | `--accent` / `--secondary` | Tertiary button bg |
-| `rgba(255,255,255,0.8)` | `--foreground` at 80% | Tertiary/Quarter text |
-| `100px` radius | `--radius` with `rounded-full` | Pill shape |
-| `opacity: 0.2` | — | Disabled state |
-| Focus ring | `--ring` / white border | 2px white outline, -4px offset |
+| Figma Value                    | CSS Variable                       | Notes                          |
+| ------------------------------ | ---------------------------------- | ------------------------------ |
+| `rgba(255,255,255,0.9)`        | `--primary` (dark mode)            | Primary button bg              |
+| `var(--color/surface/950)`     | `--primary-foreground` (dark mode) | Primary button text            |
+| `rgba(255,255,255,0.3)` border | `--border`                         | Secondary button outline       |
+| `rgba(255,255,255,0.1)`        | `--accent` / `--secondary`         | Tertiary button bg             |
+| `rgba(255,255,255,0.8)`        | `--foreground` at 80%              | Tertiary/Quarter text          |
+| `100px` radius                 | `--radius` with `rounded-full`     | Pill shape                     |
+| `opacity: 0.2`                 | —                                  | Disabled state                 |
+| Focus ring                     | `--ring` / white border            | 2px white outline, -4px offset |
 
 ### Layout
 
@@ -205,20 +205,20 @@ disabled:
 
 ### Sizes
 
-| Size | Height | Width | Padding | Font Size | Icon Size | Border Radius |
-|---|---|---|---|---|---|---|
-| **Tiny** | 32px | 260px | `pl-[12px] pr-[16px]` | 12px | 16px | `var(--radius/sm, 12px)` |
-| **Mini** | 40px | 260px | `pl-[14px] pr-[18px]` | 14px | 20px | `var(--radius/sm, 12px)` |
-| **Small** | 48px | 320px | `pl-[16px] pr-[20px]` | 16px | 24px | `var(--radius/sm, 12px)` |
-| **Medium** | 64px | 320px | `pl-[20px] pr-[24px]` | 16px | 24px | `var(--radius/sm, 12px)` |
-| **Large** | 80px | 320px | `pl-[24px] pr-[28px]` | 16px | 24px | `var(--radius/sm, 12px)` |
+| Size       | Height | Width | Padding               | Font Size | Icon Size | Border Radius            |
+| ---------- | ------ | ----- | --------------------- | --------- | --------- | ------------------------ |
+| **Tiny**   | 32px   | 260px | `pl-[12px] pr-[16px]` | 12px      | 16px      | `var(--radius/sm, 12px)` |
+| **Mini**   | 40px   | 260px | `pl-[14px] pr-[18px]` | 14px      | 20px      | `var(--radius/sm, 12px)` |
+| **Small**  | 48px   | 320px | `pl-[16px] pr-[20px]` | 16px      | 24px      | `var(--radius/sm, 12px)` |
+| **Medium** | 64px   | 320px | `pl-[20px] pr-[24px]` | 16px      | 24px      | `var(--radius/sm, 12px)` |
+| **Large**  | 80px   | 320px | `pl-[24px] pr-[28px]` | 16px      | 24px      | `var(--radius/sm, 12px)` |
 
 ### States
 
 ```yaml
 default:
   background: "rgba(255,255,255,0.1)"
-  color: "rgba(255,255,255,0.5)"  # placeholder
+  color: "rgba(255,255,255,0.5)" # placeholder
   border: "none"
   border-radius: "var(--radius/sm, 12px)"
   font-family: "Inter"
@@ -237,11 +237,11 @@ focus:
 
 pressed:
   background: "rgba(255,255,255,0.1)"
-  color: "rgba(255,255,255,1)"  # text becomes full white
+  color: "rgba(255,255,255,1)" # text becomes full white
 
 filled:
   background: "rgba(255,255,255,0.1)"
-  color: "rgba(255,255,255,1)"  # user text full white
+  color: "rgba(255,255,255,1)" # user text full white
   # clear/X icon may appear on right
 
 disabled:
@@ -253,14 +253,14 @@ disabled:
 
 ### Token Mapping
 
-| Figma Value | CSS Variable | Notes |
-|---|---|---|
-| `rgba(255,255,255,0.1)` | `--input` (dark) / `--accent` | Input background |
-| `rgba(255,255,255,0.5)` | `--muted-foreground` | Placeholder text |
-| `rgba(255,255,255,1)` | `--foreground` | Filled/active text |
-| `var(--radius/sm, 12px)` | `--radius-lg` | Input border radius |
-| Focus ring 16px radius | `--radius-md` mapped to ring | Slightly larger than input radius |
-| `opacity: 0.5` | — | Disabled state |
+| Figma Value              | CSS Variable                  | Notes                             |
+| ------------------------ | ----------------------------- | --------------------------------- |
+| `rgba(255,255,255,0.1)`  | `--input` (dark) / `--accent` | Input background                  |
+| `rgba(255,255,255,0.5)`  | `--muted-foreground`          | Placeholder text                  |
+| `rgba(255,255,255,1)`    | `--foreground`                | Filled/active text                |
+| `var(--radius/sm, 12px)` | `--radius-lg`                 | Input border radius               |
+| Focus ring 16px radius   | `--radius-md` mapped to ring  | Slightly larger than input radius |
+| `opacity: 0.5`           | —                             | Disabled state                    |
 
 ### Layout
 
@@ -273,18 +273,18 @@ disabled:
 
 All input types share the same base structure with different left/right icons:
 
-| Input Type | Left Icon | Right Icon | Special |
-|---|---|---|---|
-| **Text Input** | profile | info | — |
-| **Search Input** | search | kbd badge (CTRL+F) | — |
-| **Password Input** | lock | eye (toggle visibility) | Dots for hidden text |
-| **Date Input** | calendar | — | Placeholder: dd/mm/aaaa |
-| **Time Input** | clock | — | Placeholder: 00:00 |
-| **URL Input** | link | — | — |
-| **Email Input** | mail | clear X (on filled) | — |
-| **Number Input** | — | +/- stepper buttons | Stepper is unique |
-| **Upload Input** | upload | — | File list below, feedback states |
-| **Option Input** | number badge | — | Numbered choices, selected state |
+| Input Type         | Left Icon    | Right Icon              | Special                          |
+| ------------------ | ------------ | ----------------------- | -------------------------------- |
+| **Text Input**     | profile      | info                    | —                                |
+| **Search Input**   | search       | kbd badge (CTRL+F)      | —                                |
+| **Password Input** | lock         | eye (toggle visibility) | Dots for hidden text             |
+| **Date Input**     | calendar     | —                       | Placeholder: dd/mm/aaaa          |
+| **Time Input**     | clock        | —                       | Placeholder: 00:00               |
+| **URL Input**      | link         | —                       | —                                |
+| **Email Input**    | mail         | clear X (on filled)     | —                                |
+| **Number Input**   | —            | +/- stepper buttons     | Stepper is unique                |
+| **Upload Input**   | upload       | —                       | File list below, feedback states |
+| **Option Input**   | number badge | —                       | Numbered choices, selected state |
 
 ---
 
@@ -295,10 +295,10 @@ All input types share the same base structure with different left/right icons:
 
 ### Sizes
 
-| Size | Height | Padding | Font Size |
-|---|---|---|---|
-| **Tiny** | 20px | `px-[8px]` | 10px |
-| **Mini** | 24px | `px-[10px]` | 12px |
+| Size     | Height | Padding     | Font Size |
+| -------- | ------ | ----------- | --------- |
+| **Tiny** | 20px   | `px-[8px]`  | 10px      |
+| **Mini** | 24px   | `px-[10px]` | 12px      |
 
 ### States
 
@@ -306,7 +306,7 @@ All input types share the same base structure with different left/right icons:
 default:
   background: "rgba(255,255,255,0.1)"
   color: "rgba(255,255,255,0.8)"
-  border-radius: "100px"  # pill
+  border-radius: "100px" # pill
   font-family: "Inter"
   font-weight: 500
 
@@ -324,11 +324,11 @@ disabled:
 
 ### Token Mapping
 
-| Figma Value | CSS Variable |
-|---|---|
-| `rgba(255,255,255,0.1)` bg | `--secondary` |
+| Figma Value                  | CSS Variable                    |
+| ---------------------------- | ------------------------------- |
+| `rgba(255,255,255,0.1)` bg   | `--secondary`                   |
 | `rgba(255,255,255,0.8)` text | `--secondary-foreground` at 80% |
-| `100px` radius | `rounded-full` |
+| `100px` radius               | `rounded-full`                  |
 
 ---
 
@@ -338,11 +338,11 @@ disabled:
 
 ### Sizes
 
-| Size | Box Size | Icon Size |
-|---|---|---|
-| **Tiny** | 16px | 12px |
-| **Mini** | 20px | 16px |
-| **Small** | 24px | 20px |
+| Size      | Box Size | Icon Size |
+| --------- | -------- | --------- |
+| **Tiny**  | 16px     | 12px      |
+| **Mini**  | 20px     | 16px      |
+| **Small** | 24px     | 20px      |
 
 ### States
 
@@ -355,16 +355,16 @@ unchecked:
 checked:
   background: "rgba(255,255,255,0.9)"
   border: "none"
-  icon-color: "var(--color/surface/950, #101010)"  # dark checkmark
+  icon-color: "var(--color/surface/950, #101010)" # dark checkmark
 
 indeterminate:
   background: "rgba(255,255,255,0.9)"
   border: "none"
-  icon-color: "var(--color/surface/950, #101010)"  # dark dash
+  icon-color: "var(--color/surface/950, #101010)" # dark dash
 
 hover:
-  border-color: "rgba(255,255,255,0.5)"  # unchecked
-  background: "var(--color/surface/white)"  # checked
+  border-color: "rgba(255,255,255,0.5)" # unchecked
+  background: "var(--color/surface/white)" # checked
 
 focus:
   ring: "2px solid white"
@@ -376,12 +376,12 @@ disabled:
 
 ### Token Mapping
 
-| Figma Value | CSS Variable |
-|---|---|
-| `rgba(255,255,255,0.3)` border | `--border` |
-| `rgba(255,255,255,0.9)` checked bg | `--primary` (dark) |
-| `#101010` checkmark | `--primary-foreground` (dark) |
-| `4px` radius | `--radius-sm` |
+| Figma Value                        | CSS Variable                  |
+| ---------------------------------- | ----------------------------- |
+| `rgba(255,255,255,0.3)` border     | `--border`                    |
+| `rgba(255,255,255,0.9)` checked bg | `--primary` (dark)            |
+| `#101010` checkmark                | `--primary-foreground` (dark) |
+| `4px` radius                       | `--radius-sm`                 |
 
 ---
 
@@ -391,11 +391,11 @@ disabled:
 
 ### Sizes
 
-| Size | Outer Size | Inner Dot Size |
-|---|---|---|
-| **Tiny** | 16px | 8px |
-| **Mini** | 20px | 10px |
-| **Small** | 24px | 12px |
+| Size      | Outer Size | Inner Dot Size |
+| --------- | ---------- | -------------- |
+| **Tiny**  | 16px       | 8px            |
+| **Mini**  | 20px       | 10px           |
+| **Small** | 24px       | 12px           |
 
 ### States
 
@@ -430,11 +430,11 @@ disabled:
 
 ### Sizes
 
-| Size | Track Width | Track Height | Thumb Size |
-|---|---|---|---|
-| **Tiny** | 28px | 16px | 12px |
-| **Mini** | 36px | 20px | 16px |
-| **Small** | 44px | 24px | 20px |
+| Size      | Track Width | Track Height | Thumb Size |
+| --------- | ----------- | ------------ | ---------- |
+| **Tiny**  | 28px        | 16px         | 12px       |
+| **Mini**  | 36px        | 20px         | 16px       |
+| **Small** | 44px        | 24px         | 20px       |
 
 ### States
 
@@ -450,7 +450,7 @@ on:
   thumb-position: "right"
 
 hover:
-  track-background: "rgba(255,255,255,0.2)"  # off
+  track-background: "rgba(255,255,255,0.2)" # off
   # or full white for on
 
 focus:
@@ -462,11 +462,11 @@ disabled:
 
 ### Token Mapping
 
-| Figma Value | CSS Variable |
-|---|---|
-| `rgba(255,255,255,0.9)` on track | `--primary` (dark) |
-| `#101010` on thumb | `--primary-foreground` (dark) |
-| `rgba(255,255,255,0.1)` off track | `--input` |
+| Figma Value                       | CSS Variable                  |
+| --------------------------------- | ----------------------------- |
+| `rgba(255,255,255,0.9)` on track  | `--primary` (dark)            |
+| `#101010` on thumb                | `--primary-foreground` (dark) |
+| `rgba(255,255,255,0.1)` off track | `--input`                     |
 
 ---
 
@@ -476,13 +476,13 @@ disabled:
 
 ### Sizes
 
-| Size | Dimensions | Icon Size | Border Radius |
-|---|---|---|---|
-| **Tiny** | 24x24 | 16px | `100px` (pill) |
-| **Mini** | 32x32 | 20px | `100px` |
-| **Small** | 40x40 | 24px | `100px` |
-| **Medium** | 48x48 | 32px | `100px` |
-| **Large** | 56x56 | 32px | `100px` |
+| Size       | Dimensions | Icon Size | Border Radius  |
+| ---------- | ---------- | --------- | -------------- |
+| **Tiny**   | 24x24      | 16px      | `100px` (pill) |
+| **Mini**   | 32x32      | 20px      | `100px`        |
+| **Small**  | 40x40      | 24px      | `100px`        |
+| **Medium** | 48x48      | 32px      | `100px`        |
+| **Large**  | 56x56      | 32px      | `100px`        |
 
 ### Variants (same as Button)
 
@@ -503,10 +503,10 @@ Same pattern as Button: hover brightens, focus adds white ring, disabled opacity
 
 ### Sizes
 
-| Size | Font Size | Icon Size |
-|---|---|---|
-| **Mini** | 12px | 16px |
-| **Small** | 14px | 20px |
+| Size      | Font Size | Icon Size |
+| --------- | --------- | --------- |
+| **Mini**  | 12px      | 16px      |
+| **Small** | 14px      | 20px      |
 
 ### States
 
@@ -545,11 +545,11 @@ disabled:
 
 ### Sizes (estimated from screenshots)
 
-| Size | Dimensions | Ring Width |
-|---|---|---|
-| **Small** | 32px | 2px |
-| **Medium** | 40px | 2px |
-| **Large** | 48px | 3px |
+| Size       | Dimensions | Ring Width |
+| ---------- | ---------- | ---------- |
+| **Small**  | 32px       | 2px        |
+| **Medium** | 40px       | 2px        |
+| **Large**  | 48px       | 3px        |
 
 ### Ring Colors (brand palette)
 
@@ -564,7 +564,7 @@ Various brand colors used: Atmos, Midori, Sahara, Khewra, Boreal, etc.
 ### Spec
 
 ```yaml
-background: "var(--color/surface/white, white)"  # light tooltip on dark UI
+background: "var(--color/surface/white, white)" # light tooltip on dark UI
 color: "var(--color/surface/950, #101010)"
 border-radius: "var(--radius/xs, 8px)"
 padding: "4px 8px"
@@ -623,11 +623,11 @@ box-shadow: "0 4px 24px rgba(0,0,0,0.3)"
 
 ### Sizes
 
-| Size | Height | Padding | Font Size |
-|---|---|---|---|
-| **Small** | 32px | `px-[12px]` | 14px |
-| **Medium** | 40px | `px-[16px]` | 14px |
-| **Large** | 48px | `px-[16px]` | 16px |
+| Size       | Height | Padding     | Font Size |
+| ---------- | ------ | ----------- | --------- |
+| **Small**  | 32px   | `px-[12px]` | 14px      |
+| **Medium** | 40px   | `px-[16px]` | 14px      |
+| **Large**  | 48px   | `px-[16px]` | 16px      |
 
 ### States
 
@@ -666,11 +666,11 @@ disabled:
 
 ### Sizes
 
-| Size | Min Height | Padding | Font Size |
-|---|---|---|---|
-| **Tiny** | 64px | `p-[12px]` | 12px |
-| **Mini** | 80px | `p-[14px]` | 14px |
-| **Default** | 120px | `p-[16px]` | 16px |
+| Size        | Min Height | Padding    | Font Size |
+| ----------- | ---------- | ---------- | --------- |
+| **Tiny**    | 64px       | `p-[12px]` | 12px      |
+| **Mini**    | 80px       | `p-[14px]` | 14px      |
+| **Default** | 120px      | `p-[16px]` | 16px      |
 
 ### States
 
@@ -717,12 +717,12 @@ box-shadow: "0 4px 24px rgba(0,0,0,0.3)"
 
 ### Variants
 
-| Type | Icon Color | Icon | Token |
-|---|---|---|---|
-| **Success** | `--success` (Midori #3A913F) | Checkmark circle | `oklch(0.585 0.145 144.414)` |
-| **Error** | `--destructive` (Khewra #DC625E) | X circle | `oklch(0.646 0.154 24.222)` |
-| **Warning** | `--warning` (Sahara #D6A461) | Warning triangle | `oklch(0.751 0.103 73.232)` |
-| **Info** | `--info` (Atmos #77C5D5) | Info circle | `oklch(0.779 0.08 212.201)` |
+| Type        | Icon Color                       | Icon             | Token                        |
+| ----------- | -------------------------------- | ---------------- | ---------------------------- |
+| **Success** | `--success` (Midori #3A913F)     | Checkmark circle | `oklch(0.585 0.145 144.414)` |
+| **Error**   | `--destructive` (Khewra #DC625E) | X circle         | `oklch(0.646 0.154 24.222)`  |
+| **Warning** | `--warning` (Sahara #D6A461)     | Warning triangle | `oklch(0.751 0.103 73.232)`  |
+| **Info**    | `--info` (Atmos #77C5D5)         | Info circle      | `oklch(0.779 0.08 212.201)`  |
 
 ### Spec
 
@@ -788,11 +788,11 @@ footer:
 
 ### Feedback Types
 
-| Type | Border Color | Icon Color | Token |
-|---|---|---|---|
-| **User Error** | `--destructive` (Khewra) | Khewra | Red border + error icon |
-| **System Error** | `--warning` (Sahara) | Sahara | Orange border + warning icon |
-| **Success** | `--success` (Midori) | Midori | Green border + check icon |
+| Type             | Border Color             | Icon Color | Token                        |
+| ---------------- | ------------------------ | ---------- | ---------------------------- |
+| **User Error**   | `--destructive` (Khewra) | Khewra     | Red border + error icon      |
+| **System Error** | `--warning` (Sahara)     | Sahara     | Orange border + warning icon |
+| **Success**      | `--success` (Midori)     | Midori     | Green border + check icon    |
 
 ### Spec
 
@@ -914,46 +914,46 @@ actions:
 
 ### Prioridade Alta (core — adaptar primeiro)
 
-| # | Component | shadcn Base | Complexity |
-|---|---|---|---|
-| 1 | **Button** | `Button` | Alta — 4 variants, 4 sizes, 5 states |
-| 2 | **Text Input** | `Input` | Media — 5 sizes, 6 states, 10 sub-types |
-| 3 | **Tag** | `Badge` | Baixa — 2 sizes, pill shape |
-| 4 | **Checkbox** | `Checkbox` | Baixa — 3 sizes, 3 check states |
-| 5 | **Radio Button** | `RadioGroup` | Baixa — 3 sizes |
-| 6 | **Toggle** | `Switch` | Baixa — 3 sizes |
+| #   | Component        | shadcn Base  | Complexity                              |
+| --- | ---------------- | ------------ | --------------------------------------- |
+| 1   | **Button**       | `Button`     | Alta — 4 variants, 4 sizes, 5 states    |
+| 2   | **Text Input**   | `Input`      | Media — 5 sizes, 6 states, 10 sub-types |
+| 3   | **Tag**          | `Badge`      | Baixa — 2 sizes, pill shape             |
+| 4   | **Checkbox**     | `Checkbox`   | Baixa — 3 sizes, 3 check states         |
+| 5   | **Radio Button** | `RadioGroup` | Baixa — 3 sizes                         |
+| 6   | **Toggle**       | `Switch`     | Baixa — 3 sizes                         |
 
 ### Prioridade Media (compostos)
 
-| # | Component | shadcn Base | Complexity |
-|---|---|---|---|
-| 7 | **Icon Button** | `Button` variant=icon | Media — reusa Button |
-| 8 | **Dropdown** | `Select` | Media — trigger = Input |
-| 9 | **Item Menu** | `DropdownMenuItem` | Baixa |
-| 10 | **Textarea** | `Textarea` | Baixa — segue Input |
-| 11 | **Dropdown Menu** | `DropdownMenu` | Media — 3 variants |
-| 12 | **Tooltip** | `Tooltip` | Baixa |
-| 13 | **Popover** | `Popover` | Baixa |
+| #   | Component         | shadcn Base           | Complexity              |
+| --- | ----------------- | --------------------- | ----------------------- |
+| 7   | **Icon Button**   | `Button` variant=icon | Media — reusa Button    |
+| 8   | **Dropdown**      | `Select`              | Media — trigger = Input |
+| 9   | **Item Menu**     | `DropdownMenuItem`    | Baixa                   |
+| 10  | **Textarea**      | `Textarea`            | Baixa — segue Input     |
+| 11  | **Dropdown Menu** | `DropdownMenu`        | Media — 3 variants      |
+| 12  | **Tooltip**       | `Tooltip`             | Baixa                   |
+| 13  | **Popover**       | `Popover`             | Baixa                   |
 
 ### Prioridade Baixa (feedback + compostos complexos)
 
-| # | Component | shadcn Base | Complexity |
-|---|---|---|---|
-| 14 | **Toasts** | `Sonner` | Media — 4 types |
-| 15 | **Basic Dialog** | `Dialog` | Media |
-| 16 | **Input Feedback** | Custom on Input | Baixa — adds borders |
-| 17 | **Link** | Custom `<a>` | Baixa |
-| 18 | **Avatar** | `Avatar` | Baixa |
+| #   | Component          | shadcn Base     | Complexity           |
+| --- | ------------------ | --------------- | -------------------- |
+| 14  | **Toasts**         | `Sonner`        | Media — 4 types      |
+| 15  | **Basic Dialog**   | `Dialog`        | Media                |
+| 16  | **Input Feedback** | Custom on Input | Baixa — adds borders |
+| 17  | **Link**           | Custom `<a>`    | Baixa                |
+| 18  | **Avatar**         | `Avatar`        | Baixa                |
 
 ### Fora de Escopo (precisa planejamento)
 
-| # | Component | Motivo |
-|---|---|---|
-| 19 | **Notification Bar** | Componente custom, sem shadcn base |
-| 20 | **Chat Notification** | Componente custom, sem shadcn base |
-| 21 | **Comment Area** | Componente composto (textarea + actions) |
-| 22 | **Prompt Area** | Incompleto no Figma, precisa ser planejado |
-| 23 | **Profile Header** | Componente custom layout |
+| #   | Component             | Motivo                                     |
+| --- | --------------------- | ------------------------------------------ |
+| 19  | **Notification Bar**  | Componente custom, sem shadcn base         |
+| 20  | **Chat Notification** | Componente custom, sem shadcn base         |
+| 21  | **Comment Area**      | Componente composto (textarea + actions)   |
+| 22  | **Prompt Area**       | Incompleto no Figma, precisa ser planejado |
+| 23  | **Profile Header**    | Componente custom layout                   |
 
 ---
 
@@ -967,6 +967,6 @@ actions:
 
 ---
 
-*Gerado por: Foundations Pipeline — Phase 2 (f2-ingest-base-components)*
-*Fonte: Figma Dev Mode + components-ref/ screenshots + Figma MCP design context*
-*Data: 2026-02-21*
+_Gerado por: Foundations Pipeline — Phase 2 (f2-ingest-base-components)_
+_Fonte: Figma Dev Mode + components-ref/ screenshots + Figma MCP design context_
+_Data: 2026-02-21_

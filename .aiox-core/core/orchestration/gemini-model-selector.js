@@ -5,23 +5,23 @@
  * Automatically selects between Gemini Flash and Pro based on task complexity.
  */
 
-const { TaskComplexityClassifier } = require('./task-complexity-classifier');
+const { TaskComplexityClassifier } = require("./task-complexity-classifier");
 
 /**
  * Model configuration
  */
 const MODELS = {
   flash: {
-    id: 'gemini-2.0-flash',
+    id: "gemini-2.0-flash",
     costPer1kTokens: 0.000125,
     maxTokens: 32000,
-    bestFor: ['simple', 'medium'],
+    bestFor: ["simple", "medium"],
   },
   pro: {
-    id: 'gemini-2.0-pro',
+    id: "gemini-2.0-pro",
     costPer1kTokens: 0.00125,
     maxTokens: 128000,
-    bestFor: ['complex'],
+    bestFor: ["complex"],
   },
 };
 
@@ -30,18 +30,18 @@ const MODELS = {
  * Keys match agent IDs (without @ prefix)
  */
 const AGENT_OVERRIDES = {
-  architect: 'pro',
-  analyst: 'pro',
-  qa: 'flash',
-  pm: 'flash',
-  dev: 'auto',
-  devops: 'flash',
+  architect: "pro",
+  analyst: "pro",
+  qa: "flash",
+  pm: "flash",
+  dev: "auto",
+  devops: "flash",
 };
 
 class GeminiModelSelector {
   constructor(config = {}) {
     this.classifier = new TaskComplexityClassifier();
-    this.defaultModel = config.defaultModel || 'flash';
+    this.defaultModel = config.defaultModel || "flash";
     this.agentOverrides = { ...AGENT_OVERRIDES, ...config.agentOverrides };
     this.qualityFallback = config.qualityFallback !== false;
     this.minQualityScore = config.minQualityScore || 0.6;
@@ -61,13 +61,17 @@ class GeminiModelSelector {
    */
   selectModel(task, agentId = null) {
     // Normalize agentId (remove @ prefix if present)
-    const normalizedAgentId = agentId?.replace(/^@/, '') || null;
+    const normalizedAgentId = agentId?.replace(/^@/, "") || null;
 
     // Check agent override first
     if (normalizedAgentId && this.agentOverrides[normalizedAgentId]) {
       const override = this.agentOverrides[normalizedAgentId];
-      if (override !== 'auto') {
-        return this._buildSelection(override, 'agent_override', normalizedAgentId);
+      if (override !== "auto") {
+        return this._buildSelection(
+          override,
+          "agent_override",
+          normalizedAgentId,
+        );
       }
     }
 
@@ -77,13 +81,13 @@ class GeminiModelSelector {
     // Select based on complexity
     let model = this.defaultModel;
 
-    if (complexity.level === 'complex' || complexity.score > 0.7) {
-      model = 'pro';
-    } else if (complexity.level === 'simple' || complexity.score < 0.3) {
-      model = 'flash';
+    if (complexity.level === "complex" || complexity.score > 0.7) {
+      model = "pro";
+    } else if (complexity.level === "simple" || complexity.score < 0.3) {
+      model = "flash";
     }
 
-    return this._buildSelection(model, 'complexity', complexity);
+    return this._buildSelection(model, "complexity", complexity);
   }
 
   /**
@@ -95,10 +99,10 @@ class GeminiModelSelector {
   handleQualityFallback(originalModel, qualityScore) {
     if (!this.qualityFallback) return null;
 
-    if (originalModel === 'flash' && qualityScore < this.minQualityScore) {
+    if (originalModel === "flash" && qualityScore < this.minQualityScore) {
       return {
         shouldRetry: true,
-        newModel: 'pro',
+        newModel: "pro",
         reason: `Quality score ${qualityScore} below threshold ${this.minQualityScore}`,
       };
     }
@@ -112,7 +116,7 @@ class GeminiModelSelector {
    * @param {number} tokens - Tokens consumed
    */
   trackUsage(model, tokens) {
-    const modelKey = model.includes('flash') ? 'flash' : 'pro';
+    const modelKey = model.includes("flash") ? "flash" : "pro";
     const modelConfig = MODELS[modelKey];
 
     this.usage[modelKey].count++;

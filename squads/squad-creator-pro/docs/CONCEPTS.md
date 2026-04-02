@@ -45,6 +45,7 @@ Um **Squad** é um conjunto de agentes especializados que trabalham juntos em um
 ```
 
 **Componentes de um Squad:**
+
 - **Orchestrator:** Coordena os agents, roteia requests
 - **Agents:** Especialistas baseados em elite minds reais
 - **Tasks:** Operações atômicas
@@ -57,23 +58,25 @@ Um **Squad** é um conjunto de agentes especializados que trabalham juntos em um
 ## 2. Mind vs Agent
 
 ### Mind (Pessoa Real)
+
 O **mind** é a pessoa real cujo conhecimento queremos capturar.
 
 ```yaml
 mind:
-  name: "{Expert Name}"  # e.g., Gary Halbert, Warren Buffett
-  domain: "{Domain}"  # e.g., Direct Response Copywriting, Investment
-  known_for: "{Notable Works}"  # e.g., The Boron Letters, Shareholder Letters
-  has_documented_frameworks: true  # OBRIGATÓRIO
+  name: "{Expert Name}" # e.g., Gary Halbert, Warren Buffett
+  domain: "{Domain}" # e.g., Direct Response Copywriting, Investment
+  known_for: "{Notable Works}" # e.g., The Boron Letters, Shareholder Letters
+  has_documented_frameworks: true # OBRIGATÓRIO
 ```
 
 ### Agent (Clone Digital)
+
 O **agent** é o clone digital do mind, capaz de responder como ele responderia.
 
 ```yaml
 agent:
-  name: "{agent-name}"  # e.g., gary-halbert, contract-reviewer
-  based_on: "{Mind Name}"  # e.g., Gary Halbert, Expert Name
+  name: "{agent-name}" # e.g., gary-halbert, contract-reviewer
+  based_on: "{Mind Name}" # e.g., Gary Halbert, Expert Name
   voice_dna: "Extraído de livros, entrevistas, cartas"
   thinking_dna: "Frameworks, heurísticas, decisões"
 ```
@@ -93,6 +96,7 @@ agent:
 ```
 
 **Por isso:**
+
 - ✅ Clone experts com frameworks documentados (e.g., Gary Halbert, Warren Buffett)
 - ❌ Não clone "{role} genérico" (não tem skin in the game)
 
@@ -117,9 +121,9 @@ voice_dna:
 
   tone:
     dimensions:
-      formal_casual: 20/100      # Muito casual
-      serious_playful: 60/100   # Levemente sério
-      direct_indirect: 90/100   # Muito direto
+      formal_casual: 20/100 # Muito casual
+      serious_playful: 60/100 # Levemente sério
+      direct_indirect: 90/100 # Muito direto
 
   anti_patterns:
     never_say: ["It depends", "Maybe"]
@@ -224,12 +228,12 @@ As fontes são classificadas por **confiança**:
 
 ### Tiers de Fontes
 
-| Tier | Tipo | Confiança | Exemplos |
-|------|------|-----------|----------|
-| **Tier 0** | Do usuário | MÁXIMA | PDFs próprios, transcrições |
-| **Tier 1** | Primário (do expert) | ALTA | Livros, entrevistas diretas |
-| **Tier 2** | Secundário (sobre expert) | MÉDIA | Biografias, case studies |
-| **Tier 3** | Terciário (agregado) | BAIXA | Wikipedia, resumos |
+| Tier       | Tipo                      | Confiança | Exemplos                    |
+| ---------- | ------------------------- | --------- | --------------------------- |
+| **Tier 0** | Do usuário                | MÁXIMA    | PDFs próprios, transcrições |
+| **Tier 1** | Primário (do expert)      | ALTA      | Livros, entrevistas diretas |
+| **Tier 2** | Secundário (sobre expert) | MÉDIA     | Biografias, case studies    |
+| **Tier 3** | Terciário (agregado)      | BAIXA     | Wikipedia, resumos          |
 
 ### Requisitos Mínimos
 
@@ -237,7 +241,7 @@ As fontes são classificadas por **confiança**:
 minimum_requirements:
   total_sources: 10
   tier_1_sources: 5
-  source_types: 3  # livros, entrevistas, artigos
+  source_types: 3 # livros, entrevistas, artigos
   content_volume: "5h áudio OU 200 páginas"
   triangulation: "3+ fontes por claim principal"
 ```
@@ -402,13 +406,13 @@ Fidelity = (tier1_ratio × 0.4) + (voice_score × 0.3) + (thinking_score × 0.3)
 
 ### O que afeta fidelidade
 
-| Fator | Impacto |
-|-------|---------|
-| Materiais do usuário (Tier 0) | +20% |
-| Mais fontes Tier 1 | +10% |
-| Voice DNA completo | +15% |
-| Thinking DNA completo | +15% |
-| Smoke tests passando | Validação |
+| Fator                         | Impacto   |
+| ----------------------------- | --------- |
+| Materiais do usuário (Tier 0) | +20%      |
+| Mais fontes Tier 1            | +10%      |
+| Voice DNA completo            | +15%      |
+| Thinking DNA completo         | +15%      |
+| Smoke tests passando          | Validação |
 
 ---
 
@@ -451,14 +455,14 @@ O modelo de 8 camadas para clonar mentes:
 
 ```yaml
 dna_mental_8_layers:
-  layer_1: "Behavioral Patterns"      # O que fazem
-  layer_2: "Communication Style"      # Como falam
-  layer_3: "Routines & Rituals"       # Hábitos
-  layer_4: "Recognition Patterns"     # O que notam
-  layer_5: "Mental Models"            # Como pensam
-  layer_6: "Values Hierarchy"         # O que importa
-  layer_7: "Core Obsessions"          # O que os move
-  layer_8: "Productive Paradoxes"     # Contradições autênticas
+  layer_1: "Behavioral Patterns" # O que fazem
+  layer_2: "Communication Style" # Como falam
+  layer_3: "Routines & Rituals" # Hábitos
+  layer_4: "Recognition Patterns" # O que notam
+  layer_5: "Mental Models" # Como pensam
+  layer_6: "Values Hierarchy" # O que importa
+  layer_7: "Core Obsessions" # O que os move
+  layer_8: "Productive Paradoxes" # Contradições autênticas
 ```
 
 ### Process Absolutism (@pedro-valerio)
@@ -483,16 +487,16 @@ process_absolutism:
 
 ### Quando Usar Cada Especialista
 
-| Situação | Especialista |
-|----------|--------------|
-| Extrair DNA de expert | `@oalanicolas` |
-| Avaliar fontes | `@oalanicolas` |
-| Clone não soa autêntico | `@oalanicolas` |
-| Criar workflow | `@pedro-valerio` |
+| Situação                | Especialista     |
+| ----------------------- | ---------------- |
+| Extrair DNA de expert   | `@oalanicolas`   |
+| Avaliar fontes          | `@oalanicolas`   |
+| Clone não soa autêntico | `@oalanicolas`   |
+| Criar workflow          | `@pedro-valerio` |
 | Definir veto conditions | `@pedro-valerio` |
-| Auditar processo | `@pedro-valerio` |
-| Criar squad completo | `@squad-chief` |
-| Não sei qual usar | `@squad-chief` |
+| Auditar processo        | `@pedro-valerio` |
+| Criar squad completo    | `@squad-chief`   |
+| Não sei qual usar       | `@squad-chief`   |
 
 ---
 
@@ -581,4 +585,4 @@ Mas se o agent responde de forma genérica...
 ---
 
 **Squad Architect | Concepts v1.0**
-*"Entenda o sistema, domine o processo."*
+_"Entenda o sistema, domine o processo."_

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * IncrementalDecisionEngine — IDS Story IDS-2
@@ -13,11 +13,50 @@
  */
 
 const STOP_WORDS = new Set([
-  'the', 'a', 'an', 'is', 'are', 'for', 'to', 'of', 'in', 'on',
-  'and', 'or', 'but', 'not', 'with', 'that', 'this', 'it', 'be',
-  'as', 'at', 'by', 'from', 'has', 'have', 'had', 'was', 'were',
-  'will', 'would', 'can', 'could', 'should', 'do', 'does', 'did',
-  'i', 'we', 'you', 'my', 'our', 'your', 'its', 'their',
+  "the",
+  "a",
+  "an",
+  "is",
+  "are",
+  "for",
+  "to",
+  "of",
+  "in",
+  "on",
+  "and",
+  "or",
+  "but",
+  "not",
+  "with",
+  "that",
+  "this",
+  "it",
+  "be",
+  "as",
+  "at",
+  "by",
+  "from",
+  "has",
+  "have",
+  "had",
+  "was",
+  "were",
+  "will",
+  "would",
+  "can",
+  "could",
+  "should",
+  "do",
+  "does",
+  "did",
+  "i",
+  "we",
+  "you",
+  "my",
+  "our",
+  "your",
+  "its",
+  "their",
 ]);
 
 const MIN_KEYWORD_LENGTH = 3;
@@ -27,7 +66,7 @@ const PURPOSE_SIMILARITY_WEIGHT = 0.4;
 const THRESHOLD_MINIMUM = 0.4;
 const MAX_RESULTS = 20;
 const CACHE_TTL_MS = 300_000; // 300 seconds
-const ADAPT_IMPACT_THRESHOLD = 0.30; // Calibrate after 90 days (ADR-IDS-001 Roundtable #2)
+const ADAPT_IMPACT_THRESHOLD = 0.3; // Calibrate after 90 days (ADR-IDS-001 Roundtable #2)
 
 class IncrementalDecisionEngine {
   /**
@@ -35,7 +74,9 @@ class IncrementalDecisionEngine {
    */
   constructor(registryLoader) {
     if (!registryLoader) {
-      throw new Error('[IDS] IncrementalDecisionEngine requires a RegistryLoader instance');
+      throw new Error(
+        "[IDS] IncrementalDecisionEngine requires a RegistryLoader instance",
+      );
     }
     this._loader = registryLoader;
     this._analysisCache = new Map();
@@ -55,13 +96,18 @@ class IncrementalDecisionEngine {
    * @returns {object} Analysis result with recommendations, summary, rationale
    */
   analyze(intent, context = {}) {
-    if (!intent || typeof intent !== 'string' || !intent.trim()) {
+    if (!intent || typeof intent !== "string" || !intent.trim()) {
       return {
         intent,
         recommendations: [],
-        summary: { totalEntities: 0, matchesFound: 0, decision: 'CREATE', confidence: 'low' },
-        rationale: 'Empty or invalid intent provided.',
-        warnings: ['Empty or invalid intent provided'],
+        summary: {
+          totalEntities: 0,
+          matchesFound: 0,
+          decision: "CREATE",
+          confidence: "low",
+        },
+        rationale: "Empty or invalid intent provided.",
+        warnings: ["Empty or invalid intent provided"],
       };
     }
 
@@ -87,9 +133,14 @@ class IncrementalDecisionEngine {
       const result = {
         intent,
         recommendations: [],
-        summary: { totalEntities: 0, matchesFound: 0, decision: 'CREATE', confidence: 'low' },
-        rationale: 'Registry is empty — no existing artifacts to evaluate.',
-        warnings: ['Registry is empty — no existing artifacts to evaluate'],
+        summary: {
+          totalEntities: 0,
+          matchesFound: 0,
+          decision: "CREATE",
+          confidence: "low",
+        },
+        rationale: "Registry is empty — no existing artifacts to evaluate.",
+        warnings: ["Registry is empty — no existing artifacts to evaluate"],
         justification: this._buildCreateJustification(intent, [], allEntities),
       };
       this._setCache(cacheKey, result);
@@ -108,17 +159,26 @@ class IncrementalDecisionEngine {
     }
     if (context.category) {
       candidates = candidates.filter(
-        (e) => e.category && e.category.toLowerCase() === context.category.toLowerCase(),
+        (e) =>
+          e.category &&
+          e.category.toLowerCase() === context.category.toLowerCase(),
       );
     }
 
     // Score all candidate entities
     const evaluations = [];
     for (const entity of candidates) {
-      const keywordScore = this._calculateKeywordOverlap(intentKeywords, entity);
-      const purposeScore = this._calculatePurposeSimilarity(intentPurpose, entity);
+      const keywordScore = this._calculateKeywordOverlap(
+        intentKeywords,
+        entity,
+      );
+      const purposeScore = this._calculatePurposeSimilarity(
+        intentPurpose,
+        entity,
+      );
       const relevanceScore =
-        keywordScore * KEYWORD_OVERLAP_WEIGHT + purposeScore * PURPOSE_SIMILARITY_WEIGHT;
+        keywordScore * KEYWORD_OVERLAP_WEIGHT +
+        purposeScore * PURPOSE_SIMILARITY_WEIGHT;
 
       if (relevanceScore >= THRESHOLD_MINIMUM) {
         evaluations.push({
@@ -126,7 +186,11 @@ class IncrementalDecisionEngine {
           keywordScore,
           purposeScore,
           relevanceScore,
-          canAdapt: entity.adaptability || { score: 0.5, constraints: [], extensionPoints: [] },
+          canAdapt: entity.adaptability || {
+            score: 0.5,
+            constraints: [],
+            extensionPoints: [],
+          },
         });
       }
     }
@@ -137,9 +201,19 @@ class IncrementalDecisionEngine {
 
     // Build recommendations with decision + impact + rationale (lazy impact)
     const recommendations = topEvaluations.map((evaluation) => {
-      const adaptationImpact = this._calculateImpact(evaluation.entity, totalEntities);
-      const decision = this._applyDecisionMatrix({ ...evaluation, adaptationImpact });
-      const rationale = this._generateEntityRationale(evaluation, decision, adaptationImpact);
+      const adaptationImpact = this._calculateImpact(
+        evaluation.entity,
+        totalEntities,
+      );
+      const decision = this._applyDecisionMatrix({
+        ...evaluation,
+        adaptationImpact,
+      });
+      const rationale = this._generateEntityRationale(
+        evaluation,
+        decision,
+        adaptationImpact,
+      );
 
       const rec = {
         entityId: evaluation.entity.id,
@@ -154,7 +228,7 @@ class IncrementalDecisionEngine {
         rationale,
       };
 
-      if (decision.action === 'ADAPT') {
+      if (decision.action === "ADAPT") {
         rec.adaptationImpact = adaptationImpact;
       }
 
@@ -162,8 +236,10 @@ class IncrementalDecisionEngine {
     });
 
     // Overall summary
-    const topDecision = recommendations.length > 0 ? recommendations[0].decision : 'CREATE';
-    const topConfidence = recommendations.length > 0 ? recommendations[0].confidence : 'low';
+    const topDecision =
+      recommendations.length > 0 ? recommendations[0].decision : "CREATE";
+    const topConfidence =
+      recommendations.length > 0 ? recommendations[0].confidence : "low";
 
     const result = {
       intent,
@@ -174,18 +250,26 @@ class IncrementalDecisionEngine {
         decision: topDecision,
         confidence: topConfidence,
       },
-      rationale: this._generateOverallRationale(recommendations, topDecision, evaluations),
+      rationale: this._generateOverallRationale(
+        recommendations,
+        topDecision,
+        evaluations,
+      ),
     };
 
     // Sparse registry warning
     if (totalEntities > 0 && totalEntities < 10) {
       result.warnings = result.warnings || [];
-      result.warnings.push('Registry sparse — results may be incomplete');
+      result.warnings.push("Registry sparse — results may be incomplete");
     }
 
     // CREATE justification (ADR-IDS-001 Roundtable #4)
-    if (topDecision === 'CREATE') {
-      result.justification = this._buildCreateJustification(intent, evaluations, allEntities);
+    if (topDecision === "CREATE") {
+      result.justification = this._buildCreateJustification(
+        intent,
+        evaluations,
+        allEntities,
+      );
     }
 
     this._setCache(cacheKey, result);
@@ -205,9 +289,11 @@ class IncrementalDecisionEngine {
     if (!text) return [];
     return text
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, ' ')
+      .replace(/[^a-z0-9\s-]/g, " ")
       .split(/\s+/)
-      .filter((word) => word.length >= MIN_KEYWORD_LENGTH && !STOP_WORDS.has(word))
+      .filter(
+        (word) => word.length >= MIN_KEYWORD_LENGTH && !STOP_WORDS.has(word),
+      )
       .slice(0, MAX_KEYWORDS_PER_ENTITY);
   }
 
@@ -328,7 +414,7 @@ class IncrementalDecisionEngine {
     const { relevanceScore, canAdapt, adaptationImpact } = evaluation;
 
     if (relevanceScore >= 0.9) {
-      return { action: 'REUSE', confidence: 'high' };
+      return { action: "REUSE", confidence: "high" };
     }
 
     if (
@@ -336,12 +422,12 @@ class IncrementalDecisionEngine {
       canAdapt.score >= 0.6 &&
       adaptationImpact.percentage < ADAPT_IMPACT_THRESHOLD
     ) {
-      const confidence = relevanceScore >= 0.8 ? 'high' : 'medium';
-      return { action: 'ADAPT', confidence };
+      const confidence = relevanceScore >= 0.8 ? "high" : "medium";
+      return { action: "ADAPT", confidence };
     }
 
-    const confidence = relevanceScore >= 0.6 ? 'medium' : 'low';
-    return { action: 'CREATE', confidence };
+    const confidence = relevanceScore >= 0.6 ? "medium" : "low";
+    return { action: "CREATE", confidence };
   }
 
   // ================================================================
@@ -398,38 +484,52 @@ class IncrementalDecisionEngine {
    * Generate rationale for a single entity recommendation.
    */
   _generateEntityRationale(evaluation, decision, impact) {
-    const { entity, relevanceScore, keywordScore, purposeScore, canAdapt } = evaluation;
+    const { entity, relevanceScore, keywordScore, purposeScore, canAdapt } =
+      evaluation;
     const parts = [];
 
-    if (decision.action === 'REUSE') {
+    if (decision.action === "REUSE") {
       parts.push(`Strong match (${this._pct(relevanceScore)} relevance).`);
       parts.push(
         `Keywords align (${this._pct(keywordScore)}), purpose matches (${this._pct(purposeScore)}).`,
       );
-      parts.push(`Recommendation: Use "${entity.id}" directly without modification.`);
-    } else if (decision.action === 'ADAPT') {
-      parts.push(`Good match (${this._pct(relevanceScore)} relevance) with adaptation potential.`);
+      parts.push(
+        `Recommendation: Use "${entity.id}" directly without modification.`,
+      );
+    } else if (decision.action === "ADAPT") {
+      parts.push(
+        `Good match (${this._pct(relevanceScore)} relevance) with adaptation potential.`,
+      );
       parts.push(
         `Adaptability: ${canAdapt.score}, impact: ${this._pct(impact.percentage)} of entities affected.`,
       );
       if (canAdapt.extensionPoints && canAdapt.extensionPoints.length > 0) {
-        parts.push(`Adaptation points: ${canAdapt.extensionPoints.join(', ')}.`);
+        parts.push(
+          `Adaptation points: ${canAdapt.extensionPoints.join(", ")}.`,
+        );
       }
       if (canAdapt.constraints && canAdapt.constraints.length > 0) {
-        parts.push(`Constraints: ${canAdapt.constraints.join('; ')}.`);
+        parts.push(`Constraints: ${canAdapt.constraints.join("; ")}.`);
       }
     } else {
-      parts.push(`Insufficient match (${this._pct(relevanceScore)} relevance).`);
+      parts.push(
+        `Insufficient match (${this._pct(relevanceScore)} relevance).`,
+      );
       if (relevanceScore >= 0.6 && canAdapt.score < 0.6) {
-        parts.push(`Relevance adequate but adaptability too low (${canAdapt.score}).`);
-      } else if (relevanceScore >= 0.6 && impact.percentage >= ADAPT_IMPACT_THRESHOLD) {
+        parts.push(
+          `Relevance adequate but adaptability too low (${canAdapt.score}).`,
+        );
+      } else if (
+        relevanceScore >= 0.6 &&
+        impact.percentage >= ADAPT_IMPACT_THRESHOLD
+      ) {
         parts.push(
           `Relevance adequate but adaptation impact too high (${this._pct(impact.percentage)}).`,
         );
       }
     }
 
-    return parts.join(' ');
+    return parts.join(" ");
   }
 
   /**
@@ -437,20 +537,31 @@ class IncrementalDecisionEngine {
    */
   _generateOverallRationale(recommendations, topDecision, evaluations) {
     if (recommendations.length === 0) {
-      return 'No matches found above minimum threshold. CREATE is recommended.';
+      return "No matches found above minimum threshold. CREATE is recommended.";
     }
 
-    const reuseCount = recommendations.filter((r) => r.decision === 'REUSE').length;
-    const adaptCount = recommendations.filter((r) => r.decision === 'ADAPT').length;
-    const createCount = recommendations.filter((r) => r.decision === 'CREATE').length;
+    const reuseCount = recommendations.filter(
+      (r) => r.decision === "REUSE",
+    ).length;
+    const adaptCount = recommendations.filter(
+      (r) => r.decision === "ADAPT",
+    ).length;
+    const createCount = recommendations.filter(
+      (r) => r.decision === "CREATE",
+    ).length;
 
     const parts = [`Found ${evaluations.length} match(es) above threshold.`];
     if (reuseCount > 0) parts.push(`${reuseCount} can be reused directly.`);
     if (adaptCount > 0) parts.push(`${adaptCount} can be adapted.`);
-    if (createCount > 0) parts.push(`${createCount} evaluated but insufficient for reuse/adaptation.`);
-    parts.push(`Top recommendation: ${topDecision} "${recommendations[0].entityId}".`);
+    if (createCount > 0)
+      parts.push(
+        `${createCount} evaluated but insufficient for reuse/adaptation.`,
+      );
+    parts.push(
+      `Top recommendation: ${topDecision} "${recommendations[0].entityId}".`,
+    );
 
-    return parts.join(' ');
+    return parts.join(" ");
   }
 
   // ================================================================
@@ -478,13 +589,15 @@ class IncrementalDecisionEngine {
         reasons.push(`Low adaptability (${canAdapt.score})`);
       }
       if (impact.percentage >= ADAPT_IMPACT_THRESHOLD) {
-        reasons.push(`High adaptation impact (${this._pct(impact.percentage)})`);
+        reasons.push(
+          `High adaptation impact (${this._pct(impact.percentage)})`,
+        );
       }
       if (reasons.length === 0) {
-        reasons.push('Does not meet combined ADAPT criteria');
+        reasons.push("Does not meet combined ADAPT criteria");
       }
 
-      rejectionReasons[entity.id] = reasons.join('; ');
+      rejectionReasons[entity.id] = reasons.join("; ");
     }
 
     const reviewDate = new Date();
@@ -494,7 +607,7 @@ class IncrementalDecisionEngine {
       evaluated_patterns: evaluatedPatterns,
       rejection_reasons: rejectionReasons,
       new_capability: intent.trim(),
-      review_scheduled: reviewDate.toISOString().split('T')[0],
+      review_scheduled: reviewDate.toISOString().split("T")[0],
     };
   }
 
@@ -548,9 +661,9 @@ class IncrementalDecisionEngine {
       }
 
       // Categorize by promotion status
-      if (status === 'promotion-candidate') {
+      if (status === "promotion-candidate") {
         report.promotionCandidates.push(entry);
-      } else if (status === 'deprecation-review') {
+      } else if (status === "deprecation-review") {
         report.deprecationReview.push(entry);
       } else {
         report.monitoring.push(entry);
@@ -569,32 +682,34 @@ class IncrementalDecisionEngine {
    * - Never reused after 60 days -> deprecation-review
    */
   getPromotionStatus(entity) {
-    if (!entity) return 'unknown';
+    if (!entity) return "unknown";
 
     const reusageCount = (entity.usedBy || []).length;
 
     if (reusageCount >= 3) {
-      return 'promotion-candidate';
+      return "promotion-candidate";
     }
 
     if (reusageCount >= 1) {
-      return 'monitoring';
+      return "monitoring";
     }
 
     // Check if 60 days have passed since creation/last verification
-    const referenceDate = entity.createdAt
-      || (entity.createJustification && entity.createJustification.created_at)
-      || entity.lastVerified;
+    const referenceDate =
+      entity.createdAt ||
+      (entity.createJustification && entity.createJustification.created_at) ||
+      entity.lastVerified;
 
     if (referenceDate) {
       const refDate = new Date(referenceDate);
-      const daysSince = (Date.now() - refDate.getTime()) / (1000 * 60 * 60 * 24);
+      const daysSince =
+        (Date.now() - refDate.getTime()) / (1000 * 60 * 60 * 24);
       if (daysSince > 60) {
-        return 'deprecation-review';
+        return "deprecation-review";
       }
     }
 
-    return 'monitoring';
+    return "monitoring";
   }
 
   // ================================================================

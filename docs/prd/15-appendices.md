@@ -2,7 +2,7 @@
 
 ## 15.1 References
 
-- **Evolution API v2 Docs:** https://doc.evolution-api.com/v2/api-reference
+- **Evo GO Docs:** https://docs.evolutionfoundation.com.br/evolution-go
 - **Supabase Docs:** https://supabase.com/docs
 - **Next.js Docs:** https://nextjs.org/docs
 - **Tailwind CSS:** https://tailwindcss.com/docs
@@ -16,7 +16,7 @@
 | **Conversation**      | Thread de chat entre Owner/Attendant e um contato via WhatsApp            |
 | **Automatic Message** | Template de mensagem pré-cadastrada para envio manual ou automático       |
 | **RLS**               | Row Level Security — política de segurança que filtra dados por tenant_id |
-| **Evolution API**     | Gateway WhatsApp third-party; pairing + webhooks                          |
+| **Evo GO**            | Gateway WhatsApp third-party; pairing + webhooks                          |
 | **E2E**               | End-to-End (fluxo completo Register → Chat)                               |
 
 ## 15.3 Related Documents

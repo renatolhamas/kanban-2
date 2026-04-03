@@ -21,7 +21,8 @@
       "Bash(npx tsc:*)",
       "Bash(psql --version)",
       "mcp__supabase__execute_sql",
-      "Bash(git -C c:/git/kanban.2 diff app/api/auth/login/route.ts)"
+      "Bash(git -C c:/git/kanban.2 diff app/api/auth/login/route.ts)",
+      "Bash(grep -E '\\\\.\\(ts|tsx|js|jsx\\)$')"
     ]
   },
   "enableAllProjectMcpServers": true,

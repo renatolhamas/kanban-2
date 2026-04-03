@@ -1,11 +1,11 @@
 ---
-description: Reinicia o ambiente de desenvolvimento limpando processos anteriores na porta 3017
+description: Reinicia o ambiente de desenvolvimento limpando processos anteriores e o cache na porta 3017
 ---
 
 // turbo-all
 
-1. Limpar processos na porta 3017 para evitar conflitos:
-   `Get-NetTCPConnection -LocalPort 3017 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }`
+1. Limpar processos na porta 3017 e cache do Next.js:
+   `Get-NetTCPConnection -LocalPort 3017 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }; Remove-Item -Path ".next" -Recurse -Force -ErrorAction SilentlyContinue`
 
 2. Iniciar o servidor de desenvolvimento do Next.js:
    `npm run dev -- -p 3017`

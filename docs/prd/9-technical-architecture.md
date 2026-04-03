@@ -10,7 +10,7 @@
 | **Auth**             | Supabase Cloud Auth                           | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+)                |
 | **Real-time**        | Supabase Real-time Subscriptions              | WebSocket para sync instantâneo                          |
 | **File Storage**     | Supabase Cloud Storage                        | Mídias de conversa (fotos, vídeos, áudios)               |
-| **WhatsApp Gateway** | Evolution API v2                              | Pairing via QR, webhooks bidirecional, v2 stable         |
+| **WhatsApp Gateway** | Evo GO                                        | Pairing via QR, webhooks bidirecional, suporte completo |
 | **API Framework**    | Next.js API Routes (/app/api/)                | Auth middleware, CORS, RateLimit, Webhook validation     |
 | **Rate Limiting**    | Redis local (VPS)                             | 100 req/min per tenant, zero cost                        |
 | **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
@@ -108,7 +108,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
   FOR SELECT USING (tenant_id = auth.jwt() -> 'tenant_id');
 ```
 
-## 9.3 Evolution API v2 Integration
+## 9.3 Evo GO Integration
 
 **Fluxo de Pairing:**
 

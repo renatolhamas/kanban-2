@@ -8,7 +8,7 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 
 1. **Kanban Compartilhado:** Interface visual com colunas configuráveis (Novo → Qualificado → Proposta → Vendido → Arquivado)
 2. **Multi-tenancy with RLS:** Separação absoluta de dados por `tenant_id`; múltiplas instâncias isoladas em um único banco
-3. **Sincronização Real-time:** Webhooks da Evolution API + Supabase Real-time Subscriptions = conversas atualizadas instantaneamente
+3. **Sincronização Real-time:** Webhooks da Evo GO + Supabase Real-time Subscriptions = conversas atualizadas instantaneamente
 4. **Automatização de Follow-up:** Mensagens pré-cadastradas disparadas em intervalos configuráveis por kanban/etapa
 5. **Gestão de Contatos Centralizada:** CRUD integrado com auto-registro ao iniciar conversa
 
@@ -30,7 +30,7 @@ Um **Dashboard Colaborativo Kanban** que transforma a operação de WhatsApp de 
 │  │ Cloud Storage (mídias)           │   │
 │  └──────────────────────────────────┘   │
 ├─────────────────────────────────────────┤
-│   Evolution API v2 (WhatsApp Gateway)   │
+│   Evo GO (WhatsApp Gateway)             │
 │  (Pairing via QR, Webhooks de Msgs)     │
 └─────────────────────────────────────────┘
 ```

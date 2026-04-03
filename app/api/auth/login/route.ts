@@ -54,7 +54,15 @@ export async function POST(
     const userId = authData.user.id;
     const accessToken = authData.session?.access_token;
 
+    console.log("[LOGIN DEBUG] Auth successful", {
+      userId,
+      hasAccessToken: !!accessToken,
+      accessTokenLength: accessToken?.length,
+      authDataSessionExists: !!authData.session,
+    });
+
     if (!accessToken) {
+      console.error("[LOGIN ERROR] No access token in session");
       return NextResponse.json(
         { success: false, error: "Session token missing" },
         { status: 401 },
@@ -80,12 +88,23 @@ export async function POST(
       .single();
 
     if (userError || !userData) {
-      console.error("User fetch error:", userError);
+      console.error("[LOGIN ERROR] User fetch failed", {
+        userError: userError?.message,
+        userErrorCode: userError?.code,
+        userErrorDetails: userError?.details,
+        userDataExists: !!userData,
+      });
       return NextResponse.json(
         { success: false, error: "Invalid email or password" },
         { status: 401 },
       );
     }
+
+    console.log("[LOGIN DEBUG] User fetched successfully", {
+      userId,
+      tenantId: userData.tenant_id,
+      role: userData.role,
+    });
 
     const { tenant_id, role } = userData;
 

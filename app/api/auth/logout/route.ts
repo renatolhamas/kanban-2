@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clearJWTCookie } from "@/lib/auth";
-import type { AuthResponse } from "@/lib/types";
 
 /**
  * POST /api/auth/logout

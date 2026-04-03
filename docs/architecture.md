@@ -1106,7 +1106,7 @@ cp .env.example .env.local
 # Fill in SUPABASE_URL, SUPABASE_KEY, etc.
 
 # Start dev server
-npm run dev  # http://localhost:3000
+npm run dev  # http://localhost:3017
 
 # Supabase local (optional)
 supabase start

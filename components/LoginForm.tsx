@@ -13,7 +13,8 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isFormValid = email && password;
+  // Consider form valid if both fields have content
+  const isFormValid = email.trim().length > 0 && password.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,68 +43,84 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && <FormError message={error} />}
 
-      <div>
+      <div className="space-y-1.5">
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-semibold text-gray-700 ml-1"
         >
-          Email
+          Email Address
         </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={loading}
-        />
+        <div className="relative">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="name@company.com"
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400"
+            disabled={loading}
+            required
+          />
+        </div>
       </div>
 
-      <div>
+      <div className="space-y-1.5">
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-semibold text-gray-700 ml-1"
         >
           Password
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={loading}
-        />
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400"
+            disabled={loading}
+            required
+          />
+        </div>
       </div>
 
       <button
         type="submit"
         disabled={!isFormValid || loading}
         className={`
-          w-full py-2 rounded-lg font-semibold text-white transition
+          w-full py-3 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98]
           ${
             isFormValid && !loading
-              ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              : "bg-gray-400 cursor-not-allowed"
+              ? "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 cursor-pointer"
+              : "bg-gray-300 cursor-not-allowed"
           }
         `}
       >
-        {loading ? "Logging in..." : "Login"}
+        {loading ? (
+          <div className="flex items-center justify-center space-x-2">
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            <span>Signing in...</span>
+          </div>
+        ) : (
+          "Login to Dashboard"
+        )}
       </button>
 
-      <p className="text-center text-sm text-gray-600">
+      <div className="pt-2 text-center text-sm text-gray-500">
         Don&apos;t have an account?{" "}
-        <a href="/register" className="text-blue-600 hover:underline">
-          Register here
+        <a 
+          href="/register" 
+          className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          Create an account
         </a>
-      </p>
+      </div>
     </form>
   );
 }

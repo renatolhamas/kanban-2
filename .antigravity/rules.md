@@ -121,6 +121,20 @@ async function operation() {
 }
 ```
 
+## Shell Execution Rules (Windows/PowerShell)
+
+### Command Syntax - **CRITICAL**
+
+- **DO NOT USE `&&` or `||`** as command separators. They are NOT supported in the current PowerShell 5.1 environment.
+- **ALWAYS USE `;`** to separate sequential commands.
+- **Example (Correct)**: `npm run lint; npm run typecheck; npm test`
+- **Example (Incorrect)**: `npm run lint && npm run typecheck`
+
+### File Paths
+
+- **Always use double quotes `"`** for any path that might contain spaces.
+- **Use absolute paths** when possible or `path.join` in scripts.
+
 ---
 
-_Synkra AIOX AntiGravity Configuration v1.0_
+_Synkra AIOX AntiGravity Configuration v1.1_

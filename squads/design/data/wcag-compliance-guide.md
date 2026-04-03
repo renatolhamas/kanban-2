@@ -24,7 +24,7 @@
 ```bash
 # Use browser dev tools or:
 npm install -g pa11y
-pa11y --standard WCAG2AA http://localhost:3000
+pa11y --standard WCAG2AA http://localhost:3017
 ```
 
 ### Keyboard Navigation

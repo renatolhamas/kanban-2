@@ -43,7 +43,7 @@ Code source - one of:
 
 - Component path: `./app/components/Dashboard.tsx`
 - Folder path: `./app/components/dashboard/`
-- URL: `http://localhost:3000/dashboard` (takes screenshot)
+- URL: `http://localhost:3017/dashboard` (takes screenshot)
 
 ---
 
@@ -388,7 +388,7 @@ spacing:
 *design-compare ./designs/card.png ./app/components/ui/card/
 
 # Compare with live URL (takes screenshot first)
-*design-compare ./designs/home.png http://localhost:3000/
+*design-compare ./designs/home.png http://localhost:3017/
 
 # User pastes image directly
 *design-compare

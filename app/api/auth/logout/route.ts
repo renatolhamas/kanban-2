@@ -10,19 +10,14 @@ import type { AuthResponse } from "@/lib/types";
  */
 export async function POST(
   _request: NextRequest,
-): Promise<NextResponse<AuthResponse>> {
+): Promise<NextResponse> {
   try {
-    // Create response
-    const response = NextResponse.json(
-      { success: true, message: "Logged out successfully" },
-      { status: 200 },
-    );
+    // Clear httpOnly cookie and redirect to login
+    const response = NextResponse.redirect(new URL("/login", _request.url), {
+      status: 302,
+    });
 
-    // Clear httpOnly cookie
     response.headers.set("Set-Cookie", clearJWTCookie());
-
-    // Set redirect header
-    response.headers.set("X-Redirect-To", "/login");
 
     return response;
   } catch (error) {

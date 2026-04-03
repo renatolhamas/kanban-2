@@ -1,0 +1,196 @@
+---
+schema: 1
+story: "1.2"
+gate: FAIL
+status_reason: "Critical RLS policy bypass discovered in login endpoint. User cannot login after session expires because JWT is not included in Authorization header when querying users table. This breaks AC-15 (Session persists across page reloads) and AC-5 (Login endpoint validates credentials) for non-cached sessions."
+reviewer: Quinn (Test Architect)
+updated: "2026-04-02T21:15:00Z"
+
+top_issues:
+  - issue: "RLS Policy Bypass in Login Flow"
+    severity: "🔴 CRITICAL - BLOCKING"
+    description: "Login endpoint queries users table without including user's JWT in Authorization header. RLS policy evaluates auth.jwt() = NULL, resulting in query block and 'Invalid password' error even with correct credentials."
+    file: "app/api/auth/login/route.ts"
+    lines: "54-69"
+    fix_request: "docs/fix_request/QA-FIX_REQUEST-2026-04-02_story-1.2_rls.md"
+    impact: "Users cannot login after closing browser or clearing cookies - core authentication broken"
+
+quality_checks:
+  - check: "Code Review"
+    status: "⚠️ PARTIAL"
+    findings: "Code structure is clean, but critical security flaw: JWT not passed in Authorization header when querying RLS-protected table. This bypasses multi-tenant isolation on login."
+    severity: "CRITICAL"
+
+  - check: "Unit Tests"
+    status: "⚠️ PARTIAL"
+    findings: "46/46 unit tests passing, but tests are contracts only - they do NOT test actual login flow with session expiry. Missing integration test for 'login after session clear' scenario."
+    severity: "HIGH"
+
+  - check: "Acceptance Criteria"
+    status: "❌ FAIL"
+    findings: |
+      AC-15 (Session persists across page reloads): BROKEN - users cannot login after cookies cleared
+      AC-5 (Login endpoint validates credentials): FAILS for non-cached sessions
+      AC-18 (No regressions): REGRESSION - feature worked post-registration but not post-logout
+    severity: "CRITICAL"
+
+  - check: "No Regressions"
+    status: "⚠️ PARTIAL"
+    findings: "Post-deployment regression: Login initially works (JWT cached in cookie), but fails after browser close/cookie clear. This indicates a design flaw, not a test-catching regression."
+    severity: "HIGH"
+
+  - check: "Performance"
+    status: "✅ N/A"
+    findings: "Performance is not the issue - functionality is broken."
+    severity: "N/A"
+
+  - check: "Security"
+    status: "❌ FAIL"
+    findings: |
+      ❌ RLS policy NOT enforced on login query (JWT missing from Authorization header)
+      ❌ Multi-tenant isolation broken in login flow (should use user's JWT)
+      ❌ Potential security hole if query accidentally succeeds despite RLS block
+
+      Previous security review missed this critical pattern:
+      - Did NOT test login after session expiry (browser close scenario)
+      - Did NOT validate Authorization header is set correctly
+      - Did NOT catch that auth.jwt() in RLS context was NULL
+    severity: "CRITICAL"
+
+  - check: "Documentation"
+    status: "⚠️ PARTIAL"
+    findings: "Dev notes document httpOnly cookies and JWT structure, but do NOT mention RLS policy enforcement pattern. Missing: 'Always include user's JWT in Authorization header when querying RLS-protected tables.'"
+    severity: "MEDIUM"
+
+test_results:
+  - name: "lib/password.test.ts"
+    status: "✅ PASS"
+    count: "18/18"
+    details: "Password validation works correctly"
+
+  - name: "app/api/auth/register/register.test.ts"
+    status: "✅ PASS"
+    count: "14/14"
+    details: "Register endpoint tests passing (but are contracts, not end-to-end)"
+
+  - name: "app/api/auth/login/login.test.ts"
+    status: "✅ PASS"
+    count: "14/14"
+    details: "Login endpoint tests passing (but missing critical scenario: login after session clear)"
+
+  - name: "ESLint"
+    status: "✅ PASS"
+    details: "0 warnings/errors"
+
+  - name: "Manual Testing: Login After Session Expiry"
+    status: "❌ FAIL"
+    details: "User registers → logs out → clears cookies → attempts login with same credentials → receives 'Invalid email or password' error despite correct credentials"
+
+acceptance_criteria_status:
+  - id: "AC-5"
+    criterion: "Login endpoint validates credentials"
+    status: "❌ FAILS (non-cached sessions)"
+    test_ref: "Manual test: login after session clear fails"
+
+  - id: "AC-15"
+    criterion: "Session persists across page reloads"
+    status: "❌ FAILS (requires re-login after close)"
+    test_ref: "Manual test: user cannot login after browser close"
+
+  - id: "AC-18"
+    criterion: "All endpoints working correctly"
+    status: "❌ FAILS (login broken for non-cached)"
+    test_ref: "docs/fix_request/QA-FIX_REQUEST-2026-04-02_story-1.2_rls.md"
+
+  - id: "AC-1 through AC-4, AC-6 through AC-14, AC-16 through AC-17"
+    criterion: "Other acceptance criteria"
+    status: "✅ IMPLEMENTED (not affected by login RLS bug)"
+    test_ref: "Previously verified in gate"
+
+code_quality:
+  patterns: "Good structure, but missing critical RLS pattern: always include user JWT in Authorization header"
+  readability: "Good"
+  maintainability: "Good - but pattern needs documentation"
+  test_coverage: "⚠️ INSUFFICIENT - contracts exist but missing scenario: login after session clear"
+  security_practices: "❌ BROKEN - RLS policy not enforced in login query"
+
+file_list_verified:
+  - "app/api/auth/login/route.ts: ❌ BROKEN (missing JWT in header)"
+  - "app/api/auth/register/route.ts ✅"
+  - "app/api/auth/logout/route.ts ✅"
+  - "app/api/auth/profile/route.ts ✅"
+  - "Other files ✅"
+
+root_cause_analysis:
+  problem: "RLS policy bypass in login endpoint"
+  why_missed: |
+    1. Unit tests use contracts/mocks, NOT actual RLS policies
+    2. Manual testing did NOT include 'login after session clear' scenario
+    3. Testing only covered 'happy path' (immediate post-register login)
+    4. RLS policy enforcement not explicitly tested
+    5. JWT payload included tenant_id, but never validated that Authorization header was set
+
+  correct_pattern: |
+    1. After signInWithPassword(), extract accessToken from session
+    2. Create NEW Supabase client with Authorization: Bearer {accessToken}
+    3. Query users table with this client (NOT the anonKey client)
+    4. RLS policy then evaluates auth.jwt()['tenant_id'] correctly
+    5. Query succeeds, user can login
+
+dependencies_verified:
+  - "Story 1.1 (RLS Policies): ✅ Policies defined but NOT enforced in login endpoint"
+
+definition_of_done:
+  - "All endpoints created and tested locally: ❌ Login broken for non-cached sessions"
+  - "All AC testable and passing: ❌ AC-5, AC-15, AC-18 failing"
+  - "Code passes security review: ❌ RLS pattern missing"
+
+risks_addressed:
+  - "Risk: RLS not enforced on login → NOT ADDRESSED - this is the bug"
+  - "Risk: Multi-tenant isolation broken → CONFIRMED by this bug"
+
+recommendations:
+  - "🔴 ACTION REQUIRED: Return to @dev with fix request"
+  - "APPLY: Code changes in docs/fix_request/QA-FIX_REQUEST-2026-04-02_story-1.2_rls.md (lines 68-260)"
+  - "TEST: Login after session clear (must succeed with correct credentials)"
+  - "VERIFY: Authorization header contains Bearer token in network logs"
+  - "RE-TEST: All acceptance criteria with this fix applied"
+  - "POST-FIX: @qa re-runs gate with verification checklist"
+
+next_steps:
+  - "❌ QA gate: FAIL - Critical RLS policy bypass detected"
+  - "→ @dev: Implement fix from docs/fix_request/QA-FIX_REQUEST-2026-04-02_story-1.2_rls.md"
+  - "→ @dev: Add test case: register → logout → login (must succeed)"
+  - "→ @qa: Re-run `*gate 1.2` when fix is complete"
+  - "→ @devops: Hold push until gate is PASS"
+
+waiver:
+  active: false
+
+decision_notes: |
+  **FINAL VERDICT: FAIL (BLOCKING)**
+
+  Story 1.2 has a critical security flaw that breaks core functionality:
+  **Users cannot login after closing the browser or clearing cookies.**
+
+  This is a RLS policy bypass in the login endpoint. The endpoint uses an anonKey
+  client WITHOUT the user's JWT in the Authorization header, causing RLS to block
+  the query (auth.jwt() = NULL). The fix is well-documented in the attached fix request
+  and requires extracting the accessToken from signInWithPassword() and passing it in
+  the Authorization header.
+
+  **WHY THIS WASN'T CAUGHT EARLIER:**
+  - Unit tests are contracts, not actual RLS enforcement tests
+  - Manual testing only covered 'register → immediate login' (JWT in cookie)
+  - Did NOT test 'logout → clear cookies → login' scenario
+  - RLS policy review assumed login endpoint was using correct pattern
+
+  **SEVERITY: CRITICAL - BLOCKS PRODUCTION DEPLOYMENT**
+
+  **ACTION: Apply fix from QA-FIX_REQUEST and re-test with verification checklist**
+
+---
+gate_summary: ❌ FAIL
+approval_status: BLOCKED - Fix required before @devops push
+confidence_level: High (issue clearly identified, fix documented, test scenario clear)
+fix_request_reference: "docs/fix_request/QA-FIX_REQUEST-2026-04-02_story-1.2_rls.md"

@@ -114,11 +114,28 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 
       <div className="pt-2 text-center text-sm text-gray-500">
         Don&apos;t have an account?{" "}
-        <a 
-          href="/register" 
+        <a
+          href="/register"
           className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
         >
           Create an account
+        </a>
+      </div>
+
+      <div className="pt-2 text-center text-sm text-gray-500">
+        Password issues:{" "}
+        <a
+          href="#"
+          className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          Change Password
+        </a>
+        {" "}or{" "}
+        <a
+          href="/resend-confirmation"
+          className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          Resend Email Confirmation
         </a>
       </div>
     </form>

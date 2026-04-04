@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LoginForm } from "@/components/LoginForm";
+import { Toast } from "@/components/Toast";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if user just registered
+    if (searchParams.get("registered") === "true") {
+      setSuccessMessage("Account created successfully! Please log in.");
+    }
+  }, [searchParams]);
 
   const handleLogin = async (email: string, password: string) => {
     try {
@@ -92,6 +102,14 @@ export default function LoginPage() {
           )}
         </div>
       </div>
+
+      {successMessage && (
+        <Toast
+          message={successMessage}
+          type="success"
+          onClose={() => setSuccessMessage(null)}
+        />
+      )}
     </div>
   );
 }

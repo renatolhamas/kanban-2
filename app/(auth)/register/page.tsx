@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { RegisterForm } from "@/components/RegisterForm";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   const handleRegister = async (
@@ -33,14 +31,8 @@ export default function RegisterPage() {
         throw new Error(errorMessage);
       }
 
-      // Success - get redirect URL from response header
-      const redirectTo =
-        response.headers.get("X-Redirect-To") || "/settings/connection";
-
-      // Redirect after successful registration
-      setTimeout(() => {
-        router.push(redirectTo);
-      }, 1500);
+      // Success message displayed by RegisterForm component
+      // User stays on /register to check email for confirmation link
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
       throw err;

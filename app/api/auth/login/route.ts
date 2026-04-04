@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { generateJWT, setJWTCookie } from "@/lib/auth";
 import type { LoginRequest, AuthResponse } from "@/lib/types";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
@@ -43,11 +43,56 @@ export async function POST(
       });
 
     if (authError || !authData.user) {
-      console.error("Auth error:", authError);
+      console.error("[LOGIN ERROR] Auth failed with details:", {
+        authError_message: authError?.message,
+        authError_status: authError?.status,
+        authError_code: authError?.code,
+        authError_name: authError?.name,
+        authError_full: JSON.stringify(authError),
+        userExists: !!authData.user,
+        email: email,
+      });
+
+      // Handle specific auth errors
+      if (authError?.code === "email_not_confirmed") {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Please confirm your email before logging in. Check your inbox for a confirmation link.",
+          },
+          { status: 403 },
+        );
+      }
+
       // Generic message for security (don't reveal if user exists)
       return NextResponse.json(
         { success: false, error: "Invalid email or password" },
         { status: 401 },
+      );
+    }
+
+    // Validate email confirmation status
+    // If Supabase Auth is configured to require email confirmation,
+    // user.confirmed_at will be null until they verify
+    console.log("[LOGIN DEBUG] Email confirmation check", {
+      userId: authData.user.id,
+      email: authData.user.email,
+      confirmed_at: authData.user.confirmed_at,
+      isConfirmed: !!authData.user.confirmed_at,
+    });
+
+    if (!authData.user.confirmed_at) {
+      console.warn("[LOGIN BLOCKED] User email not confirmed", {
+        userId: authData.user.id,
+        email: authData.user.email,
+        confirmed_at: authData.user.confirmed_at,
+      });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Please confirm your email before logging in. Check your inbox for a confirmation link.",
+        },
+        { status: 403 },
       );
     }
 

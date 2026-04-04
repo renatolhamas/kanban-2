@@ -11,18 +11,19 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ## Epic 1: FOUNDATION & AUTH
 
-**Objetivo:** Schema, Auth, Onboarding, RLS, Evolution API pairing setup
+**Objetivo:** Schema, Auth, Email Confirmation, Onboarding, RLS, Evolution API pairing setup
 
 **Stories:**
 
 - Story 1.1: Create schema (tenants, users, contacts, conversations, messages, columns)
 - Story 1.2: Supabase Auth (register, login, profile)
-- Story 1.3: Onboarding (tenant auto-create, default kanban "Main" com colunas padrão)
-- Story 1.4: RLS policies validation
-- Story 1.5: Evolution API pairing (QR code generation)
-- Story 1.6: Webhook endpoint setup (/api/webhooks/messages)
+- Story 1.3: Email Confirmation Flow (Resend integration, confirmation link generation, token validation)
+- Story 1.4: Onboarding (tenant auto-create, default kanban "Main" com colunas padrão)
+- Story 1.5: RLS policies validation
+- Story 1.6: Evolution API pairing (QR code generation)
+- Story 1.7: Webhook endpoint setup (/api/webhooks/messages)
 
-**Outputs:** Auth working, webhook validated, schema ready
+**Outputs:** Auth working with email confirmation, webhook validated, schema ready
 
 ---
 

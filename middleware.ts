@@ -14,9 +14,11 @@ export async function middleware(request: NextRequest) {
   const publicRoutes = [
     "/login",
     "/register",
+    "/resend-confirmation",
     "/",
     "/api/auth/login",
     "/api/auth/register",
+    "/api/auth/resend-confirmation",
   ];
 
   // Check if route is public

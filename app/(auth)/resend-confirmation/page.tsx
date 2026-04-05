@@ -1,6 +1,17 @@
-"use client";
+import dynamic from "next/dynamic";
 
-import { ResendConfirmationForm } from "@/components/ResendConfirmationForm";
+/**
+ * Dynamic import with ssr: false
+ * Fixes useSearchParams() error during build
+ * ResendConfirmationForm uses useSearchParams() which requires client-side rendering
+ */
+const ResendConfirmationFormDynamic = dynamic(
+  () => import("@/components/ResendConfirmationForm").then(m => ({ default: m.ResendConfirmationForm })),
+  {
+    ssr: false,
+    loading: () => <div>Loading...</div>,
+  }
+);
 
 export default function ResendConfirmationPage() {
   return (
@@ -30,7 +41,7 @@ export default function ResendConfirmationPage() {
         </p>
 
         {/* Form */}
-        <ResendConfirmationForm />
+        <ResendConfirmationFormDynamic />
       </div>
     </div>
   );

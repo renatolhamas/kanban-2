@@ -6,11 +6,11 @@ import type { AuthResponse } from "@/lib/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN;
+const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-if (!supabaseUrl || !supabaseAnonKey || !appDomain) {
+if (!supabaseUrl || !supabaseAnonKey || !appUrl) {
   throw new Error(
-    "Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_APP_DOMAIN",
+    "Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_APP_URL",
   );
 }
 
@@ -80,7 +80,7 @@ export async function POST(
       type: "signup",
       email,
       options: {
-        emailRedirectTo: `${appDomain}/login?confirmed=true`,
+        emailRedirectTo: `${appUrl}/login?confirmed=true`,
       },
     });
 

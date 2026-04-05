@@ -125,10 +125,10 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       <div className="pt-2 text-center text-sm text-gray-500">
         Password issues:{" "}
         <a
-          href="#"
+          href="/forgot-password"
           className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
         >
-          Change Password
+          Forgot Password
         </a>
         {" "}or{" "}
         <a

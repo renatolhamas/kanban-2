@@ -18,6 +18,14 @@ WhatsApp Kanban System — Uma plataforma SaaS multi-tenant para gestão colabor
 
 See [docs/](./docs) for detailed documentation.
 
+### Autenticação
+
+O sistema utiliza Supabase Auth com email e senha. Fluxos implementados:
+- Registro (com confirmação por email obrigatória)
+- Login (com verificação de restrições via RLS)
+- Reenvio de Configuração de Email (`/resend-confirmation`)
+- Reset de Senha (`/forgot-password` e `/change-password`)
+
 ## Setup
 
 ```bash

@@ -27,7 +27,8 @@
       "Bash(python3 -m json.tool)",
       "Bash(curl -s -X POST http://localhost:3017/api/auth/login -H 'Content-Type: application/json' -d '{:*)",
       "WebFetch(domain:supabase.com)",
-      "WebSearch"
+      "WebSearch",
+      "mcp__supabase__search_docs"
     ]
   },
   "enableAllProjectMcpServers": true,

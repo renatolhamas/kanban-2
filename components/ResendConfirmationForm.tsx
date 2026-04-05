@@ -5,11 +5,15 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { isValidEmail } from "@/lib/auth";
 
-export function ResendConfirmationForm() {
+export interface ResendConfirmationFormProps {
+  onSuccess?: () => void;
+  onError?: (error: string | null) => void;
+}
+
+export function ResendConfirmationForm({ onSuccess, onError }: ResendConfirmationFormProps) {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [emailSendFailedMessage, setEmailSendFailedMessage] = useState<
     string | null
@@ -35,7 +39,7 @@ export function ResendConfirmationForm() {
 
   const handleResend = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    if (onError) onError(null);
     setLoading(true);
 
     try {
@@ -56,10 +60,11 @@ export function ResendConfirmationForm() {
       // Success — show confirmation message
       setSuccess(true);
       setEmail(""); // Clear input
+      onSuccess?.();
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "An error occurred";
-      setError(errorMessage);
+      if (onError) onError(errorMessage);
       console.error("Resend confirmation error:", err);
     } finally {
       setLoading(false);
@@ -75,12 +80,14 @@ export function ResendConfirmationForm() {
             see it in a few minutes, check your spam folder.
           </p>
         </div>
-        <Link
-          href="/login"
-          className="inline-block text-blue-600 hover:text-blue-700 font-medium"
-        >
-          Back to Login
-        </Link>
+        <div className="pt-2 text-center text-sm text-gray-500">
+          <Link
+            href="/login"
+            className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            Back to Login
+          </Link>
+        </div>
       </div>
     );
   }
@@ -127,87 +134,56 @@ export function ResendConfirmationForm() {
         </div>
       )}
 
-      <form onSubmit={handleResend} className="space-y-4">
-      {/* Error message */}
-      {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 p-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <p className="text-red-800 flex items-center gap-2">
-            <svg
-              className="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {error}
-          </p>
+      <form onSubmit={handleResend} className="space-y-5">
+        {/* Email input */}
+        <div className="space-y-1.5">
+          <label htmlFor="email" className="block text-sm font-semibold text-gray-700 ml-1">
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="name@company.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500"
+          />
         </div>
-      )}
 
-      {/* Email input */}
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium mb-2">
-          Email Address
-        </label>
-        <input
-          id="email"
-          type="email"
-          placeholder="name@company.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={loading}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500"
-        />
-      </div>
-
-      {/* Submit button */}
-      <button
-        type="submit"
-        disabled={!isValidInput || loading}
-        className="w-full bg-gray-300 text-gray-700 font-medium py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400 transition"
-      >
-        {loading ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg
-              className="w-4 h-4 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            Sending...
-          </span>
-        ) : (
-          "Resend Confirmation"
-        )}
-      </button>
-
-      {/* Back to login link */}
-      <p className="text-center text-sm">
-        <Link
-          href="/login"
-          className="text-blue-600 hover:text-blue-700 font-medium"
+        {/* Submit button */}
+        <button
+          type="submit"
+          disabled={!isValidInput || loading}
+          className={`
+            w-full py-3 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98]
+            ${
+              isValidInput && !loading
+                ? "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 cursor-pointer"
+                : "bg-gray-300 cursor-not-allowed"
+            }
+          `}
         >
-          Back to Login
-        </Link>
-      </p>
-    </form>
+          {loading ? (
+            <div className="flex items-center justify-center space-x-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <span>Sending...</span>
+            </div>
+          ) : (
+            "Resend Confirmation"
+          )}
+        </button>
+
+        {/* Back to login link */}
+        <div className="pt-2 text-center text-sm text-gray-500">
+          <Link
+            href="/login"
+            className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            Back to Login
+          </Link>
+        </div>
+      </form>
     </>
   );
 }

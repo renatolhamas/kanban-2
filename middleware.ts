@@ -18,10 +18,14 @@ export async function middleware(request: NextRequest) {
     "/login",
     "/register",
     "/resend-confirmation",
+    "/forgot-password",
+    "/change-password",
     "/",
     "/api/auth/login",
     "/api/auth/register",
     "/api/auth/resend-confirmation",
+    "/api/auth/forgot-password",
+    "/api/auth/change-password",
   ];
 
   // Check if route is public

@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyJWT } from "@/lib/auth";
 
 /**
  * Middleware for protecting routes that require authentication
  *
  * Protected routes: /profile, /dashboard, /settings, etc.
  * Public routes: /login, /register, /
+ *
+ * NOTE: JWT verification is handled in API routes (server-side),
+ * not in middleware (Edge Runtime). This avoids importing jose
+ * which has dependencies (CompressionStream) incompatible with Edge.
  */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -36,26 +39,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Verify JWT
-  try {
-    const payload = await verifyJWT(token);
-
-    if (!payload) {
-      // Token is invalid, redirect to login
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = "/login";
-      return NextResponse.redirect(loginUrl);
-    }
-
-    // Token is valid, continue
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Middleware JWT verification error:", error);
-    // Redirect to login on error
-    const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = "/login";
-    return NextResponse.redirect(loginUrl);
-  }
+  // Token exists, continue to route (API will verify it)
+  return NextResponse.next();
 }
 
 /**

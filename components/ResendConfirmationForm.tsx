@@ -1,14 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { isValidEmail } from "@/lib/auth";
 
 export function ResendConfirmationForm() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [emailSendFailedMessage, setEmailSendFailedMessage] = useState<
+    string | null
+  >(null);
+
+  // Check for email_send_failed error from registration flow
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    const emailParam = searchParams.get("email");
+
+    if (errorParam === "email_send_failed") {
+      setEmailSendFailedMessage(
+        "Please provide your email and request to resend the confirmation email.",
+      );
+      if (emailParam) {
+        setEmail(decodeURIComponent(emailParam));
+      }
+    }
+  }, [searchParams]);
 
   // Validate email format
   const isValidInput = email && isValidEmail(email);
@@ -66,7 +86,48 @@ export function ResendConfirmationForm() {
   }
 
   return (
-    <form onSubmit={handleResend} className="space-y-4">
+    <>
+      {/* Persistent toast for email send failure (no auto-dismiss) */}
+      {emailSendFailedMessage && (
+        <div className="mb-6 rounded-lg bg-amber-50 border border-amber-300 p-4 flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <svg
+              className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <div>
+              <p className="text-amber-800 font-semibold">
+                Email Sending Issue
+              </p>
+              <p className="text-amber-700 text-sm mt-1">
+                {emailSendFailedMessage}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => setEmailSendFailedMessage(null)}
+            className="text-amber-600 hover:text-amber-800 flex-shrink-0"
+            type="button"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </div>
+      )}
+
+      <form onSubmit={handleResend} className="space-y-4">
       {/* Error message */}
       {error && (
         <div className="rounded-lg bg-red-50 border border-red-200 p-4 animate-in fade-in slide-in-from-top-2 duration-300">
@@ -147,5 +208,6 @@ export function ResendConfirmationForm() {
         </Link>
       </p>
     </form>
+    </>
   );
 }

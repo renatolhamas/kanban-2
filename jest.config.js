@@ -11,6 +11,7 @@ const customJestConfig = {
     "^@/(.*)$": "<rootDir>/$1",
   },
   collectCoverageFrom: ["lib/**/*.ts", "!**/*.test.ts", "!**/node_modules/**"],
+  setupFiles: ["<rootDir>/jest.setup.js"],
 };
 
 module.exports = createJestConfig(customJestConfig);

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { RegisterForm } from "@/components/RegisterForm";
 
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleRegister = async (
     email: string,
@@ -24,6 +26,14 @@ export default function RegisterPage() {
       });
 
       const data = await response.json();
+
+      // Handle email send failure (keep user alive, redirect to resend-confirmation)
+      if (data.email_send_failed) {
+        router.push(
+          `/resend-confirmation?error=email_send_failed&email=${encodeURIComponent(email)}`,
+        );
+        return;
+      }
 
       if (!response.ok) {
         const errorMessage = data.error || "Registration failed";

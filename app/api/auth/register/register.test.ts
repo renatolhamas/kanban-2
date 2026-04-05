@@ -197,13 +197,13 @@ describe("Register Endpoint Validation", () => {
   describe("HTTP Response Codes", () => {
     it("should return correct status codes", () => {
       const expectedResponses = {
-        success: 201, // Created
+        success: 202, // Accepted (awaiting email confirmation)
         badRequest: 400,
         unauthorized: 401,
         serverError: 500,
       };
 
-      expect(expectedResponses.success).toBe(201);
+      expect(expectedResponses.success).toBe(202);
       expect(expectedResponses.badRequest).toBe(400);
       expect(expectedResponses.unauthorized).toBe(401);
       expect(expectedResponses.serverError).toBe(500);

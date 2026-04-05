@@ -15,14 +15,6 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
   throw new Error("Missing Supabase credentials");
 }
 
-// Validate environment on startup
-try {
-  validateEnvironmentDomain();
-} catch (error) {
-  console.error("Environment validation failed:", error);
-  throw error;
-}
-
 // Initialize Supabase admin client (service role)
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
@@ -38,6 +30,14 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<AuthResponse>> {
   try {
+    // Validate environment on runtime (not at module load for Next.js build compatibility)
+    try {
+      validateEnvironmentDomain();
+    } catch (error) {
+      console.error("Environment validation failed:", error);
+      throw error;
+    }
+
     const clientIP = getClientIP(request.headers);
     const body: RegisterRequest = await request.json();
     const { email, name, password } = body;
@@ -239,70 +239,42 @@ export async function POST(
     if (!emailResult.success) {
       console.error(`[EMAIL_SEND_FAILED] ${email}: ${emailResult.error}`);
 
-      // STEP 9: Best-effort cleanup on email failure
-      const cleanupResults = {
-        deleteUser: { success: false, error: null as string | null },
-        deleteTenant: { success: false, error: null as string | null },
-      };
-
-      // Try to delete auth user
+      // STEP 9: Log email failure for audit (keep user/tenant alive)
+      // User and tenant remain created so user can retry via /resend-confirmation
       try {
-        await supabase.auth.admin.deleteUser(userId);
-        cleanupResults.deleteUser.success = true;
-        console.log(`[CLEANUP] ✅ Auth user deleted: ${userId}`);
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        cleanupResults.deleteUser.error = errorMsg;
-        console.error(`[CLEANUP] ❌ Failed to delete auth user: ${errorMsg}`);
-      }
-
-      // Try to delete tenant (independent of deleteUser result)
-      try {
-        await supabase.from("tenants").delete().eq("id", tenantId);
-        cleanupResults.deleteTenant.success = true;
-        console.log(`[CLEANUP] ✅ Tenant deleted: ${tenantId}`);
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error);
-        cleanupResults.deleteTenant.error = errorMsg;
-        console.error(`[CLEANUP] ❌ Failed to delete tenant: ${errorMsg}`);
-      }
-
-      // Log failed registration for audit if both cleanup operations failed
-      if (
-        !cleanupResults.deleteUser.success &&
-        !cleanupResults.deleteTenant.success
-      ) {
-        try {
-          await supabase.from("failed_registrations").insert([
-            {
-              email,
-              created_resources: {
-                auth_user: true,
-                tenant: true,
-                user_record: true,
-              },
-              cleanup_attempted: true,
-              cleanup_status: cleanupResults,
-              error_message: emailResult.error,
+        await supabase.from("failed_registrations").insert([
+          {
+            email,
+            created_resources: {
+              auth_user: true,
+              tenant: true,
+              user_record: true,
             },
-          ]);
-          console.log(`[AUDIT] Failed registration logged for ${email}`);
-        } catch (auditError) {
-          console.error("Failed to log audit entry:", auditError);
-        }
+            cleanup_attempted: false,
+            error_message: emailResult.error,
+            notes: "Email send failed during registration. User kept alive for resend attempt.",
+          },
+        ]);
+        console.log(`[AUDIT] Email send failure logged for ${email}`);
+      } catch (auditError) {
+        console.error("Failed to log audit entry:", auditError);
       }
 
+      // STEP 10: Return success with email_send_failed flag
+      // Frontend uses this to redirect to /resend-confirmation with appropriate message
       return NextResponse.json(
         {
-          success: false,
-          error:
-            "Failed to send confirmation email. Please try again later or contact support.",
+          success: true,
+          email_send_failed: true,
+          message:
+            "Account created but confirmation email could not be sent. Please use Resend Confirmation to try again.",
+          redirect_to: "/resend-confirmation",
         },
-        { status: 500 },
+        { status: 202 },
       );
     }
 
-    // STEP 10: Success — Return 202 Accepted (no JWT)
+    // STEP 11: Success — Return 202 Accepted (no JWT)
     console.log(
       `[REGISTRATION_SUCCESS] User registered and confirmation email sent: ${email}`,
     );

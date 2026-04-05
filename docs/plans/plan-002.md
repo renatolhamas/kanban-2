@@ -1,9 +1,21 @@
 # Plan 002: Email Confirmation Flow — Opção C (Híbrida Revisada)
 
 **Data:** 2026-04-04  
-**Status:** DRAFT → Ready for Development  
+**Status:** Done (Transferred)  
 **Owner:** @analyst (análise) → @dev (implementação)  
 **Decisão:** Resend Free Tier + Supabase Admin API
+
+---
+
+## ✅ Implementation Status
+
+**Transferred to:** Story 1.2 (Supabase Auth - Register, Login, Profile)  
+**Implemented on:** 2026-04-04  
+**Implementation Complete:** ✅ Yes  
+
+This plan was successfully implemented and integrated into Story 1.2. The email confirmation flow planning and analysis from this document informed the registration endpoint implementation in Story 1.2, which established the foundation for email confirmation in the authentication system.
+
+---
 
 ---
 

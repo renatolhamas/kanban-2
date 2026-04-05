@@ -85,7 +85,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
     return (
       <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
         <p className="text-green-700 font-semibold">Registration successful!</p>
-        <p className="text-sm text-green-600 mt-1">Redirecting to setup...</p>
+        <p className="text-sm text-green-600 mt-1">We sent you an email.</p>
+        <p className="text-sm text-green-600 mt-1">Please open it and confirm your Signup.</p>
       </div>
     );
   }

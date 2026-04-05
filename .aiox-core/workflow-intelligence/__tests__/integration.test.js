@@ -227,7 +227,7 @@ describe("Workflow Intelligence System Integration", () => {
 
     it("should expose getWorkflowNames function", () => {
       const names = wis.getWorkflowNames();
-      expect(names.length).toBe(10);
+      expect(names.length).toBe(12);
     });
 
     it("should expose getWorkflowsByAgent function", () => {
@@ -242,8 +242,8 @@ describe("Workflow Intelligence System Integration", () => {
 
     it("should expose getStats function", () => {
       const stats = wis.getStats();
-      expect(stats.totalWorkflows).toBe(10);
-      expect(stats.workflowsWithTransitions).toBe(10);
+      expect(stats.totalWorkflows).toBe(12);
+      expect(stats.workflowsWithTransitions).toBe(12);
     });
 
     it("should expose factory functions", () => {

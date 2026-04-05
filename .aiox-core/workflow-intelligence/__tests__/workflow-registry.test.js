@@ -53,7 +53,7 @@ describe("WorkflowRegistry", () => {
     it("should return 10 workflows", () => {
       const workflows = registry.loadWorkflows();
       const names = Object.keys(workflows);
-      expect(names.length).toBe(10);
+      expect(names.length).toBe(12);
     });
 
     it("should include story_development workflow", () => {
@@ -103,7 +103,7 @@ describe("WorkflowRegistry", () => {
     it("should return array of workflow names", () => {
       const names = registry.getWorkflowNames();
       expect(Array.isArray(names)).toBe(true);
-      expect(names.length).toBe(10);
+      expect(names.length).toBe(12);
     });
 
     it("should include expected workflows", () => {
@@ -287,8 +287,8 @@ describe("WorkflowRegistry", () => {
     it("should return registry statistics", () => {
       const stats = registry.getStats();
 
-      expect(stats.totalWorkflows).toBe(10);
-      expect(stats.workflowsWithTransitions).toBe(10);
+      expect(stats.totalWorkflows).toBe(12);
+      expect(stats.workflowsWithTransitions).toBe(12);
       expect(stats.totalTransitions).toBeGreaterThan(0);
     });
 

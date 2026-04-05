@@ -3,7 +3,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { validatePassword } from "@/lib/password";
-import { verifyJWT, getJWTFromCookie } from "@/lib/auth";
+import { verifyJWT } from "@/lib/jwt";
+import { getJWTFromCookie } from "@/lib/auth";
 import type { AuthResponse } from "@/lib/types";
 
 const supabaseUrl = process.env.SUPABASE_URL;

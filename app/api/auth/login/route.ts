@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { generateJWT, setJWTCookie } from "@/lib/auth";
+import { generateJWT } from "@/lib/jwt";
+import { setJWTCookie } from "@/lib/auth";
 import type { LoginRequest, AuthResponse } from "@/lib/types";
 
 const supabaseUrl = process.env.SUPABASE_URL;

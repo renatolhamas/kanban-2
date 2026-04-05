@@ -1,6 +1,6 @@
 // JWT operations moved to lib/jwt.ts to avoid jose import in tests
-// Import from lib/jwt.ts when needed in route handlers
-export { generateJWT, verifyJWT } from "@/lib/jwt";
+// Import from lib/jwt.ts when needed in route handlers (SERVER-SIDE ONLY)
+// NOTE: Do NOT export JWT functions from here - they should only be imported server-side
 
 // JWT expiration: 1 hour (3600 seconds)
 const JWT_EXPIRATION = 3600;

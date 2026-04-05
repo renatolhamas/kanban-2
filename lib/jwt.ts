@@ -32,7 +32,7 @@ export async function generateJWT(
     iat: now,
     exp: exp,
   })
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg: "HS256", zip: undefined })
     .sign(JWT_SECRET);
 
   return token;

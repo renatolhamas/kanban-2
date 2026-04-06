@@ -3,10 +3,11 @@
  * Run: npm test -- forgot-password.test.ts
  */
 
-function isValidEmail(email: string): boolean {
+// Email validation helper
+const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
-}
+};
 
 describe("Forgot Password Endpoint Validation", () => {
   describe("Input Validation", () => {
@@ -16,8 +17,8 @@ describe("Forgot Password Endpoint Validation", () => {
     });
 
     it("should validate email format", () => {
-      expect(isValidEmail("user@example.com")).toBe(true);
-      expect(isValidEmail("not-an-email")).toBe(false);
+      expect(validateEmail("user@example.com")).toBe(true);
+      expect(validateEmail("not-an-email")).toBe(false);
     });
   });
 

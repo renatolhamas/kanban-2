@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { PasswordInput } from "./PasswordInput";
-import { FormError } from "./FormError";
 import { validatePassword } from "@/lib/password";
 
 interface RegisterFormProps {
@@ -16,7 +15,6 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const passwordValidation = validatePassword(password);
   const passwordsMatch = password === confirmPassword && password.length > 0;
@@ -63,8 +61,6 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
     try {
       if (onSubmit) {
         await onSubmit(email, name, password);
-        // Only set success if the submission didn't throw an error
-        setSuccess(true);
         setEmail("");
         setName("");
         setPassword("");
@@ -74,31 +70,17 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       const errorMsg =
         err instanceof Error ? err.message : "Registration failed";
       setError(errorMsg);
-      // Ensure success is false if any error occurred
-      setSuccess(false);
     } finally {
       setLoading(false);
     }
   };
 
-  if (success) {
-    return (
-      <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
-        <p className="text-green-700 font-semibold">Registration successful!</p>
-        <p className="text-sm text-green-600 mt-1">We sent you an email.</p>
-        <p className="text-sm text-green-600 mt-1">Please open it and confirm your Signup.</p>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <FormError message={error} />}
-
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
         >
           Email
         </label>
@@ -109,7 +91,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500"
           disabled={loading}
         />
       </div>
@@ -117,7 +99,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
         >
           Full Name
         </label>
@@ -128,7 +110,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500"
           disabled={loading}
         />
       </div>
@@ -146,7 +128,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       <div>
         <label
           htmlFor="confirmPassword"
-          className="block text-sm font-medium text-gray-700 mb-2"
+          className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
         >
           Confirm Password
         </label>
@@ -158,8 +140,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm password"
           className={`
-            w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${!passwordsMatch && confirmPassword ? "border-red-500" : "border-gray-300"}
+            w-full px-4 py-2.5 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500
+            ${!passwordsMatch && confirmPassword ? "border-red-500" : "border border-gray-200"}
           `}
           disabled={loading}
         />
@@ -172,20 +154,27 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         type="submit"
         disabled={!isFormValid || loading}
         className={`
-          w-full py-2 rounded-lg font-semibold text-white transition
+          w-full py-3 rounded-xl font-bold transition-all duration-300 transform active:scale-[0.98]
           ${
             isFormValid && !loading
-              ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              : "bg-gray-400 cursor-not-allowed"
+              ? "bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/25 cursor-pointer"
+              : "bg-gray-300 text-gray-700 cursor-not-allowed opacity-100"
           }
         `}
       >
-        {loading ? "Creating account..." : "Register"}
+        {loading ? (
+          <div className="flex items-center justify-center space-x-2">
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            <span>Processing...</span>
+          </div>
+        ) : (
+          "Register"
+        )}
       </button>
 
-      <p className="text-center text-sm text-gray-600">
+      <p className="pt-2 text-center text-sm text-gray-500">
         Already have an account?{" "}
-        <a href="/login" className="text-blue-600 hover:underline">
+        <a href="/login" className="font-medium text-blue-600 hover:text-blue-700 transition-colors">
           Login here
         </a>
       </p>

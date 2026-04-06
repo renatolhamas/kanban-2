@@ -12,6 +12,7 @@ const customJestConfig = {
     "/.next/",
     ".aiox-core/development/templates/", // Exclude framework templates from test suite
   ],
+  testTimeout: 15000, // Increase timeout for I/O intensive tests (worktree operations, etc)
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },

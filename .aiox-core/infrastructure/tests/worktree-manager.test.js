@@ -134,7 +134,6 @@ describe('WorktreeManager', () => {
     });
 
     it('should throw error when max worktrees reached', async () => {
-      jest.setTimeout(10000); // Increase timeout for worktree creation
       try {
         // Create max worktrees (3 in test config)
         await manager.create('STORY-1');
@@ -463,7 +462,6 @@ describe('WorktreeManager', () => {
     });
 
     it('should support squash option', async () => {
-      jest.setTimeout(10000); // Increase timeout for worktree merge operations
       try {
         await manager.create('STORY-42');
         const execa = require('execa');
@@ -492,7 +490,6 @@ describe('WorktreeManager', () => {
     });
 
     it('should fail gracefully on conflicts', async () => {
-      jest.setTimeout(10000); // Increase timeout for conflict resolution testing
       try {
         await manager.create('STORY-42');
         const execa = require('execa');

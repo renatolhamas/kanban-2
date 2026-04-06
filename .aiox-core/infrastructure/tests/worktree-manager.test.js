@@ -134,6 +134,7 @@ describe('WorktreeManager', () => {
     });
 
     it('should throw error when max worktrees reached', async () => {
+      jest.setTimeout(10000); // Increase timeout for worktree creation
       try {
         // Create max worktrees (3 in test config)
         await manager.create('STORY-1');

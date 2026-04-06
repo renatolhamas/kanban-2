@@ -1169,7 +1169,7 @@ class PatternLearner extends EventEmitter {
     if (!benefits || !goals) return 0;
     
     let alignment = 0;
-    let _matchedGoals = 0;
+    const _matchedGoals = 0;
     
     for (const goal of goals) {
       if (goal.type === 'performance' && benefits.performanceImprovement) {

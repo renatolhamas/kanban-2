@@ -58,7 +58,7 @@ async function handleRewind() {
     fs.appendFileSync(logPath, JSON.stringify(rewindLog) + '\n');
 
     console.log(JSON.stringify({ status: 'success', synced: true }));
-  } catch (error) {
+  } catch (_error) {
     console.log(JSON.stringify({ status: 'error', error: error.message }));
   }
 

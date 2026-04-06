@@ -8,15 +8,9 @@ import { checkIPLimit, checkEmailLimit, getClientIP } from "@/lib/rate-limit";
 import { validateConfirmationLink } from "@/lib/link-validation";
 import { sendConfirmationEmail } from "@/lib/email";
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  throw new Error("Missing Supabase credentials");
-}
-
-// Initialize Supabase admin client (service role)
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+// Supabase client will be initialized on first request
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let supabase: any = null;
 
 /**
  * POST /api/auth/register
@@ -30,6 +24,21 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<AuthResponse>> {
   try {
+    // Initialize Supabase client on first request
+    if (!supabase) {
+      const supabaseUrl = process.env.SUPABASE_URL;
+      const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+      if (!supabaseUrl || !supabaseServiceRoleKey) {
+        return NextResponse.json(
+          { success: false, error: "Server configuration error" },
+          { status: 500 },
+        );
+      }
+
+      supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+    }
+
     // Validate environment on runtime (not at module load for Next.js build compatibility)
     try {
       validateEnvironmentDomain();

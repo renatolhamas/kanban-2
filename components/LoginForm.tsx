@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FormError } from "./FormError";
 
 interface LoginFormProps {
-  onSubmit?: (email: string, password: string) => Promise<void>;
+  onSubmit?: (email: string, password: string) => Promise<void>;  
 }
 
 export function LoginForm({ onSubmit }: LoginFormProps) {

@@ -403,7 +403,7 @@ class ConflictResolver {
    */
   async applyResolution(_content, _conflict, resolution) {
     const lines = content.split('\n');
-    let newLines = [];
+    const newLines = [];
     let skipUntil = null;
 
     for (let i = 0; i < lines.length; i++) {

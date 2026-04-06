@@ -102,7 +102,7 @@ function logToolExecution(tool, args) {
 
     const logPath = path.join(logDir, 'tool-audit.jsonl');
     fs.appendFileSync(logPath, JSON.stringify(logEntry) + '\n');
-  } catch (error) {
+  } catch (_error) {
     // Non-critical
   }
 }

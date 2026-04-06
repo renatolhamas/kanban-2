@@ -56,7 +56,7 @@ async function sessionEnd() {
     updateRecentSessions(sessionDir, sessionId);
 
     console.log(JSON.stringify({ status: 'success', summary }));
-  } catch (error) {
+  } catch (_error) {
     console.log(JSON.stringify({ status: 'error', error: error.message }));
   }
 
@@ -82,7 +82,7 @@ function updateRecentSessions(sessionDir, sessionId) {
     recent = recent.slice(0, 20);
 
     fs.writeFileSync(indexPath, JSON.stringify(recent, null, 2));
-  } catch (error) {
+  } catch (_error) {
     // Non-critical
   }
 }

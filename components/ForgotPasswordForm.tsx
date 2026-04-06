@@ -6,7 +6,7 @@ import { isValidEmail } from "@/lib/auth";
 
 export interface ForgotPasswordFormProps {
   onSuccess?: () => void;
-  onError?: (error: string | null) => void;
+  onError?: (error: string | null) => void;  
 }
 
 export function ForgotPasswordForm({ onSuccess, onError }: ForgotPasswordFormProps) {

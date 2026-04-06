@@ -535,8 +535,8 @@ class PredictivePipeline extends EventEmitter {
       let weightSum = 0;
       let successWeight = 0;
       let durationEwma = 0;
-      let durationValues = [];
-      let resourceEstimates = { memory: 0, cpu: 0, apiCalls: 0 };
+      const durationValues = [];
+      const resourceEstimates = { memory: 0, cpu: 0, apiCalls: 0 };
       let resourceCount = 0;
 
       for (const { outcome, similarity } of neighbors) {

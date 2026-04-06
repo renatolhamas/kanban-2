@@ -9,7 +9,7 @@ import {
 
 interface PasswordInputProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string) => void;  
   showStrength?: boolean;
   error?: string;
   label?: string;

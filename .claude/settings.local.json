@@ -31,7 +31,11 @@
       "mcp__supabase__search_docs",
       "Bash(powershell -Command ':*)",
       "Bash(xargs grep:*)",
-      "Bash(node squads/design/scripts/design-system/generate_components_metadata.cjs)"
+      "Bash(node squads/design/scripts/design-system/generate_components_metadata.cjs)",
+      "Bash(grep -l \"eslint 9\\\\|ESLint 9\" \"C:\\\\Users\\\\User\\\\.claude\\\\projects\\\\c--git-kanban-2\"/*.jsonl)",
+      "Bash(grep -E \"^\\(C:\\\\\\\\|✖|✓|[0-9]+ errors|[0-9]+ warnings\\)\")",
+      "Bash(grep -E \"C:\\\\\\\\|error\")",
+      "Bash(grep \"C:\\\\\\\\\")"
     ]
   },
   "enableAllProjectMcpServers": true,

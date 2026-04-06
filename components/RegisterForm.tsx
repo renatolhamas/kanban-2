@@ -6,7 +6,7 @@ import { PasswordInput } from "./PasswordInput";
 import { validatePassword } from "@/lib/password";
 
 interface RegisterFormProps {
-  onSubmit?: (email: string, name: string, password: string) => Promise<void>;
+  onSubmit?: (email: string, name: string, password: string) => Promise<void>;  
 }
 
 export function RegisterForm({ onSubmit }: RegisterFormProps) {

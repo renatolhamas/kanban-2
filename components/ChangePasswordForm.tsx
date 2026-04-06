@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export interface ChangePasswordFormProps {
   token: string | null;
   onSuccess?: () => void;
-  onError?: (error: string | null) => void;
+  onError?: (error: string | null) => void;  
 }
 
 export function ChangePasswordForm({ token, onSuccess, onError }: ChangePasswordFormProps) {

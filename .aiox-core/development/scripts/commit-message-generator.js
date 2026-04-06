@@ -162,7 +162,7 @@ class CommitMessageGenerator {
 
     // Parse diff to extract changes
     const lines = diff.split('\n');
-    let _currentSection = null;
+    const _currentSection = null;
     
     for (const line of lines) {
       if (line.startsWith('+') && !line.startsWith('+++')) {

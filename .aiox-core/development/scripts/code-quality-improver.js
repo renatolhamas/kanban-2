@@ -322,7 +322,7 @@ class CodeQualityImprover {
 
     try {
       // Convert var to let/const
-      let ast = j(content);
+      const ast = j(content);
       const _varToLetConst = ast
         .find(j.VariableDeclaration, { kind: 'var' })
         .forEach(path => {

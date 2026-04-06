@@ -7,7 +7,7 @@ import { isValidEmail } from "@/lib/auth";
 
 export interface ResendConfirmationFormProps {
   onSuccess?: () => void;
-  onError?: (error: string | null) => void;
+  onError?: (error: string | null) => void;  
 }
 
 export function ResendConfirmationForm({ onSuccess, onError }: ResendConfirmationFormProps) {

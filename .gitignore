@@ -1,6 +1,6 @@
 # Node/NPM
 node_modules/
-package-lock.json
+# package-lock.json is committed for reproducible builds (required by CI/CD)
 yarn.lock
 pnpm-lock.yaml
 dist/

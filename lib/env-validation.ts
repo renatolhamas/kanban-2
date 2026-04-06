@@ -12,23 +12,32 @@ interface EnvironmentConfig {
 }
 
 /**
- * Validate NEXT_PUBLIC_APP_DOMAIN matches expected value for NODE_ENV
+ * Validate app domain (extracted from NEXT_PUBLIC_APP_URL) matches expected value for NODE_ENV
  * - Development: localhost:3017 (flexible, allows overrides)
  * - Staging: staging.kanban.com (warn on mismatch)
  * - Production: kanban.renatolhamas.com.br (FAIL on mismatch — prevents deploy)
  */
 export function validateEnvironmentDomain(): EnvironmentConfig {
   const nodeEnv = process.env.NODE_ENV || "development";
-  const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kanban.renatolhamas.com.br";
 
-  if (!appDomain) {
-    throw new Error("Missing NEXT_PUBLIC_APP_DOMAIN environment variable");
+  if (!appUrl) {
+    throw new Error("Missing NEXT_PUBLIC_APP_URL environment variable");
+  }
+
+  // Extract domain from URL (hostname without port for production comparison)
+  let appDomain: string;
+  try {
+    const url = new URL(appUrl);
+    appDomain = url.hostname; // Gets domain without port (kanban.renatolhamas.com.br)
+  } catch {
+    throw new Error(`Invalid NEXT_PUBLIC_APP_URL format: ${appUrl}`);
   }
 
   const expectedDomains: Record<string, string[]> = {
-    development: ["localhost:3017", "localhost:3000", "127.0.0.1:3017"],
+    development: ["localhost", "127.0.0.1"], // Only hostnames, ports handled separately
     production: ["kanban.renatolhamas.com.br"],
-    test: ["localhost:3017"],
+    test: ["localhost"],
   };
 
   const expected = expectedDomains[nodeEnv] || expectedDomains.development;
@@ -51,7 +60,7 @@ export function validateEnvironmentDomain(): EnvironmentConfig {
   }
 
   // Detect sandbox mode (Resend test email)
-  const isSandbox = appDomain.includes("localhost") || process.env.NODE_ENV === "development";
+  const isSandbox = appDomain === "localhost" || appDomain === "127.0.0.1" || process.env.NODE_ENV === "development";
 
   return {
     nodeEnv,

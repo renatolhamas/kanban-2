@@ -7,6 +7,11 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   testEnvironment: "node",
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/.next/",
+    ".aiox-core/development/templates/", // Exclude framework templates from test suite
+  ],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/$1",
   },

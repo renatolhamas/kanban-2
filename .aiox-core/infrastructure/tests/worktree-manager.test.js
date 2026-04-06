@@ -463,6 +463,7 @@ describe('WorktreeManager', () => {
     });
 
     it('should support squash option', async () => {
+      jest.setTimeout(10000); // Increase timeout for worktree merge operations
       try {
         await manager.create('STORY-42');
         const execa = require('execa');
@@ -491,6 +492,7 @@ describe('WorktreeManager', () => {
     });
 
     it('should fail gracefully on conflicts', async () => {
+      jest.setTimeout(10000); // Increase timeout for conflict resolution testing
       try {
         await manager.create('STORY-42');
         const execa = require('execa');

@@ -369,7 +369,6 @@ describe('RLS Validation Test Suite', () => {
         .insert({
           tenant_id: TEST_TENANTS.B.id,
           title: 'Test Concurrent Conversation',
-          description: 'Created for concurrency test',
         })
         .select()
         .single();

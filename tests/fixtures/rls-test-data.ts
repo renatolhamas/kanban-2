@@ -125,7 +125,6 @@ export function createTestConversation(tenant_id: string, index: number = 1) {
     id: uuidv4(),
     tenant_id,
     title: `Conversation ${index}`,
-    description: `Test conversation for tenant ${tenant_id}`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

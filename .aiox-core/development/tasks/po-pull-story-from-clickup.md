@@ -1,6 +1,6 @@
 ---
 tools:
-  - clickup # Required for ClickUp integration
+  - clickup  # Required for ClickUp integration
 checklists:
   - po-master-checklist.md
 ---
@@ -10,7 +10,6 @@ checklists:
 **Purpose:** Pull complete story updates from ClickUp to local file, including task completions, description changes, and status updates. This is the **reverse direction** of sync-story-to-clickup.
 
 **When to Use:**
-
 - After making changes directly in ClickUp UI (marking checkboxes, updating description)
 - When you need to pull latest state from ClickUp to continue work locally
 - After collaborators update the ClickUp task
@@ -23,19 +22,16 @@ checklists:
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -203,7 +199,6 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -223,11 +218,12 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Task Inputs
 
 ```yaml
 required:
-  - story_id: "{epic}.{story}" # e.g., "99.2" or "5.2.2"
+  - story_id: '{epic}.{story}' # e.g., "99.2" or "5.2.2"
 
 optional:
   - force: false # If true, pull even if last_sync indicates local is newer
@@ -255,12 +251,11 @@ const clickupTool = await getClickUpTool();
 
 // Get complete task data including description
 const task = await clickupTool.getTask({
-  taskId: storyData.frontmatter.clickup.task_id,
+  taskId: storyData.frontmatter.clickup.task_id
 });
 ```
 
 **What to extract from ClickUp task:**
-
 - Task description (contains full story markdown)
 - Story-status custom field
 - Task native status
@@ -299,11 +294,9 @@ const clickupFrontmatter = {
   story_id: localFrontmatter.story_id,
   epic_id: localFrontmatter.epic_id,
   title: task.name,
-  status: mapStatusFromClickUp(
-    task.custom_fields.find((f) => f.name === "story-status").value,
-  ),
+  status: mapStatusFromClickUp(task.custom_fields.find(f => f.name === 'story-status').value),
   created: localFrontmatter.created,
-  updated: new Date().toISOString().split("T")[0], // Today's date
+  updated: new Date().toISOString().split('T')[0], // Today's date
   clickup: {
     task_id: task.id,
     epic_task_id: task.parent,
@@ -312,20 +305,13 @@ const clickupFrontmatter = {
     url: task.url,
     last_sync: new Date().toISOString(),
     custom_fields: {
-      epic_number:
-        task.custom_fields.find((f) => f.name === "epic-number")?.value ||
-        localFrontmatter.clickup.custom_fields.epic_number,
-      story_number:
-        task.custom_fields.find((f) => f.name === "story-number")?.value ||
-        localFrontmatter.clickup.custom_fields.story_number,
-      story_file_path:
-        task.custom_fields.find((f) => f.name === "story-file-path")?.value ||
-        localFrontmatter.clickup.custom_fields.story_file_path,
-      "story-status": task.custom_fields.find((f) => f.name === "story-status")
-        ?.value,
-    },
+      epic_number: task.custom_fields.find(f => f.name === 'epic-number')?.value || localFrontmatter.clickup.custom_fields.epic_number,
+      story_number: task.custom_fields.find(f => f.name === 'story-number')?.value || localFrontmatter.clickup.custom_fields.story_number,
+      story_file_path: task.custom_fields.find(f => f.name === 'story-file-path')?.value || localFrontmatter.clickup.custom_fields.story_file_path,
+      'story-status': task.custom_fields.find(f => f.name === 'story-status')?.value
+    }
   },
-  tags: task.tags.map((t) => t.name),
+  tags: task.tags.map(t => t.name)
 };
 ```
 
@@ -333,17 +319,15 @@ const clickupFrontmatter = {
 
 Build complete story markdown:
 
-````markdown
+```markdown
 # Story {story_id}: {title}
 
 ```yaml
-{ frontmatter }
+{frontmatter}
 ```
-````
 
 {story body from ClickUp description}
-
-````
+```
 
 **Important:** Use the ClickUp description as the **source of truth** for the story body.
 
@@ -354,10 +338,9 @@ const { saveStoryFile } = require('../../common/scripts/story-manager');
 
 // Save with skipSync=true to avoid circular sync
 await saveStoryFile(storyFilePath, newContent, true);
-````
+```
 
 **Why skipSync=true?**
-
 - We just pulled from ClickUp, so we don't want to immediately push back
 - Prevents infinite sync loops
 
@@ -371,7 +354,6 @@ await saveStoryFile(storyFilePath, newContent, true);
 **Last Sync:** {timestamp}
 
 **Changes Pulled:**
-
 - Status: {old_status} → {new_status} (if changed)
 - Tasks completed: {count of checkboxes changed from [ ] to [x]}
 - Tasks reopened: {count of checkboxes changed from [x] to [ ]}
@@ -379,7 +361,6 @@ await saveStoryFile(storyFilePath, newContent, true);
 - Tags updated: {changes}
 
 **Local File Updated:**
-
 - Frontmatter: ✓
 - Story Body: ✓
 - Checkbox States: ✓
@@ -389,7 +370,6 @@ await saveStoryFile(storyFilePath, newContent, true);
 ## Error Handling
 
 **Error: Story file not found**
-
 ```
 ❌ Story file not found for ID: {story_id}
 
@@ -400,7 +380,6 @@ Please check:
 ```
 
 **Error: No ClickUp metadata**
-
 ```
 ❌ Story has no ClickUp integration
 
@@ -409,7 +388,6 @@ Cannot pull from ClickUp without task_id in frontmatter.
 ```
 
 **Error: ClickUp task not found**
-
 ```
 ❌ ClickUp task not found: {task_id}
 
@@ -423,7 +401,6 @@ Verify task exists: {task_url}
 ```
 
 **Error: Description empty or malformed**
-
 ```
 ❌ ClickUp task description is empty or malformed
 
@@ -441,19 +418,16 @@ Recommendation:
 ## Usage Examples
 
 ### Basic Pull
-
 ```
 *pull-story 99.2
 ```
 
 ### Force Pull (even if local is newer)
-
 ```
 *pull-story 5.2.2 --force
 ```
 
 ### After ClickUp Updates
-
 ```
 # Scenario: You marked checkboxes in ClickUp UI
 1. Run: *pull-story {story_id}
@@ -465,34 +439,29 @@ Recommendation:
 ## Integration Notes
 
 **For PO Agent:**
-
 - Add to po.md commands: `pull-story {story}`: Pull story updates from ClickUp
 - Use after collaborators update ClickUp tasks
 - Use before starting validation if task was modified in ClickUp
 
 **For Dev Agent:**
-
 - Add to dev.md commands: `pull-story {story}`: Pull story updates from ClickUp
 - Use at start of work session to get latest state
 - Use after QA or PO updates task in ClickUp
 
 **For QA Agent:**
-
 - Add to qa.md commands: `pull-story {story}`: Pull story updates from ClickUp
 - Use before starting review to get latest state
 - Use after Dev marks tasks complete in ClickUp
 
 **Best Practice:**
-
 - Pull at the **start** of work sessions
-- Push (\*sync-story) at the **end** of work sessions
+- Push (*sync-story) at the **end** of work sessions
 - ClickUp is the source of truth for collaborative updates
 - Local file is the source of truth for agent work
 
 ## Workflow Examples
 
 ### Collaborative Workflow
-
 ```
 1. PO updates story in ClickUp UI (adds acceptance criteria)
 2. Dev pulls story: *pull-story 5.2.2
@@ -504,7 +473,6 @@ Recommendation:
 ```
 
 ### Conflict Resolution
-
 ```
 # If local and ClickUp diverged:
 
@@ -525,13 +493,11 @@ Option 3: Manual merge (complex changes)
 ## Technical Implementation
 
 **Dependencies:**
-
 - `common/scripts/story-manager.js` - saveStoryFile, parseStoryFile
 - `common/scripts/status-mapper.js` - mapStatusFromClickUp
-- ClickUp MCP tool (via global.mcp**clickup**\* or tool-resolver)
+- ClickUp MCP tool (via global.mcp__clickup__* or tool-resolver)
 
 **Process Flow:**
-
 ```
 Task invoked
     ↓
@@ -559,7 +525,6 @@ Display sync summary
 ## Testing This Task
 
 **Manual Test:**
-
 1. Mark checkboxes in ClickUp UI for Story 99.2
 2. Run: `*pull-story 99.2`
 3. Verify:
@@ -572,4 +537,4 @@ Display sync summary
 
 ---
 
-_Task created to provide reverse synchronization from ClickUp to local story files_
+*Task created to provide reverse synchronization from ClickUp to local story files*

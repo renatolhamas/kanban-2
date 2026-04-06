@@ -14,9 +14,9 @@
  * @migrated Story INS-4.11 - Removed pro feature gate (AC9)
  */
 
-"use strict";
+'use strict';
 
-const { estimateTokens } = require("../utils/tokens");
+const { estimateTokens } = require('../utils/tokens');
 
 /** Memory bridge timeout in milliseconds. */
 const BRIDGE_TIMEOUT_MS = 15;
@@ -37,7 +37,7 @@ const BRACKET_LAYER_MAP = {
 };
 
 /** Default sector for unknown agents. */
-const DEFAULT_SECTORS = ["semantic"];
+const DEFAULT_SECTORS = ['semantic'];
 
 /**
  * MemoryBridge — MIS consumer for SYNAPSE engine.
@@ -72,7 +72,7 @@ class MemoryBridge {
     if (this._provider) return this._provider;
 
     try {
-      const { SynapseMemoryProvider } = require("./synapse-memory-provider");
+      const { SynapseMemoryProvider } = require('./synapse-memory-provider');
       this._provider = new SynapseMemoryProvider();
       return this._provider;
     } catch {
@@ -130,9 +130,7 @@ class MemoryBridge {
       return this._enforceTokenBudget(hints || [], effectiveBudget);
     } catch (error) {
       // Catch-all: warn and proceed with empty results
-      console.warn(
-        `[synapse:memory-bridge] Error getting memory hints: ${error.message}`,
-      );
+      console.warn(`[synapse:memory-bridge] Error getting memory hints: ${error.message}`);
       return [];
     }
   }
@@ -159,9 +157,7 @@ class MemoryBridge {
         })
         .catch((error) => {
           clearTimeout(timer);
-          console.warn(
-            `[synapse:memory-bridge] Provider error: ${error.message}`,
-          );
+          console.warn(`[synapse:memory-bridge] Provider error: ${error.message}`);
           resolve([]);
         });
     });
@@ -185,7 +181,7 @@ class MemoryBridge {
     let tokensUsed = 0;
 
     for (const hint of hints) {
-      const hintTokens = hint.tokens || estimateTokens(hint.content || "");
+      const hintTokens = hint.tokens || estimateTokens(hint.content || '');
       if (tokensUsed + hintTokens > budget) {
         break;
       }
@@ -200,7 +196,7 @@ class MemoryBridge {
    * Clear provider cache. Used for testing and session reset.
    */
   clearCache() {
-    if (this._provider && typeof this._provider.clearCache === "function") {
+    if (this._provider && typeof this._provider.clearCache === 'function') {
       this._provider.clearCache();
     }
   }

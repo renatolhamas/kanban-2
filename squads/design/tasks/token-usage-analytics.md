@@ -8,7 +8,6 @@
 ## Overview
 
 This task provides analytics on design token adoption:
-
 - Which tokens are most/least used
 - Token coverage by category (colors, spacing, typography)
 - Misuse detection (wrong token for context)
@@ -117,101 +116,95 @@ grep -rn --include="*.tsx" "success.*text-red\|error.*text-green" {path}/
 # Token Usage Heatmap
 
 ## Colors
-
-| Token                | Usage | Coverage | Status       |
-| -------------------- | ----- | -------- | ------------ |
-| studio-primary       | 47    | 12%      | ✅ High      |
-| studio-bg            | 89    | 23%      | ✅ High      |
-| studio-card-bg       | 34    | 9%       | ✅ Medium    |
-| text-foreground      | 156   | 40%      | ✅ Very High |
-| text-muted           | 67    | 17%      | ✅ High      |
-| studio-primary-light | 2     | <1%      | ⚠️ Low       |
-| studio-accent        | 0     | 0%       | ❌ Unused    |
+| Token | Usage | Coverage | Status |
+|-------|-------|----------|--------|
+| studio-primary | 47 | 12% | ✅ High |
+| studio-bg | 89 | 23% | ✅ High |
+| studio-card-bg | 34 | 9% | ✅ Medium |
+| text-foreground | 156 | 40% | ✅ Very High |
+| text-muted | 67 | 17% | ✅ High |
+| studio-primary-light | 2 | <1% | ⚠️ Low |
+| studio-accent | 0 | 0% | ❌ Unused |
 
 ## Spacing
-
 | Scale | Usage | Most Common Context |
-| ----- | ----- | ------------------- |
-| p-4   | 234   | Cards, Sections     |
-| p-6   | 89    | Modal, Large cards  |
-| gap-2 | 156   | Inline elements     |
-| gap-4 | 78    | Form fields         |
-| p-1   | 12    | Tight badges        |
-| p-12  | 3     | Hero sections       |
-| p-20  | 0     | ❌ Unused           |
+|-------|-------|---------------------|
+| p-4 | 234 | Cards, Sections |
+| p-6 | 89 | Modal, Large cards |
+| gap-2 | 156 | Inline elements |
+| gap-4 | 78 | Form fields |
+| p-1 | 12 | Tight badges |
+| p-12 | 3 | Hero sections |
+| p-20 | 0 | ❌ Unused |
 
 ## Typography
-
-| Token       | Usage | Context          |
-| ----------- | ----- | ---------------- |
-| text-sm     | 289   | Body, buttons    |
-| text-base   | 145   | Paragraphs       |
-| text-xs     | 67    | Captions, badges |
-| text-5xl    | 8     | Hero headings    |
-| font-medium | 156   | Buttons, labels  |
-| font-serif  | 0     | ❌ Unused        |
+| Token | Usage | Context |
+|-------|-------|---------|
+| text-sm | 289 | Body, buttons |
+| text-base | 145 | Paragraphs |
+| text-xs | 67 | Captions, badges |
+| text-5xl | 8 | Hero headings |
+| font-medium | 156 | Buttons, labels |
+| font-serif | 0 | ❌ Unused |
 ```
 
 ### Step 6: Generate Analytics Report
 
 ```markdown
 # Token Usage Analytics Report
-
 Generated: {timestamp}
 Path: {path}
 
 ## Summary
 
-| Category   | Defined | Used   | Coverage |
-| ---------- | ------- | ------ | -------- |
-| Colors     | 18      | 15     | 83%      |
-| Spacing    | 15      | 12     | 80%      |
-| Typography | 17      | 14     | 82%      |
-| **Total**  | **50**  | **41** | **82%**  |
+| Category | Defined | Used | Coverage |
+|----------|---------|------|----------|
+| Colors | 18 | 15 | 83% |
+| Spacing | 15 | 12 | 80% |
+| Typography | 17 | 14 | 82% |
+| **Total** | **50** | **41** | **82%** |
 
 ## Top 10 Most Used Tokens
 
-| Rank | Token           | Usage | Category   |
-| ---- | --------------- | ----- | ---------- |
-| 1    | text-foreground | 156   | Color      |
-| 2    | text-sm         | 289   | Typography |
-| 3    | p-4             | 234   | Spacing    |
-| 4    | gap-2           | 156   | Spacing    |
-| 5    | font-medium     | 156   | Typography |
-| ...  | ...             | ...   | ...        |
+| Rank | Token | Usage | Category |
+|------|-------|-------|----------|
+| 1 | text-foreground | 156 | Color |
+| 2 | text-sm | 289 | Typography |
+| 3 | p-4 | 234 | Spacing |
+| 4 | gap-2 | 156 | Spacing |
+| 5 | font-medium | 156 | Typography |
+| ... | ... | ... | ... |
 
 ## Unused Tokens (Candidates for Removal)
 
-| Token         | Category   | Recommendation              |
-| ------------- | ---------- | --------------------------- |
-| studio-accent | Color      | Remove or document use case |
-| p-20          | Spacing    | Remove from scale           |
-| font-serif    | Typography | Remove if not needed        |
-| ...           | ...        | ...                         |
+| Token | Category | Recommendation |
+|-------|----------|----------------|
+| studio-accent | Color | Remove or document use case |
+| p-20 | Spacing | Remove from scale |
+| font-serif | Typography | Remove if not needed |
+| ... | ... | ... |
 
 ## Misuse Detected
 
-| File      | Line | Issue                            | Fix            |
-| --------- | ---- | -------------------------------- | -------------- |
-| Card.tsx  | 45   | bg-foreground (text token on bg) | Use bg-surface |
-| Alert.tsx | 23   | success with text-red            | Use text-green |
-| ...       | ...  | ...                              | ...            |
+| File | Line | Issue | Fix |
+|------|------|-------|-----|
+| Card.tsx | 45 | bg-foreground (text token on bg) | Use bg-surface |
+| Alert.tsx | 23 | success with text-red | Use text-green |
+| ... | ... | ... | ... |
 
 ## Token Consolidation Opportunities
 
 ### Similar Tokens (merge candidates)
-
-| Tokens       | Usage   | Recommendation            |
-| ------------ | ------- | ------------------------- |
-| p-3, p-4     | 45, 234 | Keep p-4, migrate p-3     |
-| gap-3, gap-4 | 23, 78  | Keep gap-4, migrate gap-3 |
+| Tokens | Usage | Recommendation |
+|--------|-------|----------------|
+| p-3, p-4 | 45, 234 | Keep p-4, migrate p-3 |
+| gap-3, gap-4 | 23, 78 | Keep gap-4, migrate gap-3 |
 
 ### Underutilized Scale Points
-
-| Token   | Usage | Recommendation        |
-| ------- | ----- | --------------------- |
-| p-5     | 3     | Consider removing     |
-| text-lg | 8     | Document specific use |
+| Token | Usage | Recommendation |
+|-------|-------|----------------|
+| p-5 | 3 | Consider removing |
+| text-lg | 8 | Document specific use |
 
 ## Recommendations
 
@@ -224,7 +217,6 @@ Path: {path}
 ## Token Health Score: 82/100
 
 Breakdown:
-
 - Coverage: 82% (41/50 tokens used)
 - No misuse: -3 points (5 misuse instances)
 - Consolidation: -5 points (redundant tokens)
@@ -260,11 +252,11 @@ outputs/design-system/{project}/
 - `*validate-tokens` - Validate token usage in code
 - `*dead-code` - Full dead code detection
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

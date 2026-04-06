@@ -72,12 +72,12 @@ an-clone-review:
 conservative_example:
   task: an-clone-review
   opus: 93.3%
-  haiku: 73.3% # -20% (mais rigoroso)
+  haiku: 73.3%  # -20% (mais rigoroso)
 
 generous_example:
   task: an-validate-clone
   opus: 73.89%
-  haiku: 88.3% # +14% (mais generoso)
+  haiku: 88.3%  # +14% (mais generoso)
 ```
 
 **Nova fase proposta:** PHASE 7b: BIDIRECTIONAL BIAS TEST
@@ -89,9 +89,9 @@ generous_example:
 ```yaml
 qa-after-creation:
   opus_score: 8.32
-  haiku_score: 9.9 # +19% diferente
+  haiku_score: 9.9  # +19% diferente
   opus_decision: APPROVED
-  haiku_decision: APPROVED # IGUAL!
+  haiku_decision: APPROVED  # IGUAL!
   verdict: HAIKU QUALIFIED
 ```
 
@@ -103,7 +103,7 @@ qa-after-creation:
 
 ### PHASE 1b: SCOPE CLARIFICATION
 
-````yaml
+```yaml
 scope_clarification:
   trigger: "After Phase 1 decomposition"
   duration: "2-3 minutes"
@@ -137,11 +137,11 @@ scope_clarification:
   veto: |
     Tasks with ambiguous scope MUST NOT proceed to Haiku testing.
     Clarify scope FIRST, then test.
-````
+```
 
 ### PHASE 4b: BINARY CHECKPOINT CONVERSION
 
-````yaml
+```yaml
 binary_checkpoint_conversion:
   trigger: "After Phase 4 (code stubs), if task has subjective scoring"
   duration: "10-15 minutes"
@@ -191,7 +191,7 @@ binary_checkpoint_conversion:
     - "Scoring calibration section added?"
     - "Each checkpoint has specific lookup location?"
     - "Binary condition is yes/no, not judgment?"
-````
+```
 
 ### PHASE 1c: GATEKEEPER DETECTION
 
@@ -335,13 +335,13 @@ optimize_v4_phases:
 
 ## Changelog v4.0 Proposal
 
-| Change                                 | Rationale                             | Evidence                             |
-| -------------------------------------- | ------------------------------------- | ------------------------------------ |
-| PHASE 1b: Scope Clarification          | Haiku interprets scope literally      | an-clone-review 78.6% match          |
-| PHASE 1c: Gatekeeper Detection         | Pass/fail tasks are Haiku-safe        | qa-after-creation qualified          |
-| PHASE 4b: Binary Checkpoint Conversion | 99.3% match with binary               | an-fidelity-score v2.0               |
-| PHASE 7b: Bidirectional Bias Test      | Haiku can be conservative OR generous | an-clone-review vs an-validate-clone |
-| Script-First Priority                  | 95% deterministic = script-only       | fidelity-score.sh, clone-review.sh   |
+| Change | Rationale | Evidence |
+|--------|-----------|----------|
+| PHASE 1b: Scope Clarification | Haiku interprets scope literally | an-clone-review 78.6% match |
+| PHASE 1c: Gatekeeper Detection | Pass/fail tasks are Haiku-safe | qa-after-creation qualified |
+| PHASE 4b: Binary Checkpoint Conversion | 99.3% match with binary | an-fidelity-score v2.0 |
+| PHASE 7b: Bidirectional Bias Test | Haiku can be conservative OR generous | an-clone-review vs an-validate-clone |
+| Script-First Priority | 95% deterministic = script-only | fidelity-score.sh, clone-review.sh |
 
 ---
 

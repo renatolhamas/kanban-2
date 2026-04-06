@@ -12,19 +12,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -192,7 +189,6 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -212,10 +208,10 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Task Flow
 
 ### 1. Elicit Item Details
-
 ```yaml
 elicit: true
 questions:
@@ -257,7 +253,6 @@ questions:
 ```
 
 ### 2. Validate Input
-
 ```javascript
 // Validate story exists if relatedStory provided
 if (relatedStory) {
@@ -269,32 +264,31 @@ if (relatedStory) {
   }
 
   if (matches.length > 1) {
-    console.log("⚠️ Multiple stories matched, using first:");
-    matches.forEach((m) => console.log(`  - ${m}`));
+    console.log('⚠️ Multiple stories matched, using first:');
+    matches.forEach(m => console.log(`  - ${m}`));
   }
 }
 
 // Parse tags
-const tags = tagsInput ? tagsInput.split(",").map((t) => t.trim()) : [];
+const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()) : [];
 ```
 
 ### 3. Add Item to Backlog
-
 ```javascript
-const { BacklogManager } = require(".aiox-core/scripts/backlog-manager");
+const { BacklogManager } = require('.aiox-core/scripts/backlog-manager');
 
-const manager = new BacklogManager("docs/stories/backlog.md");
+const manager = new BacklogManager('docs/stories/backlog.md');
 await manager.load();
 
 const item = await manager.addItem({
   type: itemType,
   title: title,
-  description: description || "",
+  description: description || '',
   priority: priority,
   relatedStory: relatedStory || null,
-  createdBy: "@po",
+  createdBy: '@po',
   tags: tags,
-  estimatedEffort: estimatedEffort,
+  estimatedEffort: estimatedEffort
 });
 
 console.log(`✅ Backlog item added: ${item.id}`);
@@ -303,15 +297,13 @@ console.log(`   ${title}`);
 ```
 
 ### 4. Regenerate Backlog File
-
 ```javascript
 await manager.generateBacklogFile();
 
-console.log("✅ Backlog updated: docs/stories/backlog.md");
+console.log('✅ Backlog updated: docs/stories/backlog.md');
 ```
 
 ### 5. Summary Output
-
 ```markdown
 ## 🎯 Backlog Item Added
 
@@ -324,7 +316,6 @@ console.log("✅ Backlog updated: docs/stories/backlog.md");
 **Tags:** ${tags.join(', ') || 'None'}
 
 **Next Steps:**
-
 - Review in backlog: docs/stories/backlog.md
 - Prioritize with `*backlog-prioritize ${item.id}`
 - Schedule with `*backlog-schedule ${item.id}`
@@ -374,7 +365,6 @@ Effort: 3 hours
 ---
 
 **Related Tasks:**
-
 - `po-stories-index.md` - Regenerate story index
 - `po-backlog-review.md` - Review and prioritize backlog
 - `po-backlog-schedule.md` - Schedule backlog items

@@ -10,13 +10,13 @@
 
 ### Minimum Thresholds
 
-| Metric                 | Minimum | Target | Measurement                       |
-| ---------------------- | ------- | ------ | --------------------------------- |
-| Total lines            | 500     | 800+   | `wc -l research.md`               |
-| Primary sources        | 3       | 5+     | Count citations marked (PRIMARY)  |
-| Scope sections covered | 4/6     | 6/6    | Count ## headers matching scope   |
-| Actionable frameworks  | 1       | 2+     | Count extracted process/checklist |
-| Real examples analyzed | 2       | 5+     | Count case studies with analysis  |
+| Metric | Minimum | Target | Measurement |
+|--------|---------|--------|-------------|
+| Total lines | 500 | 800+ | `wc -l research.md` |
+| Primary sources | 3 | 5+ | Count citations marked (PRIMARY) |
+| Scope sections covered | 4/6 | 6/6 | Count ## headers matching scope |
+| Actionable frameworks | 1 | 2+ | Count extracted process/checklist |
+| Real examples analyzed | 2 | 5+ | Count case studies with analysis |
 
 ```yaml
 automated_checks:
@@ -67,14 +67,12 @@ automated_checks:
 ### 2.1 Source Types
 
 **Primary Sources (highest value):**
-
 - [ ] Direct quotes from expert/specialist
 - [ ] Excerpts from expert's books/articles
 - [ ] Transcripts of expert's speeches/interviews
 - [ ] Expert's documented processes/frameworks
 
 **Secondary Sources (supporting):**
-
 - [ ] Analysis by practitioners who studied the expert
 - [ ] Case studies applying expert's methods
 - [ ] Academic research on the methodology
@@ -125,25 +123,23 @@ For EACH scope section in the research prompt, verify:
 
 ### 3.2 Coverage Scoring
 
-| Coverage     | Score | Status      |
-| ------------ | ----- | ----------- |
-| 6/6 sections | 100%  | PASS        |
-| 5/6 sections | 83%   | PASS        |
-| 4/6 sections | 67%   | CONDITIONAL |
-| 3/6 sections | 50%   | FAIL        |
-| <3 sections  | <50%  | HARD FAIL   |
+| Coverage | Score | Status |
+|----------|-------|--------|
+| 6/6 sections | 100% | PASS |
+| 5/6 sections | 83% | PASS |
+| 4/6 sections | 67% | CONDITIONAL |
+| 3/6 sections | 50% | FAIL |
+| <3 sections | <50% | HARD FAIL |
 
 ### 3.3 Depth Indicators
 
 **Adequate depth (per section):**
-
 - [ ] Has introduction explaining section relevance
 - [ ] Has 2+ specific techniques or principles
 - [ ] Has at least 1 real example
 - [ ] Has practical guidance (not just theory)
 
 **Insufficient depth:**
-
 - [ ] Only definitions without application
 - [ ] Single paragraph treatment
 - [ ] No examples or evidence
@@ -158,35 +154,30 @@ For EACH scope section in the research prompt, verify:
 The research MUST contain enough detail to extract:
 
 **Principles (3+ required):**
-
 - [ ] Explicit rules stated by expert
 - [ ] Documented beliefs/philosophy
 - [ ] What expert considers important
 - [ ] Format: Clear, quotable statements
 
 **Process (1 required):**
-
 - [ ] Step-by-step workflow
 - [ ] Sequence of actions
 - [ ] How expert actually does the work
 - [ ] Format: Numbered or ordered steps
 
 **Structure (1 required):**
-
 - [ ] Anatomy of the output (sections, components)
 - [ ] Template or blueprint
 - [ ] What the deliverable looks like
 - [ ] Format: List of sections with purposes
 
 **Quality Criteria (1 required):**
-
 - [ ] What expert considers "good"
 - [ ] What expert considers "bad"
 - [ ] Evaluation criteria
 - [ ] Format: Do/Don't or Excellent/Weak lists
 
 **Checklist (derivable):**
-
 - [ ] Enough criteria to create validation checklist
 - [ ] Specific enough to be checkable
 - [ ] Based on expert's standards, not generic
@@ -226,14 +217,12 @@ Each example MUST have:
 ### 5.2 Example Types
 
 **Strong examples:**
-
 - [ ] Expert's own work analyzed
 - [ ] Case studies with documented results
 - [ ] Before/after comparisons
 - [ ] Line-by-line or section-by-section breakdowns
 
 **Weak examples:**
-
 - [ ] Hypothetical scenarios
 - [ ] "Imagine if..." constructions
 - [ ] Generic illustrations without specifics
@@ -241,12 +230,12 @@ Each example MUST have:
 
 ### 5.3 Example Distribution
 
-| Count        | Status    | Notes                  |
-| ------------ | --------- | ---------------------- |
-| 5+ examples  | Excellent | Strong foundation      |
-| 3-4 examples | Good      | Adequate for framework |
-| 2 examples   | Minimum   | Proceed with caution   |
-| 0-1 examples | Fail      | Re-research needed     |
+| Count | Status | Notes |
+|-------|--------|-------|
+| 5+ examples | Excellent | Strong foundation |
+| 3-4 examples | Good | Adequate for framework |
+| 2 examples | Minimum | Proceed with caution |
+| 0-1 examples | Fail | Re-research needed |
 
 ---
 
@@ -265,28 +254,24 @@ The "Consolidated Framework" section MUST include:
 ### 6.2 Framework Quality
 
 **Each principle:**
-
 - [ ] Is a clear, actionable statement
 - [ ] Has source citation
 - [ ] Is specific to the domain/expert
 - [ ] Is not generic advice
 
 **Process steps:**
-
 - [ ] Are in logical order
 - [ ] Each step is clear and executable
 - [ ] Steps cover complete workflow
 - [ ] No vague "and then magic happens" steps
 
 **Structure/Anatomy:**
-
 - [ ] All sections identified
 - [ ] Each section has clear purpose
 - [ ] Includes expert's specific guidance per section
 - [ ] Covers complete deliverable
 
 **Quality Criteria:**
-
 - [ ] "Excellent" examples are specific
 - [ ] "Weak" examples are specific
 - [ ] Criteria are observable/testable
@@ -299,21 +284,18 @@ The "Consolidated Framework" section MUST include:
 ### 7.1 Source Credibility Tiers
 
 **Tier 1 - Primary (Most Valuable):**
-
 - Expert's own books
 - Expert's documented frameworks
 - Expert's interviews/speeches (transcribed)
 - Expert's case studies
 
 **Tier 2 - Validated Secondary:**
-
 - Analysis by known practitioners
 - Academic research citing expert
 - Industry-recognized case studies
 - Peer-reviewed analysis
 
 **Tier 3 - General Secondary:**
-
 - Blog posts about expert
 - YouTube summaries
 - Forum discussions
@@ -342,7 +324,6 @@ source_requirements:
 ### 7.3 Source Documentation
 
 Each source entry should have:
-
 - [ ] Author/Creator name
 - [ ] Work title
 - [ ] Year (if available)
@@ -406,7 +387,6 @@ def quick_validate(research_doc):
 ### 9.2 Manual Review Triggers
 
 Run detailed checklist review if:
-
 - [ ] Score between 60-80% (borderline)
 - [ ] Specialist is new/unfamiliar
 - [ ] Domain is high-stakes
@@ -414,13 +394,13 @@ Run detailed checklist review if:
 
 ### 9.3 Decision Matrix
 
-| Score   | Status      | Action                               |
-| ------- | ----------- | ------------------------------------ |
-| 95-100% | PASS        | Proceed to framework extraction      |
-| 80-94%  | PASS        | Proceed with minor notes             |
-| 60-79%  | CONDITIONAL | Review gaps, proceed with caution    |
-| 40-59%  | FAIL        | Retry research with adjusted queries |
-| <40%    | HARD FAIL   | Fundamental issues, restart          |
+| Score | Status | Action |
+|-------|--------|--------|
+| 95-100% | PASS | Proceed to framework extraction |
+| 80-94% | PASS | Proceed with minor notes |
+| 60-79% | CONDITIONAL | Review gaps, proceed with caution |
+| 40-59% | FAIL | Retry research with adjusted queries |
+| <40% | HARD FAIL | Fundamental issues, restart |
 
 ---
 
@@ -480,24 +460,23 @@ hard_fail:
 
 ## Quick Metrics
 
-| Metric          | Value    | Threshold | Status      |
-| --------------- | -------- | --------- | ----------- |
-| Total Lines     | {n}      | 500       | {PASS/FAIL} |
-| Primary Sources | {n}      | 3         | {PASS/FAIL} |
-| Scope Coverage  | {n}/6    | 4/6       | {PASS/FAIL} |
-| Has Framework   | {yes/no} | yes       | {PASS/FAIL} |
-| Examples        | {n}      | 2         | {PASS/FAIL} |
+| Metric | Value | Threshold | Status |
+|--------|-------|-----------|--------|
+| Total Lines | {n} | 500 | {PASS/FAIL} |
+| Primary Sources | {n} | 3 | {PASS/FAIL} |
+| Scope Coverage | {n}/6 | 4/6 | {PASS/FAIL} |
+| Has Framework | {yes/no} | yes | {PASS/FAIL} |
+| Examples | {n} | 2 | {PASS/FAIL} |
 
 ## Overall Score: {score}%
-
 ## Status: {PASS|CONDITIONAL|FAIL|HARD_FAIL}
 
 ## Section-by-Section
 
-| Section     | Lines | Sources | Examples | Status         |
-| ----------- | ----- | ------- | -------- | -------------- |
-| {section_1} | {n}   | {n}     | {n}      | {OK/WARN/FAIL} |
-| ...         | ...   | ...     | ...      | ...            |
+| Section | Lines | Sources | Examples | Status |
+|---------|-------|---------|----------|--------|
+| {section_1} | {n} | {n} | {n} | {OK/WARN/FAIL} |
+| ... | ... | ... | ... | ... |
 
 ## Framework Extraction Readiness
 

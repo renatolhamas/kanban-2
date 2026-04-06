@@ -29,21 +29,21 @@
  * Event types enum for runtime use
  */
 const DashboardEventType = {
-  AGENT_ACTIVATED: "AgentActivated",
-  AGENT_DEACTIVATED: "AgentDeactivated",
-  COMMAND_START: "CommandStart",
-  COMMAND_COMPLETE: "CommandComplete",
-  COMMAND_ERROR: "CommandError",
-  STORY_STATUS_CHANGE: "StoryStatusChange",
-  SESSION_START: "SessionStart",
-  SESSION_END: "SessionEnd",
+  AGENT_ACTIVATED: 'AgentActivated',
+  AGENT_DEACTIVATED: 'AgentDeactivated',
+  COMMAND_START: 'CommandStart',
+  COMMAND_COMPLETE: 'CommandComplete',
+  COMMAND_ERROR: 'CommandError',
+  STORY_STATUS_CHANGE: 'StoryStatusChange',
+  SESSION_START: 'SessionStart',
+  SESSION_END: 'SessionEnd',
 
   // Story 12.6: Bob-specific event types (AC7, AC10)
-  BOB_PHASE_CHANGE: "BobPhaseChange",
-  BOB_AGENT_SPAWNED: "BobAgentSpawned",
-  BOB_AGENT_COMPLETED: "BobAgentCompleted",
-  BOB_SURFACE_DECISION: "BobSurfaceDecision",
-  BOB_ERROR: "BobError",
+  BOB_PHASE_CHANGE: 'BobPhaseChange',
+  BOB_AGENT_SPAWNED: 'BobAgentSpawned',
+  BOB_AGENT_COMPLETED: 'BobAgentCompleted',
+  BOB_SURFACE_DECISION: 'BobSurfaceDecision',
+  BOB_ERROR: 'BobError',
 };
 
 module.exports = {

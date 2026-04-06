@@ -28,17 +28,14 @@ SE TIVER PROBLEMAS
 ## Passo 1: Verifique os Pré-requisitos
 
 ### Obrigatório
-
 - [ ] **Claude Code funcionando** - Você consegue rodar `@aios-master`?
 - [ ] **Projeto AIOS** - Você está no diretório do seu projeto?
 
 ### Opcional (mas recomendado)
-
 - [ ] **Materiais dos experts** - PDFs, livros, transcrições
 - [ ] **Conhecimento do domínio** - Saber quem são os experts da área
 
 ### Não precisa
-
 - [ ] ~~Saber programar~~
 - [ ] ~~Configuração especial~~
 - [ ] ~~Conta paga~~
@@ -63,7 +60,6 @@ Leia APENAS estas perguntas do [FAQ](./FAQ.md):
 Abra o [TUTORIAL-COMPLETO](./TUTORIAL-COMPLETO.md) e siga passo a passo.
 
 O tutorial mostra:
-
 - Exatamente o que digitar
 - Exatamente o que você vai ver
 - O que fazer em cada momento
@@ -133,16 +129,16 @@ Você tem livros/PDFs dos experts?
 
 ## Exemplos de Squads por Domínio
 
-| Eu quero criar squad de... | O que digitar                         |
-| -------------------------- | ------------------------------------- |
-| Copywriting                | "Quero um squad de copywriting"       |
-| Marketing                  | "Quero um squad de marketing"         |
-| Vendas                     | "Quero um squad de vendas"            |
-| Jurídico                   | "Quero um squad jurídico"             |
-| Finanças                   | "Quero um squad de finanças pessoais" |
-| Produtividade              | "Quero um squad de produtividade"     |
-| Liderança                  | "Quero um squad de liderança"         |
-| Negociação                 | "Quero um squad de negociação"        |
+| Eu quero criar squad de... | O que digitar |
+|---------------------------|---------------|
+| Copywriting | "Quero um squad de copywriting" |
+| Marketing | "Quero um squad de marketing" |
+| Vendas | "Quero um squad de vendas" |
+| Jurídico | "Quero um squad jurídico" |
+| Finanças | "Quero um squad de finanças pessoais" |
+| Produtividade | "Quero um squad de produtividade" |
+| Liderança | "Quero um squad de liderança" |
+| Negociação | "Quero um squad de negociação" |
 
 O sistema encontra automaticamente os melhores experts do domínio.
 
@@ -211,4 +207,4 @@ Depois de criar seu primeiro squad:
 ---
 
 **Squad Creator | Por Onde Começar v1.0**
-_"Do zero ao squad em 30 minutos."_
+*"Do zero ao squad em 30 minutos."*

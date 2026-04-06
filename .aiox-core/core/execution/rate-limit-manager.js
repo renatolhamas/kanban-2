@@ -6,7 +6,7 @@
  * preemptive throttling, and comprehensive metrics.
  */
 
-const EventEmitter = require("events");
+const EventEmitter = require('events');
 
 class RateLimitManager extends EventEmitter {
   constructor(config = {}) {
@@ -55,7 +55,7 @@ class RateLimitManager extends EventEmitter {
 
         if (attempt > 1) {
           this.metrics.successAfterRetry++;
-          this.logEvent("success_after_retry", { attempt, context });
+          this.logEvent('success_after_retry', { attempt, context });
         }
 
         return result;
@@ -65,30 +65,20 @@ class RateLimitManager extends EventEmitter {
         }
 
         this.metrics.rateLimitHits++;
-        this.emit("rate_limit_hit", { attempt, error, context });
+        this.emit('rate_limit_hit', { attempt, error, context });
 
         if (attempt === this.maxRetries) {
-          this.logEvent("max_retries_exceeded", {
-            context,
-            error: error.message,
-          });
-          throw new Error(
-            `Rate limit exceeded after ${this.maxRetries} retries: ${error.message}`,
-          );
+          this.logEvent('max_retries_exceeded', { context, error: error.message });
+          throw new Error(`Rate limit exceeded after ${this.maxRetries} retries: ${error.message}`);
         }
 
         const delay = this.calculateDelay(attempt, error);
-        this.logEvent("rate_limit_hit", {
-          attempt,
-          delay,
-          context,
-          error: error.message,
-        });
+        this.logEvent('rate_limit_hit', { attempt, delay, context, error: error.message });
 
         this.metrics.totalWaitTime += delay;
         this.metrics.totalRetries++;
 
-        this.emit("waiting", { attempt, delay, context });
+        this.emit('waiting', { attempt, delay, context });
         await this.sleep(delay);
       }
     }
@@ -137,15 +127,12 @@ class RateLimitManager extends EventEmitter {
 
       if (waitTime > 0) {
         this.metrics.preemptiveThrottles++;
-        this.logEvent("preemptive_throttle", {
+        this.logEvent('preemptive_throttle', {
           waitTime,
           currentCount: this.requestLog.length,
           threshold,
         });
-        this.emit("preemptive_throttle", {
-          waitTime,
-          currentCount: this.requestLog.length,
-        });
+        this.emit('preemptive_throttle', { waitTime, currentCount: this.requestLog.length });
         await this.sleep(waitTime);
       }
     }
@@ -161,18 +148,18 @@ class RateLimitManager extends EventEmitter {
     if (error.status === 429 || error.statusCode === 429) return true;
 
     // Check error message
-    const message = error.message?.toLowerCase() || "";
-    if (message.includes("rate limit")) return true;
-    if (message.includes("too many requests")) return true;
-    if (message.includes("throttl")) return true;
-    if (message.includes("quota exceeded")) return true;
+    const message = error.message?.toLowerCase() || '';
+    if (message.includes('rate limit')) return true;
+    if (message.includes('too many requests')) return true;
+    if (message.includes('throttl')) return true;
+    if (message.includes('quota exceeded')) return true;
 
     // Anthropic/Claude specific
-    if (message.includes("overloaded")) return true;
+    if (message.includes('overloaded')) return true;
 
     // Check error code
-    if (error.code === "RATE_LIMITED") return true;
-    if (error.code === "TOO_MANY_REQUESTS") return true;
+    if (error.code === 'RATE_LIMITED') return true;
+    if (error.code === 'TOO_MANY_REQUESTS') return true;
 
     return false;
   }
@@ -230,8 +217,7 @@ class RateLimitManager extends EventEmitter {
               this.metrics.totalRequests) *
             100
           : 100,
-      currentRequestCount: this.requestLog.filter((t) => t > Date.now() - 60000)
-        .length,
+      currentRequestCount: this.requestLog.filter((t) => t > Date.now() - 60000).length,
       requestsPerMinuteLimit: this.requestsPerMinute,
     };
   }
@@ -268,10 +254,10 @@ class RateLimitManager extends EventEmitter {
     const metrics = this.getMetrics();
     const recentEvents = this.getRecentEvents(5);
 
-    let output = "📊 Rate Limit Manager Status\n";
-    output += "━".repeat(40) + "\n\n";
+    let output = '📊 Rate Limit Manager Status\n';
+    output += '━'.repeat(40) + '\n\n';
 
-    output += "**Metrics:**\n";
+    output += '**Metrics:**\n';
     output += `  Total Requests: ${metrics.totalRequests}\n`;
     output += `  Rate Limit Hits: ${metrics.rateLimitHits}\n`;
     output += `  Success Rate: ${metrics.successRate.toFixed(1)}%\n`;
@@ -280,13 +266,13 @@ class RateLimitManager extends EventEmitter {
     output += `  Current RPM: ${metrics.currentRequestCount}/${metrics.requestsPerMinuteLimit}\n\n`;
 
     if (recentEvents.length > 0) {
-      output += "**Recent Events:**\n";
+      output += '**Recent Events:**\n';
       for (const event of recentEvents) {
-        const time = event.timestamp.split("T")[1].split(".")[0];
+        const time = event.timestamp.split('T')[1].split('.')[0];
         output += `  [${time}] ${event.type}`;
         if (event.delay) output += ` (delay: ${event.delay}ms)`;
         if (event.attempt) output += ` (attempt: ${event.attempt})`;
-        output += "\n";
+        output += '\n';
       }
     }
 

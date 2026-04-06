@@ -19,9 +19,9 @@ workflow:
   # ========================================================================
   agent_mapping:
     agents:
-      oalanicolas: mind-cloner # DNA extraction, pattern recognition
+      oalanicolas: mind-cloner        # DNA extraction, pattern recognition
       pedro-valerio: process-axiomist # Task anatomy, quality validation
-      squad-chief: orchestrator # Integration, deployment
+      squad-chief: orchestrator       # Integration, deployment
 
     phase_ownership:
       research: oalanicolas
@@ -53,7 +53,7 @@ workflow:
       - extraction
       - scaffolding
       - tasks
-      - quality_gate # Human checkpoint
+      - quality_gate      # Human checkpoint
       - integration
       - smoke_test
       - complete
@@ -90,7 +90,7 @@ workflow:
 
       - trigger: quality_revision
         source: quality_gate
-        dest: tasks # Loop back for revision
+        dest: tasks          # Loop back for revision
 
       - trigger: integration_complete
         source: integration
@@ -102,10 +102,10 @@ workflow:
 
       - trigger: smoke_failed
         source: smoke_test
-        dest: integration # Retry integration
+        dest: integration    # Retry integration
 
       - trigger: fail
-        source: "*" # From any state
+        source: '*'          # From any state
         dest: failed
 
       - trigger: recover
@@ -146,7 +146,7 @@ workflow:
       agent: oalanicolas
       task: validate-sources
       description: "Validação de qualidade das fontes"
-      skip_if: "mode == 'fast'" # Skip em modo fast
+      skip_if: "mode == 'fast'"    # Skip em modo fast
       inputs:
         - outputs/{squad_slug}/research/sources.yaml
       outputs:
@@ -188,9 +188,9 @@ workflow:
         - outputs/{squad_slug}/dna/*.yaml
       outputs:
         - squads/{squad_slug}/agents/{agent_slug}.md
-        - squads/{squad_slug}/config.yaml # Must include explicit entry_agent
+        - squads/{squad_slug}/config.yaml            # Must include explicit entry_agent
         - squads/{squad_slug}/config/squad-config.yaml
-        - squads/{squad_slug}/outputs/README.md # Bootstrap runtime outputs directory
+        - squads/{squad_slug}/outputs/README.md      # Bootstrap runtime outputs directory
       trigger_on_complete: scaffolding_complete
 
     # ----------------------------------------------------------------------
@@ -267,8 +267,8 @@ workflow:
       inputs:
         - squads/{squad_slug}/**/*
       outputs:
-        - .claude/agents/{agent_slug}.md # Symlink/copy
-        - squads/{squad_slug}/README.md # Final docs
+        - .claude/agents/{agent_slug}.md      # Symlink/copy
+        - squads/{squad_slug}/README.md       # Final docs
         - squads/{squad_slug}/outputs/README.md
       post_actions:
         - refresh-registry
@@ -321,9 +321,9 @@ workflow:
   # ========================================================================
   error_handling:
     on_error:
-      - save_state # Persist current state
-      - log_error # Log error details
-      - notify: optional # Optional notification
+      - save_state            # Persist current state
+      - log_error             # Log error details
+      - notify: optional      # Optional notification
 
     recovery:
       enabled: true

@@ -27,21 +27,21 @@ Every token has three required properties:
 
 ## Supported Types
 
-| Type          | Example $value                                                                         | Notes                                   |
-| ------------- | -------------------------------------------------------------------------------------- | --------------------------------------- |
-| `color`       | `"#0066CC"` or `"oklch(0.65 0.15 250)"`                                                | Hex, RGB, HSL, OKLCH                    |
-| `dimension`   | `"16px"` or `"1rem"`                                                                   | Spacing, sizing, radius                 |
-| `fontFamily`  | `"Inter, sans-serif"`                                                                  | Font stack                              |
-| `fontWeight`  | `400` or `"bold"`                                                                      | Numeric or named                        |
-| `duration`    | `"200ms"`                                                                              | Animation timing                        |
-| `cubicBezier` | `[0.4, 0, 0.2, 1]`                                                                     | Easing curve (4 numbers)                |
-| `number`      | `1.5`                                                                                  | Unitless numbers (line-height, opacity) |
-| `strokeStyle` | `"solid"` or object                                                                    | Border style                            |
-| `border`      | `{"color": "...", "width": "...", "style": "..."}`                                     | Composite                               |
-| `transition`  | `{"duration": "...", "delay": "...", "timingFunction": [...]}`                         | Composite                               |
-| `shadow`      | `{"color": "...", "offsetX": "...", "offsetY": "...", "blur": "...", "spread": "..."}` | Composite                               |
-| `gradient`    | Array of stops                                                                         | Linear/radial                           |
-| `typography`  | `{"fontFamily": "...", "fontSize": "...", "fontWeight": ..., "lineHeight": ...}`       | Composite                               |
+| Type | Example $value | Notes |
+|------|---------------|-------|
+| `color` | `"#0066CC"` or `"oklch(0.65 0.15 250)"` | Hex, RGB, HSL, OKLCH |
+| `dimension` | `"16px"` or `"1rem"` | Spacing, sizing, radius |
+| `fontFamily` | `"Inter, sans-serif"` | Font stack |
+| `fontWeight` | `400` or `"bold"` | Numeric or named |
+| `duration` | `"200ms"` | Animation timing |
+| `cubicBezier` | `[0.4, 0, 0.2, 1]` | Easing curve (4 numbers) |
+| `number` | `1.5` | Unitless numbers (line-height, opacity) |
+| `strokeStyle` | `"solid"` or object | Border style |
+| `border` | `{"color": "...", "width": "...", "style": "..."}` | Composite |
+| `transition` | `{"duration": "...", "delay": "...", "timingFunction": [...]}` | Composite |
+| `shadow` | `{"color": "...", "offsetX": "...", "offsetY": "...", "blur": "...", "spread": "..."}` | Composite |
+| `gradient` | Array of stops | Linear/radial |
+| `typography` | `{"fontFamily": "...", "fontSize": "...", "fontWeight": ..., "lineHeight": ...}` | Composite |
 
 ---
 
@@ -121,32 +121,29 @@ This creates semantic layers: primitive → semantic → component tokens.
 
 ## Tooling Ecosystem
 
-| Tool                     | Role                              | DTCG Support                |
-| ------------------------ | --------------------------------- | --------------------------- |
-| **Style Dictionary 4.x** | Token transformation/export       | Full v1.0                   |
-| **Tokens Studio**        | Figma plugin for token management | Full v1.0                   |
-| **Terrazzo**             | CLI token compiler                | Full v1.0                   |
-| **Figma Variables**      | Design tool native tokens         | Partial (export via plugin) |
-| **Penpot**               | Open-source design tool           | Full v1.0                   |
+| Tool | Role | DTCG Support |
+|------|------|-------------|
+| **Style Dictionary 4.x** | Token transformation/export | Full v1.0 |
+| **Tokens Studio** | Figma plugin for token management | Full v1.0 |
+| **Terrazzo** | CLI token compiler | Full v1.0 |
+| **Figma Variables** | Design tool native tokens | Partial (export via plugin) |
+| **Penpot** | Open-source design tool | Full v1.0 |
 
 ---
 
 ## Migration from Proprietary Formats
 
 ### From Style Dictionary v3 format
-
 - Add `$` prefix to `value` → `$value`
 - Add `$type` to each token or group
 - Move `type` from nested `attributes` to top-level `$type`
 
 ### From Figma Variables
-
 - Export via Tokens Studio plugin in DTCG format
 - Map Figma collections to DTCG groups
 - Map Figma modes to `$extensions.mode`
 
 ### From custom JSON/YAML
-
 - Restructure to `$value`/`$type`/`$description` format
 - Normalize types to DTCG supported types
 - Add group hierarchy

@@ -9,7 +9,6 @@
 > **Dependencies:** depends_on: `[]` · enables: `[ds-rebuild-artifact]` · workflow: `artifact-analysis`
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/artifacts/artifact-scan-{id}.json`
 - **format:** JSON data
 - **consumed_by:** ds-rebuild-artifact
@@ -49,7 +48,6 @@ validate_scan_environment "$AGENT_NAME"
 ### 2. Get Target
 
 Interactive prompt or parameter:
-
 - File path: `path/to/artifact.html`
 - URL: `https://example.com/artifact`
 - Direct paste: User provides HTML content
@@ -123,11 +121,11 @@ Show completion message with artifact details and next steps.
 # [Agent prompts for content]
 ```
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

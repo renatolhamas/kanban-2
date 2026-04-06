@@ -9,7 +9,6 @@
 ## SCHEMA DESIGN
 
 ### Naming Conventions
-
 - [ ] Tables: snake_case, plural (e.g., `user_profiles`)
 - [ ] Columns: snake_case, descriptive (e.g., `created_at`, `is_active`)
 - [ ] Primary keys: `id` (UUID preferred) or `{table}_id`
@@ -18,7 +17,6 @@
 - [ ] Constraints: `{table}_{type}_{column}` (e.g., `users_unique_email`)
 
 ### Data Types
-
 - [ ] Use appropriate types (not just VARCHAR for everything)
 - [ ] UUID for primary keys (better distribution, security)
 - [ ] TIMESTAMPTZ for timestamps (timezone-aware)
@@ -31,7 +29,6 @@
 ## INDEXING STRATEGY
 
 ### When to Index
-
 - [ ] Primary keys (automatic)
 - [ ] Foreign keys (manual, but critical)
 - [ ] Columns in WHERE clauses
@@ -40,14 +37,12 @@
 - [ ] Composite indexes for multi-column queries
 
 ### Index Types
-
 - [ ] B-tree: Default, good for most cases
 - [ ] GIN: JSONB fields, full-text search, arrays
 - [ ] GiST: Geometric data, range types
 - [ ] BRIN: Large tables with natural ordering
 
 ### Index Anti-patterns
-
 - [ ] Don't index low-cardinality columns alone
 - [ ] Don't create redundant indexes
 - [ ] Don't index frequently updated columns without reason
@@ -58,22 +53,19 @@
 ## QUERY OPTIMIZATION
 
 ### General Rules
-
 - [ ] Use EXPLAIN ANALYZE before optimizing
-- [ ] Avoid SELECT \* in production code
+- [ ] Avoid SELECT * in production code
 - [ ] Use specific columns in SELECT
 - [ ] Limit result sets (pagination)
 - [ ] Use EXISTS instead of COUNT for existence checks
 
 ### Join Optimization
-
 - [ ] Ensure foreign keys are indexed
 - [ ] Use appropriate join types (INNER, LEFT, etc.)
 - [ ] Consider query order for optimal execution
 - [ ] Break complex joins into CTEs if clearer
 
 ### Subquery vs JOIN
-
 - [ ] Prefer JOINs for related data retrieval
 - [ ] Use subqueries for scalar values
 - [ ] CTEs for complex, multi-step queries
@@ -84,7 +76,6 @@
 ## DATA INTEGRITY
 
 ### Constraints
-
 - [ ] Primary key on every table
 - [ ] Foreign keys with appropriate ON DELETE/UPDATE
 - [ ] NOT NULL where data is required
@@ -92,7 +83,6 @@
 - [ ] UNIQUE constraints for business rules
 
 ### Referential Actions
-
 ```sql
 -- Safe cascade for dependent data
 ON DELETE CASCADE
@@ -110,7 +100,6 @@ ON DELETE SET NULL
 ## MIGRATIONS
 
 ### Best Practices
-
 - [ ] One concern per migration
 - [ ] Always provide rollback (down) migration
 - [ ] Test migrations on copy of production data
@@ -119,7 +108,6 @@ ON DELETE SET NULL
 - [ ] Handle data migrations separately from schema
 
 ### Safe Operations
-
 ```sql
 -- Add column (safe)
 ALTER TABLE users ADD COLUMN bio TEXT;
@@ -132,7 +120,6 @@ DROP INDEX IF EXISTS idx_old_index;
 ```
 
 ### Dangerous Operations
-
 - [ ] Dropping columns with data
 - [ ] Changing column types
 - [ ] Adding NOT NULL without default
@@ -143,7 +130,6 @@ DROP INDEX IF EXISTS idx_old_index;
 ## PERFORMANCE MONITORING
 
 ### Key Metrics
-
 - [ ] Query execution time (pg_stat_statements)
 - [ ] Index usage (pg_stat_user_indexes)
 - [ ] Table bloat (pgstattuple)
@@ -151,7 +137,6 @@ DROP INDEX IF EXISTS idx_old_index;
 - [ ] Cache hit ratio
 
 ### Tools
-
 - [ ] EXPLAIN ANALYZE for query plans
 - [ ] pg_stat_statements for query stats
 - [ ] pgBadger for log analysis
@@ -162,7 +147,6 @@ DROP INDEX IF EXISTS idx_old_index;
 ## BACKUP & RECOVERY
 
 ### Backup Strategy
-
 - [ ] Automated daily backups
 - [ ] Point-in-time recovery enabled
 - [ ] Off-site backup storage
@@ -170,7 +154,6 @@ DROP INDEX IF EXISTS idx_old_index;
 - [ ] Documented recovery procedures
 
 ### Supabase Specific
-
 - [ ] Automatic daily backups (Pro plan+)
 - [ ] Point-in-time recovery available
 - [ ] Download backups via Dashboard
@@ -181,7 +164,6 @@ DROP INDEX IF EXISTS idx_old_index;
 ## SECURITY
 
 ### Access Control
-
 - [ ] Principle of least privilege
 - [ ] Role-based access (not user-based)
 - [ ] Row Level Security (RLS) for multi-tenant
@@ -189,7 +171,6 @@ DROP INDEX IF EXISTS idx_old_index;
 - [ ] Rotate credentials regularly
 
 ### Data Protection
-
 - [ ] Encrypt sensitive data at rest
 - [ ] Use SSL/TLS for connections
 - [ ] Audit logging for sensitive tables
@@ -197,5 +178,5 @@ DROP INDEX IF EXISTS idx_old_index;
 
 ---
 
-**Reviewer:** **\_\_\_\_** **Date:** **\_\_\_\_**
+**Reviewer:** ________ **Date:** ________
 **Quality Gate:** [ ] PASS [ ] NEEDS REVIEW

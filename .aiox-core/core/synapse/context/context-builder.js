@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Build a normalized context payload for SYNAPSE layer execution.
@@ -18,16 +18,14 @@
 function buildLayerContext(params) {
   const safeParams = params || {};
   return {
-    prompt: safeParams.prompt || "",
+    prompt: safeParams.prompt || '',
     session: safeParams.session || {},
     config: {
       ...(safeParams.config || {}),
       synapsePath: safeParams.synapsePath,
       manifest: safeParams.manifest || {},
     },
-    previousLayers: Array.isArray(safeParams.previousLayers)
-      ? safeParams.previousLayers
-      : [],
+    previousLayers: Array.isArray(safeParams.previousLayers) ? safeParams.previousLayers : [],
   };
 }
 

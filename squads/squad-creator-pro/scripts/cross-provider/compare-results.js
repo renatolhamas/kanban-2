@@ -10,14 +10,14 @@
  *   node compare-results.js --task extract-knowledge --baseline opus --candidate glm5
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // Load config (auto-detects project root)
-const config = require("../lib/config-loader");
+const config = require('../lib/config-loader');
 
 const PATHS = {
-  outputDir: config.paths.llmTests,
+  outputDir: config.paths.llmTests
 };
 
 // ============================================================================
@@ -31,15 +31,14 @@ function loadLatestResult(taskName, modelName) {
     return null;
   }
 
-  const files = fs
-    .readdirSync(dir)
-    .filter((f) => f.startsWith("run-") && f.endsWith(".yaml"))
+  const files = fs.readdirSync(dir)
+    .filter(f => f.startsWith('run-') && f.endsWith('.yaml'))
     .sort()
     .reverse();
 
   if (files.length === 0) return null;
 
-  const content = fs.readFileSync(path.join(dir, files[0]), "utf-8");
+  const content = fs.readFileSync(path.join(dir, files[0]), 'utf-8');
   return { file: files[0], content, parsed: parseYaml(content) };
 }
 
@@ -63,13 +62,11 @@ function parseYaml(content) {
   result.cost = costMatch ? parseFloat(costMatch[1]) : null;
   result.tokens = {
     prompt: promptTokens ? parseInt(promptTokens[1]) : null,
-    completion: completionTokens ? parseInt(completionTokens[1]) : null,
+    completion: completionTokens ? parseInt(completionTokens[1]) : null
   };
 
   const outputMatch = content.match(/output: \|\n([\s\S]+)$/);
-  result.output = outputMatch
-    ? outputMatch[1].replace(/^  /gm, "").trim()
-    : null;
+  result.output = outputMatch ? outputMatch[1].replace(/^ {2}/gm, '').trim() : null;
 
   return result;
 }
@@ -84,27 +81,27 @@ function compare(baseline, candidate) {
       baseline: baseline.latency,
       candidate: candidate.latency,
       ratio: candidate.latency / baseline.latency,
-      improvement: `${((1 - candidate.latency / baseline.latency) * 100).toFixed(1)}% faster`,
+      improvement: `${((1 - candidate.latency / baseline.latency) * 100).toFixed(1)}% faster`
     },
     cost: {
       baseline: baseline.cost,
       candidate: candidate.cost,
       ratio: candidate.cost / baseline.cost,
-      savings: `${((1 - candidate.cost / baseline.cost) * 100).toFixed(1)}% cheaper`,
+      savings: `${((1 - candidate.cost / baseline.cost) * 100).toFixed(1)}% cheaper`
     },
     tokens: {
       baseline: baseline.tokens,
-      candidate: candidate.tokens,
-    },
+      candidate: candidate.tokens
+    }
   };
 
-  const baselineLines = baseline.output?.split("\n").length || 0;
-  const candidateLines = candidate.output?.split("\n").length || 0;
+  const baselineLines = baseline.output?.split('\n').length || 0;
+  const candidateLines = candidate.output?.split('\n').length || 0;
 
   metrics.content = {
     baseline_lines: baselineLines,
     candidate_lines: candidateLines,
-    ratio: candidateLines / baselineLines,
+    ratio: candidateLines / baselineLines
   };
 
   return metrics;
@@ -122,7 +119,7 @@ function generateReport(taskName, baseline, candidate, comparison) {
 **Task:** ${taskName}
 **Baseline:** ${baseline.model} (hash: ${baseline.task_hash})
 **Candidate:** ${candidate.model}
-**Date:** ${timestamp.split("T")[0]}
+**Date:** ${timestamp.split('T')[0]}
 
 ---
 
@@ -139,13 +136,13 @@ function generateReport(taskName, baseline, candidate, comparison) {
 ## Qualification Metrics
 
 ### Speed
-- **${comparison.latency.ratio < 1 ? "✅" : "❌"} Latency:** ${comparison.latency.improvement}
+- **${comparison.latency.ratio < 1 ? '✅' : '❌'} Latency:** ${comparison.latency.improvement}
 
 ### Cost
-- **${comparison.cost.ratio < 0.5 ? "✅" : "⚠️"} Savings:** ${comparison.cost.savings}
+- **${comparison.cost.ratio < 0.5 ? '✅' : '⚠️'} Savings:** ${comparison.cost.savings}
 
 ### Content Completeness
-- **${comparison.content.ratio > 0.8 ? "✅" : "❌"} Output Volume:** ${(comparison.content.ratio * 100).toFixed(0)}% of baseline
+- **${comparison.content.ratio > 0.8 ? '✅' : '❌'} Output Volume:** ${(comparison.content.ratio * 100).toFixed(0)}% of baseline
 
 ---
 
@@ -180,7 +177,7 @@ Proceed with manual quality review.`;
     report += `**NEEDS REVIEW** ⚠️
 
 Potential issues:
-${!speedOK ? "- Slower than baseline\n" : ""}${!costOK ? "- Limited cost savings\n" : ""}${!sizeOK ? "- Significantly less output\n" : ""}
+${!speedOK ? '- Slower than baseline\n' : ''}${!costOK ? '- Limited cost savings\n' : ''}${!sizeOK ? '- Significantly less output\n' : ''}
 Review output quality before qualifying.`;
   }
 
@@ -193,13 +190,13 @@ Review output quality before qualifying.`;
 ### ${baseline.model} Output
 
 \`\`\`yaml
-${baseline.output?.slice(0, 2000) || "N/A"}${baseline.output?.length > 2000 ? "\n... (truncated)" : ""}
+${baseline.output?.slice(0, 2000) || 'N/A'}${baseline.output?.length > 2000 ? '\n... (truncated)' : ''}
 \`\`\`
 
 ### ${candidate.model} Output
 
 \`\`\`yaml
-${candidate.output?.slice(0, 2000) || "N/A"}${candidate.output?.length > 2000 ? "\n... (truncated)" : ""}
+${candidate.output?.slice(0, 2000) || 'N/A'}${candidate.output?.length > 2000 ? '\n... (truncated)' : ''}
 \`\`\`
 `;
 
@@ -213,7 +210,7 @@ ${candidate.output?.slice(0, 2000) || "N/A"}${candidate.output?.length > 2000 ? 
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.includes("--help") || args.length === 0) {
+  if (args.includes('--help') || args.length === 0) {
     console.log(`
 Cross-Provider Results Comparator
 
@@ -239,33 +236,27 @@ Example:
     return idx !== -1 ? args[idx + 1] : defaultValue;
   };
 
-  const taskName = getArg("task");
-  const baselineModel = getArg("baseline", "opus");
-  const candidateModel = getArg("candidate");
+  const taskName = getArg('task');
+  const baselineModel = getArg('baseline', 'opus');
+  const candidateModel = getArg('candidate');
 
   if (!taskName || !candidateModel) {
-    console.error("❌ Missing required arguments. Use --help for usage.");
+    console.error('❌ Missing required arguments. Use --help for usage.');
     process.exit(1);
   }
 
-  console.log(
-    `\n📊 Comparing ${taskName}: ${baselineModel} vs ${candidateModel}\n`,
-  );
+  console.log(`\n📊 Comparing ${taskName}: ${baselineModel} vs ${candidateModel}\n`);
 
   const baseline = loadLatestResult(taskName, baselineModel);
   const candidate = loadLatestResult(taskName, candidateModel);
 
   if (!baseline) {
-    console.error(
-      `❌ No baseline results found for ${taskName}/${baselineModel}`,
-    );
+    console.error(`❌ No baseline results found for ${taskName}/${baselineModel}`);
     process.exit(1);
   }
 
   if (!candidate) {
-    console.error(
-      `❌ No candidate results found for ${taskName}/${candidateModel}`,
-    );
+    console.error(`❌ No candidate results found for ${taskName}/${candidateModel}`);
     process.exit(1);
   }
 
@@ -273,30 +264,18 @@ Example:
   console.log(`✓ Loaded candidate: ${candidate.file}`);
 
   const comparison = compare(baseline.parsed, candidate.parsed);
-  const report = generateReport(
-    taskName,
-    baseline.parsed,
-    candidate.parsed,
-    comparison,
-  );
+  const report = generateReport(taskName, baseline.parsed, candidate.parsed, comparison);
 
-  const reportPath = path.join(
-    PATHS.outputDir,
-    taskName,
-    candidateModel,
-    "qualification-report.md",
-  );
+  const reportPath = path.join(PATHS.outputDir, taskName, candidateModel, 'qualification-report.md');
   fs.writeFileSync(reportPath, report);
 
   console.log(`\n📄 Report saved: ${reportPath}`);
-  console.log(`\n${"=".repeat(50)}`);
-  console.log("Quick Summary:");
-  console.log(`${"=".repeat(50)}`);
+  console.log(`\n${'='.repeat(50)}`);
+  console.log('Quick Summary:');
+  console.log(`${'='.repeat(50)}`);
   console.log(`Latency: ${comparison.latency.improvement}`);
   console.log(`Cost:    ${comparison.cost.savings}`);
-  console.log(
-    `Output:  ${(comparison.content.ratio * 100).toFixed(0)}% of baseline`,
-  );
+  console.log(`Output:  ${(comparison.content.ratio * 100).toFixed(0)}% of baseline`);
 }
 
 main();

@@ -20,7 +20,7 @@ triggers:
         - "**/*.tsx"
         - "**/*.css"
   - scheduled:
-      cron: "0 6 * * 1" # Segundas às 6h
+      cron: "0 6 * * 1"  # Segundas às 6h
 
 # =============================================================================
 # DETECTION LAYER

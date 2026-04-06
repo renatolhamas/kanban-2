@@ -14,7 +14,6 @@ Compile a comprehensive cycle report summarizing everything that happened in thi
 Uses the `critical-eye-cycle-report-tmpl.md` template for consistent formatting across cycles.
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/critical-eye/cycle-{N}/report.md`
 - **format:** Markdown — human-readable report following template
 - **consumed_by:** design-chief (review), team (visibility)

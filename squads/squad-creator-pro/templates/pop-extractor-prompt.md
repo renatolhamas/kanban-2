@@ -12,7 +12,6 @@ You are a **Hybrid Process Architect** specialized in transforming tacit knowled
 ## Mission
 
 Extract a **complete and executable SOP** from a meeting transcript, structured to:
-
 1. Create AIOS agents that execute automatable parts
 2. Define checkpoints where humans must validate/decide
 3. Map data flow between steps
@@ -25,14 +24,14 @@ Extract a **complete and executable SOP** from a meeting transcript, structured 
 **Source:** `{{squad_config.data_sources.transcripts.active_source}}`
 **Config Path:** `config/squad-config.yaml` → `data_sources.transcripts`
 
-| Field                       | Value                         |
-| --------------------------- | ----------------------------- |
-| **transcript_id**           | `{{transcript_id}}`           |
-| **transcript_source**       | `{{transcript_source}}`       |
-| **transcript_date**         | `{{transcript_date}}`         |
-| **transcript_duration**     | `{{transcript_duration}}`     |
+| Field | Value |
+|-------|-------|
+| **transcript_id** | `{{transcript_id}}` |
+| **transcript_source** | `{{transcript_source}}` |
+| **transcript_date** | `{{transcript_date}}` |
+| **transcript_duration** | `{{transcript_duration}}` |
 | **transcript_participants** | `{{transcript_participants}}` |
-| **transcript_language**     | `{{transcript_language}}`     |
+| **transcript_language** | `{{transcript_language}}` |
 
 ### Content
 
@@ -46,30 +45,30 @@ Extract a **complete and executable SOP** from a meeting transcript, structured 
 
 ## 1.1 Metadata
 
-| Field                | Value                                        |
-| -------------------- | -------------------------------------------- |
-| **Process Name**     | [descriptive name]                           |
-| **Process Code**     | [ACRONYM-001]                                |
-| **Objective**        | [One sentence: verb + outcome + beneficiary] |
-| **Scope IN**         | [What this process COVERS]                   |
-| **Scope OUT**        | [What this process does NOT COVER]           |
-| **Frequency**        | [daily/weekly/on-demand/event-driven]        |
-| **Typical Volume**   | [X executions per period]                    |
-| **Average Duration** | [typical duration]                           |
-| **Criticality**      | ☐ High ☐ Medium ☐ Low                        |
-| **Process Owner**    | [Role/function responsible]                  |
+| Field | Value |
+|-------|-------|
+| **Process Name** | [descriptive name] |
+| **Process Code** | [ACRONYM-001] |
+| **Objective** | [One sentence: verb + outcome + beneficiary] |
+| **Scope IN** | [What this process COVERS] |
+| **Scope OUT** | [What this process does NOT COVER] |
+| **Frequency** | [daily/weekly/on-demand/event-driven] |
+| **Typical Volume** | [X executions per period] |
+| **Average Duration** | [typical duration] |
+| **Criticality** | ☐ High ☐ Medium ☐ Low |
+| **Process Owner** | [Role/function responsible] |
 
 ## 1.2 Triggers
 
-| Trigger | Type                                     | Source | System Detectable? |
-| ------- | ---------------------------------------- | ------ | ------------------ |
-|         | ☐ Event ☐ Schedule ☐ Condition ☐ Request |        | ☐ Yes ☐ No         |
+| Trigger | Type | Source | System Detectable? |
+|---------|------|--------|-------------------|
+| | ☐ Event ☐ Schedule ☐ Condition ☐ Request | | ☐ Yes ☐ No |
 
 ## 1.3 Mandatory Preconditions
 
 | Precondition | How to Verify | Blocking if Absent? |
-| ------------ | ------------- | ------------------- |
-|              |               | ☐ Yes ☐ No          |
+|--------------|---------------|---------------------|
+| | | ☐ Yes ☐ No |
 
 ---
 
@@ -77,35 +76,35 @@ Extract a **complete and executable SOP** from a meeting transcript, structured 
 
 ## 2.1 Stakeholder Map
 
-| Stakeholder | Process Role                                 | Interaction Type | Frequency |
-| ----------- | -------------------------------------------- | ---------------- | --------- |
-|             | ☐ Executor ☐ Approver ☐ Informed ☐ Consulted |                  |           |
+| Stakeholder | Process Role | Interaction Type | Frequency |
+|-------------|--------------|------------------|-----------|
+| | ☐ Executor ☐ Approver ☐ Informed ☐ Consulted | | |
 
 ## 2.2 RACI Matrix
 
 | Step | Responsible | Accountable | Consulted | Informed |
-| ---- | ----------- | ----------- | --------- | -------- |
-|      |             |             |           |          |
+|------|-------------|-------------|-----------|----------|
+| | | | | |
 
 ## 2.3 Executor Analysis (HO-EP Framework)
 
 For each persona identified, classify the **ideal executor type**:
 
 | Executor | Recommended Type | Justification |
-| -------- | ---------------- | ------------- |
-|          | ☐ **Human**      |               |
-|          | ☐ **Agent**      |               |
-|          | ☐ **Hybrid**     |               |
-|          | ☐ **Worker**     |               |
+|----------|------------------|---------------|
+| | ☐ **Human** | |
+| | ☐ **Agent** | |
+| | ☐ **Hybrid** | |
+| | ☐ **Worker** | |
 
 **Classification Criteria:**
 
-| Type       | When to Use                                                         | Example                                          |
-| ---------- | ------------------------------------------------------------------- | ------------------------------------------------ |
-| **Human**  | Irreversible decisions, negotiation, empathy, accountability        | Fire someone, negotiate contract                 |
-| **Agent**  | Large volume analysis, content generation, classification, patterns | Summarize 100 docs, categorize leads             |
-| **Hybrid** | Medium risk, needs human "sanity check"                             | Draft important email (AI writes, human reviews) |
-| **Worker** | 100% deterministic, no ambiguity, repetitive                        | Move file, call API, format date                 |
+| Type | When to Use | Example |
+|------|-------------|---------|
+| **Human** | Irreversible decisions, negotiation, empathy, accountability | Fire someone, negotiate contract |
+| **Agent** | Large volume analysis, content generation, classification, patterns | Summarize 100 docs, categorize leads |
+| **Hybrid** | Medium risk, needs human "sanity check" | Draft important email (AI writes, human reviews) |
+| **Worker** | 100% deterministic, no ambiguity, repetitive | Move file, call API, format date |
 
 ---
 
@@ -113,27 +112,27 @@ For each persona identified, classify the **ideal executor type**:
 
 ## 3.1 Input Map
 
-| Input | Source | Format | Structured? | Change Frequency                       | Required?  |
-| ----- | ------ | ------ | ----------- | -------------------------------------- | ---------- |
-|       |        |        | ☐ Yes ☐ No  | ☐ Static ☐ Rare ☐ Frequent ☐ Real-time | ☐ Yes ☐ No |
+| Input | Source | Format | Structured? | Change Frequency | Required? |
+|-------|--------|--------|-------------|------------------|-----------|
+| | | | ☐ Yes ☐ No | ☐ Static ☐ Rare ☐ Frequent ☐ Real-time | ☐ Yes ☐ No |
 
 ## 3.2 Output Map
 
 | Output | Destination | Format | Quality Criteria | Consumer |
-| ------ | ----------- | ------ | ---------------- | -------- |
-|        |             |        |                  |          |
+|--------|-------------|--------|------------------|----------|
+| | | | | |
 
 ## 3.3 Tools and Systems
 
-| Tool | Process Usage | Access Type           | API Available?       | Current Automation      |
-| ---- | ------------- | --------------------- | -------------------- | ----------------------- |
-|      |               | ☐ Read ☐ Write ☐ Both | ☐ Yes ☐ No ☐ Partial | ☐ None ☐ Partial ☐ Full |
+| Tool | Process Usage | Access Type | API Available? | Current Automation |
+|------|---------------|-------------|----------------|-------------------|
+| | | ☐ Read ☐ Write ☐ Both | ☐ Yes ☐ No ☐ Partial | ☐ None ☐ Partial ☐ Full |
 
 ## 3.4 Required Integrations for Automation
 
-| Source System | Target System | Data Exchanged | Frequency | Ideal Method                    |
-| ------------- | ------------- | -------------- | --------- | ------------------------------- |
-|               |               |                |           | ☐ API ☐ Webhook ☐ File ☐ Manual |
+| Source System | Target System | Data Exchanged | Frequency | Ideal Method |
+|---------------|---------------|----------------|-----------|--------------|
+| | | | | ☐ API ☐ Webhook ☐ File ☐ Manual |
 
 ---
 
@@ -176,32 +175,28 @@ For EACH step, complete the **full Task Anatomy per HO-TP-001**:
 
 **Task Anatomy (HO-TP-001)**
 
-| Field                    | Value                             |
-| ------------------------ | --------------------------------- |
-| **task_name**            | [Verb + Object]                   |
-| **status**               | pending                           |
-| **responsible_executor** | [@agent or Role]                  |
-| **execution_type**       | ☐ Human ☐ Agent ☐ Hybrid ☐ Worker |
-| **estimated_time**       | [Xh/Xm/Xd]                        |
+| Field | Value |
+|-------|-------|
+| **task_name** | [Verb + Object] |
+| **status** | pending |
+| **responsible_executor** | [@agent or Role] |
+| **execution_type** | ☐ Human ☐ Agent ☐ Hybrid ☐ Worker |
+| **estimated_time** | [Xh/Xm/Xd] |
 
 **Inputs:**
-
 - [ ] Input 1: [description] - Source: [origin]
 - [ ] Input 2: ...
 
 **Outputs:**
-
 - [ ] Output 1: [description] - Destination: [target]
 - [ ] Output 2: ...
 
 **Action Items (atomic steps):**
-
 1. [Specific action]
 2. [Specific action]
 3. ...
 
 **Acceptance Criteria:**
-
 - [ ] Criterion 1
 - [ ] Criterion 2
 
@@ -209,35 +204,35 @@ For EACH step, complete the **full Task Anatomy per HO-TP-001**:
 
 **Cognitive Analysis:**
 
-| Dimension          | Classification                       | Transcript Evidence |
-| ------------------ | ------------------------------------ | ------------------- |
-| **Nature**         | ☐ Deterministic ☐ Heuristic ☐ Hybrid | [quote]             |
-| **Cognition Type** | (see taxonomy below)                 | [quote]             |
-| **Complexity**     | ☐ Low ☐ Medium ☐ High                |                     |
-| **Error Impact**   | ☐ Low ☐ Medium ☐ High ☐ Critical     |                     |
+| Dimension | Classification | Transcript Evidence |
+|-----------|----------------|---------------------|
+| **Nature** | ☐ Deterministic ☐ Heuristic ☐ Hybrid | [quote] |
+| **Cognition Type** | (see taxonomy below) | [quote] |
+| **Complexity** | ☐ Low ☐ Medium ☐ High | |
+| **Error Impact** | ☐ Low ☐ Medium ☐ High ☐ Critical | |
 
 **Cognitive Taxonomy (check all that apply):**
 
-| Type                   | Description                        | Automatable?           |
-| ---------------------- | ---------------------------------- | ---------------------- |
-| ☐ **Perception**       | Identify patterns in data          | ✅ Agent (vision, NLP) |
-| ☐ **Memory/Retrieval** | Fetch known information            | ✅ Worker (query)      |
-| ☐ **Analysis**         | Decompose, compare, evaluate       | ✅ Agent               |
-| ☐ **Synthesis**        | Combine information into new whole | ✅ Agent               |
-| ☐ **Judgment**         | Decide with incomplete information | ⚠️ Hybrid              |
-| ☐ **Creativity**       | Generate genuinely novel output    | ⚠️ Hybrid              |
-| ☐ **Empathy**          | Understand others' emotional state | ❌ Human               |
-| ☐ **Negotiation**      | Influence others' decisions        | ❌ Human               |
-| ☐ **Accountability**   | Assume consequences                | ❌ Human               |
-| ☐ **Ethics**           | Decide between conflicting values  | ❌ Human               |
+| Type | Description | Automatable? |
+|------|-------------|--------------|
+| ☐ **Perception** | Identify patterns in data | ✅ Agent (vision, NLP) |
+| ☐ **Memory/Retrieval** | Fetch known information | ✅ Worker (query) |
+| ☐ **Analysis** | Decompose, compare, evaluate | ✅ Agent |
+| ☐ **Synthesis** | Combine information into new whole | ✅ Agent |
+| ☐ **Judgment** | Decide with incomplete information | ⚠️ Hybrid |
+| ☐ **Creativity** | Generate genuinely novel output | ⚠️ Hybrid |
+| ☐ **Empathy** | Understand others' emotional state | ❌ Human |
+| ☐ **Negotiation** | Influence others' decisions | ❌ Human |
+| ☐ **Accountability** | Assume consequences | ❌ Human |
+| ☐ **Ethics** | Decide between conflicting values | ❌ Human |
 
 **If NOT fully automatable:**
 
-| Aspect                     | Detail                                            |
-| -------------------------- | ------------------------------------------------- |
-| **What requires human**    | [specific judgment, sensitivity, context]         |
-| **What agent can do**      | [prepare, suggest, execute part, validate format] |
-| **Recommended checkpoint** | ☐ Before ☐ During ☐ After step                    |
+| Aspect | Detail |
+|--------|--------|
+| **What requires human** | [specific judgment, sensitivity, context] |
+| **What agent can do** | [prepare, suggest, execute part, validate format] |
+| **Recommended checkpoint** | ☐ Before ☐ During ☐ After step |
 
 ---
 
@@ -245,9 +240,9 @@ For EACH step, complete the **full Task Anatomy per HO-TP-001**:
 
 For each process branching:
 
-| ID  | Decision Point | Question | Options | Criteria | Decider | Automatable?         |
-| --- | -------------- | -------- | ------- | -------- | ------- | -------------------- |
-| D1  |                |          | A, B, C |          |         | ☐ Yes ☐ Partial ☐ No |
+| ID | Decision Point | Question | Options | Criteria | Decider | Automatable? |
+|----|----------------|----------|---------|----------|---------|--------------|
+| D1 | | | A, B, C | | | ☐ Yes ☐ Partial ☐ No |
 
 **Extracted Decision Rules (IF/THEN):**
 
@@ -261,10 +256,10 @@ ELSE [default action]
 
 **Identified Heuristics** (informal rules/"gut feeling"):
 
-| Heuristic | Original Quote     | Translation to Rule                 |
-| --------- | ------------------ | ----------------------------------- |
-|           | "usually we..."    | IF [context] THEN [action]          |
-|           | "it depends on..." | IF [variable] > [threshold] THEN... |
+| Heuristic | Original Quote | Translation to Rule |
+|-----------|----------------|---------------------|
+| | "usually we..." | IF [context] THEN [action] |
+| | "it depends on..." | IF [variable] > [threshold] THEN... |
 
 ---
 
@@ -285,26 +280,26 @@ ELSE [default action]
 
 ## 5.3 Quality Gates (Validation Checkpoints)
 
-| Gate | After Step | Validator               | Criteria | Action on Failure     |
-| ---- | ---------- | ----------------------- | -------- | --------------------- |
-| QG1  |            | ☐ Human ☐ System ☐ Both |          | ☐ Block ☐ Alert ☐ Log |
+| Gate | After Step | Validator | Criteria | Action on Failure |
+|------|------------|-----------|----------|-------------------|
+| QG1 | | ☐ Human ☐ System ☐ Both | | ☐ Block ☐ Alert ☐ Log |
 
 ## 5.4 META-AXIOMAS Assessment (10 Dimensions)
 
 Evaluate the process across 10 quality dimensions:
 
-| #   | Dimension                             | Score (0-10) | Justification | Improvement Action |
-| --- | ------------------------------------- | ------------ | ------------- | ------------------ |
-| 1   | **Truthfulness** (systemic coherence) |              |               |                    |
-| 2   | **Coherence** (words = actions)       |              |               |                    |
-| 3   | **Strategic Alignment**               |              |               |                    |
-| 4   | **Operational Excellence**            |              |               |                    |
-| 5   | **Innovation Capacity**               |              |               |                    |
-| 6   | **Risk Management**                   |              |               |                    |
-| 7   | **Resource Optimization**             |              |               |                    |
-| 8   | **Stakeholder Value**                 |              |               |                    |
-| 9   | **Sustainability**                    |              |               |                    |
-| 10  | **Adaptability**                      |              |               |                    |
+| # | Dimension | Score (0-10) | Justification | Improvement Action |
+|---|-----------|--------------|---------------|-------------------|
+| 1 | **Truthfulness** (systemic coherence) | | | |
+| 2 | **Coherence** (words = actions) | | | |
+| 3 | **Strategic Alignment** | | | |
+| 4 | **Operational Excellence** | | | |
+| 5 | **Innovation Capacity** | | | |
+| 6 | **Risk Management** | | | |
+| 7 | **Resource Optimization** | | | |
+| 8 | **Stakeholder Value** | | | |
+| 9 | **Sustainability** | | | |
+| 10 | **Adaptability** | | | |
 
 **Overall Score:** [weighted average] / 10
 **Threshold:** ≥7.0 to proceed
@@ -315,21 +310,21 @@ Evaluate the process across 10 quality dimensions:
 
 ## 6.1 Known Exceptions
 
-| Exception | Trigger | Frequency                      | Handling | Escalation |
-| --------- | ------- | ------------------------------ | -------- | ---------- |
-|           |         | ☐ Rare ☐ Occasional ☐ Frequent |          |            |
+| Exception | Trigger | Frequency | Handling | Escalation |
+|-----------|---------|-----------|----------|------------|
+| | | ☐ Rare ☐ Occasional ☐ Frequent | | |
 
 ## 6.2 Troubleshooting Guide
 
 | Problem | Symptom | Diagnosis | Solution | Typical Time |
-| ------- | ------- | --------- | -------- | ------------ |
-|         |         |           |          |              |
+|---------|---------|-----------|----------|--------------|
+| | | | | |
 
 ## 6.3 Critical Failure Points
 
-| Point | Impact if Failed                     | Current Mitigation | Recommended Mitigation |
-| ----- | ------------------------------------ | ------------------ | ---------------------- |
-|       | ☐ Low ☐ Medium ☐ High ☐ Catastrophic |                    |                        |
+| Point | Impact if Failed | Current Mitigation | Recommended Mitigation |
+|-------|------------------|--------------------|-----------------------|
+| | ☐ Low ☐ Medium ☐ High ☐ Catastrophic | | |
 
 ---
 
@@ -337,15 +332,15 @@ Evaluate the process across 10 quality dimensions:
 
 ## 7.1 Quantitative Summary
 
-| Metric                   | Value                |
-| ------------------------ | -------------------- |
-| **Total Steps**          |                      |
-| **Human Steps**          | X (Y%)               |
-| **Hybrid Steps**         | X (Y%)               |
-| **Agent Steps**          | X (Y%)               |
-| **Worker Steps**         | X (Y%)               |
-| **Automation Potential** | [low/medium/high]    |
-| **Estimated Effort**     | [small/medium/large] |
+| Metric | Value |
+|--------|-------|
+| **Total Steps** | |
+| **Human Steps** | X (Y%) |
+| **Hybrid Steps** | X (Y%) |
+| **Agent Steps** | X (Y%) |
+| **Worker Steps** | X (Y%) |
+| **Automation Potential** | [low/medium/high] |
+| **Estimated Effort** | [small/medium/large] |
 
 ## 7.2 Automation Map (Visual)
 
@@ -371,25 +366,24 @@ flowchart LR
 
 ## 7.3 Barriers to Full Automation
 
-| Barrier                      | Affected Steps | Why It Blocks | Possible Solution |
-| ---------------------------- | -------------- | ------------- | ----------------- |
-| **Subjective Judgment**      |                |               |                   |
-| **Unstructured Information** |                |               |                   |
-| **External Context**         |                |               |                   |
-| **Unpredictable Exceptions** |                |               |                   |
-| **Human Relationship**       |                |               |                   |
-| **Legal Accountability**     |                |               |                   |
+| Barrier | Affected Steps | Why It Blocks | Possible Solution |
+|---------|----------------|---------------|-------------------|
+| **Subjective Judgment** | | | |
+| **Unstructured Information** | | | |
+| **External Context** | | | |
+| **Unpredictable Exceptions** | | | |
+| **Human Relationship** | | | |
+| **Legal Accountability** | | | |
 
 ## 7.4 Automation Analysis by Heuristic (PV_PM_001)
 
 For each step, apply the **Automation Tipping Point Rule**:
 
-| Step | Frequency             | Impact             | Automatability     | Guardrails? | Decision                                          |
-| ---- | --------------------- | ------------------ | ------------------ | ----------- | ------------------------------------------------- |
-|      | ☐ >4x/mo ☐ 2-4x ☐ <2x | ☐ High ☐ Med ☐ Low | ☐ High ☐ Med ☐ Low | ☐ Yes ☐ No  | **AUTOMATE / DELEGATE / KEEP_MANUAL / ELIMINATE** |
+| Step | Frequency | Impact | Automatability | Guardrails? | Decision |
+|------|-----------|--------|----------------|-------------|----------|
+| | ☐ >4x/mo ☐ 2-4x ☐ <2x | ☐ High ☐ Med ☐ Low | ☐ High ☐ Med ☐ Low | ☐ Yes ☐ No | **AUTOMATE / DELEGATE / KEEP_MANUAL / ELIMINATE** |
 
 **Decision Rules:**
-
 - High Frequency + High Impact + High Automatability → **AUTOMATE**
 - High Frequency + High Impact + Low Automatability → **DELEGATE** (to specialized human)
 - High Frequency + Low Impact → **AUTOMATE** (efficiency gain)
@@ -403,35 +397,35 @@ For each step, apply the **Automation Tipping Point Rule**:
 
 ## 8.1 Recommended Agents
 
-| Agent                        | Responsibility            | Steps Executed | Type             |
-| ---------------------------- | ------------------------- | -------------- | ---------------- |
-| @process-[name]-orchestrator | Orchestrate complete flow | All            | Orchestrator     |
-| @[name]-[function]           | [responsibility]          | [steps]        | ☐ Agent ☐ Worker |
+| Agent | Responsibility | Steps Executed | Type |
+|-------|----------------|----------------|------|
+| @process-[name]-orchestrator | Orchestrate complete flow | All | Orchestrator |
+| @[name]-[function] | [responsibility] | [steps] | ☐ Agent ☐ Worker |
 
 ## 8.2 Tasks to Create
 
-| Task         | Agent | Steps Covered | Elicit? | Checkpoint? |
-| ------------ | ----- | ------------- | ------- | ----------- |
-| discover-[x] | @...  |               | ☐ Yes   | ☐ Yes       |
-| execute-[y]  | @...  |               | ☐ No    | ☐ Yes       |
-| validate-[z] | @...  |               | ☐ No    | ☐ Yes       |
+| Task | Agent | Steps Covered | Elicit? | Checkpoint? |
+|------|-------|---------------|---------|-------------|
+| discover-[x] | @... | | ☐ Yes | ☐ Yes |
+| execute-[y] | @... | | ☐ No | ☐ Yes |
+| validate-[z] | @... | | ☐ No | ☐ Yes |
 
 ## 8.3 Human-in-the-Loop Checkpoints
 
-| Checkpoint | After Task | Type                       | Approval Criteria | Action on Reject |
-| ---------- | ---------- | -------------------------- | ----------------- | ---------------- |
-| CP1        |            | ☐ Approval ☐ Review ☐ Veto |                   |                  |
+| Checkpoint | After Task | Type | Approval Criteria | Action on Reject |
+|------------|------------|------|-------------------|------------------|
+| CP1 | | ☐ Approval ☐ Review ☐ Veto | | |
 
 ## 8.4 Mandatory Automation Guardrails
 
-| Guardrail           | Apply To                | Implementation                   |
-| ------------------- | ----------------------- | -------------------------------- |
-| **Loop Prevention** | Repetitive tasks        | Deduplication + max_iterations   |
-| **Idempotency**     | Tasks with side-effects | Input hash → skip if identical   |
-| **Audit Trail**     | All tasks               | Structured log per execution     |
-| **Escape Route**    | Critical tasks          | manual_override flag available   |
-| **Retry Logic**     | External integrations   | Exponential backoff (3 attempts) |
-| **Rollback**        | Destructive tasks       | Snapshot before execution        |
+| Guardrail | Apply To | Implementation |
+|-----------|----------|----------------|
+| **Loop Prevention** | Repetitive tasks | Deduplication + max_iterations |
+| **Idempotency** | Tasks with side-effects | Input hash → skip if identical |
+| **Audit Trail** | All tasks | Structured log per execution |
+| **Escape Route** | Critical tasks | manual_override flag available |
+| **Retry Logic** | External integrations | Exponential backoff (3 attempts) |
+| **Rollback** | Destructive tasks | Snapshot before execution |
 
 ## 8.5 Orchestration Workflow
 
@@ -474,15 +468,15 @@ workflow:
 
 ## 9.1 Missing Information
 
-| Gap | Impact                                           | Clarifying Question | Priority              |
-| --- | ------------------------------------------------ | ------------------- | --------------------- |
-|     | ☐ Blocks automation ☐ Reduces quality ☐ Cosmetic |                     | ☐ High ☐ Medium ☐ Low |
+| Gap | Impact | Clarifying Question | Priority |
+|-----|--------|---------------------|----------|
+| | ☐ Blocks automation ☐ Reduces quality ☐ Cosmetic | | ☐ High ☐ Medium ☐ Low |
 
 ## 9.2 Identified Ambiguities
 
-| Ambiguity | Quote       | Possible Interpretations | Recommendation              |
-| --------- | ----------- | ------------------------ | --------------------------- |
-|           | "[excerpt]" | A: ... / B: ...          | Validate with [stakeholder] |
+| Ambiguity | Quote | Possible Interpretations | Recommendation |
+|-----------|-------|-------------------------|----------------|
+| | "[excerpt]" | A: ... / B: ... | Validate with [stakeholder] |
 
 ## 9.3 Recommended Next Steps
 
@@ -498,24 +492,24 @@ workflow:
 # PART 10: GLOSSARY
 
 | Term | Definition | Usage Context |
-| ---- | ---------- | ------------- |
-|      |            |               |
+|------|------------|---------------|
+| | | |
 
 ---
 
 # PART 11: EXTRACTION METADATA
 
-| Field                  | Value                                                                 |
-| ---------------------- | --------------------------------------------------------------------- |
-| **SOP Version**        | 1.0                                                                   |
-| **Extraction Date**    | [date]                                                                |
-| **Source**             | Meeting transcript                                                    |
-| **Meeting Duration**   | [X minutes]                                                           |
-| **Participants**       | [list]                                                                |
-| **Extractor**          | [who extracted]                                                       |
-| **Reliability**        | ☐ High (well explained) ☐ Medium (some gaps) ☐ Low (many ambiguities) |
-| **Next Review**        | [suggested date]                                                      |
-| **Pattern Compliance** | SC-PE-001 ✓                                                           |
+| Field | Value |
+|-------|-------|
+| **SOP Version** | 1.0 |
+| **Extraction Date** | [date] |
+| **Source** | Meeting transcript |
+| **Meeting Duration** | [X minutes] |
+| **Participants** | [list] |
+| **Extractor** | [who extracted] |
+| **Reliability** | ☐ High (well explained) ☐ Medium (some gaps) ☐ Low (many ambiguities) |
+| **Next Review** | [suggested date] |
+| **Pattern Compliance** | SC-PE-001 ✓ |
 
 ---
 
@@ -532,12 +526,12 @@ workflow:
 
 ## Confidence Classification
 
-| Level      | Criterion                         | Action                       |
-| ---------- | --------------------------------- | ---------------------------- |
-| **High**   | Explained in detail with examples | Use as-is                    |
-| **Medium** | Mentioned but lacking detail      | Mark for validation          |
-| **Low**    | Inferred from context             | Mark `[INFERRED]` + question |
-| **Absent** | Not mentioned                     | List in Gaps section         |
+| Level | Criterion | Action |
+|-------|----------|--------|
+| **High** | Explained in detail with examples | Use as-is |
+| **Medium** | Mentioned but lacking detail | Mark for validation |
+| **Low** | Inferred from context | Mark `[INFERRED]` + question |
+| **Absent** | Not mentioned | List in Gaps section |
 
 ## Red Flags (special attention)
 
@@ -552,4 +546,4 @@ workflow:
 
 **Pattern Compliance:** SC-PE-001 ✓ | HO-TP-001 ✓ | HO-EP-001-004 ✓
 
-_Generated by Squad Creator (SC-PE-001)_
+*Generated by Squad Creator (SC-PE-001)*

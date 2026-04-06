@@ -36,7 +36,7 @@ export function ForgotPasswordForm({ onSuccess, onError }: ForgotPasswordFormPro
           if (errorData.error) {
             errorMessage = errorData.error;
           }
-        } catch (e) {
+        } catch (_e) { // eslint-disable-line @typescript-eslint/no-unused-vars
           // Keep default error message
         }
         throw new Error(errorMessage);

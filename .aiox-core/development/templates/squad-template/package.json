@@ -8,10 +8,7 @@
     "lint": "eslint src/",
     "dev": "aiox-dev-server"
   },
-  "keywords": [
-    "aiox",
-    "aiox-squad"
-  ],
+  "keywords": ["aiox", "aiox-squad"],
   "author": "{{author}}",
   "license": "MIT",
   "devDependencies": {

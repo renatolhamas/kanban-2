@@ -13,20 +13,18 @@
 Reduce UI pattern redundancy by clustering similar patterns using intelligent algorithms (HSL color clustering at 5% threshold, semantic button grouping). Target: >80% reduction. **v4.0: Reference data/ds-reference-architectures.md for cross-system consolidation patterns (Material 3, Fluent 2, Carbon, Spectrum).**
 
 ## Input Schema
-
 - **requires:** Output from `ds-audit-codebase`
 - **format:** JSON data
 - **location:** `outputs/design-system/{project}/audit/pattern-inventory.json`
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/consolidation/`
 - **format:** Text data (color-clusters.txt, spacing-consolidation.txt, button-consolidation.txt)
 - **consumed_by:** ds-extract-tokens
 
 ## Prerequisites
 
-- Audit completed (\*audit command run successfully)
+- Audit completed (*audit command run successfully)
 - .state.yaml exists with inventory results
 - pattern-inventory.json available
 
@@ -59,7 +57,7 @@ This task uses interactive elicitation to review consolidation decisions.
    - If pattern-inventory.json not found, check .state.yaml for inventory_file path
    - Validate audit phase completed
    - Extract pattern counts and scan path
-   - Check: pattern-inventory.json OR .state.yaml contains inventory data with pattern count > 0 — abort with "No audit data found: run \*audit first"
+   - Check: pattern-inventory.json OR .state.yaml contains inventory data with pattern count > 0 — abort with "No audit data found: run *audit first"
 
 2. **Cluster Colors by HSL Similarity**
    - Extract all unique colors from codebase
@@ -153,13 +151,13 @@ consolidation:
 ## Failure Handling
 
 - **Pattern reduction <60%:** Review clustering thresholds — HSL tolerance may be too tight. Widen from 10% to 15% and re-run
-- **Inventory file not found:** Check .state.yaml for inventory_file path. Re-run \*audit if missing
+- **Inventory file not found:** Check .state.yaml for inventory_file path. Re-run *audit if missing
 - **Conflicting patterns detected:** Present conflicts to user for manual resolution before proceeding
 - **Consolidation takes >10 min:** Split by pattern type (colors first, then spacing, then components)
 
 ## Success Criteria
 
-- [ ] > 80% overall pattern reduction achieved
+- [ ] >80% overall pattern reduction achieved
 - [ ] Color clustering uses HSL similarity (not just hex distance)
 - [ ] Button variants identified by semantic purpose
 - [ ] Spacing scale based on consistent base unit
@@ -171,18 +169,18 @@ consolidation:
 
 > **GATE: Consolidation Review** — Human checkpoint before proceeding to tokenization
 
-| Metric            | Threshold                     | Action if FAIL                                                            |
-| ----------------- | ----------------------------- | ------------------------------------------------------------------------- |
-| Pattern reduction | >= 60%                        | Widen HSL clustering tolerance from 10% to 15%, re-run consolidation      |
-| Color clusters    | <= 20 unique groups           | Merge near-duplicates manually, re-cluster with looser threshold          |
-| Spacing scale     | Based on consistent base unit | If no base unit detected, propose 4px/8px grid and re-align               |
-| User approval     | Required                      | Present consolidation summary, get explicit "proceed" before tokenization |
+| Metric | Threshold | Action if FAIL |
+|--------|-----------|----------------|
+| Pattern reduction | >= 60% | Widen HSL clustering tolerance from 10% to 15%, re-run consolidation |
+| Color clusters | <= 20 unique groups | Merge near-duplicates manually, re-cluster with looser threshold |
+| Spacing scale | Based on consistent base unit | If no base unit detected, propose 4px/8px grid and re-align |
+| User approval | Required | Present consolidation summary, get explicit "proceed" before tokenization |
 
 **Rework rule:** If reduction < 40% after 2 iterations, escalate to user — codebase may have genuinely diverse patterns that shouldn't be consolidated.
 
 ## Error Handling
 
-- **No audit data found**: Exit with message to run \*audit first
+- **No audit data found**: Exit with message to run *audit first
 - **Insufficient patterns to consolidate**: Report that codebase is already clean
 - **Cannot achieve 80% reduction**: Explain why and show actual reduction achieved
 - **Invalid state file**: Attempt to recover from backup or prompt re-audit
@@ -203,7 +201,6 @@ consolidation:
 ```
 
 Output:
-
 ```
 🎨 CONSOLIDATING COLORS...
 Found 89 unique colors
@@ -249,8 +246,8 @@ Brad: "Override recorded. Keeping both."
 - Manual overrides are respected and documented
 - Run this after every audit to prevent pattern regression
 - Brad says: "Numbers don't lie. 82% reduction = real savings."
-
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
+

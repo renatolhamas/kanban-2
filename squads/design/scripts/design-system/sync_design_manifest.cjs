@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const process = require("process");
+const process = require('process');
 const {
   buildGeneratedConfig,
   getDesignPaths,
   readYaml,
-  writeYaml,
-} = require("./design_manifest_lib.cjs");
+  writeYaml
+} = require('./design_manifest_lib.cjs');
 
 function main() {
   const { squadPath, configPath } = getDesignPaths(process.cwd());
@@ -16,9 +16,7 @@ function main() {
   const generated = buildGeneratedConfig(squad, config);
   writeYaml(configPath, generated);
 
-  console.log(
-    "PASS: synced squads/design/config.yaml from squads/design/squad.yaml",
-  );
+  console.log('PASS: synced squads/design/config.yaml from squads/design/squad.yaml');
   console.log(`  agents=${generated.agents.length}`);
   console.log(`  tasks=${generated.tasks.length}`);
   console.log(`  templates=${generated.templates.length}`);

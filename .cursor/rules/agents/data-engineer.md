@@ -40,5 +40,4 @@
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/data-engineer.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/data-engineer.md*

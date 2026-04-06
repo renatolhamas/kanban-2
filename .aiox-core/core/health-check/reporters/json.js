@@ -9,7 +9,7 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { CheckStatus, CheckSeverity } = require("../base-check");
+const { CheckStatus, CheckSeverity } = require('../base-check');
 
 /**
  * Sensitive patterns to redact from output
@@ -53,10 +53,10 @@ class JSONReporter {
 
     // Build report object
     const report = {
-      $schema: "https://aiox.synkra.ai/schemas/health-check-report.json",
-      version: "1.0.0",
+      $schema: 'https://aiox.synkra.ai/schemas/health-check-report.json',
+      version: '1.0.0',
       timestamp,
-      mode: config?.mode || "quick",
+      mode: config?.mode || 'quick',
       duration: this.calculateDuration(checkResults),
 
       // Overall summary
@@ -241,15 +241,15 @@ class JSONReporter {
    * @private
    */
   sanitizeObject(obj) {
-    if (!obj || typeof obj !== "object") return;
+    if (!obj || typeof obj !== 'object') return;
 
     for (const [key, value] of Object.entries(obj)) {
       // Check if key matches sensitive pattern
       if (this.isSensitiveKey(key)) {
-        obj[key] = "[REDACTED]";
-      } else if (typeof value === "object") {
+        obj[key] = '[REDACTED]';
+      } else if (typeof value === 'object') {
         this.sanitizeObject(value);
-      } else if (typeof value === "string") {
+      } else if (typeof value === 'string') {
         obj[key] = this.sanitizeString(value);
       }
     }
@@ -282,15 +282,15 @@ class JSONReporter {
   sanitizeString(value) {
     // Redact values that look like tokens/keys
     if (/^(sk-|pk-|api_|key_)/i.test(value)) {
-      return "[REDACTED]";
+      return '[REDACTED]';
     }
     // Redact long hex strings (likely tokens)
     if (/^[a-f0-9]{32,}$/i.test(value)) {
-      return "[REDACTED]";
+      return '[REDACTED]';
     }
     // Redact base64 encoded strings longer than 50 chars
     if (/^[A-Za-z0-9+/=]{50,}$/.test(value)) {
-      return "[REDACTED]";
+      return '[REDACTED]';
     }
     return value;
   }

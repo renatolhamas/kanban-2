@@ -13,13 +13,9 @@
  * @created Story SYN-5 - Layer Processors L4-L7
  */
 
-const path = require("path");
-const {
-  loadDomainFile,
-  matchKeywords,
-  isExcluded,
-} = require("../domain/domain-loader");
-const LayerProcessor = require("./layer-processor");
+const path = require('path');
+const { loadDomainFile, matchKeywords, isExcluded } = require('../domain/domain-loader');
+const LayerProcessor = require('./layer-processor');
 
 /**
  * L6 Keyword Processor
@@ -32,7 +28,7 @@ const LayerProcessor = require("./layer-processor");
  */
 class L6KeywordProcessor extends LayerProcessor {
   constructor() {
-    super({ name: "keyword", layer: 6, timeout: 15 });
+    super({ name: 'keyword', layer: 6, timeout: 15 });
   }
 
   /**
@@ -95,7 +91,7 @@ class L6KeywordProcessor extends LayerProcessor {
       // 6. Load domain file
       const domainFile = domain.file
         ? path.join(synapsePath, domain.file)
-        : path.join(synapsePath, domainName.toLowerCase().replace(/_/g, "-"));
+        : path.join(synapsePath, domainName.toLowerCase().replace(/_/g, '-'));
 
       const rules = loadDomainFile(domainFile);
       if (rules && rules.length > 0) {
@@ -139,7 +135,7 @@ class L6KeywordProcessor extends LayerProcessor {
       if (source) {
         sources.add(source);
         // Also add the uppercase domain key form
-        const upperKey = source.toUpperCase().replace(/-/g, "_");
+        const upperKey = source.toUpperCase().replace(/-/g, '_');
         sources.add(upperKey);
       }
 

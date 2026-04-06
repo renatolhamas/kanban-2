@@ -11,19 +11,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -191,7 +188,6 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
-
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -211,6 +207,7 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Inputs
 
 - `sql` (string): SQL query to analyze
@@ -222,7 +219,6 @@ updated_at: 2025-11-17
 ### 1. Confirm Query
 
 Ask user:
-
 - Query to analyze
 - Expected result count (approximate)
 - Known performance issues?
@@ -265,17 +261,14 @@ Rows: Estimated XXX, Actual YYY
 ### Top-Level Metrics
 
 **Planning Time**
-
 - Time spent planning query
 - High value (>100ms) suggests complex query or missing statistics
 
 **Execution Time**
-
 - Actual query execution time
 - This is what users experience
 
 **Total Cost**
-
 - Estimated cost units (not milliseconds)
 - Higher = more expensive
 - Compare different query versions
@@ -283,43 +276,36 @@ Rows: Estimated XXX, Actual YYY
 ### Node Types (Common Patterns)
 
 **Seq Scan** (Sequential Scan)
-
 - 🔴 Reads entire table
 - Slow for large tables
 - **Fix**: Add index if filtering rows
 
 **Index Scan**
-
 - ✅ Uses index to find rows
 - Fast for selective queries
 - Good when returning few rows
 
 **Index Only Scan**
-
 - ✅✅ Best case - reads only index
 - No table access needed
 - Requires VACUUM to update visibility map
 
 **Bitmap Heap Scan**
-
 - ✅ Good for medium selectivity
 - Combines multiple indexes
 - Better than multiple index scans
 
 **Nested Loop**
-
 - Good for small result sets
 - Joins by iterating
 - Can be slow with large data
 
 **Hash Join**
-
 - Good for large result sets
 - Builds hash table in memory
 - Fast for equi-joins
 
 **Merge Join**
-
 - Good for sorted inputs
 - Efficient for large sorted data
 - Requires sorted inputs (or sorts them)
@@ -327,19 +313,16 @@ Rows: Estimated XXX, Actual YYY
 ### Buffer Analysis
 
 **Shared Hits** (Good)
-
 - Data found in cache
 - No disk I/O needed
 - High ratio = good caching
 
 **Shared Reads** (Bad if high)
-
 - Data read from disk
 - Slow compared to cache
 - High ratio = cache misses
 
 **Temp Read/Written** (Bad)
-
 - Using temp disk files
 - Memory insufficient
 - Often due to large sorts/hashes
@@ -429,8 +412,8 @@ Seq Scan on fragments  (cost=0.00..10000 rows=500000)
 **Fix**: Index RLS policy columns
 
 ```sql
-CREATE INDEX idx_fragments_user_id_not_deleted
-ON fragments(user_id)
+CREATE INDEX idx_fragments_user_id_not_deleted 
+ON fragments(user_id) 
 WHERE deleted_at IS NULL;
 ```
 
@@ -441,7 +424,6 @@ WHERE deleted_at IS NULL;
 ### 1. Baseline
 
 Run current query:
-
 ```bash
 *explain "SELECT * FROM table WHERE ..."
 ```
@@ -451,7 +433,6 @@ Note execution time and plan.
 ### 2. Hypothesize
 
 What might be slow?
-
 - Sequential scans?
 - Missing indexes?
 - Sort/hash spills?
@@ -460,7 +441,6 @@ What might be slow?
 ### 3. Test Fix
 
 Apply potential fix:
-
 ```sql
 CREATE INDEX ...;
 -- or
@@ -472,13 +452,11 @@ SET work_mem = '...';
 ### 4. Re-Measure
 
 Run explain again:
-
 ```bash
 *explain "SELECT * FROM table WHERE ..."
 ```
 
 Compare:
-
 - Execution time improved?
 - Plan changed as expected?
 - Cost reduced?
@@ -534,10 +512,9 @@ Upload to: https://explain.depesz.com or https://explain.dalibo.com
 
 **Interactive queries**: < 100ms  
 **Reports**: < 1s  
-**Batch/Background**: < 5s
+**Batch/Background**: < 5s  
 
 **If slower:**
-
 - Check for sequential scans
 - Add/optimize indexes
 - Consider caching
@@ -549,13 +526,12 @@ Upload to: https://explain.depesz.com or https://explain.dalibo.com
 
 ```sql
 -- Check overall cache hit ratio
-SELECT
+SELECT 
   sum(heap_blks_hit) / (sum(heap_blks_hit) + sum(heap_blks_read)) AS cache_hit_ratio
 FROM pg_statio_user_tables;
 ```
 
 **If low:**
-
 - Increase shared_buffers (DBA task)
 - Query optimization needed
 - Consider query pattern changes
@@ -565,21 +541,18 @@ FROM pg_statio_user_tables;
 ## When to Use EXPLAIN
 
 **Always:**
-
 - New query in production code
 - After schema changes
 - When adding indexes
 - RLS policy changes
 
 **Reactive:**
-
 - Slow query reports
 - Performance degradation
 - High database load
 - Before optimization attempts
 
 **Never:**
-
 - For queries already known to be fast
 - On queries with no data yet (stats unreliable)
 - Without ANALYZE if you need actual timing
@@ -593,12 +566,10 @@ FROM pg_statio_user_tables;
 ⚠️ **Warning**: ANALYZE actually executes query
 
 **Safe:**
-
 - SELECT queries
 - Read-only queries
 
 **Dangerous:**
-
 - INSERT/UPDATE/DELETE (use transaction + rollback)
 - Queries with side effects
 
@@ -612,7 +583,6 @@ ROLLBACK;  -- Undo changes
 ### Statistics May Be Stale
 
 Plans based on table statistics:
-
 - Updated by VACUUM/ANALYZE
 - May not reflect current data
 - Run ANALYZE if estimates way off
@@ -620,7 +590,6 @@ Plans based on table statistics:
 ### Plan Can Change
 
 Plans vary based on:
-
 - Data distribution
 - Table size
 - Server configuration
@@ -648,18 +617,15 @@ Query optimization workflow:
 ## Resources
 
 **Visualization Tools:**
-
 - https://explain.depesz.com
 - https://explain.dalibo.com
 - https://tatiyants.com/pev/
 
 **Documentation:**
-
 - PostgreSQL EXPLAIN: https://www.postgresql.org/docs/current/sql-explain.html
 - Using EXPLAIN: https://www.postgresql.org/docs/current/using-explain.html
 
 **Related Commands:**
-
 - `*analyze-hotpaths` - Check common query patterns
 - `*design-indexes` - Plan index strategy
 - `*rls-audit` - Check RLS policy performance

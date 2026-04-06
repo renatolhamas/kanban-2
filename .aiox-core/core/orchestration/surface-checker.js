@@ -11,9 +11,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
 
 /**
  * @typedef {Object} SurfaceContext
@@ -65,7 +65,8 @@ class SurfaceChecker {
    */
   constructor(criteriaPath = null) {
     this.criteriaPath =
-      criteriaPath || path.join(__dirname, "bob-surface-criteria.yaml");
+      criteriaPath ||
+      path.join(__dirname, 'bob-surface-criteria.yaml');
     this.criteria = null;
     this._loaded = false;
   }
@@ -77,20 +78,16 @@ class SurfaceChecker {
   load() {
     try {
       if (!fs.existsSync(this.criteriaPath)) {
-        console.warn(
-          `[SurfaceChecker] Criteria file not found: ${this.criteriaPath}`,
-        );
+        console.warn(`[SurfaceChecker] Criteria file not found: ${this.criteriaPath}`);
         return false;
       }
 
-      const content = fs.readFileSync(this.criteriaPath, "utf8");
+      const content = fs.readFileSync(this.criteriaPath, 'utf8');
       this.criteria = yaml.load(content);
       this._loaded = true;
       return true;
     } catch (error) {
-      console.error(
-        `[SurfaceChecker] Failed to load criteria: ${error.message}`,
-      );
+      console.error(`[SurfaceChecker] Failed to load criteria: ${error.message}`);
       return false;
     }
   }
@@ -167,24 +164,22 @@ class SurfaceChecker {
     }
 
     // Scope comparison (requested_scope > approved_scope)
-    if (condition === "requested_scope > approved_scope") {
-      const requested = context.requested_scope || "";
-      const approved = context.approved_scope || "";
+    if (condition === 'requested_scope > approved_scope') {
+      const requested = context.requested_scope || '';
+      const approved = context.approved_scope || '';
       // Compare by length or explicit scope_expanded flag
-      return (
-        context.scope_expanded === true || requested.length > approved.length
-      );
+      return context.scope_expanded === true || requested.length > approved.length;
     }
 
     // OR conditions
-    if (condition.includes(" OR ")) {
-      const parts = condition.split(" OR ").map((p) => p.trim());
+    if (condition.includes(' OR ')) {
+      const parts = condition.split(' OR ').map((p) => p.trim());
       return parts.some((part) => this.evaluateCondition(part, context));
     }
 
     // AND conditions
-    if (condition.includes(" AND ")) {
-      const parts = condition.split(" AND ").map((p) => p.trim());
+    if (condition.includes(' AND ')) {
+      const parts = condition.split(' AND ').map((p) => p.trim());
       return parts.every((part) => this.evaluateCondition(part, context));
     }
 
@@ -205,16 +200,16 @@ class SurfaceChecker {
    * @returns {string} Interpolated message
    */
   interpolateMessage(template, context) {
-    if (!template) return "";
+    if (!template) return '';
 
     return template.replace(/\$\{(\w+)\}/g, (match, key) => {
       if (key in context) {
         const value = context[key];
         // Format numbers with 2 decimal places if they're currency
-        if (typeof value === "number" && key.includes("cost")) {
+        if (typeof value === 'number' && key.includes('cost')) {
           return value.toFixed(2);
         }
-        return String(value ?? "");
+        return String(value ?? '');
       }
       return match; // Keep original if not found
     });
@@ -244,8 +239,7 @@ class SurfaceChecker {
     }
 
     // Get evaluation order
-    const evaluationOrder =
-      this.criteria.evaluation_order || Object.keys(this.criteria.criteria);
+    const evaluationOrder = this.criteria.evaluation_order || Object.keys(this.criteria.criteria);
 
     // Evaluate criteria in order (first match wins)
     for (const criterionKey of evaluationOrder) {
@@ -265,7 +259,7 @@ class SurfaceChecker {
           criterion_name: criterion.name || criterionKey,
           action: criterion.action,
           message: this.interpolateMessage(criterion.message, context),
-          severity: criterion.severity || "info",
+          severity: criterion.severity || 'info',
           can_bypass: criterion.bypass !== false,
         };
       }
@@ -336,23 +330,23 @@ class SurfaceChecker {
     const errors = [];
 
     if (!this.criteria) {
-      errors.push("Criteria file not loaded");
+      errors.push('Criteria file not loaded');
       return { valid: false, errors };
     }
 
     if (!this.criteria.version) {
-      errors.push("Missing version field");
+      errors.push('Missing version field');
     }
 
     if (!this.criteria.criteria) {
-      errors.push("Missing criteria section");
+      errors.push('Missing criteria section');
     } else {
       // Validate each criterion
       const criteriaEntries = Object.entries(this.criteria.criteria);
       for (const [key, criterion] of criteriaEntries) {
         // Skip non-criterion entries (like destructive_actions list)
         if (Array.isArray(criterion)) continue;
-        if (!criterion || typeof criterion !== "object") continue;
+        if (!criterion || typeof criterion !== 'object') continue;
 
         if (!criterion.id) {
           errors.push(`Criterion '${key}' missing id field`);
@@ -370,7 +364,7 @@ class SurfaceChecker {
     }
 
     if (!this.criteria.actions) {
-      errors.push("Missing actions section");
+      errors.push('Missing actions section');
     }
 
     return {

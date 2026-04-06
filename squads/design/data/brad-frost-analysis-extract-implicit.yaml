@@ -8,6 +8,7 @@ metadata:
   metodo: "Analise cruzada de premissas, lacunas e padroes decisorios implicitos"
 
 premissas_nao_declaradas:
+
   - id: P1
     nome: "Organizacao madura como pre-requisito"
     evidencia: "Governance Pipeline assume que existe um 'DS team' dedicado para avaliar requests, que ha roadmap, e que equipes tem canal claro de escalation. Nenhuma orientacao para orgs sem DS team."
@@ -59,6 +60,7 @@ premissas_nao_declaradas:
 premissas_nao_declaradas_count: 6
 
 heuristicas_ocultas:
+
   - id: H1
     nome: "Regra do abandono como termometro"
     padrao: "SE equipes estao hackeando estilos fora do DS -> ENTAO o problema eh governance ou gaps no DS, NUNCA indisciplina dos times"
@@ -110,6 +112,7 @@ heuristicas_ocultas:
 heuristicas_ocultas_count: 6
 
 pontos_cegos:
+
   - id: PC1
     nome: "Deprecacao e sunset de componentes"
     o_que_nao_discute: "Como remover componentes do DS. Todo o framework fala sobre ADICIONAR (governance pipeline, decision architecture) mas nenhum mecanismo para deprecar, versionar breaking changes, ou fazer sunset de componentes obsoletos."
@@ -161,6 +164,7 @@ pontos_cegos:
 pontos_cegos_count: 6
 
 decisoes_implicitas:
+
   - id: D1
     nome: "Bottom-up como unica direcao de composicao"
     escolhido_por_omissao: "Atomic Design eh inerentemente bottom-up: atoms -> molecules -> organisms -> templates -> pages. Nao ha framework top-down (partir da page e decompor) exceto 'pages' como stage de teste."

@@ -10,13 +10,13 @@
 
 > **Nota:** Exemplos usam copywriting. Substitua pelo seu domínio e experts.
 
-| Variable              | Description        | Example                       |
-| --------------------- | ------------------ | ----------------------------- |
-| `{{specialist_name}}` | Expert name        | "{expert-name}"               |
-| `{{activity}}`        | Specific activity  | "{activity-name}"             |
-| `{{domain}}`          | Domain area        | "{domain}"                    |
-| `{{date}}`            | Research date      | "2026-01-22"                  |
-| `{{agent_purpose}}`   | What agent will do | "{agent-purpose-description}" |
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `{{specialist_name}}` | Expert name | "{expert-name}" |
+| `{{activity}}` | Specific activity | "{activity-name}" |
+| `{{domain}}` | Domain area | "{domain}" |
+| `{{date}}` | Research date | "2026-01-22" |
+| `{{agent_purpose}}` | What agent will do | "{agent-purpose-description}" |
 
 ---
 
@@ -37,7 +37,6 @@
 {{executive_summary}}
 
 **Key Findings:**
-
 - {{finding_1}}
 - {{finding_2}}
 - {{finding_3}}
@@ -81,7 +80,6 @@
 {{what_makes_it_work}}
 
 **Lessons:**
-
 - {{lesson_1}}
 - {{lesson_2}}
 
@@ -150,13 +148,11 @@
 {{specialist_name}}'s core principles for {{activity}}:
 
 1. **{{principle_1_name}}**
-
    > "{{principle_1_quote}}" — {{source}}
 
    {{principle_1_explanation}}
 
 2. **{{principle_2_name}}**
-
    > "{{principle_2_quote}}" — {{source}}
 
    {{principle_2_explanation}}
@@ -175,8 +171,8 @@
 ### Process
 
 {{specialist_name}}'s workflow for {{activity}}:
-```
 
+```
 Step 1: {{step_1_name}}
 ├── {{step_1_action_1}}
 ├── {{step_1_action_2}}
@@ -193,8 +189,7 @@ Step 3: {{step_3_name}}
 └── Output: {{step_3_output}}
 
 ...continue for all steps...
-
-````
+```
 
 **Detailed Steps:**
 
@@ -473,7 +468,7 @@ research_metadata:
     checklist: {{true|false}}
 
   ready_for_agent_creation: {{true|false}}
-````
+```
 
 ---
 
@@ -491,7 +486,6 @@ Based on this research:
 **Document Status:** {{DRAFT|VALIDATED|APPROVED}}
 **Validated By:** {{validator}}
 **Validation Date:** {{validation_date}}
-
 ```
 
 ---
@@ -629,4 +623,3 @@ Based on this research:
 **Created:** 2026-01-22
 **Part of:** squads/squad-chief
 **Validates Against:** checklists/deep-research-quality.md
-```

@@ -534,7 +534,7 @@ Each status change requires user verification and approval before proceeding.
 #### Greenfield Development
 
 - Business analysis and market research
-- Product requirements and feature definition
+- Product requirements and feature definition  
 - System architecture and design
 - Development execution
 - Testing and deployment
@@ -643,11 +643,8 @@ Templates with Level 2 headings (`##`) can be automatically sharded:
 
 ```markdown
 ## Goals and Background Context
-
-## Requirements
-
+## Requirements  
 ## User Interface Design Goals
-
 ## Success Metrics
 ```
 
@@ -671,7 +668,6 @@ AIOX integrates with ClickUp for project management and story tracking. When cre
 **ALWAYS use this 2-step process:**
 
 #### Step 1: Get Workspace Hierarchy
-
 ```javascript
 // Call get_workspace_hierarchy (no parameters needed)
 const hierarchy = await clickup.get_workspace_hierarchy();
@@ -691,12 +687,11 @@ const hierarchy = await clickup.get_workspace_hierarchy();
 **Store the numeric list_id** for use in Step 2.
 
 #### Step 2: Create Task with Discovered list_id
-
 ```yaml
 # Call create_task with these parameters:
-list_id: "901317181013" # ← MUST be numeric string from Step 1
+list_id: "901317181013"  # ← MUST be numeric string from Step 1
 name: "Story 5.2: Implement Feature X"
-parent: "86acfeqeq" # Epic task ID (if creating as subtask)
+parent: "86acfeqeq"  # Epic task ID (if creating as subtask)
 markdown_description: "Complete story content..."
 tags:
   - "story"
@@ -712,7 +707,6 @@ custom_fields:
 ### Validation Requirements
 
 **Critical Rules:**
-
 - `list_id` MUST be a numeric string (validated by `/^\d+$/`)
 - Using `"Backlog"` or other non-numeric values WILL FAIL
 - `assignees` (if provided) must be an array: `[123, 456]`
@@ -721,9 +715,7 @@ custom_fields:
 ### Common Errors and Solutions
 
 #### Error: "list_id must be a numeric string"
-
 **Cause:** Used list name instead of numeric ID
-
 ```yaml
 # ❌ Wrong
 list_id: "Backlog"
@@ -733,9 +725,7 @@ list_id: "901317181013"
 ```
 
 #### Error: "assignees must be array"
-
 **Cause:** Used object format instead of array
-
 ```yaml
 # ❌ Wrong
 assignees: {add: [456]}
@@ -745,9 +735,7 @@ assignees: [456]
 ```
 
 #### Error: "custom_fields must be an array"
-
 **Cause:** Invalid field structure
-
 ```yaml
 # ❌ Wrong
 custom_fields: "field-value"
@@ -761,25 +749,22 @@ custom_fields:
 ### Quick Reference
 
 **When creating stories:**
-
 1. Always call `get_workspace_hierarchy` first
 2. Extract numeric `list_id` from response
 3. Use that `list_id` in `create_task`
 4. Store returned `task_id` in story frontmatter
 
 **Where to find examples:**
-
 - Complete workflow: `aiox-core/tools/mcp/clickup.yaml` (story_creation_workflow section)
 - Task instructions: `aiox-core/tasks/create-next-story.md` (sections 5.1 and 5.3)
 - Validators: `aiox-core/tools/mcp/clickup.yaml` (executable_knowledge section)
 
 **Response Handling:**
-
 ```yaml
 # After successful create_task, update story frontmatter:
 clickup:
-  task_id: "86acfetr9" # From create_task response
-  epic_task_id: "86acfeqeq" # From get_workspace_tasks
+  task_id: "86acfetr9"  # From create_task response
+  epic_task_id: "86acfeqeq"  # From get_workspace_tasks
   list: "Backlog"
   url: "https://app.clickup.com/t/86acfetr9"
   last_sync: "2025-10-10T14:30:00Z"
@@ -928,3 +913,4 @@ Use the **squad-creator** squad to build your own:
 - **Documentation**: Check `docs/` folder for project-specific context
 - **Community**: Discord and GitHub resources available for support
 - **Contributing**: See `CONTRIBUTING.md` for full guidelines
+ 

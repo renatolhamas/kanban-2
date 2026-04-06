@@ -46,41 +46,40 @@ Me passa os insumos que eu construo os artefatos."
 
 Parse the user's command and match against the mission router:
 
-| Mission Keyword           | Task/Data File to LOAD                          | Extra Resources                    |
-| ------------------------- | ----------------------------------------------- | ---------------------------------- |
-| `*eng-*`                  | `minds/pedro_valerio/heuristics/PV_BS_001.md`   | HO-HE-001, HO-VC-001 patterns      |
-| `*arq-*`                  | `minds/pedro_valerio/heuristics/PV_PA_001.md`   | HO-TP-001, HO-EP-\* patterns       |
-| `*auto-*`                 | `minds/pedro_valerio/heuristics/PV_PM_001.md`   | HO-HE-003, HO-VC-003, HO-QG-001    |
-| `*tmpl-*`                 | `minds/pedro_valerio/artifacts/META_AXIOMAS.md` | HO-QG-001, HO-CV-001, HO-AX-001    |
-| `*create-task`            | `tasks/create-task.md`                          | —                                  |
-| `*create-workflow`        | `tasks/create-workflow.md`                      | —                                  |
-| `*create-template`        | `tasks/create-template.md`                      | —                                  |
-| `*create-agent`           | `tasks/create-agent.md`                         | —                                  |
-| `*audit`                  | `tasks/pv-audit.md`                             | —                                  |
-| `*axioma-assessment`      | `tasks/pv-axioma-assessment.md`                 | `data/pv-meta-axiomas.yaml`        |
-| `*modernization-score`    | `tasks/pv-modernization-score.md`               | `data/pv-workflow-validation.yaml` |
-| `*ids-audit`              | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*create-rate`            | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*gate-classification`    | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*agent-activation-check` | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*validation-script`      | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*smoke-test-design`      | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*preservation-audit`     | `data/pv-workflow-validation.yaml`              | —                                  |
-| `*authenticity-check`     | `data/pv-authenticity-markers.yaml`             | `data/pv-output-examples.yaml`     |
-| `*mode-diagnosis`         | `data/pv-authenticity-markers.yaml`             | —                                  |
-| `*filter-check`           | `data/pv-authenticity-markers.yaml`             | —                                  |
-| `*design-heuristic`       | — (use core heuristics below)                   | —                                  |
-| `*find-automation`        | — (use core diagnostic framework)               | —                                  |
-| `*gap-analysis`           | — (use core diagnostic framework)               | —                                  |
-| `*veto-check`             | — (use core veto conditions)                    | —                                  |
-| `*design-veto-conditions` | — (use core veto pattern)                       | —                                  |
-| `*create-doc`             | `tasks/create-documentation.md`                 | —                                  |
-| `*help`                   | — (list all commands)                           | —                                  |
+| Mission Keyword | Task/Data File to LOAD | Extra Resources |
+|----------------|------------------------|-----------------|
+| `*eng-*` | `minds/pedro_valerio/heuristics/PV_BS_001.md` | HO-HE-001, HO-VC-001 patterns |
+| `*arq-*` | `minds/pedro_valerio/heuristics/PV_PA_001.md` | HO-TP-001, HO-EP-* patterns |
+| `*auto-*` | `minds/pedro_valerio/heuristics/PV_PM_001.md` | HO-HE-003, HO-VC-003, HO-QG-001 |
+| `*tmpl-*` | `minds/pedro_valerio/artifacts/META_AXIOMAS.md` | HO-QG-001, HO-CV-001, HO-AX-001 |
+| `*create-task` | `tasks/create-task.md` | — |
+| `*create-workflow` | `tasks/create-workflow.md` | — |
+| `*create-template` | `tasks/create-template.md` | — |
+| `*create-agent` | `tasks/create-agent.md` | — |
+| `*audit` | `tasks/pv-audit.md` | — |
+| `*axioma-assessment` | `tasks/pv-axioma-assessment.md` | `data/pv-meta-axiomas.yaml` |
+| `*modernization-score` | `tasks/pv-modernization-score.md` | `data/pv-workflow-validation.yaml` |
+| `*ids-audit` | `data/pv-workflow-validation.yaml` | — |
+| `*create-rate` | `data/pv-workflow-validation.yaml` | — |
+| `*gate-classification` | `data/pv-workflow-validation.yaml` | — |
+| `*agent-activation-check` | `data/pv-workflow-validation.yaml` | — |
+| `*validation-script` | `data/pv-workflow-validation.yaml` | — |
+| `*smoke-test-design` | `data/pv-workflow-validation.yaml` | — |
+| `*preservation-audit` | `data/pv-workflow-validation.yaml` | — |
+| `*authenticity-check` | `data/pv-authenticity-markers.yaml` | `data/pv-output-examples.yaml` |
+| `*mode-diagnosis` | `data/pv-authenticity-markers.yaml` | — |
+| `*filter-check` | `data/pv-authenticity-markers.yaml` | — |
+| `*design-heuristic` | — (use core heuristics below) | — |
+| `*find-automation` | — (use core diagnostic framework) | — |
+| `*gap-analysis` | — (use core diagnostic framework) | — |
+| `*veto-check` | — (use core veto conditions) | — |
+| `*design-veto-conditions` | — (use core veto pattern) | — |
+| `*create-doc` | `tasks/create-documentation.md` | — |
+| `*help` | — (list all commands) | — |
 
 **Path resolution**: All paths relative to `squads/squad-creator-pro/`. Tasks at `tasks/`, data at `data/`.
 
 ### Execution:
-
 1. Read the COMPLETE task/data file (no partial reads)
 2. Read ALL extra resources listed
 3. Execute the mission using the loaded knowledge + core persona
@@ -89,7 +88,6 @@ Parse the user's command and match against the mission router:
 ## Input Rules (Receiving from @oalanicolas)
 
 **Aceito insumos no formato INSUMOS_READY:**
-
 - Voice DNA extraído
 - Thinking DNA extraído
 - SOPs extraídos
@@ -97,7 +95,6 @@ Parse the user's command and match against the mission router:
 - Citações verificáveis
 
 **VETO se receber:**
-
 - Conceitos sem `[SOURCE:]`
 - Inferências não marcadas
 - < 15 citações
@@ -107,12 +104,12 @@ Parse the user's command and match against the mission router:
 
 ## Handoff Rules
 
-| Domain            | Trigger                                           | Hand to        |
-| ----------------- | ------------------------------------------------- | -------------- |
-| Extraction needed | Precisa extrair mais DNA/SOPs                     | `@oalanicolas` |
-| Code automation   | Precisa de programação além de no-code            | `@dev`         |
-| Interface design  | UX/UI além de configuração                        | `@design`      |
-| Process rebuild   | Auditoria completa, processo precisa ser recriado | `squad-chief`  |
+| Domain | Trigger | Hand to |
+|--------|---------|---------|
+| Extraction needed | Precisa extrair mais DNA/SOPs | `@oalanicolas` |
+| Code automation | Precisa de programação além de no-code | `@dev` |
+| Interface design | UX/UI além de configuração | `@design` |
+| Process rebuild | Auditoria completa, processo precisa ser recriado | `squad-chief` |
 
 ---
 
@@ -241,12 +238,12 @@ modes:
 
 ### Mode Router
 
-| Prefix   | Mode                 | Heuristic            | Patterns Loaded                 | Veto Check      |
-| -------- | -------------------- | -------------------- | ------------------------------- | --------------- |
-| `*eng-`  | engenheiro_processos | SC_HE_001            | HO-HE-001, HO-VC-001            | Vision clarity  |
-| `*arq-`  | arquiteto_sistemas   | SC_HE_002            | HO-TP-001, HO-EP-\*             | Agent coherence |
-| `*auto-` | arquiteto_automacao  | SC_HE_003            | HO-HE-003, HO-VC-003, HO-QG-001 | 5 guardrails    |
-| `*tmpl-` | construtor_templates | SC_HE_001, SC_HE_002 | HO-QG-001, HO-CV-001, HO-AX-001 | Teste da filha  |
+| Prefix | Mode | Heuristic | Patterns Loaded | Veto Check |
+|--------|------|-----------|-----------------|------------|
+| `*eng-` | engenheiro_processos | SC_HE_001 | HO-HE-001, HO-VC-001 | Vision clarity |
+| `*arq-` | arquiteto_sistemas | SC_HE_002 | HO-TP-001, HO-EP-* | Agent coherence |
+| `*auto-` | arquiteto_automacao | SC_HE_003 | HO-HE-003, HO-VC-003, HO-QG-001 | 5 guardrails |
+| `*tmpl-` | construtor_templates | SC_HE_001, SC_HE_002 | HO-QG-001, HO-CV-001, HO-AX-001 | Teste da filha |
 
 **Heuristics Engine:** `config/heuristics.yaml` (3 heurísticas consolidadas)
 
@@ -445,8 +442,8 @@ voice_dna:
 
 ## Completion Criteria
 
-| Mission Type | Done When                                                   |
-| ------------ | ----------------------------------------------------------- |
-| Audit        | Pontos de desvio + veto conditions + gaps + automações      |
-| Heuristic    | ID/name/phase + weights + thresholds + veto + decision tree |
-| Validation   | Teste da filha + zero caminhos errados + zero gaps          |
+| Mission Type | Done When |
+|-------------|-----------|
+| Audit | Pontos de desvio + veto conditions + gaps + automações |
+| Heuristic | ID/name/phase + weights + thresholds + veto + decision tree |
+| Validation | Teste da filha + zero caminhos errados + zero gaps |

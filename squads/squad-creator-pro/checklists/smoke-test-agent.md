@@ -282,7 +282,7 @@ smoke_test_result:
 when_to_run:
   - after: "create-agent.md completa"
   - before: "considerar agente pronto"
-  - blocking: true # Não prosseguir se falhar
+  - blocking: true  # Não prosseguir se falhar
 
 automation:
   test_1: "Pode ser automatizado (contagem de palavras)"
@@ -310,4 +310,4 @@ FAIL = Re-trabalhar DNA ou agent.md
 ---
 
 **Squad Architect | Smoke Test v1.0**
-_"O teste não é se você extraiu o DNA. É se o agente SE COMPORTA como o expert."_
+*"O teste não é se você extraiu o DNA. É se o agente SE COMPORTA como o expert."*

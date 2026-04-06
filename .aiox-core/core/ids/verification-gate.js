@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * VerificationGate — IDS Story IDS-5a
@@ -17,7 +17,7 @@
  * Source: ids-principles.md, story IDS-5a
  */
 
-const { CircuitBreaker } = require("./circuit-breaker");
+const { CircuitBreaker } = require('./circuit-breaker');
 
 const DEFAULT_TIMEOUT_MS = 2000;
 
@@ -40,7 +40,7 @@ function createGateResult(fields = {}) {
     },
     override: fields.override || null,
     executionMs: fields.executionMs || 0,
-    circuitBreakerState: fields.circuitBreakerState || "CLOSED",
+    circuitBreakerState: fields.circuitBreakerState || 'CLOSED',
   };
 }
 
@@ -56,19 +56,17 @@ class VerificationGate {
    */
   constructor(config = {}) {
     if (!config.gateId) {
-      throw new Error("[IDS-Gate] gateId is required");
+      throw new Error('[IDS-Gate] gateId is required');
     }
     if (!config.agent) {
-      throw new Error("[IDS-Gate] agent is required");
+      throw new Error('[IDS-Gate] agent is required');
     }
 
     this._gateId = config.gateId;
     this._agent = config.agent;
     this._blocking = config.blocking || false;
     this._timeoutMs = config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-    this._circuitBreaker = new CircuitBreaker(
-      config.circuitBreakerOptions || {},
-    );
+    this._circuitBreaker = new CircuitBreaker(config.circuitBreakerOptions || {});
     this._logger = config.logger || console;
     this._invocationCount = 0;
     this._lastResult = null;
@@ -92,10 +90,7 @@ class VerificationGate {
     // Circuit breaker check: if open, warn-and-proceed
     if (!this._circuitBreaker.isAllowed()) {
       const stats = this._circuitBreaker.getStats();
-      this._log(
-        "warn",
-        `Circuit breaker OPEN (${stats.totalTrips} trips). Skipping gate.`,
-      );
+      this._log('warn', `Circuit breaker OPEN (${stats.totalTrips} trips). Skipping gate.`);
 
       const result = createGateResult({
         gateId: this._gateId,
@@ -142,10 +137,7 @@ class VerificationGate {
       this._circuitBreaker.recordFailure();
 
       // Graceful degradation: log-and-proceed on error
-      this._log(
-        "warn",
-        `Gate failed (${error.message}). Proceeding with warning.`,
-      );
+      this._log('warn', `Gate failed (${error.message}). Proceeding with warning.`);
 
       const result = createGateResult({
         gateId: this._gateId,
@@ -247,15 +239,10 @@ class VerificationGate {
       const timer = setTimeout(() => {
         if (!isSettled) {
           isSettled = true;
-          this._log(
-            "warn",
-            `Gate timed out after ${this._timeoutMs}ms. Warn-and-proceed.`,
-          );
+          this._log('warn', `Gate timed out after ${this._timeoutMs}ms. Warn-and-proceed.`);
           resolve({
             passed: true,
-            warnings: [
-              `Gate ${this._gateId} timed out after ${this._timeoutMs}ms`,
-            ],
+            warnings: [`Gate ${this._gateId} timed out after ${this._timeoutMs}ms`],
             opportunities: [],
           });
         }
@@ -284,7 +271,7 @@ class VerificationGate {
    * @param {object} result — GateResult structure
    */
   _logInvocation(result) {
-    this._log("info", `Gate ${this._gateId} invoked`, {
+    this._log('info', `Gate ${this._gateId} invoked`, {
       passed: result.result.passed,
       blocking: result.result.blocking,
       warnings: result.result.warnings.length,

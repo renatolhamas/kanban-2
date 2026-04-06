@@ -7,7 +7,7 @@ checklist:
   created: 2026-01-30
   updated: 2026-01-30
   purpose: "Validate agent definitions meet Hybrid Loader quality standard"
-  mode: blocking # Prevents publication if critical items fail
+  mode: blocking  # Prevents publication if critical items fail
   architecture: "hybrid-loader"
 ```
 
@@ -339,7 +339,6 @@ Copy this checklist and fill in:
 ### Blocking Requirements (Must Pass)
 
 **Level 1: Identity**
-
 - [ ] agent.name defined
 - [ ] agent.id is kebab-case
 - [ ] agent.tier is 1-3
@@ -347,26 +346,22 @@ Copy this checklist and fill in:
 - [ ] persona complete (role, style, identity, focus)
 
 **Level 2: Operational**
-
 - [ ] core_principles has 5-9 items
 - [ ] operational_frameworks has 1+ framework
 - [ ] Each framework has name, philosophy, steps, examples
 - [ ] commands has 5+ items including *help, *exit
 
 **Level 3: Voice DNA**
-
 - [ ] vocabulary.always_use has 5+ terms
 - [ ] vocabulary.never_use has 3+ terms
 
 **Level 4: Quality**
-
 - [ ] output_examples has 3+ complete examples
 - [ ] anti_patterns.never_do has 5+ items
 - [ ] completion_criteria.task_done_when defined
 - [ ] completion_criteria.handoff_to has 1+ items
 
 **Level 6: Integration**
-
 - [ ] integration.tier_position defined
 - [ ] workflow_integration.position_in_flow defined
 - [ ] handoff_to has 1+ items
@@ -387,32 +382,31 @@ Copy this checklist and fill in:
 ### Domain-Specific (If Applicable)
 
 For Copy/Legal/Storytelling/Data:
-
 - [ ] authority_proof_arsenal.achievements has 3+ items
 - [ ] publications defined
 - [ ] testimonials has 1+ items
 
 ### Result
 
-**Blocking:** **_/17 passed
-**Recommended:** _**/9 passed
-**Total Score:** \_\_\_%
+**Blocking:** ___/17 passed
+**Recommended:** ___/9 passed
+**Total Score:** ___%
 
 **Decision:** [ ] PASS - Ready for publication
-[ ] CONDITIONAL - Pass with documented gaps
-[ ] FAIL - Must fix blocking items
+              [ ] CONDITIONAL - Pass with documented gaps
+              [ ] FAIL - Must fix blocking items
 ```
 
 ---
 
 ## Scoring
 
-| Score                              | Result      | Action                 |
-| ---------------------------------- | ----------- | ---------------------- |
-| 100% Blocking + 80%+ Recommended   | EXCELLENT   | Publish                |
-| 100% Blocking + 50-79% Recommended | GOOD        | Publish with note      |
-| 100% Blocking + <50% Recommended   | CONDITIONAL | Document gaps, publish |
-| <100% Blocking                     | FAIL        | Fix before publish     |
+| Score | Result | Action |
+|-------|--------|--------|
+| 100% Blocking + 80%+ Recommended | EXCELLENT | Publish |
+| 100% Blocking + 50-79% Recommended | GOOD | Publish with note |
+| 100% Blocking + <50% Recommended | CONDITIONAL | Document gaps, publish |
+| <100% Blocking | FAIL | Fix before publish |
 
 ---
 

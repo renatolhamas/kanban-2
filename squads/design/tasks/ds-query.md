@@ -21,16 +21,16 @@ Interactive query interface for the design system via MCP tools. Answers questio
 
 2. **Route to MCP Tool**
 
-   | Intent                                  | MCP Tool                              |
-   | --------------------------------------- | ------------------------------------- |
-   | "What components exist?"                | `design_system.list_components`       |
-   | "Show me the button"                    | `design_system.get_component`         |
-   | "Find components for forms"             | `design_system.search_components`     |
+   | Intent | MCP Tool |
+   |--------|----------|
+   | "What components exist?" | `design_system.list_components` |
+   | "Show me the button" | `design_system.get_component` |
+   | "Find components for forms" | `design_system.search_components` |
    | "What are the a11y requirements for X?" | `design_system.get_a11y_requirements` |
-   | "Show color tokens"                     | `design_system.get_tokens`            |
-   | "How should I use the input?"           | `design_system.get_guidelines`        |
-   | "I need a status indicator"             | `design_system.suggest_component`     |
-   | "Show registry entry for X"             | `design_system.get_registry_entry`    |
+   | "Show color tokens" | `design_system.get_tokens` |
+   | "How should I use the input?" | `design_system.get_guidelines` |
+   | "I need a status indicator" | `design_system.suggest_component` |
+   | "Show registry entry for X" | `design_system.get_registry_entry` |
 
 3. **Format Response**
    - Present results in structured format (tables, code blocks)
@@ -41,7 +41,7 @@ Interactive query interface for the design system via MCP tools. Answers questio
    - "Show me everything about button" →
      1. get_component (metadata)
      2. get_guidelines (usage)
-     3. get_tokens (component tier, button-\*)
+     3. get_tokens (component tier, button-*)
      4. get_registry_entry (files, deps)
 
 ## Examples
@@ -78,13 +78,13 @@ Brad: Running get_tokens(category: "color")...
 - [ ] Responses include concrete values, not just descriptions
 - [ ] Follow-up suggestions provided for deeper exploration
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

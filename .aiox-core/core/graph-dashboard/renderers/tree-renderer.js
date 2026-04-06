@@ -1,17 +1,12 @@
-"use strict";
+'use strict';
 
 const MAX_ITEMS_PER_BRANCH = 20;
 
 /**
  * Box-drawing characters for tree rendering.
  */
-const UNICODE_CHARS = {
-  branch: "\u251C\u2500",
-  last: "\u2514\u2500",
-  pipe: "\u2502",
-  space: " ",
-};
-const ASCII_CHARS = { branch: "+-", last: "\\-", pipe: "|", space: " " };
+const UNICODE_CHARS = { branch: '\u251C\u2500', last: '\u2514\u2500', pipe: '\u2502', space: ' ' };
+const ASCII_CHARS = { branch: '+-', last: '\\-', pipe: '|', space: ' ' };
 
 /**
  * Render graph data as ASCII dependency tree.
@@ -29,7 +24,7 @@ function renderTree(graphData, options = {}) {
   const edges = graphData.edges || [];
 
   if (nodes.length === 0) {
-    const badge = graphData.isFallback ? " [OFFLINE]" : "";
+    const badge = graphData.isFallback ? ' [OFFLINE]' : '';
     return `Dependency Graph (0 entities)${badge}\n(empty)`;
   }
 
@@ -41,7 +36,7 @@ function renderTree(graphData, options = {}) {
   const categoryNames = Object.keys(categories).sort();
 
   const lines = [];
-  const badge = graphData.isFallback ? " [OFFLINE]" : "";
+  const badge = graphData.isFallback ? ' [OFFLINE]' : '';
   lines.push(`Dependency Graph (${nodes.length} entities)${badge}`);
 
   for (let ci = 0; ci < categoryNames.length; ci++) {
@@ -63,8 +58,7 @@ function renderTree(graphData, options = {}) {
       const nodePrefix = isLastNode ? chars.last : chars.branch;
 
       const deps = depsMap.get(node.id) || [];
-      const depSuffix =
-        deps.length > 0 ? ` ${chars.last} depends: ${deps.join(", ")}` : "";
+      const depSuffix = deps.length > 0 ? ` ${chars.last} depends: ${deps.join(', ')}` : '';
 
       lines.push(`${catContinue}  ${nodePrefix} ${node.id}${depSuffix}`);
     }
@@ -75,7 +69,7 @@ function renderTree(graphData, options = {}) {
     }
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -87,7 +81,7 @@ function _buildDepsMap(edges) {
   const map = new Map();
 
   for (const edge of edges) {
-    if (edge.type !== "depends") continue;
+    if (edge.type !== 'depends') continue;
 
     if (!map.has(edge.from)) {
       map.set(edge.from, []);
@@ -107,7 +101,7 @@ function _groupByCategory(nodes) {
   const groups = {};
 
   for (const node of nodes) {
-    const cat = node.category || "other";
+    const cat = node.category || 'other';
     if (!groups[cat]) {
       groups[cat] = [];
     }

@@ -11,14 +11,13 @@
 Configure mode architecture for your design token system. Defines mode structure (light/dark/high-contrast/brand), creates semantic token aliases per mode, validates contrast ratios per mode, and generates mode switching mechanism.
 
 ## Input Schema
-
 - **requires:** Output from `ds-token-w3c-extract`
 - **format:** JSON data (W3C DTCG v1.0)
 - **location:** `outputs/design-system/{project}/tokens/tokens-w3c-dtcg.json`
 
 ## Prerequisites
 
-- Existing tokens (preferably in W3C DTCG format from \*token-w3c)
+- Existing tokens (preferably in W3C DTCG format from *token-w3c)
 - Color palette defined
 - Read data/w3c-dtcg-spec-reference.md for mode format
 
@@ -99,11 +98,11 @@ Configure mode architecture for your design token system. Defines mode structure
 - Mode switching works via system preference and manual toggle
 - High-contrast mode provides enhanced readability
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

@@ -10,48 +10,42 @@
  *   5. Consolidate letter-spacing
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const ROOT = process.cwd();
-const EXTRACTION_DIR = path.join(
-  ROOT,
-  "workspace",
-  "domains",
-  "design-system",
-  "extraction",
-);
-const MERGED_PATH = path.join(EXTRACTION_DIR, "all-pages-merged.json");
-const STYLES_PATH = path.join(EXTRACTION_DIR, "figma-styles.json");
-const OUTPUT_DIR = path.join(EXTRACTION_DIR, "curated");
-const OUTPUT_PATH = path.join(OUTPUT_DIR, "curated-typography.json");
+const EXTRACTION_DIR = path.join(ROOT, 'workspace', 'domains', 'design-system', 'extraction');
+const MERGED_PATH = path.join(EXTRACTION_DIR, 'all-pages-merged.json');
+const STYLES_PATH = path.join(EXTRACTION_DIR, 'figma-styles.json');
+const OUTPUT_DIR = path.join(EXTRACTION_DIR, 'curated');
+const OUTPUT_PATH = path.join(OUTPUT_DIR, 'curated-typography.json');
 
 // ── Size Scale (Tailwind-compatible) ───────────────────────────────────────
 
 const SIZE_SCALE = [
-  { name: "xs", px: 12 },
-  { name: "sm", px: 14 },
-  { name: "base", px: 16 },
-  { name: "lg", px: 18 },
-  { name: "xl", px: 20 },
-  { name: "2xl", px: 24 },
-  { name: "3xl", px: 30 },
-  { name: "4xl", px: 36 },
-  { name: "5xl", px: 48 },
-  { name: "6xl", px: 60 },
-  { name: "7xl", px: 72 },
-  { name: "8xl", px: 96 },
-  { name: "9xl", px: 128 },
+  { name: 'xs', px: 12 },
+  { name: 'sm', px: 14 },
+  { name: 'base', px: 16 },
+  { name: 'lg', px: 18 },
+  { name: 'xl', px: 20 },
+  { name: '2xl', px: 24 },
+  { name: '3xl', px: 30 },
+  { name: '4xl', px: 36 },
+  { name: '5xl', px: 48 },
+  { name: '6xl', px: 60 },
+  { name: '7xl', px: 72 },
+  { name: '8xl', px: 96 },
+  { name: '9xl', px: 128 },
 ];
 
 // ── Weight consolidation ───────────────────────────────────────────────────
 
 const CANONICAL_WEIGHTS = [
-  { name: "light", value: 300 },
-  { name: "normal", value: 400 },
-  { name: "medium", value: 500 },
-  { name: "semibold", value: 600 },
-  { name: "bold", value: 700 },
+  { name: 'light', value: 300 },
+  { name: 'normal', value: 400 },
+  { name: 'medium', value: 500 },
+  { name: 'semibold', value: 600 },
+  { name: 'bold', value: 700 },
 ];
 
 function findNearestWeight(w) {
@@ -70,12 +64,12 @@ function findNearestWeight(w) {
 // ── Line-height ratios ────────────────────────────────────────────────────
 
 const LH_RATIOS = [
-  { name: "none", value: 1.0 },
-  { name: "tight", value: 1.25 },
-  { name: "snug", value: 1.375 },
-  { name: "normal", value: 1.5 },
-  { name: "relaxed", value: 1.625 },
-  { name: "loose", value: 2.0 },
+  { name: 'none', value: 1.0 },
+  { name: 'tight', value: 1.25 },
+  { name: 'snug', value: 1.375 },
+  { name: 'normal', value: 1.5 },
+  { name: 'relaxed', value: 1.625 },
+  { name: 'loose', value: 2.0 },
 ];
 
 function findNearestLineHeight(ratio) {
@@ -94,67 +88,56 @@ function findNearestLineHeight(ratio) {
 // ── Letter-spacing ─────────────────────────────────────────────────────────
 
 const LS_SCALE = [
-  { name: "tighter", em: -0.05 },
-  { name: "tight", em: -0.025 },
-  { name: "normal", em: 0 },
-  { name: "wide", em: 0.025 },
-  { name: "wider", em: 0.05 },
-  { name: "widest", em: 0.1 },
+  { name: 'tighter', em: -0.05 },
+  { name: 'tight', em: -0.025 },
+  { name: 'normal', em: 0 },
+  { name: 'wide', em: 0.025 },
+  { name: 'wider', em: 0.05 },
+  { name: 'widest', em: 0.1 },
 ];
 
 // ── Mono font detection ───────────────────────────────────────────────────
 
-const MONO_PATTERNS =
-  /mono|code|console|courier|fira\s*code|jet\s*brains|source\s*code|menlo|hack|inconsolata/i;
+const MONO_PATTERNS = /mono|code|console|courier|fira\s*code|jet\s*brains|source\s*code|menlo|hack|inconsolata/i;
 
 // ── Main ───────────────────────────────────────────────────────────────────
 
 function main() {
-  console.log("=== TYPOGRAPHY CURATION PIPELINE ===\n");
+  console.log('=== TYPOGRAPHY CURATION PIPELINE ===\n');
 
-  const merged = JSON.parse(fs.readFileSync(MERGED_PATH, "utf8"));
+  const merged = JSON.parse(fs.readFileSync(MERGED_PATH, 'utf8'));
   const rawFonts = merged.fonts || [];
   const rawTextStyles = merged.textStyles || [];
 
   // Load Figma styles for enrichment
   let figmaStyles = [];
-  try {
-    figmaStyles = JSON.parse(fs.readFileSync(STYLES_PATH, "utf8"));
-  } catch (_) {
-    /* optional */
-  }
-  const textFigmaStyles = figmaStyles.filter((s) => s.style_type === "TEXT");
+  try { figmaStyles = JSON.parse(fs.readFileSync(STYLES_PATH, 'utf8')); } catch (_) { /* optional */ }
+  const textFigmaStyles = figmaStyles.filter((s) => s.style_type === 'TEXT');
   console.log(`  Figma text styles: ${textFigmaStyles.length}`);
 
   // Analyze text decoration and text case usage from enriched textStyles
   const decorationMap = new Map();
   const textCaseMap = new Map();
   for (const ts of rawTextStyles) {
-    const dec = ts.textDecoration || "NONE";
+    const dec = ts.textDecoration || 'NONE';
     decorationMap.set(dec, (decorationMap.get(dec) || 0) + (ts.count || 0));
-    const tc = ts.textCase || "ORIGINAL";
+    const tc = ts.textCase || 'ORIGINAL';
     textCaseMap.set(tc, (textCaseMap.get(tc) || 0) + (ts.count || 0));
   }
 
-  console.log(
-    `Input: ${rawFonts.length} font entries, ${rawTextStyles.length} text styles`,
-  );
+  console.log(`Input: ${rawFonts.length} font entries, ${rawTextStyles.length} text styles`);
 
   // 1. Font families — count frequency
   const familyMap = new Map(); // family → total count
   for (const font of rawFonts) {
-    const family = (font.family || "").trim();
+    const family = (font.family || '').trim();
     if (!family) continue;
     familyMap.set(family, (familyMap.get(family) || 0) + (font.count || 0));
   }
 
   const sortedFamilies = [...familyMap.entries()]
     .sort((a, b) => b[1] - a[1])
-    .map(([name, count]) => ({
-      name,
-      count,
-      isMono: MONO_PATTERNS.test(name),
-    }));
+    .map(([name, count]) => ({ name, count, isMono: MONO_PATTERNS.test(name) }));
 
   console.log(`  Unique families: ${sortedFamilies.length}`);
 
@@ -163,27 +146,22 @@ function main() {
   const nonMonoFamilies = sortedFamilies.filter((f) => !f.isMono);
 
   const selectedFamilies = [];
-  if (nonMonoFamilies.length >= 1)
-    selectedFamilies.push({ ...nonMonoFamilies[0], role: "primary" });
-  if (nonMonoFamilies.length >= 2)
-    selectedFamilies.push({ ...nonMonoFamilies[1], role: "secondary" });
-  if (monoFamilies.length >= 1)
-    selectedFamilies.push({ ...monoFamilies[0], role: "mono" });
+  if (nonMonoFamilies.length >= 1) selectedFamilies.push({ ...nonMonoFamilies[0], role: 'primary' });
+  if (nonMonoFamilies.length >= 2) selectedFamilies.push({ ...nonMonoFamilies[1], role: 'secondary' });
+  if (monoFamilies.length >= 1) selectedFamilies.push({ ...monoFamilies[0], role: 'mono' });
 
   // Rejected families (< 5% usage)
   const totalFontUsage = sortedFamilies.reduce((sum, f) => sum + f.count, 0);
   const rejectedFamilies = sortedFamilies
     .filter((f) => !selectedFamilies.some((s) => s.name === f.name))
-    .filter((f) => f.count / totalFontUsage < 0.05)
+    .filter((f) => (f.count / totalFontUsage) < 0.05)
     .map((f) => ({
       name: f.name,
       count: f.count,
       percentage: `${Math.round((f.count / totalFontUsage) * 1000) / 10}%`,
     }));
 
-  console.log(
-    `  Selected families: ${selectedFamilies.map((f) => f.name).join(", ")}`,
-  );
+  console.log(`  Selected families: ${selectedFamilies.map((f) => f.name).join(', ')}`);
   console.log(`  Rejected families: ${rejectedFamilies.length}`);
 
   // 2. Font sizes — map to scale
@@ -224,36 +202,22 @@ function main() {
       count,
     });
 
-    const acc = usedSizeSteps.get(bestStep.name) || {
-      ...bestStep,
-      count: 0,
-      rem: bestStep.px / 16,
-    };
+    const acc = usedSizeSteps.get(bestStep.name) || { ...bestStep, count: 0, rem: bestStep.px / 16 };
     acc.count += count;
     usedSizeSteps.set(bestStep.name, acc);
   }
 
   // Final size scale (used + essential)
-  const essentialSizes = [
-    "xs",
-    "sm",
-    "base",
-    "lg",
-    "xl",
-    "2xl",
-    "3xl",
-    "4xl",
-    "5xl",
-  ];
-  const finalSizeScale = SIZE_SCALE.filter(
-    (s) => usedSizeSteps.has(s.name) || essentialSizes.includes(s.name),
-  ).map((s) => ({
-    name: s.name,
-    px: s.px,
-    rem: s.px / 16,
-    cssVar: `--font-size-${s.name}`,
-    usage: usedSizeSteps.get(s.name)?.count || 0,
-  }));
+  const essentialSizes = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'];
+  const finalSizeScale = SIZE_SCALE
+    .filter((s) => usedSizeSteps.has(s.name) || essentialSizes.includes(s.name))
+    .map((s) => ({
+      name: s.name,
+      px: s.px,
+      rem: s.px / 16,
+      cssVar: `--font-size-${s.name}`,
+      usage: usedSizeSteps.get(s.name)?.count || 0,
+    }));
 
   // 3. Weights — consolidate
   const weightMap = new Map();
@@ -282,24 +246,24 @@ function main() {
 
     if (distance > 0) {
       decisions.push({
-        category: "typography",
-        action: "MAP_WEIGHT",
+        category: 'typography',
+        action: 'MAP_WEIGHT',
         items: [`weight ${w}`],
         result: `${canonical.name} (${canonical.value})`,
         reason: `Distance ${distance} < 50 threshold`,
-        authority: "DS-CURATION-PIPELINE-PROPOSAL §4.3",
+        authority: 'DS-CURATION-PIPELINE-PROPOSAL §4.3',
       });
     }
   }
 
-  const finalWeights = CANONICAL_WEIGHTS.filter((w) =>
-    usedWeights.has(w.name),
-  ).map((w) => ({
-    name: w.name,
-    value: w.value,
-    cssVar: `--font-weight-${w.name}`,
-    usage: usedWeights.get(w.name)?.count || 0,
-  }));
+  const finalWeights = CANONICAL_WEIGHTS
+    .filter((w) => usedWeights.has(w.name))
+    .map((w) => ({
+      name: w.name,
+      value: w.value,
+      cssVar: `--font-weight-${w.name}`,
+      usage: usedWeights.get(w.name)?.count || 0,
+    }));
 
   // 4. Line heights
   const lhMap = new Map();
@@ -317,14 +281,14 @@ function main() {
     usedLineHeights.set(nearest.name, acc);
   }
 
-  const finalLineHeights = LH_RATIOS.filter((lh) =>
-    usedLineHeights.has(lh.name),
-  ).map((lh) => ({
-    name: lh.name,
-    value: lh.value,
-    cssVar: `--line-height-${lh.name}`,
-    usage: usedLineHeights.get(lh.name)?.count || 0,
-  }));
+  const finalLineHeights = LH_RATIOS
+    .filter((lh) => usedLineHeights.has(lh.name))
+    .map((lh) => ({
+      name: lh.name,
+      value: lh.value,
+      cssVar: `--line-height-${lh.name}`,
+      usage: usedLineHeights.get(lh.name)?.count || 0,
+    }));
 
   // 5. Letter spacing
   const lsMap = new Map();
@@ -363,32 +327,21 @@ function main() {
     before: totalBefore,
     after: totalAfter,
     reduction: `${Math.round(reductionPct * 10) / 10}%`,
-    target: "50%",
-    status:
-      reductionPct >= 50 ? "PASS" : reductionPct >= 35 ? "CONDITIONAL" : "FAIL",
-    families_status:
-      totalAfter.families <= 3
-        ? "PASS"
-        : totalAfter.families === 4
-          ? "CONDITIONAL"
-          : "FAIL",
-    weights_status:
-      totalAfter.weights <= 5
-        ? "PASS"
-        : totalAfter.weights === 6
-          ? "CONDITIONAL"
-          : "FAIL",
+    target: '50%',
+    status: reductionPct >= 50 ? 'PASS' : reductionPct >= 35 ? 'CONDITIONAL' : 'FAIL',
+    families_status: totalAfter.families <= 3 ? 'PASS' : totalAfter.families === 4 ? 'CONDITIONAL' : 'FAIL',
+    weights_status: totalAfter.weights <= 5 ? 'PASS' : totalAfter.weights === 6 ? 'CONDITIONAL' : 'FAIL',
   };
 
   // Text decoration analysis
   const textDecorations = [...decorationMap.entries()]
-    .filter(([k]) => k !== "NONE")
+    .filter(([k]) => k !== 'NONE')
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count);
 
   // Text case analysis
   const textCases = [...textCaseMap.entries()]
-    .filter(([k]) => k !== "ORIGINAL")
+    .filter(([k]) => k !== 'ORIGINAL')
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count);
 
@@ -397,10 +350,7 @@ function main() {
   for (const ts of rawTextStyles) {
     const ps = ts.paragraphSpacing || 0;
     if (ps > 0) {
-      paragraphSpacingMap.set(
-        ps,
-        (paragraphSpacingMap.get(ps) || 0) + (ts.count || 0),
-      );
+      paragraphSpacingMap.set(ps, (paragraphSpacingMap.get(ps) || 0) + (ts.count || 0));
     }
   }
   const paragraphSpacings = [...paragraphSpacingMap.entries()]
@@ -409,10 +359,10 @@ function main() {
 
   const output = {
     meta: {
-      source: "all-pages-merged.json",
+      source: 'all-pages-merged.json',
       pagesIncluded: merged.meta.pagesIncluded,
       curatedAt: new Date().toISOString(),
-      algorithm: "Modular scale + font consolidation",
+      algorithm: 'Modular scale + font consolidation',
       figmaTextStylesCount: textFigmaStyles.length,
     },
     scores,
@@ -438,25 +388,17 @@ function main() {
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
 
   console.log(`\n--- RESULTS ---`);
-  console.log(
-    `  Families: ${totalBefore.families} → ${totalAfter.families} (${scores.families_status})`,
-  );
+  console.log(`  Families: ${totalBefore.families} → ${totalAfter.families} (${scores.families_status})`);
   console.log(`  Sizes: ${totalBefore.sizes} → ${totalAfter.sizes}`);
-  console.log(
-    `  Weights: ${totalBefore.weights} → ${totalAfter.weights} (${scores.weights_status})`,
-  );
+  console.log(`  Weights: ${totalBefore.weights} → ${totalAfter.weights} (${scores.weights_status})`);
   console.log(`  Line heights: ${lhMap.size} → ${finalLineHeights.length}`);
   console.log(`  Text decorations: ${textDecorations.length} non-default`);
   console.log(`  Text cases: ${textCases.length} non-default`);
-  console.log(
-    `  Paragraph spacings: ${paragraphSpacings.length} distinct values`,
-  );
-  console.log(
-    `  Overall reduction: ${scores.reduction} (target: ${scores.target}) → ${scores.status}`,
-  );
+  console.log(`  Paragraph spacings: ${paragraphSpacings.length} distinct values`);
+  console.log(`  Overall reduction: ${scores.reduction} (target: ${scores.target}) → ${scores.status}`);
   console.log(`  Decisions logged: ${decisions.length}`);
   console.log(`\nOutput: ${OUTPUT_PATH}`);
-  console.log("=== DONE ===");
+  console.log('=== DONE ===');
 }
 
 main();

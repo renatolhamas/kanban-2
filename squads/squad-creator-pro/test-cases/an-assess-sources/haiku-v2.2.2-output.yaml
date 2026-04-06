@@ -295,25 +295,25 @@ source_assessment:
     - "SEM NARRATIVA CONTRADITÓRIA: Livros são coerentes demais. Procurar por: entrevistas onde admite erros anteriores, posts onde mudou de ideia, debates com outros autores."
 
   extraction_sequence:
-    - step: 1
-      source: "$100M Offers"
-      effort_level: "médio"
-      expected_yield: "Grand Slam Offer framework, Equação de Valor (4 drivers), terminologia core (Grand Slam, overcommunicate, value equation)"
+  - step: 1
+    source: "$100M Offers"
+    effort_level: "médio"
+    expected_yield: "Grand Slam Offer framework, Equação de Valor (4 drivers), terminologia core (Grand Slam, overcommunicate, value equation)"
 
-    - step: 2
-      source: "$100M Leads"
-      effort_level: "alto"
-      expected_yield: "Core Four framework, lead engagement tactics, conversion psychology, sequencing mentality"
+  - step: 2
+    source: "$100M Leads"
+    effort_level: "alto"
+    expected_yield: "Core Four framework, lead engagement tactics, conversion psychology, sequencing mentality"
 
-    - step: 3
-      source: "$100M Money Models"
-      effort_level: "alto"
-      expected_yield: "GMMM framework, sequência de ofertas, paradigm shifts, implementation playbook"
+  - step: 3
+    source: "$100M Money Models"
+    effort_level: "alto"
+    expected_yield: "GMMM framework, sequência de ofertas, paradigm shifts, implementation playbook"
 
-    - step: 4
-      source: "Entrevista Tom Bilyeu"
-      effort_level: "alto"
-      expected_yield: "[PENDENTE TRANSCRIÇÃO] Story details, challenge responses, nuanced thinking beyond books"
+  - step: 4
+    source: "Entrevista Tom Bilyeu"
+    effort_level: "alto"
+    expected_yield: "[PENDENTE TRANSCRIÇÃO] Story details, challenge responses, nuanced thinking beyond books"
 
   tier_thresholds:
     ouro_range: ">= 4.0"

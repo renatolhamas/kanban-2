@@ -8,20 +8,16 @@
  * Part of Story 6.1.2.6 Performance Optimization
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs').promises;
+const path = require('path');
+const yaml = require('js-yaml');
 
-const CACHE_DIR = path.join(process.cwd(), ".aiox", "cache");
+const CACHE_DIR = path.join(process.cwd(), '.aiox', 'cache');
 const CACHE_TTL = 3600 * 1000; // 1 hour
 
 class DevContextLoader {
   constructor() {
-    this.coreConfigPath = path.join(
-      process.cwd(),
-      ".aiox-core",
-      "core-config.yaml",
-    );
+    this.coreConfigPath = path.join(process.cwd(), '.aiox-core', 'core-config.yaml');
     this.summaryCache = new Map();
     this.cacheDir = CACHE_DIR; // Make configurable for testing
   }
@@ -47,7 +43,7 @@ class DevContextLoader {
 
     if (fileList.length === 0) {
       return {
-        status: "no_files",
+        status: 'no_files',
         loadTime: Date.now() - startTime,
         files: [],
       };
@@ -59,9 +55,9 @@ class DevContextLoader {
     const loadTime = Date.now() - startTime;
 
     return {
-      status: "loaded",
+      status: 'loaded',
       loadTime,
-      loadStrategy: fullLoad ? "full" : "summary",
+      loadStrategy: fullLoad ? 'full' : 'summary',
       files,
       filesCount: files.length,
       totalLines: files.reduce((sum, f) => sum + (f.linesCount || 0), 0),
@@ -76,10 +72,10 @@ class DevContextLoader {
    */
   async loadCoreConfig() {
     try {
-      const content = await fs.readFile(this.coreConfigPath, "utf8");
+      const content = await fs.readFile(this.coreConfigPath, 'utf8');
       return yaml.load(content);
     } catch (error) {
-      console.warn("⚠️ Could not load core-config.yaml:", error.message);
+      console.warn('⚠️ Could not load core-config.yaml:', error.message);
       return {};
     }
   }
@@ -112,8 +108,8 @@ class DevContextLoader {
         }
 
         // Load from disk
-        const content = await fs.readFile(absolutePath, "utf8");
-        const lines = content.split("\n");
+        const content = await fs.readFile(absolutePath, 'utf8');
+        const lines = content.split('\n');
         const linesCount = lines.length;
 
         let fileData;
@@ -132,9 +128,9 @@ class DevContextLoader {
             path: filePath,
             summary,
             linesCount,
-            summaryLines: summary.split("\n").length,
+            summaryLines: summary.split('\n').length,
             cached: false,
-            note: "Use *load-full to load complete file",
+            note: 'Use *load-full to load complete file',
           };
         }
 
@@ -168,28 +164,26 @@ class DevContextLoader {
     const fileName = path.basename(filePath);
 
     // Extract key sections (h1, h2 headers)
-    const headers = lines
-      .filter((line) => line.match(/^#{1,2}\s+/))
-      .slice(0, 20); // First 20 headers
+    const headers = lines.filter((line) => line.match(/^#{1,2}\s+/)).slice(0, 20); // First 20 headers
 
     // First 100 lines
     const preview = lines.slice(0, 100);
 
     const summary = [
       `📄 ${fileName} (${lines.length} lines)`,
-      "",
-      "## Key Sections:",
-      ...headers.map((h) => `- ${h.replace(/^#+\s*/, "")}`),
-      "",
-      "## Preview (first 100 lines):",
-      "```",
+      '',
+      '## Key Sections:',
+      ...headers.map((h) => `- ${h.replace(/^#+\s*/, '')}`),
+      '',
+      '## Preview (first 100 lines):',
+      '```',
       ...preview,
-      "```",
-      "",
+      '```',
+      '',
       `...and ${Math.max(0, lines.length - 100)} more lines`,
     ];
 
-    return summary.join("\n");
+    return summary.join('\n');
   }
 
   /**
@@ -212,7 +206,7 @@ class DevContextLoader {
         return null;
       }
 
-      const cached = JSON.parse(await fs.readFile(cachePath, "utf8"));
+      const cached = JSON.parse(await fs.readFile(cachePath, 'utf8'));
       return cached;
     } catch (_error) {
       // Cache miss
@@ -236,10 +230,10 @@ class DevContextLoader {
       // Ensure cache directory exists
       await fs.mkdir(this.cacheDir, { recursive: true });
 
-      await fs.writeFile(cachePath, JSON.stringify(data, null, 2), "utf8");
+      await fs.writeFile(cachePath, JSON.stringify(data, null, 2), 'utf8');
     } catch (error) {
       // Cache write error - not critical
-      console.warn("⚠️ Could not save cache:", error.message);
+      console.warn('⚠️ Could not save cache:', error.message);
     }
   }
 
@@ -251,8 +245,8 @@ class DevContextLoader {
    * @returns {string} Cache key
    */
   getCacheKey(filePath, fullLoad) {
-    const normalized = filePath.replace(/[^a-zA-Z0-9]/g, "_");
-    const type = fullLoad ? "full" : "summary";
+    const normalized = filePath.replace(/[^a-zA-Z0-9]/g, '_');
+    const type = fullLoad ? 'full' : 'summary';
     return `devcontext_${normalized}_${type}`;
   }
 
@@ -264,7 +258,7 @@ class DevContextLoader {
   async clearCache() {
     try {
       const files = await fs.readdir(this.cacheDir);
-      const devContextFiles = files.filter((f) => f.startsWith("devcontext_"));
+      const devContextFiles = files.filter((f) => f.startsWith('devcontext_'));
 
       for (const file of devContextFiles) {
         await fs.unlink(path.join(this.cacheDir, file));
@@ -272,7 +266,7 @@ class DevContextLoader {
 
       console.log(`✅ Cleared ${devContextFiles.length} cache files`);
     } catch (error) {
-      console.warn("⚠️ Could not clear cache:", error.message);
+      console.warn('⚠️ Could not clear cache:', error.message);
     }
   }
 }
@@ -283,9 +277,9 @@ if (require.main === module) {
   const command = process.argv[2];
 
   (async () => {
-    if (command === "clear-cache") {
+    if (command === 'clear-cache') {
       await loader.clearCache();
-    } else if (command === "load-full") {
+    } else if (command === 'load-full') {
       const result = await loader.load({ fullLoad: true });
       console.log(JSON.stringify(result, null, 2));
     } else {
@@ -294,7 +288,7 @@ if (require.main === module) {
       console.log(JSON.stringify(result, null, 2));
     }
   })().catch((error) => {
-    console.error("❌ Error:", error.message);
+    console.error('❌ Error:', error.message);
     process.exit(1);
   });
 }

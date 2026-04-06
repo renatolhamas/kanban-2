@@ -3,29 +3,24 @@
 Este arquivo define as instrucoes do projeto para o Codex CLI.
 
 <!-- AIOX-MANAGED-START: core -->
-
 ## Core Rules
 
 1. Siga a Constitution em `.aiox-core/constitution.md`
 2. Priorize `CLI First -> Observability Second -> UI Third`
 3. Trabalhe por stories em `docs/stories/`
-4. Considere o `docs/dev/COMMAND_PLAYBOOK.md` antes de rodar comandos de shell.
-5. Nao invente requisitos fora dos artefatos existentes
+4. Nao invente requisitos fora dos artefatos existentes
 <!-- AIOX-MANAGED-END: core -->
 
 <!-- AIOX-MANAGED-START: quality -->
-
 ## Quality Gates
 
 - Rode `npm run lint`
 - Rode `npm run typecheck`
 - Rode `npm test`
-- Atualize o `docs/dev/COMMAND_PLAYBOOK.md` se um comando falhar e depois der certo.
 - Atualize checklist e file list da story antes de concluir
 <!-- AIOX-MANAGED-END: quality -->
 
 <!-- AIOX-MANAGED-START: codebase -->
-
 ## Project Map
 
 - Core framework: `.aiox-core/`
@@ -36,7 +31,6 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 <!-- AIOX-MANAGED-END: codebase -->
 
 <!-- AIOX-MANAGED-START: commands -->
-
 ## Common Commands
 
 - `npm run sync:ide`
@@ -48,11 +42,9 @@ Este arquivo define as instrucoes do projeto para o Codex CLI.
 <!-- AIOX-MANAGED-END: commands -->
 
 <!-- AIOX-MANAGED-START: shortcuts -->
-
 ## Agent Shortcuts
 
 Preferencia de ativacao no Codex CLI:
-
 1. Use `/skills` e selecione `aiox-<agent-id>` vindo de `.codex/skills` (ex.: `aiox-architect`)
 2. Se preferir, use os atalhos abaixo (`@architect`, `/architect`, etc.)
 

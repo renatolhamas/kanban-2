@@ -24,7 +24,7 @@ outputs:
 
 elicit: true
 related_tasks:
-  - extract-thinking-dna.md # Complementar: frameworks e decisões
+  - extract-thinking-dna.md  # Complementar: frameworks e decisões
 ---
 
 # Extract Voice DNA
@@ -104,9 +104,9 @@ metaphors:
 
 ```yaml
 vocabulary_rules:
-  always_use: [] # termos que SEMPRE usa
-  never_use: [] # termos que EVITA
-  transforms: # como "traduz" jargão
+  always_use: []    # termos que SEMPRE usa
+  never_use: []     # termos que EVITA
+  transforms:       # como "traduz" jargão
     - from: "jargão comum"
       to: "como ele diz"
 ```
@@ -200,7 +200,7 @@ formatting_habits:
   parentheses: "frequente|raro"
   dashes: "frequente|raro"
   ellipsis: "frequente|raro"
-  special_chars: [] # ex: "→", "•", etc
+  special_chars: []  # ex: "→", "•", etc
 ```
 
 ---
@@ -211,29 +211,29 @@ formatting_habits:
 
 ```yaml
 voice_dimensions:
-  warmth_distance: 5 # 1=caloroso, 10=distante
-  direct_indirect: 5 # 1=direto, 10=indireto
-  formal_casual: 5 # 1=formal, 10=casual
-  complex_simple: 5 # 1=complexo, 10=simples
-  emotional_rational: 5 # 1=emocional, 10=racional
-  humble_confident: 5 # 1=humilde, 10=confiante
-  serious_playful: 5 # 1=sério, 10=brincalhão
+  warmth_distance: 5      # 1=caloroso, 10=distante
+  direct_indirect: 5      # 1=direto, 10=indireto
+  formal_casual: 5        # 1=formal, 10=casual
+  complex_simple: 5       # 1=complexo, 10=simples
+  emotional_rational: 5   # 1=emocional, 10=racional
+  humble_confident: 5     # 1=humilde, 10=confiante
+  serious_playful: 5      # 1=sério, 10=brincalhão
 ```
 
 ### 5.2 Tom por Contexto
 
 ```yaml
 contextual_tone:
-  teaching: "" # quando ensina
-  persuading: "" # quando convence
-  storytelling: "" # quando conta história
-  criticizing: "" # quando critica
-  celebrating: "" # quando elogia
+  teaching: ""        # quando ensina
+  persuading: ""      # quando convence
+  storytelling: ""    # quando conta história
+  criticizing: ""     # quando critica
+  celebrating: ""     # quando elogia
 ```
 
 ### 5.3 Identidade em Uma Frase
 
-> "[Nome] escreve/fala como ******\_\_\_\_******"
+> "[Nome] escreve/fala como ________________"
 
 ---
 
@@ -616,4 +616,4 @@ voice_dna:
 ---
 
 **Squad Architect | Voice DNA Extractor v1.0**
-_"Capture how they communicate, not just what they say"_
+*"Capture how they communicate, not just what they say"*

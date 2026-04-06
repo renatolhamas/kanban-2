@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-const { PermissionMode } = require("./permission-mode");
+const { PermissionMode } = require('./permission-mode');
 
 class OperationGuard {
   /**
@@ -16,76 +16,76 @@ class OperationGuard {
    */
   static SAFE_COMMANDS = [
     // Git read operations
-    "git status",
-    "git log",
-    "git diff",
-    "git branch",
-    "git show",
-    "git ls-files",
-    "git remote -v",
+    'git status',
+    'git log',
+    'git diff',
+    'git branch',
+    'git show',
+    'git ls-files',
+    'git remote -v',
 
     // File system read operations
-    "ls",
-    "pwd",
-    "cat",
-    "head",
-    "tail",
-    "wc",
-    "find",
-    "grep",
-    "which",
-    "file",
-    "stat",
+    'ls',
+    'pwd',
+    'cat',
+    'head',
+    'tail',
+    'wc',
+    'find',
+    'grep',
+    'which',
+    'file',
+    'stat',
 
     // Package manager read operations
-    "npm list",
-    "npm outdated",
-    "npm audit",
-    "npm view",
-    "npm search",
-    "yarn list",
-    "yarn info",
-    "bun pm ls",
+    'npm list',
+    'npm outdated',
+    'npm audit',
+    'npm view',
+    'npm search',
+    'yarn list',
+    'yarn info',
+    'bun pm ls',
 
     // Version checks
-    "node --version",
-    "npm --version",
-    "yarn --version",
-    "bun --version",
-    "git --version",
-    "python --version",
-    "python3 --version",
+    'node --version',
+    'npm --version',
+    'yarn --version',
+    'bun --version',
+    'git --version',
+    'python --version',
+    'python3 --version',
 
     // System info
-    "uname",
-    "whoami",
-    "hostname",
-    "date",
-    "uptime",
-    "df -h",
-    "free -h",
-    "env",
-    "printenv",
+    'uname',
+    'whoami',
+    'hostname',
+    'date',
+    'uptime',
+    'df -h',
+    'free -h',
+    'env',
+    'printenv',
 
     // Network read operations
-    "curl -I",
-    "ping -c",
-    "nslookup",
-    "dig",
+    'curl -I',
+    'ping -c',
+    'nslookup',
+    'dig',
 
     // Process info
-    "ps aux",
-    "top -l 1",
-    "htop",
+    'ps aux',
+    'top -l 1',
+    'htop',
 
     // gh CLI read operations
-    "gh auth status",
-    "gh repo view",
-    "gh pr list",
-    "gh pr view",
-    "gh issue list",
-    "gh issue view",
-    "gh api",
+    'gh auth status',
+    'gh repo view',
+    'gh pr list',
+    'gh pr view',
+    'gh issue list',
+    'gh issue view',
+    'gh api',
   ];
 
   /**
@@ -182,36 +182,36 @@ class OperationGuard {
    */
   classifyOperation(tool, params = {}) {
     // Read-only tools
-    if (["Read", "Glob", "Grep", "WebFetch", "WebSearch"].includes(tool)) {
-      return "read";
+    if (['Read', 'Glob', 'Grep', 'WebFetch', 'WebSearch'].includes(tool)) {
+      return 'read';
     }
 
     // Write tools
-    if (["Write", "Edit", "NotebookEdit"].includes(tool)) {
-      return "write";
+    if (['Write', 'Edit', 'NotebookEdit'].includes(tool)) {
+      return 'write';
     }
 
     // Task tool - depends on subagent type
-    if (tool === "Task") {
-      const readOnlyAgents = ["Explore", "Plan", "claude-code-guide"];
+    if (tool === 'Task') {
+      const readOnlyAgents = ['Explore', 'Plan', 'claude-code-guide'];
       if (readOnlyAgents.includes(params.subagent_type)) {
-        return "read";
+        return 'read';
       }
-      return "execute";
+      return 'execute';
     }
 
     // Bash needs deeper analysis
-    if (tool === "Bash") {
-      return this.classifyBashCommand(params.command || "");
+    if (tool === 'Bash') {
+      return this.classifyBashCommand(params.command || '');
     }
 
     // MCP tools - generally execute
-    if (tool.startsWith("mcp__")) {
-      return "execute";
+    if (tool.startsWith('mcp__')) {
+      return 'execute';
     }
 
     // Default to read (safe)
-    return "read";
+    return 'read';
   }
 
   /**
@@ -225,26 +225,26 @@ class OperationGuard {
     // Check safe commands first (most specific match)
     for (const safe of OperationGuard.SAFE_COMMANDS) {
       if (normalizedCmd.startsWith(safe.toLowerCase())) {
-        return "read";
+        return 'read';
       }
     }
 
     // Check destructive patterns
     for (const pattern of OperationGuard.DESTRUCTIVE_PATTERNS) {
       if (pattern.test(command)) {
-        return "delete";
+        return 'delete';
       }
     }
 
     // Check write patterns
     for (const pattern of OperationGuard.WRITE_PATTERNS) {
       if (pattern.test(command)) {
-        return "write";
+        return 'write';
       }
     }
 
     // Default unknown bash commands to execute
-    return "execute";
+    return 'execute';
   }
 
   /**
@@ -280,7 +280,7 @@ class OperationGuard {
     }
 
     // Operation needs confirmation
-    if (check.allowed === "confirm") {
+    if (check.allowed === 'confirm') {
       return {
         proceed: false,
         needsConfirmation: true,
@@ -295,7 +295,7 @@ class OperationGuard {
     return {
       proceed: false,
       blocked: true,
-      message: "Unknown permission state",
+      message: 'Unknown permission state',
     };
   }
 
@@ -304,9 +304,9 @@ class OperationGuard {
    * @private
    */
   _formatBlockedMessage(tool, params, operation, modeInfo) {
-    let detail = "";
-    if (tool === "Bash" && params.command) {
-      detail = `\nCommand: \`${params.command.substring(0, 100)}${params.command.length > 100 ? "..." : ""}\``;
+    let detail = '';
+    if (tool === 'Bash' && params.command) {
+      detail = `\nCommand: \`${params.command.substring(0, 100)}${params.command.length > 100 ? '...' : ''}\``;
     } else if (params.file_path) {
       detail = `\nFile: \`${params.file_path}\``;
     }
@@ -326,8 +326,8 @@ Tool: \`${tool}\`${detail}
    * @private
    */
   _formatConfirmMessage(tool, params, operation) {
-    let detail = "";
-    if (tool === "Bash" && params.command) {
+    let detail = '';
+    if (tool === 'Bash' && params.command) {
       detail = `\n\n\`\`\`bash\n${params.command}\n\`\`\``;
     } else if (params.file_path) {
       detail = `\n\nFile: \`${params.file_path}\``;
@@ -349,7 +349,7 @@ Tool: \`${tool}\`${detail}`;
       tool,
       operation,
       allowed: check.allowed,
-      command: tool === "Bash" ? params.command?.substring(0, 100) : undefined,
+      command: tool === 'Bash' ? params.command?.substring(0, 100) : undefined,
       file: params.file_path,
     };
 
@@ -381,12 +381,11 @@ Tool: \`${tool}\`${detail}`;
     };
 
     for (const entry of this.operationLog) {
-      stats.byOperation[entry.operation] =
-        (stats.byOperation[entry.operation] || 0) + 1;
+      stats.byOperation[entry.operation] = (stats.byOperation[entry.operation] || 0) + 1;
 
       if (entry.allowed === true) stats.byResult.allowed++;
       else if (entry.allowed === false) stats.byResult.blocked++;
-      else if (entry.allowed === "confirm") stats.byResult.confirmed++;
+      else if (entry.allowed === 'confirm') stats.byResult.confirmed++;
     }
 
     return stats;

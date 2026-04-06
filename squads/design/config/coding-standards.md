@@ -3,13 +3,11 @@
 ## Design Token Naming
 
 ### Token Hierarchy
-
 ```
 {category}.{property}.{variant}.{state}
 ```
 
 ### Examples
-
 ```css
 /* Colors */
 --color-primary-500
@@ -37,7 +35,6 @@
 ```
 
 ### Naming Rules
-
 1. **Use kebab-case** for all token names
 2. **Prefix with category** (color, font, spacing, etc.)
 3. **Use semantic names** when possible (primary, error, success)
@@ -47,7 +44,6 @@
 ## Component Naming
 
 ### File Structure
-
 ```
 ComponentName/
 ├── ComponentName.tsx      # Main component
@@ -58,7 +54,6 @@ ComponentName/
 ```
 
 ### Naming Convention
-
 ```typescript
 // PascalCase for components
 export function Button() {}
@@ -76,23 +71,19 @@ export function calculateContrast() {}
 ## CSS Standards
 
 ### Tailwind Classes Order
-
 ```html
 <!-- Order: Layout → Sizing → Spacing → Typography → Visual → Interactive -->
-<div
-  class="
+<div class="
   flex flex-col           /* Layout */
   w-full h-auto           /* Sizing */
   p-4 mt-2                /* Spacing */
   text-sm font-medium     /* Typography */
   bg-white border rounded /* Visual */
   hover:bg-gray-50        /* Interactive */
-"
-></div>
+">
 ```
 
 ### Custom CSS Rules
-
 ```css
 /* Use CSS custom properties for tokens */
 .component {
@@ -103,20 +94,15 @@ export function calculateContrast() {}
 
 /* Avoid magic numbers */
 /* ❌ Bad */
-.component {
-  padding: 16px;
-}
+.component { padding: 16px; }
 
 /* ✅ Good */
-.component {
-  padding: var(--spacing-4);
-}
+.component { padding: var(--spacing-4); }
 ```
 
 ## Accessibility Standards
 
 ### WCAG 2.1 AA Compliance
-
 ```yaml
 required:
   - Color contrast ratio: 4.5:1 (normal text), 3:1 (large text)
@@ -127,7 +113,6 @@ required:
 ```
 
 ### Code Requirements
-
 ```tsx
 // ✅ Good - accessible button
 <button
@@ -147,13 +132,12 @@ required:
 ## Component API Standards
 
 ### Props Interface
-
 ```typescript
 interface ButtonProps {
   /** Button visual variant */
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: 'primary' | 'secondary' | 'ghost';
   /** Button size */
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   /** Disabled state */
   disabled?: boolean;
   /** Loading state */
@@ -166,11 +150,10 @@ interface ButtonProps {
 ```
 
 ### Default Props
-
 ```typescript
 const defaultProps: Partial<ButtonProps> = {
-  variant: "primary",
-  size: "md",
+  variant: 'primary',
+  size: 'md',
   disabled: false,
   loading: false,
 };
@@ -179,8 +162,7 @@ const defaultProps: Partial<ButtonProps> = {
 ## Documentation Standards
 
 ### Component Documentation
-
-````tsx
+```tsx
 /**
  * Button component for user interactions.
  *
@@ -194,21 +176,20 @@ const defaultProps: Partial<ButtonProps> = {
  * @see {@link https://design.example.com/components/button}
  */
 export function Button(props: ButtonProps) {}
-````
+```
 
 ### Storybook Stories
-
 ```tsx
 export default {
-  title: "Components/Button",
+  title: 'Components/Button',
   component: Button,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
 } satisfies Meta<typeof Button>;
 
 export const Primary: Story = {
   args: {
-    variant: "primary",
-    children: "Primary Button",
+    variant: 'primary',
+    children: 'Primary Button',
   },
 };
 ```
@@ -216,13 +197,11 @@ export const Primary: Story = {
 ## Icon Standards
 
 ### Icon Naming
-
 ```
 {category}-{name}[-{variant}]
 ```
 
 ### Examples
-
 ```
 icon-arrow-right
 icon-arrow-left
@@ -233,31 +212,28 @@ icon-user-plus
 ```
 
 ### Icon Component API
-
 ```typescript
 interface IconProps {
   name: IconName;
-  size?: "sm" | "md" | "lg" | number;
+  size?: 'sm' | 'md' | 'lg' | number;
   color?: string;
   className?: string;
-  "aria-label"?: string;
-  "aria-hidden"?: boolean;
+  'aria-label'?: string;
+  'aria-hidden'?: boolean;
 }
 ```
 
 ## Image Standards
 
 ### Thumbnail Specifications
-
-| Platform        | Size      | Aspect Ratio |
-| --------------- | --------- | ------------ |
-| YouTube         | 1280x720  | 16:9         |
-| Instagram Feed  | 1080x1080 | 1:1          |
-| Instagram Story | 1080x1920 | 9:16         |
-| Twitter         | 1200x675  | 16:9         |
+| Platform | Size | Aspect Ratio |
+|----------|------|--------------|
+| YouTube | 1280x720 | 16:9 |
+| Instagram Feed | 1080x1080 | 1:1 |
+| Instagram Story | 1080x1920 | 9:16 |
+| Twitter | 1200x675 | 16:9 |
 
 ### Export Settings
-
 ```yaml
 web:
   format: webp (with jpg fallback)
@@ -277,7 +253,6 @@ icons:
 ## Git Commit Standards
 
 ### Commit Message Format
-
 ```
 type(scope): description
 
@@ -287,7 +262,6 @@ type(scope): description
 ```
 
 ### Types
-
 ```
 feat:     New feature
 fix:      Bug fix
@@ -299,7 +273,6 @@ chore:    Maintenance
 ```
 
 ### Examples
-
 ```
 feat(tokens): add semantic color tokens
 fix(button): correct focus ring color
@@ -309,5 +282,5 @@ style(card): adjust padding for mobile
 
 ---
 
-_Design Squad Coding Standards v1.0_
-_Last Updated: 2026-02-13_
+*Design Squad Coding Standards v1.0*
+*Last Updated: 2026-02-13*

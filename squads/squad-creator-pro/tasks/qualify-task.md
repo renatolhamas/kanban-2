@@ -15,7 +15,6 @@
 Invocar `wf-model-tier-qualification.yaml` para testar empiricamente se uma task pode rodar em modelo mais barato (Haiku) mantendo qualidade.
 
 **Diferença do `*optimize`:**
-
 - `*optimize --hybrid` → Pipeline completo (análise + conversão + qualificação + GAP ZERO)
 - `*qualify-task` → APENAS qualificação empírica (Opus vs Haiku)
 
@@ -84,8 +83,8 @@ execute:
   # Invoke workflow with inputs
   inputs:
     task_name: "{from command}"
-    target_tier: "haiku" # default
-    threshold: 0.90 # default, can override with --threshold
+    target_tier: "haiku"  # default
+    threshold: 0.90       # default, can override with --threshold
 
   phases:
     - phase_0: "PRE-FLIGHT"
@@ -240,13 +239,13 @@ Dashboard: test-cases/QUALIFICATION-DASHBOARD.yaml
 
 ## Completion Criteria
 
-| Critério                       | Status |
-| ------------------------------ | ------ |
-| Pre-flight validation passed   | [ ]    |
-| Workflow executed completely   | [ ]    |
-| Qualification report generated | [ ]    |
-| Config updated (if qualified)  | [ ]    |
-| Summary displayed              | [ ]    |
+| Critério | Status |
+|----------|--------|
+| Pre-flight validation passed | [ ] |
+| Workflow executed completely | [ ] |
+| Qualification report generated | [ ] |
+| Config updated (if qualified) | [ ] |
+| Summary displayed | [ ] |
 
 ---
 
@@ -263,4 +262,4 @@ Dashboard: test-cases/QUALIFICATION-DASHBOARD.yaml
 _Task Version: 1.0.0_
 _Last Updated: 2026-02-12_
 
-_"Não assumir. Provar com dados."_
+*"Não assumir. Provar com dados."*

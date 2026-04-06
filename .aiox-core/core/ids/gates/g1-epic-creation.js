@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * G1 — Epic Creation Gate
@@ -17,10 +17,8 @@
  * Source: IDS-5a, ids-principles.md G1 definition
  */
 
-const path = require("path");
-const { VerificationGate } = require(
-  path.resolve(__dirname, "../verification-gate.js"),
-);
+const path = require('path');
+const { VerificationGate } = require(path.resolve(__dirname, '../verification-gate.js'));
 
 class G1EpicCreationGate extends VerificationGate {
   /**
@@ -32,12 +30,12 @@ class G1EpicCreationGate extends VerificationGate {
    */
   constructor(options = {}) {
     if (!options.decisionEngine) {
-      throw new Error("[IDS-G1] decisionEngine is required");
+      throw new Error('[IDS-G1] decisionEngine is required');
     }
 
     super({
-      gateId: "G1",
-      agent: "@pm",
+      gateId: 'G1',
+      agent: '@pm',
       blocking: false,
       timeoutMs: options.timeoutMs,
       circuitBreakerOptions: options.circuitBreakerOptions,
@@ -59,7 +57,7 @@ class G1EpicCreationGate extends VerificationGate {
     if (!context || !context.intent) {
       return {
         passed: true,
-        warnings: ["No epic intent provided for G1 verification"],
+        warnings: ['No epic intent provided for G1 verification'],
         opportunities: [],
       };
     }

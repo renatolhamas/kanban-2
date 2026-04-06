@@ -9,7 +9,7 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
 // Constants
 const TOKEN_LIMIT = 8000;
@@ -21,9 +21,9 @@ const CHARS_PER_TOKEN = 3.5;
  * @enum {string}
  */
 const CompressionLevel = {
-  FULL_DETAIL: "full_detail",
-  METADATA_PLUS_FILES: "metadata_plus_files",
-  METADATA_ONLY: "metadata_only",
+  FULL_DETAIL: 'full_detail',
+  METADATA_PLUS_FILES: 'metadata_plus_files',
+  METADATA_ONLY: 'metadata_only',
 };
 
 /**
@@ -31,23 +31,15 @@ const CompressionLevel = {
  */
 const COMPRESSION_FIELDS = {
   [CompressionLevel.FULL_DETAIL]: [
-    "id",
-    "title",
-    "executor",
-    "quality_gate",
-    "status",
-    "acceptance_criteria",
-    "files_modified",
-    "dev_notes",
+    'id', 'title', 'executor', 'quality_gate', 'status',
+    'acceptance_criteria', 'files_modified', 'dev_notes',
   ],
   [CompressionLevel.METADATA_PLUS_FILES]: [
-    "id",
-    "title",
-    "executor",
-    "status",
-    "files_modified",
+    'id', 'title', 'executor', 'status', 'files_modified',
   ],
-  [CompressionLevel.METADATA_ONLY]: ["id", "executor", "status"],
+  [CompressionLevel.METADATA_ONLY]: [
+    'id', 'executor', 'status',
+  ],
 };
 
 /**
@@ -56,7 +48,7 @@ const COMPRESSION_FIELDS = {
  * @returns {number} Estimated token count
  */
 function estimateTokens(text) {
-  if (!text || typeof text !== "string") return 0;
+  if (!text || typeof text !== 'string') return 0;
   return Math.ceil(text.length / CHARS_PER_TOKEN);
 }
 
@@ -107,16 +99,15 @@ function buildFileIndex(stories) {
  * @returns {boolean} True if there is overlap
  */
 function hasFileOverlap(storyFiles, targetFiles) {
-  if (!storyFiles || !Array.isArray(storyFiles) || storyFiles.length === 0)
-    return false;
+  if (!storyFiles || !Array.isArray(storyFiles) || storyFiles.length === 0) return false;
 
   if (targetFiles instanceof Map || targetFiles instanceof Set) {
-    return storyFiles.some((file) => targetFiles.has(file));
+    return storyFiles.some(file => targetFiles.has(file));
   }
 
   if (Array.isArray(targetFiles)) {
     const targetSet = new Set(targetFiles);
-    return storyFiles.some((file) => targetSet.has(file));
+    return storyFiles.some(file => targetSet.has(file));
   }
 
   return false;
@@ -129,10 +120,10 @@ function hasFileOverlap(storyFiles, targetFiles) {
  * @returns {string} Truncated text
  */
 function truncateToTokens(text, maxTokens) {
-  if (!text || typeof text !== "string") return "";
+  if (!text || typeof text !== 'string') return '';
   const maxChars = Math.floor(maxTokens * CHARS_PER_TOKEN);
   if (text.length <= maxChars) return text;
-  return text.substring(0, maxChars) + "...";
+  return text.substring(0, maxChars) + '...';
 }
 
 /**
@@ -143,7 +134,7 @@ function truncateToTokens(text, maxTokens) {
  */
 function formatStoryEntry(story, level) {
   const fields = COMPRESSION_FIELDS[level];
-  if (!fields) return "";
+  if (!fields) return '';
 
   const parts = [];
   for (const field of fields) {
@@ -151,13 +142,13 @@ function formatStoryEntry(story, level) {
     if (value === undefined || value === null) continue;
 
     if (Array.isArray(value)) {
-      parts.push(`${field}: [${value.join(", ")}]`);
+      parts.push(`${field}: [${value.join(', ')}]`);
     } else {
       parts.push(`${field}: ${value}`);
     }
   }
 
-  const entry = parts.join(" | ");
+  const entry = parts.join(' | ');
 
   // Apply hard cap per story
   const tokens = estimateTokens(entry);
@@ -195,7 +186,7 @@ class EpicContextAccumulator {
 
     const state = this.sessionState.state;
     if (!state || !state.session_state) {
-      return "";
+      return '';
     }
 
     const { progress, context_snapshot } = state.session_state;
@@ -203,7 +194,7 @@ class EpicContextAccumulator {
 
     // No completed stories — return empty context
     if (storiesDone.length === 0) {
-      return "";
+      return '';
     }
 
     // Build file index for O(1) lookups
@@ -226,32 +217,26 @@ class EpicContextAccumulator {
     }
 
     // Format entries
-    let formattedEntries = entries.map(({ story, level }) =>
-      formatStoryEntry(story, level),
-    );
+    let formattedEntries = entries.map(({ story, level }) => formatStoryEntry(story, level));
 
     // Apply token limit with compression cascade
-    formattedEntries = this._applyCompressionCascade(
-      entries,
-      formattedEntries,
-      storyN,
-    );
+    formattedEntries = this._applyCompressionCascade(entries, formattedEntries, storyN);
 
     // Build final context
     const header = `Epic ${epicId} Context (${storiesDone.length} stories completed):`;
     const executorDist = context_snapshot.executor_distribution || {};
     const executorSummary = Object.entries(executorDist)
       .map(([agent, count]) => `${agent}: ${count}`)
-      .join(", ");
+      .join(', ');
 
     const sections = [header];
     if (executorSummary) {
       sections.push(`Executors: ${executorSummary}`);
     }
-    sections.push("---");
-    sections.push(...formattedEntries.filter((e) => e.length > 0));
+    sections.push('---');
+    sections.push(...formattedEntries.filter(e => e.length > 0));
 
-    return sections.join("\n");
+    return sections.join('\n');
   }
 
   /**
@@ -274,10 +259,7 @@ class EpicContextAccumulator {
 
     // Exception: file overlap
     if (currentLevel === CompressionLevel.METADATA_ONLY) {
-      if (
-        story.files_modified &&
-        hasFileOverlap(story.files_modified, targetFiles)
-      ) {
+      if (story.files_modified && hasFileOverlap(story.files_modified, targetFiles)) {
         return targetLevel;
       }
     }
@@ -301,7 +283,7 @@ class EpicContextAccumulator {
    * @private
    */
   _applyCompressionCascade(entries, formattedEntries, storyN) {
-    const totalText = formattedEntries.join("\n");
+    const totalText = formattedEntries.join('\n');
     let totalTokens = estimateTokens(totalText);
 
     if (totalTokens <= TOKEN_LIMIT) {
@@ -310,27 +292,18 @@ class EpicContextAccumulator {
 
     // Working copy
     const result = [...formattedEntries];
-    const workingEntries = entries.map((e, i) => ({
-      ...e,
-      formatted: result[i],
-    }));
+    const workingEntries = entries.map((e, i) => ({ ...e, formatted: result[i] }));
 
     // Cascade 1: metadata_only on oldest stories (N-7+)
     for (let i = 0; i < workingEntries.length; i++) {
       const distance = storyN - workingEntries[i].index;
-      if (
-        distance >= 7 &&
-        workingEntries[i].level !== CompressionLevel.METADATA_ONLY
-      ) {
+      if (distance >= 7 && workingEntries[i].level !== CompressionLevel.METADATA_ONLY) {
         workingEntries[i].level = CompressionLevel.METADATA_ONLY;
-        result[i] = formatStoryEntry(
-          workingEntries[i].story,
-          CompressionLevel.METADATA_ONLY,
-        );
+        result[i] = formatStoryEntry(workingEntries[i].story, CompressionLevel.METADATA_ONLY);
       }
     }
 
-    totalTokens = estimateTokens(result.join("\n"));
+    totalTokens = estimateTokens(result.join('\n'));
     if (totalTokens <= TOKEN_LIMIT) return result;
 
     // Cascade 2: Remove files_modified from medium stories (N-6 to N-4)
@@ -338,14 +311,11 @@ class EpicContextAccumulator {
       const distance = storyN - workingEntries[i].index;
       if (distance >= 4 && distance <= 6) {
         workingEntries[i].level = CompressionLevel.METADATA_ONLY;
-        result[i] = formatStoryEntry(
-          workingEntries[i].story,
-          CompressionLevel.METADATA_ONLY,
-        );
+        result[i] = formatStoryEntry(workingEntries[i].story, CompressionLevel.METADATA_ONLY);
       }
     }
 
-    totalTokens = estimateTokens(result.join("\n"));
+    totalTokens = estimateTokens(result.join('\n'));
     if (totalTokens <= TOKEN_LIMIT) return result;
 
     // Cascade 3: Truncate dev_notes from recent stories (N-3 to N-1)
@@ -353,12 +323,12 @@ class EpicContextAccumulator {
       const distance = storyN - workingEntries[i].index;
       if (distance >= 1 && distance <= 3) {
         const story = { ...workingEntries[i].story };
-        story.dev_notes = truncateToTokens(story.dev_notes || "", 50);
+        story.dev_notes = truncateToTokens(story.dev_notes || '', 50);
         result[i] = formatStoryEntry(story, CompressionLevel.FULL_DETAIL);
       }
     }
 
-    totalTokens = estimateTokens(result.join("\n"));
+    totalTokens = estimateTokens(result.join('\n'));
     if (totalTokens <= TOKEN_LIMIT) return result;
 
     // Cascade 4: Remove acceptance_criteria from recent stories
@@ -384,7 +354,7 @@ class EpicContextAccumulator {
    */
   _getStoriesData(storiesDone) {
     return storiesDone.map((story, index) => {
-      if (typeof story === "string") {
+      if (typeof story === 'string') {
         return { id: story, index };
       }
       return { ...story, index };

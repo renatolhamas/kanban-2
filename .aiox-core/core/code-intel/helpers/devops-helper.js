@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const { getEnricher, isCodeIntelAvailable } = require("../index");
+const { getEnricher, isCodeIntelAvailable } = require('../index');
 
 /**
  * DevOpsHelper — Code intelligence helper for @devops agent tasks.
@@ -33,8 +33,8 @@ async function assessPrePushImpact(files) {
     if (!impact) {
       return {
         impact: null,
-        riskLevel: "LOW",
-        report: _formatImpactReport(null, "LOW"),
+        riskLevel: 'LOW',
+        report: _formatImpactReport(null, 'LOW'),
       };
     }
 
@@ -75,38 +75,33 @@ async function generateImpactSummary(files) {
       if (tests) {
         testCoverage = tests;
       }
-    } catch {
-      /* skip — partial result ok */
-    }
+    } catch { /* skip — partial result ok */ }
 
     const riskLevel = classifyRiskLevel(impact.blastRadius);
     const fileCount = impact.references ? impact.references.length : 0;
     const topFiles = (impact.references || [])
-      .map((r) => r.file || r.path || "unknown")
+      .map((r) => r.file || r.path || 'unknown')
       .slice(0, 10);
 
     const summaryLines = [
       `**Blast Radius:** ${impact.blastRadius} files affected`,
       `**Risk Level:** ${riskLevel}`,
-      `**Avg Complexity:** ${impact.complexity ? impact.complexity.average.toFixed(1) : "N/A"}`,
+      `**Avg Complexity:** ${impact.complexity ? impact.complexity.average.toFixed(1) : 'N/A'}`,
     ];
 
     if (topFiles.length > 0) {
-      summaryLines.push("", "**Affected Files:**");
+      summaryLines.push('', '**Affected Files:**');
       topFiles.forEach((f) => summaryLines.push(`- ${f}`));
     }
 
     if (testCoverage && testCoverage.length > 0) {
-      summaryLines.push(
-        "",
-        `**Related Tests:** ${testCoverage.length} test file(s) found`,
-      );
+      summaryLines.push('', `**Related Tests:** ${testCoverage.length} test file(s) found`);
     } else {
-      summaryLines.push("", "**Related Tests:** No related tests found");
+      summaryLines.push('', '**Related Tests:** No related tests found');
     }
 
     return {
-      summary: summaryLines.join("\n"),
+      summary: summaryLines.join('\n'),
       testCoverage,
     };
   } catch {
@@ -122,9 +117,9 @@ async function generateImpactSummary(files) {
  * @returns {string} 'LOW' | 'MEDIUM' | 'HIGH'
  */
 function classifyRiskLevel(blastRadius) {
-  if (!blastRadius || blastRadius <= 5) return "LOW";
-  if (blastRadius <= 15) return "MEDIUM";
-  return "HIGH";
+  if (!blastRadius || blastRadius <= 5) return 'LOW';
+  if (blastRadius <= 15) return 'MEDIUM';
+  return 'HIGH';
 }
 
 /**
@@ -136,33 +131,30 @@ function classifyRiskLevel(blastRadius) {
  */
 function _formatImpactReport(impact, riskLevel) {
   if (!impact) {
-    return "📊 Impact Analysis: No impact data available (code intelligence returned empty result)";
+    return '📊 Impact Analysis: No impact data available (code intelligence returned empty result)';
   }
 
   const lines = [
-    "📊 Impact Analysis:",
+    '📊 Impact Analysis:',
     `   Blast Radius: ${impact.blastRadius} files affected`,
     `   Risk Level: ${riskLevel}`,
-    `   Avg Complexity: ${impact.complexity ? impact.complexity.average.toFixed(1) : "N/A"}`,
+    `   Avg Complexity: ${impact.complexity ? impact.complexity.average.toFixed(1) : 'N/A'}`,
   ];
 
   const topFiles = (impact.references || [])
-    .map((r) => r.file || r.path || "unknown")
+    .map((r) => r.file || r.path || 'unknown')
     .slice(0, 10);
 
   if (topFiles.length > 0) {
-    lines.push("   Top affected files:");
+    lines.push('   Top affected files:');
     topFiles.forEach((f) => lines.push(`     - ${f}`));
   }
 
-  if (riskLevel === "HIGH") {
-    lines.push(
-      "",
-      `   ⚠️  HIGH RISK: ${impact.blastRadius} files affected. Confirm push?`,
-    );
+  if (riskLevel === 'HIGH') {
+    lines.push('', `   ⚠️  HIGH RISK: ${impact.blastRadius} files affected. Confirm push?`);
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 module.exports = {

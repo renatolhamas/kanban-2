@@ -126,10 +126,10 @@ User can type `#yolo` to toggle to YOLO mode (process all sections at once).
 - Section-by-section rationale log captured in the generated artifact
 - Elicitation decisions and overrides recorded in-line
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

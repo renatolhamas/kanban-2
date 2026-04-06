@@ -5,52 +5,52 @@
  * @llm-context CLI tool for tracking squad creation pipeline progress.
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SQUADS_BASE = path.resolve(__dirname, "..", ".."); // squads/
-const ACTIVE_SQUAD_PATH = path.join(SQUADS_BASE, ".active-squad");
+const SQUADS_BASE = path.resolve(__dirname, '..', '..'); // squads/
+const ACTIVE_SQUAD_PATH = path.join(SQUADS_BASE, '.active-squad');
 
 const CONCURRENCY_THRESHOLD_MS = 5000; // --force bypasses this check
 
 // Squad creation pipeline phases
 const VALID_PHASES = [
-  "init",
-  "research", // phase_0: Research sources
-  "source_validation", // phase_0_5: Validate sources
-  "dna_extraction", // phase_1: Extract DNA patterns
-  "agent_scaffolding", // phase_2: Create agent structure
-  "task_anatomy", // phase_3: Define tasks
-  "quality_gate", // phase_4: CHECKPOINT - Human approval
-  "integration", // phase_5: Integrate into squad
-  "smoke_test", // phase_6: Functional test
-  "completed",
-  "failed",
+  'init',
+  'research',           // phase_0: Research sources
+  'source_validation',  // phase_0_5: Validate sources
+  'dna_extraction',     // phase_1: Extract DNA patterns
+  'agent_scaffolding',  // phase_2: Create agent structure
+  'task_anatomy',       // phase_3: Define tasks
+  'quality_gate',       // phase_4: CHECKPOINT - Human approval
+  'integration',        // phase_5: Integrate into squad
+  'smoke_test',         // phase_6: Functional test
+  'completed',
+  'failed'
 ];
 
 const VALID_STATUSES = [
-  "pending",
-  "in_progress",
-  "checkpoint", // Awaiting human approval
-  "approved",
-  "rejected",
-  "completed",
+  'pending',
+  'in_progress',
+  'checkpoint',    // Awaiting human approval
+  'approved',
+  'rejected',
+  'completed'
 ];
 
 // Agent mapping for each phase
 const PHASE_AGENTS = {
-  research: "oalanicolas",
-  source_validation: "oalanicolas",
-  dna_extraction: "oalanicolas",
-  agent_scaffolding: "oalanicolas",
-  task_anatomy: "pedro-valerio",
-  quality_gate: "pedro-valerio",
-  integration: "squad-chief",
-  smoke_test: "squad-chief",
+  'research': 'oalanicolas',
+  'source_validation': 'oalanicolas',
+  'dna_extraction': 'oalanicolas',
+  'agent_scaffolding': 'oalanicolas',
+  'task_anatomy': 'pedro-valerio',
+  'quality_gate': 'pedro-valerio',
+  'integration': 'squad-chief',
+  'smoke_test': 'squad-chief'
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -64,17 +64,17 @@ function outputJson(data) {
 function outputError(code, message, details = {}) {
   outputJson({
     success: false,
-    error: { code, message, details },
+    error: { code, message, details }
   });
 }
 
 function getStatePath(slug) {
-  return path.join(SQUADS_BASE, slug, "metadata", "state.json");
+  return path.join(SQUADS_BASE, slug, 'metadata', 'state.json');
 }
 
 function readActiveSquad() {
   if (fs.existsSync(ACTIVE_SQUAD_PATH)) {
-    return fs.readFileSync(ACTIVE_SQUAD_PATH, "utf8").trim();
+    return fs.readFileSync(ACTIVE_SQUAD_PATH, 'utf8').trim();
   }
   return null;
 }
@@ -90,7 +90,7 @@ function writeActiveSquad(slug) {
  * Resolve slug: use provided slug or fallback to .active-squad.
  */
 function resolveSlug(slug) {
-  if (slug && !slug.startsWith("-")) return slug;
+  if (slug && !slug.startsWith('-')) return slug;
   return readActiveSquad();
 }
 
@@ -98,7 +98,7 @@ function readState(slug) {
   const statePath = getStatePath(slug);
   if (fs.existsSync(statePath)) {
     try {
-      return JSON.parse(fs.readFileSync(statePath, "utf8"));
+      return JSON.parse(fs.readFileSync(statePath, 'utf8'));
     } catch {
       return { __corrupted: true };
     }
@@ -122,7 +122,7 @@ function checkConcurrency(slug) {
   const statePath = getStatePath(slug);
   if (!fs.existsSync(statePath)) return false;
   const stat = fs.statSync(statePath);
-  return Date.now() - stat.mtimeMs < CONCURRENCY_THRESHOLD_MS;
+  return (Date.now() - stat.mtimeMs) < CONCURRENCY_THRESHOLD_MS;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -137,44 +137,36 @@ function cmdInit(slug, options = {}) {
 
   // Validate slug format (snake_case)
   if (!/^[a-z0-9]+(_[a-z0-9]+)*$/.test(slug)) {
-    outputError("INVALID_SLUG", "Slug must be snake_case", {
+    outputError('INVALID_SLUG', 'Slug must be snake_case', {
       received: slug,
-      expected_pattern: "^[a-z0-9]+(_[a-z0-9]+)*$",
+      expected_pattern: '^[a-z0-9]+(_[a-z0-9]+)*$'
     });
     process.exit(1);
   }
 
   const now = new Date().toISOString();
-  const displayName =
-    name ||
-    slug
-      .split("_")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+  const displayName = name || slug.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
   // Create or update state
   const existingState = readState(slug);
-  const state =
-    existingState && !existingState.__corrupted
-      ? existingState
-      : {
-          slug,
-          display_name: displayName,
-          created_at: now,
-          current_phase: "init",
-          checkpoint_status: "pending",
-          phases: {},
-          completed_outputs: [],
-          agent_history: [],
-          metadata: {
-            source_mind: sourceMind,
-            target_domain: targetDomain,
-          },
-        };
+  const state = (existingState && !existingState.__corrupted) ? existingState : {
+    slug,
+    display_name: displayName,
+    created_at: now,
+    current_phase: 'init',
+    checkpoint_status: 'pending',
+    phases: {},
+    completed_outputs: [],
+    agent_history: [],
+    metadata: {
+      source_mind: sourceMind,
+      target_domain: targetDomain
+    }
+  };
 
   state.updated_at = now;
-  state.current_phase = "init";
-  state.checkpoint_status = "pending";
+  state.current_phase = 'init';
+  state.checkpoint_status = 'pending';
   if (name) state.display_name = displayName;
   if (sourceMind) state.metadata.source_mind = sourceMind;
   if (targetDomain) state.metadata.target_domain = targetDomain;
@@ -186,7 +178,7 @@ function cmdInit(slug, options = {}) {
     success: true,
     slug,
     path: getStatePath(slug),
-    display_name: state.display_name,
+    display_name: state.display_name
   });
 }
 
@@ -198,18 +190,18 @@ function cmdUpdate(slug, phase, status, options = {}) {
 
   // Validate phase
   if (!VALID_PHASES.includes(phase)) {
-    outputError("INVALID_PHASE", `Invalid phase: ${phase}`, {
+    outputError('INVALID_PHASE', `Invalid phase: ${phase}`, {
       received: phase,
-      valid_phases: VALID_PHASES,
+      valid_phases: VALID_PHASES
     });
     process.exit(1);
   }
 
   // Validate status
   if (status && !VALID_STATUSES.includes(status)) {
-    outputError("INVALID_STATUS", `Invalid status: ${status}`, {
+    outputError('INVALID_STATUS', `Invalid status: ${status}`, {
       received: status,
-      valid_statuses: VALID_STATUSES,
+      valid_statuses: VALID_STATUSES
     });
     process.exit(1);
   }
@@ -217,51 +209,39 @@ function cmdUpdate(slug, phase, status, options = {}) {
   // Read existing state
   const state = readState(slug);
   if (!state) {
-    outputError(
-      "STATE_NOT_FOUND",
-      `No state found for slug: ${slug}. Run init first.`,
-    );
+    outputError('STATE_NOT_FOUND', `No state found for slug: ${slug}. Run init first.`);
     process.exit(1);
   }
 
   if (state.__corrupted) {
-    outputError(
-      "CORRUPTED_STATE",
-      `state.json for ${slug} is corrupted (invalid JSON)`,
-    );
+    outputError('CORRUPTED_STATE', `state.json for ${slug} is corrupted (invalid JSON)`);
     process.exit(1);
   }
 
   // Concurrency check
   if (checkConcurrency(slug) && !force) {
-    console.error(
-      "WARNING: state.json modified in last 5s - possible concurrent access",
-    );
-    console.error("Use --force to override");
-    outputError(
-      "CONCURRENT_MODIFICATION",
-      "state.json was modified in the last 5 seconds",
-      {
-        hint: "Use --force to override",
-      },
-    );
+    console.error('WARNING: state.json modified in last 5s - possible concurrent access');
+    console.error('Use --force to override');
+    outputError('CONCURRENT_MODIFICATION', 'state.json was modified in the last 5 seconds', {
+      hint: 'Use --force to override'
+    });
     process.exit(1);
   }
 
   const now = new Date().toISOString();
   const previous = {
     current_phase: state.current_phase,
-    checkpoint_status: state.checkpoint_status,
+    checkpoint_status: state.checkpoint_status
   };
 
   // Update phase tracking
-  const resolvedStatus = status || "in_progress";
+  const resolvedStatus = status || 'in_progress';
   if (!state.phases) state.phases = {};
   state.phases[phase] = {
     status: resolvedStatus,
     started_at: state.phases[phase] ? state.phases[phase].started_at : now,
     agent: PHASE_AGENTS[phase] || null,
-    ...(resolvedStatus === "completed" ? { completed_at: now } : {}),
+    ...(resolvedStatus === 'completed' ? { completed_at: now } : {})
   };
 
   state.current_phase = phase;
@@ -269,10 +249,7 @@ function cmdUpdate(slug, phase, status, options = {}) {
   state.updated_at = now;
 
   // Track agent history
-  if (
-    PHASE_AGENTS[phase] &&
-    !state.agent_history.includes(PHASE_AGENTS[phase])
-  ) {
+  if (PHASE_AGENTS[phase] && !state.agent_history.includes(PHASE_AGENTS[phase])) {
     state.agent_history.push(PHASE_AGENTS[phase]);
   }
 
@@ -291,8 +268,8 @@ function cmdUpdate(slug, phase, status, options = {}) {
     current: {
       current_phase: phase,
       checkpoint_status: resolvedStatus,
-      agent: PHASE_AGENTS[phase] || null,
-    },
+      agent: PHASE_AGENTS[phase] || null
+    }
   });
 }
 
@@ -302,30 +279,22 @@ function cmdUpdate(slug, phase, status, options = {}) {
 function cmdGet(slug) {
   const resolvedSlug = resolveSlug(slug);
   if (!resolvedSlug) {
-    outputError(
-      "NO_ACTIVE_SQUAD",
-      "No slug provided and no .active-squad file found",
-      {
-        hint: "Run: node squad-state-manager.cjs init <slug>",
-      },
-    );
+    outputError('NO_ACTIVE_SQUAD', 'No slug provided and no .active-squad file found', {
+      hint: 'Run: node squad-state-manager.cjs init <slug>'
+    });
     process.exit(1);
   }
 
   const state = readState(resolvedSlug);
   if (!state) {
-    outputError("STATE_NOT_FOUND", `No state found for slug: ${resolvedSlug}`);
+    outputError('STATE_NOT_FOUND', `No state found for slug: ${resolvedSlug}`);
     process.exit(1);
   }
 
   if (state.__corrupted) {
-    outputError(
-      "CORRUPTED_STATE",
-      `state.json for ${resolvedSlug} is corrupted (invalid JSON)`,
-      {
-        path: getStatePath(resolvedSlug),
-      },
-    );
+    outputError('CORRUPTED_STATE', `state.json for ${resolvedSlug} is corrupted (invalid JSON)`, {
+      path: getStatePath(resolvedSlug)
+    });
     process.exit(1);
   }
 
@@ -337,7 +306,7 @@ function cmdGet(slug) {
  */
 function cmdList(statusFilter) {
   if (!fs.existsSync(SQUADS_BASE)) {
-    outputJson({ squads: [], count: 0, filter: statusFilter || "all" });
+    outputJson({ squads: [], count: 0, filter: statusFilter || 'all' });
     return;
   }
 
@@ -347,19 +316,19 @@ function cmdList(statusFilter) {
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    if (entry.name.startsWith(".")) continue;
+    if (entry.name.startsWith('.')) continue;
 
     const slug = entry.name;
     const state = readState(slug);
     if (!state || state.__corrupted) continue;
 
-    const phase = state.current_phase || "unknown";
-    const status = state.checkpoint_status || "unknown";
-    const isActive = status !== "completed" && phase !== "completed";
+    const phase = state.current_phase || 'unknown';
+    const status = state.checkpoint_status || 'unknown';
+    const isActive = (status !== 'completed' && phase !== 'completed');
 
     // Apply filter
-    if (statusFilter === "active" && !isActive) continue;
-    if (statusFilter === "completed" && isActive) continue;
+    if (statusFilter === 'active' && !isActive) continue;
+    if (statusFilter === 'completed' && isActive) continue;
 
     squads.push({
       slug,
@@ -368,7 +337,7 @@ function cmdList(statusFilter) {
       checkpoint_status: status,
       updated_at: state.updated_at || null,
       is_active_squad: slug === activeSquad,
-      agent_history: state.agent_history || [],
+      agent_history: state.agent_history || []
     });
   }
 
@@ -379,7 +348,7 @@ function cmdList(statusFilter) {
     return new Date(b.updated_at) - new Date(a.updated_at);
   });
 
-  outputJson({ squads, count: squads.length, filter: statusFilter || "all" });
+  outputJson({ squads, count: squads.length, filter: statusFilter || 'all' });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -395,7 +364,7 @@ function parseArg(args, flag) {
 function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
+  if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
     console.log(`Squad State Manager - Pipeline state management for squad creation
 
 Usage:
@@ -418,8 +387,8 @@ Update options:
 List options:
   --status active|completed|all   Filter by status (default: all)
 
-Valid phases: ${VALID_PHASES.join(", ")}
-Valid statuses: ${VALID_STATUSES.join(", ")}
+Valid phases: ${VALID_PHASES.join(', ')}
+Valid statuses: ${VALID_STATUSES.join(', ')}
 
 Phase → Agent mapping:
   research, source_validation, dna_extraction, agent_scaffolding → oalanicolas
@@ -432,53 +401,48 @@ Active squad file:    squads/.active-squad`);
   }
 
   const command = args[0];
-  const force = args.includes("--force");
+  const force = args.includes('--force');
 
-  if (command === "init") {
-    const slug = args[1] && !args[1].startsWith("-") ? args[1] : null;
+  if (command === 'init') {
+    const slug = args[1] && !args[1].startsWith('-') ? args[1] : null;
     if (!slug) {
-      outputError(
-        "MISSING_ARG",
-        'Usage: init <slug> [--name "Name"] [--source-mind <slug>] [--target-domain <domain>]',
-      );
+      outputError('MISSING_ARG', 'Usage: init <slug> [--name "Name"] [--source-mind <slug>] [--target-domain <domain>]');
       process.exit(1);
     }
-    const name = parseArg(args, "--name");
-    const sourceMind = parseArg(args, "--source-mind");
-    const targetDomain = parseArg(args, "--target-domain");
+    const name = parseArg(args, '--name');
+    const sourceMind = parseArg(args, '--source-mind');
+    const targetDomain = parseArg(args, '--target-domain');
     cmdInit(slug, { name, sourceMind, targetDomain });
-  } else if (command === "update") {
-    const slugArg = args[1] && !args[1].startsWith("-") ? args[1] : null;
+
+  } else if (command === 'update') {
+    const slugArg = args[1] && !args[1].startsWith('-') ? args[1] : null;
     const slug = resolveSlug(slugArg);
     if (!slug) {
-      outputError(
-        "NO_ACTIVE_SQUAD",
-        "No slug provided and no .active-squad file found",
-      );
+      outputError('NO_ACTIVE_SQUAD', 'No slug provided and no .active-squad file found');
       process.exit(1);
     }
 
-    const phase = parseArg(args, "--phase");
+    const phase = parseArg(args, '--phase');
     if (!phase) {
-      outputError(
-        "MISSING_ARG",
-        "Usage: update [slug] --phase <phase> [--status <status>] [--output <file>] [--force]",
-      );
+      outputError('MISSING_ARG', 'Usage: update [slug] --phase <phase> [--status <status>] [--output <file>] [--force]');
       process.exit(1);
     }
 
-    const status = parseArg(args, "--status");
-    const output = parseArg(args, "--output");
+    const status = parseArg(args, '--status');
+    const output = parseArg(args, '--output');
     cmdUpdate(slug, phase, status, { force, output });
-  } else if (command === "get") {
-    const slug = args[1] && !args[1].startsWith("-") ? args[1] : null;
+
+  } else if (command === 'get') {
+    const slug = args[1] && !args[1].startsWith('-') ? args[1] : null;
     cmdGet(slug);
-  } else if (command === "list") {
-    const statusFilter = parseArg(args, "--status") || "all";
+
+  } else if (command === 'list') {
+    const statusFilter = parseArg(args, '--status') || 'all';
     cmdList(statusFilter);
+
   } else {
-    outputError("INVALID_COMMAND", `Unknown command: ${command}`, {
-      valid_commands: ["init", "update", "get", "list"],
+    outputError('INVALID_COMMAND', `Unknown command: ${command}`, {
+      valid_commands: ['init', 'update', 'get', 'list']
     });
     process.exit(1);
   }

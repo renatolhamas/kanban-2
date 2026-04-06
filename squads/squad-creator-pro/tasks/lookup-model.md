@@ -33,7 +33,7 @@ config: model-routing.yaml
 
 lookup:
   path: tasks.{task_name}.tier
-  default: opus # Conservative default
+  default: opus  # Conservative default
 ```
 
 ### Step 3: Return Result
@@ -48,11 +48,11 @@ output:
 
 ## Quick Reference
 
-| Tier       | Tasks Count | Use For                                     |
-| ---------- | ----------- | ------------------------------------------- |
-| **haiku**  | 13          | Validation, scoring, admin                  |
-| **sonnet** | 17          | Documentation, templates, moderate analysis |
-| **opus**   | 12          | DNA extraction, agent creation, research    |
+| Tier | Tasks Count | Use For |
+|------|-------------|---------|
+| **haiku** | 13 | Validation, scoring, admin |
+| **sonnet** | 17 | Documentation, templates, moderate analysis |
+| **opus** | 12 | DNA extraction, agent creation, research |
 
 ## Integration with Task Tool
 

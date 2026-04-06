@@ -13,14 +13,13 @@ Rebuilds HTML artifact using design tokens to produce clean, token-based version
 **Goal**: Same design, better code, in minutes not hours.
 
 ## Input Schema
-
 - **requires:** Output from `ds-scan-artifact`
 - **format:** JSON data
 - **location:** `outputs/design-system/{project}/artifacts/artifact-scan-{id}.json`
 
 ## Prerequisites
 
-- Tokenization completed (\*tokenize command run successfully)
+- Tokenization completed (*tokenize command run successfully)
 - tokens.css exists in outputs/design-system/{project}/
 - Artifact to rebuild available (file path or HTML content)
 - .state.yaml contains token data
@@ -58,7 +57,7 @@ This task uses interactive elicitation to configure rebuild.
    - Read tokens.css from project directory
    - Parse available tokens (colors, spacing, typography, etc)
    - Build token lookup table
-   - Check: `test -f tokens.css` AND file parses as valid CSS AND token count > 0 — abort with "tokens.css invalid or missing: run \*tokenize first"
+   - Check: `test -f tokens.css` AND file parses as valid CSS AND token count > 0 — abort with "tokens.css invalid or missing: run *tokenize first"
 
 3. **Analyze Current Patterns**
    - Extract all color declarations (inline, hardcoded)
@@ -130,24 +129,24 @@ This task uses interactive elicitation to configure rebuild.
 <!-- {artifact-name}-rebuilt.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{Original Title}</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{Original Title}</title>
 
-    <!-- Design System Tokens -->
-    <link rel="stylesheet" href="tokens.css" />
+  <!-- Design System Tokens -->
+  <link rel="stylesheet" href="tokens.css">
 
-    <!-- Artifact-specific styles (if needed) -->
-    <link rel="stylesheet" href="{artifact-name}.css" />
-  </head>
-  <body>
-    <!-- Clean semantic HTML with token classes -->
-    <div class="bg-secondary text-primary p-xl rounded-lg">
-      <h1 class="text-hero font-bold">Example</h1>
-      <span class="text-success">✓</span>
-    </div>
-  </body>
+  <!-- Artifact-specific styles (if needed) -->
+  <link rel="stylesheet" href="{artifact-name}.css">
+</head>
+<body>
+  <!-- Clean semantic HTML with token classes -->
+  <div class="bg-secondary text-primary p-xl rounded-lg">
+    <h1 class="text-hero font-bold">Example</h1>
+    <span class="text-success">✓</span>
+  </div>
+</body>
 </html>
 ```
 
@@ -165,35 +164,31 @@ This task uses interactive elicitation to configure rebuild.
 ## Summary
 
 ✅ **Rebuild Complete**
-
 - Visual output: 100% match
 - Code quality: Improved 85%
 - Token usage: 100%
 
 ## Metrics
 
-| Metric           | Before | After  | Change |
-| ---------------- | ------ | ------ | ------ |
-| Inline styles    | 110    | 0      | -100%  |
-| Hardcoded colors | 15     | 0      | -100%  |
-| Token usage      | 0%     | 100%   | +100%  |
-| File size        | 2.4 KB | 1.8 KB | -25%   |
-| Maintainability  | 15/100 | 95/100 | +533%  |
+| Metric | Before | After | Change |
+|--------|--------|-------|--------|
+| Inline styles | 110 | 0 | -100% |
+| Hardcoded colors | 15 | 0 | -100% |
+| Token usage | 0% | 100% | +100% |
+| File size | 2.4 KB | 1.8 KB | -25% |
+| Maintainability | 15/100 | 95/100 | +533% |
 
 ## Changes Made
 
 ### Colors
-
 - `style="color: rgb(72, 187, 120)"` → `class="text-success"`
 - `#262625` → `var(--bg-secondary)`
 
 ### Spacing
-
 - `padding: 16px` → `class="p-lg"`
 - `margin: 24px` → `class="m-xl"`
 
 ### Typography
-
 - `font-size: 24px` → `class="text-section"`
 - `font-weight: 600` → `class="font-semibold"`
 
@@ -217,7 +212,7 @@ None - 100% token coverage achieved.
 
 ## Failure Handling
 
-- **Token coverage below 70%:** If less than 70% of artifact patterns map to tokens, halt rebuild and suggest running \*tokenize with additional pattern extraction before proceeding
+- **Token coverage below 70%:** If less than 70% of artifact patterns map to tokens, halt rebuild and suggest running *tokenize with additional pattern extraction before proceeding
 - **Critical structural changes detected:** If rebuilt HTML loses semantic tags or element hierarchy (parent-child relationships broken), abort with "Structure preservation failed — manual review required for {component}"
 - **Visual validation fails by >10%:** If color HSL distance exceeds 10% or spacing differs by >4px on 20%+ of comparisons, generate diff report and exit with "Visual fidelity threshold not met — review diff report before accepting rebuild"
 - **Circular token references detected:** If token mapping creates circular dependencies (token A → token B → token A), break the cycle by inlining one value and document as tech debt in rebuild report
@@ -233,8 +228,8 @@ None - 100% token coverage achieved.
 
 ## Error Handling
 
-- **Source artifact not found**: Exit with helpful message, suggest \*scan to find artifact IDs
-- **tokens.css missing**: Exit with message to run \*tokenize first
+- **Source artifact not found**: Exit with helpful message, suggest *scan to find artifact IDs
+- **tokens.css missing**: Exit with message to run *tokenize first
 - **Pattern not in tokens**: Warn user, offer to add to custom CSS or skip
 - **HTML parsing error**: Report error location, suggest manual cleanup
 - **Visual mismatch**: Generate comparison report, let user decide to accept or reject
@@ -256,7 +251,6 @@ None - 100% token coverage achieved.
 ```
 
 **Output:**
-
 ```
 🔍 Brad: Rebuilding artifact-005 (tabela-comparativa)...
 
@@ -288,7 +282,6 @@ None - 100% token coverage achieved.
 ```
 
 **Output:**
-
 ```
 🔍 Brad: Rebuilding from file path...
 
@@ -315,7 +308,6 @@ None - 100% token coverage achieved.
 ```
 
 **Output:**
-
 ```
 🔍 Brad: Rebuilding with component extraction...
 
@@ -351,21 +343,22 @@ None - 100% token coverage achieved.
 
 ## Comparison: Rebuild vs Migrate
 
-| Aspect       | \*rebuild                | \*migrate                 |
-| ------------ | ------------------------ | ------------------------- |
-| **Speed**    | 10 min/artifact          | 12+ hours total           |
-| **Approach** | Automated rebuild        | Manual step-by-step       |
-| **Output**   | New clean files          | Modified existing         |
-| **Risk**     | Low (original preserved) | Medium (changes in place) |
-| **Best for** | Small # of artifacts     | Large codebase            |
-| **Learning** | Fast results             | Educational process       |
+| Aspect | *rebuild | *migrate |
+|--------|----------|----------|
+| **Speed** | 10 min/artifact | 12+ hours total |
+| **Approach** | Automated rebuild | Manual step-by-step |
+| **Output** | New clean files | Modified existing |
+| **Risk** | Low (original preserved) | Medium (changes in place) |
+| **Best for** | Small # of artifacts | Large codebase |
+| **Learning** | Fast results | Educational process |
 
-**Use \*rebuild when**: You have 5-10 artifacts and want fast results
-**Use \*migrate when**: You have large codebase and need phased rollout
+**Use *rebuild when**: You have 5-10 artifacts and want fast results
+**Use *migrate when**: You have large codebase and need phased rollout
 
 ---
 
-_Brad's recommendation: "Rebuild is faster. Migration is safer at scale. Pick based on your context."_
+*Brad's recommendation: "Rebuild is faster. Migration is safer at scale. Pick based on your context."*
+
 
 ## Related Checklists
 
@@ -373,5 +366,4 @@ _Brad's recommendation: "Rebuild is faster. Migration is safer at scale. Pick ba
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

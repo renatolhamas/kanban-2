@@ -55,14 +55,7 @@
   "definitions": {
     "worker": {
       "type": "object",
-      "required": [
-        "id",
-        "name",
-        "description",
-        "category",
-        "path",
-        "taskFormat"
-      ],
+      "required": ["id", "name", "description", "category", "path", "taskFormat"],
       "properties": {
         "id": {
           "type": "string",
@@ -81,15 +74,7 @@
         },
         "category": {
           "type": "string",
-          "enum": [
-            "task",
-            "template",
-            "script",
-            "checklist",
-            "workflow",
-            "data",
-            "util"
-          ],
+          "enum": ["task", "template", "script", "checklist", "workflow", "data", "util"],
           "description": "Primary category of the worker"
         },
         "subcategory": {
@@ -118,14 +103,7 @@
         },
         "taskFormat": {
           "type": "string",
-          "enum": [
-            "TASK-FORMAT-V1",
-            "TASK-FORMAT-V2",
-            "SCRIPT",
-            "TEMPLATE",
-            "CHECKLIST",
-            "WORKFLOW"
-          ],
+          "enum": ["TASK-FORMAT-V1", "TASK-FORMAT-V2", "SCRIPT", "TEMPLATE", "CHECKLIST", "WORKFLOW"],
           "description": "Format specification the worker follows"
         },
         "executorTypes": {

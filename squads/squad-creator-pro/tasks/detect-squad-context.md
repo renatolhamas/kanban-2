@@ -18,11 +18,11 @@ Detect first, then build.
 
 ## Inputs
 
-| Parameter    | Type   | Required | Description                    |
-| ------------ | ------ | -------- | ------------------------------ |
-| `domain`     | string | Yes      | Domain to create/upgrade       |
-| `squad_name` | string | No       | Existing or desired squad slug |
-| `intent`     | enum   | No       | `create`, `upgrade`, `unsure`  |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `domain` | string | Yes | Domain to create/upgrade |
+| `squad_name` | string | No | Existing or desired squad slug |
+| `intent` | enum | No | `create`, `upgrade`, `unsure` |
 
 ---
 

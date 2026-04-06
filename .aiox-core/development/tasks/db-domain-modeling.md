@@ -11,19 +11,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -191,7 +188,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -210,6 +206,7 @@ updated_at: 2025-11-17
 ```
 
 ---
+
 
 ## Overview
 

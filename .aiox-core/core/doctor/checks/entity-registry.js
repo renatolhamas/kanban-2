@@ -7,27 +7,22 @@
  * @story INS-4.1
  */
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const name = "entity-registry";
+const name = 'entity-registry';
 
 const MAX_AGE_MS = 48 * 60 * 60 * 1000; // 48 hours
 
 async function run(context) {
-  const registryPath = path.join(
-    context.projectRoot,
-    ".aiox-core",
-    "data",
-    "entity-registry.yaml",
-  );
+  const registryPath = path.join(context.projectRoot, '.aiox-core', 'data', 'entity-registry.yaml');
 
   if (!fs.existsSync(registryPath)) {
     return {
       check: name,
-      status: "FAIL",
-      message: "entity-registry.yaml not found",
-      fixCommand: "npx aiox-core install --force",
+      status: 'FAIL',
+      message: 'entity-registry.yaml not found',
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
@@ -35,21 +30,21 @@ async function run(context) {
   const ageMs = Date.now() - stat.mtimeMs;
   const ageHours = Math.round(ageMs / (60 * 60 * 1000));
 
-  const content = fs.readFileSync(registryPath, "utf8");
-  const lineCount = content.split("\n").length;
+  const content = fs.readFileSync(registryPath, 'utf8');
+  const lineCount = content.split('\n').length;
 
   if (ageMs > MAX_AGE_MS) {
     return {
       check: name,
-      status: "WARN",
+      status: 'WARN',
       message: `entity-registry.yaml is ${ageHours}h old (threshold: 48h), ~${lineCount} lines`,
-      fixCommand: "npx aiox-core install --force",
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
   return {
     check: name,
-    status: "PASS",
+    status: 'PASS',
     message: `~${lineCount} lines, updated ${ageHours}h ago`,
     fixCommand: null,
   };

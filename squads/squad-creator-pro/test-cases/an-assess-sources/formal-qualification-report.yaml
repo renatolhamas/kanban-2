@@ -64,7 +64,7 @@ qualification_report:
           dimension_variances:
             autenticidade: "0% (5 vs 5)"
             profundidade: "0% (5 vs 5)"
-            atualidade: "25% (4 vs 5)" # HIGHEST VARIANCE
+            atualidade: "25% (4 vs 5)"  # HIGHEST VARIANCE
             unicidade: "0% (5 vs 5)"
             completude: "0% (5 vs 5)"
 

@@ -6,6 +6,7 @@
 
 NOT for: Market research or competitive analysis → Use @analyst. PRD creation or product strategy → Use @pm. Database schema design or query optimization → Use @data-engineer.
 
+
 ## Quick Commands
 
 - `*help` - Show all available commands with descriptions
@@ -22,5 +23,4 @@ NOT for: Market research or competitive analysis → Use @analyst. PRD creation 
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/architect.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/architect.md*

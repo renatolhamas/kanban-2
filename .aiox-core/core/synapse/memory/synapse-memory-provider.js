@@ -16,12 +16,12 @@
  * @migrated Story INS-4.11 - Moved from pro/ to open-source (AC9)
  */
 
-"use strict";
+'use strict';
 
-const { estimateTokens } = require("../utils/tokens");
+const { estimateTokens } = require('../utils/tokens');
 
 /** Default sectors for unknown agents. */
-const DEFAULT_SECTORS = ["semantic"];
+const DEFAULT_SECTORS = ['semantic'];
 
 /**
  * Agent sector preferences for memory retrieval.
@@ -30,16 +30,16 @@ const DEFAULT_SECTORS = ["semantic"];
  * Moved from pro/memory/memory-loader.js to open-source.
  */
 const AGENT_SECTOR_PREFERENCES = {
-  dev: ["procedural", "semantic"],
-  qa: ["reflective", "episodic"],
-  architect: ["semantic", "reflective"],
-  pm: ["episodic", "semantic"],
-  po: ["episodic", "semantic"],
-  sm: ["procedural", "episodic"],
-  devops: ["procedural", "episodic"],
-  analyst: ["semantic", "reflective"],
-  "data-engineer": ["procedural", "semantic"],
-  "ux-design-expert": ["reflective", "procedural"],
+  dev: ['procedural', 'semantic'],
+  qa: ['reflective', 'episodic'],
+  architect: ['semantic', 'reflective'],
+  pm: ['episodic', 'semantic'],
+  po: ['episodic', 'semantic'],
+  sm: ['procedural', 'episodic'],
+  devops: ['procedural', 'episodic'],
+  analyst: ['semantic', 'reflective'],
+  'data-engineer': ['procedural', 'semantic'],
+  'ux-design-expert': ['reflective', 'procedural'],
 };
 
 /**
@@ -84,7 +84,7 @@ class SynapseMemoryProvider {
     if (this._loader) return this._loader;
 
     try {
-      const { MemoryLoader } = require("../../../../pro/memory/memory-loader");
+      const { MemoryLoader } = require('../../../../pro/memory/memory-loader');
       this._loader = new MemoryLoader(this._projectDir);
       return this._loader;
     } catch {
@@ -165,7 +165,7 @@ class SynapseMemoryProvider {
     let tokensUsed = 0;
 
     for (const memory of memories) {
-      const content = memory.content || memory.summary || memory.title || "";
+      const content = memory.content || memory.summary || memory.title || '';
       const tokens = estimateTokens(content);
 
       if (tokensUsed + tokens > tokenBudget) {
@@ -174,7 +174,7 @@ class SynapseMemoryProvider {
 
       hints.push({
         content,
-        source: memory.source || memory.sector || "memory",
+        source: memory.source || memory.sector || 'memory',
         relevance: memory.relevance || memory.attention || 0,
         tokens,
       });

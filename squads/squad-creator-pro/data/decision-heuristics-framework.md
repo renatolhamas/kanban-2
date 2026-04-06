@@ -13,23 +13,23 @@ Every decision heuristic must have this structure:
 
 ```yaml
 heuristic:
-  id: "{PREFIX}_{AREA}_{NUMBER}" # e.g., "QA_STR_001"
+  id: "{PREFIX}_{AREA}_{NUMBER}"  # e.g., "QA_STR_001"
   name: "Human-readable name"
   type: "Decision Heuristic"
-  phase: 1-N # Which workflow phase
-  agent: "@squad:agent-name" # Which agent applies it
+  phase: 1-N                      # Which workflow phase
+  agent: "@squad:agent-name"      # Which agent applies it
 
   # Weighted criteria
   weights:
-    criterion_1: 0.9 # 0.0 to 1.0
+    criterion_1: 0.9              # 0.0 to 1.0
     criterion_2: 0.8
     criterion_3: 0.7
 
   # Minimum thresholds for pass
   thresholds:
-    criterion_1: 0.8 # Must score >= this
+    criterion_1: 0.8              # Must score >= this
     criterion_2: 0.7
-    criterion_3: null # Context-dependent
+    criterion_3: null             # Context-dependent
 
   # Conditions that BLOCK progress
   veto_conditions:
@@ -121,14 +121,14 @@ coherence_scan:
   phase: "mid (executor assignment)"
 
   weights:
-    consistency: 1.0 # VETO power
+    consistency: 1.0           # VETO power
     system_fit: 0.8
     capability: 0.3
 
   thresholds:
-    consistency: 0.7 # Must be coherent
+    consistency: 0.7           # Must be coherent
     system_fit: 0.7
-    capability: null # Context-dependent
+    capability: null           # Context-dependent
 
   veto_conditions:
     - condition: "consistency < 0.7"
@@ -162,7 +162,7 @@ automation_decision:
     frequency: 0.7
     impact: 0.9
     automatability: 0.8
-    guardrails_present: 1.0 # VETO power
+    guardrails_present: 1.0    # VETO power
 
   thresholds:
     frequency: "2x per month"
@@ -198,11 +198,11 @@ automation_decision:
 
 Standard format for documenting criteria:
 
-| Criterion   | Weight | Threshold | VETO Power | Description      |
-| ----------- | ------ | --------- | ---------- | ---------------- |
-| criterion_1 | 0.9    | ≥0.8      | YES        | What it measures |
-| criterion_2 | 0.8    | ≥0.7      | NO         | What it measures |
-| criterion_3 | 0.7    | Context   | NO         | What it measures |
+| Criterion | Weight | Threshold | VETO Power | Description |
+|-----------|--------|-----------|------------|-------------|
+| criterion_1 | 0.9 | ≥0.8 | YES | What it measures |
+| criterion_2 | 0.8 | ≥0.7 | NO | What it measures |
+| criterion_3 | 0.7 | Context | NO | What it measures |
 
 ---
 
@@ -345,7 +345,6 @@ Heuristics work within quality gates:
 ### 10.1 The Problem
 
 Large-scope squads created "on the fly" result in:
-
 - Incomplete coverage (workflows missed)
 - Poor prioritization (no roadmap)
 - Technical debt (rushing to create many agents)
@@ -361,9 +360,9 @@ scope_complexity_heuristic:
   blocking: true
 
   thresholds:
-    workflows_mapped: 10 # >= 10 workflows = PRD required
-    agents_needed: 8 # >= 8 agents = PRD required
-    domain_precedent: false # No similar squad exists = higher risk
+    workflows_mapped: 10       # >= 10 workflows = PRD required
+    agents_needed: 8           # >= 8 agents = PRD required
+    domain_precedent: false    # No similar squad exists = higher risk
 
   decision_tree: |
     PRIMARY CHECK - Workflow Count:
@@ -493,11 +492,11 @@ examples:
 
 ### 10.1 Available Specialists
 
-| Specialist       | Domain                                        | Activation                      |
-| ---------------- | --------------------------------------------- | ------------------------------- |
-| `@oalanicolas`   | Mind cloning, DNA extraction, source curation | `/squad-creator @oalanicolas`   |
-| `@pedro-valerio` | Processes, tasks, checklists, automation      | `/squad-creator @pedro-valerio` |
-| `@squad-chief`   | General squad creation, orchestration         | `/squad-creator` (default)      |
+| Specialist | Domain | Activation |
+|------------|--------|------------|
+| `@oalanicolas` | Mind cloning, DNA extraction, source curation | `/squad-creator @oalanicolas` |
+| `@pedro-valerio` | Processes, tasks, checklists, automation | `/squad-creator @pedro-valerio` |
+| `@squad-chief` | General squad creation, orchestration | `/squad-creator` (default) |
 
 ### 10.2 Decision Matrix
 
@@ -617,5 +616,5 @@ anti_patterns:
 
 ---
 
-_AIOS Decision Heuristics Framework v1.1_
-_Updated: Specialist Selection Heuristic added_
+*AIOS Decision Heuristics Framework v1.1*
+*Updated: Specialist Selection Heuristic added*

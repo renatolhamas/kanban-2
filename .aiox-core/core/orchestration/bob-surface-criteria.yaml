@@ -121,7 +121,7 @@ criteria:
 
       Tem CERTEZA que deseja continuar? [SIM para confirmar]
     severity: "critical"
-    bypass: false # NEVER bypass destructive actions, even in YOLO mode
+    bypass: false  # NEVER bypass destructive actions, even in YOLO mode
 
   # Destructive actions list
   destructive_actions:
@@ -205,7 +205,7 @@ actions:
   present_options_with_tradeoffs:
     type: "multiple_choice"
     prompt_type: "select"
-    default: null # User must choose
+    default: null  # User must choose
     timeout_seconds: 600
     on_timeout: "abort"
 
@@ -226,7 +226,7 @@ actions:
   always_confirm:
     type: "explicit_confirm"
     prompt_type: "text"
-    required_input: "SIM" # Must type exactly "SIM" to proceed
+    required_input: "SIM"  # Must type exactly "SIM" to proceed
     default: "no"
     timeout_seconds: 300
     on_timeout: "no"
@@ -246,13 +246,13 @@ actions:
 # ============================================
 
 evaluation_order:
-  - destructive_action # C005 - Always check first (most critical)
-  - risk_threshold # C002 - High risk operations
-  - consecutive_errors # C004 - Error recovery
-  - cost_threshold # C001 - Cost confirmation
-  - scope_change # C006 - Scope expansion
-  - multiple_options # C003 - User choice needed
-  - external_dependency # C007 - External dependencies
+  - destructive_action   # C005 - Always check first (most critical)
+  - risk_threshold       # C002 - High risk operations
+  - consecutive_errors   # C004 - Error recovery
+  - cost_threshold       # C001 - Cost confirmation
+  - scope_change         # C006 - Scope expansion
+  - multiple_options     # C003 - User choice needed
+  - external_dependency  # C007 - External dependencies
 
 # ============================================
 # METADATA

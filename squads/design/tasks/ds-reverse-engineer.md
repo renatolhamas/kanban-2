@@ -17,14 +17,14 @@ Extrair padrões de design systems validados (Shopify, Vercel, ClickMax, etc) em
 
 ```yaml
 input:
-  source_url: string # URL do sistema a analisar
-  source_type: enum # "public_site" | "figma" | "storybook" | "github"
-  focus_areas: # Áreas de interesse
+  source_url: string          # URL do sistema a analisar
+  source_type: enum           # "public_site" | "figma" | "storybook" | "github"
+  focus_areas:                # Áreas de interesse
     - tokens
     - components
     - patterns
     - interactions
-  output_format: enum # "report" | "tokens" | "components" | "full"
+  output_format: enum         # "report" | "tokens" | "components" | "full"
 ```
 
 ## Output Contract
@@ -174,8 +174,9 @@ recommendations:
 
 ---
 
-_Task criada: 2026-02-16_
-_Squad: Design_
+*Task criada: 2026-02-16*
+*Squad: Design*
+
 
 ## Related Checklists
 
@@ -183,13 +184,11 @@ _Squad: Design_
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
-
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

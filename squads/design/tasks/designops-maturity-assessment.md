@@ -15,20 +15,18 @@ This task provides a comprehensive assessment of an organization's DesignOps mat
 ## Malouf Framework Reference
 
 ### Three Lenses of DesignOps
-
 1. **How We Work** - Workflow, tools, processes, collaboration
 2. **How We Grow** - Hiring, onboarding, career development, learning
 3. **How We Thrive** - Culture, community, well-being, advocacy
 
 ### Maturity Levels
-
-| Level | Name      | Description                                          |
-| ----- | --------- | ---------------------------------------------------- |
-| 1     | Ad Hoc    | No formal DesignOps - reactive and individual        |
-| 2     | Emerging  | Basic standardization beginning - some awareness     |
-| 3     | Defined   | Clear processes and standards - adoption growing     |
-| 4     | Managed   | Metrics-driven optimization - continuous improvement |
-| 5     | Optimized | Industry-leading - innovation and excellence         |
+| Level | Name | Description |
+|-------|------|-------------|
+| 1 | Ad Hoc | No formal DesignOps - reactive and individual |
+| 2 | Emerging | Basic standardization beginning - some awareness |
+| 3 | Defined | Clear processes and standards - adoption growing |
+| 4 | Managed | Metrics-driven optimization - continuous improvement |
+| 5 | Optimized | Industry-leading - innovation and excellence |
 
 ## Task Steps
 
@@ -349,19 +347,18 @@ output_structure: |
 
 Use `checklists/designops-maturity-checklist.md` for detailed criteria at each level.
 
+
 ## Related Checklists
 
 - `squads/design/checklists/designops-maturity-checklist.md`
 - `squads/design/checklists/design-team-health-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
-
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

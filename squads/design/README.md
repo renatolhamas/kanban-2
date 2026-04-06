@@ -21,16 +21,16 @@ Domain work like brand, logo, thumbnails, photo, and editing was moved to dedica
 
 ## Agents
 
-| Agent            | Command                  | Specialty                                                |
-| ---------------- | ------------------------ | -------------------------------------------------------- |
-| Design Chief     | `@design-chief`          | Orchestration and routing                                |
-| Brad Frost       | `@brad-frost`            | Atomic design, components, tokens                        |
-| Dan Mall         | `@dan-mall`              | Stakeholder buy-in and DS adoption                       |
-| Dave Malouf      | `@dave-malouf`           | DesignOps and operating model                            |
-| Nano Banana      | `@nano-banana-generator` | Visual utility support                                   |
-| Atlas            | `@ds-token-architect`    | Figma-to-tokens/component specs                          |
-| Foundations Lead | `@ds-foundations-lead`   | Orchestrates F1/F2/F3 foundations pipeline               |
-| Storybook Expert | `@storybook-expert`      | Story architecture, interaction tests, visual regression |
+| Agent | Command | Specialty |
+|---|---|---|
+| Design Chief | `@design-chief` | Orchestration and routing |
+| Brad Frost | `@brad-frost` | Atomic design, components, tokens |
+| Dan Mall | `@dan-mall` | Stakeholder buy-in and DS adoption |
+| Dave Malouf | `@dave-malouf` | DesignOps and operating model |
+| Nano Banana | `@nano-banana-generator` | Visual utility support |
+| Atlas | `@ds-token-architect` | Figma-to-tokens/component specs |
+| Foundations Lead | `@ds-foundations-lead` | Orchestrates F1/F2/F3 foundations pipeline |
+| Storybook Expert | `@storybook-expert` | Story architecture, interaction tests, visual regression |
 
 ## Routing
 
@@ -85,12 +85,12 @@ O protocolo completo está documentado em `squads/design/protocols/ai-first-gove
 
 Definido em `squads/design/config.yaml`:
 
-| Tier                   | Papel                                                    |
-| ---------------------- | -------------------------------------------------------- |
-| **tier_0_foundation**  | Agentes de entrada para operações e estratégia de adoção |
-| **tier_1_masters**     | Masters de execução com práticas especialistas           |
-| **tier_2_specialists** | Especialistas profundos para implementação de DS         |
-| **orchestrator**       | Design Chief — roteia requisições para o agente adequado |
+| Tier | Papel |
+|------|-------|
+| **tier_0_foundation** | Agentes de entrada para operações e estratégia de adoção |
+| **tier_1_masters** | Masters de execução com práticas especialistas |
+| **tier_2_specialists** | Especialistas profundos para implementação de DS |
+| **orchestrator** | Design Chief — roteia requisições para o agente adequado |
 
 ### Hierarquia de Fontes Canônicas
 

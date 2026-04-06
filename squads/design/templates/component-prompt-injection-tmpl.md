@@ -61,11 +61,11 @@ NON-NEGOTIABLE:
 
 ## Surface Types
 
-| Surface | Contexto                          | Regras Específicas                       |
-| ------- | --------------------------------- | ---------------------------------------- |
-| **S1**  | Transactional (checkout, forms)   | Max 15 words/sentence, CTA = action verb |
-| **S2**  | Informational (dashboards, lists) | Max 25 words/sentence, scannable         |
-| **S3**  | Educational (docs, help)          | Max 30 words/sentence, examples required |
+| Surface | Contexto | Regras Específicas |
+|---------|----------|-------------------|
+| **S1** | Transactional (checkout, forms) | Max 15 words/sentence, CTA = action verb |
+| **S2** | Informational (dashboards, lists) | Max 25 words/sentence, scannable |
+| **S3** | Educational (docs, help) | Max 30 words/sentence, examples required |
 
 ---
 
@@ -188,11 +188,11 @@ NON-NEGOTIABLE:
 ... (cole o template apropriado)
 */
 
-import { cva } from "class-variance-authority";
+import { cva } from "class-variance-authority"
 
-export const buttonVariants =
-  cva();
+export const buttonVariants = cva(
   // base styles from tokens
+)
 ```
 
 ### 2. Ao Revisar Componente Existente
@@ -204,7 +204,6 @@ export const buttonVariants =
 ### 3. Ao Gerar com AI
 
 O AI agent DEVE:
-
 1. Ler o @AIOS-RULES do componente
 2. Seguir TODAS as regras listadas
 3. Não criar componente novo se variante resolve
@@ -232,6 +231,6 @@ grep -r "#[0-9A-Fa-f]{6}" app/components/ --include="*.tsx"
 
 ---
 
-_Template criado: 2026-02-16_
-_Squad: Design_
-_Insight Source: #3 Prompt Injection nos Componentes_
+*Template criado: 2026-02-16*
+*Squad: Design*
+*Insight Source: #3 Prompt Injection nos Componentes*

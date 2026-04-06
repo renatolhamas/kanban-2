@@ -16,7 +16,6 @@ O **Squad Creation Pipeline** é o workflow completo para criação de squads ba
 ### Objetivo
 
 Garantir que squads sejam criados com:
-
 1. **Conhecimento autêntico** - Extraído de fontes reais, não inventado
 2. **Processos à prova de erro** - Operacionalizados com veto conditions
 3. **Rastreabilidade completa** - Citações, fontes, e validações documentadas
@@ -41,12 +40,12 @@ KNOWLEDGE ≠ OPERATIONALIZATION
 
 ### Tipos de Projeto Suportados
 
-| Tipo           | Descrição                                               |
-| -------------- | ------------------------------------------------------- |
-| `mind-clone`   | Clonagem de expert individual (funcional, não perfeito) |
-| `multi-mind`   | Squad com múltiplos experts clonados                    |
-| `domain-squad` | Squad temático (ex: Copy, Design, Data)                 |
-| `hybrid-squad` | Combinação de minds clonados + agents funcionais        |
+| Tipo | Descrição |
+|------|-----------|
+| `mind-clone` | Clonagem de expert individual (funcional, não perfeito) |
+| `multi-mind` | Squad com múltiplos experts clonados |
+| `domain-squad` | Squad temático (ex: Copy, Design, Data) |
+| `hybrid-squad` | Combinação de minds clonados + agents funcionais |
 
 ---
 
@@ -54,31 +53,31 @@ KNOWLEDGE ≠ OPERATIONALIZATION
 
 ### Regra de Ouro
 
-| Se o artefato responde... | Owner          |
-| ------------------------- | -------------- |
-| "O que ele pensa?"        | @oalanicolas   |
-| "Como ele decide?"        | @oalanicolas   |
-| "Qual o modelo mental?"   | @oalanicolas   |
-| "Quais as heurísticas?"   | @oalanicolas   |
-| "Como fazer sem errar?"   | @pedro-valerio |
-| "Qual a sequência?"       | @pedro-valerio |
-| "Como validar?"           | @pedro-valerio |
+| Se o artefato responde... | Owner |
+|---------------------------|-------|
+| "O que ele pensa?" | @oalanicolas |
+| "Como ele decide?" | @oalanicolas |
+| "Qual o modelo mental?" | @oalanicolas |
+| "Quais as heurísticas?" | @oalanicolas |
+| "Como fazer sem errar?" | @pedro-valerio |
+| "Qual a sequência?" | @pedro-valerio |
+| "Como validar?" | @pedro-valerio |
 
 ### Mapeamento de Artefatos
 
-| Artefato                 | Tipo               | Owner          |
-| ------------------------ | ------------------ | -------------- |
-| `*-framework.md`         | Knowledge          | @oalanicolas   |
-| `*_dna.yaml`             | Knowledge          | @oalanicolas   |
-| `core_principles.yaml`   | Knowledge          | @oalanicolas   |
-| `mental_models.yaml`     | Knowledge          | @oalanicolas   |
-| `heuristics.yaml`        | Knowledge          | @oalanicolas   |
-| `signature_phrases.yaml` | Knowledge          | @oalanicolas   |
-| `source-index.yaml`      | Knowledge          | @oalanicolas   |
-| `*-sop.md`               | Operationalization | @pedro-valerio |
-| `*-checklist.md`         | Operationalization | @pedro-valerio |
-| `*-workflow.yaml`        | Operationalization | @pedro-valerio |
-| `*-blueprint.yaml`       | Operationalization | @pedro-valerio |
+| Artefato | Tipo | Owner |
+|----------|------|-------|
+| `*-framework.md` | Knowledge | @oalanicolas |
+| `*_dna.yaml` | Knowledge | @oalanicolas |
+| `core_principles.yaml` | Knowledge | @oalanicolas |
+| `mental_models.yaml` | Knowledge | @oalanicolas |
+| `heuristics.yaml` | Knowledge | @oalanicolas |
+| `signature_phrases.yaml` | Knowledge | @oalanicolas |
+| `source-index.yaml` | Knowledge | @oalanicolas |
+| `*-sop.md` | Operationalization | @pedro-valerio |
+| `*-checklist.md` | Operationalization | @pedro-valerio |
+| `*-workflow.yaml` | Operationalization | @pedro-valerio |
+| `*-blueprint.yaml` | Operationalization | @pedro-valerio |
 
 ---
 
@@ -276,27 +275,27 @@ sequenceDiagram
 
 ### Step 0: Intake (Fase 0)
 
-| Campo      | Valor                         |
-| ---------- | ----------------------------- |
-| **ID**     | `intake`                      |
-| **Agente** | @squad-chief                  |
-| **Ação**   | Triagem e criação de briefing |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `intake` |
+| **Agente** | @squad-chief |
+| **Ação** | Triagem e criação de briefing |
 
 #### Inputs
 
-| Input           | Tipo   | Origem     | Obrigatório |
-| --------------- | ------ | ---------- | ----------- |
-| `expert_name`   | string | User Input | Sim         |
-| `domain`        | string | User Input | Sim         |
-| `sources_hints` | array  | User Input | Não         |
-| `agents_count`  | number | User Input | Não         |
+| Input | Tipo | Origem | Obrigatório |
+|-------|------|--------|-------------|
+| `expert_name` | string | User Input | Sim |
+| `domain` | string | User Input | Sim |
+| `sources_hints` | array | User Input | Não |
+| `agents_count` | number | User Input | Não |
 
 #### Outputs
 
-| Output          | Tipo    | Destino                               |
-| --------------- | ------- | ------------------------------------- |
+| Output | Tipo | Destino |
+|--------|------|---------|
 | `briefing.yaml` | arquivo | `docs/projects/{squad}/briefing.yaml` |
-| `expert_slug`   | string  | Contexto do workflow                  |
+| `expert_slug` | string | Contexto do workflow |
 
 #### Gate: USER_APPROVAL
 
@@ -308,66 +307,66 @@ sequenceDiagram
 
 ### Step 1: Knowledge - Research (Fase 1a)
 
-| Campo      | Valor                    |
-| ---------- | ------------------------ |
-| **ID**     | `research`               |
-| **Agente** | @oalanicolas             |
-| **Ação**   | Buscar e curar sources   |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `research` |
+| **Agente** | @oalanicolas |
+| **Ação** | Buscar e curar sources |
 | **Requer** | `intake` + User approval |
 
 #### Inputs
 
-| Input           | Tipo    | Origem        | Obrigatório |
-| --------------- | ------- | ------------- | ----------- |
-| `briefing.yaml` | arquivo | Step anterior | Sim         |
-| `expert_name`   | string  | Briefing      | Sim         |
-| `source_hints`  | array   | User          | Não         |
+| Input | Tipo | Origem | Obrigatório |
+|-------|------|--------|-------------|
+| `briefing.yaml` | arquivo | Step anterior | Sim |
+| `expert_name` | string | Briefing | Sim |
+| `source_hints` | array | User | Não |
 
 #### Outputs
 
-| Output              | Tipo      | Destino                                 |
-| ------------------- | --------- | --------------------------------------- |
-| `source-index.yaml` | arquivo   | `squads/{squad}/data/source-index.yaml` |
-| `transcripts/`      | diretório | `squads/{squad}/data/transcripts/`      |
-| `citations.yaml`    | arquivo   | `squads/{squad}/data/citations.yaml`    |
+| Output | Tipo | Destino |
+|--------|------|---------|
+| `source-index.yaml` | arquivo | `squads/{squad}/data/source-index.yaml` |
+| `transcripts/` | diretório | `squads/{squad}/data/transcripts/` |
+| `citations.yaml` | arquivo | `squads/{squad}/data/citations.yaml` |
 
 #### Gate: SOURCE_COVERAGE (interno a AN)
 
-| Critério                     | Threshold | Ação se FAIL                              |
-| ---------------------------- | --------- | ----------------------------------------- |
-| Páginas/minutos de conteúdo  | ≥ 5       | Buscar mais sources                       |
-| Citações diretas utilizáveis | ≥ 3       | Procurar entrevistas/podcasts             |
-| Tipos de source              | ≥ 2       | Diversificar (livro + video + entrevista) |
+| Critério | Threshold | Ação se FAIL |
+|----------|-----------|--------------|
+| Páginas/minutos de conteúdo | ≥ 5 | Buscar mais sources |
+| Citações diretas utilizáveis | ≥ 3 | Procurar entrevistas/podcasts |
+| Tipos de source | ≥ 2 | Diversificar (livro + video + entrevista) |
 
 ---
 
 ### Step 2: Knowledge - Extraction (Fase 1b)
 
-| Campo      | Valor                               |
-| ---------- | ----------------------------------- |
-| **ID**     | `extraction`                        |
-| **Agente** | @oalanicolas                        |
-| **Ação**   | Extrair conhecimento do expert      |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `extraction` |
+| **Agente** | @oalanicolas |
+| **Ação** | Extrair conhecimento do expert |
 | **Requer** | `research` com SOURCE_COVERAGE PASS |
 
 #### Inputs
 
-| Input               | Tipo      | Origem        | Obrigatório |
-| ------------------- | --------- | ------------- | ----------- |
-| `source-index.yaml` | arquivo   | Step anterior | Sim         |
-| `transcripts/`      | diretório | Step anterior | Sim         |
-| `citations.yaml`    | arquivo   | Step anterior | Sim         |
+| Input | Tipo | Origem | Obrigatório |
+|-------|------|--------|-------------|
+| `source-index.yaml` | arquivo | Step anterior | Sim |
+| `transcripts/` | diretório | Step anterior | Sim |
+| `citations.yaml` | arquivo | Step anterior | Sim |
 
 #### Outputs
 
-| Output                   | Tipo      | Destino                           |
-| ------------------------ | --------- | --------------------------------- |
-| `{expert}_dna.yaml`      | arquivo   | `squads/{squad}/data/minds/`      |
-| `core_principles.yaml`   | arquivo   | `squads/{squad}/data/minds/`      |
-| `heuristics.yaml`        | arquivo   | `squads/{squad}/data/minds/`      |
-| `mental_models.yaml`     | arquivo   | `squads/{squad}/data/minds/`      |
-| `signature_phrases.yaml` | arquivo   | `squads/{squad}/data/minds/`      |
-| `frameworks/*.md`        | diretório | `squads/{squad}/docs/frameworks/` |
+| Output | Tipo | Destino |
+|--------|------|---------|
+| `{expert}_dna.yaml` | arquivo | `squads/{squad}/data/minds/` |
+| `core_principles.yaml` | arquivo | `squads/{squad}/data/minds/` |
+| `heuristics.yaml` | arquivo | `squads/{squad}/data/minds/` |
+| `mental_models.yaml` | arquivo | `squads/{squad}/data/minds/` |
+| `signature_phrases.yaml` | arquivo | `squads/{squad}/data/minds/` |
+| `frameworks/*.md` | diretório | `squads/{squad}/docs/frameworks/` |
 
 #### Checklist de Self-Validation
 
@@ -381,37 +380,36 @@ sequenceDiagram
 
 #### Veto Conditions (Self)
 
-| Trigger                | Ação                                      |
-| ---------------------- | ----------------------------------------- |
-| < 15 citações          | LOOP - voltar para extração               |
-| Conceito sem fonte     | LOOP - documentar ou remover              |
-| Framework genérico     | LOOP - especificar com exemplos do expert |
-| Heuristic sem contexto | LOOP - adicionar "QUANDO aplicar"         |
+| Trigger | Ação |
+|---------|------|
+| < 15 citações | LOOP - voltar para extração |
+| Conceito sem fonte | LOOP - documentar ou remover |
+| Framework genérico | LOOP - especificar com exemplos do expert |
+| Heuristic sem contexto | LOOP - adicionar "QUANDO aplicar" |
 
 ---
 
 ### Handoff #1: AN → PV
 
-| Campo    | Valor                   |
-| -------- | ----------------------- |
-| **ID**   | `handoff_an_pv`         |
-| **De**   | @oalanicolas            |
-| **Para** | @pedro-valerio          |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `handoff_an_pv` |
+| **De** | @oalanicolas |
+| **Para** | @pedro-valerio |
 | **Gate** | FRAMEWORK_HANDOFF_READY |
 
 #### Veto Conditions
 
-| Trigger                               | Ação   | Destino      |
-| ------------------------------------- | ------ | ------------ |
-| Framework sem citações de fonte       | REJECT | @oalanicolas |
-| DNA sem signature phrases reais       | REJECT | @oalanicolas |
+| Trigger | Ação | Destino |
+|---------|------|---------|
+| Framework sem citações de fonte | REJECT | @oalanicolas |
+| DNA sem signature phrases reais | REJECT | @oalanicolas |
 | Heurísticas sem contexto de aplicação | REJECT | @oalanicolas |
-| Conceito inventado detectado          | REJECT | @oalanicolas |
+| Conceito inventado detectado | REJECT | @oalanicolas |
 
 #### Critérios de Aprovação
 
 AN entrega framework QUANDO:
-
 - [ ] 15+ citações diretas com fonte
 - [ ] Voice DNA com 5+ signature phrases verificáveis
 - [ ] Thinking DNA com decision architecture mapeada
@@ -419,7 +417,6 @@ AN entrega framework QUANDO:
 - [ ] Nenhum conceito marcado como "inferido" sem fonte
 
 PV recebe APENAS SE:
-
 - [ ] Framework passou no checklist acima
 - [ ] Nenhum conceito marcado como "inferido" sem fonte
 
@@ -427,29 +424,29 @@ PV recebe APENAS SE:
 
 ### Step 3: Operationalization (Fase 2)
 
-| Campo      | Valor                                 |
-| ---------- | ------------------------------------- |
-| **ID**     | `operationalization`                  |
-| **Agente** | @pedro-valerio                        |
-| **Ação**   | Transformar conhecimento em processos |
-| **Requer** | `handoff_an_pv` APPROVED              |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `operationalization` |
+| **Agente** | @pedro-valerio |
+| **Ação** | Transformar conhecimento em processos |
+| **Requer** | `handoff_an_pv` APPROVED |
 
 #### Inputs
 
-| Input               | Tipo      | Origem        | Obrigatório |
-| ------------------- | --------- | ------------- | ----------- |
-| `{expert}_dna.yaml` | arquivo   | Step anterior | Sim         |
-| `frameworks/*.md`   | diretório | Step anterior | Sim         |
-| `heuristics.yaml`   | arquivo   | Step anterior | Sim         |
+| Input | Tipo | Origem | Obrigatório |
+|-------|------|--------|-------------|
+| `{expert}_dna.yaml` | arquivo | Step anterior | Sim |
+| `frameworks/*.md` | diretório | Step anterior | Sim |
+| `heuristics.yaml` | arquivo | Step anterior | Sim |
 
 #### Outputs
 
-| Output              | Tipo      | Destino                      |
-| ------------------- | --------- | ---------------------------- |
-| `sops/*.md`         | diretório | `squads/{squad}/sops/`       |
-| `checklists/*.md`   | diretório | `squads/{squad}/checklists/` |
-| `workflows/*.yaml`  | diretório | `squads/{squad}/workflows/`  |
-| `blueprints/*.yaml` | diretório | `squads/{squad}/templates/`  |
+| Output | Tipo | Destino |
+|--------|------|---------|
+| `sops/*.md` | diretório | `squads/{squad}/sops/` |
+| `checklists/*.md` | diretório | `squads/{squad}/checklists/` |
+| `workflows/*.yaml` | diretório | `squads/{squad}/workflows/` |
+| `blueprints/*.yaml` | diretório | `squads/{squad}/templates/` |
 
 #### Regras de Derivação
 
@@ -470,57 +467,57 @@ Heuristic → Veto Condition (gate automático)
 
 #### Veto Conditions (Self)
 
-| Trigger                              | Ação                              |
-| ------------------------------------ | --------------------------------- |
+| Trigger | Ação |
+|---------|------|
 | SOP contém conceito não no framework | LOOP - remover ou escalar para AN |
-| Checklist órfão (sem SOP)            | LOOP - criar SOP ou remover       |
-| Workflow com passo sem checklist     | LOOP - derivar checklist          |
+| Checklist órfão (sem SOP) | LOOP - criar SOP ou remover |
+| Workflow com passo sem checklist | LOOP - derivar checklist |
 
 ---
 
 ### Handoff #2: PV → Chief
 
-| Campo    | Valor              |
-| -------- | ------------------ |
-| **ID**   | `handoff_pv_chief` |
-| **De**   | @pedro-valerio     |
-| **Para** | @squad-chief       |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `handoff_pv_chief` |
+| **De** | @pedro-valerio |
+| **Para** | @squad-chief |
 | **Gate** | SOP_INTEGRITY_GATE |
 
 #### Veto Conditions
 
-| Trigger                      | Ação   | Destino                            |
-| ---------------------------- | ------ | ---------------------------------- |
-| SOP não referencia framework | REJECT | @pedro-valerio (inventou)          |
-| Falta conhecimento para SOP  | REJECT | @oalanicolas (extração incompleta) |
-| Paths inconsistentes         | REJECT | Owner do path                      |
-| Artefatos incompletos        | REJECT | Owner do artefato                  |
+| Trigger | Ação | Destino |
+|---------|------|---------|
+| SOP não referencia framework | REJECT | @pedro-valerio (inventou) |
+| Falta conhecimento para SOP | REJECT | @oalanicolas (extração incompleta) |
+| Paths inconsistentes | REJECT | Owner do path |
+| Artefatos incompletos | REJECT | Owner do artefato |
 
 ---
 
 ### Step 4: Assembly (Fase 3)
 
-| Campo      | Valor                       |
-| ---------- | --------------------------- |
-| **ID**     | `assembly`                  |
-| **Agente** | @squad-chief                |
-| **Ação**   | Montar squad final          |
+| Campo | Valor |
+|-------|-------|
+| **ID** | `assembly` |
+| **Agente** | @squad-chief |
+| **Ação** | Montar squad final |
 | **Requer** | `handoff_pv_chief` APPROVED |
 
 #### Inputs
 
-| Input                 | Tipo      | Origem | Obrigatório |
-| --------------------- | --------- | ------ | ----------- |
-| Knowledge artifacts   | diretório | Fase 1 | Sim         |
-| Operational artifacts | diretório | Fase 2 | Sim         |
+| Input | Tipo | Origem | Obrigatório |
+|-------|------|--------|-------------|
+| Knowledge artifacts | diretório | Fase 1 | Sim |
+| Operational artifacts | diretório | Fase 2 | Sim |
 
 #### Outputs
 
-| Output        | Tipo      | Destino                      |
-| ------------- | --------- | ---------------------------- |
-| `agents/*.md` | diretório | `squads/{squad}/agents/`     |
-| `config.yaml` | arquivo   | `squads/{squad}/config.yaml` |
-| `README.md`   | arquivo   | `squads/{squad}/README.md`   |
+| Output | Tipo | Destino |
+|--------|------|---------|
+| `agents/*.md` | diretório | `squads/{squad}/agents/` |
+| `config.yaml` | arquivo | `squads/{squad}/config.yaml` |
+| `README.md` | arquivo | `squads/{squad}/README.md` |
 
 #### Smoke Test Checklist
 
@@ -536,15 +533,14 @@ Heuristic → Veto Condition (gate automático)
 
 ### @squad-chief - Orquestrador
 
-| Aspecto               | Descrição                                              |
-| --------------------- | ------------------------------------------------------ |
-| **Ícone**             | 👑                                                     |
-| **Papel**             | Pipeline Orchestrator & Quality Gatekeeper             |
-| **Foco**              | Coordenar fases, validar handoffs, montar squad final  |
+| Aspecto | Descrição |
+|---------|-----------|
+| **Ícone** | 👑 |
+| **Papel** | Pipeline Orchestrator & Quality Gatekeeper |
+| **Foco** | Coordenar fases, validar handoffs, montar squad final |
 | **Responsabilidades** | Intake, routing, gate validation, assembly, smoke test |
 
 **Comandos Relevantes:**
-
 - `*create-squad` - Iniciar pipeline
 - `*validate-squad` - Validar squad
 - `*assemble-squad` - Montar squad final
@@ -553,28 +549,25 @@ Heuristic → Veto Condition (gate automático)
 
 ### @oalanicolas - Knowledge Architect
 
-| Aspecto               | Descrição                                                        |
-| --------------------- | ---------------------------------------------------------------- |
-| **Ícone**             | 🧠                                                               |
-| **Título**            | Knowledge Architect                                              |
-| **Papel**             | Research + Extraction Specialist                                 |
-| **Foco**              | Extrair conhecimento autêntico com rastreabilidade               |
+| Aspecto | Descrição |
+|---------|-----------|
+| **Ícone** | 🧠 |
+| **Título** | Knowledge Architect |
+| **Papel** | Research + Extraction Specialist |
+| **Foco** | Extrair conhecimento autêntico com rastreabilidade |
 | **Responsabilidades** | Source curation, Voice DNA, Thinking DNA, Frameworks, Heuristics |
 
 **Escopo no Squad Creator:**
-
 - Research (buscar, classificar, curar sources)
 - Extraction (DNA, frameworks, heuristics, mental models)
 - Basic mind cloning (funcional para a task, não clone perfeito)
 
 **NÃO é:**
-
 - Full MMOS pipeline (8 layers completos)
 - Clone perfeito 97% fidelity
 - Validação extensiva com blind test
 
 **Comandos Relevantes:**
-
 - `*assess-sources` - Avaliar e classificar sources (ouro/bronze)
 - `*extract-framework` - Extrair framework + Voice + Thinking
 - `*find-80-20` - Identificar 20% que produz 80%
@@ -586,16 +579,15 @@ Heuristic → Veto Condition (gate automático)
 
 ### @pedro-valerio - Process Architect
 
-| Aspecto               | Descrição                                             |
-| --------------------- | ----------------------------------------------------- |
-| **Ícone**             | ⚙️                                                    |
-| **Título**            | Process Architect                                     |
-| **Papel**             | Operationalization Expert                             |
-| **Foco**              | Transformar conhecimento em processos à prova de erro |
-| **Responsabilidades** | SOPs, Checklists, Workflows, Veto Conditions          |
+| Aspecto | Descrição |
+|---------|-----------|
+| **Ícone** | ⚙️ |
+| **Título** | Process Architect |
+| **Papel** | Operationalization Expert |
+| **Foco** | Transformar conhecimento em processos à prova de erro |
+| **Responsabilidades** | SOPs, Checklists, Workflows, Veto Conditions |
 
 **Comandos Relevantes:**
-
 - `*extract-sop` - Criar SOP do framework
 - `*extract-checklist` - Derivar checklist do SOP
 - `*generate-blueprint` - Gerar blueprint YAML
@@ -673,20 +665,20 @@ graph TD
 
 ### Documentação Prerequisita
 
-| Documento                       | Local                       | Obrigatório |
-| ------------------------------- | --------------------------- | ----------- |
-| Expert sources                  | Variável                    | Sim         |
-| Domain definition               | Briefing                    | Sim         |
-| Existing frameworks (se houver) | `squads/*/docs/frameworks/` | Não         |
+| Documento | Local | Obrigatório |
+|-----------|-------|-------------|
+| Expert sources | Variável | Sim |
+| Domain definition | Briefing | Sim |
+| Existing frameworks (se houver) | `squads/*/docs/frameworks/` | Não |
 
 ### Ferramentas Integradas
 
-| Ferramenta   | Propósito             | Agentes      |
-| ------------ | --------------------- | ------------ |
-| `WebSearch`  | Descoberta de sources | @oalanicolas |
-| `WebFetch`   | Coleta de conteúdo    | @oalanicolas |
-| `Grep/Glob`  | Análise de patterns   | @oalanicolas |
-| `Write/Edit` | Criação de artefatos  | Todos        |
+| Ferramenta | Propósito | Agentes |
+|------------|-----------|---------|
+| `WebSearch` | Descoberta de sources | @oalanicolas |
+| `WebFetch` | Coleta de conteúdo | @oalanicolas |
+| `Grep/Glob` | Análise de patterns | @oalanicolas |
+| `Write/Edit` | Criação de artefatos | Todos |
 
 ---
 
@@ -694,22 +686,22 @@ graph TD
 
 ### Entradas do Workflow
 
-| Entrada      | Tipo   | Fonte | Descrição                 |
-| ------------ | ------ | ----- | ------------------------- |
-| Expert name  | string | User  | Nome do expert a clonar   |
-| Domain       | string | User  | Domínio de expertise      |
-| Source hints | array  | User  | URLs/referências iniciais |
-| Agent count  | number | User  | Quantos agents criar      |
+| Entrada | Tipo | Fonte | Descrição |
+|---------|------|-------|-----------|
+| Expert name | string | User | Nome do expert a clonar |
+| Domain | string | User | Domínio de expertise |
+| Source hints | array | User | URLs/referências iniciais |
+| Agent count | number | User | Quantos agents criar |
 
 ### Saídas do Workflow
 
-| Saída          | Tipo      | Destino                | Descrição                  |
-| -------------- | --------- | ---------------------- | -------------------------- |
-| Squad completo | diretório | `squads/{squad-name}/` | Squad pronto para uso      |
-| DNA files      | yaml      | `data/minds/`          | Conhecimento extraído      |
-| SOPs           | md        | `sops/`                | Procedimentos operacionais |
-| Checklists     | md        | `checklists/`          | Validações derivadas       |
-| Workflows      | yaml      | `workflows/`           | Orquestrações              |
+| Saída | Tipo | Destino | Descrição |
+|-------|------|---------|-----------|
+| Squad completo | diretório | `squads/{squad-name}/` | Squad pronto para uso |
+| DNA files | yaml | `data/minds/` | Conhecimento extraído |
+| SOPs | md | `sops/` | Procedimentos operacionais |
+| Checklists | md | `checklists/` | Validações derivadas |
+| Workflows | yaml | `workflows/` | Orquestrações |
 
 ---
 
@@ -806,13 +798,11 @@ flowchart LR
 **Sintoma:** AN não consegue passar SOURCE_COVERAGE
 
 **Causas:**
-
 - Expert pouco documentado publicamente
 - Sources muito genéricas (bronze)
 - Transcrições de baixa qualidade
 
 **Solução:**
-
 1. Procurar podcasts longos (2h+)
 2. Buscar entrevistas em profundidade
 3. Verificar se expert tem livros/artigos
@@ -823,13 +813,11 @@ flowchart LR
 **Sintoma:** AN não consegue 15 citações
 
 **Causas:**
-
 - Sources insuficientes (voltar para research)
 - Expert muito tácito
 - Foco muito amplo
 
 **Solução:**
-
 1. Restringir escopo do domain
 2. Usar entrevistas longas (podcasts 2h+)
 3. Procurar livros/artigos do expert
@@ -839,13 +827,11 @@ flowchart LR
 **Sintoma:** Framework volta para AN várias vezes
 
 **Causas:**
-
 - Framework muito genérico
 - Falta signature phrases reais
 - Heurísticas sem contexto
 
 **Solução:**
-
 1. Revisar checklist de self-validation
 2. Adicionar mais citações diretas
 3. Especificar contexto de aplicação
@@ -855,12 +841,10 @@ flowchart LR
 **Sintoma:** SOP não pode ser criado sem informação faltante
 
 **Causas:**
-
 - Framework incompleto
 - Gap de conhecimento não detectado em Handoff #1
 
 **Solução:**
-
 1. Escalar para AN com request específico
 2. AN extrai conhecimento adicional
 3. Resubmeter para PV
@@ -870,13 +854,11 @@ flowchart LR
 **Sintoma:** Agent não carrega ou commands não funcionam
 
 **Causas:**
-
 - Path inconsistente
 - YAML malformado
 - Referência circular
 
 **Solução:**
-
 1. Validar YAML syntax
 2. Verificar paths com `ls -la`
 3. Testar comando isolado
@@ -887,36 +869,36 @@ flowchart LR
 
 ### Knowledge Quality Score
 
-| Métrica                 | Peso | Threshold |
-| ----------------------- | ---- | --------- |
-| Citações diretas        | 30%  | ≥ 15      |
-| Signature phrases       | 20%  | ≥ 5       |
-| Frameworks documentados | 20%  | ≥ 1       |
-| Source diversity        | 15%  | ≥ 2 tipos |
-| Rastreabilidade         | 15%  | 100%      |
+| Métrica | Peso | Threshold |
+|---------|------|-----------|
+| Citações diretas | 30% | ≥ 15 |
+| Signature phrases | 20% | ≥ 5 |
+| Frameworks documentados | 20% | ≥ 1 |
+| Source diversity | 15% | ≥ 2 tipos |
+| Rastreabilidade | 15% | 100% |
 
 ### Operationalization Quality Score
 
-| Métrica               | Peso | Threshold   |
-| --------------------- | ---- | ----------- |
-| SOP-Framework linkage | 30%  | 100%        |
-| Checklist coverage    | 25%  | 100%        |
-| Veto conditions       | 20%  | ≥ 1 por SOP |
-| Zero invention        | 25%  | 100%        |
+| Métrica | Peso | Threshold |
+|---------|------|-----------|
+| SOP-Framework linkage | 30% | 100% |
+| Checklist coverage | 25% | 100% |
+| Veto conditions | 20% | ≥ 1 por SOP |
+| Zero invention | 25% | 100% |
 
 ---
 
 ## Tabela de Handoffs
 
-| #   | De → Para      | Trigger            | Artefato              | Veto Condition         |
-| --- | -------------- | ------------------ | --------------------- | ---------------------- |
-| 0   | User → Chief   | Request            | Briefing              | —                      |
-| 0.5 | Chief → User   | Briefing pronto    | Aprovação escopo      | User não aprova        |
-| 1   | Chief → AN     | Escopo aprovado    | Sources + extraction  | —                      |
-| 1.5 | AN interno     | Sources coletadas  | SOURCE_COVERAGE       | Sources insuficientes  |
-| 2   | AN → PV        | Framework completo | Knowledge artifacts   | Sem citações, inventou |
-| 3   | PV → Chief     | SOPs completos     | Operational artifacts | SOP não ref. framework |
-| 4   | Chief → Output | Smoke test PASS    | Squad completo        | Paths quebrados        |
+| # | De → Para | Trigger | Artefato | Veto Condition |
+|---|-----------|---------|----------|----------------|
+| 0 | User → Chief | Request | Briefing | — |
+| 0.5 | Chief → User | Briefing pronto | Aprovação escopo | User não aprova |
+| 1 | Chief → AN | Escopo aprovado | Sources + extraction | — |
+| 1.5 | AN interno | Sources coletadas | SOURCE_COVERAGE | Sources insuficientes |
+| 2 | AN → PV | Framework completo | Knowledge artifacts | Sem citações, inventou |
+| 3 | PV → Chief | SOPs completos | Operational artifacts | SOP não ref. framework |
+| 4 | Chief → Output | Smoke test PASS | Squad completo | Paths quebrados |
 
 ---
 
@@ -924,13 +906,13 @@ flowchart LR
 
 ### Arquivos Relacionados
 
-| Arquivo               | Caminho                                            |
-| --------------------- | -------------------------------------------------- |
-| Squad Chief Agent     | `squads/squad-creator-pro/agents/squad-chief.md`   |
-| Oalanicolas Agent     | `squads/squad-creator-pro/agents/oalanicolas.md`   |
-| Pedro Valerio Agent   | `squads/squad-creator-pro/agents/pedro-valerio.md` |
-| Extraction Tasks      | `squads/squad-creator-pro/tasks/extract-*.md`      |
-| Validation Checklists | `squads/squad-creator-pro/checklists/`             |
+| Arquivo | Caminho |
+|---------|---------|
+| Squad Chief Agent | `squads/squad-creator-pro/agents/squad-chief.md` |
+| Oalanicolas Agent | `squads/squad-creator-pro/agents/oalanicolas.md` |
+| Pedro Valerio Agent | `squads/squad-creator-pro/agents/pedro-valerio.md` |
+| Extraction Tasks | `squads/squad-creator-pro/tasks/extract-*.md` |
+| Validation Checklists | `squads/squad-creator-pro/checklists/` |
 
 ### Documentação Adicional
 
@@ -942,14 +924,14 @@ flowchart LR
 
 ## Changelog
 
-| Versão | Data       | Mudanças                                                                  |
-| ------ | ---------- | ------------------------------------------------------------------------- |
-| 1.0    | 2026-02-10 | Versão inicial com separação AN/PV                                        |
-| 2.0    | 2026-02-10 | Removido Tim Ferriss, AN absorve research+extraction, títulos atualizados |
+| Versão | Data | Mudanças |
+|--------|------|----------|
+| 1.0 | 2026-02-10 | Versão inicial com separação AN/PV |
+| 2.0 | 2026-02-10 | Removido Tim Ferriss, AN absorve research+extraction, títulos atualizados |
 
 ---
 
-_Documentação criada por @oalanicolas (Knowledge Architect) + @pedro-valerio (Process Architect)_
+*Documentação criada por @oalanicolas (Knowledge Architect) + @pedro-valerio (Process Architect)*
 
-_"Curadoria > Volume" — @oalanicolas_
-_"A melhor coisa é impossibilitar caminhos" — @pedro-valerio_
+*"Curadoria > Volume" — @oalanicolas*
+*"A melhor coisa é impossibilitar caminhos" — @pedro-valerio*

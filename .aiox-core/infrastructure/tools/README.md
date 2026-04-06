@@ -55,14 +55,12 @@ Model Context Protocol servers that provide specialized AI capabilities.
 ### Available MCP Servers
 
 #### UI & Development
-
 - **21st-dev-magic.yaml** - UI component generation
   - React component creation
   - Design pattern implementation
   - Component libraries integration
 
 #### Web & Research
-
 - **browser.yaml** - Browser automation
   - Web scraping
   - UI testing
@@ -82,7 +80,6 @@ Model Context Protocol servers that provide specialized AI capabilities.
   - Version-specific docs
 
 #### Project Management
-
 - **clickup.yaml** - ClickUp integration
   - Task management
   - Sprint planning
@@ -90,7 +87,6 @@ Model Context Protocol servers that provide specialized AI capabilities.
   - Team collaboration
 
 #### Backend Services
-
 - **google-workspace.yaml** - Google Workspace APIs
   - Drive file operations
   - Docs editing
@@ -104,7 +100,6 @@ Model Context Protocol servers that provide specialized AI capabilities.
   - Edge functions
 
 #### Automation
-
 - **n8n.yaml** - Workflow automation
   - Integration workflows
   - Data transformation
@@ -118,14 +113,14 @@ Model Context Protocol servers that provide specialized AI capabilities.
 Agents can discover available tools using the tool resolver:
 
 ```javascript
-const { resolveTools } = require("../utils/tool-resolver");
+const { resolveTools } = require('../utils/tool-resolver');
 
 // Get all available tools
 const tools = await resolveTools();
 
 // Get tools by category
-const mcpServers = await resolveTools({ category: "mcp" });
-const cliTools = await resolveTools({ category: "cli" });
+const mcpServers = await resolveTools({ category: 'mcp' });
+const cliTools = await resolveTools({ category: 'cli' });
 ```
 
 ### Configuration
@@ -224,4 +219,4 @@ node .aiox-core/infrastructure/scripts/tool-resolver.js
 
 ---
 
-_Last updated: 2025-10-22 - Documentation Sync Initiative_
+*Last updated: 2025-10-22 - Documentation Sync Initiative*

@@ -45,7 +45,7 @@ external_models:
     context_window: 200000
     validation_report: "docs/model-discovery/scans/2026-02-12/validation-glm-5.md"
     verdict: "ADD_CONDITIONAL"
-    privacy_risk: "moderate" # Singapore entity, China parent
+    privacy_risk: "moderate"  # Singapore entity, China parent
     pt_br_status: "unknown"
 
   kimi:
@@ -58,7 +58,7 @@ external_models:
     context_window: 256000
     validation_report: "docs/model-discovery/scans/2026-02-08/validation-kimi-k2-5.md"
     verdict: "MONITOR"
-    privacy_risk: "high" # China, trains on prompts
+    privacy_risk: "high"  # China, trains on prompts
     pt_br_status: "unknown"
     latency_warning: "HIGH (15-200s per request)"
 
@@ -149,7 +149,7 @@ cross_provider_candidates:
   # === AGENT CREATION ===
   create-agent:
     current_tier: opus
-    test_with: [glm5] # GLM-5 has lower hallucination
+    test_with: [glm5]  # GLM-5 has lower hallucination
     expected_savings: "80%"
     risk: "Generic agent without depth"
     test_input:
@@ -639,7 +639,7 @@ batch_mode:
     wave_2_kimi:
       model: kimi
       tasks:
-        - deep-research-pre-agent # Kimi Swarm pode excel aqui
+        - deep-research-pre-agent  # Kimi Swarm pode excel aqui
       condition: "Only if GLM-5 not qualified for task"
 
   consolidated_report:
@@ -694,9 +694,9 @@ metadata:
 
   dependencies:
     - "infrastructure/services/llm-router/" # Para chamar modelos externos
-    - "wf-model-tier-qualification.yaml" # Comparison logic
-    - "validation-glm-5.md" # GLM-5 validation report
-    - "validation-kimi-k2-5.md" # Kimi validation report
+    - "wf-model-tier-qualification.yaml"    # Comparison logic
+    - "validation-glm-5.md"                 # GLM-5 validation report
+    - "validation-kimi-k2-5.md"             # Kimi validation report
 
   changelog:
     - version: "1.0"

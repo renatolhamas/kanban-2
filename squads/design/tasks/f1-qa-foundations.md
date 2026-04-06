@@ -80,11 +80,11 @@ Verificar contraste minimo (4.5:1 para texto normal, 3:1 para texto grande):
 
 ## Verdicts
 
-| Verdict                  | Condicao                                                      | Acao                               |
-| ------------------------ | ------------------------------------------------------------- | ---------------------------------- |
-| **PASS**                 | Todos os checks criticos ok                                   | Prosseguir para Phase 2            |
-| **PASS com observacoes** | Checks criticos ok, warnings em contraste                     | Documentar e prosseguir            |
-| **FAIL**                 | Qualquer token ausente, valor invalido, ou estrutura quebrada | Retornar para f1-apply-foundations |
+| Verdict | Condicao | Acao |
+|---------|----------|------|
+| **PASS** | Todos os checks criticos ok | Prosseguir para Phase 2 |
+| **PASS com observacoes** | Checks criticos ok, warnings em contraste | Documentar e prosseguir |
+| **FAIL** | Qualquer token ausente, valor invalido, ou estrutura quebrada | Retornar para f1-apply-foundations |
 
 ## Output
 

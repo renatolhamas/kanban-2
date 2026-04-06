@@ -5,9 +5,9 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
-const crypto = require("crypto");
+const crypto = require('crypto');
 
 /**
  * Default minimum sequence length for pattern capture
@@ -20,14 +20,14 @@ const DEFAULT_MIN_SEQUENCE_LENGTH = 3;
  * @type {string[]}
  */
 const KEY_WORKFLOW_COMMANDS = [
-  "develop",
-  "review-qa",
-  "apply-qa-fixes",
-  "validate-story-draft",
-  "create-story",
-  "create-next-story",
-  "run-tests",
-  "create-pr",
+  'develop',
+  'review-qa',
+  'apply-qa-fixes',
+  'validate-story-draft',
+  'create-story',
+  'create-next-story',
+  'run-tests',
+  'create-pr',
 ];
 
 /**
@@ -42,11 +42,9 @@ class PatternCapture {
    * @param {boolean} options.enabled - Whether capture is enabled
    */
   constructor(options = {}) {
-    this.minSequenceLength =
-      options.minSequenceLength || DEFAULT_MIN_SEQUENCE_LENGTH;
+    this.minSequenceLength = options.minSequenceLength || DEFAULT_MIN_SEQUENCE_LENGTH;
     this.keyCommands = options.keyCommands || KEY_WORKFLOW_COMMANDS;
-    this.enabled =
-      options.enabled !== false && process.env.AIOX_PATTERN_CAPTURE !== "false";
+    this.enabled = options.enabled !== false && process.env.AIOX_PATTERN_CAPTURE !== 'false';
     this.sessionBuffer = new Map(); // Track ongoing sessions
   }
 
@@ -62,16 +60,16 @@ class PatternCapture {
    */
   captureSession(sessionData) {
     if (!this.enabled) {
-      return { valid: false, reason: "Pattern capture disabled" };
+      return { valid: false, reason: 'Pattern capture disabled' };
     }
 
     if (!sessionData || !sessionData.commands) {
-      return { valid: false, reason: "Invalid session data" };
+      return { valid: false, reason: 'Invalid session data' };
     }
 
     // Only capture successful workflows
     if (!sessionData.success) {
-      return { valid: false, reason: "Workflow not successful" };
+      return { valid: false, reason: 'Workflow not successful' };
     }
 
     // Check minimum sequence length
@@ -97,7 +95,7 @@ class PatternCapture {
       lastSeen: new Date(sessionData.timestamp || Date.now()).toISOString(),
       sessionId: sessionData.sessionId || crypto.randomUUID(),
       workflow: this._detectWorkflow(sequence),
-      status: "pending",
+      status: 'pending',
     };
 
     return {
@@ -121,11 +119,7 @@ class PatternCapture {
     const normalized = this._normalizeCommands(commandHistory);
 
     // Use sliding window to find subsequences
-    for (
-      let length = this.minSequenceLength;
-      length <= Math.min(normalized.length, 7);
-      length++
-    ) {
+    for (let length = this.minSequenceLength; length <= Math.min(normalized.length, 7); length++) {
       for (let i = 0; i <= normalized.length - length; i++) {
         const subsequence = normalized.slice(i, i + length);
 
@@ -159,10 +153,10 @@ class PatternCapture {
    */
   async onTaskComplete(taskName, context) {
     if (!this.enabled) {
-      return { captured: false, reason: "disabled" };
+      return { captured: false, reason: 'disabled' };
     }
 
-    const sessionId = context.sessionId || "default";
+    const sessionId = context.sessionId || 'default';
 
     // Get or create session buffer
     if (!this.sessionBuffer.has(sessionId)) {
@@ -182,7 +176,7 @@ class PatternCapture {
 
     // Track agent if provided
     if (context.agentId) {
-      const normalizedAgent = context.agentId.replace("@", "");
+      const normalizedAgent = context.agentId.replace('@', '');
       if (!session.agents.includes(normalizedAgent)) {
         session.agents.push(normalizedAgent);
       }
@@ -208,7 +202,7 @@ class PatternCapture {
       };
     }
 
-    return { captured: false, reason: "workflow_in_progress" };
+    return { captured: false, reason: 'workflow_in_progress' };
   }
 
   /**
@@ -216,7 +210,7 @@ class PatternCapture {
    * @param {string} sessionId - Session identifier
    */
   markSessionFailed(sessionId) {
-    const session = this.sessionBuffer.get(sessionId || "default");
+    const session = this.sessionBuffer.get(sessionId || 'default');
     if (session) {
       session.success = false;
     }
@@ -241,10 +235,10 @@ class PatternCapture {
    * @private
    */
   _normalizeCommand(command) {
-    if (!command) return "";
+    if (!command) return '';
     return command
-      .replace(/^\*/, "") // Remove * prefix
-      .replace(/-/g, "-") // Keep hyphens
+      .replace(/^\*/, '') // Remove * prefix
+      .replace(/-/g, '-') // Keep hyphens
       .toLowerCase()
       .trim();
   }
@@ -256,9 +250,7 @@ class PatternCapture {
    * @private
    */
   _normalizeCommands(commands) {
-    return commands
-      .map((cmd) => this._normalizeCommand(cmd))
-      .filter((cmd) => cmd.length > 0);
+    return commands.map((cmd) => this._normalizeCommand(cmd)).filter((cmd) => cmd.length > 0);
   }
 
   /**
@@ -269,7 +261,7 @@ class PatternCapture {
    */
   _normalizeAgents(agents) {
     return agents
-      .map((agent) => agent.replace("@", "").toLowerCase().trim())
+      .map((agent) => agent.replace('@', '').toLowerCase().trim())
       .filter((agent) => agent.length > 0);
   }
 
@@ -280,9 +272,7 @@ class PatternCapture {
    * @private
    */
   _containsKeyCommand(sequence) {
-    return sequence.some((cmd) =>
-      this.keyCommands.some((key) => cmd.includes(key)),
-    );
+    return sequence.some((cmd) => this.keyCommands.some((key) => cmd.includes(key)));
   }
 
   /**
@@ -292,22 +282,19 @@ class PatternCapture {
    * @private
    */
   _detectWorkflow(sequence) {
-    const joined = sequence.join(" ");
+    const joined = sequence.join(' ');
 
-    if (
-      joined.includes("develop") &&
-      (joined.includes("review-qa") || joined.includes("qa"))
-    ) {
-      return "story_development";
+    if (joined.includes('develop') && (joined.includes('review-qa') || joined.includes('qa'))) {
+      return 'story_development';
     }
-    if (joined.includes("create-story") || joined.includes("validate-story")) {
-      return "story_creation";
+    if (joined.includes('create-story') || joined.includes('validate-story')) {
+      return 'story_creation';
     }
-    if (joined.includes("create-epic")) {
-      return "epic_creation";
+    if (joined.includes('create-epic')) {
+      return 'epic_creation';
     }
-    if (joined.includes("create-pr") || joined.includes("push")) {
-      return "deployment";
+    if (joined.includes('create-pr') || joined.includes('push')) {
+      return 'deployment';
     }
 
     return null;
@@ -320,14 +307,7 @@ class PatternCapture {
    * @private
    */
   _isWorkflowEnd(command) {
-    const endCommands = [
-      "create-pr",
-      "push",
-      "deploy",
-      "complete",
-      "done",
-      "finish",
-    ];
+    const endCommands = ['create-pr', 'push', 'deploy', 'complete', 'done', 'finish'];
     return endCommands.some((end) => command.includes(end));
   }
 }

@@ -9,14 +9,14 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const crypto = require("crypto");
+const fs = require('fs').promises;
+const path = require('path');
+const crypto = require('crypto');
 
 /**
  * Default backup directory
  */
-const DEFAULT_BACKUP_DIR = ".aiox/backups/health-check";
+const DEFAULT_BACKUP_DIR = '.aiox/backups/health-check';
 
 /**
  * Maximum backup retention (in days)
@@ -71,7 +71,7 @@ class BackupManager {
       // Check if file exists
       const stats = await fs.stat(absolutePath);
       if (!stats.isFile()) {
-        throw new Error("Target is not a file");
+        throw new Error('Target is not a file');
       }
 
       // Create backup
@@ -88,9 +88,7 @@ class BackupManager {
 
       return backupPath;
     } catch (error) {
-      throw new Error(
-        `Failed to create backup for ${filePath}: ${error.message}`,
-      );
+      throw new Error(`Failed to create backup for ${filePath}: ${error.message}`);
     }
   }
 
@@ -160,7 +158,7 @@ class BackupManager {
 
       const backups = [];
       for (const file of files) {
-        if (file.endsWith(".bak")) {
+        if (file.endsWith('.bak')) {
           const backupPath = path.join(this.backupDir, file);
           const stats = await fs.stat(backupPath);
           const metadata = this.metadata.get(backupPath);
@@ -170,7 +168,7 @@ class BackupManager {
             filename: file,
             size: stats.size,
             created: stats.birthtime,
-            originalPath: metadata?.originalPath || "unknown",
+            originalPath: metadata?.originalPath || 'unknown',
           });
         }
       }
@@ -255,7 +253,7 @@ class BackupManager {
     if (!backupPath) {
       return {
         valid: false,
-        error: "No backup found",
+        error: 'No backup found',
       };
     }
 
@@ -268,7 +266,7 @@ class BackupManager {
       if (!backupStats) {
         return {
           valid: false,
-          error: "Backup file not found",
+          error: 'Backup file not found',
         };
       }
 
@@ -302,11 +300,7 @@ class BackupManager {
    * @returns {string} Short hash
    */
   generateHash(input) {
-    return crypto
-      .createHash("sha256")
-      .update(input)
-      .digest("hex")
-      .substring(0, 8);
+    return crypto.createHash('sha256').update(input).digest('hex').substring(0, 8);
   }
 
   /**
@@ -321,8 +315,7 @@ class BackupManager {
       count: backups.length,
       totalSize,
       totalSizeFormatted: this.formatSize(totalSize),
-      oldestBackup:
-        backups.length > 0 ? backups[backups.length - 1].created : null,
+      oldestBackup: backups.length > 0 ? backups[backups.length - 1].created : null,
       newestBackup: backups.length > 0 ? backups[0].created : null,
       backupDir: this.backupDir,
     };
@@ -337,8 +330,7 @@ class BackupManager {
   formatSize(bytes) {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    if (bytes < 1024 * 1024 * 1024)
-      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   }
 }

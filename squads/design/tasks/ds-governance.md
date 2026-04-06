@@ -12,7 +12,6 @@
 Setup a governance model for your design system based on Nathan Curtis's team model frameworks. Defines contribution flow, decision-making process, versioning strategy, and communication channels.
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/governance/governance-model.md`
 - **format:** Markdown report
 - **consumed_by:** ds-designops
@@ -91,7 +90,6 @@ Setup a governance model for your design system based on Nathan Curtis's team mo
 **Input:** `*ds-govern` with team_size=30, maturity=new, style=centralized, products=2
 
 **Output (governance-model.md excerpt):**
-
 ```
 # Design System Governance — Acme Corp
 
@@ -123,7 +121,6 @@ Setup a governance model for your design system based on Nathan Curtis's team mo
 **Input:** `*ds-govern` with team_size=200, maturity=established, style=federated, products=8
 
 **Output (contribution-guide.md excerpt):**
-
 ```
 # Contributing to the Design System
 
@@ -185,6 +182,6 @@ Any product team can propose components. The DS Core Team reviews all PRs.
 - [ ] Versioning strategy includes breaking change policy with deprecation period
 - [ ] All generated documentation is actionable (contains tables, checklists, or templates — not just prose)
 
-## Process Guards
 
+## Process Guards
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

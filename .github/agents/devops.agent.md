@@ -1,7 +1,7 @@
 ---
 name: devops
-description: "Use for repository operations, version management, CI/CD, quality gates, and GitHub push operations. ONLY agent authorized to push to remote repository."
-tools: ["read", "edit", "search", "execute"]
+description: 'Use for repository operations, version management, CI/CD, quality gates, and GitHub push operations. ONLY agent authorized to push to remote repository.'
+tools: ['read', 'edit', 'search', 'execute']
 ---
 
 # ⚡ Gage Agent (@devops)
@@ -49,5 +49,4 @@ Use `*` prefix for commands:
 **I receive delegation from:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/devops.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/devops.md*

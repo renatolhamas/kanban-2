@@ -22,14 +22,7 @@
     },
     "status": {
       "type": "string",
-      "enum": [
-        "pending",
-        "in_progress",
-        "paused",
-        "abandoned",
-        "failed",
-        "completed"
-      ],
+      "enum": ["pending", "in_progress", "paused", "abandoned", "failed", "completed"],
       "description": "Current build status"
     },
     "currentPhase": {
@@ -136,10 +129,7 @@
       "items": {
         "type": "object",
         "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["info", "warning", "error", "stuck", "abandoned"]
-          },
+          "type": { "type": "string", "enum": ["info", "warning", "error", "stuck", "abandoned"] },
           "message": { "type": "string" },
           "timestamp": { "type": "string", "format": "date-time" },
           "acknowledged": { "type": "boolean", "default": false }

@@ -20,30 +20,28 @@
  * @version 1.0.0
  */
 
-const fs = require("fs");
-const path = require("path");
-const { spawn, execSync } = require("child_process");
-const { EventEmitter } = require("events");
+const fs = require('fs');
+const path = require('path');
+const { spawn, execSync } = require('child_process');
+const { EventEmitter } = require('events');
 
 // Import components
-const { AutonomousBuildLoop, BuildEvent } = require("./autonomous-build-loop");
-const {
-  BuildStateManager: _BuildStateManager,
-} = require("./build-state-manager");
+const { AutonomousBuildLoop, BuildEvent } = require('./autonomous-build-loop');
+const { BuildStateManager: _BuildStateManager } = require('./build-state-manager');
 
 // Epic 10: Parallel Execution Components (optional - loaded dynamically when needed)
 // These are available for future parallel execution features but not used in current pipeline
 
 let WorktreeManager;
 try {
-  WorktreeManager = require("../../infrastructure/scripts/worktree-manager");
+  WorktreeManager = require('../../infrastructure/scripts/worktree-manager');
 } catch {
   WorktreeManager = null;
 }
 
 let GotchasMemory;
 try {
-  GotchasMemory = require("../memory/gotchas-memory").GotchasMemory;
+  GotchasMemory = require('../memory/gotchas-memory').GotchasMemory;
 } catch {
   GotchasMemory = null;
 }
@@ -51,7 +49,7 @@ try {
 // Optional chalk
 let chalk;
 try {
-  chalk = require("chalk");
+  chalk = require('chalk');
 } catch {
   chalk = {
     blue: (s) => s,
@@ -94,9 +92,9 @@ const DEFAULT_CONFIG = {
   claudeMaxTokens: 16000,
 
   // Paths
-  planDir: "plan",
-  reportDir: "plan",
-  storiesDir: "docs/stories",
+  planDir: 'plan',
+  reportDir: 'plan',
+  storiesDir: 'docs/stories',
 
   // Flags
   dryRun: false,
@@ -106,29 +104,29 @@ const DEFAULT_CONFIG = {
 };
 
 const OrchestratorEvent = {
-  BUILD_QUEUED: "build_queued",
-  PHASE_STARTED: "phase_started",
-  PHASE_COMPLETED: "phase_completed",
-  PHASE_FAILED: "phase_failed",
-  SUBTASK_EXECUTING: "subtask_executing",
-  QA_STARTED: "qa_started",
-  QA_COMPLETED: "qa_completed",
-  MERGE_STARTED: "merge_started",
-  MERGE_COMPLETED: "merge_completed",
-  BUILD_COMPLETED: "build_completed",
-  BUILD_FAILED: "build_failed",
-  REPORT_GENERATED: "report_generated",
+  BUILD_QUEUED: 'build_queued',
+  PHASE_STARTED: 'phase_started',
+  PHASE_COMPLETED: 'phase_completed',
+  PHASE_FAILED: 'phase_failed',
+  SUBTASK_EXECUTING: 'subtask_executing',
+  QA_STARTED: 'qa_started',
+  QA_COMPLETED: 'qa_completed',
+  MERGE_STARTED: 'merge_started',
+  MERGE_COMPLETED: 'merge_completed',
+  BUILD_COMPLETED: 'build_completed',
+  BUILD_FAILED: 'build_failed',
+  REPORT_GENERATED: 'report_generated',
 };
 
 const Phase = {
-  INIT: "init",
-  WORKTREE: "worktree",
-  PLAN: "plan",
-  EXECUTE: "execute",
-  QA: "qa",
-  MERGE: "merge",
-  CLEANUP: "cleanup",
-  REPORT: "report",
+  INIT: 'init',
+  WORKTREE: 'worktree',
+  PLAN: 'plan',
+  EXECUTE: 'execute',
+  QA: 'qa',
+  MERGE: 'merge',
+  CLEANUP: 'cleanup',
+  REPORT: 'report',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -234,11 +232,8 @@ class BuildOrchestrator extends EventEmitter {
         await this.phaseReport(ctx, true);
       } catch (reportError) {
         // Log failure report error but don't override the original error
-        const errorMsg =
-          reportError instanceof Error ? reportError.message : "Unknown error";
-        ctx.errors.push(
-          new Error(`Failed to generate failure report: ${errorMsg}`),
-        );
+        const errorMsg = reportError instanceof Error ? reportError.message : 'Unknown error';
+        ctx.errors.push(new Error(`Failed to generate failure report: ${errorMsg}`));
       }
 
       this.emit(OrchestratorEvent.BUILD_FAILED, {
@@ -272,13 +267,13 @@ class BuildOrchestrator extends EventEmitter {
       phase: phaseName,
     });
 
-    this.log(`[${phaseName.toUpperCase()}] Starting...`, "info");
+    this.log(`[${phaseName.toUpperCase()}] Starting...`, 'info');
 
     try {
       const result = await fn();
 
       ctx.phases[phaseName] = {
-        status: "completed",
+        status: 'completed',
         duration: Date.now() - phaseStart,
         result,
       };
@@ -289,15 +284,12 @@ class BuildOrchestrator extends EventEmitter {
         duration: Date.now() - phaseStart,
       });
 
-      this.log(
-        `[${phaseName.toUpperCase()}] Completed in ${Date.now() - phaseStart}ms`,
-        "success",
-      );
+      this.log(`[${phaseName.toUpperCase()}] Completed in ${Date.now() - phaseStart}ms`, 'success');
 
       return result;
     } catch (error) {
       ctx.phases[phaseName] = {
-        status: "failed",
+        status: 'failed',
         duration: Date.now() - phaseStart,
         error: error.message,
       };
@@ -308,10 +300,7 @@ class BuildOrchestrator extends EventEmitter {
         error: error.message,
       });
 
-      this.log(
-        `[${phaseName.toUpperCase()}] Failed: ${error.message}`,
-        "error",
-      );
+      this.log(`[${phaseName.toUpperCase()}] Failed: ${error.message}`, 'error');
       throw error;
     }
   }
@@ -334,10 +323,7 @@ class BuildOrchestrator extends EventEmitter {
     // Load gotchas for context injection
     if (GotchasMemory) {
       ctx.gotchasMemory = new GotchasMemory(this.rootPath);
-      ctx.relevantGotchas = ctx.gotchasMemory.getContextForTask(
-        `Implementing ${ctx.storyId}`,
-        [],
-      );
+      ctx.relevantGotchas = ctx.gotchasMemory.getContextForTask(`Implementing ${ctx.storyId}`, []);
     }
 
     return { storyPath, gotchasCount: ctx.relevantGotchas?.length || 0 };
@@ -348,7 +334,7 @@ class BuildOrchestrator extends EventEmitter {
    */
   async phaseWorktree(ctx) {
     if (ctx.config.dryRun) {
-      this.log("DRY RUN: Would create worktree", "info");
+      this.log('DRY RUN: Would create worktree', 'info');
       return { dryRun: true };
     }
 
@@ -358,7 +344,7 @@ class BuildOrchestrator extends EventEmitter {
     const existing = await manager.get(ctx.storyId);
     if (existing) {
       ctx.worktree = existing;
-      this.log(`Using existing worktree: ${existing.path}`, "info");
+      this.log(`Using existing worktree: ${existing.path}`, 'info');
       return existing;
     }
 
@@ -374,24 +360,24 @@ class BuildOrchestrator extends EventEmitter {
     const planPath = path.join(
       ctx.worktree?.path || this.rootPath,
       ctx.config.planDir,
-      "implementation.yaml",
+      'implementation.yaml',
     );
 
     // Check if plan exists
     if (fs.existsSync(planPath)) {
-      const yaml = require("js-yaml");
-      ctx.plan = yaml.load(fs.readFileSync(planPath, "utf-8"));
-      return { source: "existing", path: planPath };
+      const yaml = require('js-yaml');
+      ctx.plan = yaml.load(fs.readFileSync(planPath, 'utf-8'));
+      return { source: 'existing', path: planPath };
     }
 
     // Generate plan using Claude
     if (ctx.config.dryRun) {
-      this.log("DRY RUN: Would generate plan", "info");
+      this.log('DRY RUN: Would generate plan', 'info');
       return { dryRun: true };
     }
 
     ctx.plan = await this.generatePlan(ctx);
-    return { source: "generated", subtasks: ctx.plan.phases?.length || 0 };
+    return { source: 'generated', subtasks: ctx.plan.phases?.length || 0 };
   }
 
   /**
@@ -399,7 +385,7 @@ class BuildOrchestrator extends EventEmitter {
    */
   async phaseExecute(ctx) {
     if (ctx.config.dryRun) {
-      this.log("DRY RUN: Would execute build loop", "info");
+      this.log('DRY RUN: Would execute build loop', 'info');
       return { dryRun: true };
     }
 
@@ -441,9 +427,9 @@ class BuildOrchestrator extends EventEmitter {
     // Build the prompt for Claude
     const prompt = this.buildSubtaskPrompt(subtask, execCtx, buildCtx);
 
-    this.log(`Executing subtask: ${subtask.id}`, "info");
+    this.log(`Executing subtask: ${subtask.id}`, 'info');
     if (buildCtx.config.verbose) {
-      this.log(`Prompt: ${prompt.substring(0, 200)}...`, "debug");
+      this.log(`Prompt: ${prompt.substring(0, 200)}...`, 'debug');
     }
 
     try {
@@ -457,7 +443,7 @@ class BuildOrchestrator extends EventEmitter {
         success,
         output: result.stdout,
         filesModified: this.extractModifiedFiles(result.stdout),
-        error: success ? null : "Implementation did not pass validation",
+        error: success ? null : 'Implementation did not pass validation',
       };
     } catch (error) {
       return {
@@ -477,8 +463,8 @@ class BuildOrchestrator extends EventEmitter {
 ## Current Subtask
 ID: ${subtask.id}
 Description: ${subtask.description}
-${subtask.files ? `Files to modify: ${subtask.files.join(", ")}` : ""}
-${subtask.acceptanceCriteria ? `Acceptance Criteria:\n${subtask.acceptanceCriteria.map((ac) => `- ${ac}`).join("\n")}` : ""}
+${subtask.files ? `Files to modify: ${subtask.files.join(', ')}` : ''}
+${subtask.acceptanceCriteria ? `Acceptance Criteria:\n${subtask.acceptanceCriteria.map((ac) => `- ${ac}`).join('\n')}` : ''}
 
 ## Instructions
 1. Implement the subtask completely
@@ -489,12 +475,12 @@ ${subtask.acceptanceCriteria ? `Acceptance Criteria:\n${subtask.acceptanceCriter
 
 ## Iteration Info
 This is attempt ${execCtx.iteration} of ${execCtx.config.maxIterations}.
-${execCtx.iteration > 1 ? "Previous attempt failed. Review the error and try a different approach." : ""}
+${execCtx.iteration > 1 ? 'Previous attempt failed. Review the error and try a different approach.' : ''}
 `;
 
     // Add gotchas context
     if (buildCtx.relevantGotchas && buildCtx.relevantGotchas.length > 0) {
-      prompt += "\n## Known Gotchas (IMPORTANT - Review Before Coding)\n";
+      prompt += '\n## Known Gotchas (IMPORTANT - Review Before Coding)\n';
       for (const gotcha of buildCtx.relevantGotchas) {
         prompt += `\n### ${gotcha.title}\n${gotcha.description}\n`;
         if (gotcha.workaround) {
@@ -520,45 +506,45 @@ The subtask is complete only when verification passes.
   async runClaudeCLI(prompt, workDir, config) {
     return new Promise((resolve, reject) => {
       const args = [
-        "--print", // Non-interactive mode
-        "--dangerously-skip-permissions", // Allow file writes
+        '--print', // Non-interactive mode
+        '--dangerously-skip-permissions', // Allow file writes
       ];
 
       if (config.claudeModel) {
-        args.push("--model", config.claudeModel);
+        args.push('--model', config.claudeModel);
       }
 
       // Escape prompt for shell
       const escapedPrompt = prompt.replace(/'/g, "'\\''");
 
-      const fullCommand = `echo '${escapedPrompt}' | claude ${args.join(" ")}`;
+      const fullCommand = `echo '${escapedPrompt}' | claude ${args.join(' ')}`;
 
-      this.log(`Running Claude CLI in ${workDir}`, "debug");
+      this.log(`Running Claude CLI in ${workDir}`, 'debug');
 
-      const child = spawn("sh", ["-c", fullCommand], {
+      const child = spawn('sh', ['-c', fullCommand], {
         cwd: workDir,
         env: { ...process.env },
         timeout: config.subtaskTimeout,
       });
 
-      let stdout = "";
-      let stderr = "";
+      let stdout = '';
+      let stderr = '';
 
-      child.stdout.on("data", (data) => {
+      child.stdout.on('data', (data) => {
         stdout += data.toString();
         if (config.verbose) {
           process.stdout.write(data);
         }
       });
 
-      child.stderr.on("data", (data) => {
+      child.stderr.on('data', (data) => {
         stderr += data.toString();
         if (config.verbose) {
           process.stderr.write(data);
         }
       });
 
-      child.on("close", (code) => {
+      child.on('close', (code) => {
         if (code === 0) {
           resolve({ stdout, stderr, code });
         } else {
@@ -566,7 +552,7 @@ The subtask is complete only when verification passes.
         }
       });
 
-      child.on("error", (error) => {
+      child.on('error', (error) => {
         reject(error);
       });
     });
@@ -579,24 +565,24 @@ The subtask is complete only when verification passes.
     // Check for common failure patterns
     const output = result.stdout.toLowerCase();
 
-    if (output.includes("error:") && output.includes("failed")) {
+    if (output.includes('error:') && output.includes('failed')) {
       return false;
     }
 
-    if (output.includes("test failed") || output.includes("tests failed")) {
+    if (output.includes('test failed') || output.includes('tests failed')) {
       return false;
     }
 
     // If verification command specified, check it was run
     if (subtask.verification) {
       const verifyCmd = subtask.verification.command || subtask.verification;
-      if (!output.includes("verification passed") && !output.includes("✓")) {
+      if (!output.includes('verification passed') && !output.includes('✓')) {
         // Try running verification ourselves
         try {
           execSync(verifyCmd, {
             cwd: this.rootPath,
             timeout: 30000,
-            stdio: "pipe",
+            stdio: 'pipe',
           });
           return true;
         } catch {
@@ -635,7 +621,7 @@ The subtask is complete only when verification passes.
    */
   async phaseQA(ctx) {
     if (ctx.config.dryRun) {
-      this.log("DRY RUN: Would run QA", "info");
+      this.log('DRY RUN: Would run QA', 'info');
       return { dryRun: true };
     }
 
@@ -645,37 +631,25 @@ The subtask is complete only when verification passes.
 
     try {
       // Run linting
-      this.log("Running lint...", "info");
+      this.log('Running lint...', 'info');
       try {
-        execSync("npm run lint", {
-          cwd: workDir,
-          stdio: "pipe",
-          timeout: 60000,
-        });
+        execSync('npm run lint', { cwd: workDir, stdio: 'pipe', timeout: 60000 });
       } catch (_e) {
-        this.log("Lint warnings (non-blocking)", "warn");
+        this.log('Lint warnings (non-blocking)', 'warn');
       }
 
       // Run tests
-      this.log("Running tests...", "info");
+      this.log('Running tests...', 'info');
       try {
-        execSync("npm test -- --passWithNoTests", {
-          cwd: workDir,
-          stdio: "pipe",
-          timeout: 120000,
-        });
+        execSync('npm test -- --passWithNoTests', { cwd: workDir, stdio: 'pipe', timeout: 120000 });
       } catch (e) {
         throw new Error(`Tests failed: ${e.message}`);
       }
 
       // Run typecheck if available
-      this.log("Running typecheck...", "info");
+      this.log('Running typecheck...', 'info');
       try {
-        execSync("npm run typecheck", {
-          cwd: workDir,
-          stdio: "pipe",
-          timeout: 60000,
-        });
+        execSync('npm run typecheck', { cwd: workDir, stdio: 'pipe', timeout: 60000 });
       } catch {
         // TypeCheck not available or failed (non-blocking)
       }
@@ -706,12 +680,12 @@ The subtask is complete only when verification passes.
    */
   async phaseMerge(ctx) {
     if (ctx.config.dryRun || ctx.config.noMerge) {
-      this.log("DRY RUN/NO-MERGE: Would merge to main", "info");
+      this.log('DRY RUN/NO-MERGE: Would merge to main', 'info');
       return { dryRun: true };
     }
 
     if (!ctx.worktree || !WorktreeManager) {
-      return { skipped: true, reason: "No worktree to merge" };
+      return { skipped: true, reason: 'No worktree to merge' };
     }
 
     this.emit(OrchestratorEvent.MERGE_STARTED, { storyId: ctx.storyId });
@@ -741,7 +715,7 @@ The subtask is complete only when verification passes.
    */
   async phaseCleanup(ctx) {
     if (ctx.config.dryRun || ctx.config.keepWorktree) {
-      this.log("DRY RUN/KEEP: Would cleanup worktree", "info");
+      this.log('DRY RUN/KEEP: Would cleanup worktree', 'info');
       return { dryRun: true };
     }
 
@@ -751,7 +725,7 @@ The subtask is complete only when verification passes.
         await manager.remove(ctx.storyId, { force: true });
         return { cleaned: true };
       } catch (e) {
-        this.log(`Cleanup warning: ${e.message}`, "warn");
+        this.log(`Cleanup warning: ${e.message}`, 'warn');
         return { cleaned: false, error: e.message };
       }
     }
@@ -774,7 +748,7 @@ The subtask is complete only when verification passes.
 
     const report = this.generateReport(ctx, duration, isFailed);
 
-    fs.writeFileSync(reportPath, report, "utf-8");
+    fs.writeFileSync(reportPath, report, 'utf-8');
     ctx.reportPath = reportPath;
 
     this.emit(OrchestratorEvent.REPORT_GENERATED, {
@@ -789,7 +763,7 @@ The subtask is complete only when verification passes.
    * Generate markdown report (AC6)
    */
   generateReport(ctx, duration, isFailed) {
-    const status = isFailed ? "❌ FAILED" : "✅ SUCCESS";
+    const status = isFailed ? '❌ FAILED' : '✅ SUCCESS';
     const now = new Date().toISOString();
 
     let report = `# Build Report: ${ctx.storyId}
@@ -805,11 +779,11 @@ The subtask is complete only when verification passes.
 | Metric | Value |
 |--------|-------|
 | Story | ${ctx.storyId} |
-| Status | ${isFailed ? "Failed" : "Completed"} |
+| Status | ${isFailed ? 'Failed' : 'Completed'} |
 | Duration | ${this.formatDuration(duration)} |
-| Worktree | ${ctx.worktree ? ctx.worktree.path : "N/A"} |
-| QA Passed | ${ctx.qaResult?.success ? "Yes" : "No"} |
-| Merged | ${ctx.mergeResult?.success ? "Yes" : "No"} |
+| Worktree | ${ctx.worktree ? ctx.worktree.path : 'N/A'} |
+| QA Passed | ${ctx.qaResult?.success ? 'Yes' : 'No'} |
+| Merged | ${ctx.mergeResult?.success ? 'Yes' : 'No'} |
 
 ---
 
@@ -820,25 +794,25 @@ The subtask is complete only when verification passes.
 `;
 
     for (const [phase, data] of Object.entries(ctx.phases)) {
-      const statusIcon = data.status === "completed" ? "✅" : "❌";
+      const statusIcon = data.status === 'completed' ? '✅' : '❌';
       report += `| ${phase} | ${statusIcon} ${data.status} | ${data.duration}ms |\n`;
     }
 
     if (ctx.errors.length > 0) {
-      report += "\n---\n\n## Errors\n\n";
+      report += '\n---\n\n## Errors\n\n';
       for (const error of ctx.errors) {
         report += `- ${error.message}\n`;
       }
     }
 
     if (ctx.result) {
-      report += "\n---\n\n## Build Loop Results\n\n";
+      report += '\n---\n\n## Build Loop Results\n\n';
       report += `- Completed Subtasks: ${ctx.result.stats?.completedSubtasks || 0}\n`;
       report += `- Failed Subtasks: ${ctx.result.stats?.failedSubtasks || 0}\n`;
       report += `- Total Iterations: ${ctx.result.stats?.totalIterations || 0}\n`;
     }
 
-    report += "\n---\n\n*Generated by AIOX Build Orchestrator v1.0.0*\n";
+    report += '\n---\n\n*Generated by AIOX Build Orchestrator v1.0.0*\n';
 
     return report;
   }
@@ -852,13 +826,13 @@ The subtask is complete only when verification passes.
    */
   findStoryFile(storyId) {
     const patterns = [
-      path.join(this.rootPath, "docs", "stories", `${storyId}.md`),
-      path.join(this.rootPath, "docs", "stories", storyId, "README.md"),
-      path.join(this.rootPath, "docs", "stories", storyId, `${storyId}.md`),
+      path.join(this.rootPath, 'docs', 'stories', `${storyId}.md`),
+      path.join(this.rootPath, 'docs', 'stories', storyId, 'README.md'),
+      path.join(this.rootPath, 'docs', 'stories', storyId, `${storyId}.md`),
     ];
 
     // Also search subdirectories
-    const storiesDir = path.join(this.rootPath, "docs", "stories");
+    const storiesDir = path.join(this.rootPath, 'docs', 'stories');
     if (fs.existsSync(storiesDir)) {
       const dirs = fs.readdirSync(storiesDir, { withFileTypes: true });
       for (const dir of dirs) {
@@ -885,14 +859,14 @@ The subtask is complete only when verification passes.
     // In a full implementation, this would use Claude to analyze the story
     // and generate a detailed implementation plan
 
-    const storyContent = fs.readFileSync(ctx.storyPath, "utf-8");
+    const storyContent = fs.readFileSync(ctx.storyPath, 'utf-8');
 
     // Extract acceptance criteria
     const acMatches = storyContent.match(/- \[ \] AC\d+:.*$/gm) || [];
 
     const subtasks = acMatches.map((ac, i) => ({
       id: `1.${i + 1}`, // Format: phase.subtask (e.g., "1.1", "1.2")
-      description: ac.replace(/- \[ \] AC\d+:\s*/, ""),
+      description: ac.replace(/- \[ \] AC\d+:\s*/, ''),
       files: [],
       verification: null,
     }));
@@ -902,8 +876,8 @@ The subtask is complete only when verification passes.
       generatedAt: new Date().toISOString(),
       phases: [
         {
-          id: "implementation",
-          name: "Implementation",
+          id: 'implementation',
+          name: 'Implementation',
           subtasks,
         },
       ],
@@ -925,17 +899,17 @@ The subtask is complete only when verification passes.
   /**
    * Log message
    */
-  log(message, level = "info") {
+  log(message, level = 'info') {
     const prefix =
       {
-        info: chalk.blue("ℹ"),
-        warn: chalk.yellow("⚠"),
-        error: chalk.red("✗"),
-        success: chalk.green("✓"),
-        debug: chalk.gray("…"),
-      }[level] || "";
+        info: chalk.blue('ℹ'),
+        warn: chalk.yellow('⚠'),
+        error: chalk.red('✗'),
+        success: chalk.green('✓'),
+        debug: chalk.gray('…'),
+      }[level] || '';
 
-    if (level === "debug" && !this.config.verbose) {
+    if (level === 'debug' && !this.config.verbose) {
       return;
     }
 
@@ -961,15 +935,15 @@ The subtask is complete only when verification passes.
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
+  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     console.log(`
-${chalk.bold("Build Orchestrator")} - AIOX Autonomous Build (Story 8.5)
+${chalk.bold('Build Orchestrator')} - AIOX Autonomous Build (Story 8.5)
 
-${chalk.cyan("Usage:")}
+${chalk.cyan('Usage:')}
   build-orchestrator <story-id> [options]
   *build <story-id> [options]
 
-${chalk.cyan("Options:")}
+${chalk.cyan('Options:')}
   --dry-run             Show what would happen without executing
   --no-merge            Skip merge phase
   --keep-worktree       Don't cleanup worktree after build
@@ -979,16 +953,16 @@ ${chalk.cyan("Options:")}
   --timeout <ms>        Global timeout (default: 2700000 = 45min)
   --help, -h            Show this help
 
-${chalk.cyan("Pipeline:")} (AC3)
+${chalk.cyan('Pipeline:')} (AC3)
   worktree → plan → execute → verify → merge → cleanup
 
-${chalk.cyan("Examples:")}
+${chalk.cyan('Examples:')}
   build-orchestrator story-8.5
   build-orchestrator story-8.5 --dry-run
   build-orchestrator story-8.5 --no-merge --verbose
   build-orchestrator story-8.5 --keep-worktree
 
-${chalk.cyan("Acceptance Criteria:")}
+${chalk.cyan('Acceptance Criteria:')}
   AC1: Integrates all components
   AC2: Command *build {story-id} executes complete pipeline
   AC3: Pipeline: worktree → plan → execute → verify → merge → cleanup
@@ -998,7 +972,7 @@ ${chalk.cyan("Acceptance Criteria:")}
   AC7: Support multiple simultaneous builds
   AC8: QA loop integration before merge
 `);
-    process.exit(args.includes("--help") || args.includes("-h") ? 0 : 1);
+    process.exit(args.includes('--help') || args.includes('-h') ? 0 : 1);
   }
 
   // Parse arguments
@@ -1008,27 +982,27 @@ ${chalk.cyan("Acceptance Criteria:")}
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
 
-    if (arg === "--dry-run") {
+    if (arg === '--dry-run') {
       options.dryRun = true;
-    } else if (arg === "--no-merge") {
+    } else if (arg === '--no-merge') {
       options.noMerge = true;
-    } else if (arg === "--keep-worktree") {
+    } else if (arg === '--keep-worktree') {
       options.keepWorktree = true;
-    } else if (arg === "--no-worktree") {
+    } else if (arg === '--no-worktree') {
       options.useWorktree = false;
-    } else if (arg === "--no-qa") {
+    } else if (arg === '--no-qa') {
       options.runQA = false;
-    } else if (arg === "--verbose" || arg === "-v") {
+    } else if (arg === '--verbose' || arg === '-v') {
       options.verbose = true;
-    } else if (arg === "--timeout") {
+    } else if (arg === '--timeout') {
       options.globalTimeout = parseInt(args[++i], 10);
-    } else if (!arg.startsWith("-")) {
+    } else if (!arg.startsWith('-')) {
       storyId = arg;
     }
   }
 
   if (!storyId) {
-    console.error(chalk.red("Error: story-id is required"));
+    console.error(chalk.red('Error: story-id is required'));
     process.exit(1);
   }
 
@@ -1049,7 +1023,7 @@ ${chalk.cyan("Acceptance Criteria:")}
     const result = await orchestrator.build(storyId, options);
 
     if (result.success) {
-      console.log(chalk.green("\n✅ Build completed successfully!"));
+      console.log(chalk.green('\n✅ Build completed successfully!'));
       console.log(chalk.gray(`   Report: ${result.reportPath}`));
     } else {
       console.log(chalk.red(`\n❌ Build failed in phase: ${result.phase}`));

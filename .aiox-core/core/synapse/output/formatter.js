@@ -10,7 +10,7 @@
  * @created Story SYN-6 - SynapseEngine Orchestrator + Output Formatter
  */
 
-const { estimateTokens } = require("../utils/tokens");
+const { estimateTokens } = require('../utils/tokens');
 
 // ---------------------------------------------------------------------------
 // Section ordering (DESIGN doc section 14)
@@ -24,32 +24,32 @@ const { estimateTokens } = require("../utils/tokens");
  * KEYWORD, then SQUAD, etc.) to preserve highest-priority sections.
  */
 const SECTION_ORDER = [
-  "CONTEXT_BRACKET",
-  "CONSTITUTION",
-  "AGENT",
-  "WORKFLOW",
-  "TASK",
-  "SQUAD",
-  "KEYWORD",
-  "MEMORY_HINTS",
-  "STAR_COMMANDS",
-  "DEVMODE",
-  "SUMMARY",
+  'CONTEXT_BRACKET',
+  'CONSTITUTION',
+  'AGENT',
+  'WORKFLOW',
+  'TASK',
+  'SQUAD',
+  'KEYWORD',
+  'MEMORY_HINTS',
+  'STAR_COMMANDS',
+  'DEVMODE',
+  'SUMMARY',
 ];
 
 /**
  * Map layer names to section identifiers.
  */
 const LAYER_TO_SECTION = {
-  constitution: "CONSTITUTION",
-  global: "CONTEXT_BRACKET", // global rules go into bracket section
-  agent: "AGENT",
-  workflow: "WORKFLOW",
-  task: "TASK",
-  squad: "SQUAD",
-  keyword: "KEYWORD",
-  memory: "MEMORY_HINTS",
-  "star-command": "STAR_COMMANDS",
+  constitution: 'CONSTITUTION',
+  global: 'CONTEXT_BRACKET',   // global rules go into bracket section
+  agent: 'AGENT',
+  workflow: 'WORKFLOW',
+  task: 'TASK',
+  squad: 'SQUAD',
+  keyword: 'KEYWORD',
+  memory: 'MEMORY_HINTS',
+  'star-command': 'STAR_COMMANDS',
 };
 
 // ---------------------------------------------------------------------------
@@ -65,9 +65,7 @@ const LAYER_TO_SECTION = {
  * @returns {string}
  */
 function formatContextBracket(bracket, contextPercent, globalResults) {
-  const lines = [
-    `[CONTEXT BRACKET]\nCONTEXT BRACKET: [${bracket}] (${contextPercent.toFixed(1)}% remaining)`,
-  ];
+  const lines = [`[CONTEXT BRACKET]\nCONTEXT BRACKET: [${bracket}] (${contextPercent.toFixed(1)}% remaining)`];
 
   // Include global/context rules if present
   for (const result of globalResults) {
@@ -79,7 +77,7 @@ function formatContextBracket(bracket, contextPercent, globalResults) {
     }
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -89,11 +87,11 @@ function formatContextBracket(bracket, contextPercent, globalResults) {
  * @returns {string}
  */
 function formatConstitution(result) {
-  const lines = ["[CONSTITUTION] (NON-NEGOTIABLE)"];
+  const lines = ['[CONSTITUTION] (NON-NEGOTIABLE)'];
   for (const rule of result.rules) {
     lines.push(`  ${rule}`);
   }
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -104,8 +102,8 @@ function formatConstitution(result) {
  */
 function formatAgent(result) {
   const meta = result.metadata || {};
-  const agentId = meta.agentId || meta.source || "unknown";
-  const domain = meta.domain || meta.source || "";
+  const agentId = meta.agentId || meta.source || 'unknown';
+  const domain = meta.domain || meta.source || '';
   const lines = [`[ACTIVE AGENT: @${agentId}]`];
 
   if (domain) {
@@ -113,20 +111,20 @@ function formatAgent(result) {
   }
 
   if (meta.authority && Array.isArray(meta.authority)) {
-    lines.push("  AUTHORITY BOUNDARIES:");
+    lines.push('  AUTHORITY BOUNDARIES:');
     for (const auth of meta.authority) {
       lines.push(`    - ${auth}`);
     }
   }
 
   if (result.rules.length > 0) {
-    lines.push("  RULES:");
+    lines.push('  RULES:');
     result.rules.forEach((rule, i) => {
       lines.push(`    ${i}. ${rule}`);
     });
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -137,8 +135,8 @@ function formatAgent(result) {
  */
 function formatWorkflow(result) {
   const meta = result.metadata || {};
-  const workflowId = meta.workflowId || meta.source || "unknown";
-  const phase = meta.phase || "";
+  const workflowId = meta.workflowId || meta.source || 'unknown';
+  const phase = meta.phase || '';
   const lines = [`[ACTIVE WORKFLOW: ${workflowId}]`];
 
   if (phase) {
@@ -146,13 +144,13 @@ function formatWorkflow(result) {
   }
 
   if (result.rules.length > 0) {
-    lines.push("  RULES:");
+    lines.push('  RULES:');
     result.rules.forEach((rule, i) => {
       lines.push(`    ${i}. ${rule}`);
     });
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -163,7 +161,7 @@ function formatWorkflow(result) {
  */
 function formatTask(result) {
   const meta = result.metadata || {};
-  const lines = ["[TASK CONTEXT]"];
+  const lines = ['[TASK CONTEXT]'];
 
   if (meta.taskId) {
     lines.push(`  Active Task: ${meta.taskId}`);
@@ -176,7 +174,7 @@ function formatTask(result) {
     lines.push(`  ${rule}`);
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -187,14 +185,14 @@ function formatTask(result) {
  */
 function formatSquad(result) {
   const meta = result.metadata || {};
-  const squadName = meta.squadName || meta.source || "unknown";
+  const squadName = meta.squadName || meta.source || 'unknown';
   const lines = [`[SQUAD: ${squadName}]`];
 
   for (const rule of result.rules) {
     lines.push(`  ${rule}`);
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -205,13 +203,11 @@ function formatSquad(result) {
  */
 function formatKeyword(result) {
   const meta = result.metadata || {};
-  const lines = ["[KEYWORD MATCHES]"];
+  const lines = ['[KEYWORD MATCHES]'];
 
   if (meta.matches && Array.isArray(meta.matches)) {
     for (const match of meta.matches) {
-      lines.push(
-        `  "${match.keyword}" matched ${match.domain} (${match.reason || "keyword match"})`,
-      );
+      lines.push(`  "${match.keyword}" matched ${match.domain} (${match.reason || 'keyword match'})`);
     }
   }
 
@@ -219,7 +215,7 @@ function formatKeyword(result) {
     lines.push(`  ${rule}`);
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -230,10 +226,10 @@ function formatKeyword(result) {
  */
 function formatStarCommands(result) {
   const meta = result.metadata || {};
-  const command = meta.command || meta.source || "unknown";
+  const command = meta.command || meta.source || 'unknown';
   const lines = [
-    "[STAR-COMMANDS]",
-    "============================================================",
+    '[STAR-COMMANDS]',
+    '============================================================',
     `[*${command}] COMMAND:`,
   ];
 
@@ -241,8 +237,8 @@ function formatStarCommands(result) {
     lines.push(`  ${i}. ${rule}`);
   });
 
-  lines.push("============================================================");
-  return lines.join("\n");
+  lines.push('============================================================');
+  return lines.join('\n');
 }
 
 // ---------------------------------------------------------------------------
@@ -259,19 +255,18 @@ function formatStarCommands(result) {
  * @returns {string}
  */
 function formatMemoryHints(result) {
-  const lines = ["[MEMORY HINTS]"];
+  const lines = ['[MEMORY HINTS]'];
 
   for (const hint of result.rules) {
-    const source = hint.source || "memory";
-    const relevance =
-      typeof hint.relevance === "number"
-        ? `${(hint.relevance * 100).toFixed(0)}%`
-        : "?%";
-    const content = hint.content || "";
+    const source = hint.source || 'memory';
+    const relevance = typeof hint.relevance === 'number'
+      ? `${(hint.relevance * 100).toFixed(0)}%`
+      : '?%';
+    const content = hint.content || '';
     lines.push(`  [${source}] (relevance: ${relevance}) ${content}`);
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 // ---------------------------------------------------------------------------
@@ -290,82 +285,68 @@ function formatMemoryHints(result) {
  */
 function formatDevmode(bracket, contextPercent, session, metrics, results) {
   const lines = [
-    "[DEVMODE STATUS]",
-    "---",
-    "SYNAPSE DEVMODE",
-    "",
+    '[DEVMODE STATUS]',
+    '---',
+    'SYNAPSE DEVMODE',
+    '',
     `Bracket: [${bracket}] (${contextPercent.toFixed(1)}% remaining)`,
-    "",
+    '',
   ];
 
   // Layers loaded
-  const loaded = Object.entries(metrics.per_layer || {}).filter(
-    ([, v]) => v.status === "ok",
-  );
+  const loaded = Object.entries(metrics.per_layer || {})
+    .filter(([, v]) => v.status === 'ok');
   if (loaded.length > 0) {
-    lines.push("Layers Loaded:");
+    lines.push('Layers Loaded:');
     for (const [name, info] of loaded) {
-      const duration = info.duration != null ? `${info.duration}ms` : "?ms";
-      lines.push(
-        `  [L${info.layer != null ? info.layer : "?"}] ${name.toUpperCase()}: ${info.rules || 0} rules (${duration})`,
-      );
+      const duration = info.duration != null ? `${info.duration}ms` : '?ms';
+      lines.push(`  [L${info.layer != null ? info.layer : '?'}] ${name.toUpperCase()}: ${info.rules || 0} rules (${duration})`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Layers skipped
-  const skipped = Object.entries(metrics.per_layer || {}).filter(
-    ([, v]) => v.status === "skipped",
-  );
+  const skipped = Object.entries(metrics.per_layer || {})
+    .filter(([, v]) => v.status === 'skipped');
   if (skipped.length > 0) {
-    lines.push("Layers Skipped:");
+    lines.push('Layers Skipped:');
     for (const [name, info] of skipped) {
-      lines.push(
-        `  [${name.toUpperCase()}] ${info.reason || "Unknown reason"}`,
-      );
+      lines.push(`  [${name.toUpperCase()}] ${info.reason || 'Unknown reason'}`);
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Session info
   if (session) {
-    lines.push("Session:");
+    lines.push('Session:');
     if (session.id || session.sessionId) {
-      lines.push(`  UUID: ${session.id || session.sessionId || "unknown"}`);
+      lines.push(`  UUID: ${session.id || session.sessionId || 'unknown'}`);
     }
     if (session.active_agent) {
       lines.push(`  Agent: @${session.active_agent}`);
     }
-    lines.push(
-      `  Prompts: ${session.prompt_count || 0} | Last bracket: ${bracket}`,
-    );
-    lines.push("");
+    lines.push(`  Prompts: ${session.prompt_count || 0} | Last bracket: ${bracket}`);
+    lines.push('');
   }
 
   // Pipeline metrics
-  lines.push("Pipeline Metrics:");
-  lines.push(
-    `  Total: ${metrics.total_ms}ms | Layers: ${metrics.layers_loaded}/${metrics.layers_loaded + metrics.layers_skipped + metrics.layers_errored} | Rules: ${metrics.total_rules}`,
-  );
+  lines.push('Pipeline Metrics:');
+  lines.push(`  Total: ${metrics.total_ms}ms | Layers: ${metrics.layers_loaded}/${metrics.layers_loaded + metrics.layers_skipped + metrics.layers_errored} | Rules: ${metrics.total_rules}`);
 
   // Available domains (not loaded) — based on results metadata
-  const loadedDomains = new Set(
-    results.map((r) => (r.metadata && r.metadata.source) || "").filter(Boolean),
-  );
+  const loadedDomains = new Set(results.map(r => (r.metadata && r.metadata.source) || '').filter(Boolean));
   if (loadedDomains.size > 0) {
-    lines.push("");
-    lines.push("Loaded Domains:");
+    lines.push('');
+    lines.push('Loaded Domains:');
     for (const domain of loadedDomains) {
-      const result = results.find(
-        (r) => r.metadata && r.metadata.source === domain,
-      );
+      const result = results.find(r => r.metadata && r.metadata.source === domain);
       const ruleCount = result ? result.rules.length : 0;
       lines.push(`  [${domain.toUpperCase()}] (${ruleCount} rules)`);
     }
   }
 
-  lines.push("---");
-  return lines.join("\n");
+  lines.push('---');
+  return lines.join('\n');
 }
 
 // ---------------------------------------------------------------------------
@@ -380,17 +361,17 @@ function formatDevmode(bracket, contextPercent, session, metrics, results) {
  * @returns {string}
  */
 function formatSummary(results, _metrics) {
-  const lines = ["[LOADED DOMAINS SUMMARY]", "  LOADED DOMAINS:"];
+  const lines = ['[LOADED DOMAINS SUMMARY]', '  LOADED DOMAINS:'];
 
   for (const result of results) {
     if (!result || !result.rules || result.rules.length === 0) continue;
     const meta = result.metadata || {};
-    const source = (meta.source || meta.domain || "unknown").toUpperCase();
-    const reason = meta.activationReason || meta.reason || "active layer";
+    const source = (meta.source || meta.domain || 'unknown').toUpperCase();
+    const reason = meta.activationReason || meta.reason || 'active layer';
     lines.push(`    [${source}] ${reason} (${result.rules.length} rules)`);
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 // ---------------------------------------------------------------------------
@@ -414,24 +395,24 @@ function enforceTokenBudget(sections, sectionIds, tokenBudget) {
   }
 
   // Sections that should never be removed
-  const PROTECTED = new Set(["CONTEXT_BRACKET", "CONSTITUTION", "AGENT"]);
+  const PROTECTED = new Set(['CONTEXT_BRACKET', 'CONSTITUTION', 'AGENT']);
 
   // Truncation priority: remove from end first
   const TRUNCATION_ORDER = [
-    "SUMMARY",
-    "KEYWORD",
-    "MEMORY_HINTS",
-    "SQUAD",
-    "STAR_COMMANDS",
-    "DEVMODE",
-    "TASK",
-    "WORKFLOW",
+    'SUMMARY',
+    'KEYWORD',
+    'MEMORY_HINTS',
+    'SQUAD',
+    'STAR_COMMANDS',
+    'DEVMODE',
+    'TASK',
+    'WORKFLOW',
   ];
 
   const result = [...sections];
   const ids = [...sectionIds];
 
-  let totalTokens = estimateTokens(result.join("\n\n"));
+  let totalTokens = estimateTokens(result.join('\n\n'));
 
   if (totalTokens <= tokenBudget) {
     return result;
@@ -447,7 +428,7 @@ function enforceTokenBudget(sections, sectionIds, tokenBudget) {
     if (idx !== -1 && !PROTECTED.has(sectionToRemove)) {
       result.splice(idx, 1);
       ids.splice(idx, 1);
-      totalTokens = estimateTokens(result.join("\n\n"));
+      totalTokens = estimateTokens(result.join('\n\n'));
     }
   }
 
@@ -485,18 +466,9 @@ const SECTION_FORMATTERS = {
  * @param {boolean} showHandoffWarning - Whether to include handoff warning
  * @returns {string} Formatted <synapse-rules> XML string
  */
-function formatSynapseRules(
-  results,
-  bracket,
-  contextPercent,
-  session,
-  devmode,
-  metrics,
-  tokenBudget,
-  showHandoffWarning,
-) {
+function formatSynapseRules(results, bracket, contextPercent, session, devmode, metrics, tokenBudget, showHandoffWarning) {
   if (!results || results.length === 0) {
-    return "";
+    return '';
   }
 
   // Categorize results by section
@@ -509,24 +481,24 @@ function formatSynapseRules(
     }
 
     const meta = result.metadata || {};
-    const layerName = meta.source || "";
+    const layerName = meta.source || '';
     const section = LAYER_TO_SECTION[layerName];
 
-    if (section === "CONTEXT_BRACKET") {
+    if (section === 'CONTEXT_BRACKET') {
       globalResults.push(result);
     } else if (section) {
       sectionResults[section] = result;
     } else {
       // Fallback: try to match by layer number
       const layerNum = meta.layer;
-      if (layerNum === 0) sectionResults["CONSTITUTION"] = result;
+      if (layerNum === 0) sectionResults['CONSTITUTION'] = result;
       else if (layerNum === 1) globalResults.push(result);
-      else if (layerNum === 2) sectionResults["AGENT"] = result;
-      else if (layerNum === 3) sectionResults["WORKFLOW"] = result;
-      else if (layerNum === 4) sectionResults["TASK"] = result;
-      else if (layerNum === 5) sectionResults["SQUAD"] = result;
-      else if (layerNum === 6) sectionResults["KEYWORD"] = result;
-      else if (layerNum === 7) sectionResults["STAR_COMMANDS"] = result;
+      else if (layerNum === 2) sectionResults['AGENT'] = result;
+      else if (layerNum === 3) sectionResults['WORKFLOW'] = result;
+      else if (layerNum === 4) sectionResults['TASK'] = result;
+      else if (layerNum === 5) sectionResults['SQUAD'] = result;
+      else if (layerNum === 6) sectionResults['KEYWORD'] = result;
+      else if (layerNum === 7) sectionResults['STAR_COMMANDS'] = result;
     }
   }
 
@@ -536,13 +508,13 @@ function formatSynapseRules(
 
   // CONTEXT BRACKET — always first
   sections.push(formatContextBracket(bracket, contextPercent, globalResults));
-  sectionIds.push("CONTEXT_BRACKET");
+  sectionIds.push('CONTEXT_BRACKET');
 
   // Remaining sections in order (skip CONTEXT_BRACKET since already added)
   for (const sectionId of SECTION_ORDER) {
-    if (sectionId === "CONTEXT_BRACKET") continue;
-    if (sectionId === "DEVMODE") continue;
-    if (sectionId === "SUMMARY") continue;
+    if (sectionId === 'CONTEXT_BRACKET') continue;
+    if (sectionId === 'DEVMODE') continue;
+    if (sectionId === 'SUMMARY') continue;
 
     const result = sectionResults[sectionId];
     if (!result) continue;
@@ -556,31 +528,27 @@ function formatSynapseRules(
 
   // Handoff warning (CRITICAL bracket)
   if (showHandoffWarning) {
-    sections.push(
-      "[HANDOFF WARNING]\n  Context is nearly exhausted. Consider starting a new session to preserve quality.",
-    );
-    sectionIds.push("HANDOFF_WARNING");
+    sections.push('[HANDOFF WARNING]\n  Context is nearly exhausted. Consider starting a new session to preserve quality.');
+    sectionIds.push('HANDOFF_WARNING');
   }
 
   // DEVMODE section (conditional)
   if (devmode && metrics) {
-    sections.push(
-      formatDevmode(bracket, contextPercent, session, metrics, results),
-    );
-    sectionIds.push("DEVMODE");
+    sections.push(formatDevmode(bracket, contextPercent, session, metrics, results));
+    sectionIds.push('DEVMODE');
   }
 
   // SUMMARY — always last
   if (results.length > 0) {
     sections.push(formatSummary(results, metrics || {}));
-    sectionIds.push("SUMMARY");
+    sectionIds.push('SUMMARY');
   }
 
   // Token budget enforcement
   const finalSections = enforceTokenBudget(sections, sectionIds, tokenBudget);
 
   // Wrap in <synapse-rules> tags
-  const body = finalSections.join("\n\n");
+  const body = finalSections.join('\n\n');
   return `<synapse-rules>\n\n${body}\n\n</synapse-rules>`;
 }
 

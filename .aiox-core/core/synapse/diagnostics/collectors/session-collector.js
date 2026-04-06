@@ -8,10 +8,10 @@
  * @created Story SYN-13
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Collect session status data.
@@ -21,7 +21,7 @@ const path = require("path");
  * @returns {{ fields: Array<{ field: string, expected: string, actual: string, status: string }>, raw: object|null }}
  */
 function collectSessionStatus(projectRoot, sessionId) {
-  const sessionsDir = path.join(projectRoot, ".synapse", "sessions");
+  const sessionsDir = path.join(projectRoot, '.synapse', 'sessions');
   const fields = [];
   let raw = null;
 
@@ -34,54 +34,51 @@ function collectSessionStatus(projectRoot, sessionId) {
   }
 
   // Fallback: read _active-agent.json bridge file
-  const bridgePath = path.join(sessionsDir, "_active-agent.json");
+  const bridgePath = path.join(sessionsDir, '_active-agent.json');
   const bridgeData = _readJsonSafe(bridgePath);
 
   // Check active_agent
   const agentId = session?.active_agent?.id || bridgeData?.id || null;
   fields.push({
-    field: "active_agent.id",
-    expected: "(any agent)",
-    actual: agentId || "(none)",
-    status: agentId ? "PASS" : "WARN",
+    field: 'active_agent.id',
+    expected: '(any agent)',
+    actual: agentId || '(none)',
+    status: agentId ? 'PASS' : 'WARN',
   });
 
   // Check activation_quality
-  const quality =
-    session?.active_agent?.activation_quality ||
-    bridgeData?.activation_quality ||
-    null;
+  const quality = session?.active_agent?.activation_quality || bridgeData?.activation_quality || null;
   fields.push({
-    field: "activation_quality",
-    expected: "full|partial|fallback",
-    actual: quality || "(none)",
-    status: quality ? "PASS" : "WARN",
+    field: 'activation_quality',
+    expected: 'full|partial|fallback',
+    actual: quality || '(none)',
+    status: quality ? 'PASS' : 'WARN',
   });
 
   // Check prompt_count
   const promptCount = session?.prompt_count ?? null;
   fields.push({
-    field: "prompt_count",
-    expected: ">= 0",
-    actual: promptCount !== null ? String(promptCount) : "(no session)",
-    status: promptCount !== null ? "PASS" : "INFO",
+    field: 'prompt_count',
+    expected: '>= 0',
+    actual: promptCount !== null ? String(promptCount) : '(no session)',
+    status: promptCount !== null ? 'PASS' : 'INFO',
   });
 
   // Check bracket
   const bracket = session?.context?.last_bracket || null;
   fields.push({
-    field: "bracket",
-    expected: "FRESH|MODERATE|DEPLETED|CRITICAL",
-    actual: bracket || "(no session)",
-    status: bracket ? "PASS" : "INFO",
+    field: 'bracket',
+    expected: 'FRESH|MODERATE|DEPLETED|CRITICAL',
+    actual: bracket || '(no session)',
+    status: bracket ? 'PASS' : 'INFO',
   });
 
   // Check bridge file exists
   fields.push({
-    field: "_active-agent.json",
-    expected: "exists",
-    actual: bridgeData ? "exists" : "missing",
-    status: bridgeData ? "PASS" : "WARN",
+    field: '_active-agent.json',
+    expected: 'exists',
+    actual: bridgeData ? 'exists' : 'missing',
+    status: bridgeData ? 'PASS' : 'WARN',
   });
 
   raw = { session, bridgeData };
@@ -96,7 +93,7 @@ function collectSessionStatus(projectRoot, sessionId) {
 function _readJsonSafe(filePath) {
   try {
     if (!fs.existsSync(filePath)) return null;
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
   } catch (_) {
     return null;
   }

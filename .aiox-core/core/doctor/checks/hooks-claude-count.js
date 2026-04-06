@@ -10,20 +10,20 @@
  * @story INS-4.8
  */
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const name = "hooks-claude-count";
+const name = 'hooks-claude-count';
 
 async function run(context) {
-  const hooksDir = path.join(context.projectRoot, ".claude", "hooks");
+  const hooksDir = path.join(context.projectRoot, '.claude', 'hooks');
 
   if (!fs.existsSync(hooksDir)) {
     return {
       check: name,
-      status: "FAIL",
-      message: "Hooks directory not found (.claude/hooks/)",
-      fixCommand: "npx aiox-core install --force",
+      status: 'FAIL',
+      message: 'Hooks directory not found (.claude/hooks/)',
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
@@ -33,39 +33,33 @@ async function run(context) {
   } catch {
     return {
       check: name,
-      status: "FAIL",
-      message: "Cannot read hooks directory",
-      fixCommand: "npx aiox-core install --force",
+      status: 'FAIL',
+      message: 'Cannot read hooks directory',
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
   const hookFiles = entries.filter(
-    (e) => e.isFile() && e.name.endsWith(".cjs"),
+    (e) => e.isFile() && e.name.endsWith('.cjs'),
   );
   const hookCount = hookFiles.length;
 
   if (hookCount === 0) {
     return {
       check: name,
-      status: "FAIL",
-      message: "No hook files found (.cjs)",
-      fixCommand: "npx aiox-core install --force",
+      status: 'FAIL',
+      message: 'No hook files found (.cjs)',
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
   // Check registration in settings.local.json
-  const settingsLocalPath = path.join(
-    context.projectRoot,
-    ".claude",
-    "settings.local.json",
-  );
+  const settingsLocalPath = path.join(context.projectRoot, '.claude', 'settings.local.json');
   let registered = false;
 
   if (fs.existsSync(settingsLocalPath)) {
     try {
-      const settingsLocal = JSON.parse(
-        fs.readFileSync(settingsLocalPath, "utf8"),
-      );
+      const settingsLocal = JSON.parse(fs.readFileSync(settingsLocalPath, 'utf8'));
       const hooks = settingsLocal.hooks || {};
       // Claude Code hooks schema: { EventName: [{ matcher, hooks: [{ type, command }] }] }
       const allHookCommands = [];
@@ -78,18 +72,15 @@ async function run(context) {
             }
           }
           // Fallback: flat string or direct command
-          if (typeof entry === "string") allHookCommands.push(entry);
-          if (entry && typeof entry.command === "string")
-            allHookCommands.push(entry.command);
+          if (typeof entry === 'string') allHookCommands.push(entry);
+          if (entry && typeof entry.command === 'string') allHookCommands.push(entry.command);
         }
       }
-      const hooksStr = allHookCommands.join("\n");
+      const hooksStr = allHookCommands.join('\n');
 
       // Check if at least some hook files are referenced in settings
       const referencedCount = hookFiles.filter(
-        (f) =>
-          hooksStr.includes(f.name) ||
-          hooksStr.includes(f.name.replace(".cjs", "")),
+        (f) => hooksStr.includes(f.name) || hooksStr.includes(f.name.replace('.cjs', '')),
       ).length;
 
       registered = referencedCount > 0;
@@ -101,7 +92,7 @@ async function run(context) {
   if (hookCount >= 2 && registered) {
     return {
       check: name,
-      status: "PASS",
+      status: 'PASS',
       message: `${hookCount} hook files found and registered`,
       fixCommand: null,
     };
@@ -110,17 +101,17 @@ async function run(context) {
   if (hookCount >= 2 && !registered) {
     return {
       check: name,
-      status: "WARN",
+      status: 'WARN',
       message: `${hookCount} hook files found but not registered in settings.local.json`,
-      fixCommand: "npx aiox-core install --force",
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
   return {
     check: name,
-    status: "WARN",
+    status: 'WARN',
     message: `Only ${hookCount}/2 hook files found`,
-    fixCommand: "npx aiox-core install --force",
+    fixCommand: 'npx aiox-core install --force',
   };
 }
 

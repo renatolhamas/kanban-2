@@ -11,23 +11,15 @@
  * @created Story SYN-8 - Domain Content Files
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Roman numeral to Arabic number map (I-X)
  */
 const ROMAN_TO_ARABIC = {
-  I: 1,
-  II: 2,
-  III: 3,
-  IV: 4,
-  V: 5,
-  VI: 6,
-  VII: 7,
-  VIII: 8,
-  IX: 9,
-  X: 10,
+  'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5,
+  'VI': 6, 'VII': 7, 'VIII': 8, 'IX': 9, 'X': 10,
 };
 
 /**
@@ -38,7 +30,7 @@ const ROMAN_TO_ARABIC = {
  * @returns {string} Cleaned text
  */
 function cleanText(text) {
-  return text.replace(/`/g, "").trim();
+  return text.replace(/`/g, '').trim();
 }
 
 /**
@@ -48,7 +40,7 @@ function cleanText(text) {
  * @returns {Array<{number: number, roman: string, title: string, severity: string, rules: string[]}>}
  */
 function parseConstitution(content) {
-  if (!content || typeof content !== "string") {
+  if (!content || typeof content !== 'string') {
     return [];
   }
 
@@ -71,12 +63,11 @@ function parseConstitution(content) {
 
   for (let i = 0; i < articlePositions.length; i++) {
     const start = articlePositions[i].startIndex;
-    const end =
-      i + 1 < articlePositions.length
-        ? articlePositions[i + 1].startIndex
-        : content.indexOf("## Governance", start) !== -1
-          ? content.indexOf("## Governance", start)
-          : content.length;
+    const end = i + 1 < articlePositions.length
+      ? articlePositions[i + 1].startIndex
+      : content.indexOf('## Governance', start) !== -1
+        ? content.indexOf('## Governance', start)
+        : content.length;
 
     const articleContent = content.substring(start, end);
     const rules = extractRules(articleContent);
@@ -107,13 +98,11 @@ function parseConstitution(content) {
  */
 function extractRules(articleContent) {
   const rules = [];
-  const lines = articleContent.split("\n");
+  const lines = articleContent.split('\n');
 
   for (const line of lines) {
     const trimmed = line.trim();
-    const ruleMatch = trimmed.match(
-      /^-\s+(MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|EXCEPTION):\s+(.+)$/,
-    );
+    const ruleMatch = trimmed.match(/^-\s+(MUST(?:\s+NOT)?|SHOULD(?:\s+NOT)?|EXCEPTION):\s+(.+)$/);
     if (ruleMatch) {
       rules.push(`${ruleMatch[1]}: ${cleanText(ruleMatch[2])}`);
     }
@@ -130,33 +119,27 @@ function extractRules(articleContent) {
  */
 function generateConstitution(articles) {
   const lines = [
-    "# SYNAPSE Constitution Domain (L0)",
-    "# Auto-generated from .aiox-core/constitution.md",
-    "# DO NOT EDIT MANUALLY — re-run generate-constitution.js",
-    "",
+    '# SYNAPSE Constitution Domain (L0)',
+    '# Auto-generated from .aiox-core/constitution.md',
+    '# DO NOT EDIT MANUALLY — re-run generate-constitution.js',
+    '',
   ];
 
   for (const article of articles) {
-    lines.push(
-      `# Article ${article.roman}: ${article.title} (${article.severity})`,
-    );
+    lines.push(`# Article ${article.roman}: ${article.title} (${article.severity})`);
 
     // Rule 0: title + severity summary
-    lines.push(
-      `CONSTITUTION_RULE_ART${article.number}_0=${article.title} (${article.severity})`,
-    );
+    lines.push(`CONSTITUTION_RULE_ART${article.number}_0=${article.title} (${article.severity})`);
 
     // Subsequent rules from bullet points
     for (let i = 0; i < article.rules.length; i++) {
-      lines.push(
-        `CONSTITUTION_RULE_ART${article.number}_${i + 1}=${article.rules[i]}`,
-      );
+      lines.push(`CONSTITUTION_RULE_ART${article.number}_${i + 1}=${article.rules[i]}`);
     }
 
-    lines.push("");
+    lines.push('');
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -169,23 +152,19 @@ function generateConstitution(articles) {
  * @returns {{success: boolean, articles?: number, rules?: number, outputPath?: string, error?: string}}
  */
 function main(options = {}) {
-  const projectRoot =
-    options.projectRoot || path.resolve(__dirname, "..", "..", "..", "..");
-  const constitutionPath =
-    options.constitutionPath ||
-    path.join(projectRoot, ".aiox-core", "constitution.md");
-  const outputPath =
-    options.outputPath || path.join(projectRoot, ".synapse", "constitution");
+  const projectRoot = options.projectRoot || path.resolve(__dirname, '..', '..', '..', '..');
+  const constitutionPath = options.constitutionPath || path.join(projectRoot, '.aiox-core', 'constitution.md');
+  const outputPath = options.outputPath || path.join(projectRoot, '.synapse', 'constitution');
 
   // Read source
   let content;
   try {
-    content = fs.readFileSync(constitutionPath, "utf8");
+    content = fs.readFileSync(constitutionPath, 'utf8');
   } catch (error) {
-    if (error.code === "ENOENT") {
+    if (error.code === 'ENOENT') {
       console.error(`Constitution not found: ${constitutionPath}`);
       process.exitCode = 1;
-      return { success: false, error: "Constitution file not found" };
+      return { success: false, error: 'Constitution file not found' };
     }
     throw error;
   }
@@ -194,9 +173,9 @@ function main(options = {}) {
   const articles = parseConstitution(content);
 
   if (articles.length === 0) {
-    console.error("No articles found in constitution.md");
+    console.error('No articles found in constitution.md');
     process.exitCode = 1;
-    return { success: false, error: "No articles found" };
+    return { success: false, error: 'No articles found' };
   }
 
   // Generate output
@@ -209,19 +188,12 @@ function main(options = {}) {
   }
 
   // Write output (idempotent — overwrites cleanly)
-  fs.writeFileSync(outputPath, output, "utf8");
+  fs.writeFileSync(outputPath, output, 'utf8');
 
   const totalRules = articles.reduce((sum, a) => sum + a.rules.length + 1, 0);
-  console.log(
-    `Constitution generated: ${articles.length} articles, ${totalRules} rules`,
-  );
+  console.log(`Constitution generated: ${articles.length} articles, ${totalRules} rules`);
 
-  return {
-    success: true,
-    articles: articles.length,
-    rules: totalRules,
-    outputPath,
-  };
+  return { success: true, articles: articles.length, rules: totalRules, outputPath };
 }
 
 // Run if called directly
@@ -229,11 +201,4 @@ if (require.main === module) {
   main();
 }
 
-module.exports = {
-  parseConstitution,
-  extractRules,
-  generateConstitution,
-  cleanText,
-  main,
-  ROMAN_TO_ARABIC,
-};
+module.exports = { parseConstitution, extractRules, generateConstitution, cleanText, main, ROMAN_TO_ARABIC };

@@ -20,7 +20,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Workflow Health
 
 **Green Flags (Healthy)**
-
 - [ ] Projects complete on or near estimated timelines
 - [ ] Designers know what to work on and why
 - [ ] Reviews happen on schedule with constructive feedback
@@ -28,7 +27,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Documentation is up-to-date and useful
 
 **Yellow Flags (Warning)**
-
 - [ ] Some projects consistently run over timeline
 - [ ] Occasional confusion about priorities
 - [ ] Reviews sometimes delayed or skipped
@@ -36,7 +34,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Documentation becoming outdated
 
 **Red Flags (Critical)**
-
 - [ ] Most projects significantly delayed
 - [ ] Designers unclear on priorities
 - [ ] Reviews rarely happen or are combative
@@ -54,7 +51,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Tool Health
 
 **Green Flags (Healthy)**
-
 - [ ] High adoption of standard tools (>90%)
 - [ ] Tools support the workflow well
 - [ ] Design system actively used (>80% component usage)
@@ -62,7 +58,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Team knows how to use tools effectively
 
 **Yellow Flags (Warning)**
-
 - [ ] Some designers using non-standard tools
 - [ ] Workarounds needed for tool limitations
 - [ ] Design system usage declining
@@ -70,7 +65,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Tool training gaps emerging
 
 **Red Flags (Critical)**
-
 - [ ] Tool fragmentation across team
 - [ ] Major workflow gaps due to tools
 - [ ] Design system abandoned or ignored
@@ -88,7 +82,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Collaboration Health
 
 **Green Flags (Healthy)**
-
 - [ ] Regular touchpoints with eng/PM/stakeholders
 - [ ] Cross-functional partners satisfied with design
 - [ ] Feedback is timely and constructive
@@ -96,14 +89,12 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Trust between design and partners
 
 **Yellow Flags (Warning)**
-
 - [ ] Some friction with specific teams
 - [ ] Occasional delayed feedback
 - [ ] Decisions sometimes unclear
 - [ ] Some relationship strain
 
 **Red Flags (Critical)**
-
 - [ ] Design seen as bottleneck
 - [ ] Chronic conflict with partners
 - [ ] Feedback loops broken
@@ -123,7 +114,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Hiring Health
 
 **Green Flags (Healthy)**
-
 - [ ] Attracting qualified candidates
 - [ ] Interview process efficient (<45 days)
 - [ ] High offer acceptance rate (>80%)
@@ -131,7 +121,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Positive candidate experience
 
 **Yellow Flags (Warning)**
-
 - [ ] Candidate quality declining
 - [ ] Hiring taking longer (45-60 days)
 - [ ] Some offer rejections
@@ -139,7 +128,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Some candidate complaints
 
 **Red Flags (Critical)**
-
 - [ ] Can't find qualified candidates
 - [ ] Hiring significantly delayed (>60 days)
 - [ ] Most offers rejected
@@ -157,7 +145,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Onboarding Health
 
 **Green Flags (Healthy)**
-
 - [ ] New hires productive within 90 days
 - [ ] High onboarding satisfaction
 - [ ] New hires feel welcomed
@@ -165,7 +152,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] New hires become contributors
 
 **Yellow Flags (Warning)**
-
 - [ ] Some new hires struggling longer
 - [ ] Mixed onboarding feedback
 - [ ] Integration taking longer
@@ -173,7 +159,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] New hires seem lost
 
 **Red Flags (Critical)**
-
 - [ ] New hires not becoming productive
 - [ ] Poor onboarding experience
 - [ ] New hires feel unsupported
@@ -191,7 +176,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Career Development Health
 
 **Green Flags (Healthy)**
-
 - [ ] Clear career paths understood
 - [ ] Regular growth conversations
 - [ ] Internal promotions common (>50%)
@@ -199,7 +183,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Career satisfaction high
 
 **Yellow Flags (Warning)**
-
 - [ ] Career path clarity declining
 - [ ] Growth conversations inconsistent
 - [ ] Some external hiring for senior roles
@@ -207,7 +190,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Some career frustration
 
 **Red Flags (Critical)**
-
 - [ ] No clear career paths
 - [ ] No growth conversations
 - [ ] Most senior roles filled externally
@@ -225,7 +207,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Retention Health
 
 **Green Flags (Healthy)**
-
 - [ ] High retention (>85% annual)
 - [ ] Departures are for positive reasons
 - [ ] Exit feedback is constructive
@@ -233,7 +214,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Team stability
 
 **Yellow Flags (Warning)**
-
 - [ ] Retention starting to decline (75-85%)
 - [ ] Some unexpected departures
 - [ ] Exit interviews show patterns
@@ -241,7 +221,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Some instability
 
 **Red Flags (Critical)**
-
 - [ ] High turnover (<75% annual)
 - [ ] Critical people leaving
 - [ ] Exit interviews show systemic issues
@@ -261,7 +240,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Culture Health
 
 **Green Flags (Healthy)**
-
 - [ ] Values lived in daily work
 - [ ] High psychological safety
 - [ ] Healthy feedback culture
@@ -269,7 +247,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Inclusive environment
 
 **Yellow Flags (Warning)**
-
 - [ ] Values sometimes ignored
 - [ ] Some fear of speaking up
 - [ ] Feedback inconsistent
@@ -277,7 +254,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Some inclusion concerns
 
 **Red Flags (Critical)**
-
 - [ ] Values not reflected in behavior
 - [ ] Low psychological safety
 - [ ] Toxic feedback culture
@@ -295,7 +271,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Community Health
 
 **Green Flags (Healthy)**
-
 - [ ] Active design community participation
 - [ ] Regular knowledge sharing
 - [ ] Cross-team collaboration
@@ -303,7 +278,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Community adds value
 
 **Yellow Flags (Warning)**
-
 - [ ] Participation declining
 - [ ] Knowledge sharing sporadic
 - [ ] Some team silos forming
@@ -311,7 +285,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Community events less attended
 
 **Red Flags (Critical)**
-
 - [ ] No community participation
 - [ ] Knowledge hoarding
 - [ ] Strong silos between teams
@@ -329,7 +302,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Well-being Health
 
 **Green Flags (Healthy)**
-
 - [ ] Sustainable workloads
 - [ ] Work-life balance supported
 - [ ] Low stress levels
@@ -337,7 +309,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Energy and enthusiasm high
 
 **Yellow Flags (Warning)**
-
 - [ ] Some crunch periods
 - [ ] Work-life balance strained
 - [ ] Stress levels rising
@@ -345,7 +316,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Energy declining
 
 **Red Flags (Critical)**
-
 - [ ] Chronic overwork
 - [ ] No work-life balance
 - [ ] High stress across team
@@ -363,7 +333,6 @@ This checklist helps identify team health issues before they become critical. Us
 ### Advocacy Health
 
 **Green Flags (Healthy)**
-
 - [ ] Design has executive visibility
 - [ ] Design involved in strategic decisions
 - [ ] Cross-functional partners value design
@@ -371,7 +340,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Budget and resources appropriate
 
 **Yellow Flags (Warning)**
-
 - [ ] Design visibility declining
 - [ ] Some decisions bypass design
 - [ ] Partner appreciation mixed
@@ -379,7 +347,6 @@ This checklist helps identify team health issues before they become critical. Us
 - [ ] Resource constraints emerging
 
 **Red Flags (Critical)**
-
 - [ ] Design invisible to leadership
 - [ ] Design excluded from decisions
 - [ ] Partners don't value design
@@ -435,29 +402,25 @@ This checklist helps identify team health issues before they become critical. Us
 
 ### Summary Dashboard
 
-| Area          | Status     | Trend   | Notes   |
-| ------------- | ---------- | ------- | ------- |
-| How We Work   | [🟢/🟡/🔴] | [↑/→/↓] | [notes] |
-| How We Grow   | [🟢/🟡/🔴] | [↑/→/↓] | [notes] |
+| Area | Status | Trend | Notes |
+|------|--------|-------|-------|
+| How We Work | [🟢/🟡/🔴] | [↑/→/↓] | [notes] |
+| How We Grow | [🟢/🟡/🔴] | [↑/→/↓] | [notes] |
 | How We Thrive | [🟢/🟡/🔴] | [↑/→/↓] | [notes] |
 
 ### Red Flags This Month
-
 1. [Flag]: [Status/Action]
 2. [Flag]: [Status/Action]
 
 ### Yellow Flags to Watch
-
 1. [Flag]: [Monitoring plan]
 2. [Flag]: [Monitoring plan]
 
 ### Improvements Made
-
 1. [Improvement]: [Impact]
 2. [Improvement]: [Impact]
 
 ### Focus for Next Month
-
 1. [Focus area]
 2. [Focus area]
 ```
@@ -468,13 +431,13 @@ This checklist helps identify team health issues before they become critical. Us
 
 These always require immediate attention:
 
-| Category      | Critical Warning             | Immediate Action                  |
-| ------------- | ---------------------------- | --------------------------------- |
-| Retention     | Key people leaving           | Stay interviews, retention offers |
-| Well-being    | Burnout cases                | Reduce load immediately           |
-| Culture       | Psychological safety failing | Leadership intervention           |
-| Quality       | Consistent failures          | Stop and fix processes            |
-| Collaboration | Trust breakdown              | Relationship reset                |
+| Category | Critical Warning | Immediate Action |
+|----------|-----------------|------------------|
+| Retention | Key people leaving | Stay interviews, retention offers |
+| Well-being | Burnout cases | Reduce load immediately |
+| Culture | Psychological safety failing | Leadership intervention |
+| Quality | Consistent failures | Stop and fix processes |
+| Collaboration | Trust breakdown | Relationship reset |
 
 ---
 
@@ -483,7 +446,6 @@ These always require immediate attention:
 > "Culture is fragile at scale - intentionality is required." - Dave Malouf
 
 Use this checklist:
-
 - Monthly for growing teams
 - Quarterly for stable teams
 - After any major change (reorg, leadership change, etc.)

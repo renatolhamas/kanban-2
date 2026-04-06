@@ -20,14 +20,14 @@
  * @version 1.0.0
  */
 
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
 // Optional dependencies with graceful fallback
 let chalk;
 try {
-  chalk = require("chalk");
+  chalk = require('chalk');
 } catch {
   chalk = {
     blue: (s) => s,
@@ -47,10 +47,8 @@ try {
 // Import Epic 5 components for integration (AC8)
 let StuckDetector, RecoveryTracker;
 try {
-  StuckDetector =
-    require("../../infrastructure/scripts/stuck-detector").StuckDetector;
-  RecoveryTracker =
-    require("../../infrastructure/scripts/recovery-tracker").RecoveryTracker;
+  StuckDetector = require('../../infrastructure/scripts/stuck-detector').StuckDetector;
+  RecoveryTracker = require('../../infrastructure/scripts/recovery-tracker').RecoveryTracker;
 } catch {
   // Will be null if not available - handled gracefully
   StuckDetector = null;
@@ -66,27 +64,27 @@ const DEFAULT_CONFIG = {
   globalTimeout: 30 * 60 * 1000, // 30 minutes
   abandonedThreshold: 60 * 60 * 1000, // 1 hour (AC5)
   autoCheckpoint: true, // Auto-save checkpoint after subtask
-  checkpointDir: "checkpoints", // Subdirectory for checkpoint files
-  stateFile: "build-state.json", // Main state file
-  logFile: "build-attempts.log", // Attempt log file (AC7)
-  schemaVersion: "1.0.0",
+  checkpointDir: 'checkpoints', // Subdirectory for checkpoint files
+  stateFile: 'build-state.json', // Main state file
+  logFile: 'build-attempts.log', // Attempt log file (AC7)
+  schemaVersion: '1.0.0',
 };
 
 const BuildStatus = {
-  PENDING: "pending",
-  IN_PROGRESS: "in_progress",
-  PAUSED: "paused",
-  ABANDONED: "abandoned",
-  FAILED: "failed",
-  COMPLETED: "completed",
+  PENDING: 'pending',
+  IN_PROGRESS: 'in_progress',
+  PAUSED: 'paused',
+  ABANDONED: 'abandoned',
+  FAILED: 'failed',
+  COMPLETED: 'completed',
 };
 
 const NotificationType = {
-  INFO: "info",
-  WARNING: "warning",
-  ERROR: "error",
-  STUCK: "stuck",
-  ABANDONED: "abandoned",
+  INFO: 'info',
+  WARNING: 'warning',
+  ERROR: 'error',
+  STUCK: 'stuck',
+  ABANDONED: 'abandoned',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -102,7 +100,7 @@ function validateBuildState(state) {
   const errors = [];
 
   // Required fields
-  const required = ["storyId", "status", "startedAt", "checkpoints"];
+  const required = ['storyId', 'status', 'startedAt', 'checkpoints'];
   for (const field of required) {
     if (state[field] === undefined) {
       errors.push(`Missing required field: ${field}`);
@@ -110,25 +108,25 @@ function validateBuildState(state) {
   }
 
   // Type checks
-  if (state.storyId && typeof state.storyId !== "string") {
-    errors.push("storyId must be a string");
+  if (state.storyId && typeof state.storyId !== 'string') {
+    errors.push('storyId must be a string');
   }
 
   const validStatuses = Object.values(BuildStatus);
   if (state.status && !validStatuses.includes(state.status)) {
-    errors.push(`status must be one of: ${validStatuses.join(", ")}`);
+    errors.push(`status must be one of: ${validStatuses.join(', ')}`);
   }
 
   if (state.checkpoints && !Array.isArray(state.checkpoints)) {
-    errors.push("checkpoints must be an array");
+    errors.push('checkpoints must be an array');
   }
 
   if (state.completedSubtasks && !Array.isArray(state.completedSubtasks)) {
-    errors.push("completedSubtasks must be an array");
+    errors.push('completedSubtasks must be an array');
   }
 
   if (state.failedAttempts && !Array.isArray(state.failedAttempts)) {
-    errors.push("failedAttempts must be an array");
+    errors.push('failedAttempts must be an array');
   }
 
   return { valid: errors.length === 0, errors };
@@ -156,12 +154,12 @@ class BuildStateManager {
    */
   constructor(storyId, options = {}) {
     if (!storyId) {
-      throw new Error("storyId is required");
+      throw new Error('storyId is required');
     }
 
     this.storyId = storyId;
     this.rootPath = options.rootPath || process.cwd();
-    this.planDir = options.planDir || path.join(this.rootPath, "plan");
+    this.planDir = options.planDir || path.join(this.rootPath, 'plan');
     this.config = { ...DEFAULT_CONFIG, ...options.config };
 
     // State file paths
@@ -172,16 +170,16 @@ class BuildStateManager {
     // Epic 5 integration (AC8)
     this.stuckDetector = StuckDetector
       ? new StuckDetector({
-          maxAttempts: this.config.maxIterations,
-          verbose: options.verbose,
-        })
+        maxAttempts: this.config.maxIterations,
+        verbose: options.verbose,
+      })
       : null;
 
     this.recoveryTracker = RecoveryTracker
       ? new RecoveryTracker({
-          storyId,
-          rootPath: this.rootPath,
-        })
+        storyId,
+        rootPath: this.rootPath,
+      })
       : null;
 
     // Internal state
@@ -233,7 +231,7 @@ class BuildStateManager {
     // Validate before saving
     const validation = validateBuildState(state);
     if (!validation.valid) {
-      throw new Error(`Invalid state: ${validation.errors.join(", ")}`);
+      throw new Error(`Invalid state: ${validation.errors.join(', ')}`);
     }
 
     this._state = state;
@@ -251,13 +249,13 @@ class BuildStateManager {
     }
 
     try {
-      const content = fs.readFileSync(this.stateFilePath, "utf-8");
+      const content = fs.readFileSync(this.stateFilePath, 'utf-8');
       const state = JSON.parse(content);
 
       // Validate
       const validation = validateBuildState(state);
       if (!validation.valid) {
-        throw new Error(`Invalid state file: ${validation.errors.join(", ")}`);
+        throw new Error(`Invalid state file: ${validation.errors.join(', ')}`);
       }
 
       this._state = state;
@@ -276,9 +274,7 @@ class BuildStateManager {
    */
   saveState(options = {}) {
     if (!this._state) {
-      throw new Error(
-        "No state to save. Call createState() or loadState() first.",
-      );
+      throw new Error('No state to save. Call createState() or loadState() first.');
     }
 
     // Ensure directory exists
@@ -294,15 +290,11 @@ class BuildStateManager {
     // Validate before saving
     const validation = validateBuildState(this._state);
     if (!validation.valid) {
-      throw new Error(`Invalid state: ${validation.errors.join(", ")}`);
+      throw new Error(`Invalid state: ${validation.errors.join(', ')}`);
     }
 
     // Write state file
-    fs.writeFileSync(
-      this.stateFilePath,
-      JSON.stringify(this._state, null, 2),
-      "utf-8",
-    );
+    fs.writeFileSync(this.stateFilePath, JSON.stringify(this._state, null, 2), 'utf-8');
 
     // Flush log buffer
     this._flushLogBuffer();
@@ -346,7 +338,7 @@ class BuildStateManager {
    */
   saveCheckpoint(subtaskId, options = {}) {
     if (!this._state) {
-      throw new Error("No state loaded");
+      throw new Error('No state loaded');
     }
 
     // Ensure checkpoint directory exists
@@ -361,7 +353,7 @@ class BuildStateManager {
       id: checkpointId,
       timestamp: now,
       subtaskId,
-      status: options.status || "completed",
+      status: options.status || 'completed',
       gitCommit: options.gitCommit || null,
       filesModified: options.filesModified || [],
       metrics: {
@@ -384,23 +376,16 @@ class BuildStateManager {
     this._updateMetrics(checkpoint);
 
     // Save checkpoint file
-    const checkpointPath = path.join(
-      this.checkpointDir,
-      `${checkpointId}.json`,
-    );
-    fs.writeFileSync(
-      checkpointPath,
-      JSON.stringify(checkpoint, null, 2),
-      "utf-8",
-    );
+    const checkpointPath = path.join(this.checkpointDir, `${checkpointId}.json`);
+    fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint, null, 2), 'utf-8');
 
     // Save main state with checkpoint timestamp update
     this.saveState({ updateCheckpoint: true });
 
     // Log attempt (AC7)
-    this._logAttempt(subtaskId, "checkpoint", {
+    this._logAttempt(subtaskId, 'checkpoint', {
       checkpointId,
-      status: "success",
+      status: 'success',
     });
 
     return checkpoint;
@@ -437,7 +422,7 @@ class BuildStateManager {
    */
   _generateCheckpointId() {
     const timestamp = Date.now().toString(36);
-    const random = crypto.randomBytes(4).toString("hex");
+    const random = crypto.randomBytes(4).toString('hex');
     return `cp-${timestamp}-${random}`;
   }
 
@@ -459,12 +444,12 @@ class BuildStateManager {
 
     // Check if build can be resumed
     if (state.status === BuildStatus.COMPLETED) {
-      throw new Error("Build already completed");
+      throw new Error('Build already completed');
     }
 
     if (state.status === BuildStatus.FAILED) {
       // Allow resume of failed builds
-      this._log("Resuming failed build");
+      this._log('Resuming failed build');
     }
 
     // Get last checkpoint
@@ -481,14 +466,14 @@ class BuildStateManager {
     // Add notification
     this._addNotification(
       NotificationType.INFO,
-      `Build resumed from checkpoint ${lastCheckpoint?.id || "start"}`,
+      `Build resumed from checkpoint ${lastCheckpoint?.id || 'start'}`,
     );
 
     // Save updated state
     this.saveState();
 
     // Log resume (AC7)
-    this._logAttempt(nextSubtask, "resume", {
+    this._logAttempt(nextSubtask, 'resume', {
       fromCheckpoint: lastCheckpoint?.id,
       completedSubtasks: state.completedSubtasks.length,
     });
@@ -511,10 +496,7 @@ class BuildStateManager {
    */
   _calculateNextSubtask(state) {
     // If current subtask is set and not completed, resume it
-    if (
-      state.currentSubtask &&
-      !state.completedSubtasks.includes(state.currentSubtask)
-    ) {
+    if (state.currentSubtask && !state.completedSubtasks.includes(state.currentSubtask)) {
       return state.currentSubtask;
     }
 
@@ -538,7 +520,7 @@ class BuildStateManager {
       return {
         exists: false,
         storyId: this.storyId,
-        message: "No build state found",
+        message: 'No build state found',
       };
     }
 
@@ -565,11 +547,7 @@ class BuildStateManager {
         total: state.metrics.totalSubtasks,
         percentage:
           state.metrics.totalSubtasks > 0
-            ? Math.round(
-                (state.metrics.completedSubtasks /
-                  state.metrics.totalSubtasks) *
-                  100,
-              )
+            ? Math.round((state.metrics.completedSubtasks / state.metrics.totalSubtasks) * 100)
             : 0,
       },
       metrics: state.metrics,
@@ -577,8 +555,7 @@ class BuildStateManager {
       abandoned: isAbandoned,
       worktree: state.worktree,
       checkpointCount: state.checkpoints.length,
-      notificationCount: state.notifications.filter((n) => !n.acknowledged)
-        .length,
+      notificationCount: state.notifications.filter((n) => !n.acknowledged).length,
     };
   }
 
@@ -593,21 +570,14 @@ class BuildStateManager {
     const planDirs = [];
 
     // Search for plan directories
-    const searchDirs = [
-      path.join(baseDir, "plan"),
-      path.join(baseDir, "docs", "stories"),
-    ];
+    const searchDirs = [path.join(baseDir, 'plan'), path.join(baseDir, 'docs', 'stories')];
 
     for (const searchDir of searchDirs) {
       if (fs.existsSync(searchDir)) {
         const files = fs.readdirSync(searchDir, { withFileTypes: true });
         for (const file of files) {
           if (file.isDirectory()) {
-            const statePath = path.join(
-              searchDir,
-              file.name,
-              "build-state.json",
-            );
+            const statePath = path.join(searchDir, file.name, 'build-state.json');
             if (fs.existsSync(statePath)) {
               planDirs.push({
                 dir: path.join(searchDir, file.name),
@@ -620,13 +590,13 @@ class BuildStateManager {
     }
 
     // Check root plan directory
-    const rootStatePath = path.join(baseDir, "plan", "build-state.json");
+    const rootStatePath = path.join(baseDir, 'plan', 'build-state.json');
     if (fs.existsSync(rootStatePath)) {
       try {
-        const content = fs.readFileSync(rootStatePath, "utf-8");
+        const content = fs.readFileSync(rootStatePath, 'utf-8');
         const state = JSON.parse(content);
         planDirs.push({
-          dir: path.join(baseDir, "plan"),
+          dir: path.join(baseDir, 'plan'),
           storyId: state.storyId,
         });
       } catch {
@@ -692,7 +662,7 @@ class BuildStateManager {
   detectAbandoned(threshold = null) {
     const state = this.loadState();
     if (!state) {
-      return { detected: false, reason: "No build state" };
+      return { detected: false, reason: 'No build state' };
     }
 
     const thresholdMs = threshold || this.config.abandonedThreshold;
@@ -718,7 +688,7 @@ class BuildStateManager {
       this.saveState();
 
       // Log (AC7)
-      this._logAttempt(state.currentSubtask || "unknown", "abandoned", {
+      this._logAttempt(state.currentSubtask || 'unknown', 'abandoned', {
         elapsed: this._formatDuration(elapsed),
         threshold: this._formatDuration(thresholdMs),
       });
@@ -749,7 +719,7 @@ class BuildStateManager {
   async cleanup(options = {}) {
     const state = this.loadState();
     if (!state) {
-      return { cleaned: false, reason: "No build state" };
+      return { cleaned: false, reason: 'No build state' };
     }
 
     const result = {
@@ -808,16 +778,15 @@ class BuildStateManager {
    */
   recordFailure(subtaskId, options = {}) {
     if (!this._state) {
-      throw new Error("No state loaded");
+      throw new Error('No state loaded');
     }
 
     const failure = {
       subtaskId,
       attempt:
         options.attempt ||
-        this._state.failedAttempts.filter((f) => f.subtaskId === subtaskId)
-          .length + 1,
-      error: options.error || "Unknown error",
+        this._state.failedAttempts.filter((f) => f.subtaskId === subtaskId).length + 1,
+      error: options.error || 'Unknown error',
       timestamp: new Date().toISOString(),
       approach: options.approach || null,
       duration: options.duration || null,
@@ -836,7 +805,7 @@ class BuildStateManager {
     }
 
     // Log attempt (AC7)
-    this._logAttempt(subtaskId, "failure", {
+    this._logAttempt(subtaskId, 'failure', {
       attempt: failure.attempt,
       error: failure.error,
       isStuck: isStuck.stuck,
@@ -895,7 +864,7 @@ class BuildStateManager {
     this._state.notifications.push(notification);
 
     // Also add to log (AC7)
-    this._logAttempt(subtaskId, "stuck_notification", {
+    this._logAttempt(subtaskId, 'stuck_notification', {
       attempt: failure.attempt,
       suggestions: stuckResult.suggestions?.slice(0, 3),
     });
@@ -981,7 +950,7 @@ class BuildStateManager {
     }
 
     // Append to log file
-    fs.appendFileSync(this.logFilePath, this._logBuffer.join(""), "utf-8");
+    fs.appendFileSync(this.logFilePath, this._logBuffer.join(''), 'utf-8');
     this._logBuffer = [];
   }
 
@@ -996,8 +965,8 @@ class BuildStateManager {
       return [];
     }
 
-    const content = fs.readFileSync(this.logFilePath, "utf-8");
-    let lines = content.split("\n").filter((l) => l.trim());
+    const content = fs.readFileSync(this.logFilePath, 'utf-8');
+    let lines = content.split('\n').filter((l) => l.trim());
 
     // Filter by subtask if specified
     if (options.subtaskId) {
@@ -1024,7 +993,7 @@ class BuildStateManager {
    */
   startSubtask(subtaskId, options = {}) {
     if (!this._state) {
-      throw new Error("No state loaded");
+      throw new Error('No state loaded');
     }
 
     this._state.currentSubtask = subtaskId;
@@ -1033,7 +1002,7 @@ class BuildStateManager {
     this._state.metrics.totalAttempts++;
 
     // Log (AC7)
-    this._logAttempt(subtaskId, "start", {
+    this._logAttempt(subtaskId, 'start', {
       phase: options.phase,
       attempt: options.attempt || 1,
     });
@@ -1049,7 +1018,7 @@ class BuildStateManager {
    */
   completeSubtask(subtaskId, options = {}) {
     if (!this._state) {
-      throw new Error("No state loaded");
+      throw new Error('No state loaded');
     }
 
     // Save checkpoint (AC2)
@@ -1059,7 +1028,7 @@ class BuildStateManager {
     this._state.currentSubtask = null;
 
     // Log (AC7)
-    this._logAttempt(subtaskId, "complete", {
+    this._logAttempt(subtaskId, 'complete', {
       duration: options.duration,
       filesModified: options.filesModified?.length || 0,
     });
@@ -1070,7 +1039,7 @@ class BuildStateManager {
    */
   completeBuild() {
     if (!this._state) {
-      throw new Error("No state loaded");
+      throw new Error('No state loaded');
     }
 
     this._state.status = BuildStatus.COMPLETED;
@@ -1088,7 +1057,7 @@ class BuildStateManager {
     );
 
     // Log (AC7)
-    this._logAttempt("build", "complete", {
+    this._logAttempt('build', 'complete', {
       totalDuration: this._formatDuration(this._state.metrics.totalDuration),
       totalSubtasks: this._state.metrics.completedSubtasks,
       totalAttempts: this._state.metrics.totalAttempts,
@@ -1104,7 +1073,7 @@ class BuildStateManager {
    */
   failBuild(reason) {
     if (!this._state) {
-      throw new Error("No state loaded");
+      throw new Error('No state loaded');
     }
 
     this._state.status = BuildStatus.FAILED;
@@ -1113,7 +1082,7 @@ class BuildStateManager {
     this._addNotification(NotificationType.ERROR, `Build failed: ${reason}`);
 
     // Log (AC7)
-    this._logAttempt("build", "failed", { reason });
+    this._logAttempt('build', 'failed', { reason });
 
     this.saveState();
   }
@@ -1136,9 +1105,7 @@ class BuildStateManager {
       const totalTime =
         metrics.averageTimePerSubtask * (metrics.completedSubtasks - 1) +
         checkpoint.metrics.duration;
-      metrics.averageTimePerSubtask = Math.round(
-        totalTime / metrics.completedSubtasks,
-      );
+      metrics.averageTimePerSubtask = Math.round(totalTime / metrics.completedSubtasks);
     }
   }
 
@@ -1163,9 +1130,7 @@ class BuildStateManager {
     }
     if (minutes > 0) {
       const remainingSecs = seconds % 60;
-      return remainingSecs > 0
-        ? `${minutes}m ${remainingSecs}s`
-        : `${minutes}m`;
+      return remainingSecs > 0 ? `${minutes}m ${remainingSecs}s` : `${minutes}m`;
     }
     return `${seconds}s`;
   }
@@ -1206,28 +1171,23 @@ class BuildStateManager {
 
     const statusColor = statusColors[status.status] || chalk.gray;
 
-    lines.push("");
+    lines.push('');
     lines.push(chalk.bold(`Build Status: ${this.storyId}`));
-    lines.push("─".repeat(50));
+    lines.push('─'.repeat(50));
     lines.push(`Status:      ${statusColor(status.status.toUpperCase())}`);
     lines.push(`Started:     ${status.startedAt}`);
     lines.push(`Duration:    ${status.duration}`);
-    lines.push(`Last Check:  ${status.lastCheckpoint || "N/A"}`);
-    lines.push("");
+    lines.push(`Last Check:  ${status.lastCheckpoint || 'N/A'}`);
+    lines.push('');
 
     // Progress bar
     const progressWidth = 30;
-    const filled = Math.round(
-      (status.progress.percentage / 100) * progressWidth,
-    );
+    const filled = Math.round((status.progress.percentage / 100) * progressWidth);
     const empty = progressWidth - filled;
-    const progressBar =
-      chalk.green("█".repeat(filled)) + chalk.gray("░".repeat(empty));
+    const progressBar = chalk.green('█'.repeat(filled)) + chalk.gray('░'.repeat(empty));
     lines.push(`Progress:    [${progressBar}] ${status.progress.percentage}%`);
-    lines.push(
-      `             ${status.progress.completed}/${status.progress.total} subtasks`,
-    );
-    lines.push("");
+    lines.push(`             ${status.progress.completed}/${status.progress.total} subtasks`);
+    lines.push('');
 
     // Current work
     if (status.currentSubtask) {
@@ -1238,8 +1198,8 @@ class BuildStateManager {
     }
 
     // Metrics
-    lines.push("");
-    lines.push(chalk.bold("Metrics:"));
+    lines.push('');
+    lines.push(chalk.bold('Metrics:'));
     lines.push(`  Attempts:  ${status.metrics.totalAttempts}`);
     lines.push(`  Failures:  ${status.metrics.totalFailures}`);
     lines.push(
@@ -1249,32 +1209,30 @@ class BuildStateManager {
 
     // Warnings
     if (status.abandoned) {
-      lines.push("");
-      lines.push(chalk.bgRed.white(" ⚠ BUILD ABANDONED "));
+      lines.push('');
+      lines.push(chalk.bgRed.white(' ⚠ BUILD ABANDONED '));
     }
 
     if (status.notificationCount > 0) {
-      lines.push("");
-      lines.push(
-        chalk.yellow(`📬 ${status.notificationCount} unread notification(s)`),
-      );
+      lines.push('');
+      lines.push(chalk.yellow(`📬 ${status.notificationCount} unread notification(s)`));
     }
 
     // Recent failures
     if (status.recentFailures.length > 0) {
-      lines.push("");
-      lines.push(chalk.bold("Recent Failures:"));
+      lines.push('');
+      lines.push(chalk.bold('Recent Failures:'));
       for (const f of status.recentFailures.slice(-3)) {
-        const errorPreview = f.error?.substring(0, 40) || "Unknown";
+        const errorPreview = f.error?.substring(0, 40) || 'Unknown';
         lines.push(chalk.red(`  • [${f.subtaskId}] ${errorPreview}...`));
       }
     }
 
-    lines.push("");
-    lines.push("─".repeat(50));
-    lines.push("");
+    lines.push('');
+    lines.push('─'.repeat(50));
+    lines.push('');
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -1287,23 +1245,23 @@ class BuildStateManager {
     const builds = BuildStateManager.getAllBuilds(baseDir);
     const lines = [];
 
-    lines.push("");
-    lines.push(chalk.bold("All Active Builds"));
-    lines.push("═".repeat(70));
+    lines.push('');
+    lines.push(chalk.bold('All Active Builds'));
+    lines.push('═'.repeat(70));
 
     if (builds.length === 0) {
-      lines.push(chalk.dim("  No active builds found."));
+      lines.push(chalk.dim('  No active builds found.'));
     } else {
       for (const build of builds) {
         const statusIcon =
           {
-            [BuildStatus.PENDING]: "○",
-            [BuildStatus.IN_PROGRESS]: "◐",
-            [BuildStatus.PAUSED]: "◑",
-            [BuildStatus.ABANDONED]: "✗",
-            [BuildStatus.FAILED]: "✗",
-            [BuildStatus.COMPLETED]: "✓",
-          }[build.status] || "?";
+            [BuildStatus.PENDING]: '○',
+            [BuildStatus.IN_PROGRESS]: '◐',
+            [BuildStatus.PAUSED]: '◑',
+            [BuildStatus.ABANDONED]: '✗',
+            [BuildStatus.FAILED]: '✗',
+            [BuildStatus.COMPLETED]: '✓',
+          }[build.status] || '?';
 
         const statusColor =
           {
@@ -1323,11 +1281,11 @@ class BuildStateManager {
       }
     }
 
-    lines.push("");
-    lines.push("═".repeat(70));
-    lines.push("");
+    lines.push('');
+    lines.push('═'.repeat(70));
+    lines.push('');
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 }
 
@@ -1338,14 +1296,14 @@ class BuildStateManager {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
+  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     console.log(`
-${chalk.bold("Build State Manager")} - AIOX Build Recovery System (Story 8.4)
+${chalk.bold('Build State Manager')} - AIOX Build Recovery System (Story 8.4)
 
-${chalk.cyan("Usage:")}
+${chalk.cyan('Usage:')}
   build-state-manager <command> <story-id> [options]
 
-${chalk.cyan("Commands:")}
+${chalk.cyan('Commands:')}
   create <story-id>             Create new build state
   status <story-id>             Show build status (AC4)
   status --all                  Show all active builds
@@ -1355,14 +1313,14 @@ ${chalk.cyan("Commands:")}
   cleanup <story-id>            Clean up build state
   log <story-id>                Show attempt log (AC7)
 
-${chalk.cyan("Options:")}
+${chalk.cyan('Options:')}
   --threshold <ms>    Abandoned threshold in ms (default: 3600000)
   --force             Force cleanup even if not abandoned
   --limit <n>         Limit log output lines
   --verbose, -v       Enable verbose output
   --help, -h          Show this help
 
-${chalk.cyan("Acceptance Criteria:")}
+${chalk.cyan('Acceptance Criteria:')}
   AC1: build-state.json schema with checkpoints
   AC2: Checkpoint saved after subtask completion
   AC3: Resume build from last checkpoint
@@ -1372,7 +1330,7 @@ ${chalk.cyan("Acceptance Criteria:")}
   AC7: Complete attempt logging for debugging
   AC8: Integration with stuck-detector.js
 
-${chalk.cyan("Examples:")}
+${chalk.cyan('Examples:')}
   build-state-manager create story-8.4
   build-state-manager status story-8.4
   build-state-manager status --all
@@ -1381,7 +1339,7 @@ ${chalk.cyan("Examples:")}
   build-state-manager detect-abandoned story-8.4 --threshold 1800000
   build-state-manager log story-8.4 --limit 20
 `);
-    process.exit(args.includes("--help") || args.includes("-h") ? 0 : 1);
+    process.exit(args.includes('--help') || args.includes('-h') ? 0 : 1);
   }
 
   const command = args[0];
@@ -1397,17 +1355,17 @@ ${chalk.cyan("Examples:")}
   for (let i = 1; i < args.length; i++) {
     const arg = args[i];
 
-    if (arg === "--threshold") {
+    if (arg === '--threshold') {
       threshold = parseInt(args[++i], 10);
-    } else if (arg === "--force") {
+    } else if (arg === '--force') {
       force = true;
-    } else if (arg === "--limit") {
+    } else if (arg === '--limit') {
       limit = parseInt(args[++i], 10);
-    } else if (arg === "--verbose" || arg === "-v") {
+    } else if (arg === '--verbose' || arg === '-v') {
       verbose = true;
-    } else if (arg === "--all") {
+    } else if (arg === '--all') {
       all = true;
-    } else if (!arg.startsWith("-")) {
+    } else if (!arg.startsWith('-')) {
       if (!storyId) {
         storyId = arg;
       } else if (!subtaskId) {
@@ -1418,9 +1376,9 @@ ${chalk.cyan("Examples:")}
 
   try {
     switch (command) {
-      case "create": {
+      case 'create': {
         if (!storyId) {
-          console.error(chalk.red("Error: story-id required"));
+          console.error(chalk.red('Error: story-id required'));
           process.exit(1);
         }
 
@@ -1433,12 +1391,12 @@ ${chalk.cyan("Examples:")}
         break;
       }
 
-      case "status": {
+      case 'status': {
         if (all) {
           console.log(BuildStateManager.formatAllBuilds());
         } else {
           if (!storyId) {
-            console.error(chalk.red("Error: story-id required (or use --all)"));
+            console.error(chalk.red('Error: story-id required (or use --all)'));
             process.exit(1);
           }
 
@@ -1448,9 +1406,9 @@ ${chalk.cyan("Examples:")}
         break;
       }
 
-      case "resume": {
+      case 'resume': {
         if (!storyId) {
-          console.error(chalk.red("Error: story-id required"));
+          console.error(chalk.red('Error: story-id required'));
           process.exit(1);
         }
 
@@ -1458,27 +1416,15 @@ ${chalk.cyan("Examples:")}
         const context = manager.resumeBuild();
 
         console.log(chalk.green(`\n✓ Resumed build for ${storyId}`));
-        console.log(
-          chalk.dim(
-            `  From checkpoint: ${context.lastCheckpoint?.id || "start"}`,
-          ),
-        );
-        console.log(
-          chalk.dim(
-            `  Completed: ${context.completedSubtasks.length} subtasks`,
-          ),
-        );
-        console.log(
-          chalk.dim(
-            `  Next subtask: ${context.nextSubtask || "determine from plan"}`,
-          ),
-        );
+        console.log(chalk.dim(`  From checkpoint: ${context.lastCheckpoint?.id || 'start'}`));
+        console.log(chalk.dim(`  Completed: ${context.completedSubtasks.length} subtasks`));
+        console.log(chalk.dim(`  Next subtask: ${context.nextSubtask || 'determine from plan'}`));
         break;
       }
 
-      case "checkpoint": {
+      case 'checkpoint': {
         if (!storyId || !subtaskId) {
-          console.error(chalk.red("Error: story-id and subtask-id required"));
+          console.error(chalk.red('Error: story-id and subtask-id required'));
           process.exit(1);
         }
 
@@ -1491,9 +1437,9 @@ ${chalk.cyan("Examples:")}
         break;
       }
 
-      case "detect-abandoned": {
+      case 'detect-abandoned': {
         if (!storyId) {
-          console.error(chalk.red("Error: story-id required"));
+          console.error(chalk.red('Error: story-id required'));
           process.exit(1);
         }
 
@@ -1507,16 +1453,14 @@ ${chalk.cyan("Examples:")}
           console.log(chalk.dim(`  Threshold: ${result.threshold}`));
         } else {
           console.log(chalk.green(`\n✓ Build ${storyId} is active`));
-          console.log(
-            chalk.dim(`  Elapsed since last activity: ${result.elapsed}`),
-          );
+          console.log(chalk.dim(`  Elapsed since last activity: ${result.elapsed}`));
         }
         break;
       }
 
-      case "cleanup": {
+      case 'cleanup': {
         if (!storyId) {
-          console.error(chalk.red("Error: story-id required"));
+          console.error(chalk.red('Error: story-id required'));
           process.exit(1);
         }
 
@@ -1525,18 +1469,16 @@ ${chalk.cyan("Examples:")}
 
         if (result.cleaned) {
           console.log(chalk.green(`\n✓ Cleaned up build state for ${storyId}`));
-          console.log(
-            chalk.dim(`  Removed ${result.filesRemoved.length} files`),
-          );
+          console.log(chalk.dim(`  Removed ${result.filesRemoved.length} files`));
         } else {
           console.log(chalk.yellow(`\n⚠ Could not cleanup: ${result.reason}`));
         }
         break;
       }
 
-      case "log": {
+      case 'log': {
         if (!storyId) {
-          console.error(chalk.red("Error: story-id required"));
+          console.error(chalk.red('Error: story-id required'));
           process.exit(1);
         }
 
@@ -1544,10 +1486,10 @@ ${chalk.cyan("Examples:")}
         const logs = manager.getAttemptLog({ limit, subtaskId });
 
         console.log(chalk.bold(`\nAttempt Log: ${storyId}`));
-        console.log("─".repeat(70));
+        console.log('─'.repeat(70));
 
         if (logs.length === 0) {
-          console.log(chalk.dim("  No log entries found."));
+          console.log(chalk.dim('  No log entries found.'));
         } else {
           for (const line of logs) {
             console.log(line);

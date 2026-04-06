@@ -103,11 +103,11 @@ FALLBACK: Identify weakest component, focus extraction there
 
 ## Diagnostic Questions
 
-| Component | Diagnostic Question                      | If NO                  |
-| --------- | ---------------------------------------- | ---------------------- |
-| Playbook  | "Tenho passos sequenciais documentados?" | Extract steps          |
-| Framework | "Tenho regras SE/ENTÃO documentadas?"    | Extract decision rules |
-| Swipe     | "Tenho exemplos reais de output?"        | Find/create examples   |
+| Component | Diagnostic Question | If NO |
+|-----------|---------------------|-------|
+| Playbook | "Tenho passos sequenciais documentados?" | Extract steps |
+| Framework | "Tenho regras SE/ENTÃO documentadas?" | Extract decision rules |
+| Swipe | "Tenho exemplos reais de output?" | Find/create examples |
 
 ## Application Examples
 
@@ -144,11 +144,11 @@ example_problem: "Clone genérico de copywriting"
 
 has:
   - playbook: "AIDA formula steps"
-  - framework: null # MISSING
+  - framework: null  # MISSING
   - swipe_file: "Some ad examples"
 
 diagnosis: "Clone sabe O QUE fazer (AIDA) e vê exemplos,
-  mas não sabe QUANDO usar AIDA vs PAS vs outro framework"
+            mas não sabe QUANDO usar AIDA vs PAS vs outro framework"
 
 fix: "Extract decision rules: SE awareness level X → ENTÃO use Y framework"
 ```
@@ -186,7 +186,6 @@ performance:
 ## Failure Modes
 
 ### Playbook-Only Trap
-
 - **Trigger:** Expert teaches steps clearly, frameworks implicit
 - **Manifestation:** Clone follows recipe but can't adapt
 - **Detection:** Clone fails on edge cases
@@ -194,7 +193,6 @@ performance:
 - **Prevention:** Always ask "E se X não funcionar?"
 
 ### Framework-Without-Proof Trap
-
 - **Trigger:** Framework extraído mas sem exemplos reais
 - **Manifestation:** Clone sounds theoretical, not practical
 - **Detection:** No [SOURCE:] pointing to real cases

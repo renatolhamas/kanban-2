@@ -11,9 +11,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const EpicExecutor = require("./epic-executor");
+const fs = require('fs-extra');
+const path = require('path');
+const EpicExecutor = require('./epic-executor');
 
 /**
  * Epic 4 Executor - Execution Engine
@@ -35,10 +35,10 @@ class Epic4Executor extends EpicExecutor {
   _getPlanTracker() {
     if (!this._planTracker) {
       try {
-        const PlanTracker = require("../../infrastructure/scripts/plan-tracker");
+        const PlanTracker = require('../../infrastructure/scripts/plan-tracker');
         this._planTracker = PlanTracker;
       } catch (error) {
-        this._log(`PlanTracker not available: ${error.message}`, "warn");
+        this._log(`PlanTracker not available: ${error.message}`, 'warn');
       }
     }
     return this._planTracker;
@@ -51,10 +51,10 @@ class Epic4Executor extends EpicExecutor {
   _getSubtaskVerifier() {
     if (!this._subtaskVerifier) {
       try {
-        const SubtaskVerifier = require("../../infrastructure/scripts/subtask-verifier");
+        const SubtaskVerifier = require('../../infrastructure/scripts/subtask-verifier');
         this._subtaskVerifier = SubtaskVerifier;
       } catch (error) {
-        this._log(`SubtaskVerifier not available: ${error.message}`, "warn");
+        this._log(`SubtaskVerifier not available: ${error.message}`, 'warn');
       }
     }
     return this._subtaskVerifier;
@@ -72,22 +72,16 @@ class Epic4Executor extends EpicExecutor {
     this._startExecution();
 
     try {
-      const {
-        spec,
-        specPath,
-        complexity,
-        storyId,
-        techStack: _techStack,
-      } = context;
+      const { spec, specPath, complexity, storyId, techStack: _techStack } = context;
       const actualSpecPath = spec || specPath;
 
       this._log(`Executing for story: ${storyId}`);
-      this._log(`Complexity: ${complexity || "STANDARD"}`);
+      this._log(`Complexity: ${complexity || 'STANDARD'}`);
 
       // Find or create implementation plan
       const planPath = await this._findOrCreatePlan(storyId, actualSpecPath);
       this._log(`Using plan: ${planPath}`);
-      this._addArtifact("plan", planPath);
+      this._addArtifact('plan', planPath);
 
       // Load plan tracker
       const PlanTracker = this._getPlanTracker();
@@ -105,20 +99,14 @@ class Epic4Executor extends EpicExecutor {
         try {
           await tracker.loadPlan();
           planStatus = tracker.getStatus();
-          this._log(
-            `Plan status: ${planStatus.completed}/${planStatus.total} subtasks`,
-          );
+          this._log(`Plan status: ${planStatus.completed}/${planStatus.total} subtasks`);
         } catch (error) {
-          this._log(`Could not load plan: ${error.message}`, "warn");
+          this._log(`Could not load plan: ${error.message}`, 'warn');
         }
       }
 
       // Execute subtasks
-      const subtaskResults = await this._executeSubtasks(
-        storyId,
-        tracker,
-        context,
-      );
+      const subtaskResults = await this._executeSubtasks(storyId, tracker, context);
 
       // Collect code changes
       const codeChanges = this._collectCodeChanges(subtaskResults);
@@ -133,7 +121,7 @@ class Epic4Executor extends EpicExecutor {
         failed: subtaskResults.filter((r) => !r.success).length,
       };
 
-      this._addArtifact("progress", JSON.stringify(progress));
+      this._addArtifact('progress', JSON.stringify(progress));
 
       return this._completeExecution({
         implementationPath: planPath,
@@ -155,9 +143,9 @@ class Epic4Executor extends EpicExecutor {
   async _findOrCreatePlan(storyId, specPath) {
     // Look for existing implementation plan
     const possiblePaths = [
-      this._getPath("docs", "stories", storyId, "plan", "implementation.yaml"),
-      this._getPath("docs", "stories", storyId, "implementation.yaml"),
-      this._getPath(".aiox", "plans", `${storyId}.yaml`),
+      this._getPath('docs', 'stories', storyId, 'plan', 'implementation.yaml'),
+      this._getPath('docs', 'stories', storyId, 'implementation.yaml'),
+      this._getPath('.aiox', 'plans', `${storyId}.yaml`),
     ];
 
     for (const planPath of possiblePaths) {
@@ -167,13 +155,7 @@ class Epic4Executor extends EpicExecutor {
     }
 
     // Create stub plan
-    const planPath = this._getPath(
-      "docs",
-      "stories",
-      storyId,
-      "plan",
-      "implementation.yaml",
-    );
+    const planPath = this._getPath('docs', 'stories', storyId, 'plan', 'implementation.yaml');
     await this._createStubPlan(planPath, storyId, specPath);
 
     return planPath;
@@ -189,7 +171,7 @@ class Epic4Executor extends EpicExecutor {
 
 metadata:
   storyId: "${storyId}"
-  specPath: "${specPath || "N/A"}"
+  specPath: "${specPath || 'N/A'}"
   status: draft
   createdAt: "${new Date().toISOString()}"
 
@@ -225,7 +207,7 @@ phases:
 
     await fs.ensureDir(path.dirname(planPath));
     await fs.writeFile(planPath, stubPlan);
-    this._log("Created stub implementation plan");
+    this._log('Created stub implementation plan');
   }
 
   /**
@@ -238,10 +220,10 @@ phases:
     // In full implementation, this would iterate through subtasks
     // and invoke agents for each one. For now, return stub results.
     results.push({
-      subtaskId: "1.1",
-      name: "Initialize",
+      subtaskId: '1.1',
+      name: 'Initialize',
       success: true,
-      duration: "0s",
+      duration: '0s',
       timestamp: new Date().toISOString(),
     });
 
@@ -270,15 +252,15 @@ phases:
    */
   async _runTests(_context) {
     // Check if tests exist
-    const testsDir = this._getPath("tests");
+    const testsDir = this._getPath('tests');
     if (!(await fs.pathExists(testsDir))) {
-      return { skipped: true, reason: "no_tests_dir" };
+      return { skipped: true, reason: 'no_tests_dir' };
     }
 
     // In full implementation, would run actual tests
     return {
       ran: false,
-      reason: "test_execution_requires_agent",
+      reason: 'test_execution_requires_agent',
     };
   }
 }

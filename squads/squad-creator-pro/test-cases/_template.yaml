@@ -67,12 +67,12 @@ expected_output:
 # Reference to Opus output (gold standard)
 
 baseline:
-  opus_output: "opus-baseline.yaml" # Relative to test-cases/{task-name}/
-  opus_score: 10.0 # By definition, Opus is 100%
+  opus_output: "opus-baseline.yaml"  # Relative to test-cases/{task-name}/
+  opus_score: 10.0  # By definition, Opus is 100%
   opus_tokens:
-    input: 0 # Fill after first run
-    output: 0 # Fill after first run
-  opus_latency_ms: 0 # Fill after first run
+    input: 0      # Fill after first run
+    output: 0     # Fill after first run
+  opus_latency_ms: 0  # Fill after first run
 
 # ============================================================================
 # EVALUATION CRITERIA
@@ -88,12 +88,12 @@ evaluation:
       - "section_3: nice to have"
 
   accuracy:
-    numeric_tolerance: 0.05 # 5% tolerance for scores
-    enum_exact_match: true # Status must match exactly
+    numeric_tolerance: 0.05  # 5% tolerance for scores
+    enum_exact_match: true   # Status must match exactly
 
   reasoning:
-    minimum_justifications: 3 # At least 3 justified points
-    requires_evidence: true # Must cite specific evidence
+    minimum_justifications: 3  # At least 3 justified points
+    requires_evidence: true    # Must cite specific evidence
 
   format:
     expected_format: "yaml"
@@ -101,7 +101,7 @@ evaluation:
 
   actionability:
     minimum_recommendations: 1
-    specificity: "high" # high, medium, low
+    specificity: "high"  # high, medium, low
 
 # ============================================================================
 # COMPENSATION ATTEMPTS
@@ -138,10 +138,10 @@ results:
     output_file: "sonnet-output.yaml"
 
   opus:
-    score: 10.0 # Baseline
+    score: 10.0  # Baseline
     percentage: 100
     qualified: true
     output_file: "opus-baseline.yaml"
 
-  final_tier: null # haiku | sonnet | opus
+  final_tier: null  # haiku | sonnet | opus
   recommendation: null

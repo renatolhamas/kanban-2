@@ -7,22 +7,22 @@
  * @story INS-4.1
  */
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const name = "git-hooks";
+const name = 'git-hooks';
 
-const EXPECTED_HOOKS = ["pre-commit", "pre-push"];
+const EXPECTED_HOOKS = ['pre-commit', 'pre-push'];
 
 async function run(context) {
-  const huskyDir = path.join(context.projectRoot, ".husky");
+  const huskyDir = path.join(context.projectRoot, '.husky');
 
   if (!fs.existsSync(huskyDir)) {
     return {
       check: name,
-      status: "WARN",
-      message: ".husky directory not found",
-      fixCommand: "npx husky init",
+      status: 'WARN',
+      message: '.husky directory not found',
+      fixCommand: 'npx husky init',
     };
   }
 
@@ -33,17 +33,17 @@ async function run(context) {
   if (missing.length === 0) {
     return {
       check: name,
-      status: "PASS",
-      message: `${EXPECTED_HOOKS.join(" + ")} installed`,
+      status: 'PASS',
+      message: `${EXPECTED_HOOKS.join(' + ')} installed`,
       fixCommand: null,
     };
   }
 
   return {
     check: name,
-    status: "WARN",
-    message: `Missing hooks: ${missing.join(", ")}`,
-    fixCommand: "npx husky init",
+    status: 'WARN',
+    message: `Missing hooks: ${missing.join(', ')}`,
+    fixCommand: 'npx husky init',
   };
 }
 

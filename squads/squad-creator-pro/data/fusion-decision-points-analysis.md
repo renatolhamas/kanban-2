@@ -7,7 +7,6 @@
 ## Princípio de Análise
 
 Para cada step, perguntar:
-
 1. **Existe ambiguidade?** Se sim → precisa interpretação
 2. **A decisão afeta qualidade?** Se sim → precisa julgamento
 3. **Regra determinística cobre 100% dos casos?** Se não → precisa fallback inteligente
@@ -17,22 +16,18 @@ Para cada step, perguntar:
 ## PHASE 1: DISCOVERY
 
 ### ✅ WORKER: Contagem de arquivos
-
 ```bash
 find squads/{squad}/agents -name '*.md' | wc -l
 ```
-
 **Decisão?** Nenhuma. Puramente mecânico.
 
 ### ⚠️ PRECISA REVISÃO: Entendimento do que cada squad FAZ
 
 **Problema identificado:**
-
 - Contar arquivos ✅
 - Entender o PROPÓSITO de cada squad ❌
 
 **Exemplo:**
-
 - `media-buy`: Foco em elite minds com frameworks
 - `media-squad`: Foco em operação multi-plataforma
 - `meta-ads`: Foco em compliance/auditoria
@@ -40,7 +35,6 @@ find squads/{squad}/agents -name '*.md' | wc -l
 **Pergunta crítica:** Como sei se dois squads são REALMENTE complementares ou têm overlap?
 
 **Decisão necessária:**
-
 - LLM precisa ler README/config de cada squad
 - Entender propósito, foco, diferenças
 - Identificar complementaridade vs redundância
@@ -52,7 +46,6 @@ find squads/{squad}/agents -name '*.md' | wc -l
 ## PHASE 2: DEDUPLICATION
 
 ### ✅ WORKER: Exact match por nome
-
 ```bash
 sort | uniq -d
 ```
@@ -61,15 +54,14 @@ sort | uniq -d
 
 **Cenários que NÃO são simples:**
 
-| Agent A                       | Agent B                    | São duplicatas?                                           |
-| ----------------------------- | -------------------------- | --------------------------------------------------------- |
-| ads-analyst (media-squad)     | ads-analyst (meta-ads)     | **DEPENDE** - mesmo nome, mas propósitos diferentes?      |
+| Agent A | Agent B | São duplicatas? |
+|---------|---------|-----------------|
+| ads-analyst (media-squad) | ads-analyst (meta-ads) | **DEPENDE** - mesmo nome, mas propósitos diferentes? |
 | scale-optimizer (media-squad) | scale-optimizer (meta-ads) | **PRECISA LER** - um é genérico, outro é específico Meta? |
-| creative-analyst              | creative-director          | **NÃO** - funções diferentes                              |
-| traffic-manager               | traffic-head               | **TALVEZ** - precisa ver descrição                        |
+| creative-analyst | creative-director | **NÃO** - funções diferentes |
+| traffic-manager | traffic-head | **TALVEZ** - precisa ver descrição |
 
 **Problema:** Mapa estático de sinônimos NÃO resolve. Precisa:
-
 1. Ler o conteúdo dos dois agents
 2. Comparar propósito, função, especialidade
 3. Decidir se são duplicatas, complementares, ou distintos
@@ -83,12 +75,10 @@ sort | uniq -d
 **Problema:** Linhas ≠ Qualidade
 
 **Cenários reais:**
-
 - Agent A: 500 linhas, mas genérico e superficial
 - Agent B: 350 linhas, mas focado e com frameworks reais
 
 **Critérios REAIS de qualidade:**
-
 1. Tem voice_dna bem definido?
 2. Tem output_examples REAIS (não placeholders)?
 3. Tem frameworks documentados?
@@ -97,7 +87,6 @@ sort | uniq -d
 6. Foi validado/testado?
 
 **Decisão necessária:**
-
 - LLM precisa ler AMBOS os agents
 - Avaliar qualidade em múltiplas dimensões
 - Recomendar qual manter (com rationale)
@@ -114,17 +103,16 @@ sort | uniq -d
 
 **Cenários problemáticos:**
 
-| Agent                 | Keywords encontradas | Pertence a paid_traffic?                         |
-| --------------------- | -------------------- | ------------------------------------------------ |
-| automation-engineer   | "automation"         | **DEPENDE** - automação de quê? Ads? Email?      |
-| research-head         | "research"           | **DEPENDE** - research de mercado? De audiência? |
-| cro-analyst           | "conversion"         | **SIM** - mas keyword não estava na lista        |
-| content-scout-hormozi | "content"            | **TALVEZ** - content para ads ou orgânico?       |
+| Agent | Keywords encontradas | Pertence a paid_traffic? |
+|-------|---------------------|--------------------------|
+| automation-engineer | "automation" | **DEPENDE** - automação de quê? Ads? Email? |
+| research-head | "research" | **DEPENDE** - research de mercado? De audiência? |
+| cro-analyst | "conversion" | **SIM** - mas keyword não estava na lista |
+| content-scout-hormozi | "content" | **TALVEZ** - content para ads ou orgânico? |
 
 **Problema:** O NOME do agent não revela tudo. Precisa ler descrição/propósito.
 
 **Decisão necessária:**
-
 - Para agents ambíguos (score entre 0-2), LLM precisa:
   1. Ler o agent completo
   2. Entender sua função real
@@ -140,20 +128,19 @@ sort | uniq -d
 
 ### ⚠️ CRÍTICO: Resolver conflitos
 
-**Minha simplificação:** "Maior ganha" ou "mover para \_conflicts"
+**Minha simplificação:** "Maior ganha" ou "mover para _conflicts"
 
 **Cenários reais de conflito:**
 
-| Conflito                        | Decisão correta                   |
-| ------------------------------- | --------------------------------- |
+| Conflito | Decisão correta |
+|----------|-----------------|
 | Mesmo agent, versões diferentes | Qual é mais atual? Mais completo? |
-| Mesmo nome, funções diferentes  | **NÃO MERGEAR** - renomear um     |
-| Task com mesmo nome             | Combinar? Escolher uma?           |
+| Mesmo nome, funções diferentes | **NÃO MERGEAR** - renomear um |
+| Task com mesmo nome | Combinar? Escolher uma? |
 
 **Problema:** Conflitos precisam de análise caso a caso.
 
 **Opções:**
-
 1. **YOLO:** Sempre escolher do squad "mais confiável" (pré-definido)
 2. **QUALITY:** LLM analisa e recomenda
 
@@ -164,7 +151,6 @@ sort | uniq -d
 ## PHASE 5: VALIDATION
 
 ### ✅ WORKER: Verificações estruturais
-
 - Arquivo existe e não está vazio
 - YAML válido
 - Seções obrigatórias presentes
@@ -173,7 +159,6 @@ sort | uniq -d
 ### ⚠️ NOVO INSIGHT: Validação de QUALIDADE
 
 **O que script NÃO consegue validar:**
-
 - O voice_dna faz sentido?
 - Os output_examples são realistas?
 - Os frameworks estão bem documentados?
@@ -214,7 +199,6 @@ tier_2: [scale-optimizer]                  # Escala
 ```
 
 **Decisão necessária:**
-
 - Como reconciliar estruturas diferentes?
 - Onde colocar agents novos que não existiam nos fontes?
 - Qual lógica de tier usar?
@@ -227,13 +211,12 @@ tier_2: [scale-optimizer]                  # Escala
 
 ```yaml
 # Quando usar qual agent?
-meta_ads: [depesh-mandalia, nicholas-kusmich] # POR QUÊ estes?
-google_ads: [kasim-aslam] # POR QUÊ só este?
-scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
+meta_ads: [depesh-mandalia, nicholas-kusmich]  # POR QUÊ estes?
+google_ads: [kasim-aslam]                       # POR QUÊ só este?
+scaling: [ralph-burns, scale-optimizer]        # POR QUÊ estes dois?
 ```
 
 **Decisão necessária:**
-
 - Entender especialidade de cada agent
 - Mapear para cenários de uso
 - Garantir cobertura completa
@@ -243,7 +226,6 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 ### ⚠️ CRÍTICO: Criar Orchestrator
 
 **Não é template simples.** Orchestrator precisa:
-
 - Conhecer TODOS os agents do squad fusionado
 - Saber quando acionar cada um
 - Ter voice_dna próprio
@@ -256,13 +238,11 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 ## PHASE 7: INTEGRATION TEST
 
 ### ✅ WORKER: Verificações mecânicas
-
 - Orchestrator existe
 - Agents referenciados existem
 - Config YAML válido
 
 ### ⚠️ OPCIONAL: Smoke test de comportamento
-
 - Ativar orchestrator e ver se responde bem
 - Testar um routing
 
@@ -280,25 +260,25 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 
 ### Pontos de Decisão Identificados
 
-| ID  | Decision Point                        | Tipo                | Justificativa                     |
-| --- | ------------------------------------- | ------------------- | --------------------------------- |
-| D1  | Entender propósito de cada squad      | **Agent**           | Precisa ler e interpretar         |
-| D2  | Identificar duplicatas semânticas     | **Agent**           | Nome ≠ função                     |
-| D3  | Comparar qualidade (não só linhas)    | **Agent**           | Múltiplos critérios subjetivos    |
-| D4  | Classificar agents ambíguos no escopo | **Agent/Hybrid**    | Keyword não resolve               |
-| D5  | Resolver conflitos                    | **Agent (QUALITY)** | Análise caso a caso               |
-| D6  | Organizar tiers                       | **Agent**           | Reconciliar estruturas diferentes |
-| D7  | Definir routing                       | **Agent**           | Semântico, não mecânico           |
-| D8  | Criar orchestrator                    | **Agent**           | Criativo, não template            |
+| ID | Decision Point | Tipo | Justificativa |
+|----|---------------|------|---------------|
+| D1 | Entender propósito de cada squad | **Agent** | Precisa ler e interpretar |
+| D2 | Identificar duplicatas semânticas | **Agent** | Nome ≠ função |
+| D3 | Comparar qualidade (não só linhas) | **Agent** | Múltiplos critérios subjetivos |
+| D4 | Classificar agents ambíguos no escopo | **Agent/Hybrid** | Keyword não resolve |
+| D5 | Resolver conflitos | **Agent (QUALITY)** | Análise caso a caso |
+| D6 | Organizar tiers | **Agent** | Reconciliar estruturas diferentes |
+| D7 | Definir routing | **Agent** | Semântico, não mecânico |
+| D8 | Criar orchestrator | **Agent** | Criativo, não template |
 
 ### Distribuição REAL Revisada
 
-| Executor   | Steps | %       | Antes |
-| ---------- | ----- | ------- | ----- |
-| **Worker** | 42    | **71%** | 91.5% |
-| **Agent**  | 12    | **20%** | 3.4%  |
-| **Hybrid** | 4     | **7%**  | 3.4%  |
-| **Human**  | 1     | **2%**  | 1.7%  |
+| Executor | Steps | % | Antes |
+|----------|-------|---|-------|
+| **Worker** | 42 | **71%** | 91.5% |
+| **Agent** | 12 | **20%** | 3.4% |
+| **Hybrid** | 4 | **7%** | 3.4% |
+| **Human** | 1 | **2%** | 1.7% |
 
 **Diferença:** 91.5% → 71% Worker. 20 pontos percentuais de LLM que eu tinha subestimado.
 
@@ -308,31 +288,31 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 
 ### YOLO Mode (Mínima interação, aceita 60-75% qualidade)
 
-| Decision Point      | Estratégia YOLO              |
-| ------------------- | ---------------------------- |
-| D1 (propósito)      | Skip - assume complementares |
-| D2 (semantic dedup) | Usar mapa estático apenas    |
-| D3 (qualidade)      | Linhas + presença de seções  |
-| D4 (escopo ambíguo) | Score >= 1 = inclui          |
-| D5 (conflitos)      | Squad com mais agents ganha  |
-| D6 (tiers)          | Herdar do squad principal    |
-| D7 (routing)        | Copiar do squad principal    |
-| D8 (orchestrator)   | Template genérico            |
+| Decision Point | Estratégia YOLO |
+|----------------|-----------------|
+| D1 (propósito) | Skip - assume complementares |
+| D2 (semantic dedup) | Usar mapa estático apenas |
+| D3 (qualidade) | Linhas + presença de seções |
+| D4 (escopo ambíguo) | Score >= 1 = inclui |
+| D5 (conflitos) | Squad com mais agents ganha |
+| D6 (tiers) | Herdar do squad principal |
+| D7 (routing) | Copiar do squad principal |
+| D8 (orchestrator) | Template genérico |
 
 **Worker em YOLO:** ~85%
 
 ### QUALITY Mode (Checkpoints, 85-95% qualidade)
 
-| Decision Point      | Estratégia QUALITY               |
-| ------------------- | -------------------------------- |
-| D1 (propósito)      | **LLM analisa cada squad**       |
-| D2 (semantic dedup) | **LLM compara pares**            |
-| D3 (qualidade)      | **LLM avalia ambos**             |
-| D4 (escopo ambíguo) | **Hybrid: LLM + Human**          |
-| D5 (conflitos)      | **LLM recomenda + Human aprova** |
-| D6 (tiers)          | **LLM propõe estrutura**         |
-| D7 (routing)        | **LLM define regras**            |
-| D8 (orchestrator)   | **LLM gera completo**            |
+| Decision Point | Estratégia QUALITY |
+|----------------|-------------------|
+| D1 (propósito) | **LLM analisa cada squad** |
+| D2 (semantic dedup) | **LLM compara pares** |
+| D3 (qualidade) | **LLM avalia ambos** |
+| D4 (escopo ambíguo) | **Hybrid: LLM + Human** |
+| D5 (conflitos) | **LLM recomenda + Human aprova** |
+| D6 (tiers) | **LLM propõe estrutura** |
+| D7 (routing) | **LLM define regras** |
+| D8 (orchestrator) | **LLM gera completo** |
 
 **Worker em QUALITY:** ~65%
 
@@ -364,7 +344,6 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 ## ✅ CONCLUSÃO HONESTA
 
 ### O que É 100% Worker (não precisa de LLM nunca):
-
 - Criar diretórios
 - Contar arquivos
 - Copiar/mover arquivos
@@ -375,7 +354,6 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 - Backup/restore
 
 ### O que PRECISA de LLM (pelo menos em QUALITY mode):
-
 - Entender propósito de um squad
 - Comparar dois agents semanticamente
 - Avaliar qualidade real (não só estrutura)
@@ -397,26 +375,23 @@ scaling: [ralph-burns, scale-optimizer] # POR QUÊ estes dois?
 Todas as correções foram implementadas em `wf-squad-fusion.yaml` v2.1.0:
 
 ### Bugs Corrigidos:
-
 1. ✅ Adicionado step `define_tiers` (Agent)
 2. ✅ Adicionado step `define_routing_rules` (Agent)
 3. ✅ Corrigido `create_orchestrator_if_needed` com prompt real
 
 ### Executor Tags:
-
 - ✅ Todos os 56 steps agora têm `executor:` definido
 - ✅ Distribuição documentada no header do workflow
 
 ### Distribuição Final Real:
-
-| Executor | Count | %   |
-| -------- | ----- | --- |
-| Worker   | 44    | 79% |
-| Agent    | 5     | 9%  |
-| Hybrid   | 6     | 11% |
-| Human    | 1     | 1%  |
+| Executor | Count | % |
+|----------|-------|---|
+| Worker | 44 | 79% |
+| Agent | 5 | 9% |
+| Hybrid | 6 | 11% |
+| Human | 1 | 1% |
 
 ---
 
-_Análise revisada com honestidade sobre complexidade real_
-*Correções aplicadas após processo de `*optimize`\*
+*Análise revisada com honestidade sobre complexidade real*
+*Correções aplicadas após processo de `*optimize`*

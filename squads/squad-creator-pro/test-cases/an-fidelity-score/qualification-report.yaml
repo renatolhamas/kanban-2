@@ -29,7 +29,7 @@ qualification_report:
       tokens: 65597
       tool_uses: 10
       duration_ms: 127989
-      gaps: [] # No significant gaps!
+      gaps: []  # No significant gaps!
       match_classification: true
       match_major_gaps: true
 
@@ -53,8 +53,8 @@ qualification_report:
       Haiku can count checkpoints as accurately as Opus.
 
   cost_analysis:
-    opus_per_run: "$0.27" # Based on 45K tokens
-    haiku_per_run: "$0.008" # Based on 65K tokens (cheaper rate)
+    opus_per_run: "$0.27"  # Based on 45K tokens
+    haiku_per_run: "$0.008"  # Based on 65K tokens (cheaper rate)
     savings_if_haiku: "97%"
     savings_applicable: true
 

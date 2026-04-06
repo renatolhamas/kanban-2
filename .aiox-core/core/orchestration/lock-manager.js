@@ -18,17 +18,17 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs").promises;
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs').promises;
+const path = require('path');
+const yaml = require('js-yaml');
 
 // Constants
 const DEFAULT_TTL_SECONDS = 300; // 5 minutes
 const RETRY_DELAY_MS = 2000;
 const MAX_RETRIES = 3;
-const LOCKS_DIR = ".aiox/locks";
+const LOCKS_DIR = '.aiox/locks';
 
 /**
  * LockManager - File-based locking with PID/TTL management
@@ -47,7 +47,7 @@ class LockManager {
     this.options = {
       debug: false,
       ttlSeconds: DEFAULT_TTL_SECONDS,
-      owner: "bob-orchestrator",
+      owner: 'bob-orchestrator',
       ...options,
     };
 
@@ -71,7 +71,7 @@ class LockManager {
    */
   _getLockPath(resource) {
     // Sanitize resource name for filesystem safety
-    const safeName = resource.replace(/[^a-zA-Z0-9_-]/g, "_");
+    const safeName = resource.replace(/[^a-zA-Z0-9_-]/g, '_');
     return path.join(this.locksDir, `${safeName}.lock`);
   }
 
@@ -105,18 +105,14 @@ class LockManager {
           await this._removeLock(lockPath);
         } else {
           // Lock is active — retry after delay (AC4.7)
-          this._log(
-            `Lock active for ${resource}, retrying in ${RETRY_DELAY_MS}ms (attempt ${attempt}/${MAX_RETRIES})`,
-          );
+          this._log(`Lock active for ${resource}, retrying in ${RETRY_DELAY_MS}ms (attempt ${attempt}/${MAX_RETRIES})`);
 
           if (attempt < MAX_RETRIES) {
             await this._sleep(RETRY_DELAY_MS);
             continue;
           }
 
-          this._log(
-            `Failed to acquire lock for ${resource} after ${MAX_RETRIES} attempts`,
-          );
+          this._log(`Failed to acquire lock for ${resource} after ${MAX_RETRIES} attempts`);
           return false;
         }
       }
@@ -131,12 +127,12 @@ class LockManager {
       };
 
       try {
-        await fs.writeFile(lockPath, yaml.dump(lockData), { flag: "wx" });
+        await fs.writeFile(lockPath, yaml.dump(lockData), { flag: 'wx' });
         this._log(`Lock acquired for ${resource}`);
         return true;
       } catch (error) {
         // EEXIST means another process created the file between our check and write
-        if (error.code === "EEXIST") {
+        if (error.code === 'EEXIST') {
           this._log(`Race condition on lock for ${resource}, retrying`);
           if (attempt < MAX_RETRIES) {
             await this._sleep(RETRY_DELAY_MS);
@@ -167,9 +163,7 @@ class LockManager {
 
     // Only release if we own the lock
     if (existingLock.pid !== process.pid) {
-      this._log(
-        `Cannot release lock for ${resource} — owned by PID ${existingLock.pid}`,
-      );
+      this._log(`Cannot release lock for ${resource} — owned by PID ${existingLock.pid}`);
       return false;
     }
 
@@ -210,7 +204,7 @@ class LockManager {
 
     try {
       const files = await fs.readdir(this.locksDir);
-      const lockFiles = files.filter((f) => f.endsWith(".lock"));
+      const lockFiles = files.filter((f) => f.endsWith('.lock'));
 
       for (const file of lockFiles) {
         const lockPath = path.join(this.locksDir, file);
@@ -241,7 +235,7 @@ class LockManager {
    */
   async _readLock(lockPath) {
     try {
-      const content = await fs.readFile(lockPath, "utf8");
+      const content = await fs.readFile(lockPath, 'utf8');
       return yaml.load(content);
     } catch {
       return null;

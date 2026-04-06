@@ -77,7 +77,7 @@ Current: [icon ModeName]
 ## Implementation
 
 ```javascript
-const { cycleMode } = require("./.aiox-core/core/permissions");
+const { cycleMode } = require('./.aiox-core/core/permissions');
 
 async function yoloToggle() {
   const result = await cycleMode();

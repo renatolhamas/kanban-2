@@ -26,35 +26,35 @@ Extract a complete, AIOS-ready Standard Operating Procedure (SOP) from a meeting
 
 ## Task Anatomy (HO-TP-001)
 
-| Field                | Value                                     |
-| -------------------- | ----------------------------------------- |
-| task_name            | Extract SOP from Transcript               |
-| status               | pending                                   |
-| responsible_executor | @sop-extractor                            |
-| execution_type       | Hybrid (Agent extracts, Human validates)  |
-| estimated_time       | 1-2h per process                          |
-| input                | transcript, domain_context                |
-| output               | sop_document, squad_blueprint, gap_report |
-| action_items         | See Execution section                     |
-| acceptance_criteria  | All 11 parts completed, gaps documented   |
+| Field | Value |
+|-------|-------|
+| task_name | Extract SOP from Transcript |
+| status | pending |
+| responsible_executor | @sop-extractor |
+| execution_type | Hybrid (Agent extracts, Human validates) |
+| estimated_time | 1-2h per process |
+| input | transcript, domain_context |
+| output | sop_document, squad_blueprint, gap_report |
+| action_items | See Execution section |
+| acceptance_criteria | All 11 parts completed, gaps documented |
 
 ## Inputs
 
-| Input          | Type      | Required | Description                                                         |
-| -------------- | --------- | -------- | ------------------------------------------------------------------- |
-| transcript     | text/file | Yes      | Meeting transcript (text, audio transcription, or video transcript) |
-| domain_context | string    | No       | Business domain/area for terminology context                        |
-| existing_docs  | file[]    | No       | Current SOPs, manuals, or process docs                              |
-| process_owner  | string    | No       | Who to validate extracted SOP with                                  |
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| transcript | text/file | Yes | Meeting transcript (text, audio transcription, or video transcript) |
+| domain_context | string | No | Business domain/area for terminology context |
+| existing_docs | file[] | No | Current SOPs, manuals, or process docs |
+| process_owner | string | No | Who to validate extracted SOP with |
 
 ## Outputs
 
-| Output              | Type | Description                                  |
-| ------------------- | ---- | -------------------------------------------- |
-| sop_document        | MD   | Complete SOP following SC-PE-001 template    |
-| squad_blueprint     | YAML | Ready-to-use squad structure (Part 8)        |
-| gap_report          | MD   | Missing information and clarifying questions |
-| automation_analysis | MD   | Summary of automation potential (Part 7)     |
+| Output | Type | Description |
+|--------|------|-------------|
+| sop_document | MD | Complete SOP following SC-PE-001 template |
+| squad_blueprint | YAML | Ready-to-use squad structure (Part 8) |
+| gap_report | MD | Missing information and clarifying questions |
+| automation_analysis | MD | Summary of automation potential (Part 7) |
 
 ## Execution
 
@@ -68,7 +68,7 @@ Extract a complete, AIOS-ready Standard Operating Procedure (SOP) from a meeting
 
 ```yaml
 # Read active_source from squad-config.yaml
-active_source: { { squad_config.data_sources.transcripts.active_source } }
+active_source: {{squad_config.data_sources.transcripts.active_source}}
 
 # Execute appropriate fetch
 if active_source == "supabase":
@@ -91,7 +91,6 @@ elif active_source == "direct":
 ```
 
 **Output:** Transcript object with standard schema:
-
 ```yaml
 transcript:
   transcript_id: string
@@ -106,7 +105,6 @@ transcript:
 ```
 
 **Elicit if source not configured:**
-
 ```
 Which transcript source should I use?
 1. Supabase database (default)
@@ -126,7 +124,6 @@ Which transcript source should I use?
 5. Apply chunking if transcript exceeds `max_tokens_per_chunk`
 
 **Elicit if unclear:**
-
 ```
 What is the business domain of this process?
 Who is the process owner to validate with?
@@ -161,12 +158,12 @@ step_template:
 
 **Classification Guide:**
 
-| Cognitive Signal                        | Executor Type          |
-| --------------------------------------- | ---------------------- |
-| "I look at...", "I check..."            | Agent (perception)     |
-| "I decide based on...", "It depends..." | Hybrid (judgment)      |
-| "I talk to...", "I convince..."         | Human (relationship)   |
-| "I copy...", "I move...", "I send..."   | Worker (deterministic) |
+| Cognitive Signal | Executor Type |
+|------------------|---------------|
+| "I look at...", "I check..." | Agent (perception) |
+| "I decide based on...", "It depends..." | Hybrid (judgment) |
+| "I talk to...", "I convince..." | Human (relationship) |
+| "I copy...", "I move...", "I send..." | Worker (deterministic) |
 
 ### Step 4: Third Pass - Decision Rules Extraction
 
@@ -183,15 +180,14 @@ For each "depends", "usually", "sometimes":
 
 For each step, evaluate:
 
-| Criterion      | Question                                         |
-| -------------- | ------------------------------------------------ |
-| Frequency      | How often? (>4x/mo = high)                       |
-| Impact         | What if it fails? (business impact)              |
-| Automatability | Can code/AI do it? (determinism level)           |
-| Guardrails     | Can we add safeguards? (required for automation) |
+| Criterion | Question |
+|-----------|----------|
+| Frequency | How often? (>4x/mo = high) |
+| Impact | What if it fails? (business impact) |
+| Automatability | Can code/AI do it? (determinism level) |
+| Guardrails | Can we add safeguards? (required for automation) |
 
 **Apply Decision Matrix:**
-
 - AUTOMATE: High freq + High impact + High auto + Has guardrails
 - DELEGATE: High freq + High impact + Low auto
 - KEEP_MANUAL: Low freq + High impact
@@ -264,12 +260,12 @@ Assemble final SOP using template `pop-extractor-prompt.md`:
 
 **Quality Gate:**
 
-| Criterion               | Threshold  | Action if Failed          |
-| ----------------------- | ---------- | ------------------------- |
-| Parts completed         | 11/11      | Block until complete      |
-| Steps with Task Anatomy | 100%       | Block until complete      |
-| Gaps documented         | All listed | Review with process owner |
-| META-AXIOMAS score      | ≥7.0       | Review weak dimensions    |
+| Criterion | Threshold | Action if Failed |
+|-----------|-----------|------------------|
+| Parts completed | 11/11 | Block until complete |
+| Steps with Task Anatomy | 100% | Block until complete |
+| Gaps documented | All listed | Review with process owner |
+| META-AXIOMAS score | ≥7.0 | Review weak dimensions |
 
 ## Handoff
 
@@ -286,11 +282,11 @@ handoff:
 
 ## Tools
 
-| Tool              | Purpose                       |
-| ----------------- | ----------------------------- |
+| Tool | Purpose |
+|------|---------|
 | Transcript parser | Extract text from audio/video |
-| Mermaid           | Generate flow diagrams        |
-| YAML validator    | Validate squad blueprint      |
+| Mermaid | Generate flow diagrams |
+| YAML validator | Validate squad blueprint |
 
 ## Templates
 
@@ -298,24 +294,22 @@ handoff:
 
 ## Error Handling
 
-| Error                   | Cause                          | Resolution                                  |
-| ----------------------- | ------------------------------ | ------------------------------------------- |
-| Incomplete transcript   | Audio quality, speaker overlap | Request clarification from process owner    |
-| Conflicting information | Multiple speakers disagree     | Document both versions, flag for validation |
-| Missing steps           | Tacit knowledge not verbalized | Add to gaps, schedule follow-up interview   |
-| Unclear executor        | Role not specified             | Default to Hybrid, flag for validation      |
+| Error | Cause | Resolution |
+|-------|-------|------------|
+| Incomplete transcript | Audio quality, speaker overlap | Request clarification from process owner |
+| Conflicting information | Multiple speakers disagree | Document both versions, flag for validation |
+| Missing steps | Tacit knowledge not verbalized | Add to gaps, schedule follow-up interview |
+| Unclear executor | Role not specified | Default to Hybrid, flag for validation |
 
 ## Examples
 
 **Good transcript signals:**
-
 - "First, I do X, then Y, then Z" → Clear sequence
 - "If the client says no, I do A, otherwise B" → Decision rule
 - "I always check this before proceeding" → Precondition
 - "This takes about 30 minutes" → Time estimate
 
 **Red flag signals:**
-
 - "It depends" (without criteria) → Needs clarification
 - "João knows how to do this" → Single point of failure
 - "We figure it out" → Undocumented exception

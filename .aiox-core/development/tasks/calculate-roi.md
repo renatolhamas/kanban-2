@@ -9,19 +9,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -189,7 +186,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -209,13 +205,14 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Description
 
 Calculate real cost savings from pattern consolidation with hard numbers. Estimates monthly/annual maintenance costs before and after, projects ROI timeline, shows when investment breaks even.
 
 ## Prerequisites
 
-- Consolidation completed (\*consolidate command run successfully)
+- Consolidation completed (*consolidate command run successfully)
 - .state.yaml contains pattern reduction metrics
 - Optional: Team salary data for accurate calculations
 
@@ -361,7 +358,7 @@ roi:
 
 ## Error Handling
 
-- **No consolidation data**: Exit with message to run \*consolidate first
+- **No consolidation data**: Exit with message to run *consolidate first
 - **Unrealistic costs**: Warn user, suggest reviewing inputs
 - **Negative ROI**: Explain why, suggest higher-impact consolidation
 - **Missing team data**: Use industry defaults, flag estimates as rough
@@ -382,7 +379,6 @@ roi:
 ```
 
 Output:
-
 ```
 💰 Brad: Calculating ROI from pattern consolidation...
 
@@ -428,23 +424,18 @@ Brad says: Numbers don't lie. Show this to your boss.
 # Design System ROI - Executive Summary
 
 ## Investment
-
 **$15,000** (4 developer-weeks)
 
 ## Return
-
 **$518,400/year** savings
 
 ## ROI
-
 **34.6x return** on investment
 
 ## Breakeven
-
 **10 days**
 
 ## Impact
-
 - 81.8% pattern reduction (176 → 32)
 - 5x velocity improvement
 - 1.8 FTE equivalent time savings

@@ -11,19 +11,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -191,7 +188,6 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
-
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -211,6 +207,7 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Inputs
 
 - `user_id` (uuid): User ID to impersonate
@@ -222,7 +219,6 @@ updated_at: 2025-11-17
 ### 1. Confirm Impersonation
 
 Ask user:
-
 - User ID to impersonate: `{user_id}`
 - Purpose of impersonation (testing what?)
 - Queries you plan to run
@@ -235,18 +231,18 @@ Ask user:
 psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 <<SQL
 -- Set JWT claims for current session
 SELECT
-  set_config('request.jwt.claims',
+  set_config('request.jwt.claims', 
     jsonb_build_object(
       'sub', '{user_id}',
       'role', 'authenticated'
-    )::text,
+    )::text, 
     true
   ) AS jwt_claims,
   set_config('request.jwt.claim.sub', '{user_id}', true) AS sub,
   set_config('role', 'authenticated', true) AS role;
 
 -- Verify settings
-SELECT
+SELECT 
   current_setting('request.jwt.claims', true) AS jwt_claims,
   current_setting('request.jwt.claim.sub', true) AS user_id,
   current_setting('role', true) AS role;
@@ -273,7 +269,7 @@ User can now run queries as this user:
 SELECT * FROM my_table;  -- Should respect RLS for this user
 
 -- Check current context
-SELECT
+SELECT 
   auth.uid() AS current_user_id,
   current_setting('role') AS current_role;
 
@@ -306,7 +302,7 @@ Test that user CANNOT access others' data:
 SELECT * FROM fragments WHERE user_id != auth.uid();
 
 -- Should fail if trying to insert as another user
-INSERT INTO fragments (user_id, content)
+INSERT INTO fragments (user_id, content) 
 VALUES ('00000000-0000-0000-0000-000000000000', 'test');
 -- Expected: RLS policy violation
 ```
@@ -317,12 +313,12 @@ If using org-based isolation:
 
 ```sql
 -- Set org_id in JWT
-SELECT set_config('request.jwt.claims',
+SELECT set_config('request.jwt.claims', 
   jsonb_build_object(
     'sub', '{user_id}',
     'role', 'authenticated',
     'org_id', '{org_id}'
-  )::text,
+  )::text, 
   true
 );
 
@@ -364,7 +360,7 @@ User reports "can't see their data":
 SELECT * FROM table_name WHERE ...;
 
 -- 3. Check what RLS policies are active
-SELECT * FROM pg_policies
+SELECT * FROM pg_policies 
 WHERE tablename = 'table_name';
 
 -- 4. Verify user_id matches
@@ -394,7 +390,6 @@ SELECT user_id, COUNT(*) FROM fragments GROUP BY user_id;
 ### Session-Local Only
 
 Settings are session-local and reset when:
-
 - Session closes
 - `RESET ALL;` is executed
 - New connection is established
@@ -402,7 +397,6 @@ Settings are session-local and reset when:
 ### Not for Production
 
 **Never use this in application code:**
-
 - ❌ Setting claims manually in app
 - ❌ Bypassing Supabase Auth
 - ✅ Only for testing and debugging
@@ -410,7 +404,6 @@ Settings are session-local and reset when:
 ### Service Role Bypasses RLS
 
 If using service role key, RLS is bypassed completely:
-
 - Cannot test RLS with service role
 - Must use authenticated role
 - Service role sees ALL data
@@ -420,7 +413,7 @@ If using service role key, RLS is bypassed completely:
 RLS policies respect these settings even in functions:
 
 ```sql
-CREATE FUNCTION get_user_data()
+CREATE FUNCTION get_user_data() 
 RETURNS TABLE(...)
 LANGUAGE sql
 SECURITY DEFINER  -- Function runs as owner
@@ -454,7 +447,7 @@ RESET ALL;
 
 ```sql
 -- Check current settings
-SELECT
+SELECT 
   current_setting('request.jwt.claims', true),
   current_setting('role', true);
 ```
@@ -462,8 +455,7 @@ SELECT
 ### "Still seeing all data"
 
 **Problem**: Using service role or RLS not enabled  
-**Fix**:
-
+**Fix**: 
 1. Check connection string (should not be service role)
 2. Verify RLS enabled: `*rls-audit`
 3. Confirm policies exist
@@ -495,10 +487,9 @@ Typical testing workflow:
 
 ## Security Reminder
 
-🔒 **This is a testing tool only**
+🔒 **This is a testing tool only**  
 
 Never bypass Supabase Auth in production. Always use:
-
 - Supabase client with user authentication
 - Proper JWT tokens from auth.users
 - Real user sessions with valid credentials

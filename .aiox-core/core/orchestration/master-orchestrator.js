@@ -20,41 +20,32 @@
  * @author @dev (Dex)
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const { EventEmitter } = require("events");
+const fs = require('fs-extra');
+const path = require('path');
+const { EventEmitter } = require('events');
 
 // Core dependencies
-const TechStackDetector = require("./tech-stack-detector");
+const TechStackDetector = require('./tech-stack-detector');
 
 // Epic Executors (Story 0.3)
-const { createExecutor, hasExecutor } = require("./executors");
+const { createExecutor, hasExecutor } = require('./executors');
 
 // Recovery Handler (Story 0.5)
-const {
-  RecoveryHandler,
-  RecoveryStrategy: _RecoveryStrategy,
-} = require("./recovery-handler");
+const { RecoveryHandler, RecoveryStrategy: _RecoveryStrategy } = require('./recovery-handler');
 
 // Gate Evaluator (Story 0.6)
-const { GateEvaluator, GateVerdict } = require("./gate-evaluator");
+const { GateEvaluator, GateVerdict } = require('./gate-evaluator');
 
 // Agent Invoker (Story 0.7)
-const {
-  AgentInvoker,
-  SUPPORTED_AGENTS: _SUPPORTED_AGENTS,
-} = require("./agent-invoker");
+const { AgentInvoker, SUPPORTED_AGENTS: _SUPPORTED_AGENTS } = require('./agent-invoker');
 
 // Dashboard Integration (Story 0.8)
-const {
-  DashboardIntegration,
-  NotificationType: _NotificationType,
-} = require("./dashboard-integration");
+const { DashboardIntegration, NotificationType: _NotificationType } = require('./dashboard-integration');
 
 // Optional chalk for colored output
 let chalk;
 try {
-  chalk = require("chalk");
+  chalk = require('chalk');
 } catch {
   chalk = {
     blue: (s) => s,
@@ -79,15 +70,15 @@ try {
  */
 const OrchestratorState = {
   /** Initial state after construction */
-  INITIALIZED: "initialized",
+  INITIALIZED: 'initialized',
   /** Ready to execute after pre-flight checks */
-  READY: "ready",
+  READY: 'ready',
   /** Currently executing epics */
-  IN_PROGRESS: "in_progress",
+  IN_PROGRESS: 'in_progress',
   /** Blocked due to error or requiring intervention */
-  BLOCKED: "blocked",
+  BLOCKED: 'blocked',
   /** All epics completed successfully */
-  COMPLETE: "complete",
+  COMPLETE: 'complete',
 };
 
 /**
@@ -95,11 +86,11 @@ const OrchestratorState = {
  * @enum {string}
  */
 const EpicStatus = {
-  PENDING: "pending",
-  IN_PROGRESS: "in_progress",
-  COMPLETED: "completed",
-  FAILED: "failed",
-  SKIPPED: "skipped",
+  PENDING: 'pending',
+  IN_PROGRESS: 'in_progress',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+  SKIPPED: 'skipped',
 };
 
 /**
@@ -107,29 +98,29 @@ const EpicStatus = {
  */
 const EPIC_CONFIG = {
   3: {
-    name: "Spec Pipeline",
-    description: "Requirements → Specification generation",
-    executor: "Epic3Executor",
-    icon: "📝",
+    name: 'Spec Pipeline',
+    description: 'Requirements → Specification generation',
+    executor: 'Epic3Executor',
+    icon: '📝',
   },
   4: {
-    name: "Execution Engine",
-    description: "Plan tracking and subtask execution",
-    executor: "Epic4Executor",
-    icon: "⚙️",
+    name: 'Execution Engine',
+    description: 'Plan tracking and subtask execution',
+    executor: 'Epic4Executor',
+    icon: '⚙️',
   },
   5: {
-    name: "Recovery System",
-    description: "Error detection and recovery",
-    executor: "Epic5Executor",
-    icon: "🔄",
+    name: 'Recovery System',
+    description: 'Error detection and recovery',
+    executor: 'Epic5Executor',
+    icon: '🔄',
     onDemand: true, // Only triggered on errors
   },
   6: {
-    name: "QA Loop",
-    description: "Quality assurance and validation",
-    executor: "Epic6Executor",
-    icon: "🔍",
+    name: 'QA Loop',
+    description: 'Quality assurance and validation',
+    executor: 'Epic6Executor',
+    icon: '🔍',
   },
 };
 
@@ -166,16 +157,14 @@ class MasterOrchestrator extends EventEmitter {
     this.storyId = options.storyId || null;
     this.maxRetries = options.maxRetries ?? 3;
     this.autoRecovery = options.autoRecovery ?? true;
-    this.source = options.source || "story";
+    this.source = options.source || 'story';
     this.prdPath = options.prdPath || null;
     this.strictGates = options.strictGates ?? false;
 
     // Callbacks
     this.onEpicStart = options.onEpicStart || this._defaultEpicStart.bind(this);
-    this.onEpicComplete =
-      options.onEpicComplete || this._defaultEpicComplete.bind(this);
-    this.onStateChange =
-      options.onStateChange || this._defaultStateChange.bind(this);
+    this.onEpicComplete = options.onEpicComplete || this._defaultEpicComplete.bind(this);
+    this.onStateChange = options.onStateChange || this._defaultStateChange.bind(this);
     this.invokeAgent = options.invokeAgent || null;
 
     // State machine (AC6)
@@ -187,7 +176,7 @@ class MasterOrchestrator extends EventEmitter {
     this.executionState = {
       workflowId: null,
       storyId: this.storyId,
-      status: "initialized",
+      status: 'initialized',
       startedAt: null,
       updatedAt: null,
       techStackProfile: null,
@@ -236,13 +225,13 @@ class MasterOrchestrator extends EventEmitter {
     // State persistence paths
     this.statePath = path.join(
       projectRoot,
-      ".aiox",
-      "master-orchestrator",
-      this.storyId ? `${this.storyId}.json` : "current.json",
+      '.aiox',
+      'master-orchestrator',
+      this.storyId ? `${this.storyId}.json` : 'current.json',
     );
 
     // Log initialization
-    this._log("MasterOrchestrator initialized", {
+    this._log('MasterOrchestrator initialized', {
       projectRoot,
       storyId: this.storyId,
       maxRetries: this.maxRetries,
@@ -270,14 +259,8 @@ class MasterOrchestrator extends EventEmitter {
    */
   _transitionTo(newState, context = {}) {
     const validTransitions = {
-      [OrchestratorState.INITIALIZED]: [
-        OrchestratorState.READY,
-        OrchestratorState.BLOCKED,
-      ],
-      [OrchestratorState.READY]: [
-        OrchestratorState.IN_PROGRESS,
-        OrchestratorState.BLOCKED,
-      ],
+      [OrchestratorState.INITIALIZED]: [OrchestratorState.READY, OrchestratorState.BLOCKED],
+      [OrchestratorState.READY]: [OrchestratorState.IN_PROGRESS, OrchestratorState.BLOCKED],
       [OrchestratorState.IN_PROGRESS]: [
         OrchestratorState.COMPLETE,
         OrchestratorState.BLOCKED,
@@ -293,9 +276,7 @@ class MasterOrchestrator extends EventEmitter {
 
     const allowed = validTransitions[this._state] || [];
     if (!allowed.includes(newState) && newState !== this._state) {
-      this._log(`Invalid state transition: ${this._state} → ${newState}`, {
-        level: "warn",
-      });
+      this._log(`Invalid state transition: ${this._state} → ${newState}`, { level: 'warn' });
       return false;
     }
 
@@ -305,17 +286,14 @@ class MasterOrchestrator extends EventEmitter {
     this.executionState.updatedAt = new Date().toISOString();
 
     // Emit state change event
-    this.emit("stateChange", {
+    this.emit('stateChange', {
       from: this._previousState,
       to: newState,
       context,
     });
 
     this.onStateChange(this._previousState, newState, context);
-    this._log(
-      `State transition: ${this._previousState} → ${newState}`,
-      context,
-    );
+    this._log(`State transition: ${this._previousState} → ${newState}`, context);
 
     return true;
   }
@@ -348,7 +326,7 @@ class MasterOrchestrator extends EventEmitter {
    * @returns {Promise<void>}
    */
   async initialize() {
-    this._log("Starting initialization...");
+    this._log('Starting initialization...');
 
     try {
       // Ensure state directory exists
@@ -356,13 +334,8 @@ class MasterOrchestrator extends EventEmitter {
 
       // Try to load existing state
       const existingState = await this._loadState();
-      if (
-        existingState &&
-        existingState.status !== OrchestratorState.COMPLETE
-      ) {
-        this._log("Found existing state, resuming...", {
-          storyId: existingState.storyId,
-        });
+      if (existingState && existingState.status !== OrchestratorState.COMPLETE) {
+        this._log('Found existing state, resuming...', { storyId: existingState.storyId });
         // Deep merge for nested objects like epics
         this.executionState = {
           ...this.executionState,
@@ -390,15 +363,13 @@ class MasterOrchestrator extends EventEmitter {
       }
 
       // Run pre-flight tech stack detection (AC7)
-      this._log("Running pre-flight tech stack detection...");
+      this._log('Running pre-flight tech stack detection...');
       const techStack = await this._detectTechStack();
       this.executionState.techStackProfile = techStack;
 
       // Log detection summary
       const summary = TechStackDetector.getSummary(techStack);
-      this._log(`Tech stack detected: ${summary}`, {
-        confidence: techStack.confidence,
-      });
+      this._log(`Tech stack detected: ${summary}`, { confidence: techStack.confidence });
 
       // Transition to ready
       this._transitionTo(OrchestratorState.READY, { techStack });
@@ -406,9 +377,9 @@ class MasterOrchestrator extends EventEmitter {
       // Save initial state
       await this._saveState();
 
-      this._log("Initialization complete");
+      this._log('Initialization complete');
     } catch (error) {
-      this._log(`Initialization failed: ${error.message}`, { level: "error" });
+      this._log(`Initialization failed: ${error.message}`, { level: 'error' });
       this._transitionTo(OrchestratorState.BLOCKED, { error: error.message });
       throw error;
     }
@@ -433,7 +404,7 @@ class MasterOrchestrator extends EventEmitter {
    * @returns {Promise<Object>} Pipeline execution result
    */
   async executeFullPipeline() {
-    this._log("Starting full pipeline execution...");
+    this._log('Starting full pipeline execution...');
 
     // Ensure initialized
     if (this._state === OrchestratorState.INITIALIZED) {
@@ -441,17 +412,12 @@ class MasterOrchestrator extends EventEmitter {
     }
 
     // Validate ready state
-    if (
-      this._state !== OrchestratorState.READY &&
-      this._state !== OrchestratorState.IN_PROGRESS
-    ) {
+    if (this._state !== OrchestratorState.READY && this._state !== OrchestratorState.IN_PROGRESS) {
       throw new Error(`Cannot execute pipeline in state: ${this._state}`);
     }
 
     // Transition to in progress
-    this._transitionTo(OrchestratorState.IN_PROGRESS, {
-      action: "executeFullPipeline",
-    });
+    this._transitionTo(OrchestratorState.IN_PROGRESS, { action: 'executeFullPipeline' });
 
     const pipelineResult = {
       success: true,
@@ -473,9 +439,7 @@ class MasterOrchestrator extends EventEmitter {
 
       for (const epicNum of epicSequence) {
         // Check if already completed (for resume scenarios)
-        if (
-          this.executionState.epics[epicNum]?.status === EpicStatus.COMPLETED
-        ) {
+        if (this.executionState.epics[epicNum]?.status === EpicStatus.COMPLETED) {
           this._log(`Epic ${epicNum} already completed, skipping...`);
           pipelineResult.epicsSkipped.push(epicNum);
           continue;
@@ -504,9 +468,7 @@ class MasterOrchestrator extends EventEmitter {
             }
           }
         } catch (error) {
-          this._log(`Epic ${epicNum} threw error: ${error.message}`, {
-            level: "error",
-          });
+          this._log(`Epic ${epicNum} threw error: ${error.message}`, { level: 'error' });
           pipelineResult.epicsFailed.push(epicNum);
           pipelineResult.success = false;
 
@@ -521,9 +483,7 @@ class MasterOrchestrator extends EventEmitter {
           if (this.autoRecovery) {
             const recovered = await this._attemptRecovery(epicNum, error);
             if (recovered) {
-              pipelineResult.epicsFailed = pipelineResult.epicsFailed.filter(
-                (e) => e !== epicNum,
-              );
+              pipelineResult.epicsFailed = pipelineResult.epicsFailed.filter((e) => e !== epicNum);
               pipelineResult.epicsExecuted.push(epicNum);
               pipelineResult.success = true;
             }
@@ -541,14 +501,11 @@ class MasterOrchestrator extends EventEmitter {
 
       // Finalize pipeline
       pipelineResult.endTime = Date.now();
-      pipelineResult.duration =
-        pipelineResult.endTime - pipelineResult.startTime;
+      pipelineResult.duration = pipelineResult.endTime - pipelineResult.startTime;
 
       // Transition to final state
       if (pipelineResult.success && pipelineResult.epicsFailed.length === 0) {
-        this._transitionTo(OrchestratorState.COMPLETE, {
-          result: pipelineResult,
-        });
+        this._transitionTo(OrchestratorState.COMPLETE, { result: pipelineResult });
       } else if (pipelineResult.epicsFailed.length > 0) {
         this._transitionTo(OrchestratorState.BLOCKED, {
           failedEpics: pipelineResult.epicsFailed,
@@ -560,9 +517,7 @@ class MasterOrchestrator extends EventEmitter {
 
       return this.finalize(pipelineResult);
     } catch (error) {
-      this._log(`Pipeline execution failed: ${error.message}`, {
-        level: "error",
-      });
+      this._log(`Pipeline execution failed: ${error.message}`, { level: 'error' });
       this._transitionTo(OrchestratorState.BLOCKED, { error: error.message });
       await this._saveState();
       throw error;
@@ -598,9 +553,7 @@ class MasterOrchestrator extends EventEmitter {
       throw new Error(`Unknown epic number: ${epicNum}`);
     }
 
-    this._log(`Starting Epic ${epicNum}: ${epicConfig.name}`, {
-      icon: epicConfig.icon,
-    });
+    this._log(`Starting Epic ${epicNum}: ${epicConfig.name}`, { icon: epicConfig.icon });
 
     // Update epic state
     this.executionState.currentEpic = epicNum;
@@ -612,7 +565,7 @@ class MasterOrchestrator extends EventEmitter {
     };
 
     // Emit epic start event
-    this.emit("epicStart", { epicNum, config: epicConfig });
+    this.emit('epicStart', { epicNum, config: epicConfig });
     this.onEpicStart(epicNum, epicConfig);
 
     try {
@@ -640,13 +593,8 @@ class MasterOrchestrator extends EventEmitter {
       // Evaluate quality gate (Story 0.6) - only in full pipeline mode
       // Skip gate evaluation if result is from stub executor
       let gateResult = null;
-      const isStubResult = result && result.status === "stub";
-      if (
-        this._inFullPipeline &&
-        result &&
-        result.success !== false &&
-        !isStubResult
-      ) {
+      const isStubResult = result && result.status === 'stub';
+      if (this._inFullPipeline && result && result.success !== false && !isStubResult) {
         gateResult = await this._evaluateGate(epicNum, result);
 
         // Store gate result if exists
@@ -659,20 +607,17 @@ class MasterOrchestrator extends EventEmitter {
       await this._saveState();
 
       // Emit epic complete event
-      this.emit("epicComplete", { epicNum, result, gateResult });
+      this.emit('epicComplete', { epicNum, result, gateResult });
       this.onEpicComplete(epicNum, result);
 
-      this._log(`Epic ${epicNum} completed successfully`, { icon: "✅" });
+      this._log(`Epic ${epicNum} completed successfully`, { icon: '✅' });
 
       // Check gate verdict (only block/warn during full pipeline)
       if (gateResult && this._inFullPipeline) {
         if (this.gateEvaluator.shouldBlock(gateResult.verdict)) {
-          this._log(`Gate blocked: ${gateResult.gate}`, {
-            level: "warn",
-            icon: "🚫",
-          });
+          this._log(`Gate blocked: ${gateResult.gate}`, { level: 'warn', icon: '🚫' });
           this._transitionTo(OrchestratorState.BLOCKED, {
-            reason: "gate_blocked",
+            reason: 'gate_blocked',
             gate: gateResult.gate,
             issues: gateResult.issues,
           });
@@ -680,10 +625,7 @@ class MasterOrchestrator extends EventEmitter {
         }
 
         if (this.gateEvaluator.needsRevision(gateResult.verdict)) {
-          this._log(`Gate needs revision: ${gateResult.gate}`, {
-            level: "warn",
-            icon: "⚠️",
-          });
+          this._log(`Gate needs revision: ${gateResult.gate}`, { level: 'warn', icon: '⚠️' });
           result.needsRevision = true;
         }
       }
@@ -700,18 +642,13 @@ class MasterOrchestrator extends EventEmitter {
         ],
       };
 
-      this._log(`Epic ${epicNum} failed: ${error.message}`, {
-        level: "error",
-        icon: "❌",
-      });
+      this._log(`Epic ${epicNum} failed: ${error.message}`, { level: 'error', icon: '❌' });
 
       // Check retry count
       const retries = this.executionState.retryCount[epicNum] || 0;
       if (retries < this.maxRetries && this.autoRecovery) {
         this.executionState.retryCount[epicNum] = retries + 1;
-        this._log(
-          `Retrying Epic ${epicNum} (attempt ${retries + 1}/${this.maxRetries})...`,
-        );
+        this._log(`Retrying Epic ${epicNum} (attempt ${retries + 1}/${this.maxRetries})...`);
         return this.executeEpic(epicNum, options);
       }
 
@@ -773,10 +710,7 @@ class MasterOrchestrator extends EventEmitter {
 
     // Clear blocked state if set
     if (this._state === OrchestratorState.BLOCKED) {
-      this._transitionTo(OrchestratorState.READY, {
-        action: "resume",
-        fromEpic,
-      });
+      this._transitionTo(OrchestratorState.READY, { action: 'resume', fromEpic });
     }
 
     // Execute pipeline from this point
@@ -820,8 +754,7 @@ class MasterOrchestrator extends EventEmitter {
       case 5: // Recovery (on-demand)
         return {
           ...baseContext,
-          implementationPath:
-            this.executionState.epics[4]?.result?.implementationPath,
+          implementationPath: this.executionState.epics[4]?.result?.implementationPath,
           errors: this.executionState.errors,
           attempts: this.executionState.epics[4]?.attempts,
         };
@@ -867,10 +800,7 @@ class MasterOrchestrator extends EventEmitter {
         ? Date.now() - new Date(this.executionState.startedAt).getTime()
         : 0,
       errorsEncountered: this.executionState.errors.length,
-      recoveryAttempts: Object.values(this.executionState.retryCount).reduce(
-        (a, b) => a + b,
-        0,
-      ),
+      recoveryAttempts: Object.values(this.executionState.retryCount).reduce((a, b) => a + b, 0),
       completedEpics: this._getCompletedGates().length,
     };
   }
@@ -898,40 +828,25 @@ class MasterOrchestrator extends EventEmitter {
 
     const nextEpic = epicSequence[currentIndex + 1];
 
-    this._log(`Evaluating gate: Epic ${epicNum} -> Epic ${nextEpic}`, {
-      icon: "🚦",
-    });
+    this._log(`Evaluating gate: Epic ${epicNum} -> Epic ${nextEpic}`, { icon: '🚦' });
 
     try {
-      const gateResult = await this.gateEvaluator.evaluate(
-        epicNum,
-        nextEpic,
-        result,
-      );
+      const gateResult = await this.gateEvaluator.evaluate(epicNum, nextEpic, result);
 
       // Log gate result
-      this._log(
-        `Gate verdict: ${gateResult.verdict} (score: ${gateResult.score.toFixed(1)})`,
-        {
-          level: gateResult.verdict === GateVerdict.APPROVED ? "info" : "warn",
-        },
-      );
+      this._log(`Gate verdict: ${gateResult.verdict} (score: ${gateResult.score.toFixed(1)})`, {
+        level: gateResult.verdict === GateVerdict.APPROVED ? 'info' : 'warn',
+      });
 
       return gateResult;
     } catch (error) {
-      this._log(`Gate evaluation error: ${error.message}`, { level: "error" });
+      this._log(`Gate evaluation error: ${error.message}`, { level: 'error' });
       // Return blocked gate on error if strict
       if (this.strictGates) {
         return {
           gate: `epic${epicNum}_to_epic${nextEpic}`,
           verdict: GateVerdict.BLOCKED,
-          issues: [
-            {
-              check: "evaluation_error",
-              message: error.message,
-              severity: "critical",
-            },
-          ],
+          issues: [{ check: 'evaluation_error', message: error.message, severity: 'critical' }],
         };
       }
       return null;
@@ -1077,35 +992,27 @@ class MasterOrchestrator extends EventEmitter {
    * @returns {Promise<boolean>} True if should retry
    */
   async _attemptRecovery(epicNum, error) {
-    this._log(`Attempting recovery for Epic ${epicNum}...`, {
-      error: error.message,
-    });
+    this._log(`Attempting recovery for Epic ${epicNum}...`, { error: error.message });
 
     // Don't try to recover from recovery failures (avoid infinite loop)
     if (epicNum === 5) {
-      this._log("Cannot recover from recovery epic failure", { level: "warn" });
+      this._log('Cannot recover from recovery epic failure', { level: 'warn' });
       return false;
     }
 
     // Check if we can still retry (AC5)
     if (!this.recoveryHandler.canRetry(epicNum)) {
-      this._log(`Max retries reached for Epic ${epicNum}`, { level: "warn" });
+      this._log(`Max retries reached for Epic ${epicNum}`, { level: 'warn' });
       return false;
     }
 
     try {
       // Use RecoveryHandler for intelligent recovery (AC1)
-      const result = await this.recoveryHandler.handleEpicFailure(
-        epicNum,
-        error,
-        {
-          approach:
-            this.executionState.epics[epicNum]?.currentApproach || "default",
-          subtaskId: this.executionState.epics[epicNum]?.currentSubtask,
-          affectedFiles:
-            this.executionState.epics[epicNum]?.result?.codeChanges || [],
-        },
-      );
+      const result = await this.recoveryHandler.handleEpicFailure(epicNum, error, {
+        approach: this.executionState.epics[epicNum]?.currentApproach || 'default',
+        subtaskId: this.executionState.epics[epicNum]?.currentSubtask,
+        affectedFiles: this.executionState.epics[epicNum]?.result?.codeChanges || [],
+      });
 
       // Log recovery result (AC7)
       this._log(
@@ -1115,17 +1022,16 @@ class MasterOrchestrator extends EventEmitter {
           shouldRetry: result.shouldRetry,
           escalated: result.escalated,
         })}`,
-        { level: result.success ? "info" : "warn" },
+        { level: result.success ? 'info' : 'warn' },
       );
 
       // Track retry count
-      this.executionState.retryCount[epicNum] =
-        (this.executionState.retryCount[epicNum] || 0) + 1;
+      this.executionState.retryCount[epicNum] = (this.executionState.retryCount[epicNum] || 0) + 1;
 
       // Handle escalation
       if (result.escalated) {
         this._transitionTo(OrchestratorState.BLOCKED, {
-          reason: "escalated_to_human",
+          reason: 'escalated_to_human',
           epicNum,
           error: error.message,
         });
@@ -1135,9 +1041,7 @@ class MasterOrchestrator extends EventEmitter {
       // Should we retry?
       return result.shouldRetry;
     } catch (recoveryError) {
-      this._log(`Recovery handler error: ${recoveryError.message}`, {
-        level: "error",
-      });
+      this._log(`Recovery handler error: ${recoveryError.message}`, { level: 'error' });
       return false;
     }
   }
@@ -1166,7 +1070,7 @@ class MasterOrchestrator extends EventEmitter {
       // Build comprehensive state object (AC2, AC6, AC7)
       const stateToSave = {
         // Metadata
-        schemaVersion: "1.0",
+        schemaVersion: '1.0',
         workflowId: this.executionState.workflowId,
         storyId: this.storyId,
         status: this._state,
@@ -1176,10 +1080,7 @@ class MasterOrchestrator extends EventEmitter {
           startedAt: this.executionState.startedAt,
           updatedAt: new Date().toISOString(),
           savedAt: new Date().toISOString(),
-          completedAt:
-            this._state === OrchestratorState.COMPLETE
-              ? new Date().toISOString()
-              : null,
+          completedAt: this._state === OrchestratorState.COMPLETE ? new Date().toISOString() : null,
         },
 
         // Tech stack profile (AC7)
@@ -1215,11 +1116,11 @@ class MasterOrchestrator extends EventEmitter {
       };
 
       await fs.writeJson(this.statePath, stateToSave, { spaces: 2 });
-      this._log("State saved successfully", { path: this.statePath });
+      this._log('State saved successfully', { path: this.statePath });
 
       return true;
     } catch (error) {
-      this._log(`Failed to save state: ${error.message}`, { level: "warn" });
+      this._log(`Failed to save state: ${error.message}`, { level: 'warn' });
       return false;
     }
   }
@@ -1240,12 +1141,7 @@ class MasterOrchestrator extends EventEmitter {
   async loadState(storyId = null) {
     const targetStoryId = storyId || this.storyId;
     const targetPath = targetStoryId
-      ? path.join(
-          this.projectRoot,
-          ".aiox",
-          "master-orchestrator",
-          `${targetStoryId}.json`,
-        )
+      ? path.join(this.projectRoot, '.aiox', 'master-orchestrator', `${targetStoryId}.json`)
       : this.statePath;
 
     try {
@@ -1254,17 +1150,15 @@ class MasterOrchestrator extends EventEmitter {
 
         // Validate state schema
         if (!this._validateStateSchema(state)) {
-          this._log("Invalid state schema, ignoring saved state", {
-            level: "warn",
-          });
+          this._log('Invalid state schema, ignoring saved state', { level: 'warn' });
           return null;
         }
 
-        this._log("State loaded successfully", { storyId: targetStoryId });
+        this._log('State loaded successfully', { storyId: targetStoryId });
         return state;
       }
     } catch (error) {
-      this._log(`Failed to load state: ${error.message}`, { level: "warn" });
+      this._log(`Failed to load state: ${error.message}`, { level: 'warn' });
     }
     return null;
   }
@@ -1283,11 +1177,7 @@ class MasterOrchestrator extends EventEmitter {
    * @returns {Promise<Object|null>} Most recent valid state or null
    */
   async findLatestValidState() {
-    const stateDir = path.join(
-      this.projectRoot,
-      ".aiox",
-      "master-orchestrator",
-    );
+    const stateDir = path.join(this.projectRoot, '.aiox', 'master-orchestrator');
 
     try {
       if (!(await fs.pathExists(stateDir))) {
@@ -1295,7 +1185,7 @@ class MasterOrchestrator extends EventEmitter {
       }
 
       const files = await fs.readdir(stateDir);
-      const stateFiles = files.filter((f) => f.endsWith(".json"));
+      const stateFiles = files.filter((f) => f.endsWith('.json'));
 
       if (stateFiles.length === 0) {
         return null;
@@ -1309,9 +1199,7 @@ class MasterOrchestrator extends EventEmitter {
           const state = await fs.readJson(filePath);
 
           if (this._validateStateSchema(state) && this._isResumable(state)) {
-            const updatedAt = new Date(
-              state.timestamps?.updatedAt || 0,
-            ).getTime();
+            const updatedAt = new Date(state.timestamps?.updatedAt || 0).getTime();
             states.push({ file, state, updatedAt });
           }
         } catch {
@@ -1326,18 +1214,13 @@ class MasterOrchestrator extends EventEmitter {
       // Sort by most recent
       states.sort((a, b) => b.updatedAt - a.updatedAt);
 
-      this._log(
-        `Found ${states.length} resumable state(s), using most recent`,
-        {
-          storyId: states[0].state.storyId,
-        },
-      );
+      this._log(`Found ${states.length} resumable state(s), using most recent`, {
+        storyId: states[0].state.storyId,
+      });
 
       return states[0].state;
     } catch (error) {
-      this._log(`Failed to find latest state: ${error.message}`, {
-        level: "warn",
-      });
+      this._log(`Failed to find latest state: ${error.message}`, { level: 'warn' });
       return null;
     }
   }
@@ -1347,10 +1230,10 @@ class MasterOrchestrator extends EventEmitter {
    * @private
    */
   _validateStateSchema(state) {
-    if (!state || typeof state !== "object") return false;
+    if (!state || typeof state !== 'object') return false;
 
     // Required fields
-    const requiredFields = ["workflowId", "status", "epics"];
+    const requiredFields = ['workflowId', 'status', 'epics'];
     for (const field of requiredFields) {
       if (state[field] === undefined) {
         return false;
@@ -1358,7 +1241,7 @@ class MasterOrchestrator extends EventEmitter {
     }
 
     // Validate epics structure
-    if (typeof state.epics !== "object") return false;
+    if (typeof state.epics !== 'object') return false;
 
     return true;
   }
@@ -1411,11 +1294,11 @@ class MasterOrchestrator extends EventEmitter {
     try {
       if (await fs.pathExists(this.statePath)) {
         await fs.remove(this.statePath);
-        this._log("State cleared", { path: this.statePath });
+        this._log('State cleared', { path: this.statePath });
         return true;
       }
     } catch (error) {
-      this._log(`Failed to clear state: ${error.message}`, { level: "warn" });
+      this._log(`Failed to clear state: ${error.message}`, { level: 'warn' });
     }
     return false;
   }
@@ -1425,11 +1308,7 @@ class MasterOrchestrator extends EventEmitter {
    * @returns {Promise<Array>} List of state summaries
    */
   async listSavedStates() {
-    const stateDir = path.join(
-      this.projectRoot,
-      ".aiox",
-      "master-orchestrator",
-    );
+    const stateDir = path.join(this.projectRoot, '.aiox', 'master-orchestrator');
 
     try {
       if (!(await fs.pathExists(stateDir))) {
@@ -1440,14 +1319,14 @@ class MasterOrchestrator extends EventEmitter {
       const states = [];
 
       for (const file of files) {
-        if (!file.endsWith(".json")) continue;
+        if (!file.endsWith('.json')) continue;
 
         try {
           const filePath = path.join(stateDir, file);
           const state = await fs.readJson(filePath);
 
           states.push({
-            storyId: state.storyId || file.replace(".json", ""),
+            storyId: state.storyId || file.replace('.json', ''),
             workflowId: state.workflowId,
             status: state.status,
             progress: this._calculateProgressFromState(state),
@@ -1460,12 +1339,10 @@ class MasterOrchestrator extends EventEmitter {
       }
 
       return states.sort(
-        (a, b) =>
-          new Date(b.updatedAt || 0).getTime() -
-          new Date(a.updatedAt || 0).getTime(),
+        (a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime(),
       );
     } catch (error) {
-      this._log(`Failed to list states: ${error.message}`, { level: "warn" });
+      this._log(`Failed to list states: ${error.message}`, { level: 'warn' });
       return [];
     }
   }
@@ -1477,9 +1354,7 @@ class MasterOrchestrator extends EventEmitter {
   _calculateProgressFromState(state) {
     if (!state.epics) return 0;
 
-    const totalEpics = Object.keys(EPIC_CONFIG).filter(
-      (num) => !EPIC_CONFIG[num].onDemand,
-    ).length;
+    const totalEpics = Object.keys(EPIC_CONFIG).filter((num) => !EPIC_CONFIG[num].onDemand).length;
 
     const completedEpics = Object.values(state.epics).filter(
       (epic) => epic.status === EpicStatus.COMPLETED,
@@ -1511,13 +1386,10 @@ class MasterOrchestrator extends EventEmitter {
       workflowId: this.executionState.workflowId,
       storyId: this.storyId,
       status: this._state,
-      success:
-        pipelineResult.success ?? this._state === OrchestratorState.COMPLETE,
+      success: pipelineResult.success ?? this._state === OrchestratorState.COMPLETE,
       duration: `${minutes}m ${seconds}s`,
       durationMs: duration,
-      techStack: TechStackDetector.getSummary(
-        this.executionState.techStackProfile || {},
-      ),
+      techStack: TechStackDetector.getSummary(this.executionState.techStackProfile || {}),
       epics: {
         executed: pipelineResult.epicsExecuted || [],
         failed: pipelineResult.epicsFailed || [],
@@ -1538,9 +1410,7 @@ class MasterOrchestrator extends EventEmitter {
    * @returns {number} Progress 0-100
    */
   getProgressPercentage() {
-    const totalEpics = Object.keys(EPIC_CONFIG).filter(
-      (num) => !EPIC_CONFIG[num].onDemand,
-    ).length;
+    const totalEpics = Object.keys(EPIC_CONFIG).filter((num) => !EPIC_CONFIG[num].onDemand).length;
 
     const completedEpics = Object.values(this.executionState.epics).filter(
       (epic) => epic.status === EpicStatus.COMPLETED,
@@ -1578,19 +1448,19 @@ class MasterOrchestrator extends EventEmitter {
    * @private
    */
   _log(message, options = {}) {
-    const timestamp = new Date().toISOString().split("T")[1].split(".")[0];
-    const level = options.level || "info";
-    const icon = options.icon || "";
+    const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+    const level = options.level || 'info';
+    const icon = options.icon || '';
 
     let coloredMessage;
     switch (level) {
-      case "error":
+      case 'error':
         coloredMessage = chalk.red(message);
         break;
-      case "warn":
+      case 'warn':
         coloredMessage = chalk.yellow(message);
         break;
-      case "success":
+      case 'success':
         coloredMessage = chalk.green(message);
         break;
       default:
@@ -1598,11 +1468,11 @@ class MasterOrchestrator extends EventEmitter {
     }
 
     console.log(
-      `${chalk.dim(`[${timestamp}]`)} ${chalk.cyan("[MasterOrchestrator]")} ${icon} ${coloredMessage}`,
+      `${chalk.dim(`[${timestamp}]`)} ${chalk.cyan('[MasterOrchestrator]')} ${icon} ${coloredMessage}`,
     );
 
     // Emit log event for external listeners
-    this.emit("log", { timestamp, level, message, ...options });
+    this.emit('log', { timestamp, level, message, ...options });
   }
 
   /**
@@ -1610,9 +1480,7 @@ class MasterOrchestrator extends EventEmitter {
    * @private
    */
   _defaultEpicStart(epicNum, config) {
-    console.log(
-      chalk.blue(`\n${config.icon} Starting Epic ${epicNum}: ${config.name}`),
-    );
+    console.log(chalk.blue(`\n${config.icon} Starting Epic ${epicNum}: ${config.name}`));
     console.log(chalk.gray(`   ${config.description}`));
   }
 
@@ -1621,7 +1489,7 @@ class MasterOrchestrator extends EventEmitter {
    * @private
    */
   _defaultEpicComplete(epicNum, result) {
-    const status = result?.success !== false ? "✅" : "❌";
+    const status = result?.success !== false ? '✅' : '❌';
     console.log(chalk.green(`   ${status} Epic ${epicNum} complete`));
   }
 
@@ -1650,19 +1518,13 @@ class StubEpicExecutor {
   }
 
   async execute(_context) {
-    console.log(
-      chalk.yellow(`   ⚠️  Using stub executor for Epic ${this.epicNum}`),
-    );
-    console.log(
-      chalk.gray(
-        `      Real executor (${this.config.executor}) not yet implemented`,
-      ),
-    );
-    console.log(chalk.gray("      See Story 0.3: Epic Executors"));
+    console.log(chalk.yellow(`   ⚠️  Using stub executor for Epic ${this.epicNum}`));
+    console.log(chalk.gray(`      Real executor (${this.config.executor}) not yet implemented`));
+    console.log(chalk.gray('      See Story 0.3: Epic Executors'));
 
     // Return minimal success result for pipeline to continue
     return {
-      status: "stub",
+      status: 'stub',
       epicNum: this.epicNum,
       message: `Stub executor for ${this.config.name}`,
       timestamp: new Date().toISOString(),

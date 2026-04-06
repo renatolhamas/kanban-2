@@ -16,25 +16,22 @@ This task systematically identifies and removes friction from design processes. 
 ## Malouf Framework Reference
 
 ### Core Principle
-
 > "Process should feel like a handrail, not a cage."
 
 ### Workflow Operations Pillar Components
-
 1. **Process Design** - Sprints, intake, milestones, approvals
 2. **Rituals** - Planning, reviews, critiques, retrospectives
 3. **Handoffs** - Design to dev, research to design, QA
 4. **Templates** - Briefs, specs, presentations
 
 ### Friction Categories
-
-| Category          | Examples                                  | Impact            |
-| ----------------- | ----------------------------------------- | ----------------- |
-| Wait Time         | Approval delays, stakeholder availability | Slower delivery   |
-| Rework            | Unclear requirements, late feedback       | Wasted effort     |
-| Context Switching | Multiple projects, unclear priorities     | Reduced quality   |
-| Information Loss  | Poor handoffs, missing documentation      | Errors, confusion |
-| Tool Friction     | Manual tasks, poor integration            | Lost time         |
+| Category | Examples | Impact |
+|----------|----------|--------|
+| Wait Time | Approval delays, stakeholder availability | Slower delivery |
+| Rework | Unclear requirements, late feedback | Wasted effort |
+| Context Switching | Multiple projects, unclear priorities | Reduced quality |
+| Information Loss | Poor handoffs, missing documentation | Errors, confusion |
+| Tool Friction | Manual tasks, poor integration | Lost time |
 
 ## Task Steps
 
@@ -104,32 +101,31 @@ mapping_template: |
   ## PROCESS MAP: [Process Name]
 
   ### Current State
-```
 
-[Step 1] --> [Step 2] --> [Step 3] --> [Step 4]
-| | | |
-[Actor] [Actor] [Actor] [Actor]
-| | | |
-[Time] [Time] [Time] [Time]
-| | | |
-[Friction] [Friction] [Friction] [Friction]
+  ```
+  [Step 1] --> [Step 2] --> [Step 3] --> [Step 4]
+     |            |            |            |
+  [Actor]     [Actor]     [Actor]     [Actor]
+     |            |            |            |
+  [Time]      [Time]      [Time]      [Time]
+     |            |            |            |
+  [Friction]  [Friction]  [Friction]  [Friction]
+  ```
 
-```
+  ### Step Details
 
-### Step Details
+  | Step | Owner | Inputs | Outputs | Avg Time | Friction |
+  |------|-------|--------|---------|----------|----------|
+  | [step] | [who] | [what] | [what] | [time] | [yes/no] |
 
-| Step | Owner | Inputs | Outputs | Avg Time | Friction |
-|------|-------|--------|---------|----------|----------|
-| [step] | [who] | [what] | [what] | [time] | [yes/no] |
+  ### Bottlenecks Identified
+  1. [bottleneck 1] - [impact]
+  2. [bottleneck 2] - [impact]
 
-### Bottlenecks Identified
-1. [bottleneck 1] - [impact]
-2. [bottleneck 2] - [impact]
-
-### Wait Time Analysis
-- Active work time: [X hours]
-- Wait time: [Y hours]
-- Efficiency ratio: [X / (X+Y)]%
+  ### Wait Time Analysis
+  - Active work time: [X hours]
+  - Wait time: [Y hours]
+  - Efficiency ratio: [X / (X+Y)]%
 ```
 
 ### Phase 3: Prioritization
@@ -333,31 +329,28 @@ tracking_template: |
 ## Common Process Optimizations
 
 ### Design Review Process
-
-| Common Issue       | Solution                                     |
-| ------------------ | -------------------------------------------- |
+| Common Issue | Solution |
+|--------------|----------|
 | Too many reviewers | Define review RACI, limit to decision-makers |
-| Unclear feedback   | Structured feedback template                 |
-| Multiple rounds    | Combine reviews, earlier alignment           |
-| Scheduling delays  | Fixed critique slots in calendar             |
+| Unclear feedback | Structured feedback template |
+| Multiple rounds | Combine reviews, earlier alignment |
+| Scheduling delays | Fixed critique slots in calendar |
 
 ### Design Handoff Process
-
-| Common Issue         | Solution                               |
-| -------------------- | -------------------------------------- |
-| Missing specs        | Handoff checklist template             |
-| Questions during dev | Design-dev pairing, office hours       |
-| Late changes         | Change freeze policy                   |
-| Asset management     | Centralized, version-controlled assets |
+| Common Issue | Solution |
+|--------------|----------|
+| Missing specs | Handoff checklist template |
+| Questions during dev | Design-dev pairing, office hours |
+| Late changes | Change freeze policy |
+| Asset management | Centralized, version-controlled assets |
 
 ### Project Intake Process
-
-| Common Issue          | Solution                   |
-| --------------------- | -------------------------- |
-| Unclear requirements  | Standard brief template    |
-| Scope creep           | Change request process     |
-| Priority conflicts    | Centralized prioritization |
-| Unrealistic timelines | Estimation framework       |
+| Common Issue | Solution |
+|--------------|----------|
+| Unclear requirements | Standard brief template |
+| Scope creep | Change request process |
+| Priority conflicts | Centralized prioritization |
+| Unrealistic timelines | Estimation framework |
 
 ## Malouf Principles Applied
 
@@ -378,13 +371,13 @@ tracking_template: |
 
 ## Anti-patterns to Avoid
 
-| Anti-pattern             | Why Bad                           | Instead                |
-| ------------------------ | --------------------------------- | ---------------------- |
-| Big bang rollout         | High risk, hard to course-correct | Pilot first            |
-| Process for process sake | Adds friction, not value          | Start with friction    |
-| Over-engineering         | Complex processes fail            | Keep it simple         |
-| Ignoring feedback        | Builds resentment                 | Iterate based on input |
-| Measuring everything     | Analysis paralysis                | Focus on key metrics   |
+| Anti-pattern | Why Bad | Instead |
+|--------------|---------|---------|
+| Big bang rollout | High risk, hard to course-correct | Pilot first |
+| Process for process sake | Adds friction, not value | Start with friction |
+| Over-engineering | Complex processes fail | Keep it simple |
+| Ignoring feedback | Builds resentment | Iterate based on input |
+| Measuring everything | Analysis paralysis | Focus on key metrics |
 
 ## Related Tasks
 
@@ -402,14 +395,13 @@ tracking_template: |
 
 > The goal is not to have the most sophisticated process. The goal is to have the simplest process that enables quality design work at scale.
 
-## Process Guards
 
+## Process Guards
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
-
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

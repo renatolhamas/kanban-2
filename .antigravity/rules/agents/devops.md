@@ -68,5 +68,4 @@
 **I receive delegation from:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/devops.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/devops.md*

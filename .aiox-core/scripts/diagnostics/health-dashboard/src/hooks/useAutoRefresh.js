@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 const DEFAULT_INTERVAL = 30000; // 30 seconds
 
@@ -6,11 +6,7 @@ const DEFAULT_INTERVAL = 30000; // 30 seconds
  * Custom hook for auto-refresh functionality
  */
 function useAutoRefresh(options = {}) {
-  const {
-    interval = DEFAULT_INTERVAL,
-    enabled = true,
-    onRefresh = () => {},
-  } = options;
+  const { interval = DEFAULT_INTERVAL, enabled = true, onRefresh = () => {} } = options;
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isEnabled, setIsEnabled] = useState(enabled);

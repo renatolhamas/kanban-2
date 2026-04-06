@@ -16,7 +16,6 @@ Gate obrigatório antes de distribuir trabalho em paralelo. Analisa dependência
 ## When to Use
 
 Execute ANTES de:
-
 - Distribuir componentes para múltiplos agents
 - Executar múltiplas tasks de design simultaneamente
 - Modificar tokens que afetam múltiplos componentes
@@ -35,7 +34,7 @@ input:
         tokens: array
         components: array
 
-  execution_mode: enum # "parallel" | "sequential" | "hybrid"
+  execution_mode: enum  # "parallel" | "sequential" | "hybrid"
 ```
 
 ---
@@ -107,12 +106,12 @@ def analyze_parallelization(tasks):
 
 ## Conflict Types
 
-| Type                      | Description                                  | Resolution               |
-| ------------------------- | -------------------------------------------- | ------------------------ |
-| **Write-Write**           | Duas tasks escrevem no mesmo arquivo         | Sequenciar               |
-| **Read-Write**            | Uma task lê o que outra escreve              | Ordenar (write primeiro) |
-| **Token Dependency**      | Componente depende de token sendo modificado | Sequenciar               |
-| **Component Composition** | Componente A usa componente B                | B antes de A             |
+| Type | Description | Resolution |
+|------|-------------|------------|
+| **Write-Write** | Duas tasks escrevem no mesmo arquivo | Sequenciar |
+| **Read-Write** | Uma task lê o que outra escreve | Ordenar (write primeiro) |
+| **Token Dependency** | Componente depende de token sendo modificado | Sequenciar |
+| **Component Composition** | Componente A usa componente B | B antes de A |
 
 ---
 
@@ -147,7 +146,6 @@ output:
 ## Example
 
 ### Input
-
 ```yaml
 tasks_to_parallelize:
   - task_id: "update-button-tokens"
@@ -159,7 +157,7 @@ tasks_to_parallelize:
   - task_id: "refactor-button-component"
     scope:
       files: ["button.tsx", "button.variants.ts"]
-      tokens: ["color.brand.primary"] # READS this token
+      tokens: ["color.brand.primary"]  # READS this token
       components: ["button"]
 
   - task_id: "create-card-component"
@@ -170,7 +168,6 @@ tasks_to_parallelize:
 ```
 
 ### Output
-
 ```yaml
 analysis_result:
   can_parallelize: false
@@ -206,14 +203,13 @@ execution_plan:
 ## Integration
 
 ### Com Task Runner
-
 ```javascript
 // Antes de executar tasks em paralelo
 const analysis = await runParallelizationGate(tasks);
 
 if (!analysis.can_parallelize) {
-  console.log("Conflicts detected:", analysis.conflicts);
-  console.log("Running sequentially:", analysis.execution_plan.sequence);
+  console.log('Conflicts detected:', analysis.conflicts);
+  console.log('Running sequentially:', analysis.execution_plan.sequence);
   await runSequential(analysis.execution_plan.sequence);
 } else {
   await runParallel(analysis.execution_plan.parallel_groups);
@@ -231,8 +227,9 @@ if (!analysis.can_parallelize) {
 
 ---
 
-_Task criada: 2026-02-16_
-_Squad: Design_
+*Task criada: 2026-02-16*
+*Squad: Design*
+
 
 ## Related Checklists
 
@@ -240,12 +237,10 @@ _Squad: Design_
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
-
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

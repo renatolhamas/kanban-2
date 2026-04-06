@@ -1,6 +1,6 @@
-import React from "react";
-import { StatusBadge } from "./shared";
-import "./TechDebtList.css";
+import React from 'react';
+import { StatusBadge } from './shared';
+import './TechDebtList.css';
 
 /**
  * Technical debt recommendations list

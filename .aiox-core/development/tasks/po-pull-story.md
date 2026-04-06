@@ -1,6 +1,6 @@
 ---
 tools:
-  - pm-tool # Uses configured PM tool (ClickUp, GitHub, Jira, or local-only)
+  - pm-tool  # Uses configured PM tool (ClickUp, GitHub, Jira, or local-only)
 ---
 
 # pull-story
@@ -8,7 +8,6 @@ tools:
 **Purpose:** Pull story updates from the configured PM tool to check for external changes.
 
 **When to Use:**
-
 - To check if story status changed in PM tool
 - Before starting work on a story (ensure you have latest state)
 - To detect if someone else updated the story in PM tool
@@ -18,19 +17,16 @@ tools:
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -198,7 +194,6 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -218,11 +213,12 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Task Inputs
 
 ```yaml
 required:
-  - story_id: "{epic}.{story}" # e.g., "3.20"
+  - story_id: '{epic}.{story}' # e.g., "3.20"
 
 optional:
   - auto_merge: false # If true, automatically apply updates to local file
@@ -237,14 +233,11 @@ optional:
 ### Step 1: Get PM Adapter
 
 ```javascript
-const {
-  getPMAdapter,
-  isPMToolConfigured,
-} = require("../.aiox-core/scripts/pm-adapter-factory");
+const { getPMAdapter, isPMToolConfigured } = require('../.aiox-core/scripts/pm-adapter-factory');
 
 if (!isPMToolConfigured()) {
-  console.log("ℹ️  Local-only mode: No PM tool configured");
-  console.log("   Local story file is the source of truth");
+  console.log('ℹ️  Local-only mode: No PM tool configured');
+  console.log('   Local story file is the source of truth');
   return;
 }
 
@@ -314,10 +307,10 @@ If `auto_merge: true` and updates exist:
 ## Integration with Story Manager
 
 ```javascript
-const { pullStoryFromPM } = require("../.aiox-core/scripts/story-manager");
+const { pullStoryFromPM } = require('../.aiox-core/scripts/story-manager');
 
 const updates = await pullStoryFromPM(storyId);
 if (updates) {
-  console.log("Updates available:", updates);
+  console.log('Updates available:', updates);
 }
 ```

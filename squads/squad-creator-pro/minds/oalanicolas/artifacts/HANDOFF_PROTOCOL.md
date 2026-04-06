@@ -177,7 +177,7 @@ handoff_checklist:
   - id: "CHK-05"
     name: "Pareto Applied"
     threshold: "4 zones documented"
-    blocking: false # Can proceed with warning
+    blocking: false  # Can proceed with warning
 ```
 
 ---
@@ -222,13 +222,13 @@ notes_for_pv:
 
 ## Veto Conditions
 
-| Condition                 | Veto Code | Action                    |
-| ------------------------- | --------- | ------------------------- |
-| citations < 15            | AN_VC_004 | LOOP - extract more       |
-| phrases < 5               | AN_VC_004 | LOOP - mine more          |
-| trinity incomplete        | AN_VC_002 | LOOP - complete component |
-| unvalidated inferences    | AN_VC_004 | LOOP - validate or remove |
-| handoff without checklist | AN_VC_005 | HARD VETO                 |
+| Condition | Veto Code | Action |
+|-----------|-----------|--------|
+| citations < 15 | AN_VC_004 | LOOP - extract more |
+| phrases < 5 | AN_VC_004 | LOOP - mine more |
+| trinity incomplete | AN_VC_002 | LOOP - complete component |
+| unvalidated inferences | AN_VC_004 | LOOP - validate or remove |
+| handoff without checklist | AN_VC_005 | HARD VETO |
 
 ---
 

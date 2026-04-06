@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const ROOT = process.cwd();
 const requiredFiles = [
-  "workspace/domains/design-system/mcp/server.ts",
-  "workspace/domains/design-system/mcp/types.ts",
-  "workspace/domains/design-system/mcp/config.json",
-  "workspace/domains/design-system/mcp/handlers/components.ts",
-  "workspace/domains/design-system/mcp/handlers/registry.ts",
-  "workspace/domains/design-system/mcp/handlers/tokens.ts",
-  "workspace/domains/design-system/mcp/handlers/guidelines.ts",
+  'workspace/domains/design-system/mcp/server.ts',
+  'workspace/domains/design-system/mcp/types.ts',
+  'workspace/domains/design-system/mcp/config.json',
+  'workspace/domains/design-system/mcp/handlers/components.ts',
+  'workspace/domains/design-system/mcp/handlers/registry.ts',
+  'workspace/domains/design-system/mcp/handlers/tokens.ts',
+  'workspace/domains/design-system/mcp/handlers/guidelines.ts'
 ];
 
 function fail(message) {
@@ -26,13 +26,13 @@ function main() {
       fail(`Missing required MCP file: ${rel}`);
     }
 
-    const content = fs.readFileSync(full, "utf8");
+    const content = fs.readFileSync(full, 'utf8');
     if (!content.trim()) {
       fail(`MCP file is empty: ${rel}`);
     }
   }
 
-  console.log("PASS: MCP skeleton files are present");
+  console.log('PASS: MCP skeleton files are present');
 }
 
 main();

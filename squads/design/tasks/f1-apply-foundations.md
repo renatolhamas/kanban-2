@@ -46,12 +46,8 @@ Editar `app/app/globals.css` para substituir os tokens default do shadcn pelos t
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
 }
 ```
 
@@ -63,9 +59,9 @@ Para cada token mapeado, substituir o valor OKLch:
 
 ```css
 :root {
-  --radius: 0.625rem; /* Usar valor do Figma se fornecido */
-  --background: oklch(...); /* Novo valor do Figma */
-  --foreground: oklch(...); /* Novo valor do Figma */
+  --radius: 0.625rem;          /* Usar valor do Figma se fornecido */
+  --background: oklch(...);     /* Novo valor do Figma */
+  --foreground: oklch(...);     /* Novo valor do Figma */
   /* ... todos os 18 core tokens ... */
   /* ... 5 chart tokens ... */
   /* ... 8 sidebar tokens ... */
@@ -78,8 +74,8 @@ Para cada token mapeado com valor dark:
 
 ```css
 .dark {
-  --background: oklch(...); /* Novo valor dark do Figma */
-  --foreground: oklch(...); /* Novo valor dark do Figma */
+  --background: oklch(...);     /* Novo valor dark do Figma */
+  --foreground: oklch(...);     /* Novo valor dark do Figma */
   /* ... todos os tokens com valores dark ... */
 }
 ```
@@ -122,14 +118,12 @@ E adicionar os valores em `:root` e `.dark`:
 ### Step 4: Preservar Estrutura
 
 **NAO alterar:**
-
 - Imports (`@import`)
 - `@custom-variant dark`
 - `@layer base` block
 - Ordem das sections
 
 **Manter se Figma nao fornecer:**
-
 - Chart tokens (--chart-1 through --chart-5) — usar defaults
 - Sidebar tokens — derivar de core tokens se nao fornecido:
   - `--sidebar: var(--background)` pattern
@@ -137,7 +131,6 @@ E adicionar os valores em `:root` e `.dark`:
 ### Step 5: Validar Sintaxe
 
 Verificar que o CSS resultante e valido:
-
 - Todos os valores OKLch tem formato correto: `oklch(L C H)` ou `oklch(L C H / alpha)`
 - Todas as variaveis referenciadas existem
 - Nenhuma variavel duplicada

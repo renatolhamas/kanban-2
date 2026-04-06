@@ -207,7 +207,7 @@ squad_types:
           - "outputs_inspectable"
 
       automation_script:
-        required: "conditional" # Required if phases >= 8
+        required: "conditional"  # Required if phases >= 8
         condition: "phases_count >= 8"
         description: |
           YOLO mode script that can execute the entire pipeline autonomously,
@@ -242,7 +242,7 @@ squad_types:
           - "parallel_execution"
           - "ab_testing"
           - "visual_dashboard"
-        minimum_required: 5 # of 7 features
+        minimum_required: 5  # of 7 features
         scoring:
           7_of_7: 10
           6_of_7: 8

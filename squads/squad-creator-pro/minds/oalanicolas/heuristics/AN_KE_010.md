@@ -108,14 +108,14 @@ FALLBACK: Loop back with specific feedback on failing items
 
 ## Evaluation Criteria
 
-| Criterion             | Weight | Threshold        | Description                 |
-| --------------------- | ------ | ---------------- | --------------------------- |
-| WHY documented        | 0.9    | Required         | Porquê, não só o quê        |
-| Terms defined         | 0.7    | >= 80%           | Termos técnicos explicados  |
-| Dependencies explicit | 0.8    | 100%             | Arquivos, tools, acessos    |
-| Concrete examples     | 0.8    | >= 1 per concept | Não só abstrações           |
-| Decisions documented  | 0.9    | 100%             | Não precisa re-decidir      |
-| Anti-patterns absent  | 1.0    | 0 detected       | Zero referências implícitas |
+| Criterion | Weight | Threshold | Description |
+|-----------|--------|-----------|-------------|
+| WHY documented | 0.9 | Required | Porquê, não só o quê |
+| Terms defined | 0.7 | >= 80% | Termos técnicos explicados |
+| Dependencies explicit | 0.8 | 100% | Arquivos, tools, acessos |
+| Concrete examples | 0.8 | >= 1 per concept | Não só abstrações |
+| Decisions documented | 0.9 | 100% | Não precisa re-decidir |
+| Anti-patterns absent | 1.0 | 0 detected | Zero referências implícitas |
 
 ## Validation Questions
 
@@ -139,7 +139,6 @@ performance:
 ## Failure Modes
 
 ### Implicit Context Dependency
-
 - **Trigger:** Documento criado no meio de conversa longa
 - **Manifestation:** Referências a "o que falamos", "aquele approach"
 - **Detection:** Grep por anti-patterns ("lembra", "discutimos", "aquele")
@@ -147,7 +146,6 @@ performance:
 - **Prevention:** Aplicar checklist ANTES de finalizar documento
 
 ### Assumed Domain Knowledge
-
 - **Trigger:** Expert escrevendo para si mesmo
 - **Manifestation:** Jargão sem definição, "óbvio" que não é óbvio
 - **Detection:** Pedir para não-expert ler e marcar termos desconhecidos
@@ -155,7 +153,6 @@ performance:
 - **Prevention:** Checklist item CDT_02 (termos definidos)
 
 ### Missing WHY
-
 - **Trigger:** Foco em execução, pressa para entregar
 - **Manifestation:** Lista de passos sem rationale
 - **Detection:** Para cada ação, perguntar "por que isso e não outra coisa?"

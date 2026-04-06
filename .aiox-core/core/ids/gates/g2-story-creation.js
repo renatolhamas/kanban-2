@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * G2 — Story Creation Gate
@@ -16,10 +16,8 @@
  * Source: IDS-5a, ids-principles.md G2 definition
  */
 
-const path = require("path");
-const { VerificationGate } = require(
-  path.resolve(__dirname, "../verification-gate.js"),
-);
+const path = require('path');
+const { VerificationGate } = require(path.resolve(__dirname, '../verification-gate.js'));
 
 class G2StoryCreationGate extends VerificationGate {
   /**
@@ -31,12 +29,12 @@ class G2StoryCreationGate extends VerificationGate {
    */
   constructor(options = {}) {
     if (!options.decisionEngine) {
-      throw new Error("[IDS-G2] decisionEngine is required");
+      throw new Error('[IDS-G2] decisionEngine is required');
     }
 
     super({
-      gateId: "G2",
-      agent: "@sm",
+      gateId: 'G2',
+      agent: '@sm',
       blocking: false,
       timeoutMs: options.timeoutMs,
       circuitBreakerOptions: options.circuitBreakerOptions,
@@ -58,7 +56,7 @@ class G2StoryCreationGate extends VerificationGate {
     if (!context || !context.intent) {
       return {
         passed: true,
-        warnings: ["No story intent provided for G2 verification"],
+        warnings: ['No story intent provided for G2 verification'],
         opportunities: [],
       };
     }
@@ -66,17 +64,17 @@ class G2StoryCreationGate extends VerificationGate {
     // Build enriched intent from story description + acceptance criteria
     let enrichedIntent = context.intent;
     if (context.acceptanceCriteria && context.acceptanceCriteria.length > 0) {
-      enrichedIntent += " " + context.acceptanceCriteria.join(" ");
+      enrichedIntent += ' ' + context.acceptanceCriteria.join(' ');
     }
 
     // Query for matching tasks
     const taskAnalysis = this._decisionEngine.analyze(enrichedIntent, {
-      type: "task",
+      type: 'task',
     });
 
     // Query for matching templates
     const templateAnalysis = this._decisionEngine.analyze(enrichedIntent, {
-      type: "template",
+      type: 'template',
     });
 
     const opportunities = [];
@@ -88,19 +86,17 @@ class G2StoryCreationGate extends VerificationGate {
       relevance: rec.relevanceScore,
       recommendation: rec.decision,
       reason: rec.rationale,
-      type: "task",
+      type: 'task',
     }));
 
     // Collect template matches
-    const templateMatches = (templateAnalysis.recommendations || []).map(
-      (rec) => ({
-        entity: rec.entityPath,
-        relevance: rec.relevanceScore,
-        recommendation: rec.decision,
-        reason: rec.rationale,
-        type: "template",
-      }),
-    );
+    const templateMatches = (templateAnalysis.recommendations || []).map((rec) => ({
+      entity: rec.entityPath,
+      relevance: rec.relevanceScore,
+      recommendation: rec.decision,
+      reason: rec.rationale,
+      type: 'template',
+    }));
 
     opportunities.push(...taskMatches, ...templateMatches);
 

@@ -8,20 +8,20 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
+const fs = require('fs').promises;
+const path = require('path');
+const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 
 /**
  * CI platforms and their config files
  */
 const CI_CONFIGS = [
-  { dir: ".github/workflows", name: "GitHub Actions" },
-  { file: ".gitlab-ci.yml", name: "GitLab CI" },
-  { file: "azure-pipelines.yml", name: "Azure DevOps" },
-  { file: ".circleci/config.yml", name: "CircleCI" },
-  { file: "Jenkinsfile", name: "Jenkins" },
-  { file: ".travis.yml", name: "Travis CI" },
+  { dir: '.github/workflows', name: 'GitHub Actions' },
+  { file: '.gitlab-ci.yml', name: 'GitLab CI' },
+  { file: 'azure-pipelines.yml', name: 'Azure DevOps' },
+  { file: '.circleci/config.yml', name: 'CircleCI' },
+  { file: 'Jenkinsfile', name: 'Jenkins' },
+  { file: '.travis.yml', name: 'Travis CI' },
 ];
 
 /**
@@ -33,15 +33,15 @@ const CI_CONFIGS = [
 class CiConfigCheck extends BaseCheck {
   constructor() {
     super({
-      id: "deployment.ci-config",
-      name: "CI/CD Configuration",
-      description: "Verifies CI/CD configuration",
+      id: 'deployment.ci-config',
+      name: 'CI/CD Configuration',
+      description: 'Verifies CI/CD configuration',
       domain: CheckDomain.DEPLOYMENT,
       severity: CheckSeverity.LOW,
       timeout: 3000,
       cacheable: true,
       healingTier: 0,
-      tags: ["ci", "cd", "automation"],
+      tags: ['ci', 'cd', 'automation'],
     });
   }
 
@@ -56,9 +56,7 @@ class CiConfigCheck extends BaseCheck {
     const issues = [];
 
     for (const ci of CI_CONFIGS) {
-      const checkPath = ci.dir
-        ? path.join(projectRoot, ci.dir)
-        : path.join(projectRoot, ci.file);
+      const checkPath = ci.dir ? path.join(projectRoot, ci.dir) : path.join(projectRoot, ci.file);
 
       try {
         const stats = await fs.stat(checkPath);
@@ -66,9 +64,7 @@ class CiConfigCheck extends BaseCheck {
         if (ci.dir && stats.isDirectory()) {
           // Check for workflow files
           const files = await fs.readdir(checkPath);
-          const workflows = files.filter(
-            (f) => f.endsWith(".yml") || f.endsWith(".yaml"),
-          );
+          const workflows = files.filter((f) => f.endsWith('.yml') || f.endsWith('.yaml'));
 
           if (workflows.length > 0) {
             foundPlatforms.push({
@@ -80,12 +76,9 @@ class CiConfigCheck extends BaseCheck {
             // Validate YAML syntax
             for (const workflow of workflows) {
               try {
-                const content = await fs.readFile(
-                  path.join(checkPath, workflow),
-                  "utf8",
-                );
+                const content = await fs.readFile(path.join(checkPath, workflow), 'utf8');
                 // Basic validation
-                if (content.includes("\t")) {
+                if (content.includes('\t')) {
                   issues.push(`${workflow}: contains tabs (use spaces)`);
                 }
               } catch {
@@ -110,22 +103,19 @@ class CiConfigCheck extends BaseCheck {
     };
 
     if (foundPlatforms.length === 0) {
-      return this.pass(
-        "No CI/CD configuration found (consider adding for automation)",
-        {
-          details,
-        },
-      );
+      return this.pass('No CI/CD configuration found (consider adding for automation)', {
+        details,
+      });
     }
 
     if (issues.length > 0) {
-      return this.warning(`CI configuration issues: ${issues.join(", ")}`, {
-        recommendation: "Fix YAML syntax issues in CI configuration files",
+      return this.warning(`CI configuration issues: ${issues.join(', ')}`, {
+        recommendation: 'Fix YAML syntax issues in CI configuration files',
         details: { ...details, issues },
       });
     }
 
-    const names = foundPlatforms.map((p) => p.name).join(", ");
+    const names = foundPlatforms.map((p) => p.name).join(', ');
     return this.pass(`CI/CD configured: ${names}`, { details });
   }
 }

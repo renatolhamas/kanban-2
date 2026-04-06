@@ -11,10 +11,8 @@
 ### Memory Settings
 
 #### shared_buffers
-
 - **Purpose:** Shared memory for caching data
 - **Recommendation:** 25% of total RAM (max ~8GB for most workloads)
-
 ```sql
 -- Check current value
 SHOW shared_buffers;
@@ -25,21 +23,17 @@ shared_buffers = 2GB
 ```
 
 #### effective_cache_size
-
 - **Purpose:** Planner's estimate of available cache
 - **Recommendation:** 50-75% of total RAM
-
 ```sql
 -- Example: 8GB RAM system
 effective_cache_size = 6GB
 ```
 
 #### work_mem
-
 - **Purpose:** Memory per operation (sort, hash)
 - **Recommendation:** total_ram / max_connections / 4
 - **Caution:** Set too high can cause memory exhaustion
-
 ```sql
 -- Example: 8GB RAM, 100 connections
 work_mem = 20MB
@@ -51,10 +45,8 @@ RESET work_mem;
 ```
 
 #### maintenance_work_mem
-
 - **Purpose:** Memory for maintenance operations (VACUUM, CREATE INDEX)
 - **Recommendation:** 256MB-1GB depending on RAM
-
 ```sql
 maintenance_work_mem = 512MB
 ```
@@ -64,13 +56,11 @@ maintenance_work_mem = 512MB
 ## CONNECTION POOLING
 
 ### Why Pool Connections
-
 - PostgreSQL forks a process per connection (~10MB each)
 - Too many connections = memory exhaustion
 - Connection overhead is significant
 
 ### PgBouncer Configuration
-
 ```ini
 [databases]
 mydb = host=localhost port=5432 dbname=mydb
@@ -88,13 +78,11 @@ reserve_pool_size = 5
 ```
 
 ### Pool Modes
-
 - **session:** Connection held until client disconnects
 - **transaction:** Connection returned after transaction (recommended)
 - **statement:** Connection returned after each statement
 
 ### Supabase Connection Pooling
-
 - Built-in Supavisor pooler
 - Use pooler URL for application connections
 - Use direct URL for migrations only
@@ -104,7 +92,6 @@ reserve_pool_size = 5
 ## QUERY OPTIMIZATION
 
 ### EXPLAIN ANALYZE
-
 ```sql
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
 SELECT * FROM orders
@@ -114,7 +101,6 @@ LIMIT 10;
 ```
 
 ### Key Metrics to Watch
-
 - **Seq Scan:** Full table scan (may indicate missing index)
 - **Rows Removed by Filter:** High count = inefficient query
 - **Buffers:** Shared hit (cache) vs read (disk)
@@ -123,7 +109,6 @@ LIMIT 10;
 ### Common Optimizations
 
 #### Add Missing Indexes
-
 ```sql
 -- Before: Seq Scan on orders
 EXPLAIN SELECT * FROM orders WHERE customer_id = 123;
@@ -135,7 +120,6 @@ CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ```
 
 #### Use Covering Indexes
-
 ```sql
 -- Query
 SELECT email, name FROM users WHERE email = 'test@example.com';
@@ -145,7 +129,6 @@ CREATE INDEX idx_users_email_covering ON users(email) INCLUDE (name);
 ```
 
 #### Partial Indexes
-
 ```sql
 -- Only index active users
 CREATE INDEX idx_users_active ON users(email)
@@ -157,7 +140,6 @@ WHERE is_active = true;
 ## VACUUM AND MAINTENANCE
 
 ### Autovacuum Tuning
-
 ```sql
 -- Check autovacuum stats
 SELECT schemaname, relname, n_dead_tup, last_autovacuum
@@ -172,7 +154,6 @@ ALTER TABLE high_churn_table SET (
 ```
 
 ### Manual Maintenance
-
 ```sql
 -- Analyze table statistics
 ANALYZE table_name;
@@ -188,7 +169,6 @@ VACUUM FULL table_name;  -- Use with caution
 ```
 
 ### Reindex
-
 ```sql
 -- Rebuild bloated index (non-blocking)
 REINDEX INDEX CONCURRENTLY idx_name;
@@ -202,7 +182,6 @@ REINDEX TABLE CONCURRENTLY table_name;
 ## MONITORING QUERIES
 
 ### Find Slow Queries
-
 ```sql
 -- Enable pg_stat_statements
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
@@ -219,7 +198,6 @@ LIMIT 10;
 ```
 
 ### Check Index Usage
-
 ```sql
 -- Unused indexes
 SELECT
@@ -235,7 +213,6 @@ ORDER BY pg_relation_size(indexrelid) DESC;
 ```
 
 ### Table Bloat
-
 ```sql
 -- Check table sizes and bloat
 SELECT
@@ -250,7 +227,6 @@ ORDER BY n_dead_tup DESC;
 ```
 
 ### Cache Hit Ratio
-
 ```sql
 -- Should be > 99% for good performance
 SELECT
@@ -263,7 +239,6 @@ FROM pg_stat_database;
 ## LOCKING AND CONCURRENCY
 
 ### Check Active Locks
-
 ```sql
 SELECT
   l.pid,
@@ -278,7 +253,6 @@ WHERE NOT l.granted;
 ```
 
 ### Kill Long-Running Queries
-
 ```sql
 -- Find long-running queries
 SELECT
@@ -302,7 +276,6 @@ SELECT pg_terminate_backend(pid);
 ## PRODUCTION CHECKLIST
 
 ### Before Go-Live
-
 - [ ] shared_buffers configured (25% RAM)
 - [ ] effective_cache_size configured (50-75% RAM)
 - [ ] work_mem tuned for workload
@@ -314,7 +287,6 @@ SELECT pg_terminate_backend(pid);
 - [ ] Index strategy reviewed
 
 ### Regular Maintenance
-
 - [ ] Monitor cache hit ratio (>99%)
 - [ ] Check unused indexes monthly
 - [ ] Review slow query logs weekly
@@ -324,5 +296,5 @@ SELECT pg_terminate_backend(pid);
 
 ---
 
-**Reviewer:** **\_\_\_\_** **Date:** **\_\_\_\_**
+**Reviewer:** ________ **Date:** ________
 **Quality Gate:** [ ] PASS [ ] NEEDS REVIEW

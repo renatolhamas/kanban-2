@@ -37,32 +37,29 @@ const _BOOT_TIME = process.hrtime.bigint();
  * @see generate-greeting.js - CLI wrapper (now thin wrapper around this pipeline)
  */
 
-("use strict");
+'use strict';
 
-const path = require("path");
-const fs = require("fs").promises;
-const fsSync = require("fs");
-const yaml = require("js-yaml");
+const path = require('path');
+const fs = require('fs').promises;
+const fsSync = require('fs');
+const yaml = require('js-yaml');
 
-const GreetingBuilder = require("./greeting-builder");
-const { AgentConfigLoader } = require("./agent-config-loader");
-const SessionContextLoader = require("../../core/session/context-loader");
+const GreetingBuilder = require('./greeting-builder');
+const { AgentConfigLoader } = require('./agent-config-loader');
+const SessionContextLoader = require('../../core/session/context-loader');
 // NOG-18: loadProjectStatus removed — gitStatus is native in Claude Code system prompt.
 // const { loadProjectStatus } = require('../../infrastructure/scripts/project-status-loader');
-const GitConfigDetector = require("../../infrastructure/scripts/git-config-detector");
-const { PermissionMode } = require("../../core/permissions");
-const GreetingPreferenceManager = require("./greeting-preference-manager");
-const ContextDetector = require("../../core/session/context-detector");
-const WorkflowNavigator = require("./workflow-navigator");
-const { atomicWriteSync } = require("../../core/synapse/utils/atomic-write");
+const GitConfigDetector = require('../../infrastructure/scripts/git-config-detector');
+const { PermissionMode } = require('../../core/permissions');
+const GreetingPreferenceManager = require('./greeting-preference-manager');
+const ContextDetector = require('../../core/session/context-detector');
+const WorkflowNavigator = require('./workflow-navigator');
+const { atomicWriteSync } = require('../../core/synapse/utils/atomic-write');
 // BUG-1 fix (INS-1): Graceful degradation when pro-detector is not available
 // In installed projects, bin/utils/pro-detector.js does not exist
 let isProAvailable, loadProModule;
 try {
-  ({
-    isProAvailable,
-    loadProModule,
-  } = require("../../../bin/utils/pro-detector"));
+  ({ isProAvailable, loadProModule } = require('../../../bin/utils/pro-detector'));
 } catch {
   isProAvailable = () => false;
   loadProModule = () => null;
@@ -77,21 +74,19 @@ try {
  */
 const LOADER_TIERS = {
   critical: {
-    loaders: ["agentConfig"],
+    loaders: ['agentConfig'],
     timeout: 80,
-    description: "Agent identity — greeting is broken without this",
+    description: 'Agent identity — greeting is broken without this',
   },
   high: {
-    loaders: ["permissionMode", "gitConfig"],
+    loaders: ['permissionMode', 'gitConfig'],
     timeout: 120,
-    description:
-      "Permission badge + branch name — visually degraded without these",
+    description: 'Permission badge + branch name — visually degraded without these',
   },
   bestEffort: {
-    loaders: ["sessionContext"],
+    loaders: ['sessionContext'],
     timeout: 180,
-    description:
-      "Session awareness — greeting works fine without this. NOG-18: projectStatus removed (native gitStatus)",
+    description: 'Session awareness — greeting works fine without this. NOG-18: projectStatus removed (native gitStatus)',
   },
 };
 
@@ -107,18 +102,9 @@ const DEFAULT_PIPELINE_TIMEOUT_MS = 500;
  * @type {string[]}
  */
 const ALL_AGENT_IDS = [
-  "dev",
-  "qa",
-  "architect",
-  "pm",
-  "po",
-  "sm",
-  "analyst",
-  "data-engineer",
-  "ux-design-expert",
-  "devops",
-  "aiox-master",
-  "squad-creator",
+  'dev', 'qa', 'architect', 'pm', 'po', 'sm',
+  'analyst', 'data-engineer', 'ux-design-expert',
+  'devops', 'aiox-master', 'squad-creator',
 ];
 
 /**
@@ -126,19 +112,16 @@ const ALL_AGENT_IDS = [
  * Language handling is delegated to Claude Code's native `language` setting in settings.json.
  * @type {string}
  */
-const FALLBACK_PHRASE = "Type `*help` to see available commands.";
+const FALLBACK_PHRASE = 'Type `*help` to see available commands.';
 
 class UnifiedActivationPipeline {
   constructor(options = {}) {
     this.projectRoot = options.projectRoot || process.cwd();
     this.greetingBuilder = options.greetingBuilder || new GreetingBuilder();
-    this.preferenceManager =
-      options.preferenceManager || new GreetingPreferenceManager();
+    this.preferenceManager = options.preferenceManager || new GreetingPreferenceManager();
     this.contextDetector = options.contextDetector || new ContextDetector();
-    this.workflowNavigator =
-      options.workflowNavigator || new WorkflowNavigator();
-    this.gitConfigDetector =
-      options.gitConfigDetector || new GitConfigDetector();
+    this.workflowNavigator = options.workflowNavigator || new WorkflowNavigator();
+    this.gitConfigDetector = options.gitConfigDetector || new GitConfigDetector();
   }
 
   /**
@@ -179,10 +162,7 @@ class UnifiedActivationPipeline {
       const pipelineTimeout = this._resolvePipelineTimeout(coreConfig);
 
       // Race: full pipeline vs timeout (clear timer to prevent leak)
-      const { promise: timeoutPromise, timerId } = this._timeoutFallback(
-        agentId,
-        pipelineTimeout,
-      );
+      const { promise: timeoutPromise, timerId } = this._timeoutFallback(agentId, pipelineTimeout);
       const result = await Promise.race([
         this._runPipeline(agentId, options, coreConfig, startTime),
         timeoutPromise,
@@ -191,17 +171,15 @@ class UnifiedActivationPipeline {
 
       result.duration = Date.now() - startTime;
       return result;
+
     } catch (error) {
-      console.warn(
-        `[UnifiedActivationPipeline] Activation failed for ${agentId}:`,
-        error.message,
-      );
+      console.warn(`[UnifiedActivationPipeline] Activation failed for ${agentId}:`, error.message);
       const fallbackGreeting = this._generateFallbackGreeting(agentId);
       return {
         greeting: fallbackGreeting,
         context: this._getDefaultContext(agentId),
         duration: Date.now() - startTime,
-        quality: "fallback",
+        quality: 'fallback',
         // ACT-11: backward compat — keep fallback field
         fallback: true,
         metrics: { loaders: {} },
@@ -226,26 +204,16 @@ class UnifiedActivationPipeline {
    * @param {Object} coreConfig - Pre-loaded core config (shared, not read again)
    * @returns {Promise<{greeting: string, context: Object, quality: string, metrics: Object}>}
    */
-  async _runPipeline(
-    agentId,
-    options = {},
-    coreConfig = {},
-    startTime = Date.now(),
-  ) {
+  async _runPipeline(agentId, options = {}, coreConfig = {}, startTime = Date.now()) {
     const pipelineStart = Date.now();
     const metrics = { loaders: {} };
 
     // --- Tier 1: Critical (AgentConfig) ---
     const tier1Budget = LOADER_TIERS.critical.timeout;
-    const agentComplete = await this._profileLoader(
-      "agentConfig",
-      metrics,
-      tier1Budget,
-      () => {
-        const loader = new AgentConfigLoader(agentId);
-        return loader.loadComplete(coreConfig);
-      },
-    );
+    const agentComplete = await this._profileLoader('agentConfig', metrics, tier1Budget, () => {
+      const loader = new AgentConfigLoader(agentId);
+      return loader.loadComplete(coreConfig);
+    });
 
     // If Tier 1 failed, we can still build a minimal greeting but mark as fallback
     const agentDefinition = this._buildAgentDefinition(agentId, agentComplete);
@@ -256,7 +224,7 @@ class UnifiedActivationPipeline {
       return {
         greeting,
         context: this._getDefaultContext(agentId),
-        quality: "fallback",
+        quality: 'fallback',
         fallback: true,
         metrics,
       };
@@ -268,17 +236,12 @@ class UnifiedActivationPipeline {
     const tier2Remaining = Math.max(tier2Budget - elapsedAfterT1, 20);
 
     const [permissionData, gitConfig] = await Promise.all([
-      this._profileLoader(
-        "permissionMode",
-        metrics,
-        tier2Remaining,
-        async () => {
-          const mode = new PermissionMode(this.projectRoot);
-          await mode.load();
-          return { mode: mode.currentMode, badge: mode.getBadge() };
-        },
-      ),
-      this._profileLoader("gitConfig", metrics, tier2Remaining, () => {
+      this._profileLoader('permissionMode', metrics, tier2Remaining, async () => {
+        const mode = new PermissionMode(this.projectRoot);
+        await mode.load();
+        return { mode: mode.currentMode, badge: mode.getBadge() };
+      }),
+      this._profileLoader('gitConfig', metrics, tier2Remaining, () => {
         return this.gitConfigDetector.get();
       }),
     ]);
@@ -287,30 +250,21 @@ class UnifiedActivationPipeline {
     let memories = [];
     try {
       if (isProAvailable()) {
-        const MemoryLoader = loadProModule("memory/memory-loader");
+        const MemoryLoader = loadProModule('memory/memory-loader');
         if (MemoryLoader) {
           // Check feature gate for memory.extended
-          const featureGate = loadProModule("license/feature-gate");
-          const isMemoryEnabled =
-            featureGate?.featureGate?.isAvailable("pro.memory.extended") ??
-            false;
+          const featureGate = loadProModule('license/feature-gate');
+          const isMemoryEnabled = featureGate?.featureGate?.isAvailable('pro.memory.extended') ?? false;
 
           if (isMemoryEnabled) {
             const memoryBudget = agentComplete?.config?.memoryBudget || 2000;
             const memoryTimeout = 500; // 500ms timeout for memory load
 
-            memories = await this._profileLoader(
-              "memories",
-              metrics,
-              memoryTimeout,
-              async () => {
-                const loader = new MemoryLoader(this.projectRoot);
-                const result = await loader.loadForAgent(agentId, {
-                  budget: memoryBudget,
-                });
-                return result?.memories || [];
-              },
-            );
+            memories = await this._profileLoader('memories', metrics, memoryTimeout, async () => {
+              const loader = new MemoryLoader(this.projectRoot);
+              const result = await loader.loadForAgent(agentId, { budget: memoryBudget });
+              return result?.memories || [];
+            });
           }
         }
       }
@@ -331,7 +285,7 @@ class UnifiedActivationPipeline {
     // The loadProjectStatus() function ran 5+ git commands (~76ms) duplicating native features.
     // GreetingBuilder handles projectStatus: null gracefully (null-checks everywhere).
     const [sessionContext] = await Promise.all([
-      this._profileLoader("sessionContext", metrics, tier3Remaining, () => {
+      this._profileLoader('sessionContext', metrics, tier3Remaining, () => {
         const loader = new SessionContextLoader();
         return loader.loadContext(agentId);
       }),
@@ -349,10 +303,7 @@ class UnifiedActivationPipeline {
     const sessionType = this._detectSessionType(sessionContext, options);
 
     // Step 8: Workflow state detection
-    const workflowState = this._detectWorkflowState(
-      sessionContext,
-      sessionType,
-    );
+    const workflowState = this._detectWorkflowState(sessionContext, sessionType);
 
     // --- Assemble enriched context ---
     const enrichedContext = {
@@ -361,7 +312,7 @@ class UnifiedActivationPipeline {
       session: sessionContext || this._getDefaultSessionContext(),
       projectStatus: projectStatus || null,
       gitConfig: gitConfig || { configured: false, type: null, branch: null },
-      permissions: permissionData || { mode: "ask", badge: "[Ask]" },
+      permissions: permissionData || { mode: 'ask', badge: '[Ask]' },
       preference,
       sessionType,
       workflowState,
@@ -380,10 +331,7 @@ class UnifiedActivationPipeline {
     };
 
     // --- Build greeting via GreetingBuilder ---
-    const greeting = await this.greetingBuilder.buildGreeting(
-      agentDefinition,
-      enrichedContext,
-    );
+    const greeting = await this.greetingBuilder.buildGreeting(agentDefinition, enrichedContext);
 
     // ACT-11: Determine quality level based on what loaded successfully
     const quality = this._determineQuality(metrics);
@@ -399,7 +347,7 @@ class UnifiedActivationPipeline {
       context: enrichedContext,
       quality,
       // ACT-11: backward compat — fallback is false unless quality is 'fallback'
-      fallback: quality === "fallback",
+      fallback: quality === 'fallback',
       metrics,
     };
   }
@@ -426,35 +374,22 @@ class UnifiedActivationPipeline {
     let timer;
     try {
       const timeoutPromise = new Promise((_, reject) => {
-        timer = setTimeout(
-          () => reject(new Error(`${name} timeout (${timeoutMs}ms)`)),
-          timeoutMs,
-        );
+        timer = setTimeout(() => reject(new Error(`${name} timeout (${timeoutMs}ms)`)), timeoutMs);
       });
-      const result = await Promise.race([loaderFn(), timeoutPromise]);
+      const result = await Promise.race([
+        loaderFn(),
+        timeoutPromise,
+      ]);
       clearTimeout(timer);
       const duration = Date.now() - start;
-      metrics.loaders[name] = {
-        duration,
-        status: "ok",
-        start,
-        end: start + duration,
-      };
+      metrics.loaders[name] = { duration, status: 'ok', start, end: start + duration };
       return result;
     } catch (error) {
       clearTimeout(timer);
       const duration = Date.now() - start;
-      const status = error.message.includes("timeout") ? "timeout" : "error";
-      metrics.loaders[name] = {
-        duration,
-        status,
-        start,
-        end: start + duration,
-        error: error.message,
-      };
-      console.warn(
-        `[UnifiedActivationPipeline] ${name} ${status}: ${error.message}`,
-      );
+      const status = error.message.includes('timeout') ? 'timeout' : 'error';
+      metrics.loaders[name] = { duration, status, start, end: start + duration, error: error.message };
+      console.warn(`[UnifiedActivationPipeline] ${name} ${status}: ${error.message}`);
       return null;
     }
   }
@@ -474,21 +409,19 @@ class UnifiedActivationPipeline {
     const loaders = metrics.loaders;
 
     // Tier 1 failure = fallback
-    if (!loaders.agentConfig || loaders.agentConfig.status !== "ok") {
-      return "fallback";
+    if (!loaders.agentConfig || loaders.agentConfig.status !== 'ok') {
+      return 'fallback';
     }
 
     // Check if any loader failed
     const allLoaderNames = Object.keys(loaders);
-    const failedLoaders = allLoaderNames.filter(
-      (name) => loaders[name].status !== "ok",
-    );
+    const failedLoaders = allLoaderNames.filter(name => loaders[name].status !== 'ok');
 
     if (failedLoaders.length === 0) {
-      return "full";
+      return 'full';
     }
 
-    return "partial";
+    return 'partial';
   }
 
   /**
@@ -499,18 +432,11 @@ class UnifiedActivationPipeline {
    */
   async _loadCoreConfig() {
     try {
-      const configPath = path.join(
-        this.projectRoot,
-        ".aiox-core",
-        "core-config.yaml",
-      );
-      const content = await fs.readFile(configPath, "utf8");
+      const configPath = path.join(this.projectRoot, '.aiox-core', 'core-config.yaml');
+      const content = await fs.readFile(configPath, 'utf8');
       return yaml.load(content);
     } catch (error) {
-      console.warn(
-        "[UnifiedActivationPipeline] Failed to load core config:",
-        error.message,
-      );
+      console.warn('[UnifiedActivationPipeline] Failed to load core config:', error.message);
       return {};
     }
   }
@@ -534,11 +460,7 @@ class UnifiedActivationPipeline {
 
     // Config override
     const configTimeout = coreConfig?.pipeline?.timeout_ms;
-    if (
-      configTimeout &&
-      typeof configTimeout === "number" &&
-      configTimeout > 0
-    ) {
+    if (configTimeout && typeof configTimeout === 'number' && configTimeout > 0) {
       return configTimeout;
     }
 
@@ -557,12 +479,9 @@ class UnifiedActivationPipeline {
       return {
         ...agentComplete.agent,
         id: agentComplete.agent.id || agentId,
-        persona_profile:
-          agentComplete.persona_profile ||
-          agentComplete.definition?.persona_profile,
+        persona_profile: agentComplete.persona_profile || agentComplete.definition?.persona_profile,
         persona: agentComplete.definition?.persona || agentComplete.persona,
-        commands:
-          agentComplete.commands || agentComplete.definition?.commands || [],
+        commands: agentComplete.commands || agentComplete.definition?.commands || [],
       };
     }
 
@@ -592,10 +511,9 @@ class UnifiedActivationPipeline {
    */
   _resolvePreference(agentDefinition, userProfile) {
     // PM agent bypasses bob mode restriction (PM is primary interface in bob mode)
-    const effectiveProfile =
-      userProfile === "bob" && agentDefinition.id === "pm"
-        ? "advanced"
-        : userProfile;
+    const effectiveProfile = (userProfile === 'bob' && agentDefinition.id === 'pm')
+      ? 'advanced'
+      : userProfile;
 
     return this.preferenceManager.getPreference(effectiveProfile);
   }
@@ -610,13 +528,8 @@ class UnifiedActivationPipeline {
   _detectSessionType(sessionContext, options) {
     try {
       // If conversation history provided, prefer that
-      if (
-        options.conversationHistory &&
-        options.conversationHistory.length > 0
-      ) {
-        return this.contextDetector.detectSessionType(
-          options.conversationHistory,
-        );
+      if (options.conversationHistory && options.conversationHistory.length > 0) {
+        return this.contextDetector.detectSessionType(options.conversationHistory);
       }
 
       // Use pre-detected session type from SessionContextLoader
@@ -627,11 +540,8 @@ class UnifiedActivationPipeline {
       // Fallback to file-based detection
       return this.contextDetector.detectSessionType([]);
     } catch (error) {
-      console.warn(
-        "[UnifiedActivationPipeline] Session type detection failed:",
-        error.message,
-      );
-      return "new";
+      console.warn('[UnifiedActivationPipeline] Session type detection failed:', error.message);
+      return 'new';
     }
   }
 
@@ -645,7 +555,7 @@ class UnifiedActivationPipeline {
    */
   _detectWorkflowState(sessionContext, sessionType) {
     try {
-      if (sessionType === "new" || !sessionContext) {
+      if (sessionType === 'new' || !sessionContext) {
         return null;
       }
 
@@ -654,15 +564,9 @@ class UnifiedActivationPipeline {
         return null;
       }
 
-      return this.workflowNavigator.detectWorkflowState(
-        commandHistory,
-        sessionContext,
-      );
+      return this.workflowNavigator.detectWorkflowState(commandHistory, sessionContext);
     } catch (error) {
-      console.warn(
-        "[UnifiedActivationPipeline] Workflow detection failed:",
-        error.message,
-      );
+      console.warn('[UnifiedActivationPipeline] Workflow detection failed:', error.message);
       return null;
     }
   }
@@ -679,13 +583,11 @@ class UnifiedActivationPipeline {
     let timerId;
     const promise = new Promise((resolve) => {
       timerId = setTimeout(() => {
-        console.warn(
-          `[UnifiedActivationPipeline] Pipeline timeout (${timeoutMs}ms) for ${agentId}`,
-        );
+        console.warn(`[UnifiedActivationPipeline] Pipeline timeout (${timeoutMs}ms) for ${agentId}`);
         resolve({
           greeting: this._generateFallbackGreeting(agentId),
           context: this._getDefaultContext(agentId),
-          quality: "fallback",
+          quality: 'fallback',
           fallback: true,
           metrics: { loaders: {} },
         });
@@ -715,20 +617,20 @@ class UnifiedActivationPipeline {
    */
   _getDefaultIcon(agentId) {
     const icons = {
-      dev: "\uD83D\uDCBB",
-      qa: "\uD83D\uDD0D",
-      architect: "\uD83C\uDFD7\uFE0F",
-      pm: "\uD83D\uDCCA",
-      po: "\uD83D\uDCCB",
-      sm: "\uD83C\uDFC3",
-      analyst: "\uD83D\uDD2C",
-      "data-engineer": "\uD83D\uDDC4\uFE0F",
-      "ux-design-expert": "\uD83C\uDFA8",
-      devops: "\u2699\uFE0F",
-      "aiox-master": "\uD83D\uDC51",
-      "squad-creator": "\uD83D\uDC65",
+      'dev': '\uD83D\uDCBB',
+      'qa': '\uD83D\uDD0D',
+      'architect': '\uD83C\uDFD7\uFE0F',
+      'pm': '\uD83D\uDCCA',
+      'po': '\uD83D\uDCCB',
+      'sm': '\uD83C\uDFC3',
+      'analyst': '\uD83D\uDD2C',
+      'data-engineer': '\uD83D\uDDC4\uFE0F',
+      'ux-design-expert': '\uD83C\uDFA8',
+      'devops': '\u2699\uFE0F',
+      'aiox-master': '\uD83D\uDC51',
+      'squad-creator': '\uD83D\uDC65',
     };
-    return icons[agentId] || "\uD83E\uDD16";
+    return icons[agentId] || '\uD83E\uDD16';
   }
 
   /**
@@ -738,7 +640,7 @@ class UnifiedActivationPipeline {
    */
   _getDefaultSessionContext() {
     return {
-      sessionType: "new",
+      sessionType: 'new',
       message: null,
       previousAgent: null,
       lastCommands: [],
@@ -755,20 +657,16 @@ class UnifiedActivationPipeline {
    */
   _getDefaultContext(agentId) {
     return {
-      agent: {
-        id: agentId,
-        name: agentId,
-        icon: this._getDefaultIcon(agentId),
-      },
+      agent: { id: agentId, name: agentId, icon: this._getDefaultIcon(agentId) },
       config: {},
       session: this._getDefaultSessionContext(),
       projectStatus: null,
       gitConfig: { configured: false, type: null, branch: null },
-      permissions: { mode: "ask", badge: "[Ask]" },
-      preference: "auto",
-      sessionType: "new",
+      permissions: { mode: 'ask', badge: '[Ask]' },
+      preference: 'auto',
+      sessionType: 'new',
       workflowState: null,
-      userProfile: "advanced",
+      userProfile: 'advanced',
       // MIS-6: Include memories field in fallback context
       memories: [],
       conversationHistory: [],
@@ -795,16 +693,11 @@ class UnifiedActivationPipeline {
   _writeSynapseSession(agentId, quality, metrics) {
     const start = Date.now();
     try {
-      const sessionsDir = path.join(this.projectRoot, ".synapse", "sessions");
-      if (!fsSync.existsSync(path.join(this.projectRoot, ".synapse"))) {
+      const sessionsDir = path.join(this.projectRoot, '.synapse', 'sessions');
+      if (!fsSync.existsSync(path.join(this.projectRoot, '.synapse'))) {
         // .synapse/ does not exist — project may not have SYNAPSE installed
         const duration = Date.now() - start;
-        metrics.loaders.synapseSession = {
-          duration,
-          status: "skipped",
-          start,
-          end: start + duration,
-        };
+        metrics.loaders.synapseSession = { duration, status: 'skipped', start, end: start + duration };
         return;
       }
 
@@ -816,31 +709,18 @@ class UnifiedActivationPipeline {
         id: agentId,
         activated_at: new Date().toISOString(),
         activation_quality: quality,
-        source: "uap",
+        source: 'uap',
       };
 
-      const bridgePath = path.join(sessionsDir, "_active-agent.json");
+      const bridgePath = path.join(sessionsDir, '_active-agent.json');
       atomicWriteSync(bridgePath, JSON.stringify(bridgeData, null, 2));
 
       const duration = Date.now() - start;
-      metrics.loaders.synapseSession = {
-        duration,
-        status: "ok",
-        start,
-        end: start + duration,
-      };
+      metrics.loaders.synapseSession = { duration, status: 'ok', start, end: start + duration };
     } catch (error) {
       const duration = Date.now() - start;
-      metrics.loaders.synapseSession = {
-        duration,
-        status: "error",
-        start,
-        end: start + duration,
-        error: error.message,
-      };
-      console.warn(
-        `[UnifiedActivationPipeline] SYNAPSE session write failed: ${error.message}`,
-      );
+      metrics.loaders.synapseSession = { duration, status: 'error', start, end: start + duration, error: error.message };
+      console.warn(`[UnifiedActivationPipeline] SYNAPSE session write failed: ${error.message}`);
     }
   }
 
@@ -856,16 +736,15 @@ class UnifiedActivationPipeline {
    */
   _persistUapMetrics(agentId, quality, metrics, totalDuration) {
     try {
-      const synapsePath = path.join(this.projectRoot, ".synapse");
+      const synapsePath = path.join(this.projectRoot, '.synapse');
       if (!fsSync.existsSync(synapsePath)) return;
-      const metricsDir = path.join(synapsePath, "metrics");
+      const metricsDir = path.join(synapsePath, 'metrics');
       if (!fsSync.existsSync(metricsDir)) {
         fsSync.mkdirSync(metricsDir, { recursive: true });
       }
-      const requireChainMs =
-        typeof _BOOT_TIME !== "undefined"
-          ? Number(process.hrtime.bigint() - _BOOT_TIME) / 1e6
-          : 0;
+      const requireChainMs = typeof _BOOT_TIME !== 'undefined'
+        ? Number(process.hrtime.bigint() - _BOOT_TIME) / 1e6
+        : 0;
       const data = {
         agentId,
         quality,
@@ -877,11 +756,11 @@ class UnifiedActivationPipeline {
       for (const [name, info] of Object.entries(metrics.loaders || {})) {
         data.loaders[name] = {
           duration: info.duration || 0,
-          status: info.status || "unknown",
+          status: info.status || 'unknown',
         };
       }
       atomicWriteSync(
-        path.join(metricsDir, "uap-metrics.json"),
+        path.join(metricsDir, 'uap-metrics.json'),
         JSON.stringify(data, null, 2),
       );
     } catch {
@@ -921,17 +800,15 @@ module.exports = {
 if (require.main === module) {
   const agentId = process.argv[2];
   if (!agentId || !ALL_AGENT_IDS.includes(agentId)) {
-    console.error(
-      `Usage: node unified-activation-pipeline.js <agentId>\nValid agents: ${ALL_AGENT_IDS.join(", ")}`,
-    );
+    console.error(`Usage: node unified-activation-pipeline.js <agentId>\nValid agents: ${ALL_AGENT_IDS.join(', ')}`);
     process.exit(1);
   }
   UnifiedActivationPipeline.activate(agentId)
-    .then((result) => {
+    .then(result => {
       console.log(result.greeting);
       process.exit(0);
     })
-    .catch((err) => {
+    .catch(err => {
       console.error(`Activation error: ${err.message}`);
       process.exit(1);
     });

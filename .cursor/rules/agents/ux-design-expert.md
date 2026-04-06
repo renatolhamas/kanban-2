@@ -9,5 +9,4 @@
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/ux-design-expert.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/ux-design-expert.md*

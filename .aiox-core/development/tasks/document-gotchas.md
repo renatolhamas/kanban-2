@@ -178,13 +178,11 @@ acceptance-criteria:
 ### 1. Initialize
 
 ```javascript
-const {
-  GotchasDocumenter,
-} = require(".aiox-core/infrastructure/scripts/gotchas-documenter");
+const { GotchasDocumenter } = require('.aiox-core/infrastructure/scripts/gotchas-documenter');
 
 const documenter = new GotchasDocumenter(rootPath, {
-  outputPath: ".aiox/gotchas.md",
-  quiet: false,
+  outputPath: '.aiox/gotchas.md',
+  quiet: false
 });
 ```
 
@@ -192,7 +190,7 @@ const documenter = new GotchasDocumenter(rootPath, {
 
 ```javascript
 // Merge with existing gotchas to preserve manually added ones
-documenter.mergeWithExisting(".aiox/gotchas.json");
+documenter.mergeWithExisting('.aiox/gotchas.json');
 ```
 
 ### 3. Scan Insights Files
@@ -239,11 +237,9 @@ console.log(`Duplicates merged: ${stats.gotchasDeduplicated}`);
 ```javascript
 // In capture-session-insights workflow
 afterCapture: async (insightsPath) => {
-  const {
-    updateGotchas,
-  } = require(".aiox-core/infrastructure/scripts/gotchas-documenter");
+  const { updateGotchas } = require('.aiox-core/infrastructure/scripts/gotchas-documenter');
   await updateGotchas(rootPath);
-};
+}
 ```
 
 ### 2. Self-Critique Integration (Epic 4 - AC5)
@@ -252,17 +248,15 @@ afterCapture: async (insightsPath) => {
 
 ```javascript
 // In self-critique-checklist.md execution
-const {
-  getGotchasForSelfCritique,
-} = require(".aiox-core/infrastructure/scripts/gotchas-documenter");
+const { getGotchasForSelfCritique } = require('.aiox-core/infrastructure/scripts/gotchas-documenter');
 
 // Get relevant gotchas for current context
-const relevantGotchas = getGotchasForSelfCritique(rootPath, "TypeScript");
+const relevantGotchas = getGotchasForSelfCritique(rootPath, 'TypeScript');
 
 // Include in self-critique prompt
 const prompt = `
 Before completing, verify against known gotchas:
-${relevantGotchas.map((g) => `- ${g.title}: ${g.reason}`).join("\n")}
+${relevantGotchas.map(g => `- ${g.title}: ${g.reason}`).join('\n')}
 `;
 ```
 
@@ -272,7 +266,7 @@ ${relevantGotchas.map((g) => `- ${g.title}: ${g.reason}`).join("\n")}
 
 ```javascript
 // When writing implementation spec
-const gotchas = getGotchasForSelfCritique(rootPath, "API");
+const gotchas = getGotchasForSelfCritique(rootPath, 'API');
 // Add "Known Gotchas" section to spec
 ```
 
@@ -322,7 +316,7 @@ const gotchas = getGotchasForSelfCritique(rootPath, "API");
 
 ### gotchas.md Structure (AC2, AC3)
 
-````markdown
+```markdown
 # Known Gotchas
 
 > Auto-generated from session insights
@@ -330,10 +324,9 @@ const gotchas = getGotchasForSelfCritique(rootPath, "API");
 > Total gotchas: 15
 
 ## Table of Contents
-
 - [State Management](#state-management) (3)
 - [API](#api) (2)
-  ...
+...
 
 ---
 
@@ -344,16 +337,13 @@ const gotchas = getGotchasForSelfCritique(rootPath, "API");
 **[HIGH]**
 
 **Wrong:**
-
 ```typescript
 const useStore = create(
   persist((set) => ({ ... }), { name: 'store' })
 );
 ```
-````
 
 **Right:**
-
 ```typescript
 const useStore = create<StoreType>()(
   persist((set) => ({ ... }), { name: 'store' })
@@ -367,8 +357,7 @@ const useStore = create<StoreType>()(
 **Discovered:** STORY-42 (2026-01-28)
 
 ---
-
-````
+```
 
 ### gotchas.json Schema (AC6)
 
@@ -386,7 +375,7 @@ const useStore = create<StoreType>()(
   "gotchas": [...],
   "categories": {...}
 }
-````
+```
 
 ---
 
@@ -448,7 +437,6 @@ token_usage: ~500 tokens (for help text only)
 ```
 
 **Optimization Notes:**
-
 - Uses in-memory deduplication for speed
 - Incremental updates (merges with existing)
 - Lightweight file scanning
@@ -458,10 +446,9 @@ token_usage: ~500 tokens (for help text only)
 ## Scripts
 
 **Script:** gotchas-documenter.js
-
-- **Purpose:** Extract and consolidate gotchas from session insights
-- **Language:** JavaScript
-- **Location:** .aiox-core/infrastructure/scripts/gotchas-documenter.js
+  - **Purpose:** Extract and consolidate gotchas from session insights
+  - **Language:** JavaScript
+  - **Location:** .aiox-core/infrastructure/scripts/gotchas-documenter.js
 
 ---
 

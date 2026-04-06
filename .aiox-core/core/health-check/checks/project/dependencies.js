@@ -8,14 +8,14 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
+const fs = require('fs').promises;
+const path = require('path');
+const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 
 /**
  * Required AIOX dependencies
  */
-const REQUIRED_DEPENDENCIES = ["js-yaml"];
+const REQUIRED_DEPENDENCIES = ['js-yaml'];
 
 /**
  * Dependencies validation check
@@ -26,15 +26,15 @@ const REQUIRED_DEPENDENCIES = ["js-yaml"];
 class DependenciesCheck extends BaseCheck {
   constructor() {
     super({
-      id: "project.dependencies",
-      name: "Required Dependencies",
-      description: "Verifies required dependencies are installed",
+      id: 'project.dependencies',
+      name: 'Required Dependencies',
+      description: 'Verifies required dependencies are installed',
       domain: CheckDomain.PROJECT,
       severity: CheckSeverity.HIGH,
       timeout: 5000,
       cacheable: true,
       healingTier: 2, // Can auto-fix with npm install (with confirmation)
-      tags: ["npm", "dependencies"],
+      tags: ['npm', 'dependencies'],
     });
   }
 
@@ -45,12 +45,12 @@ class DependenciesCheck extends BaseCheck {
    */
   async execute(context) {
     const projectRoot = context.projectRoot || process.cwd();
-    const packagePath = path.join(projectRoot, "package.json");
-    const nodeModulesPath = path.join(projectRoot, "node_modules");
+    const packagePath = path.join(projectRoot, 'package.json');
+    const nodeModulesPath = path.join(projectRoot, 'node_modules');
 
     try {
       // Read package.json
-      const content = await fs.readFile(packagePath, "utf8");
+      const content = await fs.readFile(packagePath, 'utf8');
       const packageJson = JSON.parse(content);
 
       const dependencies = {
@@ -82,40 +82,31 @@ class DependenciesCheck extends BaseCheck {
           }
         }
       } catch {
-        return this.fail(
-          "node_modules not found - dependencies not installed",
-          {
-            recommendation: "Run npm install to install dependencies",
-            healable: true,
-            healingTier: 2,
-            details: { nodeModulesPath },
-          },
-        );
+        return this.fail('node_modules not found - dependencies not installed', {
+          recommendation: 'Run npm install to install dependencies',
+          healable: true,
+          healingTier: 2,
+          details: { nodeModulesPath },
+        });
       }
 
       // Report results
       if (missing.length > 0) {
-        return this.warning(
-          `Missing recommended dependencies: ${missing.join(", ")}`,
-          {
-            recommendation: `Install missing: npm install ${missing.join(" ")}`,
-            healable: true,
-            healingTier: 2,
-            details: { missing },
-          },
-        );
+        return this.warning(`Missing recommended dependencies: ${missing.join(', ')}`, {
+          recommendation: `Install missing: npm install ${missing.join(' ')}`,
+          healable: true,
+          healingTier: 2,
+          details: { missing },
+        });
       }
 
       if (notInstalled.length > 0) {
-        return this.fail(
-          `Dependencies listed but not installed: ${notInstalled.join(", ")}`,
-          {
-            recommendation: "Run npm install to install missing dependencies",
-            healable: true,
-            healingTier: 2,
-            details: { notInstalled },
-          },
-        );
+        return this.fail(`Dependencies listed but not installed: ${notInstalled.join(', ')}`, {
+          recommendation: 'Run npm install to install missing dependencies',
+          healable: true,
+          healingTier: 2,
+          details: { notInstalled },
+        });
       }
 
       const depCount = Object.keys(dependencies).length;
@@ -123,13 +114,10 @@ class DependenciesCheck extends BaseCheck {
         details: { count: depCount },
       });
     } catch (error) {
-      if (error.code === "ENOENT") {
-        return this.fail("Cannot check dependencies: package.json not found");
+      if (error.code === 'ENOENT') {
+        return this.fail('Cannot check dependencies: package.json not found');
       }
-      return this.error(
-        `Failed to check dependencies: ${error.message}`,
-        error,
-      );
+      return this.error(`Failed to check dependencies: ${error.message}`, error);
     }
   }
 
@@ -139,19 +127,19 @@ class DependenciesCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: "npm-install",
-      action: "install-dependencies",
-      promptMessage: "Install missing dependencies?",
-      promptQuestion: "Run npm install to fix dependency issues?",
-      promptDescription: "This will run npm install in your project directory",
-      risk: "low",
+      name: 'npm-install',
+      action: 'install-dependencies',
+      promptMessage: 'Install missing dependencies?',
+      promptQuestion: 'Run npm install to fix dependency issues?',
+      promptDescription: 'This will run npm install in your project directory',
+      risk: 'low',
       fix: async (_result) => {
-        const { exec } = require("child_process");
-        const util = require("util");
+        const { exec } = require('child_process');
+        const util = require('util');
         const execPromise = util.promisify(exec);
 
-        await execPromise("npm install", { cwd: process.cwd() });
-        return { success: true, message: "Dependencies installed" };
+        await execPromise('npm install', { cwd: process.cwd() });
+        return { success: true, message: 'Dependencies installed' };
       },
     };
   }

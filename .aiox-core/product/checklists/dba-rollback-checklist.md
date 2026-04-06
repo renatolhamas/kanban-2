@@ -25,6 +25,7 @@ Controlled rollback is better than panic.]]
 1. **Situation Assessment:**
 
    [[LLM: Understand the problem before acting]]
+
    - [ ] Issue clearly identified and documented
    - [ ] Impact assessment completed (affected users, data, features)
    - [ ] Decision to rollback confirmed by appropriate stakeholder
@@ -34,6 +35,7 @@ Controlled rollback is better than panic.]]
 2. **Pre-Rollback Preparation:**
 
    [[LLM: Prepare before executing any rollback]]
+
    - [ ] Rollback script(s) located and reviewed
    - [ ] Dependencies between migrations understood
    - [ ] Application instances notified or stopped (if needed)
@@ -43,6 +45,7 @@ Controlled rollback is better than panic.]]
 3. **Rollback Execution:**
 
    [[LLM: Execute carefully and monitor]]
+
    - [ ] Database connection established with appropriate privileges
    - [ ] Transaction started for rollback operations
    - [ ] Rollback script executed
@@ -52,6 +55,7 @@ Controlled rollback is better than panic.]]
 4. **Post-Rollback Validation:**
 
    [[LLM: Verify the rollback was successful]]
+
    - [ ] Schema state matches expected pre-migration state
    - [ ] Application functionality restored
    - [ ] No data corruption detected
@@ -61,6 +65,7 @@ Controlled rollback is better than panic.]]
 5. **Recovery & Communication:**
 
    [[LLM: Complete the recovery process]]
+
    - [ ] Application instances restarted (if stopped)
    - [ ] Maintenance mode disabled
    - [ ] Stakeholders notified of rollback completion
@@ -70,6 +75,7 @@ Controlled rollback is better than panic.]]
 6. **Documentation & Post-Mortem:**
 
    [[LLM: Learn from this incident]]
+
    - [ ] Incident timeline documented
    - [ ] Root cause identified (if known)
    - [ ] Rollback procedure effectiveness noted

@@ -10,7 +10,6 @@
 ## IMPORTANTE: O Que Este Template Resolve
 
 **Problema Anterior:**
-
 ```
 Story continha:
 ├── 200+ linhas de YAML do agent (especificação completa)
@@ -20,7 +19,6 @@ Resultado: Agents genéricos, sem profundidade, sem DNA real
 ```
 
 **Solução Deste Template:**
-
 ```
 Story contém:
 ├── REFERÊNCIA aos workflows de criação
@@ -48,8 +46,7 @@ Criar o agent `{{agent_id}}` executando o workflow de criação apropriado.
 ## 2. Tipo de Agent
 
 ```yaml
-agent_type: "{{TYPE}}" # mind_clone | functional | hybrid
-
+agent_type: "{{TYPE}}"  # mind_clone | functional | hybrid
 
 # SE mind_clone (baseado em expert real):
 #   → OBRIGATÓRIO executar wf-clone-mind.yaml
@@ -78,7 +75,7 @@ phases_to_execute:
     inputs:
       mind_name: "{{MIND_NAME}}"
       domain: "{{DOMAIN}}"
-      sources_path: "{{SOURCES_PATH}}" # KB criada na story anterior
+      sources_path: "{{SOURCES_PATH}}"  # KB criada na story anterior
     checkpoint: "SOURCE_QUALITY (blocking)"
 
   - phase: 1
@@ -139,16 +136,16 @@ inputs:
   agent_id: "{{agent_id}}"
   agent_name: "{{AGENT_NAME}}"
   pack_name: "{{PACK}}"
-  tier: { { TIER } }
+  tier: {{TIER}}
   domain: "{{DOMAIN}}"
 
   # Para mind_clone
-  mind_name: "{{MIND_NAME}}" # Nome do expert
-  sources_path: "{{KB_PATH}}" # KB da story anterior
+  mind_name: "{{MIND_NAME}}"  # Nome do expert
+  sources_path: "{{KB_PATH}}"  # KB da story anterior
 
   # Para functional
   purpose: "{{PURPOSE}}"
-  workflows_covered: [{ { WORKFLOW_IDS } }]
+  workflows_covered: [{{WORKFLOW_IDS}}]
 
   # Opcional
   base_knowledge: "data/{{KB_FILE}}.md"
@@ -156,11 +153,11 @@ inputs:
 
 ## 5. Workflows Cobertos por Este Agent
 
-| ID          | Workflow      | Descrição     |
-| ----------- | ------------- | ------------- |
+| ID | Workflow | Descrição |
+|----|----------|-----------|
 | {{WF_ID_1}} | {{WF_NAME_1}} | {{WF_DESC_1}} |
 | {{WF_ID_2}} | {{WF_NAME_2}} | {{WF_DESC_2}} |
-| ...         | ...           | ...           |
+| ... | ... | ... |
 
 ## 6. Critérios de Aceite
 
@@ -168,25 +165,25 @@ inputs:
 
 ```yaml
 quality_gates:
-  SC_AGT_001: # Structure Gate
+  SC_AGT_001:  # Structure Gate
     - "[ ] Agent file exists at squads/{{PACK}}/agents/{{agent_id}}.md"
     - "[ ] Agent file >= 300 lines"
     - "[ ] YAML structure válido"
 
-  SC_AGT_002: # Content Gate
+  SC_AGT_002:  # Content Gate
     - "[ ] Level 1 (Identity) completo"
     - "[ ] Level 2 (Operational) com 1+ framework"
     - "[ ] Level 3 (Voice DNA) com vocabulary.always_use (5+)"
     - "[ ] Level 4 (QA) com 3+ output_examples"
     - "[ ] Level 6 (Integration) com handoffs"
 
-  SC_AGT_003: # Depth Gate (NEW)
+  SC_AGT_003:  # Depth Gate (NEW)
     - "[ ] Frameworks têm TEORIA (o porquê), não só passos"
     - "[ ] Heurísticas têm EXEMPLOS de aplicação"
     - "[ ] Voice DNA é distinguível (não genérico)"
     - "[ ] Anti-patterns têm RAZÃO explicada"
 
-  SMOKE_TEST: # Behavioral Gate
+  SMOKE_TEST:  # Behavioral Gate
     - "[ ] Test 1: Conhecimento do domínio - PASS"
     - "[ ] Test 2: Tomada de decisão - PASS"
     - "[ ] Test 3: Resposta a objeção - PASS"
@@ -242,52 +239,46 @@ story_nova:
 **Dependência:** Story 2.3 (KB MEI)
 
 ## Tipo de Agent
-
-agent_type: "functional" # Não é clone de expert específico
+agent_type: "functional"  # Não é clone de expert específico
 
 ## Workflow de Execução
-
 workflow: "create-agent.md"
 
 phases:
+  - phase: 1
+    name: "Research Domain"
+    action: "Usar KB criada em story 2.3"
+    source: "data/mei-kb.md"
 
-- phase: 1
-  name: "Research Domain"
-  action: "Usar KB criada em story 2.3"
-  source: "data/mei-kb.md"
+  - phase: 2
+    name: "Extract Thinking DNA"
+    task: "extract-thinking-dna.md"
+    focus: "Heurísticas de MEI, decision trees de limite"
 
-- phase: 2
-  name: "Extract Thinking DNA"
-  task: "extract-thinking-dna.md"
-  focus: "Heurísticas de MEI, decision trees de limite"
-
-- phase: 3
-  name: "Create Agent"
-  template: "agent-tmpl.md"
+  - phase: 3
+    name: "Create Agent"
+    template: "agent-tmpl.md"
 
 ## Inputs
-
 inputs:
-agent_id: "mei-specialist"
-pack_name: "contabilidade"
-tier: 0
-domain: "MEI"
-base_knowledge: "data/mei-kb.md"
-workflows_covered: [MEI-01, MEI-02, MEI-03, MEI-04, MEI-05]
+  agent_id: "mei-specialist"
+  pack_name: "contabilidade"
+  tier: 0
+  domain: "MEI"
+  base_knowledge: "data/mei-kb.md"
+  workflows_covered: [MEI-01, MEI-02, MEI-03, MEI-04, MEI-05]
 
 ## Critérios de Aceite
-
 - [ ] Passa SC_AGT_001, SC_AGT_002, SC_AGT_003
 - [ ] Smoke tests 3/3
 - [ ] Heurísticas de limite com TEORIA (por que 60/80/95%)
 - [ ] Voice DNA distinguível (não genérico)
 
 ## Arquivo de Saída
-
 squads/contabilidade/agents/mei-specialist.md
 ```
 
 ---
 
 **Squad Creator | Story Template v1.0**
-_"Stories reference workflows, don't replace them"_
+*"Stories reference workflows, don't replace them"*

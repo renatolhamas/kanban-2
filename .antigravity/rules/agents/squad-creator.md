@@ -38,5 +38,4 @@
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/squad-creator.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/squad-creator.md*

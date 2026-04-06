@@ -7,49 +7,44 @@
  * @story INS-4.1
  */
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const name = "agent-memory";
+const name = 'agent-memory';
 
 const EXPECTED_AGENTS = [
-  "dev",
-  "qa",
-  "architect",
-  "pm",
-  "po",
-  "sm",
-  "analyst",
-  "data-engineer",
-  "ux",
-  "devops",
+  'dev',
+  'qa',
+  'architect',
+  'pm',
+  'po',
+  'sm',
+  'analyst',
+  'data-engineer',
+  'ux',
+  'devops',
 ];
 
 async function run(context) {
-  const agentsDir = path.join(
-    context.projectRoot,
-    ".aiox-core",
-    "development",
-    "agents",
-  );
+  const agentsDir = path.join(context.projectRoot, '.aiox-core', 'development', 'agents');
 
   if (!fs.existsSync(agentsDir)) {
     return {
       check: name,
-      status: "FAIL",
-      message: "Agents directory not found",
-      fixCommand: "aiox doctor --fix",
+      status: 'FAIL',
+      message: 'Agents directory not found',
+      fixCommand: 'aiox doctor --fix',
     };
   }
 
   const missing = EXPECTED_AGENTS.filter(
-    (agent) => !fs.existsSync(path.join(agentsDir, agent, "MEMORY.md")),
+    (agent) => !fs.existsSync(path.join(agentsDir, agent, 'MEMORY.md')),
   );
 
   if (missing.length === 0) {
     return {
       check: name,
-      status: "PASS",
+      status: 'PASS',
       message: `${EXPECTED_AGENTS.length}/${EXPECTED_AGENTS.length} MEMORY.md files present`,
       fixCommand: null,
     };
@@ -59,9 +54,9 @@ async function run(context) {
 
   return {
     check: name,
-    status: "WARN",
-    message: `${present}/${EXPECTED_AGENTS.length} MEMORY.md files present (missing: ${missing.join(", ")})`,
-    fixCommand: "aiox doctor --fix",
+    status: 'WARN',
+    message: `${present}/${EXPECTED_AGENTS.length} MEMORY.md files present (missing: ${missing.join(', ')})`,
+    fixCommand: 'aiox doctor --fix',
   };
 }
 

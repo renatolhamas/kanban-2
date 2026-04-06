@@ -54,5 +54,4 @@
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/qa.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/qa.md*

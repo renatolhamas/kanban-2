@@ -9,7 +9,7 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { CheckStatus, CheckSeverity } = require("./base-check");
+const { CheckStatus, CheckSeverity } = require('./base-check');
 
 /**
  * Simple in-memory cache for check results
@@ -116,7 +116,7 @@ class HealthCheckEngine {
     this.results = [];
     this.errors = [];
 
-    const mode = runConfig.mode || "quick";
+    const mode = runConfig.mode || 'quick';
     const timeout = this.timeouts[mode] || this.timeouts.quick;
 
     // Group checks by domain for parallel execution
@@ -133,34 +133,25 @@ class HealthCheckEngine {
 
     try {
       // Run CRITICAL checks first
-      const criticalChecks = checks.filter(
-        (c) => c.severity === CheckSeverity.CRITICAL,
-      );
+      const criticalChecks = checks.filter((c) => c.severity === CheckSeverity.CRITICAL);
       if (criticalChecks.length > 0) {
-        const criticalResults = await this.runCheckGroup(
-          criticalChecks,
-          timeout,
-          runConfig,
-        );
+        const criticalResults = await this.runCheckGroup(criticalChecks, timeout, runConfig);
         this.results.push(...criticalResults);
 
         // Fail-fast in quick mode if critical failures
-        if (mode === "quick" && this.hasCriticalFailure(criticalResults)) {
+        if (mode === 'quick' && this.hasCriticalFailure(criticalResults)) {
           return this.results;
         }
       }
 
       // Run remaining checks by domain (parallel)
-      const remainingChecks = checks.filter(
-        (c) => c.severity !== CheckSeverity.CRITICAL,
-      );
+      const remainingChecks = checks.filter((c) => c.severity !== CheckSeverity.CRITICAL);
 
       if (this.parallel) {
         // Group by domain and run domains in parallel
         const domainGroups = this.groupByDomain(remainingChecks);
-        const domainPromises = Object.entries(domainGroups).map(
-          ([_domain, domainChecks]) =>
-            this.runCheckGroup(domainChecks, timeout, runConfig),
+        const domainPromises = Object.entries(domainGroups).map(([_domain, domainChecks]) =>
+          this.runCheckGroup(domainChecks, timeout, runConfig),
         );
 
         const domainResults = await Promise.all(domainPromises);
@@ -169,11 +160,7 @@ class HealthCheckEngine {
         }
       } else {
         // Run sequentially
-        const results = await this.runCheckGroup(
-          remainingChecks,
-          timeout,
-          runConfig,
-        );
+        const results = await this.runCheckGroup(remainingChecks, timeout, runConfig);
         this.results.push(...results);
       }
 
@@ -203,22 +190,18 @@ class HealthCheckEngine {
 
     if (remainingTime <= 0) {
       // Timeout exceeded, mark remaining as skipped
-      return checks.map((check) =>
-        this.createSkippedResult(check, "Timeout exceeded"),
-      );
+      return checks.map((check) => this.createSkippedResult(check, 'Timeout exceeded'));
     }
 
     if (this.parallel) {
       // Run in parallel with timeout
-      const promises = checks.map((check) =>
-        this.runSingleCheck(check, remainingTime, runConfig),
-      );
+      const promises = checks.map((check) => this.runSingleCheck(check, remainingTime, runConfig));
 
       const settledResults = await Promise.allSettled(promises);
 
       for (let i = 0; i < settledResults.length; i++) {
         const settled = settledResults[i];
-        if (settled.status === "fulfilled") {
+        if (settled.status === 'fulfilled') {
           results.push(settled.value);
         } else {
           results.push(this.createErrorResult(checks[i], settled.reason));
@@ -229,16 +212,12 @@ class HealthCheckEngine {
       for (const check of checks) {
         const elapsedTime = Date.now() - this.startTime;
         if (elapsedTime >= timeout) {
-          results.push(this.createSkippedResult(check, "Timeout exceeded"));
+          results.push(this.createSkippedResult(check, 'Timeout exceeded'));
           continue;
         }
 
         try {
-          const result = await this.runSingleCheck(
-            check,
-            timeout - elapsedTime,
-            runConfig,
-          );
+          const result = await this.runSingleCheck(check, timeout - elapsedTime, runConfig);
           results.push(result);
         } catch (error) {
           results.push(this.createErrorResult(check, error));
@@ -274,16 +253,13 @@ class HealthCheckEngine {
       // Story TD-6: Fix Jest worker leak by properly clearing timeouts
       const timeoutPromise = new Promise((_, reject) => {
         timeoutId = setTimeout(
-          () => reject(new Error("Check timeout")),
+          () => reject(new Error('Check timeout')),
           Math.min(timeout, check.timeout || 5000),
         );
       });
 
       // Execute check with timeout
-      const result = await Promise.race([
-        check.execute(runConfig),
-        timeoutPromise,
-      ]);
+      const result = await Promise.race([check.execute(runConfig), timeoutPromise]);
 
       // Clear timeout to prevent Jest worker leak (TD-6)
       if (timeoutId) {
@@ -340,7 +316,7 @@ class HealthCheckEngine {
       status: CheckStatus.ERROR,
       message: `Check failed: ${error.message}`,
       details: { error: error.message },
-      recommendation: "Investigate check execution error",
+      recommendation: 'Investigate check execution error',
       healable: false,
       healingTier: 0,
       duration,
@@ -365,7 +341,7 @@ class HealthCheckEngine {
       status: CheckStatus.SKIPPED,
       message: reason,
       details: null,
-      recommendation: "Run in full mode or increase timeout",
+      recommendation: 'Run in full mode or increase timeout',
       healable: false,
       healingTier: 0,
       duration: 0,
@@ -396,7 +372,7 @@ class HealthCheckEngine {
    */
   groupByDomain(checks) {
     return checks.reduce((acc, check) => {
-      const domain = check.domain || "unknown";
+      const domain = check.domain || 'unknown';
       if (!acc[domain]) {
         acc[domain] = [];
       }

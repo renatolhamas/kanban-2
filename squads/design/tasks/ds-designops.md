@@ -94,6 +94,6 @@ Setup DesignOps workflow for your design system team. Maps current operations, i
 - Playbook covers entire component lifecycle
 - Dashboard can be implemented with available tools
 
-## Process Guards
 
+## Process Guards
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

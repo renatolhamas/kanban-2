@@ -42,10 +42,7 @@
         "architecture_sharded_location": { "type": "string" },
         "stories_dir": { "type": "string" },
         "dev_debug_log": { "type": "string" },
-        "slash_prefix": {
-          "type": "string",
-          "description": "Prefix for slash commands in IDEs"
-        },
+        "slash_prefix": { "type": "string", "description": "Prefix for slash commands in IDEs" },
         "custom_technical_documents": {
           "oneOf": [
             { "type": "array", "items": { "type": "string" } },
@@ -129,22 +126,10 @@
         "severity_handling": {
           "type": "object",
           "properties": {
-            "CRITICAL": {
-              "type": "string",
-              "enum": ["auto_fix", "document_as_debt", "ignore"]
-            },
-            "HIGH": {
-              "type": "string",
-              "enum": ["auto_fix", "document_as_debt", "ignore"]
-            },
-            "MEDIUM": {
-              "type": "string",
-              "enum": ["auto_fix", "document_as_debt", "ignore"]
-            },
-            "LOW": {
-              "type": "string",
-              "enum": ["auto_fix", "document_as_debt", "ignore"]
-            }
+            "CRITICAL": { "type": "string", "enum": ["auto_fix", "document_as_debt", "ignore"] },
+            "HIGH": { "type": "string", "enum": ["auto_fix", "document_as_debt", "ignore"] },
+            "MEDIUM": { "type": "string", "enum": ["auto_fix", "document_as_debt", "ignore"] },
+            "LOW": { "type": "string", "enum": ["auto_fix", "document_as_debt", "ignore"] }
           },
           "additionalProperties": false
         },

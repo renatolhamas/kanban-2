@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
 const DEFAULT_STALE_TTL_HOURS = 168; // 7 days
 
@@ -14,16 +14,12 @@ const DEFAULT_STALE_TTL_HOURS = 168; // 7 days
  */
 function getStaleSessionTTL(cwd) {
   try {
-    const yaml = require("js-yaml");
-    const configPath = path.join(cwd, ".aiox-core", "core-config.yaml");
+    const yaml = require('js-yaml');
+    const configPath = path.join(cwd, '.aiox-core', 'core-config.yaml');
     if (!fs.existsSync(configPath)) return DEFAULT_STALE_TTL_HOURS;
-    const config = yaml.load(fs.readFileSync(configPath, "utf8"));
-    const ttl =
-      config &&
-      config.synapse &&
-      config.synapse.session &&
-      config.synapse.session.staleTTLHours;
-    return typeof ttl === "number" && ttl > 0 ? ttl : DEFAULT_STALE_TTL_HOURS;
+    const config = yaml.load(fs.readFileSync(configPath, 'utf8'));
+    const ttl = config && config.synapse && config.synapse.session && config.synapse.session.staleTTLHours;
+    return typeof ttl === 'number' && ttl > 0 ? ttl : DEFAULT_STALE_TTL_HOURS;
   } catch (_err) {
     return DEFAULT_STALE_TTL_HOURS;
   }
@@ -44,27 +40,20 @@ function getStaleSessionTTL(cwd) {
 function resolveHookRuntime(input) {
   const cwd = input && input.cwd;
   const sessionId = input && (input.session_id || input.sessionId);
-  if (!cwd || typeof cwd !== "string") return null;
+  if (!cwd || typeof cwd !== 'string') return null;
 
-  const synapsePath = path.join(cwd, ".synapse");
+  const synapsePath = path.join(cwd, '.synapse');
   if (!fs.existsSync(synapsePath)) return null;
 
   try {
     const { loadSession, cleanStaleSessions } = require(
-      path.join(
-        cwd,
-        ".aiox-core",
-        "core",
-        "synapse",
-        "session",
-        "session-manager.js",
-      ),
+      path.join(cwd, '.aiox-core', 'core', 'synapse', 'session', 'session-manager.js'),
     );
     const { SynapseEngine } = require(
-      path.join(cwd, ".aiox-core", "core", "synapse", "engine.js"),
+      path.join(cwd, '.aiox-core', 'core', 'synapse', 'engine.js'),
     );
 
-    const sessionsDir = path.join(synapsePath, "sessions");
+    const sessionsDir = path.join(synapsePath, 'sessions');
     const session = loadSession(sessionId, sessionsDir) || { prompt_count: 0 };
     const engine = new SynapseEngine(synapsePath);
 
@@ -73,10 +62,8 @@ function resolveHookRuntime(input) {
       try {
         const ttlHours = getStaleSessionTTL(cwd);
         const removed = cleanStaleSessions(sessionsDir, ttlHours);
-        if (removed > 0 && process.env.DEBUG === "1") {
-          console.error(
-            `[hook-runtime] Cleaned ${removed} stale session(s) (TTL: ${ttlHours}h)`,
-          );
+        if (removed > 0 && process.env.DEBUG === '1') {
+          console.error(`[hook-runtime] Cleaned ${removed} stale session(s) (TTL: ${ttlHours}h)`);
         }
       } catch (_cleanupErr) {
         // Fire-and-forget: never block hook execution
@@ -85,10 +72,8 @@ function resolveHookRuntime(input) {
 
     return { engine, session, sessionId, sessionsDir, cwd };
   } catch (error) {
-    if (process.env.DEBUG === "1") {
-      console.error(
-        `[hook-runtime] Failed to resolve runtime: ${error.message}`,
-      );
+    if (process.env.DEBUG === '1') {
+      console.error(`[hook-runtime] Failed to resolve runtime: ${error.message}`);
     }
     return null;
   }
@@ -106,8 +91,8 @@ function resolveHookRuntime(input) {
 function buildHookOutput(xml) {
   return {
     hookSpecificOutput: {
-      hookEventName: "UserPromptSubmit",
-      additionalContext: xml || "",
+      hookEventName: 'UserPromptSubmit',
+      additionalContext: xml || '',
     },
   };
 }

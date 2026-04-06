@@ -11,7 +11,6 @@
 Scan codebase for design values (colors, spacing, typography, shadows, etc.), normalize them to W3C DTCG v1.0 stable format, organize in semantic groups, validate against spec, and export as tokens.json.
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/tokens/tokens-w3c-dtcg.json`
 - **format:** JSON data (W3C DTCG v1.0)
 - **consumed_by:** ds-token-modes
@@ -96,11 +95,11 @@ Scan codebase for design values (colors, spacing, typography, shadows, etc.), no
 - tokens.json passes DTCG schema validation
 - Multi-format exports generated and valid
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

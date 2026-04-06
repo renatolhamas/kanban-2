@@ -9,69 +9,58 @@
  * @story 2.14 - Migration Script v2.0 → v4.0.4
  */
 
-const fs = require("fs");
-const path = require("path");
-const { getAllFiles } = require("./backup");
+const fs = require('fs');
+const path = require('path');
+const { getAllFiles } = require('./backup');
 
 /**
  * Module mapping configuration for v2.0 → v4.0.4 migration
  */
 const MODULE_MAPPING = {
   core: {
-    target: "core",
+    target: 'core',
     patterns: [
-      "registry/**",
-      "quality-gates/**",
-      "manifest/**",
-      "utils/**",
-      "elicitation/**",
-      "session/**",
-      "config/**",
-      "mcp/**",
-      "data/**",
-      "docs/**",
+      'registry/**',
+      'quality-gates/**',
+      'manifest/**',
+      'utils/**',
+      'elicitation/**',
+      'session/**',
+      'config/**',
+      'mcp/**',
+      'data/**',
+      'docs/**',
     ],
-    directories: [
-      "registry",
-      "quality-gates",
-      "manifest",
-      "utils",
-      "elicitation",
-      "session",
-      "config",
-      "mcp",
-      "data",
-      "docs",
-    ],
+    directories: ['registry', 'quality-gates', 'manifest', 'utils', 'elicitation', 'session', 'config', 'mcp', 'data', 'docs'],
   },
   development: {
-    target: "development",
+    target: 'development',
     patterns: [
-      "agents/**",
-      "tasks/**",
-      "templates/**",
-      "checklists/**",
-      "scripts/**",
-      "personas/**",
+      'agents/**',
+      'tasks/**',
+      'templates/**',
+      'checklists/**',
+      'scripts/**',
+      'personas/**',
     ],
-    directories: [
-      "agents",
-      "tasks",
-      "templates",
-      "checklists",
-      "scripts",
-      "personas",
-    ],
+    directories: ['agents', 'tasks', 'templates', 'checklists', 'scripts', 'personas'],
   },
   product: {
-    target: "product",
-    patterns: ["cli/**", "api/**"],
-    directories: ["cli", "api"],
+    target: 'product',
+    patterns: [
+      'cli/**',
+      'api/**',
+    ],
+    directories: ['cli', 'api'],
   },
   infrastructure: {
-    target: "infrastructure",
-    patterns: ["hooks/**", "telemetry/**", "integrations/**"],
-    directories: ["hooks", "telemetry", "integrations"],
+    target: 'infrastructure',
+    patterns: [
+      'hooks/**',
+      'telemetry/**',
+      'integrations/**',
+    ],
+    directories: ['hooks', 'telemetry', 'integrations'],
   },
 };
 
@@ -81,20 +70,20 @@ const MODULE_MAPPING = {
  * @returns {Promise<Object>} Detection result
  */
 async function detectV2Structure(projectRoot) {
-  const aioxCoreDir = path.join(projectRoot, ".aiox-core");
+  const aioxCoreDir = path.join(projectRoot, '.aiox-core');
 
   if (!fs.existsSync(aioxCoreDir)) {
     return {
       isV2: false,
       isV21: false,
       version: null,
-      error: "No .aiox-core directory found",
+      error: 'No .aiox-core directory found',
     };
   }
 
   // Check for v4.0.4 modular structure (core, development, product, infrastructure dirs)
-  const v21Modules = ["core", "development", "product", "infrastructure"];
-  const hasV21Structure = v21Modules.every((module) =>
+  const v21Modules = ['core', 'development', 'product', 'infrastructure'];
+  const hasV21Structure = v21Modules.every(module =>
     fs.existsSync(path.join(aioxCoreDir, module)),
   );
 
@@ -102,14 +91,14 @@ async function detectV2Structure(projectRoot) {
     return {
       isV2: false,
       isV21: true,
-      version: "2.1",
-      message: "Project already has v4.0.4 modular structure",
+      version: '2.1',
+      message: 'Project already has v4.0.4 modular structure',
     };
   }
 
   // Check for v2.0 flat structure
-  const v20Indicators = ["agents", "tasks", "registry", "cli"];
-  const hasV20Structure = v20Indicators.some((dir) =>
+  const v20Indicators = ['agents', 'tasks', 'registry', 'cli'];
+  const hasV20Structure = v20Indicators.some(dir =>
     fs.existsSync(path.join(aioxCoreDir, dir)),
   );
 
@@ -117,8 +106,8 @@ async function detectV2Structure(projectRoot) {
     return {
       isV2: true,
       isV21: false,
-      version: "2.0",
-      message: "Project has v2.0 flat structure",
+      version: '2.0',
+      message: 'Project has v2.0 flat structure',
     };
   }
 
@@ -126,7 +115,7 @@ async function detectV2Structure(projectRoot) {
     isV2: false,
     isV21: false,
     version: null,
-    error: "Unable to detect AIOX version structure",
+    error: 'Unable to detect AIOX version structure',
   };
 }
 
@@ -137,8 +126,8 @@ async function detectV2Structure(projectRoot) {
  */
 function categorizeFile(relativePath) {
   // Normalize path separators for cross-platform compatibility
-  const normalizedPath = relativePath.replace(/\\/g, "/");
-  const topDir = normalizedPath.split("/")[0];
+  const normalizedPath = relativePath.replace(/\\/g, '/');
+  const topDir = normalizedPath.split('/')[0];
 
   for (const [moduleName, config] of Object.entries(MODULE_MAPPING)) {
     if (config.directories.includes(topDir)) {
@@ -147,8 +136,8 @@ function categorizeFile(relativePath) {
   }
 
   // Root level files stay in core
-  if (!normalizedPath.includes("/")) {
-    return "core";
+  if (!normalizedPath.includes('/')) {
+    return 'core';
   }
 
   return null;
@@ -162,7 +151,7 @@ function categorizeFile(relativePath) {
  */
 async function analyzeMigrationPlan(projectRoot, options = {}) {
   const { verbose: _verbose = false } = options;
-  const aioxCoreDir = path.join(projectRoot, ".aiox-core");
+  const aioxCoreDir = path.join(projectRoot, '.aiox-core');
 
   // First detect version
   const versionInfo = await detectV2Structure(projectRoot);
@@ -180,8 +169,8 @@ async function analyzeMigrationPlan(projectRoot, options = {}) {
   // Build migration plan
   const plan = {
     canMigrate: true,
-    sourceVersion: "2.0",
-    targetVersion: "2.1",
+    sourceVersion: '2.0',
+    targetVersion: '2.1',
     projectRoot,
     aioxCoreDir,
     modules: {
@@ -227,7 +216,7 @@ async function analyzeMigrationPlan(projectRoot, options = {}) {
     const targetDir = path.join(aioxCoreDir, moduleName);
     if (fs.existsSync(targetDir)) {
       plan.conflicts.push({
-        type: "existing_directory",
+        type: 'existing_directory',
         path: targetDir,
         module: moduleName,
       });
@@ -268,7 +257,7 @@ async function analyzeMigrationPlan(projectRoot, options = {}) {
  * @returns {string} Formatted size
  */
 function formatSize(bytes) {
-  const units = ["B", "KB", "MB", "GB"];
+  const units = ['B', 'KB', 'MB', 'GB'];
   let size = bytes;
   let unitIndex = 0;
 
@@ -288,13 +277,13 @@ function formatSize(bytes) {
 function formatMigrationPlan(plan) {
   const lines = [];
 
-  lines.push("Migration Plan:");
-  lines.push("┌─────────────────┬───────┬─────────────┐");
-  lines.push("│ Module          │ Files │ Size        │");
-  lines.push("├─────────────────┼───────┼─────────────┤");
+  lines.push('Migration Plan:');
+  lines.push('┌─────────────────┬───────┬─────────────┐');
+  lines.push('│ Module          │ Files │ Size        │');
+  lines.push('├─────────────────┼───────┼─────────────┤');
 
   for (const [moduleName, stats] of Object.entries(plan.stats)) {
-    if (moduleName === "total" || moduleName === "uncategorized") continue;
+    if (moduleName === 'total' || moduleName === 'uncategorized') continue;
 
     const name = moduleName.padEnd(15);
     const files = String(stats.files).padStart(5);
@@ -303,25 +292,21 @@ function formatMigrationPlan(plan) {
     lines.push(`│ ${name} │ ${files} │ ${size} │`);
   }
 
-  lines.push("└─────────────────┴───────┴─────────────┘");
-  lines.push(
-    `Total: ${plan.stats.total.files} files, ${plan.stats.total.size}`,
-  );
+  lines.push('└─────────────────┴───────┴─────────────┘');
+  lines.push(`Total: ${plan.stats.total.files} files, ${plan.stats.total.size}`);
 
   if (plan.stats.uncategorized > 0) {
-    lines.push(
-      `\n⚠️  ${plan.stats.uncategorized} uncategorized files (will be moved to core/)`,
-    );
+    lines.push(`\n⚠️  ${plan.stats.uncategorized} uncategorized files (will be moved to core/)`);
   }
 
   if (plan.conflicts.length > 0) {
-    lines.push("\n⚠️  Potential conflicts detected:");
+    lines.push('\n⚠️  Potential conflicts detected:');
     for (const conflict of plan.conflicts) {
       lines.push(`   - ${conflict.path}`);
     }
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -334,10 +319,7 @@ function analyzeImports(plan) {
 
   for (const [moduleName, moduleData] of Object.entries(plan.modules)) {
     for (const file of moduleData.files) {
-      if (
-        file.relativePath.endsWith(".js") ||
-        file.relativePath.endsWith(".ts")
-      ) {
+      if (file.relativePath.endsWith('.js') || file.relativePath.endsWith('.ts')) {
         importPaths.push({
           file: file.relativePath,
           module: moduleName,
@@ -351,11 +333,10 @@ function analyzeImports(plan) {
   return {
     totalImportableFiles: importPaths.length,
     byModule: {
-      core: importPaths.filter((f) => f.module === "core").length,
-      development: importPaths.filter((f) => f.module === "development").length,
-      product: importPaths.filter((f) => f.module === "product").length,
-      infrastructure: importPaths.filter((f) => f.module === "infrastructure")
-        .length,
+      core: importPaths.filter(f => f.module === 'core').length,
+      development: importPaths.filter(f => f.module === 'development').length,
+      product: importPaths.filter(f => f.module === 'product').length,
+      infrastructure: importPaths.filter(f => f.module === 'infrastructure').length,
     },
     files: importPaths,
   };

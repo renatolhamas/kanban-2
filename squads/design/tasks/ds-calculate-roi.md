@@ -12,20 +12,18 @@
 Calculate real cost savings from pattern consolidation with hard numbers. Estimates monthly/annual maintenance costs before and after, projects ROI timeline, shows when investment breaks even.
 
 ## Input Schema
-
 - **requires:** Output from `ds-generate-migration-strategy`
 - **format:** Markdown report
 - **location:** `outputs/design-system/{project}/migration/migration-strategy.md`
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/roi/roi-analysis.md`
 - **format:** Markdown report
 - **consumed_by:** ds-generate-shock-report
 
 ## Prerequisites
 
-- Consolidation completed (\*consolidate command run successfully)
+- Consolidation completed (*consolidate command run successfully)
 - .state.yaml contains pattern reduction metrics
 - Optional: Team salary data for accurate calculations
 
@@ -57,13 +55,13 @@ This task uses interactive elicitation to gather cost parameters.
    - Read .state.yaml for pattern reduction data
    - Extract before/after counts for all pattern types
    - Calculate reduction percentages
-   - Check: .state.yaml contains consolidation section with before/after pattern counts — abort with "No consolidation data: run \*consolidate first"
+   - Check: .state.yaml contains consolidation section with before/after pattern counts — abort with "No consolidation data: run *consolidate first"
 
 2. **Calculate Maintenance Cost (Before)**
    - Formula: patterns × hours_per_pattern_monthly × hourly_rate × 12
    - Default: 2 hours/month per pattern for maintenance
    - Include debugging, updates, consistency fixes
-   - Check: monthly cost > 0 AND cost = patterns _ hours_per_pattern _ hourly_rate — log "Before: {patterns} patterns, ${cost}/month"
+   - Check: monthly cost > 0 AND cost = patterns * hours_per_pattern * hourly_rate — log "Before: {patterns} patterns, ${cost}/month"
 
 3. **Calculate Maintenance Cost (After)**
    - Same formula with consolidated pattern count
@@ -161,7 +159,7 @@ roi:
 
 ## Failure Handling
 
-- **No consolidation data available:** If .state.yaml missing consolidation section or before/after pattern counts, abort with "No consolidation data: run \*consolidate first to generate pattern reduction metrics."
+- **No consolidation data available:** If .state.yaml missing consolidation section or before/after pattern counts, abort with "No consolidation data: run *consolidate first to generate pattern reduction metrics."
 - **Negative or zero monthly savings:** If calculated monthly savings <=0, abort with "ROI calculation shows negative savings: ${value}/month. Review pattern consolidation strategy or maintenance cost assumptions."
 - **Unrealistic cost inputs:** If hourly rate >$500/hr or <$50/hr, warn user "Hourly rate ${rate}/hr seems {high|low}. Industry average: $100-200/hr. Confirm before proceeding to avoid stakeholder skepticism."
 - **Implementation cost exceeds annual savings:** If implementation_cost > annual_savings AND ROI ratio <1.0, warn user "ROI ratio {ratio}x is negative. Consider phased rollout or reassess consolidation scope to improve business case."
@@ -178,7 +176,7 @@ roi:
 
 ## Error Handling
 
-- **No consolidation data**: Exit with message to run \*consolidate first
+- **No consolidation data**: Exit with message to run *consolidate first
 - **Unrealistic costs**: Warn user, suggest reviewing inputs
 - **Negative ROI**: Explain why, suggest higher-impact consolidation
 - **Missing team data**: Use industry defaults, flag estimates as rough
@@ -199,7 +197,6 @@ roi:
 ```
 
 Output:
-
 ```
 💰 Brad: Calculating ROI from pattern consolidation...
 
@@ -245,23 +242,18 @@ Brad says: Numbers don't lie. Show this to your boss.
 # Design System ROI - Executive Summary
 
 ## Investment
-
 **$15,000** (4 developer-weeks)
 
 ## Return
-
 **$518,400/year** savings
 
 ## ROI
-
 **34.6x return** on investment
 
 ## Breakeven
-
 **10 days**
 
 ## Impact
-
 - 81.8% pattern reduction (176 → 32)
 - 5x velocity improvement
 - 1.8 FTE equivalent time savings
@@ -280,11 +272,11 @@ Brad says: Numbers don't lie. Show this to your boss.
 - Use this report to justify design system to stakeholders
 - Recalculate ROI after Phase 2 migration to validate projections
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

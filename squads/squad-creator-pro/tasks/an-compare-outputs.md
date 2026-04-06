@@ -12,8 +12,8 @@
 
 ```yaml
 evaluator_rules:
-  model: "opus" # NEVER use Haiku to evaluate Haiku
-  blind_mode: false # We know which is which (baseline vs test)
+  model: "opus"  # NEVER use Haiku to evaluate Haiku
+  blind_mode: false  # We know which is which (baseline vs test)
   bias_mitigation:
     - "Score WHAT IS WRITTEN, not what you expect"
     - "Do NOT assume Opus is better - measure objectively"
@@ -24,12 +24,12 @@ evaluator_rules:
 
 ## Inputs
 
-| Parameter       | Type   | Required | Description                                      |
-| --------------- | ------ | -------- | ------------------------------------------------ |
-| `task_name`     | string | Yes      | Task being evaluated (e.g., "an-assess-sources") |
-| `opus_baseline` | file   | Yes      | Path to Opus output file                         |
-| `haiku_output`  | file   | Yes      | Path to Haiku output file                        |
-| `task_file`     | file   | Yes      | Original task definition (for reference)         |
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `task_name` | string | Yes | Task being evaluated (e.g., "an-assess-sources") |
+| `opus_baseline` | file | Yes | Path to Opus output file |
+| `haiku_output` | file | Yes | Path to Haiku output file |
+| `task_file` | file | Yes | Original task definition (for reference) |
 
 ---
 
@@ -43,11 +43,11 @@ tier_match:
   description: "Do both outputs classify items into the same tiers?"
 
   scoring:
-    perfect_match: 40 # 100% of items have same tier
-    high_match: 32 # 90-99% same tier
-    moderate_match: 24 # 75-89% same tier
-    low_match: 16 # 50-74% same tier
-    poor_match: 0 # <50% same tier
+    perfect_match: 40    # 100% of items have same tier
+    high_match: 32       # 90-99% same tier
+    moderate_match: 24   # 75-89% same tier
+    low_match: 16        # 50-74% same tier
+    poor_match: 0        # <50% same tier
 
   calculation: |
     match_rate = count(opus_tier == haiku_tier) / total_items
@@ -71,10 +71,10 @@ score_variance:
   description: "Are numerical scores within acceptable variance?"
 
   thresholds:
-    excellent: 5% # Scores within 5%
-    good: 10% # Scores within 10%
-    acceptable: 15% # Scores within 15%
-    poor: 20% # Scores within 20%
+    excellent: 5%     # Scores within 5%
+    good: 10%         # Scores within 10%
+    acceptable: 15%   # Scores within 15%
+    poor: 20%         # Scores within 20%
     unacceptable: ">20%"
 
   scoring:
@@ -113,11 +113,11 @@ checkpoint_match:
   applies_to: "Tasks with binary checkpoint scoring"
 
   scoring:
-    perfect_match: 20 # 100% checkpoints match
-    high_match: 16 # 95-99% match
-    moderate_match: 12 # 90-94% match
-    low_match: 8 # 80-89% match
-    poor_match: 0 # <80% match
+    perfect_match: 20    # 100% checkpoints match
+    high_match: 16       # 95-99% match
+    moderate_match: 12   # 90-94% match
+    low_match: 8         # 80-89% match
+    poor_match: 0        # <80% match
 
   calculation: |
     FOR each item with checkpoints:
@@ -145,10 +145,10 @@ recommendation_quality:
   description: "Do recommendations lead to same user actions?"
 
   scoring:
-    same_actions: 10 # Same recommended actions
-    similar_actions: 7 # Same direction, different specifics
-    different_actions: 3 # Different recommendations
-    contradictory: 0 # Opposite recommendations
+    same_actions: 10       # Same recommended actions
+    similar_actions: 7     # Same direction, different specifics
+    different_actions: 3   # Different recommendations
+    contradictory: 0       # Opposite recommendations
 
   evaluation_criteria:
     - "Would user take same action based on each output?"
@@ -317,7 +317,6 @@ step_4:
 ## Output
 
 Save qualification report to:
-
 ```
 squads/squad-creator-pro/test-cases/{task_name}/qualification-report.yaml
 ```
@@ -350,6 +349,6 @@ squads/squad-creator-pro/test-cases/{task_name}/qualification-report.yaml
 
 ## Changelog
 
-| Version | Date       | Changes                                 |
-| ------- | ---------- | --------------------------------------- |
-| 1.0.0   | 2026-02-11 | Initial version with 4-dimension rubric |
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2026-02-11 | Initial version with 4-dimension rubric |

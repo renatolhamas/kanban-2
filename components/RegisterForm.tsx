@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { PasswordInput } from "./PasswordInput";
 import { validatePassword } from "@/lib/password";
 
@@ -77,6 +78,11 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {error && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          {error}
+        </div>
+      )}
       <div>
         <label
           htmlFor="email"
@@ -172,12 +178,11 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         )}
       </button>
 
-      <p className="pt-2 text-center text-sm text-gray-500">
-        Already have an account?{" "}
-        <a href="/login" className="font-medium text-blue-600 hover:text-blue-700 transition-colors">
-          Login here
-        </a>
-      </p>
+      <div className="pt-2 text-center text-sm text-gray-500">
+        <Link href="/login" className="font-medium text-blue-600 hover:text-blue-700 transition-colors">
+          Back to Login
+        </Link>
+      </div>
     </form>
   );
 }

@@ -10,13 +10,13 @@
 
 ## Scoring Summary
 
-| Category               | Points  | Weight   |
-| ---------------------- | ------- | -------- |
-| Structure Completeness | 30      | 30%      |
-| Content Quality        | 35      | 35%      |
-| Technical Accuracy     | 20      | 20%      |
-| Visual & Formatting    | 15      | 15%      |
-| **Total**              | **100** | **100%** |
+| Category | Points | Weight |
+|----------|--------|--------|
+| Structure Completeness | 30 | 30% |
+| Content Quality | 35 | 35% |
+| Technical Accuracy | 20 | 20% |
+| Visual & Formatting | 15 | 15% |
+| **Total** | **100** | **100%** |
 
 ---
 
@@ -58,23 +58,23 @@
 
 ### 1.2 Conditional Sections (10 points)
 
-_Score only applicable sections_
+*Score only applicable sections*
 
-- [ ] **SOBRE OS ESPECIALISTAS** (3 pts) — _If expert-based squad_
+- [ ] **SOBRE OS ESPECIALISTAS** (3 pts) — *If expert-based squad*
   - Each expert has biography
   - Credentials listed
   - Focus area defined
 
-- [ ] **DNA EXTRAIDO** (3 pts) — _If mind cloning was used_
+- [ ] **DNA EXTRAIDO** (3 pts) — *If mind cloning was used*
   - Directory structure shown
   - Files listed per expert
   - Fidelity scores included
 
-- [ ] **COMPLIANCE** (2 pts) — _If legal/regulatory requirements_
+- [ ] **COMPLIANCE** (2 pts) — *If legal/regulatory requirements*
   - Requirements listed
   - Standards referenced
 
-- [ ] **INTEGRACOES** (2 pts) — _If squad integrates with others_
+- [ ] **INTEGRACOES** (2 pts) — *If squad integrates with others*
   - Input sources listed
   - Output destinations listed
 
@@ -132,7 +132,7 @@ _Score only applicable sections_
   - Each framework shows when/how to use
   - Not just a name list
 
-- [ ] **Heuristics documented** (3 pts) — _If squad has decision rules_
+- [ ] **Heuristics documented** (3 pts) — *If squad has decision rules*
   - Key heuristics listed
   - IF/THEN format used
 
@@ -231,27 +231,27 @@ _Score only applicable sections_
 
 These issues cause automatic failure regardless of score:
 
-| ID   | Condition                   | Reason                |
-| ---- | --------------------------- | --------------------- |
-| VF-1 | File doesn't exist          | Task didn't complete  |
-| VF-2 | < 100 lines                 | Insufficient content  |
-| VF-3 | No VISAO GERAL section      | Missing core section  |
-| VF-4 | No commands section         | Squad is unusable     |
-| VF-5 | Agent count = 0             | Empty squad           |
+| ID | Condition | Reason |
+|----|-----------|--------|
+| VF-1 | File doesn't exist | Task didn't complete |
+| VF-2 | < 100 lines | Insufficient content |
+| VF-3 | No VISAO GERAL section | Missing core section |
+| VF-4 | No commands section | Squad is unusable |
+| VF-5 | Agent count = 0 | Empty squad |
 | VF-6 | Contains {PLACEHOLDER} text | Unfinished generation |
-| VF-7 | Wrong squad name in content | Wrong target          |
+| VF-7 | Wrong squad name in content | Wrong target |
 
 ---
 
 ## Scoring Guide
 
-| Score Range | Result          | Action                                  |
-| ----------- | --------------- | --------------------------------------- |
-| 90-100      | **EXCELLENT**   | Ready for production                    |
-| 80-89       | **PASS**        | Acceptable, minor improvements optional |
-| 70-79       | **CONDITIONAL** | Needs specific fixes before use         |
-| 60-69       | **NEEDS WORK**  | Significant gaps, regenerate            |
-| < 60        | **FAIL**        | Major issues, start over                |
+| Score Range | Result | Action |
+|-------------|--------|--------|
+| 90-100 | **EXCELLENT** | Ready for production |
+| 80-89 | **PASS** | Acceptable, minor improvements optional |
+| 70-79 | **CONDITIONAL** | Needs specific fixes before use |
+| 60-69 | **NEEDS WORK** | Significant gaps, regenerate |
+| < 60 | **FAIL** | Major issues, start over |
 
 ---
 
@@ -319,7 +319,7 @@ scores:
   visual_formatting: __/15
   total: __/100
 
-veto_triggered: false # or veto ID
+veto_triggered: false  # or veto ID
 
 issues:
   critical: []
@@ -340,7 +340,7 @@ next_action: "Ready for use | Fix issues and re-run | Regenerate"
 
 ## Usage
 
-### During \*squad-overview execution
+### During *squad-overview execution
 
 ```bash
 # Task automatically applies checklist
@@ -367,14 +367,14 @@ next_action: "Ready for use | Fix issues and re-run | Regenerate"
 
 ## Related
 
-| Checklist                   | Purpose                   |
-| --------------------------- | ------------------------- |
-| `squad-checklist.md`        | Full squad validation     |
-| `agent-quality-gate.md`     | Individual agent quality  |
+| Checklist | Purpose |
+|-----------|---------|
+| `squad-checklist.md` | Full squad validation |
+| `agent-quality-gate.md` | Individual agent quality |
 | `task-anatomy-checklist.md` | Task structure validation |
 
-| Task                | Purpose               |
-| ------------------- | --------------------- |
+| Task | Purpose |
+|------|---------|
 | `squad-overview.md` | Generate the document |
 | `validate-squad.md` | Validate entire squad |
 
@@ -382,9 +382,9 @@ next_action: "Ready for use | Fix issues and re-run | Regenerate"
 
 ## Changelog
 
-| Version | Date       | Changes                                                    |
-| ------- | ---------- | ---------------------------------------------------------- |
-| 1.0.0   | 2026-02-18 | Initial version — comprehensive overview quality checklist |
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2026-02-18 | Initial version — comprehensive overview quality checklist |
 
 ---
 

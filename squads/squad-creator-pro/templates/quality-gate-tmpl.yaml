@@ -42,8 +42,7 @@ _template:
     type: ["manual", "automated", "hybrid", "external"]
     severity: ["blocking", "warning", "info"]
     criteria_type: ["threshold", "presence", "enum", "count"]
-    operator:
-      [">=", "<=", ">", "<", "==", "!=", "contains", "not_contains", "matches"]
+    operator: [">=", "<=", ">", "<", "==", "!=", "contains", "not_contains", "matches"]
 
 # =============================================================================
 # QUALITY GATE DEFINITION
@@ -96,18 +95,18 @@ quality_gate:
     # Used for numeric comparisons (scores, percentages, counts)
     - check: "{Description of what is being checked}"
       type: "threshold"
-      field: "{field_name}" # Field/metric to evaluate
-      value: 60 # Target value
-      operator: ">=" # Comparison operator
-      weight: 0.4 # Weight in final score (0.0-1.0)
-      required: true # If true, must pass regardless of weight
+      field: "{field_name}"           # Field/metric to evaluate
+      value: 60                        # Target value
+      operator: ">="                   # Comparison operator
+      weight: 0.4                      # Weight in final score (0.0-1.0)
+      required: true                   # If true, must pass regardless of weight
 
     # --- PRESENCE TYPE ---
     # Used to verify something exists (file, field, artifact)
     - check: "{Description of presence check}"
       type: "presence"
-      field: "{field_or_artifact}" # What must be present
-      must_exist: true # true = must exist, false = must NOT exist
+      field: "{field_or_artifact}"    # What must be present
+      must_exist: true                 # true = must exist, false = must NOT exist
       weight: 0.2
 
     # --- ENUM TYPE ---
@@ -115,7 +114,7 @@ quality_gate:
     - check: "{Description of enum validation}"
       type: "enum"
       field: "{field_name}"
-      allowed_values: # List of valid values
+      allowed_values:                  # List of valid values
         - "APPROVED"
         - "REVIEWED"
         - "VALIDATED"
@@ -126,8 +125,8 @@ quality_gate:
     - check: "{Description of count check}"
       type: "count"
       field: "{array_or_collection}"
-      min_count: 1 # Minimum items required
-      max_count: null # Maximum items allowed (null = unlimited)
+      min_count: 1                     # Minimum items required
+      max_count: null                  # Maximum items allowed (null = unlimited)
       weight: 0.2
 
   # ---------------------------------------------------------------------------
@@ -270,9 +269,9 @@ quality_gate:
   # Other gates or tasks that must complete before this gate runs
 
   dependencies:
-    gates: [] # Other gates that must pass first
-    tasks: [] # Tasks that must complete first
-    artifacts: [] # Artifacts that must exist
+    gates: []                          # Other gates that must pass first
+    tasks: []                          # Tasks that must complete first
+    artifacts: []                      # Artifacts that must exist
 
   # ---------------------------------------------------------------------------
   # Optional: Metadata
@@ -283,7 +282,7 @@ quality_gate:
     created_by: "{author}"
     last_modified: "{modification_date}"
     pattern_compliance:
-      - "HO-PP-003" # Quality Gate Pattern
+      - "HO-PP-003"                    # Quality Gate Pattern
     tags:
       - "{tag1}"
       - "{tag2}"
@@ -293,6 +292,7 @@ quality_gate:
 # =============================================================================
 
 _examples:
+
   # ---------------------------------------------------------------------------
   # Example 1: MANUAL Gate
   # ---------------------------------------------------------------------------
@@ -321,14 +321,14 @@ _examples:
         weight: 0.5
 
     thresholds:
-      pass: 1.0 # Both criteria must pass
+      pass: 1.0                        # Both criteria must pass
       review: 0.5
       fail: 0.5
 
     executor:
       type: "manual"
       human_review: "Product Owner"
-      timeout_minutes: 1440 # 24 hours
+      timeout_minutes: 1440            # 24 hours
 
     pass_action:
       - "Status -> Approved for Production"
@@ -523,6 +523,7 @@ _examples:
 # =============================================================================
 
 _criteria_reference:
+
   threshold:
     description: "Numeric comparison against a target value"
     fields:

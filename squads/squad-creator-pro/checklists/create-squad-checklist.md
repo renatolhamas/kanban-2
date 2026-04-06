@@ -118,17 +118,7 @@ creation_checks:
   - id: directory-structure
     check: "All required directories created"
     type: blocking
-    directories:
-      [
-        "agents/",
-        "tasks/",
-        "workflows/",
-        "templates/",
-        "checklists/",
-        "data/",
-        "docs/",
-        "outputs/",
-      ]
+    directories: ["agents/", "tasks/", "workflows/", "templates/", "checklists/", "data/", "docs/", "outputs/"]
 
   - id: outputs-bootstrap
     check: "outputs/ contains bootstrap artifact for runtime evidence"
@@ -216,11 +206,11 @@ final_metrics:
 
 ## Scoring
 
-| Score         | Result      | Action                              |
-| ------------- | ----------- | ----------------------------------- |
-| 100% Blocking | PASS        | Squad ready for use                 |
+| Score | Result | Action |
+|-------|--------|--------|
+| 100% Blocking | PASS | Squad ready for use |
 | 90%+ Blocking | CONDITIONAL | Document gaps, usable with warnings |
-| <90% Blocking | FAIL        | Fix issues before handoff           |
+| <90% Blocking | FAIL | Fix issues before handoff |
 
 ---
 

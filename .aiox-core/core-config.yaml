@@ -1,7 +1,7 @@
 markdownExploder: true
 project:
   type: brownfield
-  installedAt: "2026-04-02T10:24:35.693Z"
+  installedAt: '2026-04-06T11:27:32.266Z'
   version: 2.1.0
 user_profile: bob
 ide:
@@ -9,14 +9,13 @@ ide:
     - claude-code
     - codex
     - gemini
-    - cursor
     - github-copilot
     - antigravity
   configs:
     vscode: false
     codex: true
     gemini: true
-    cursor: true
+    cursor: false
     github-copilot: true
     antigravity: true
     zed: false
@@ -28,8 +27,6 @@ mcp:
   servers: []
 qa:
   qaLocation: docs/qa
-  fixRequestLocation: docs/fix_request
-  fixRequestNaming: "QA-FIX_REQUEST-{YYYY-MM-DD}_{story-identifier}.md"
 prd:
   prdFile: docs/prd.md
   prdVersion: v4

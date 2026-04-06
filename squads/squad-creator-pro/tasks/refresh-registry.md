@@ -9,7 +9,6 @@
 **Worker Script:** `scripts/refresh-registry.py`
 
 **Architecture:**
-
 ```
 DETERMINISTIC (Python Script)          LLM (Semantic Understanding)
 ├── Count agents, tasks, etc.          ├── Infer domain category
@@ -26,7 +25,6 @@ DETERMINISTIC (Python Script)          LLM (Semantic Understanding)
 ## Overview
 
 This task uses a hybrid approach:
-
 1. **Python script** handles all deterministic operations (counts, file reads)
 2. **LLM** handles semantic understanding (keywords, domain inference)
 
@@ -62,22 +60,19 @@ OUTPUT: Updated squad-registry.yaml
 ## Triggers (Hooks)
 
 ### 1. Manual Command
-
 ```bash
 *refresh-registry
 ```
 
 ### 2. On Squad-Creator Activation (Optional)
-
 ```yaml
 # In squad-chief.md activation-instructions
 auto_refresh:
-  enabled: false # Set to true for auto-refresh
+  enabled: false  # Set to true for auto-refresh
   condition: "registry older than 24 hours"
 ```
 
 ### 3. After Creating New Squad
-
 ```yaml
 # Automatic trigger after *create-squad completes
 post_create_hook:
@@ -86,7 +81,6 @@ post_create_hook:
 ```
 
 ### 4. Pre-Commit Hook (Recommended)
-
 ```bash
 # .claude/hooks/refresh-registry.sh
 # Trigger: Changes to squads/*/config.yaml
@@ -102,11 +96,11 @@ fi
 
 ## Inputs
 
-| Parameter         | Type    | Required | Default   | Description                               |
-| ----------------- | ------- | -------- | --------- | ----------------------------------------- |
-| `squads_path`     | string  | No       | `squads/` | Base path to scan                         |
-| `preserve_manual` | boolean | No       | `true`    | Keep manual highlights, quality_reference |
-| `update_gaps`     | boolean | No       | `false`   | Re-analyze gaps (slower)                  |
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `squads_path` | string | No | `squads/` | Base path to scan |
+| `preserve_manual` | boolean | No | `true` | Keep manual highlights, quality_reference |
+| `update_gaps` | boolean | No | `false` | Re-analyze gaps (slower) |
 
 ---
 
@@ -120,7 +114,6 @@ python3 squads/squad-creator-pro/scripts/refresh-registry.py --output json --reg
 ```
 
 **Script Output:**
-
 ```json
 {
   "metadata": {
@@ -156,7 +149,6 @@ python3 squads/squad-creator-pro/scripts/refresh-registry.py --output json --reg
 ```
 
 **What Script Does (Deterministic):**
-
 - Scans `squads/` directory
 - Reads each `config.yaml`
 - Counts files in each subdirectory
@@ -165,7 +157,6 @@ python3 squads/squad-creator-pro/scripts/refresh-registry.py --output json --reg
 - Validates YAML syntax
 
 **What Script Does NOT Do:**
-
 - Infer domain category
 - Extract keywords
 - Generate highlights
@@ -233,9 +224,9 @@ build_entry:
       example_use: "{generated_example}"
 
   preserve_if_exists:
-    - highlights # Keep manual annotations
+    - highlights  # Keep manual annotations
     - quality_reference
-    - example_use # Keep if manually set
+    - example_use  # Keep if manually set
 ```
 
 ### Step 4: Update Domain Index
@@ -363,7 +354,7 @@ post_command_hooks:
   "*create-squad":
     on_success:
       - task: "refresh-registry"
-        silent: true # Don't show output unless error
+        silent: true  # Don't show output unless error
 ```
 
 ---
@@ -371,20 +362,17 @@ post_command_hooks:
 ## Usage Examples
 
 ### Manual Refresh
-
 ```bash
 @squad-chief
 *refresh-registry
 ```
 
 ### Refresh with Gap Analysis
-
 ```bash
 *refresh-registry --update-gaps
 ```
 
 ### Check Registry Status
-
 ```bash
 *show-registry
 # Shows current registry contents

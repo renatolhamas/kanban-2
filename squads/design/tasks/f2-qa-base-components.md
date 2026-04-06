@@ -72,22 +72,22 @@ Validar que todos os componentes base adaptados estao corretos: renderizam sem e
 
 ## Componentes a Validar
 
-| Componente | Arquivo                    | Status |
-| ---------- | -------------------------- | ------ |
-| Button     | `components/ui/button.tsx` | [ ]    |
-| Input      | `components/ui/input.tsx`  | [ ]    |
-| Badge      | `components/ui/badge.tsx`  | [ ]    |
-| Card       | `components/ui/card.tsx`   | [ ]    |
-| Alert      | `components/ui/alert.tsx`  | [ ]    |
-| Dialog     | `components/ui/dialog.tsx` | [ ]    |
+| Componente | Arquivo | Status |
+|---|---|---|
+| Button | `components/ui/button.tsx` | [ ] |
+| Input | `components/ui/input.tsx` | [ ] |
+| Badge | `components/ui/badge.tsx` | [ ] |
+| Card | `components/ui/card.tsx` | [ ] |
+| Alert | `components/ui/alert.tsx` | [ ] |
+| Dialog | `components/ui/dialog.tsx` | [ ] |
 
 ## Verdicts
 
-| Verdict                  | Condicao                                                | Acao                                     |
-| ------------------------ | ------------------------------------------------------- | ---------------------------------------- |
-| **PASS**                 | Todos os checks ok para todos os componentes            | Prosseguir para Phase 3                  |
-| **PASS com observacoes** | Checks criticos ok, minor visual diffs                  | Documentar e prosseguir                  |
-| **FAIL**                 | API quebrada, acessibilidade comprometida, render error | Retornar para f2-adapt-shadcn-components |
+| Verdict | Condicao | Acao |
+|---------|----------|------|
+| **PASS** | Todos os checks ok para todos os componentes | Prosseguir para Phase 3 |
+| **PASS com observacoes** | Checks criticos ok, minor visual diffs | Documentar e prosseguir |
+| **FAIL** | API quebrada, acessibilidade comprometida, render error | Retornar para f2-adapt-shadcn-components |
 
 ## Output
 

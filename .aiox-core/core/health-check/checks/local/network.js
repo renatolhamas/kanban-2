@@ -8,16 +8,16 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const https = require("https");
-const dns = require("dns").promises;
-const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
+const https = require('https');
+const dns = require('dns').promises;
+const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 
 /**
  * Endpoints to check
  */
 const ENDPOINTS = [
-  { name: "npm Registry", host: "registry.npmjs.org", path: "/" },
-  { name: "GitHub", host: "github.com", path: "/" },
+  { name: 'npm Registry', host: 'registry.npmjs.org', path: '/' },
+  { name: 'GitHub', host: 'github.com', path: '/' },
 ];
 
 /**
@@ -29,15 +29,15 @@ const ENDPOINTS = [
 class NetworkCheck extends BaseCheck {
   constructor() {
     super({
-      id: "local.network",
-      name: "Network Connectivity",
-      description: "Verifies network connectivity for development tools",
+      id: 'local.network',
+      name: 'Network Connectivity',
+      description: 'Verifies network connectivity for development tools',
       domain: CheckDomain.LOCAL,
       severity: CheckSeverity.HIGH,
       timeout: 10000,
       cacheable: false, // Don't cache - network can change
       healingTier: 3, // Manual - network issues
-      tags: ["network", "connectivity"],
+      tags: ['network', 'connectivity'],
     });
   }
 
@@ -52,30 +52,27 @@ class NetworkCheck extends BaseCheck {
 
     // Check DNS first
     try {
-      await dns.lookup("github.com");
-      results.push({ name: "DNS", status: "ok" });
+      await dns.lookup('github.com');
+      results.push({ name: 'DNS', status: 'ok' });
     } catch {
-      failures.push("DNS resolution");
-      results.push({ name: "DNS", status: "failed" });
+      failures.push('DNS resolution');
+      results.push({ name: 'DNS', status: 'failed' });
     }
 
     // Check each endpoint
     for (const endpoint of ENDPOINTS) {
       try {
-        const responseTime = await this.checkEndpoint(
-          endpoint.host,
-          endpoint.path,
-        );
+        const responseTime = await this.checkEndpoint(endpoint.host, endpoint.path);
         results.push({
           name: endpoint.name,
-          status: "ok",
+          status: 'ok',
           responseTime: `${responseTime}ms`,
         });
       } catch (error) {
         failures.push(endpoint.name);
         results.push({
           name: endpoint.name,
-          status: "failed",
+          status: 'failed',
           error: error.message,
         });
       }
@@ -85,8 +82,8 @@ class NetworkCheck extends BaseCheck {
 
     // All failed - critical
     if (failures.length === ENDPOINTS.length + 1) {
-      return this.fail("No network connectivity detected", {
-        recommendation: "Check your internet connection",
+      return this.fail('No network connectivity detected', {
+        recommendation: 'Check your internet connection',
         healable: false,
         healingTier: 3,
         details,
@@ -95,16 +92,13 @@ class NetworkCheck extends BaseCheck {
 
     // Some failed - warning
     if (failures.length > 0) {
-      return this.warning(
-        `Some network services unreachable: ${failures.join(", ")}`,
-        {
-          recommendation: "Check firewall settings or try again later",
-          details,
-        },
-      );
+      return this.warning(`Some network services unreachable: ${failures.join(', ')}`, {
+        recommendation: 'Check firewall settings or try again later',
+        details,
+      });
     }
 
-    return this.pass("Network connectivity OK", { details });
+    return this.pass('Network connectivity OK', { details });
   }
 
   /**
@@ -122,7 +116,7 @@ class NetworkCheck extends BaseCheck {
         {
           host,
           path: urlPath,
-          method: "HEAD",
+          method: 'HEAD',
           timeout: 5000,
         },
         (res) => {
@@ -136,13 +130,13 @@ class NetworkCheck extends BaseCheck {
         },
       );
 
-      req.on("error", (error) => {
+      req.on('error', (error) => {
         reject(error);
       });
 
-      req.on("timeout", () => {
+      req.on('timeout', () => {
         req.destroy();
-        reject(new Error("Timeout"));
+        reject(new Error('Timeout'));
       });
 
       req.end();
@@ -154,19 +148,19 @@ class NetworkCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: "network-troubleshoot-guide",
-      action: "manual",
-      manualGuide: "Troubleshoot network connectivity",
+      name: 'network-troubleshoot-guide',
+      action: 'manual',
+      manualGuide: 'Troubleshoot network connectivity',
       steps: [
-        "Check if you have internet access",
-        "Try pinging github.com or google.com",
-        "Check your firewall settings",
-        "Verify proxy settings if behind a corporate proxy",
-        "Try a different network (mobile hotspot)",
-        "Contact your network administrator if issues persist",
+        'Check if you have internet access',
+        'Try pinging github.com or google.com',
+        'Check your firewall settings',
+        'Verify proxy settings if behind a corporate proxy',
+        'Try a different network (mobile hotspot)',
+        'Contact your network administrator if issues persist',
       ],
       documentation:
-        "https://docs.github.com/en/authentication/troubleshooting-ssh/error-permission-denied-publickey",
+        'https://docs.github.com/en/authentication/troubleshooting-ssh/error-permission-denied-publickey',
     };
   }
 }

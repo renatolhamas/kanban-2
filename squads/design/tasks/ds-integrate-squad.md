@@ -39,7 +39,7 @@ Connect design system with MMOS, CreatorOS, or InnerLens expansion packs. Genera
 ## Failure Handling
 
 - **Target pack not found in expected location:** If MMOS/CreatorOS/InnerLens directory does not exist at standard paths, prompt user for custom pack location or exit with "Pack not found — verify pack is installed and provide path"
-- **Pack-specific token variations conflict with base tokens:** If personality/theme tokens (e.g., MMOS formal mode) override base system tokens causing visual inconsistency, namespace the pack tokens (e.g., mmos-formal-\*) and document in integration guide
+- **Pack-specific token variations conflict with base tokens:** If personality/theme tokens (e.g., MMOS formal mode) override base system tokens causing visual inconsistency, namespace the pack tokens (e.g., mmos-formal-*) and document in integration guide
 - **Pack imports fail due to missing dependencies:** If pack requires DS components not yet built (e.g., CreatorOS needs VideoPlayer but DS has no media components), generate placeholder component stubs and note "Stubs created for: {list} — implement full components before production"
 - **Integration test suite fails in pack context:** If DS components render incorrectly or error when imported by pack (e.g., missing context provider, broken prop types), isolate failing components, document integration requirements, and suggest pack-specific wrapper pattern
 
@@ -120,11 +120,11 @@ Connect design system with MMOS, CreatorOS, or InnerLens expansion packs. Genera
 - Integration is bidirectional (pack ↔ design system)
 - Document in pack's README
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

@@ -40,7 +40,7 @@ Generate comprehensive pattern library documentation from built components. Crea
 
 ## Failure Handling
 
-- **No components found:** If scan finds zero component files in design-system directory, abort with "No components found. Run \*build to create components before generating documentation."
+- **No components found:** If scan finds zero component files in design-system directory, abort with "No components found. Run *build to create components before generating documentation."
 - **Component metadata extraction failed:** If TypeScript parser fails to extract prop types from component file, abort with "Cannot parse {ComponentName}.tsx: {error}. Ensure valid TypeScript and exported interfaces."
 - **Missing component documentation files:** If component exists but {ComponentName}.md does not exist or is empty, warn user "{N} components missing .md files. Generate basic docs or skip incomplete components?"
 - **Broken usage examples:** If code snippets in generated documentation contain syntax errors or reference non-existent props, abort with "{N} documentation examples have errors: {list}. Fix component APIs or example code before publishing docs."
@@ -61,7 +61,6 @@ Generate comprehensive pattern library documentation from built components. Crea
 ```
 
 Output:
-
 ```
 📚 Merovingian: Generating pattern library documentation...
 
@@ -92,11 +91,11 @@ Merovingian says: "Documentation is code. Keep it fresh."
 - Includes live Storybook links (if enabled)
 - Searchable by component name, prop, or token
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

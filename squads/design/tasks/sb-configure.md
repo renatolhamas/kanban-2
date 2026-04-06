@@ -7,16 +7,16 @@
 
 ## Task Anatomy
 
-| Field                    | Value                                                                |
-| ------------------------ | -------------------------------------------------------------------- |
-| **task_name**            | Configure Storybook                                                  |
-| **status**               | `pending`                                                            |
-| **responsible_executor** | @storybook-expert                                                    |
-| **execution_type**       | `Agent`                                                              |
-| **input**                | Installed packages, project structure, CSS framework, theme strategy |
-| **output**               | `.storybook/main.ts`, `.storybook/preview.ts`, `.gitignore` updated  |
-| **action_items**         | 6 steps                                                              |
-| **acceptance_criteria**  | 5 criteria                                                           |
+| Field | Value |
+|-------|-------|
+| **task_name** | Configure Storybook |
+| **status** | `pending` |
+| **responsible_executor** | @storybook-expert |
+| **execution_type** | `Agent` |
+| **input** | Installed packages, project structure, CSS framework, theme strategy |
+| **output** | `.storybook/main.ts`, `.storybook/preview.ts`, `.gitignore` updated |
+| **action_items** | 6 steps |
+| **acceptance_criteria** | 5 criteria |
 
 ## Overview
 
@@ -93,14 +93,13 @@ const config: StorybookConfig = {
     "@chromatic-com/storybook",
   ],
   framework: "{framework_adapter}",
-  staticDirs: { static_dirs },
+  staticDirs: {static_dirs},
 };
 
 export default config;
 ```
 
 **Notes:**
-
 - Path aliases from tsconfig.json are resolved automatically by the Vite-based frameworks
 - PostCSS config is auto-detected by Vite — no manual config needed
 - Do NOT add `webpackFinal` or `viteFinal` unless custom resolution is required
@@ -114,15 +113,14 @@ import "{global_css_path}";
 
 **Theme configuration based on strategy:**
 
-| Strategy         | Decorator                  | Import                    |
-| ---------------- | -------------------------- | ------------------------- |
-| `class`          | `withThemeByClassName`     | `@storybook/addon-themes` |
+| Strategy | Decorator | Import |
+|----------|-----------|--------|
+| `class` | `withThemeByClassName` | `@storybook/addon-themes` |
 | `data-attribute` | `withThemeByDataAttribute` | `@storybook/addon-themes` |
-| `media-query`    | None (CSS handles it)      | —                         |
-| `none`           | None                       | —                         |
+| `media-query` | None (CSS handles it) | — |
+| `none` | None | — |
 
 **For `class` strategy (most common with Tailwind):**
-
 ```typescript
 import { withThemeByClassName } from "@storybook/addon-themes";
 
@@ -155,9 +153,8 @@ Append `storybook-static` to `.gitignore` if not already present.
 ### Step 5: Update ESLint Config (if applicable)
 
 If project uses `eslint.config.mjs` (flat config), add `storybook-static/**` to `globalIgnores`:
-
 ```javascript
-globalIgnores: ["storybook-static/**"];
+globalIgnores: ["storybook-static/**"]
 ```
 
 If project uses `.eslintignore`, append `storybook-static`.
@@ -179,21 +176,18 @@ If project uses `.eslintignore`, append `storybook-static`.
 ## Error Handling
 
 ### CSS Not Loading
-
 - **Trigger:** Components render without styles in Storybook
 - **Detection:** Visual — no colors, fonts missing, layout broken
 - **Recovery:** Verify global CSS import path. For Tailwind v4, ensure PostCSS config exists. Check that `@theme` block (Tailwind v4) or `@tailwind` directives (v3) are in the CSS file.
 - **Prevention:** Step 1 detection verifies CSS path existence
 
 ### Path Aliases Not Resolving
-
 - **Trigger:** `Cannot find module '@/...'` errors
 - **Detection:** Build error in Storybook console
 - **Recovery:** For Vite-based frameworks, path aliases from tsconfig.json should auto-resolve. If not, add `viteFinal` with alias config in main.ts.
 - **Prevention:** Verify tsconfig.json has `paths` configured before proceeding
 
 ### Fonts Not Loading
-
 - **Trigger:** Fallback system fonts render instead of project fonts
 - **Detection:** Visual inspection in Storybook
 - **Recovery:** Check if fonts are loaded via CSS (@font-face) or Next.js font system. For Next.js fonts, they may need manual CSS override in preview since next/font doesnt work in Storybook context.
@@ -215,11 +209,11 @@ If project uses `.eslintignore`, append `storybook-static`.
 
 ## Handoff
 
-| Attribute     | Value                       |
-| ------------- | --------------------------- |
-| **Next Task** | `sb-expand-shadcn`          |
-| **Trigger**   | All acceptance criteria met |
-| **Executor**  | @storybook-expert           |
+| Attribute | Value |
+|-----------|-------|
+| **Next Task** | `sb-expand-shadcn` |
+| **Trigger** | All acceptance criteria met |
+| **Executor** | @storybook-expert |
 
 ### Handoff Package
 

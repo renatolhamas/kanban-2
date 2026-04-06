@@ -85,12 +85,12 @@ FALLBACK: LOOP back to weakest step until all criteria pass
 
 ## Evaluation Criteria
 
-| Criterion                   | Weight | Threshold | Description                   |
-| --------------------------- | ------ | --------- | ----------------------------- |
-| Source quality (ouro ratio) | 0.9    | >= 0.6    | Fontes ouro / total fontes    |
-| Citation coverage           | 0.8    | >= 15     | Citações com [SOURCE:]        |
-| Trinity completeness        | 0.7    | 3/3       | Playbook + Framework + Swipe  |
-| Signature phrases           | 0.6    | >= 5      | Frases verificáveis do expert |
+| Criterion | Weight | Threshold | Description |
+|-----------|--------|-----------|-------------|
+| Source quality (ouro ratio) | 0.9 | >= 0.6 | Fontes ouro / total fontes |
+| Citation coverage | 0.8 | >= 15 | Citações com [SOURCE:] |
+| Trinity completeness | 0.7 | 3/3 | Playbook + Framework + Swipe |
+| Signature phrases | 0.6 | >= 5 | Frases verificáveis do expert |
 
 ## Validation Questions
 
@@ -113,7 +113,6 @@ performance:
 ## Failure Modes
 
 ### Volume Over Curation
-
 - **Trigger:** Pressão por entregas rápidas, muitas fontes disponíveis
 - **Manifestation:** 30h de áudio sem classificação = clone genérico
 - **Detection:** Clone responses são genéricas, sem signature phrases
@@ -121,7 +120,6 @@ performance:
 - **Prevention:** Veto condition AN_VC_001 bloqueia volume sem curadoria
 
 ### Inference Without Source
-
 - **Trigger:** Conceito parece óbvio, "todo mundo sabe"
 - **Manifestation:** Clone fala coisas que expert nunca disse
 - **Detection:** Buscar citação, não encontrar [SOURCE:]

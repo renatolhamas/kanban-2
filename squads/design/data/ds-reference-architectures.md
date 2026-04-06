@@ -66,28 +66,28 @@
 
 ## Comparison Matrix
 
-| Dimension           | Material 3                     | Fluent 2                       | Carbon           | Spectrum                  |
-| ------------------- | ------------------------------ | ------------------------------ | ---------------- | ------------------------- |
-| **Token approach**  | Tonal palettes + semantic      | 3-layer global/alias/component | Granular 1,500+  | Scale/locale-aware        |
-| **Component model** | Customizable theme             | Compound/slots                 | Enterprise forms | Hooks + styled            |
-| **A11y strategy**   | Palette contrast               | Built-in ARIA + Tabster        | IBM Equal Access | React The Architect hooks |
-| **Governance**      | Centralized (Google)           | Centralized (Microsoft)        | Federated        | Centralized (Adobe)       |
-| **Cross-platform**  | MDC-Web, Android, iOS, Flutter | Web, iOS, Android, Windows     | Web primary      | Web primary               |
-| **Token format**    | Custom JSON                    | Custom JSON                    | Sass → tokens    | Custom JSON               |
-| **DTCG adoption**   | Partial                        | Partial                        | Migrating        | Partial                   |
-| **Open source**     | Yes (MDC)                      | Yes (@fluentui)                | Yes (carbon)     | Yes (react-aria)          |
+| Dimension | Material 3 | Fluent 2 | Carbon | Spectrum |
+|-----------|-----------|----------|--------|----------|
+| **Token approach** | Tonal palettes + semantic | 3-layer global/alias/component | Granular 1,500+ | Scale/locale-aware |
+| **Component model** | Customizable theme | Compound/slots | Enterprise forms | Hooks + styled |
+| **A11y strategy** | Palette contrast | Built-in ARIA + Tabster | IBM Equal Access | React The Architect hooks |
+| **Governance** | Centralized (Google) | Centralized (Microsoft) | Federated | Centralized (Adobe) |
+| **Cross-platform** | MDC-Web, Android, iOS, Flutter | Web, iOS, Android, Windows | Web primary | Web primary |
+| **Token format** | Custom JSON | Custom JSON | Sass → tokens | Custom JSON |
+| **DTCG adoption** | Partial | Partial | Migrating | Partial |
+| **Open source** | Yes (MDC) | Yes (@fluentui) | Yes (carbon) | Yes (react-aria) |
 
 ---
 
 ## When to Reference Each
 
-| Scenario                            | Reference                      |
-| ----------------------------------- | ------------------------------ |
-| Consumer app needing personality    | Material 3                     |
-| Enterprise productivity tool        | Fluent 2                       |
-| Complex data-heavy enterprise       | Carbon                         |
+| Scenario | Reference |
+|----------|-----------|
+| Consumer app needing personality | Material 3 |
+| Enterprise productivity tool | Fluent 2 |
+| Complex data-heavy enterprise | Carbon |
 | Custom-styled accessible components | Spectrum (React The Architect) |
-| Cross-platform native feel          | Fluent 2                       |
-| Design token best practices         | Carbon (granularity)           |
-| Accessible hooks without styling    | Spectrum (React The Architect) |
-| Dynamic theming/personalization     | Material 3                     |
+| Cross-platform native feel | Fluent 2 |
+| Design token best practices | Carbon (granularity) |
+| Accessible hooks without styling | Spectrum (React The Architect) |
+| Dynamic theming/personalization | Material 3 |

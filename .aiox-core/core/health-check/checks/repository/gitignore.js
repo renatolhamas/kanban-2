@@ -8,25 +8,19 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
+const fs = require('fs').promises;
+const path = require('path');
+const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 
 /**
  * Required gitignore patterns
  */
-const REQUIRED_PATTERNS = ["node_modules", ".env"];
+const REQUIRED_PATTERNS = ['node_modules', '.env'];
 
 /**
  * Recommended patterns
  */
-const RECOMMENDED_PATTERNS = [
-  ".env.local",
-  ".DS_Store",
-  "*.log",
-  "dist",
-  "coverage",
-];
+const RECOMMENDED_PATTERNS = ['.env.local', '.DS_Store', '*.log', 'dist', 'coverage'];
 
 /**
  * Gitignore check
@@ -37,15 +31,15 @@ const RECOMMENDED_PATTERNS = [
 class GitignoreCheck extends BaseCheck {
   constructor() {
     super({
-      id: "repository.gitignore",
-      name: "Gitignore Configuration",
-      description: "Verifies .gitignore has required patterns",
+      id: 'repository.gitignore',
+      name: 'Gitignore Configuration',
+      description: 'Verifies .gitignore has required patterns',
       domain: CheckDomain.REPOSITORY,
       severity: CheckSeverity.MEDIUM,
       timeout: 2000,
       cacheable: true,
       healingTier: 1, // Can auto-add missing patterns
-      tags: ["git", "gitignore", "security"],
+      tags: ['git', 'gitignore', 'security'],
     });
   }
 
@@ -56,16 +50,16 @@ class GitignoreCheck extends BaseCheck {
    */
   async execute(context) {
     const projectRoot = context.projectRoot || process.cwd();
-    const gitignorePath = path.join(projectRoot, ".gitignore");
+    const gitignorePath = path.join(projectRoot, '.gitignore');
 
     try {
       let content;
       try {
-        content = await fs.readFile(gitignorePath, "utf8");
+        content = await fs.readFile(gitignorePath, 'utf8');
       } catch (error) {
-        if (error.code === "ENOENT") {
-          return this.fail(".gitignore not found", {
-            recommendation: "Create a .gitignore file with standard patterns",
+        if (error.code === 'ENOENT') {
+          return this.fail('.gitignore not found', {
+            recommendation: 'Create a .gitignore file with standard patterns',
             healable: true,
             healingTier: 1,
           });
@@ -74,9 +68,9 @@ class GitignoreCheck extends BaseCheck {
       }
 
       const lines = content
-        .split("\n")
+        .split('\n')
         .map((l) => l.trim())
-        .filter((l) => l && !l.startsWith("#"));
+        .filter((l) => l && !l.startsWith('#'));
       const patterns = new Set(lines);
 
       const missingRequired = [];
@@ -104,24 +98,20 @@ class GitignoreCheck extends BaseCheck {
 
       // Missing required is a failure
       if (missingRequired.length > 0) {
-        return this.fail(
-          `Missing required gitignore patterns: ${missingRequired.join(", ")}`,
-          {
-            recommendation: `Add missing patterns to .gitignore: ${missingRequired.join(", ")}`,
-            healable: true,
-            healingTier: 1,
-            details,
-          },
-        );
+        return this.fail(`Missing required gitignore patterns: ${missingRequired.join(', ')}`, {
+          recommendation: `Add missing patterns to .gitignore: ${missingRequired.join(', ')}`,
+          healable: true,
+          healingTier: 1,
+          details,
+        });
       }
 
       // Missing recommended is a warning
       if (missingRecommended.length > 0) {
         return this.warning(
-          `Missing recommended gitignore patterns: ${missingRecommended.join(", ")}`,
+          `Missing recommended gitignore patterns: ${missingRecommended.join(', ')}`,
           {
-            recommendation:
-              "Consider adding recommended patterns to .gitignore",
+            recommendation: 'Consider adding recommended patterns to .gitignore',
             healable: true,
             healingTier: 1,
             details,
@@ -164,17 +154,17 @@ class GitignoreCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: "add-gitignore-patterns",
-      action: "update-gitignore",
-      successMessage: "Added missing patterns to .gitignore",
-      targetFile: ".gitignore",
+      name: 'add-gitignore-patterns',
+      action: 'update-gitignore',
+      successMessage: 'Added missing patterns to .gitignore',
+      targetFile: '.gitignore',
       fix: async (_result) => {
         const projectRoot = process.cwd();
-        const gitignorePath = path.join(projectRoot, ".gitignore");
+        const gitignorePath = path.join(projectRoot, '.gitignore');
 
-        let content = "";
+        let content = '';
         try {
-          content = await fs.readFile(gitignorePath, "utf8");
+          content = await fs.readFile(gitignorePath, 'utf8');
         } catch {
           // File doesn't exist
         }
@@ -185,10 +175,10 @@ class GitignoreCheck extends BaseCheck {
         if (toAdd.length > 0) {
           const newContent =
             content +
-            (content.endsWith("\n") ? "" : "\n") +
-            "# Added by AIOX Health Check\n" +
-            toAdd.join("\n") +
-            "\n";
+            (content.endsWith('\n') ? '' : '\n') +
+            '# Added by AIOX Health Check\n' +
+            toAdd.join('\n') +
+            '\n';
 
           await fs.writeFile(gitignorePath, newContent);
         }

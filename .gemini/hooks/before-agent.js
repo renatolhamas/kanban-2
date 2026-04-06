@@ -7,14 +7,14 @@
  * Output must be valid JSON to stdout.
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 async function beforeAgent() {
   const projectDir = process.env.GEMINI_PROJECT_DIR || process.cwd();
 
   const result = {
-    status: "success",
+    status: 'success',
     contextInjection: {
       gotchas: [],
       patterns: [],
@@ -24,9 +24,9 @@ async function beforeAgent() {
 
   // Load gotchas
   try {
-    const gotchasPath = path.join(projectDir, ".aiox", "gotchas.json");
+    const gotchasPath = path.join(projectDir, '.aiox', 'gotchas.json');
     if (fs.existsSync(gotchasPath)) {
-      const gotchas = JSON.parse(fs.readFileSync(gotchasPath, "utf8"));
+      const gotchas = JSON.parse(fs.readFileSync(gotchasPath, 'utf8'));
       result.contextInjection.gotchas = gotchas.slice(0, 5); // Top 5 recent
     }
   } catch (error) {
@@ -35,9 +35,9 @@ async function beforeAgent() {
 
   // Load patterns from codebase map
   try {
-    const codebaseMapPath = path.join(projectDir, ".aiox", "codebase-map.json");
+    const codebaseMapPath = path.join(projectDir, '.aiox', 'codebase-map.json');
     if (fs.existsSync(codebaseMapPath)) {
-      const map = JSON.parse(fs.readFileSync(codebaseMapPath, "utf8"));
+      const map = JSON.parse(fs.readFileSync(codebaseMapPath, 'utf8'));
       if (map.patterns) {
         result.contextInjection.patterns = map.patterns.slice(0, 5);
       }
@@ -51,17 +51,13 @@ async function beforeAgent() {
 
   // Load CLAUDE.md conventions (works for both CLIs)
   try {
-    const claudeMdPath = path.join(projectDir, ".claude", "CLAUDE.md");
+    const claudeMdPath = path.join(projectDir, '.claude', 'CLAUDE.md');
     if (fs.existsSync(claudeMdPath)) {
-      const content = fs.readFileSync(claudeMdPath, "utf8");
+      const content = fs.readFileSync(claudeMdPath, 'utf8');
       // Extract key sections
-      const importConventions = content.match(
-        /## (?:Code Standards|Conventions)([\s\S]*?)(?=##|$)/i,
-      );
+      const importConventions = content.match(/## (?:Code Standards|Conventions)([\s\S]*?)(?=##|$)/i);
       if (importConventions) {
-        result.contextInjection.projectConventions = importConventions[1]
-          .trim()
-          .slice(0, 500);
+        result.contextInjection.projectConventions = importConventions[1].trim().slice(0, 500);
       }
     }
   } catch (error) {
@@ -78,6 +74,6 @@ beforeAgent()
     process.exit(0);
   })
   .catch((error) => {
-    console.log(JSON.stringify({ status: "error", error: error.message }));
+    console.log(JSON.stringify({ status: 'error', error: error.message }));
     process.exit(0);
   });

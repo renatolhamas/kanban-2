@@ -17,7 +17,7 @@
 version: 1.0.0
 
 metadata:
-  lastUpdated: "2026-02-23"
+  lastUpdated: '2026-02-23'
   story: TOK-4B
   adrs: [ADR-4, ADR-5]
   limits:

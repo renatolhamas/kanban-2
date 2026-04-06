@@ -24,12 +24,10 @@ This task creates clear boundaries for tokens, primitives, patterns, and product
 ## Workflow
 
 1. **Map Current State**
-
 - Inventory token files, component files, and style utilities.
 - Classify by role: token source, primitive, product UI.
 
 2. **Create Target Workspace Structure**
-
 - `workspace/domains/design-system/tokens/primitives`
 - `workspace/domains/design-system/tokens/semantic`
 - `workspace/domains/design-system/tokens/component`
@@ -41,13 +39,11 @@ This task creates clear boundaries for tokens, primitives, patterns, and product
 - `workspace/ui/blocks`
 
 3. **Define Ownership Boundaries**
-
 - `domains/design-system`: token truth and themes.
 - `system`: reusable Radix/Shadcn primitives and patterns.
 - `ui`: app-facing composed components and blocks.
 
 4. **Wire Configuration**
-
 - Add mapping files under `config/mappings/`:
   - `colors.json`
   - `spacing.json`
@@ -55,19 +51,16 @@ This task creates clear boundaries for tokens, primitives, patterns, and product
 - Ensure mappings are generated from tokens, not hardcoded.
 
 5. **Integrate with Registry Flow**
-
 - Place `registry.json` in `workspace/ui/`.
 - Ensure component metadata references source paths and dependencies.
 
 6. **Validation**
-
 - Verify no circular dependencies between `domains`, `system`, and `ui`.
 - Verify component imports only flow upward:
   - `domains` -> `system` -> `ui`
 - Validate with lint, typecheck, and tests.
 
 7. **Documentation**
-
 - Generate migration notes:
   - old path -> new path
   - rollback plan
@@ -95,13 +88,13 @@ This task creates clear boundaries for tokens, primitives, patterns, and product
 - Keep token names stable to avoid migration churn.
 - Treat workspace topology as architecture, not temporary structure.
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

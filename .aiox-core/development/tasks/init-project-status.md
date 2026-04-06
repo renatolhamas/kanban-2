@@ -12,19 +12,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -165,7 +162,6 @@ token_usage: ~500-1,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Minimize external dependencies; cache results if reusable; validate inputs early
 
 ---
@@ -184,6 +180,7 @@ updated_at: 2025-11-17
 ```
 
 ---
+
 
 ## Description
 
@@ -218,7 +215,6 @@ git rev-parse --is-inside-work-tree 2>/dev/null
 ```
 
 **Exit Condition:** If not a git repo, display message and exit gracefully:
-
 ```
 ⚠️  Project status feature requires a git repository.
     Initialize git first: git init
@@ -231,14 +227,12 @@ git rev-parse --is-inside-work-tree 2>/dev/null
 **Action:** Read `.aiox-core/core-config.yaml` and check `projectStatus.enabled`
 
 **Logic:**
-
 ```javascript
-const config = yaml.load(fs.readFileSync(".aiox-core/core-config.yaml"));
+const config = yaml.load(fs.readFileSync('.aiox-core/core-config.yaml'));
 const isEnabled = config?.projectStatus?.enabled === true;
 ```
 
 **If already enabled:**
-
 ```
 ✅ Project status is already enabled in core-config.yaml
 ```
@@ -252,7 +246,6 @@ Skip to Step 4.
 **Action:** Update `core-config.yaml` to enable project status
 
 **Changes:**
-
 ```yaml
 projectStatus:
   enabled: true
@@ -271,7 +264,6 @@ projectStatus:
 ```
 
 **Confirmation:**
-
 ```
 ✅ Enabled projectStatus in core-config.yaml
 ```
@@ -295,16 +287,13 @@ mkdir -p .aiox
 **Action:** Load project status for the first time
 
 ```javascript
-const {
-  loadProjectStatus,
-} = require("./.aiox-core/scripts/project-status-loader.js");
+const { loadProjectStatus } = require('./.aiox-core/scripts/project-status-loader.js');
 const status = await loadProjectStatus();
 ```
 
 **Verification:** Check that `.aiox/project-status.yaml` was created with valid content.
 
 **Sample Cache Content:**
-
 ```yaml
 status:
   branch: main
@@ -314,14 +303,13 @@ status:
     - "chore: cleanup Utils Registry"
   currentEpic: null
   currentStory: null
-  lastUpdate: "2025-01-14T10:30:00.000Z"
+  lastUpdate: '2025-01-14T10:30:00.000Z'
   isGitRepo: true
 timestamp: 1705238400000
 ttl: 60
 ```
 
 **Confirmation:**
-
 ```
 ✅ Initialized project status cache (.aiox/project-status.yaml)
 ```
@@ -361,7 +349,6 @@ console.log('\nType *help to see available commands!');
 ```
 
 **Confirmation:**
-
 ```
 ✅ Added .aiox/project-status.yaml to .gitignore
 ```
@@ -427,13 +414,11 @@ Documentation: docs/guides/project-status-feature.md
 ### Not a Git Repository
 
 **Error:**
-
 ```
 ⚠️  Project status feature requires a git repository.
 ```
 
 **Resolution:**
-
 ```bash
 git init
 ```
@@ -441,7 +426,6 @@ git init
 ### core-config.yaml Not Found
 
 **Error:**
-
 ```
 ❌ Could not find .aiox-core/core-config.yaml
    Are you in the project root directory?
@@ -452,7 +436,6 @@ git init
 ### Permission Denied on .aiox Directory
 
 **Error:**
-
 ```
 ❌ Cannot create .aiox directory: Permission denied
 ```
@@ -466,14 +449,12 @@ git init
 To disable project status tracking:
 
 1. **Edit core-config.yaml:**
-
    ```yaml
    projectStatus:
      enabled: false
    ```
 
 2. **Remove cache file:**
-
    ```bash
    rm .aiox/project-status.yaml
    ```

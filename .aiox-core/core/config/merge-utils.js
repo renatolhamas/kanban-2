@@ -21,7 +21,7 @@
  * @returns {boolean} True if plain object
  */
 function isPlainObject(value) {
-  if (value === null || typeof value !== "object") return false;
+  if (value === null || typeof value !== 'object') return false;
   if (Array.isArray(value)) return false;
 
   const proto = Object.getPrototypeOf(value);
@@ -51,7 +51,7 @@ function deepMerge(target, source) {
 
   for (const [key, value] of Object.entries(source)) {
     // Handle +append modifier for arrays
-    if (key.endsWith("+append")) {
+    if (key.endsWith('+append')) {
       const baseKey = key.slice(0, -7); // Remove '+append'
       if (Array.isArray(value)) {
         const existing = result[baseKey];

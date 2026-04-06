@@ -7,23 +7,22 @@
 
 ## Task Anatomy
 
-| Field                    | Value                                                                 |
-| ------------------------ | --------------------------------------------------------------------- |
-| **task_name**            | Migrate Brownfield Components                                         |
-| **status**               | `pending`                                                             |
-| **responsible_executor** | @storybook-expert                                                     |
-| **execution_type**       | `Agent`                                                               |
-| **input**                | Component inventory, migration plan, dependency graph, target project |
-| **output**               | Story files for all brownfield components, adaptation report          |
-| **action_items**         | 8 steps                                                               |
-| **acceptance_criteria**  | 6 criteria                                                            |
+| Field | Value |
+|-------|-------|
+| **task_name** | Migrate Brownfield Components |
+| **status** | `pending` |
+| **responsible_executor** | @storybook-expert |
+| **execution_type** | `Agent` |
+| **input** | Component inventory, migration plan, dependency graph, target project |
+| **output** | Story files for all brownfield components, adaptation report |
+| **action_items** | 8 steps |
+| **acceptance_criteria** | 6 criteria |
 
 ## Overview
 
 Execute the migration plan produced by `sb-brownfield-scan`. For each component in dependency order: analyze its API, adapt it for Storybook isolation (mock providers, stub data, handle side effects), and generate a `.stories.tsx` file. Handles components ranging from simple atoms to complex organisms with context dependencies.
 
 Supports two migration modes:
-
 - **Same-project:** Components stay where they are, stories are added co-located
 - **Cross-project:** Components are copied/adapted from source to target project
 
@@ -89,12 +88,10 @@ Supports two migration modes:
 ### Step 2: Prepare Storybook Environment
 
 If target project doesn't have Storybook yet:
-
 - [ ] Run `sb-install` task (or delegate to workflow)
 - [ ] Run `sb-configure` task
 
 If Storybook exists:
-
 - [ ] Verify `.storybook/main.ts` stories glob covers component locations
 - [ ] Update glob if needed to include brownfield component paths
 
@@ -114,21 +111,18 @@ For each component, determine story strategy based on complexity:
 
 **4a. Simple Components (atoms, complexity 1-2)**
 Strategy: Args-driven stories, minimal setup
-
 ```
 Read component → extract props → generate meta + Default + Variants + Gallery
 ```
 
 **4b. Composite Components (molecules, complexity 3-5)**
 Strategy: Render function stories with composition
-
 ```
 Read component → identify sub-components → compose render → add interaction stories
 ```
 
 **4c. Complex Components (organisms, complexity 6-8)**
 Strategy: Render function + decorators for context
-
 ```
 Read component → identify context deps → create mock providers → compose stories
 ```
@@ -137,7 +131,6 @@ Read component → identify context deps → create mock providers → compose s
 Strategy: Full isolation with mocks and stubs
 
 Identify and handle:
-
 - **Router dependency:** Wrap with `MemoryRouter` or mock `useRouter`
 - **Auth context:** Provide mock user object
 - **API calls:** Mock with `msw` handlers or `fn()` stubs
@@ -145,7 +138,6 @@ Identify and handle:
 - **Feature flags:** Provide default flag values
 
 Create decorator or wrapper:
-
 ```typescript
 // .storybook/decorators/with-providers.tsx
 export const withProviders = (Story) => (
@@ -183,33 +175,30 @@ export const Default: Story = { /* ... */ };
 
 **Title hierarchy for brownfield:**
 
-| Atomic Level | Title Pattern                | Example                       |
-| ------------ | ---------------------------- | ----------------------------- |
-| Atom         | `Base Components/{Name}`     | `Base Components/GlassButton` |
-| Molecule     | `Components/{Name}`          | `Components/SearchBar`        |
-| Organism     | `Features/{Category}/{Name}` | `Features/Agents/AgentCard`   |
-| Template     | `Templates/{Name}`           | `Templates/DashboardLayout`   |
-| Page         | `Pages/{Name}`               | `Pages/AgentExplorer`         |
+| Atomic Level | Title Pattern | Example |
+|-------------|---------------|---------|
+| Atom | `Base Components/{Name}` | `Base Components/GlassButton` |
+| Molecule | `Components/{Name}` | `Components/SearchBar` |
+| Organism | `Features/{Category}/{Name}` | `Features/Agents/AgentCard` |
+| Template | `Templates/{Name}` | `Templates/DashboardLayout` |
+| Page | `Pages/{Name}` | `Pages/AgentExplorer` |
 
 ### Step 6: Handle Cross-Project Migration (if applicable)
 
 When `migration_mode=cross-project`:
 
 **6a. Copy component file to target:**
-
 ```bash
 cp {source_path}/{component}.tsx {target_path}/components/{category}/{component}.tsx
 ```
 
 **6b. Adapt imports:**
-
 - Rewrite relative imports to match new location
 - Replace project-specific aliases (`@/` → new project alias)
 - Verify all dependencies exist in target project
 - Install missing npm packages
 
 **6c. Resolve missing dependencies:**
-
 - If component imports another component not yet in target → flag as blocked
 - If component imports a util/hook → copy that too
 - Track all copied files in adaptation_report
@@ -223,7 +212,6 @@ After completing each phase:
 - [ ] Storybook renders new stories without crashes
 
 If errors found:
-
 - Fix in the current phase before proceeding to next
 - Document fixes in adaptation_report
 
@@ -233,7 +221,6 @@ If errors found:
 # Brownfield Migration Report
 
 ## Summary
-
 - **Total components scanned:** 95
 - **Components migrated:** 95
 - **Stories generated:** 95
@@ -243,32 +230,26 @@ If errors found:
 ## Phase Results
 
 ### Phase 1: Atoms (18 components)
-
-| Component   | Story                    | Adaptations | Status |
-| ----------- | ------------------------ | ----------- | ------ |
-| GlassButton | glass-button.stories.tsx | None        | OK     |
-| Badge       | badge.stories.tsx        | None        | OK     |
-
+| Component | Story | Adaptations | Status |
+|-----------|-------|-------------|--------|
+| GlassButton | glass-button.stories.tsx | None | OK |
+| Badge | badge.stories.tsx | None | OK |
 ...
 
 ### Phase 3: Organisms (30 components)
-
-| Component     | Story                      | Adaptations                  | Status |
-| ------------- | -------------------------- | ---------------------------- | ------ |
-| AgentCard     | agent-card.stories.tsx     | Mock: useAgentData hook      | OK     |
-| ChatContainer | chat-container.stories.tsx | Mock: WebSocket, AuthContext | OK     |
-
+| Component | Story | Adaptations | Status |
+|-----------|-------|-------------|--------|
+| AgentCard | agent-card.stories.tsx | Mock: useAgentData hook | OK |
+| ChatContainer | chat-container.stories.tsx | Mock: WebSocket, AuthContext | OK |
 ...
 
 ## Adaptations Applied
-
 1. **AgentCard** — Mocked `useAgentData` hook with static fixture data
 2. **ChatContainer** — Created `withChatProviders` decorator for WebSocket + Auth
 3. **KanbanBoard** — Mocked drag-and-drop context (dnd-kit)
-   ...
+...
 
 ## Mock Files Created
-
 - `.storybook/mocks/auth-provider.tsx`
 - `.storybook/mocks/router-provider.tsx`
 - `.storybook/mocks/agent-data.ts`
@@ -324,28 +305,24 @@ quality_gate:
 ## Error Handling
 
 ### Component Crashes in Storybook
-
 - **Trigger:** Component throws error without required context/provider
 - **Detection:** Storybook shows error overlay
 - **Recovery:** Identify missing context, create mock decorator, retry
 - **Prevention:** Step 4 context analysis should catch most cases
 
 ### Import Resolution Fails (Cross-Project)
-
 - **Trigger:** Copied component imports module not in target project
 - **Detection:** TypeScript "Cannot find module" error
 - **Recovery:** Copy missing dependency, or install npm package, or create stub
 - **Prevention:** Step 6c dependency resolution
 
 ### Component Has Side Effects
-
 - **Trigger:** Component makes API calls, mutates global state on mount
 - **Detection:** Network errors or state warnings in Storybook console
 - **Recovery:** Mock API calls with `msw` or `fn()`, provide inert context
 - **Prevention:** Step 4 complexity analysis flags side effects
 
 ### Drag-and-Drop / Canvas / WebGL Components
-
 - **Trigger:** Components using canvas, WebGL, or complex DOM APIs
 - **Detection:** Blank render or "not supported" errors
 - **Recovery:** Skip render stories, create visual-only stories with screenshots
@@ -354,25 +331,22 @@ quality_gate:
 ## Dependencies
 
 ### Depends On (Upstream)
-
 - `sb-brownfield-scan` - Scan Brownfield Components
   - Required output: component_inventory, migration_plan, dependency_graph
 
 ### Required By (Downstream)
-
 - `sb-verify` - Verify Storybook Setup
   - Uses output: story_files
 
 ## Handoff
 
-| Attribute     | Value                                             |
-| ------------- | ------------------------------------------------- |
-| **Next Task** | `sb-verify`                                       |
-| **Trigger**   | All phases completed, adaptation report generated |
-| **Executor**  | @storybook-expert                                 |
+| Attribute | Value |
+|-----------|-------|
+| **Next Task** | `sb-verify` |
+| **Trigger** | All phases completed, adaptation report generated |
+| **Executor** | @storybook-expert |
 
 ### Handoff Package
-
 - **story_files**: List of all generated story file paths
 - **mock_files**: List of mock/decorator files created
 - **adaptation_report**: Full adaptation report

@@ -9,7 +9,6 @@
 Design and implement a Model Context Protocol (MCP) server that exposes design system assets to AI agents.
 
 Core data exposed:
-
 - component metadata
 - registry entries
 - token catalogs
@@ -24,7 +23,6 @@ Core data exposed:
 ## Workflow
 
 1. **Define MCP Capabilities**
-
 - Tools to query:
   - list components
   - inspect component contract
@@ -32,31 +30,26 @@ Core data exposed:
   - resolve required tokens
 
 2. **Implement Server Skeleton**
-
 - Create:
   - `workspace/domains/design-system/mcp/server.ts`
   - `workspace/domains/design-system/mcp/handlers/*`
 - Keep handlers deterministic and stateless.
 
 3. **Connect Data Sources**
-
 - `metadata/components.json`
 - `workspace/ui/registry.json`
 - token files under `domains/design-system/tokens`
 
 4. **Add Query Guards**
-
 - Schema validation on load.
 - Safe fallback for missing component entries.
 - No execution of arbitrary user code.
 
 5. **Validate with Real Queries**
-
 - Query by component name, intent, and accessibility requirement.
 - Verify returned contracts are complete and traceable.
 
 6. **Document Contract**
-
 - Input/output schema for each MCP tool.
 - Versioning and compatibility policy.
 
@@ -79,13 +72,13 @@ Core data exposed:
 - Keep response payloads concise and fully structured.
 - Favor machine contracts over natural language in API surfaces.
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

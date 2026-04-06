@@ -15,12 +15,12 @@ Playbook para modernizar sistemas legados (CodeIgniter, Laravel, Rails, jQuery) 
 
 ## Value Proposition
 
-| Legacy Stack              | Migration Target             | Market Value |
-| ------------------------- | ---------------------------- | ------------ |
-| CodeIgniter + Bootstrap 3 | Next.js + Tailwind + Shadcn  | $50K-150K    |
-| Laravel Blade + jQuery    | React + Design System        | $80K-200K    |
-| Rails ERB + Sprockets     | Next.js + Modern CSS         | $100K-300K   |
-| WordPress + Custom Theme  | Headless + Component Library | $30K-100K    |
+| Legacy Stack | Migration Target | Market Value |
+|--------------|------------------|--------------|
+| CodeIgniter + Bootstrap 3 | Next.js + Tailwind + Shadcn | $50K-150K |
+| Laravel Blade + jQuery | React + Design System | $80K-200K |
+| Rails ERB + Sprockets | Next.js + Modern CSS | $100K-300K |
+| WordPress + Custom Theme | Headless + Component Library | $30K-100K |
 
 ---
 
@@ -61,12 +61,12 @@ High:   500+    → 3-6 months
 
 ### 3. Risk Matrix
 
-| Risk                    | Impact   | Mitigation                      |
-| ----------------------- | -------- | ------------------------------- |
-| Breaking existing flows | HIGH     | Feature flags + gradual rollout |
-| Data loss               | CRITICAL | Backup + rollback plan          |
-| Performance regression  | MEDIUM   | Benchmark before/after          |
-| Team unfamiliarity      | MEDIUM   | Training + documentation        |
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| Breaking existing flows | HIGH | Feature flags + gradual rollout |
+| Data loss | CRITICAL | Backup + rollback plan |
+| Performance regression | MEDIUM | Benchmark before/after |
+| Team unfamiliarity | MEDIUM | Training + documentation |
 
 ---
 
@@ -227,24 +227,12 @@ pricing_tiers:
     timeline: "1-2 weeks"
 
   foundation_package:
-    deliverables:
-      [
-        "Assessment",
-        "Design system setup",
-        "Token extraction",
-        "5 core components",
-      ]
+    deliverables: ["Assessment", "Design system setup", "Token extraction", "5 core components"]
     price_range: "$25K-50K"
     timeline: "4-6 weeks"
 
   full_migration:
-    deliverables:
-      [
-        "Everything above",
-        "Full page migration",
-        "A11y compliance",
-        "Documentation",
-      ]
+    deliverables: ["Everything above", "Full page migration", "A11y compliance", "Documentation"]
     price_range: "$80K-300K"
     timeline: "3-6 months"
 
@@ -289,27 +277,26 @@ pricing_tiers:
 
 ## Success Metrics
 
-| Metric             | Target |
-| ------------------ | ------ |
-| Page load time     | -50%   |
-| Bundle size        | -40%   |
-| A11y score         | 95+    |
-| Component reuse    | 80%+   |
-| Developer velocity | +100%  |
+| Metric | Target |
+|--------|--------|
+| Page load time | -50% |
+| Bundle size | -40% |
+| A11y score | 95+ |
+| Component reuse | 80%+ |
+| Developer velocity | +100% |
 
 ---
 
-_Task criada: 2026-02-16_
-_Squad: Design_
+*Task criada: 2026-02-16*
+*Squad: Design*
+
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
-
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

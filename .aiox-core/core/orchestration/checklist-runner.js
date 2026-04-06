@@ -13,9 +13,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs-extra');
+const path = require('path');
+const yaml = require('js-yaml');
 
 /**
  * Runs checklist validations programmatically
@@ -26,12 +26,7 @@ class ChecklistRunner {
    */
   constructor(projectRoot) {
     this.projectRoot = projectRoot;
-    this.checklistsPath = path.join(
-      projectRoot,
-      ".aiox-core",
-      "product",
-      "checklists",
-    );
+    this.checklistsPath = path.join(projectRoot, '.aiox-core', 'product', 'checklists');
   }
 
   /**
@@ -82,13 +77,11 @@ class ChecklistRunner {
    * @returns {Promise<string|null>} Checklist content or null
    */
   async loadChecklist(checklistName) {
-    const fileName = checklistName.endsWith(".md")
-      ? checklistName
-      : `${checklistName}.md`;
+    const fileName = checklistName.endsWith('.md') ? checklistName : `${checklistName}.md`;
     const filePath = path.join(this.checklistsPath, fileName);
 
     if (await fs.pathExists(filePath)) {
-      return await fs.readFile(filePath, "utf8");
+      return await fs.readFile(filePath, 'utf8');
     }
 
     return null;
@@ -110,11 +103,7 @@ class ChecklistRunner {
         const yamlContent = yaml.load(yamlMatch[1]);
         if (yamlContent) {
           // Handle pre-conditions, post-conditions, acceptance-criteria
-          for (const key of [
-            "pre-conditions",
-            "post-conditions",
-            "acceptance-criteria",
-          ]) {
+          for (const key of ['pre-conditions', 'post-conditions', 'acceptance-criteria']) {
             if (yamlContent[key]) {
               for (const item of yamlContent[key]) {
                 items.push(this.normalizeItem(item, key));
@@ -133,12 +122,10 @@ class ChecklistRunner {
     while ((checkboxMatch = checkboxPattern.exec(content)) !== null) {
       const description = checkboxMatch[1].trim();
       // Skip if already parsed from YAML
-      if (
-        !items.some((i) => i.description.includes(description.substring(0, 30)))
-      ) {
+      if (!items.some(i => i.description.includes(description.substring(0, 30)))) {
         items.push({
           description,
-          tipo: "manual",
+          tipo: 'manual',
           blocker: false,
           validation: null,
         });
@@ -155,23 +142,23 @@ class ChecklistRunner {
    * @returns {Object} Normalized item
    */
   normalizeItem(item, category) {
-    if (typeof item === "string") {
+    if (typeof item === 'string') {
       return {
         description: item,
         tipo: category,
-        blocker: category === "pre-conditions",
+        blocker: category === 'pre-conditions',
         validation: null,
       };
     }
 
     // Item is an object with YAML structure
     const firstKey = Object.keys(item)[0];
-    const description = firstKey.replace(/^\[[ x]\]\s*/, "").trim();
+    const description = firstKey.replace(/^\[[ x]\]\s*/, '').trim();
 
     return {
       description,
       tipo: item.tipo || category,
-      blocker: item.blocker !== false && category !== "manual",
+      blocker: item.blocker !== false && category !== 'manual',
       validation: item.validação || item.validation || null,
       errorMessage: item.error_message || null,
     };
@@ -195,13 +182,9 @@ class ChecklistRunner {
     // If item has code-based validation, execute it
     if (item.validation) {
       try {
-        result.passed = await this.executeValidation(
-          item.validation,
-          targetPaths,
-        );
+        result.passed = await this.executeValidation(item.validation, targetPaths);
         if (!result.passed) {
-          result.message =
-            item.errorMessage || `Validation failed: ${item.description}`;
+          result.message = item.errorMessage || `Validation failed: ${item.description}`;
         }
       } catch (error) {
         result.passed = false;
@@ -210,7 +193,7 @@ class ChecklistRunner {
     } else {
       // Manual items are assumed to pass (require human verification)
       result.passed = true;
-      result.message = "Manual verification required";
+      result.message = 'Manual verification required';
     }
 
     return result;
@@ -228,11 +211,11 @@ class ChecklistRunner {
     const validationLower = validation.toLowerCase();
 
     // File exists check
-    if (validationLower.includes("file") && validationLower.includes("exist")) {
+    if (validationLower.includes('file') && validationLower.includes('exist')) {
       for (const targetPath of paths) {
         if (targetPath) {
           const fullPath = path.join(this.projectRoot, targetPath);
-          if (!(await fs.pathExists(fullPath))) {
+          if (!await fs.pathExists(fullPath)) {
             return false;
           }
         }
@@ -241,10 +224,7 @@ class ChecklistRunner {
     }
 
     // Directory exists check
-    if (
-      validationLower.includes("director") &&
-      validationLower.includes("exist")
-    ) {
+    if (validationLower.includes('director') && validationLower.includes('exist')) {
       for (const targetPath of paths) {
         if (targetPath) {
           const fullPath = path.join(this.projectRoot, targetPath);
@@ -258,12 +238,12 @@ class ChecklistRunner {
     }
 
     // Non-empty file check
-    if (validationLower.includes("not") && validationLower.includes("empty")) {
+    if (validationLower.includes('not') && validationLower.includes('empty')) {
       for (const targetPath of paths) {
         if (targetPath) {
           const fullPath = path.join(this.projectRoot, targetPath);
           if (await fs.pathExists(fullPath)) {
-            const content = await fs.readFile(fullPath, "utf8");
+            const content = await fs.readFile(fullPath, 'utf8');
             if (content.trim().length === 0) {
               return false;
             }
@@ -281,10 +261,10 @@ class ChecklistRunner {
         if (targetPath) {
           const fullPath = path.join(this.projectRoot, targetPath);
           // Missing file = validation failure (file must exist to contain content)
-          if (!(await fs.pathExists(fullPath))) {
+          if (!await fs.pathExists(fullPath)) {
             return false;
           }
-          const content = await fs.readFile(fullPath, "utf8");
+          const content = await fs.readFile(fullPath, 'utf8');
           if (!content.includes(searchTerm)) {
             return false;
           }
@@ -294,16 +274,14 @@ class ChecklistRunner {
     }
 
     // Minimum size check
-    const minSizeMatch = validationLower.match(
-      /min(?:imum)?\s*(?:size|length)?\s*[:=]?\s*(\d+)/,
-    );
+    const minSizeMatch = validationLower.match(/min(?:imum)?\s*(?:size|length)?\s*[:=]?\s*(\d+)/);
     if (minSizeMatch) {
       const minSize = parseInt(minSizeMatch[1]);
       for (const targetPath of paths) {
         if (targetPath) {
           const fullPath = path.join(this.projectRoot, targetPath);
           // Missing file = validation failure (file must exist to have size)
-          if (!(await fs.pathExists(fullPath))) {
+          if (!await fs.pathExists(fullPath)) {
             return false;
           }
           const stats = await fs.stat(fullPath);
@@ -335,15 +313,12 @@ class ChecklistRunner {
     return {
       name: checklistName,
       totalItems: items.length,
-      blockers: items.filter((i) => i.blocker).length,
+      blockers: items.filter(i => i.blocker).length,
       categories: {
-        preConditions: items.filter((i) => i.tipo === "pre-conditions").length,
-        postConditions: items.filter((i) => i.tipo === "post-conditions")
-          .length,
-        acceptanceCriteria: items.filter(
-          (i) => i.tipo === "acceptance-criteria",
-        ).length,
-        manual: items.filter((i) => i.tipo === "manual").length,
+        preConditions: items.filter(i => i.tipo === 'pre-conditions').length,
+        postConditions: items.filter(i => i.tipo === 'post-conditions').length,
+        acceptanceCriteria: items.filter(i => i.tipo === 'acceptance-criteria').length,
+        manual: items.filter(i => i.tipo === 'manual').length,
       },
     };
   }

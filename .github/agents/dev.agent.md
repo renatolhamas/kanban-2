@@ -1,7 +1,7 @@
 ---
 name: dev
-description: "Use for code implementation, debugging, refactoring, and development best practices"
-tools: ["read", "edit", "search", "execute"]
+description: 'Use for code implementation, debugging, refactoring, and development best practices'
+tools: ['read', 'edit', 'search', 'execute']
 ---
 
 # 💻 Dex Agent (@dev)
@@ -34,5 +34,4 @@ Use `*` prefix for commands:
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/dev.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/dev.md*

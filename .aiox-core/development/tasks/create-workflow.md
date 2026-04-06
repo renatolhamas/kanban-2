@@ -218,7 +218,6 @@ token_usage: ~800-2,500 tokens
 ```
 
 **Optimization Notes:**
-
 - Validate configuration early; use atomic writes; implement rollback checkpoints
 
 ---
@@ -239,25 +238,18 @@ updated_at: 2025-11-17
 ---
 
 tools:
-
-- github-cli
-
+  - github-cli
 # TODO: Create workflow-validation-checklist.md for validation (follow-up story needed)
-
 # checklists:
-
-# - workflow-validation-checklist.md
-
+#   - workflow-validation-checklist.md
 ---
 
 # Create Workflow
 
 ## Purpose
-
 To create a new workflow definition that orchestrates multiple agents and tasks for complex multi-step processes in Synkra AIOX.
 
 ## Prerequisites
-
 - User authorization verified
 - Clear understanding of workflow goals
 - Knowledge of participating agents and tasks
@@ -266,7 +258,6 @@ To create a new workflow definition that orchestrates multiple agents and tasks 
 ## Interactive Elicitation Process
 
 ### Step 0: Target Context
-
 ```
 ELICIT: Target Context
 1. Where should this workflow be created? (core / squad / hybrid)
@@ -274,7 +265,6 @@ ELICIT: Target Context
 ```
 
 ### Step 1: Workflow Overview
-
 ```
 ELICIT: Workflow Basic Information
 1. What is the workflow name? (e.g., "feature-development", "bug-fix")
@@ -284,7 +274,6 @@ ELICIT: Workflow Basic Information
 ```
 
 ### Step 2: Workflow Stages
-
 ```
 ELICIT: Workflow Stages and Flow
 1. What are the main stages/phases? (e.g., "planning", "implementation", "testing")
@@ -295,7 +284,6 @@ ELICIT: Workflow Stages and Flow
 ```
 
 ### Step 3: Agent Orchestration
-
 ```
 ELICIT: Agent Participation
 For each stage:
@@ -306,7 +294,6 @@ For each stage:
 ```
 
 ### Step 4: Resource Requirements
-
 ```
 ELICIT: Resources and Dependencies
 1. What templates are needed?
@@ -325,40 +312,39 @@ ELICIT: Resources and Dependencies
    - Verify all resources exist
 
 2. **Generate Workflow Structure**
-
    ```yaml
    workflow:
-     id: { workflow-name }
-     name: { Workflow Display Name }
-     description: { Purpose and overview }
-     type: { greenfield|brownfield }
-     scope: { ui|service|fullstack }
-
+     id: {workflow-name}
+     name: {Workflow Display Name}
+     description: {Purpose and overview}
+     type: {greenfield|brownfield}
+     scope: {ui|service|fullstack}
+     
    stages:
      - id: stage-1
-       name: { Stage Name }
-       agent: { agent-id }
+       name: {Stage Name}
+       agent: {agent-id}
        tasks:
-         - { task-name }
+         - {task-name}
        outputs:
-         - { output-description }
+         - {output-description}
        next: stage-2
-
+       
    transitions:
      - from: stage-1
        to: stage-2
-       condition: { optional condition }
-
+       condition: {optional condition}
+       
    resources:
      templates:
-       - { template-name }
+       - {template-name}
      data:
-       - { data-file }
-
+       - {data-file}
+       
    validation:
      checkpoints:
-       - stage: { stage-id }
-         criteria: { validation-criteria }
+       - stage: {stage-id}
+         criteria: {validation-criteria}
    ```
 
 3. **Add Security Controls**
@@ -376,18 +362,16 @@ ELICIT: Resources and Dependencies
    - Include comprehensive documentation
 
 4.5. **Update Squad Manifest** (when target_context="squad" or "hybrid")
-
-- Load `squads/{squad_name}/squad.yaml`
-- Initialize `components.workflows` array if it does not exist
-- Add workflow filename to `components.workflows[]` (skip if already present)
-- Create backup of `squad.yaml` before saving
-- Save updated manifest
+   - Load `squads/{squad_name}/squad.yaml`
+   - Initialize `components.workflows` array if it does not exist
+   - Add workflow filename to `components.workflows[]` (skip if already present)
+   - Create backup of `squad.yaml` before saving
+   - Save updated manifest
 
 5. **Update Memory Layer**
-
    ```javascript
    await memoryClient.addMemory({
-     type: "workflow_created",
+     type: 'workflow_created',
      name: workflowName,
      path: workflowPath,
      creator: currentUser,
@@ -395,8 +379,8 @@ ELICIT: Resources and Dependencies
      metadata: {
        type: workflowType,
        stages: stageList,
-       agents: involvedAgents,
-     },
+       agents: involvedAgents
+     }
    });
    ```
 
@@ -407,7 +391,6 @@ ELICIT: Resources and Dependencies
    - Include troubleshooting guide
 
 ## Validation Checklist
-
 - [ ] Workflow name is unique and valid
 - [ ] All stages have clear purposes
 - [ ] Agent assignments are valid
@@ -418,14 +401,12 @@ ELICIT: Resources and Dependencies
 - [ ] Memory layer updated
 
 ## Error Handling
-
 - If workflow exists: Offer versioning or update
 - If agents missing: List required agents
 - If circular dependency: Show cycle and suggest fix
 - If resources missing: List and offer to create
 
 ## Success Output
-
 ```
 ✅ Workflow '{workflow-name}' created successfully!
 📁 Location: {resolved-path}
@@ -441,8 +422,7 @@ ELICIT: Resources and Dependencies
 ```
 
 ## Workflow Execution Notes
-
 - Workflows are selected during project initialization
 - Each stage execution is logged in memory
 - Progress tracking available through memory queries
-- Agents automatically receive stage-specific context
+- Agents automatically receive stage-specific context 

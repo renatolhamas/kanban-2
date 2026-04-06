@@ -73,13 +73,13 @@ AN_KE_008:
 
 ## Pattern Categories
 
-| Category | Example Trigger     | Rule Format     |
-| -------- | ------------------- | --------------- |
-| NEVER    | "Don't do X" (2x)   | NEVER: X        |
-| ALWAYS   | "Always do Y" (2x)  | ALWAYS: Y       |
-| IF/THEN  | "When Z, do W" (2x) | IF Z → THEN W   |
-| PRIORITY | "A before B" (2x)   | PRIORITY: A > B |
-| VETO     | "Stop if X" (2x)    | VETO: X → STOP  |
+| Category | Example Trigger | Rule Format |
+|----------|-----------------|-------------|
+| NEVER | "Don't do X" (2x) | NEVER: X |
+| ALWAYS | "Always do Y" (2x) | ALWAYS: Y |
+| IF/THEN | "When Z, do W" (2x) | IF Z → THEN W |
+| PRIORITY | "A before B" (2x) | PRIORITY: A > B |
+| VETO | "Stop if X" (2x) | VETO: X → STOP |
 
 ## Decision Tree
 

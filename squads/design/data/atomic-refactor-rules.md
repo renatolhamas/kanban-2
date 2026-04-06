@@ -13,12 +13,12 @@
 
 ### GATE 0: Devo Atomizar?
 
-| Linhas  | useState | Decisão                                 |
-| ------- | -------- | --------------------------------------- |
-| >800    | qualquer | **SIM** - atomizar                      |
-| 500-800 | >7       | **SIM** - atomizar                      |
-| 500-800 | ≤7       | **TALVEZ** - só se hooks serão reusados |
-| <500    | qualquer | **NÃO** - organizar inline              |
+| Linhas | useState | Decisão |
+|--------|----------|---------|
+| >800 | qualquer | **SIM** - atomizar |
+| 500-800 | >7 | **SIM** - atomizar |
+| 500-800 | ≤7 | **TALVEZ** - só se hooks serão reusados |
+| <500 | qualquer | **NÃO** - organizar inline |
 
 ### GATE 1: Antes de Criar Cada Hook
 
@@ -30,7 +30,6 @@ SE NÃO → NÃO criar, manter useState inline com comentários organizados
 ```
 
 **Exemplo de useState inline organizado (melhor que hook órfão):**
-
 ```typescript
 const MyComponent = () => {
   // === STATE: Data ===
@@ -57,11 +56,11 @@ find {pasta-criada} -name "*.ts" -o -name "*.tsx" | xargs wc -l | tail -1
 # Se linhas_depois > linhas_antes → FALHA, simplificar ou reverter
 ```
 
-| Métrica       | Limite         | Se Falhar    |
-| ------------- | -------------- | ------------ |
-| Linhas totais | ≤ original     | Simplificar  |
-| Arquivos      | ≤7 por feature | Consolidar   |
-| Hooks órfãos  | 0              | Mover inline |
+| Métrica | Limite | Se Falhar |
+|---------|--------|-----------|
+| Linhas totais | ≤ original | Simplificar |
+| Arquivos | ≤7 por feature | Consolidar |
+| Hooks órfãos | 0 | Mover inline |
 
 ---
 
@@ -69,17 +68,16 @@ find {pasta-criada} -name "*.ts" -o -name "*.tsx" | xargs wc -l | tail -1
 
 ### 1. Line Limits
 
-| Type                    | Max      | Ideal   |
-| ----------------------- | -------- | ------- |
-| Template (orchestrator) | **100**  | 50-80   |
-| Organism                | 200      | 100-150 |
-| Molecule                | 100      | 50-80   |
-| Hook                    | 150      | 80-120  |
-| types.ts                | No limit | -       |
-| data/\*.ts              | No limit | -       |
+| Type | Max | Ideal |
+|------|--------|-------|
+| Template (orchestrator) | **100** | 50-80 |
+| Organism | 200 | 100-150 |
+| Molecule | 100 | 50-80 |
+| Hook | 150 | 80-120 |
+| types.ts | No limit | - |
+| data/*.ts | No limit | - |
 
 **Validation:**
-
 ```bash
 # Check largest file (except types.ts and data/)
 find . -name "*.tsx" -o -name "*.ts" | grep -v types.ts | grep -v /data/ | xargs wc -l | sort -rn | head -5
@@ -102,21 +100,20 @@ find . -name "*.tsx" -o -name "*.ts" | grep -v types.ts | grep -v /data/ | xargs
 
 ### 3. Naming Conventions
 
-| Type           | Pattern                  | Example                |
-| -------------- | ------------------------ | ---------------------- |
-| Template       | `{Feature}Template.tsx`  | `CoursesTemplate.tsx`  |
-| Organism       | `{Feature}{Type}.tsx`    | `CoursesListView.tsx`  |
-| Molecule       | `{Name}.tsx`             | `StatCard.tsx`         |
-| Hook (data)    | `use{Feature}Data.ts`    | `useCoursesData.ts`    |
+| Type | Pattern | Example |
+|------|---------|---------|
+| Template | `{Feature}Template.tsx` | `CoursesTemplate.tsx` |
+| Organism | `{Feature}{Type}.tsx` | `CoursesListView.tsx` |
+| Molecule | `{Name}.tsx` | `StatCard.tsx` |
+| Hook (data) | `use{Feature}Data.ts` | `useCoursesData.ts` |
 | Hook (filters) | `use{Feature}Filters.ts` | `useCoursesFilters.ts` |
-| Hook (dialog)  | `use{Name}Dialog.ts`     | `useCreateDialog.ts`   |
-| Types          | `types.ts`               | `types.ts`             |
-| Index          | `index.ts`               | `index.ts`             |
+| Hook (dialog) | `use{Name}Dialog.ts` | `useCreateDialog.ts` |
+| Types | `types.ts` | `types.ts` |
+| Index | `index.ts` | `index.ts` |
 
 ### 4. Required Extraction
 
 **ALWAYS extract:**
-
 - [ ] `render{X}()` → `{X}View.tsx` or `{X}Section.tsx`
 - [ ] `useState` grouped by concern → custom hook
 - [ ] Color/icon configs → `types.ts`
@@ -149,7 +146,6 @@ import type { FaqItem, CourseModule } from '../types'; // OK!
 ```
 
 **Validation:**
-
 ```bash
 # Check imported vs exported types
 grep -h "from '../types'" {folder}/data/*.ts
@@ -165,18 +161,13 @@ grep "export interface\|export type" {folder}/types.ts
 //        to: books/book-detail/BookDetailTemplate.tsx
 
 // BEFORE in AppRoutes.tsx:
-const BookDetailTemplate = React.lazy(
-  () => import("./books/templates/BookDetailTemplate"),
-);
+const BookDetailTemplate = React.lazy(() => import('./books/templates/BookDetailTemplate'));
 
 // AFTER in AppRoutes.tsx:
-const BookDetailTemplate = React.lazy(
-  () => import("./books/book-detail/BookDetailTemplate"),
-);
+const BookDetailTemplate = React.lazy(() => import('./books/book-detail/BookDetailTemplate'));
 ```
 
 **Validation:**
-
 ```bash
 # Check if import exists in new path
 grep "BookDetailTemplate" app/components/AppRoutes.tsx
@@ -193,7 +184,6 @@ grep -rn "{ComponentName}" app/components/ --include="*.tsx" --include="*.ts" | 
 ```
 
 **Common error example:**
-
 ```
 # Component: CreatePersona
 # Subagent moved to: create-persona/CreatePersona.tsx
@@ -203,7 +193,6 @@ grep -rn "{ComponentName}" app/components/ --include="*.tsx" --include="*.ts" | 
 ```
 
 **Import checklist:**
-
 - [ ] views/index.ts (re-export)
 - [ ] {Parent}Template.tsx (direct import)
 - [ ] AppRoutes.tsx (lazy import)
@@ -217,7 +206,7 @@ grep -rn "{ComponentName}" app/components/ --include="*.tsx" --include="*.ts" | 
 // ❌ WRONG - Create type without checking hook
 // types.ts
 interface Props {
-  slug?: string; // useParams returns string | undefined
+  slug?: string;  // useParams returns string | undefined
 }
 // hook/useData.ts
 const { data } = useCourseContents(slug); // useCourseContents expects string | null
@@ -229,7 +218,6 @@ const { data } = useCourseContents(slug); // useCourseContents expects string | 
 ```
 
 **Validation BEFORE creating types.ts:**
-
 ```bash
 # See hook signature
 grep -A5 "export function use" app/hooks/useYYY.ts
@@ -247,14 +235,14 @@ grep -A5 "export const use" app/hooks/useYYY.ts
 ```typescript
 // ❌ WRONG - type used before defined
 export interface Props {
-  onNavigate: (view: CourseView) => void; // CourseView not defined yet!
+  onNavigate: (view: CourseView) => void;  // CourseView not defined yet!
 }
-export type CourseView = "overview" | "research"; // Too late
+export type CourseView = 'overview' | 'research';  // Too late
 
 // ✅ CORRECT - type defined first
-export type CourseView = "overview" | "research";
+export type CourseView = 'overview' | 'research';
 export interface Props {
-  onNavigate: (view: CourseView) => void; // OK
+  onNavigate: (view: CourseView) => void;  // OK
 }
 ```
 
@@ -268,7 +256,7 @@ export interface Props {
 
 // ❌ WRONG - passing undefined to null parameter
 const { slug } = useParams();
-useCourseContents(slug); // Type error!
+useCourseContents(slug);  // Type error!
 
 // ✅ CORRECT - convert undefined to null
 const { slug } = useParams();
@@ -388,10 +376,10 @@ export const FeatureTemplate = () => {
 ```typescript
 // ✅ BOM
 export function useFilters(items) {
-  const [search, setSearch] = useState("");
-  const filtered = useMemo(
-    () => items.filter((i) => i.name.includes(search)),
-    [items, search],
+  const [search, setSearch] = useState('');
+  const filtered = useMemo(() =>
+    items.filter(i => i.name.includes(search)),
+    [items, search]
   );
   return { search, setSearch, filtered };
 }
@@ -399,7 +387,7 @@ export function useFilters(items) {
 // ❌ RUIM - mistura concerns
 export function useEverything() {
   const [items, setItems] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   // ... 20 estados diferentes
 }
@@ -438,7 +426,6 @@ export const ListView = () => {
 ### 5. Shared Components
 
 Antes de criar um molecule/hook:
-
 1. Verificar se existe em `shared/molecules/`
 2. Verificar se existe em `shared/hooks/`
 3. Se for genérico (usado em 3+ lugares) → criar em shared/
@@ -453,15 +440,14 @@ Antes de criar um molecule/hook:
 ```typescript
 // ❌ NUNCA - hooks importando organisms
 // hooks/useData.ts
-import { ListView } from "../organisms/ListView"; // ERRADO!
+import { ListView } from '../organisms/ListView'; // ERRADO!
 
 // ❌ NUNCA - molecules importando organisms
 // molecules/Card.ts
-import { Header } from "../organisms/Header"; // ERRADO!
+import { Header } from '../organisms/Header'; // ERRADO!
 ```
 
 **Hierarquia correta:**
-
 ```
 types.ts ← hooks ← molecules ← organisms ← Template
 ```
@@ -526,20 +512,20 @@ return <div>{sortedItems.map(...)}</div>;
 
 ### Redução Esperada
 
-| Tier             | Antes    | Depois | Redução |
-| ---------------- | -------- | ------ | ------- |
-| TIER 1 (>800)    | 800-2000 | 50-200 | 85-95%  |
-| TIER 2 (500-800) | 500-800  | 40-150 | 80-90%  |
-| TIER 3 (300-500) | 300-500  | 30-100 | 70-80%  |
+| Tier | Antes | Depois | Redução |
+|------|-------|--------|---------|
+| TIER 1 (>800) | 800-2000 | 50-200 | 85-95% |
+| TIER 2 (500-800) | 500-800 | 40-150 | 80-90% |
+| TIER 3 (300-500) | 300-500 | 30-100 | 70-80% |
 
 ### Número de Arquivos
 
 | Componente Original | Arquivos Esperados |
-| ------------------- | ------------------ |
-| 300-500 linhas      | 8-12 arquivos      |
-| 500-800 linhas      | 12-18 arquivos     |
-| 800-1500 linhas     | 15-25 arquivos     |
-| 1500+ linhas        | 20-35 arquivos     |
+|---------------------|-------------------|
+| 300-500 linhas | 8-12 arquivos |
+| 500-800 linhas | 12-18 arquivos |
+| 800-1500 linhas | 15-25 arquivos |
+| 1500+ linhas | 20-35 arquivos |
 
 ### Qualidade
 
@@ -557,7 +543,6 @@ return <div>{sortedItems.map(...)}</div>;
 ## Refactoring Validation: {ComponentName}
 
 ### Structure
-
 - [ ] Folder created at `{domain}/{feature}/`
 - [ ] types.ts exists
 - [ ] index.ts with barrel exports
@@ -565,7 +550,6 @@ return <div>{sortedItems.map(...)}</div>;
 - [ ] organisms/index.ts exists
 
 ### Code
-
 - [ ] Template ≤200 lines
 - [ ] No file >200 lines (except types/data)
 - [ ] All render{X} extracted
@@ -573,28 +557,26 @@ return <div>{sortedItems.map(...)}</div>;
 - [ ] npx tsc --noEmit passes
 
 ### Functionality
-
 - [ ] Renders same as original
 - [ ] Interactions work
 - [ ] Edge cases handled (loading, empty, error)
 
 ### Metrics
-
-- Before: **\_** lines
-- After: **\_** lines (orchestrator)
-- Reduction: **\_**%
-- Files created: **\_**
+- Before: _____ lines
+- After: _____ lines (orchestrator)
+- Reduction: _____%
+- Files created: _____
 ```
 
 ---
 
-_Rules v1.3 - 2026-01-05_
-_Added rules 8-14 based on Wave 1.1 subagent errors:_
-_- Rule 8: Find ALL importers before moving_
-_- Rule 9: Preserve hook types (undefined vs null)_
-_- Rule 10: Real TypeScript validation_
-_- Rule 11: Type definition order (define before use)_
-_- Rule 12: Nullable consistency (undefined vs null)_
-_- Rule 13: String to union type casting_
-_- Rule 14: Props consistency across components_
-_Based on 18+ refactorings + Wave 1.1 error analysis_
+*Rules v1.3 - 2026-01-05*
+*Added rules 8-14 based on Wave 1.1 subagent errors:*
+*- Rule 8: Find ALL importers before moving*
+*- Rule 9: Preserve hook types (undefined vs null)*
+*- Rule 10: Real TypeScript validation*
+*- Rule 11: Type definition order (define before use)*
+*- Rule 12: Nullable consistency (undefined vs null)*
+*- Rule 13: String to union type casting*
+*- Rule 14: Props consistency across components*
+*Based on 18+ refactorings + Wave 1.1 error analysis*

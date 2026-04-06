@@ -6,9 +6,9 @@ updated: "2026-02-11"
 
 # Thresholds for tier qualification
 thresholds:
-  haiku: 0.90 # >= 90% of Opus quality
-  sonnet: 0.95 # >= 95% of Opus quality
-  opus: 1.00 # Baseline (100%)
+  haiku: 0.90      # >= 90% of Opus quality
+  sonnet: 0.95     # >= 95% of Opus quality
+  opus: 1.00       # Baseline (100%)
 
 # Quality dimensions with weights
 dimensions:
@@ -131,17 +131,17 @@ compensations:
 # Source: https://www.anthropic.com/pricing
 costs:
   haiku:
-    input: 0.25 # $0.25 per 1M input tokens
-    output: 1.25 # $1.25 per 1M output tokens
-    ratio_vs_opus: 60 # 60x cheaper than Opus
+    input: 0.25      # $0.25 per 1M input tokens
+    output: 1.25     # $1.25 per 1M output tokens
+    ratio_vs_opus: 60  # 60x cheaper than Opus
   sonnet:
     input: 3.00
     output: 15.00
-    ratio_vs_opus: 5 # 5x cheaper than Opus
+    ratio_vs_opus: 5   # 5x cheaper than Opus
   opus:
     input: 15.00
     output: 75.00
-    ratio_vs_opus: 1 # Baseline
+    ratio_vs_opus: 1   # Baseline
 
 # CRITICAL: Cost-First Decision Logic
 # The goal is $$$ savings, NOT token savings
@@ -163,12 +163,12 @@ cost_first_logic:
     opus:
       tokens_in: 15000
       tokens_out: 800
-      cost: 0.285 # (15K * $15/1M) + (800 * $75/1M)
+      cost: 0.285  # (15K * $15/1M) + (800 * $75/1M)
     haiku:
-      tokens_in: 55000 # 3.6x more!
-      tokens_out: 3000 # 3.75x more!
-      cost: 0.018 # (55K * $0.25/1M) + (3K * $1.25/1M)
-    savings: 93.7% # Even using MORE tokens, 93.7% cheaper
+      tokens_in: 55000  # 3.6x more!
+      tokens_out: 3000  # 3.75x more!
+      cost: 0.018  # (55K * $0.25/1M) + (3K * $1.25/1M)
+    savings: 93.7%  # Even using MORE tokens, 93.7% cheaper
 
 # Patterns learned from validation
 patterns:

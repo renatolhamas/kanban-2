@@ -20,13 +20,13 @@
  * @see Story MIS-3.1 - Fix Session-Digest Hook Registration
  */
 
-"use strict";
+'use strict';
 
-const path = require("path");
+const path = require('path');
 
 // Resolve project root via __dirname (same pattern as synapse-engine.cjs)
 // More robust than input.cwd — doesn't depend on external input
-const PROJECT_ROOT = path.resolve(__dirname, "..", "..");
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..');
 
 /** Safety timeout (ms) — defense-in-depth; Claude Code also manages hook timeout. */
 const HOOK_TIMEOUT_MS = 9000;
@@ -38,18 +38,13 @@ const HOOK_TIMEOUT_MS = 9000;
  */
 function readStdin() {
   return new Promise((resolve, reject) => {
-    let data = "";
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("error", (e) => reject(e));
-    process.stdin.on("data", (chunk) => {
-      data += chunk;
-    });
-    process.stdin.on("end", () => {
-      try {
-        resolve(JSON.parse(data));
-      } catch (e) {
-        reject(e);
-      }
+    let data = '';
+    process.stdin.setEncoding('utf8');
+    process.stdin.on('error', (e) => reject(e));
+    process.stdin.on('data', (chunk) => { data += chunk; });
+    process.stdin.on('end', () => {
+      try { resolve(JSON.parse(data)); }
+      catch (e) { reject(e); }
     });
   });
 }
@@ -62,11 +57,11 @@ async function main() {
   // Same pattern as synapse-engine.cjs — robust against incorrect cwd
   const runnerPath = path.join(
     PROJECT_ROOT,
-    ".aiox-core",
-    "hooks",
-    "unified",
-    "runners",
-    "precompact-runner.js",
+    '.aiox-core',
+    'hooks',
+    'unified',
+    'runners',
+    'precompact-runner.js',
   );
 
   // Build context object expected by onPreCompact
@@ -74,11 +69,11 @@ async function main() {
     sessionId: input.session_id,
     projectDir: input.cwd || PROJECT_ROOT,
     transcriptPath: input.transcript_path,
-    trigger: input.trigger || "auto",
-    hookEventName: input.hook_event_name || "PreCompact",
+    trigger: input.trigger || 'auto',
+    hookEventName: input.hook_event_name || 'PreCompact',
     permissionMode: input.permission_mode,
     conversation: input,
-    provider: "claude",
+    provider: 'claude',
   };
 
   const { onPreCompact } = require(runnerPath);

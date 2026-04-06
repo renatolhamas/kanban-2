@@ -9,7 +9,6 @@
 **Model:** `Sonnet` (documentation generation, moderate complexity)
 
 **Core Philosophy:**
-
 ```
 A squad without proper documentation is a squad nobody can use.
 SQUAD-OVERVIEW.md is the single source of truth for squad understanding.
@@ -20,16 +19,16 @@ Generate once, reference always.
 
 ## Task Anatomy
 
-| Field                    | Value                             |
-| ------------------------ | --------------------------------- |
-| **task_name**            | Generate Squad Overview           |
-| **status**               | `pending`                         |
-| **responsible_executor** | @squad-chief                      |
-| **execution_type**       | `Agent`                           |
-| **input**                | squad_name, squad_path (optional) |
-| **output**               | SQUAD-OVERVIEW.md                 |
-| **action_items**         | 6 phases                          |
-| **acceptance_criteria**  | 8 criteria                        |
+| Field | Value |
+|-------|-------|
+| **task_name** | Generate Squad Overview |
+| **status** | `pending` |
+| **responsible_executor** | @squad-chief |
+| **execution_type** | `Agent` |
+| **input** | squad_name, squad_path (optional) |
+| **output** | SQUAD-OVERVIEW.md |
+| **action_items** | 6 phases |
+| **acceptance_criteria** | 8 criteria |
 
 ---
 
@@ -52,19 +51,19 @@ This task generates a comprehensive SQUAD-OVERVIEW.md document that serves as th
 
 ## Inputs
 
-| Parameter       | Type    | Required | Description               | Example                     |
-| --------------- | ------- | -------- | ------------------------- | --------------------------- |
-| `squad_name`    | string  | Yes      | Name of squad to document | `"franchise"`               |
-| `squad_path`    | string  | No       | Override default path     | `"squads/franchise/"`       |
-| `include_minds` | boolean | No       | Include mind DNA details  | `true` (default)            |
-| `format`        | string  | No       | Output format             | `"detailed"` or `"compact"` |
+| Parameter | Type | Required | Description | Example |
+|-----------|------|----------|-------------|---------|
+| `squad_name` | string | Yes | Name of squad to document | `"franchise"` |
+| `squad_path` | string | No | Override default path | `"squads/franchise/"` |
+| `include_minds` | boolean | No | Include mind DNA details | `true` (default) |
+| `format` | string | No | Output format | `"detailed"` or `"compact"` |
 
 ---
 
 ## Outputs
 
-| Output            | Location                         | Description                  |
-| ----------------- | -------------------------------- | ---------------------------- |
+| Output | Location | Description |
+|--------|----------|-------------|
 | SQUAD-OVERVIEW.md | `{squad_path}/SQUAD-OVERVIEW.md` | Complete squad documentation |
 
 ---
@@ -368,7 +367,7 @@ write_output:
 
 ## Output Template
 
-````markdown
+```markdown
 # SQUAD {SQUAD_NAME} — Documentacao Completa
 
 ---
@@ -376,21 +375,21 @@ write_output:
 ## VISAO GERAL
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ │
-│ {ICON} SQUAD {NAME} v{VERSION} │
-│ │
-│ "{TAGLINE}" │
-│ │
+│                                                                             │
+│                      {ICON} SQUAD {NAME} v{VERSION}                        │
+│                                                                             │
+│   "{TAGLINE}"                                                               │
+│                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-| Atributo               | Valor                          |
-| ---------------------- | ------------------------------ |
-| Nome                   | {name}                         |
-| Versao                 | {version}                      |
-| Localizacao            | squads/{name}/                 |
-| Tamanho                | {size} ({file_count} arquivos) |
-| Ativacao               | @{entry_agent}                 |
-| {Compliance if exists} | {compliance_info}              |
+| Atributo | Valor |
+|----------|-------|
+| Nome | {name} |
+| Versao | {version} |
+| Localizacao | squads/{name}/ |
+| Tamanho | {size} ({file_count} arquivos) |
+| Ativacao | @{entry_agent} |
+| {Compliance if exists} | {compliance_info} |
 
 ---
 
@@ -403,8 +402,7 @@ write_output:
 ### Detalhamento dos Agents
 
 | Agent | Papel | Linhas | Tamanho | Tier | Fidelidade DNA |
-| ----- | ----- | ------ | ------- | ---- | -------------- |
-
+|-------|-------|--------|---------|------|----------------|
 {AGENT_ROWS}
 
 Total: {total_lines} linhas de agents especializados
@@ -414,14 +412,13 @@ Total: {total_lines} linhas de agents especializados
 ## SOBRE OS ESPECIALISTAS
 
 {FOR_EACH_EXPERT}
-
 ### {EXPERT_NAME}
 
 - **Credenciais:** {credentials}
 - **Foco:** {focus_area}
 - **Frameworks principais:** {frameworks}
 - **Por que no squad:** {rationale}
-  {/FOR_EACH_EXPERT}
+{/FOR_EACH_EXPERT}
 
 ---
 
@@ -440,8 +437,7 @@ Total: {total_lines} linhas de agents especializados
 ## FRAMEWORKS INTEGRADOS
 
 | Expert | Framework | Aplicacao |
-| ------ | --------- | --------- |
-
+|--------|-----------|-----------|
 {FRAMEWORK_ROWS}
 
 ---
@@ -451,15 +447,13 @@ Total: {total_lines} linhas de agents especializados
 ### Comandos do Lider (@{leader})
 
 | Comando | Descricao | Delega para |
-| ------- | --------- | ----------- |
-
+|---------|-----------|-------------|
 {LEADER_COMMAND_ROWS}
 
 ### Comandos por Especialista
 
 | Agent | Comandos Principais |
-| ----- | ------------------- |
-
+|-------|---------------------|
 {SPECIALIST_COMMAND_ROWS}
 
 ---
@@ -500,37 +494,35 @@ Total: {total_lines} linhas de agents especializados
 # 3. Fluxo tipico
 {typical_flow}
 ```
-````
 
 ---
 
 ## HEURISTICAS-CHAVE
 
-| Expert | ID  | Heuristica |
-| ------ | --- | ---------- |
-
+| Expert | ID | Heuristica |
+|--------|----|------------|
 {HEURISTIC_ROWS}
 
 ---
 
 ## METRICAS DE CRIACAO
 
-| Metrica              | Valor            |
-| -------------------- | ---------------- |
-| Agents criados       | {agent_count}    |
-| Tasks criadas        | {task_count}     |
-| Workflows criados    | {workflow_count} |
-| Fidelidade media DNA | {avg_fidelity}   |
-| Linhas totais        | {total_lines}    |
+| Metrica | Valor |
+|---------|-------|
+| Agents criados | {agent_count} |
+| Tasks criadas | {task_count} |
+| Workflows criados | {workflow_count} |
+| Fidelidade media DNA | {avg_fidelity} |
+| Linhas totais | {total_lines} |
 
 ---
 
 ## TIME DOS SONHOS — ENTREGUE
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ │
+│                                                                             │
 {EXPERT_SUMMARY_BOX}
-│ │
+│                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ---
@@ -538,8 +530,7 @@ Total: {total_lines} linhas de agents especializados
 Squad {name} v{version} — Pronto para uso! {icon}
 
 — Clone minds > create bots.
-
-````
+```
 
 ---
 
@@ -591,10 +582,9 @@ quality_gate:
     - "No VISAO GERAL section"
     - "No commands section"
     - "Contains {PLACEHOLDER} text"
-````
+```
 
 **Post-Generation Validation:**
-
 1. Run quick validation script from checklist
 2. Apply 100-point scoring
 3. Report score in completion message
@@ -619,18 +609,17 @@ quality_gate:
 
 ## Error Handling
 
-| Error            | Detection                         | Recovery                            |
-| ---------------- | --------------------------------- | ----------------------------------- |
-| Squad not found  | config.yaml missing               | Report error, list available squads |
-| No agents        | agents/ empty                     | Create minimal doc with warning     |
-| Mind dir missing | outputs/minds/{expert}/ not found | Skip DNA section, note in doc       |
+| Error | Detection | Recovery |
+|-------|-----------|----------|
+| Squad not found | config.yaml missing | Report error, list available squads |
+| No agents | agents/ empty | Create minimal doc with warning |
+| Mind dir missing | outputs/minds/{expert}/ not found | Skip DNA section, note in doc |
 
 ---
 
 ## Integration
 
 This task integrates with:
-
 - `*validate-squad` — Can run after validation to document validated squad
 - `*create-squad` — Automatically called at end of squad creation
 - `*refresh-registry` — Updates registry after doc creation
@@ -646,7 +635,6 @@ This task integrates with:
 ```
 
 **Output:** `squads/franchise/SQUAD-OVERVIEW.md` with:
-
 - 6 experts documented
 - Compliance section for Lei 13.966/2019
 - Complete workflow diagram
@@ -659,7 +647,6 @@ This task integrates with:
 ```
 
 **Output:** `squads/book-summary/SQUAD-OVERVIEW.md` with:
-
 - Orchestrator documented
 - Phase-based workflow
 - No DNA section (pipeline, not expert-based)
@@ -669,25 +656,25 @@ This task integrates with:
 
 ## Related
 
-| Command                  | Purpose                     |
-| ------------------------ | --------------------------- |
+| Command | Purpose |
+|---------|---------|
 | `*squad-overview {name}` | Generate this documentation |
-| `*validate-squad {name}` | Validate squad first        |
-| `*squad-analytics`       | Get detailed metrics        |
+| `*validate-squad {name}` | Validate squad first |
+| `*squad-analytics` | Get detailed metrics |
 
-| Reference             | File                                     |
-| --------------------- | ---------------------------------------- |
+| Reference | File |
+|-----------|------|
 | **Quality Checklist** | `checklists/squad-overview-checklist.md` |
-| Squad Checklist       | `checklists/squad-checklist.md`          |
-| Type Definitions      | `data/squad-type-definitions.yaml`       |
+| Squad Checklist | `checklists/squad-checklist.md` |
+| Type Definitions | `data/squad-type-definitions.yaml` |
 
 ---
 
 ## Changelog
 
-| Version | Date       | Changes                                                       |
-| ------- | ---------- | ------------------------------------------------------------- |
-| 1.0.0   | 2026-02-18 | Initial version — comprehensive squad documentation generator |
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2026-02-18 | Initial version — comprehensive squad documentation generator |
 
 ---
 

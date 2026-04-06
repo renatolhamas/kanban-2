@@ -32,39 +32,39 @@ responsible_type: Agent
 atomic_layer: Analysis
 
 inputs:
-  - field: targetDir
-    type: string
-    source: User Input or cwd
-    required: false
-    validation: Valid directory path with existing project
+- field: targetDir
+  type: string
+  source: User Input or cwd
+  required: false
+  validation: Valid directory path with existing project
 
-  - field: outputFormat
-    type: string
-    source: User Input
-    required: false
-    validation: report|json|summary
+- field: outputFormat
+  type: string
+  source: User Input
+  required: false
+  validation: report|json|summary
 
-  - field: executionMode
-    type: string
-    source: User Input
-    required: false
-    validation: yolo|interactive|pre-flight
+- field: executionMode
+  type: string
+  source: User Input
+  required: false
+  validation: yolo|interactive|pre-flight
 
 outputs:
-  - field: analysis
-    type: BrownfieldAnalysis
-    destination: Memory/Console
-    persisted: false
+- field: analysis
+  type: BrownfieldAnalysis
+  destination: Memory/Console
+  persisted: false
 
-  - field: report
-    type: string
-    destination: Console or File
-    persisted: optional
+- field: report
+  type: string
+  destination: Console or File
+  persisted: optional
 
-  - field: recommendations
-    type: array
-    destination: Memory
-    persisted: false
+- field: recommendations
+  type: array
+  destination: Memory
+  persisted: false
 ```
 
 ---
@@ -210,7 +210,6 @@ token_usage: ~300-1,000 tokens
 ```
 
 **Optimization Notes:**
-
 - File existence checks are fast
 - JSON parsing cached per file
 - Directory structure scan is O(n) for root level
@@ -234,10 +233,8 @@ updated_at: 2025-12-14
 ---
 
 tools:
-
-- filesystem # Read project files
-- brownfield-analyzer # Core module for this task
-
+  - filesystem        # Read project files
+  - brownfield-analyzer  # Core module for this task
 ---
 
 # Analyze Brownfield Project
@@ -253,10 +250,7 @@ Analyze an existing project to understand its structure, tech stack, coding stan
 Execute the brownfield analyzer on the target project:
 
 ```javascript
-const {
-  analyzeProject,
-  formatMigrationReport,
-} = require("./.aiox-core/infrastructure/scripts/documentation-integrity/brownfield-analyzer");
+const { analyzeProject, formatMigrationReport } = require('./.aiox-core/infrastructure/scripts/documentation-integrity/brownfield-analyzer');
 
 const targetDir = process.cwd(); // or specified directory
 const analysis = analyzeProject(targetDir);
@@ -271,17 +265,17 @@ The analysis returns comprehensive information about the project:
 ```typescript
 interface BrownfieldAnalysis {
   // Basic flags
-  hasExistingStructure: boolean; // Has src/, lib/, tests/, etc.
-  hasExistingWorkflows: boolean; // Has CI/CD configurations
-  hasExistingStandards: boolean; // Has linting/formatting configs
+  hasExistingStructure: boolean;   // Has src/, lib/, tests/, etc.
+  hasExistingWorkflows: boolean;   // Has CI/CD configurations
+  hasExistingStandards: boolean;   // Has linting/formatting configs
 
   // Merge strategy
-  mergeStrategy: "parallel" | "manual"; // Recommended approach
+  mergeStrategy: 'parallel' | 'manual';  // Recommended approach
 
   // Detected stack
-  techStack: string[]; // ['Node.js', 'TypeScript', 'Python', 'Go', 'Rust']
-  frameworks: string[]; // ['React', 'Vue', 'Angular', 'Next.js', 'Express', etc.]
-  version: string | null; // Project version from package.json
+  techStack: string[];      // ['Node.js', 'TypeScript', 'Python', 'Go', 'Rust']
+  frameworks: string[];     // ['React', 'Vue', 'Angular', 'Next.js', 'Express', etc.]
+  version: string | null;   // Project version from package.json
 
   // Config paths
   configs: {
@@ -297,9 +291,9 @@ interface BrownfieldAnalysis {
   };
 
   // Detected settings
-  linting: string; // 'ESLint', 'Flake8', 'none'
-  formatting: string; // 'Prettier', 'Black', 'none'
-  testing: string; // 'Jest', 'Vitest', 'pytest', 'none'
+  linting: string;      // 'ESLint', 'Flake8', 'none'
+  formatting: string;   // 'Prettier', 'Black', 'none'
+  testing: string;      // 'Jest', 'Vitest', 'pytest', 'none'
 
   // Integration guidance
   recommendations: string[];
@@ -357,17 +351,16 @@ console.log(report);
 
 Based on the analysis, follow the recommended merge strategy:
 
-| Strategy   | Meaning                                  | Actions                            |
-| ---------- | ---------------------------------------- | ---------------------------------- |
+| Strategy | Meaning | Actions |
+|----------|---------|---------|
 | `parallel` | Safe to proceed with standard AIOX setup | Use `*setup-project-docs` directly |
-| `manual`   | Existing CI/CD requires careful review   | Review workflows, then proceed     |
+| `manual` | Existing CI/CD requires careful review | Review workflows, then proceed |
 
 ### 5. Address Manual Review Items
 
 For each item in `analysis.manualReviewItems`:
 
 1. **Review GitHub Workflows:**
-
    ```bash
    # List existing workflows
    ls -la .github/workflows/
@@ -377,7 +370,6 @@ For each item in `analysis.manualReviewItems`:
    ```
 
 2. **Review GitLab CI:**
-
    ```bash
    # Check .gitlab-ci.yml for existing stages
    cat .gitlab-ci.yml | grep -E "^[a-z]+:"
@@ -407,14 +399,12 @@ For each item in `analysis.conflicts`:
 After analysis and review, proceed based on findings:
 
 **If mergeStrategy is 'parallel':**
-
 ```bash
 # Direct integration
 *setup-project-docs
 ```
 
 **If mergeStrategy is 'manual':**
-
 ```bash
 # First review workflows, then
 *setup-project-docs --merge
@@ -434,19 +424,16 @@ After analysis and review, proceed based on findings:
 ## Output Options
 
 **Console Report (default):**
-
 ```bash
 *analyze-brownfield
 ```
 
 **JSON Output:**
-
 ```bash
 *analyze-brownfield --format json > analysis.json
 ```
 
 **Summary Only:**
-
 ```bash
 *analyze-brownfield --format summary
 # Output: Tech Stack: Node.js, TypeScript | Frameworks: React | Standards: ESLint/Prettier | CI/CD: Existing workflows detected | Recommended Strategy: manual

@@ -19,11 +19,11 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const EventEmitter = require("events");
+const fs = require('fs');
+const path = require('path');
+const EventEmitter = require('events');
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              BROWNFIELD PHASES
@@ -34,18 +34,18 @@ const EventEmitter = require("events");
  * @enum {string}
  */
 const BrownfieldPhase = {
-  WELCOME: "welcome",
-  SYSTEM_DOCUMENTATION: "system_documentation",
-  DATABASE_DOCUMENTATION: "database_documentation",
-  FRONTEND_DOCUMENTATION: "frontend_documentation",
-  INITIAL_CONSOLIDATION: "initial_consolidation",
-  DATABASE_REVIEW: "database_specialist_review",
-  UX_REVIEW: "ux_specialist_review",
-  QA_REVIEW: "qa_general_review",
-  FINAL_ASSESSMENT: "final_assessment",
-  EXECUTIVE_REPORT: "executive_awareness_report",
-  PLANNING: "epic_creation",
-  COMPLETE: "complete",
+  WELCOME: 'welcome',
+  SYSTEM_DOCUMENTATION: 'system_documentation',
+  DATABASE_DOCUMENTATION: 'database_documentation',
+  FRONTEND_DOCUMENTATION: 'frontend_documentation',
+  INITIAL_CONSOLIDATION: 'initial_consolidation',
+  DATABASE_REVIEW: 'database_specialist_review',
+  UX_REVIEW: 'ux_specialist_review',
+  QA_REVIEW: 'qa_general_review',
+  FINAL_ASSESSMENT: 'final_assessment',
+  EXECUTIVE_REPORT: 'executive_awareness_report',
+  PLANNING: 'epic_creation',
+  COMPLETE: 'complete',
 };
 
 /**
@@ -53,8 +53,8 @@ const BrownfieldPhase = {
  * @enum {string}
  */
 const PostDiscoveryChoice = {
-  RESOLVE_DEBTS: "resolve_debts",
-  ADD_FEATURE: "add_feature",
+  RESOLVE_DEBTS: 'resolve_debts',
+  ADD_FEATURE: 'add_feature',
 };
 
 /**
@@ -62,9 +62,9 @@ const PostDiscoveryChoice = {
  * @enum {string}
  */
 const PhaseFailureAction = {
-  RETRY: "retry",
-  SKIP: "skip",
-  ABORT: "abort",
+  RETRY: 'retry',
+  SKIP: 'skip',
+  ABORT: 'abort',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -86,8 +86,8 @@ class BrownfieldHandler extends EventEmitter {
   constructor(projectRoot, options = {}) {
     super();
 
-    if (!projectRoot || typeof projectRoot !== "string") {
-      throw new Error("projectRoot is required and must be a string");
+    if (!projectRoot || typeof projectRoot !== 'string') {
+      throw new Error('projectRoot is required and must be a string');
     }
 
     this.projectRoot = projectRoot;
@@ -104,13 +104,13 @@ class BrownfieldHandler extends EventEmitter {
     // Workflow path
     this.workflowPath = path.join(
       projectRoot,
-      ".aiox-core/development/workflows/brownfield-discovery.yaml",
+      '.aiox-core/development/workflows/brownfield-discovery.yaml',
     );
 
     // Phase progress tracking
     this.phaseProgress = {};
 
-    this._log("BrownfieldHandler initialized");
+    this._log('BrownfieldHandler initialized');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════════════
@@ -124,12 +124,12 @@ class BrownfieldHandler extends EventEmitter {
   _getWorkflowExecutor() {
     if (!this._workflowExecutor) {
       try {
-        const { WorkflowExecutor } = require("./workflow-executor");
+        const { WorkflowExecutor } = require('./workflow-executor');
         this._workflowExecutor = new WorkflowExecutor(this.projectRoot, {
           debug: this.options.debug,
         });
       } catch (error) {
-        this._log(`WorkflowExecutor not available: ${error.message}`, "warn");
+        this._log(`WorkflowExecutor not available: ${error.message}`, 'warn');
       }
     }
     return this._workflowExecutor;
@@ -142,10 +142,10 @@ class BrownfieldHandler extends EventEmitter {
   _getSurfaceChecker() {
     if (!this._surfaceChecker) {
       try {
-        const { SurfaceChecker } = require("./surface-checker");
+        const { SurfaceChecker } = require('./surface-checker');
         this._surfaceChecker = new SurfaceChecker();
       } catch (error) {
-        this._log(`SurfaceChecker not available: ${error.message}`, "warn");
+        this._log(`SurfaceChecker not available: ${error.message}`, 'warn');
       }
     }
     return this._surfaceChecker;
@@ -158,12 +158,12 @@ class BrownfieldHandler extends EventEmitter {
   _getSessionState() {
     if (!this._sessionState) {
       try {
-        const { SessionState } = require("./session-state");
+        const { SessionState } = require('./session-state');
         this._sessionState = new SessionState(this.projectRoot, {
           debug: this.options.debug,
         });
       } catch (error) {
-        this._log(`SessionState not available: ${error.message}`, "warn");
+        this._log(`SessionState not available: ${error.message}`, 'warn');
       }
     }
     return this._sessionState;
@@ -183,9 +183,7 @@ class BrownfieldHandler extends EventEmitter {
    * @returns {Promise<Object>} Handler result
    */
   async handle(context = {}) {
-    this._log(
-      "🔍 First execution detected — project has code but no AIOX docs",
-    );
+    this._log('🔍 First execution detected — project has code but no AIOX docs');
 
     // Step 1: Check if user has already accepted (resuming)
     if (context.userAccepted === true) {
@@ -194,10 +192,7 @@ class BrownfieldHandler extends EventEmitter {
 
     // Step 2: Check if this is post-discovery routing
     if (context.postDiscoveryChoice) {
-      return this._handlePostDiscoveryChoice(
-        context.postDiscoveryChoice,
-        context,
-      );
+      return this._handlePostDiscoveryChoice(context.postDiscoveryChoice, context);
     }
 
     // Step 3: Present welcome message and ask for acceptance (AC2)
@@ -212,7 +207,7 @@ class BrownfieldHandler extends EventEmitter {
    * @private
    */
   _presentWelcomeMessage(context) {
-    this._log("Presenting welcome message for first execution");
+    this._log('Presenting welcome message for first execution');
 
     const welcomeMessage = `Bem-vindo! Percebi que é a primeira vez que trabalho neste projeto.
 Posso dar uma olhada no que você tem aqui e configurar tudo para a gente
@@ -223,21 +218,21 @@ Quer que eu comece?`;
     const surfaceChecker = this._getSurfaceChecker();
     const surfaceResult = surfaceChecker
       ? surfaceChecker.shouldSurface({
-          valid_options_count: 2,
-          options_with_tradeoffs: [
-            "1. Sim — Iniciar análise completa do projeto (4-8 horas)",
-            "2. Não — Pular análise e usar configurações padrão",
-          ].join("\n"),
-        })
+        valid_options_count: 2,
+        options_with_tradeoffs: [
+          '1. Sim — Iniciar análise completa do projeto (4-8 horas)',
+          '2. Não — Pular análise e usar configurações padrão',
+        ].join('\n'),
+      })
       : { should_surface: true };
 
     return {
-      action: "brownfield_welcome",
+      action: 'brownfield_welcome',
       phase: BrownfieldPhase.WELCOME,
       data: {
         message: welcomeMessage,
-        timeEstimate: "4-8 horas",
-        options: ["accept", "decline"],
+        timeEstimate: '4-8 horas',
+        options: ['accept', 'decline'],
         surfaceResult,
         context,
       },
@@ -252,15 +247,15 @@ Quer que eu comece?`;
    * @returns {Promise<Object>} Next step result
    */
   async handleUserDecision(accepted, context = {}) {
-    this._log(`User decision: ${accepted ? "ACCEPTED" : "DECLINED"}`);
+    this._log(`User decision: ${accepted ? 'ACCEPTED' : 'DECLINED'}`);
 
     if (!accepted) {
       // User declined - route to existing project handler with defaults
       return {
-        action: "brownfield_declined",
+        action: 'brownfield_declined',
         data: {
-          message: "Análise pulada. Usando configurações padrão.",
-          nextStep: "existing_project_defaults",
+          message: 'Análise pulada. Usando configurações padrão.',
+          nextStep: 'existing_project_defaults',
           context,
         },
       };
@@ -282,20 +277,20 @@ Quer que eu comece?`;
    * @private
    */
   async _executeDiscovery(context) {
-    this._log("Starting brownfield discovery workflow execution");
+    this._log('Starting brownfield discovery workflow execution');
 
     const workflowExecutor = this._getWorkflowExecutor();
     if (!workflowExecutor) {
       return {
-        action: "brownfield_error",
-        error: "WorkflowExecutor not available",
+        action: 'brownfield_error',
+        error: 'WorkflowExecutor not available',
       };
     }
 
     // Check if workflow file exists
     if (!fs.existsSync(this.workflowPath)) {
       return {
-        action: "brownfield_error",
+        action: 'brownfield_error',
         error: `Workflow file not found: ${this.workflowPath}`,
       };
     }
@@ -309,10 +304,8 @@ Quer que eu comece?`;
         projectRoot: this.projectRoot,
         techStack: context.techStack || {},
         onPhaseStart: (phase) => this._onPhaseStart(phase, context),
-        onPhaseComplete: (phase, output) =>
-          this._onPhaseComplete(phase, output, context),
-        onPhaseError: (phase, error) =>
-          this._onPhaseError(phase, error, context),
+        onPhaseComplete: (phase, output) => this._onPhaseComplete(phase, output, context),
+        onPhaseError: (phase, error) => this._onPhaseError(phase, error, context),
       });
 
       // Check if workflow completed successfully
@@ -322,17 +315,17 @@ Quer que eu comece?`;
 
       // Workflow failed
       return {
-        action: "brownfield_failed",
+        action: 'brownfield_failed',
         data: {
           result,
-          message: "Brownfield discovery workflow failed",
+          message: 'Brownfield discovery workflow failed',
           canRetry: true,
         },
       };
     } catch (error) {
-      this._log(`Discovery execution error: ${error.message}`, "error");
+      this._log(`Discovery execution error: ${error.message}`, 'error');
       return {
-        action: "brownfield_error",
+        action: 'brownfield_error',
         error: error.message,
         canRetry: true,
       };
@@ -345,14 +338,11 @@ Quer que eu comece?`;
    */
   async _onPhaseStart(phase, context) {
     this._log(`Phase started: ${phase}`);
-    this.phaseProgress[phase] = {
-      status: "in_progress",
-      startTime: Date.now(),
-    };
+    this.phaseProgress[phase] = { status: 'in_progress', startTime: Date.now() };
 
     await this._recordPhase(phase, context);
 
-    this.emit("phaseStart", { phase, context });
+    this.emit('phaseStart', { phase, context });
   }
 
   /**
@@ -363,12 +353,12 @@ Quer que eu comece?`;
     this._log(`Phase completed: ${phase}`);
     this.phaseProgress[phase] = {
       ...this.phaseProgress[phase],
-      status: "complete",
+      status: 'complete',
       endTime: Date.now(),
       output,
     };
 
-    this.emit("phaseComplete", { phase, output, context });
+    this.emit('phaseComplete', { phase, output, context });
   }
 
   /**
@@ -381,25 +371,25 @@ Quer que eu comece?`;
    * @private
    */
   async _onPhaseError(phase, error, context) {
-    this._log(`Phase failed: ${phase} - ${error.message}`, "error");
+    this._log(`Phase failed: ${phase} - ${error.message}`, 'error');
     this.phaseProgress[phase] = {
       ...this.phaseProgress[phase],
-      status: "failed",
+      status: 'failed',
       endTime: Date.now(),
       error: error.message,
     };
 
-    this.emit("phaseError", { phase, error, context });
+    this.emit('phaseError', { phase, error, context });
 
     // Return failure options for user decision
     return {
-      action: "phase_failure",
+      action: 'phase_failure',
       phase,
       error: error.message,
       options: [
-        { action: PhaseFailureAction.RETRY, label: "1. Tentar novamente" },
-        { action: PhaseFailureAction.SKIP, label: "2. Pular esta fase" },
-        { action: PhaseFailureAction.ABORT, label: "3. Cancelar discovery" },
+        { action: PhaseFailureAction.RETRY, label: '1. Tentar novamente' },
+        { action: PhaseFailureAction.SKIP, label: '2. Pular esta fase' },
+        { action: PhaseFailureAction.ABORT, label: '3. Cancelar discovery' },
       ],
     };
   }
@@ -418,29 +408,26 @@ Quer que eu comece?`;
     switch (action) {
       case PhaseFailureAction.RETRY:
         this._log(`Retrying phase: ${phase}`);
-        return { action: "retry_phase", phase, context };
+        return { action: 'retry_phase', phase, context };
 
       case PhaseFailureAction.SKIP:
         this._log(`Skipping phase: ${phase}`);
-        this.phaseProgress[phase] = {
-          ...this.phaseProgress[phase],
-          status: "skipped",
-        };
-        return { action: "skip_phase", phase, context };
+        this.phaseProgress[phase] = { ...this.phaseProgress[phase], status: 'skipped' };
+        return { action: 'skip_phase', phase, context };
 
       case PhaseFailureAction.ABORT:
         this._log(`Aborting discovery at phase: ${phase}`);
         return {
-          action: "brownfield_aborted",
+          action: 'brownfield_aborted',
           data: {
-            message: "Discovery cancelado pelo usuário",
+            message: 'Discovery cancelado pelo usuário',
             lastPhase: phase,
             progress: this.phaseProgress,
           },
         };
 
       default:
-        return { action: "invalid_action", error: `Unknown action: ${action}` };
+        return { action: 'invalid_action', error: `Unknown action: ${action}` };
     }
   }
 
@@ -457,7 +444,7 @@ Quer que eu comece?`;
    * @private
    */
   _handleDiscoveryComplete(result, context) {
-    this._log("Discovery workflow completed successfully");
+    this._log('Discovery workflow completed successfully');
 
     // Build summary from generated outputs
     const summary = this._buildDiscoverySummary();
@@ -467,10 +454,10 @@ Quer que eu comece?`;
 
     // Next step question
     const nextStepQuestion =
-      "Quer que eu monte um plano para resolver os débitos primeiro, ou prefere adicionar uma feature nova?";
+      'Quer que eu monte um plano para resolver os débitos primeiro, ou prefere adicionar uma feature nova?';
 
     return {
-      action: "brownfield_complete",
+      action: 'brownfield_complete',
       phase: BrownfieldPhase.COMPLETE,
       data: {
         summary,
@@ -479,16 +466,16 @@ Quer que eu comece?`;
         options: [
           {
             choice: PostDiscoveryChoice.RESOLVE_DEBTS,
-            label: "1. Resolver débitos técnicos",
+            label: '1. Resolver débitos técnicos',
           },
           {
             choice: PostDiscoveryChoice.ADD_FEATURE,
-            label: "2. Adicionar feature nova",
+            label: '2. Adicionar feature nova',
           },
         ],
         outputs: {
-          systemArchitecture: "docs/architecture/system-architecture.md",
-          technicalDebtReport: "docs/reports/TECHNICAL-DEBT-REPORT.md",
+          systemArchitecture: 'docs/architecture/system-architecture.md',
+          technicalDebtReport: 'docs/reports/TECHNICAL-DEBT-REPORT.md',
         },
         result,
         context,
@@ -505,53 +492,37 @@ Quer que eu comece?`;
       structureOk: false,
       databaseIssues: 0,
       testingConfigured: false,
-      estimatedDebt: "N/A",
+      estimatedDebt: 'N/A',
       indicators: [],
     };
 
     // Check for generated files and extract info
-    const archPath = path.join(
-      this.projectRoot,
-      "docs/architecture/system-architecture.md",
-    );
-    const debtReportPath = path.join(
-      this.projectRoot,
-      "docs/reports/TECHNICAL-DEBT-REPORT.md",
-    );
+    const archPath = path.join(this.projectRoot, 'docs/architecture/system-architecture.md');
+    const debtReportPath = path.join(this.projectRoot, 'docs/reports/TECHNICAL-DEBT-REPORT.md');
 
     if (fs.existsSync(archPath)) {
       summary.structureOk = true;
-      summary.indicators.push({
-        type: "success",
-        message: "Estrutura de pastas organizada",
-      });
+      summary.indicators.push({ type: 'success', message: 'Estrutura de pastas organizada' });
     }
 
     if (fs.existsSync(debtReportPath)) {
       try {
-        const reportContent = fs.readFileSync(debtReportPath, "utf8");
+        const reportContent = fs.readFileSync(debtReportPath, 'utf8');
 
         // Extract debt estimate from report (simple regex)
-        const debtMatch = reportContent.match(
-          /Custo Estimado[:\s]*R\$\s*([\d.,]+)/i,
-        );
+        const debtMatch = reportContent.match(/Custo Estimado[:\s]*R\$\s*([\d.,]+)/i);
         if (debtMatch) {
           summary.estimatedDebt = `R$ ${debtMatch[1]}`;
         }
 
         // Count issues
-        const dbIssuesMatch = reportContent.match(
-          /Database[:\s]*(\d+)\s*(?:issues?|problemas?)/i,
-        );
+        const dbIssuesMatch = reportContent.match(/Database[:\s]*(\d+)\s*(?:issues?|problemas?)/i);
         if (dbIssuesMatch) {
           summary.databaseIssues = parseInt(dbIssuesMatch[1], 10);
         }
 
         // Check testing
-        if (
-          reportContent.includes("testes configurados") ||
-          reportContent.includes("tests configured")
-        ) {
+        if (reportContent.includes('testes configurados') || reportContent.includes('tests configured')) {
           summary.testingConfigured = true;
         }
       } catch {
@@ -562,21 +533,21 @@ Quer que eu comece?`;
     // Build indicators based on findings
     if (summary.databaseIssues > 0) {
       summary.indicators.push({
-        type: "warning",
+        type: 'warning',
         message: `${summary.databaseIssues} problemas de banco de dados`,
       });
     }
 
     if (!summary.testingConfigured) {
       summary.indicators.push({
-        type: "warning",
-        message: "Sem testes configurados",
+        type: 'warning',
+        message: 'Sem testes configurados',
       });
     }
 
-    if (summary.estimatedDebt !== "N/A") {
+    if (summary.estimatedDebt !== 'N/A') {
       summary.indicators.push({
-        type: "critical",
+        type: 'critical',
         message: `${summary.estimatedDebt} estimados em débito técnico`,
       });
     }
@@ -589,27 +560,27 @@ Quer que eu comece?`;
    * @private
    */
   _formatSummaryMessage(summary) {
-    const lines = ["Encontrei algumas coisas:"];
+    const lines = ['Encontrei algumas coisas:'];
 
     for (const indicator of summary.indicators) {
       let icon;
       switch (indicator.type) {
-        case "success":
-          icon = "✅";
+        case 'success':
+          icon = '✅';
           break;
-        case "warning":
-          icon = "⚠️";
+        case 'warning':
+          icon = '⚠️';
           break;
-        case "critical":
-          icon = "❌";
+        case 'critical':
+          icon = '❌';
           break;
         default:
-          icon = "•";
+          icon = '•';
       }
       lines.push(`- ${icon} ${indicator.message}`);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -627,11 +598,11 @@ Quer que eu comece?`;
       case PostDiscoveryChoice.RESOLVE_DEBTS:
         // Route to brownfield-create-epic task
         return {
-          action: "route_to_debt_resolution",
+          action: 'route_to_debt_resolution',
           data: {
-            message: "Vou criar um plano para resolver os débitos técnicos.",
-            nextStep: "brownfield_create_epic",
-            taskPath: ".aiox-core/development/tasks/brownfield-create-epic.md",
+            message: 'Vou criar um plano para resolver os débitos técnicos.',
+            nextStep: 'brownfield_create_epic',
+            taskPath: '.aiox-core/development/tasks/brownfield-create-epic.md',
             context,
           },
         };
@@ -639,17 +610,17 @@ Quer que eu comece?`;
       case PostDiscoveryChoice.ADD_FEATURE:
         // Route to existing project handler (enhancement workflow)
         return {
-          action: "route_to_enhancement",
+          action: 'route_to_enhancement',
           data: {
-            message: "Ok! Vamos adicionar uma feature nova.",
-            nextStep: "existing_project_enhancement",
+            message: 'Ok! Vamos adicionar uma feature nova.',
+            nextStep: 'existing_project_enhancement',
             context,
           },
         };
 
       default:
         return {
-          action: "invalid_choice",
+          action: 'invalid_choice',
           error: `Unknown post-discovery choice: ${choice}`,
         };
     }
@@ -672,7 +643,7 @@ Quer que eu comece?`;
     if (exists) {
       this._log(`📄 Updating existing ${outputPath} (idempotent re-run)`);
       try {
-        const existingContent = fs.readFileSync(fullPath, "utf8");
+        const existingContent = fs.readFileSync(fullPath, 'utf8');
         return {
           exists: true,
           existingContent,
@@ -703,7 +674,7 @@ Quer que eu comece?`;
     }
 
     // Overwrite (not append) for idempotency
-    fs.writeFileSync(fullPath, content, "utf8");
+    fs.writeFileSync(fullPath, content, 'utf8');
     this._log(`📄 Wrote ${outputPath}`);
 
     return true;
@@ -730,15 +701,11 @@ Quer que eu comece?`;
       const exists = await sessionState.exists();
       if (exists) {
         await sessionState.loadSessionState();
-        await sessionState.recordPhaseChange(
-          `brownfield_${phase}`,
-          "brownfield-discovery",
-          "@architect",
-        );
+        await sessionState.recordPhaseChange(`brownfield_${phase}`, 'brownfield-discovery', '@architect');
         this._log(`Phase recorded in session state: ${phase}`);
       }
     } catch (error) {
-      this._log(`Failed to record phase: ${error.message}`, "warn");
+      this._log(`Failed to record phase: ${error.message}`, 'warn');
     }
   }
 
@@ -752,9 +719,9 @@ Quer que eu comece?`;
    * @param {string} [level='info'] - Log level
    * @private
    */
-  _log(message, level = "info") {
-    if (this.options.debug || level === "error" || level === "warn") {
-      const prefix = level === "error" ? "❌" : level === "warn" ? "⚠️" : "🔍";
+  _log(message, level = 'info') {
+    if (this.options.debug || level === 'error' || level === 'warn') {
+      const prefix = level === 'error' ? '❌' : level === 'warn' ? '⚠️' : '🔍';
       console.log(`[BrownfieldHandler] ${prefix} ${message}`);
     }
   }

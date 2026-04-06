@@ -9,21 +9,21 @@
  * @story 2.11 - MCP System Global
  */
 
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
-const { isWindows, getGlobalMcpDir, getLinkType } = require("./os-detector");
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+const { isWindows, getGlobalMcpDir, getLinkType } = require('./os-detector');
 
 /**
  * Link status types
  * @enum {string}
  */
 const LINK_STATUS = {
-  LINKED: "linked",
-  NOT_LINKED: "not_linked",
-  BROKEN: "broken",
-  DIRECTORY: "directory",
-  ERROR: "error",
+  LINKED: 'linked',
+  NOT_LINKED: 'not_linked',
+  BROKEN: 'broken',
+  DIRECTORY: 'directory',
+  ERROR: 'error',
 };
 
 /**
@@ -32,7 +32,7 @@ const LINK_STATUS = {
  * @returns {string} Path to .aiox-core/tools/mcp
  */
 function getProjectMcpPath(projectRoot = process.cwd()) {
-  return path.join(projectRoot, ".aiox-core", "tools", "mcp");
+  return path.join(projectRoot, '.aiox-core', 'tools', 'mcp');
 }
 
 /**
@@ -64,11 +64,11 @@ function isWindowsJunction(linkPath) {
   try {
     // Use fsutil to check if it's a junction
     const result = execSync(`fsutil reparsepoint query "${linkPath}"`, {
-      encoding: "utf8",
+      encoding: 'utf8',
       windowsHide: true,
-      stdio: ["pipe", "pipe", "pipe"],
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
-    return result.includes("Symbolic Link") || result.includes("Mount Point");
+    return result.includes('Symbolic Link') || result.includes('Mount Point');
   } catch (_error) {
     return false;
   }
@@ -101,9 +101,9 @@ function getWindowsJunctionTarget(linkPath) {
 
   try {
     const result = execSync(`fsutil reparsepoint query "${linkPath}"`, {
-      encoding: "utf8",
+      encoding: 'utf8',
       windowsHide: true,
-      stdio: ["pipe", "pipe", "pipe"],
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
 
     // Parse the target from fsutil output
@@ -117,7 +117,7 @@ function getWindowsJunctionTarget(linkPath) {
     if (substMatch) {
       let target = substMatch[1].trim();
       // Remove \\?\ prefix if present
-      target = target.replace(/^\\\\\?\\/g, "");
+      target = target.replace(/^\\\\\?\\/g, '');
       return target;
     }
 
@@ -144,7 +144,7 @@ function checkLinkStatus(projectRoot = process.cwd()) {
       linkPath,
       globalPath,
       type: getLinkType(),
-      message: "Tools directory does not exist",
+      message: 'Tools directory does not exist',
     };
   }
 
@@ -155,7 +155,7 @@ function checkLinkStatus(projectRoot = process.cwd()) {
       linkPath,
       globalPath,
       type: getLinkType(),
-      message: "MCP link does not exist",
+      message: 'MCP link does not exist',
     };
   }
 
@@ -173,9 +173,7 @@ function checkLinkStatus(projectRoot = process.cwd()) {
       // Use path.relative to safely compare - empty string means same path,
       // no '..' prefix means target is equal to or child of global
       const relativePath = path.relative(resolvedGlobal, resolvedTarget);
-      const isLinkedToGlobal =
-        relativePath === "" ||
-        (!relativePath.startsWith("..") && !path.isAbsolute(relativePath));
+      const isLinkedToGlobal = relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
 
       if (isLinkedToGlobal) {
         return {
@@ -184,7 +182,7 @@ function checkLinkStatus(projectRoot = process.cwd()) {
           globalPath,
           target,
           type: getLinkType(),
-          message: "Linked to global MCP config",
+          message: 'Linked to global MCP config',
         };
       } else {
         return {
@@ -203,7 +201,7 @@ function checkLinkStatus(projectRoot = process.cwd()) {
       linkPath,
       globalPath,
       type: getLinkType(),
-      message: "Could not resolve link target",
+      message: 'Could not resolve link target',
     };
   }
 
@@ -213,7 +211,7 @@ function checkLinkStatus(projectRoot = process.cwd()) {
     linkPath,
     globalPath,
     type: getLinkType(),
-    message: "Path exists as regular directory (not linked)",
+    message: 'Path exists as regular directory (not linked)',
   };
 }
 
@@ -272,7 +270,7 @@ function createLink(projectRoot = process.cwd(), options = {}) {
     if (!options.force) {
       return {
         success: false,
-        error: "Path already exists. Use --force to overwrite.",
+        error: 'Path already exists. Use --force to overwrite.',
         status: status.status,
         linkPath,
         globalPath,
@@ -283,9 +281,9 @@ function createLink(projectRoot = process.cwd(), options = {}) {
     try {
       if (status.status === LINK_STATUS.DIRECTORY) {
         // Backup existing config if it has content
-        const configFile = path.join(linkPath, "global-config.json");
+        const configFile = path.join(linkPath, 'global-config.json');
         if (fs.existsSync(configFile)) {
-          const backupPath = linkPath + ".backup." + Date.now();
+          const backupPath = linkPath + '.backup.' + Date.now();
           fs.renameSync(linkPath, backupPath);
           return {
             success: false,
@@ -316,11 +314,11 @@ function createLink(projectRoot = process.cwd(), options = {}) {
       // Use mklink /J for Windows junction
       execSync(`mklink /J "${linkPath}" "${globalPath}"`, {
         windowsHide: true,
-        stdio: ["pipe", "pipe", "pipe"],
+        stdio: ['pipe', 'pipe', 'pipe'],
       });
     } else {
       // Use fs.symlinkSync for Unix (type 'dir' for directory symlinks)
-      fs.symlinkSync(globalPath, linkPath, "dir");
+      fs.symlinkSync(globalPath, linkPath, 'dir');
     }
 
     // Verify the link was created
@@ -335,7 +333,7 @@ function createLink(projectRoot = process.cwd(), options = {}) {
     } else {
       return {
         success: false,
-        error: "Link created but verification failed",
+        error: 'Link created but verification failed',
         linkPath,
         globalPath,
         status: verifyStatus.status,
@@ -348,8 +346,8 @@ function createLink(projectRoot = process.cwd(), options = {}) {
       linkPath,
       globalPath,
       hint: isWindows()
-        ? "Try running as Administrator or enable Developer Mode"
-        : "Check directory permissions",
+        ? 'Try running as Administrator or enable Developer Mode'
+        : 'Check directory permissions',
     };
   }
 }
@@ -374,7 +372,7 @@ function removeLink(projectRoot = process.cwd()) {
   if (status.status === LINK_STATUS.DIRECTORY) {
     return {
       success: false,
-      error: "Path is a directory, not a link. Cannot remove.",
+      error: 'Path is a directory, not a link. Cannot remove.',
       linkPath,
     };
   }
@@ -384,7 +382,7 @@ function removeLink(projectRoot = process.cwd()) {
       // Remove junction using rmdir
       execSync(`rmdir "${linkPath}"`, {
         windowsHide: true,
-        stdio: ["pipe", "pipe", "pipe"],
+        stdio: ['pipe', 'pipe', 'pipe'],
       });
     } else {
       fs.unlinkSync(linkPath);

@@ -16,59 +16,59 @@
  * Based on Auto-Claude's merge system architecture.
  */
 
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
-const EventEmitter = require("events");
-const yaml = require("js-yaml");
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+const EventEmitter = require('events');
+const yaml = require('js-yaml');
 
 // ============================================================================
 // TYPES & ENUMS
 // ============================================================================
 
 const ChangeType = {
-  IMPORT_ADDED: "import_added",
-  IMPORT_REMOVED: "import_removed",
-  IMPORT_MODIFIED: "import_modified",
-  FUNCTION_ADDED: "function_added",
-  FUNCTION_REMOVED: "function_removed",
-  FUNCTION_MODIFIED: "function_modified",
-  CLASS_ADDED: "class_added",
-  CLASS_REMOVED: "class_removed",
-  CLASS_MODIFIED: "class_modified",
-  VARIABLE_ADDED: "variable_added",
-  VARIABLE_REMOVED: "variable_removed",
-  VARIABLE_MODIFIED: "variable_modified",
-  JSX_ADDED: "jsx_added",
-  JSX_MODIFIED: "jsx_modified",
-  COMMENT_ADDED: "comment_added",
-  COMMENT_MODIFIED: "comment_modified",
-  STYLE_ADDED: "style_added",
-  STYLE_MODIFIED: "style_modified",
-  CONFIG_MODIFIED: "config_modified",
-  UNKNOWN: "unknown",
+  IMPORT_ADDED: 'import_added',
+  IMPORT_REMOVED: 'import_removed',
+  IMPORT_MODIFIED: 'import_modified',
+  FUNCTION_ADDED: 'function_added',
+  FUNCTION_REMOVED: 'function_removed',
+  FUNCTION_MODIFIED: 'function_modified',
+  CLASS_ADDED: 'class_added',
+  CLASS_REMOVED: 'class_removed',
+  CLASS_MODIFIED: 'class_modified',
+  VARIABLE_ADDED: 'variable_added',
+  VARIABLE_REMOVED: 'variable_removed',
+  VARIABLE_MODIFIED: 'variable_modified',
+  JSX_ADDED: 'jsx_added',
+  JSX_MODIFIED: 'jsx_modified',
+  COMMENT_ADDED: 'comment_added',
+  COMMENT_MODIFIED: 'comment_modified',
+  STYLE_ADDED: 'style_added',
+  STYLE_MODIFIED: 'style_modified',
+  CONFIG_MODIFIED: 'config_modified',
+  UNKNOWN: 'unknown',
 };
 
 const MergeStrategy = {
-  COMBINE: "combine", // Both changes can coexist
-  TAKE_NEWER: "take_newer", // Take the more recent change
-  TAKE_LARGER: "take_larger", // Take the more comprehensive change
-  AI_REQUIRED: "ai_required", // Needs AI to resolve
-  HUMAN_REQUIRED: "human_required", // Too complex, needs human
+  COMBINE: 'combine', // Both changes can coexist
+  TAKE_NEWER: 'take_newer', // Take the more recent change
+  TAKE_LARGER: 'take_larger', // Take the more comprehensive change
+  AI_REQUIRED: 'ai_required', // Needs AI to resolve
+  HUMAN_REQUIRED: 'human_required', // Too complex, needs human
 };
 
 const ConflictSeverity = {
-  LOW: "low", // Auto-mergeable
-  MEDIUM: "medium", // AI can likely resolve
-  HIGH: "high", // AI required with review
-  CRITICAL: "critical", // Human intervention required
+  LOW: 'low', // Auto-mergeable
+  MEDIUM: 'medium', // AI can likely resolve
+  HIGH: 'high', // AI required with review
+  CRITICAL: 'critical', // Human intervention required
 };
 
 const MergeDecision = {
-  AUTO_MERGED: "auto_merged",
-  AI_MERGED: "ai_merged",
-  NEEDS_HUMAN_REVIEW: "needs_human_review",
-  FAILED: "failed",
+  AUTO_MERGED: 'auto_merged',
+  AI_MERGED: 'ai_merged',
+  NEEDS_HUMAN_REVIEW: 'needs_human_review',
+  FAILED: 'failed',
 };
 
 // ============================================================================
@@ -115,11 +115,7 @@ class SemanticAnalyzer {
     const beforeElements = this.extractElements(before, language);
     const afterElements = this.extractElements(after, language);
 
-    const changes = this.computeChanges(
-      beforeElements,
-      afterElements,
-      language,
-    );
+    const changes = this.computeChanges(beforeElements, afterElements, language);
 
     return {
       filePath,
@@ -127,7 +123,7 @@ class SemanticAnalyzer {
       language,
       changes,
       functionsModified: changes
-        .filter((c) => c.changeType.includes("function"))
+        .filter((c) => c.changeType.includes('function'))
         .map((c) => c.target),
       functionsAdded: changes
         .filter((c) => c.changeType === ChangeType.FUNCTION_ADDED)
@@ -144,19 +140,19 @@ class SemanticAnalyzer {
    */
   detectLanguage(ext) {
     const languageMap = {
-      ".js": "javascript",
-      ".jsx": "javascript",
-      ".ts": "typescript",
-      ".tsx": "typescript",
-      ".py": "python",
-      ".css": "css",
-      ".scss": "scss",
-      ".json": "json",
-      ".md": "markdown",
-      ".yaml": "yaml",
-      ".yml": "yaml",
+      '.js': 'javascript',
+      '.jsx': 'javascript',
+      '.ts': 'typescript',
+      '.tsx': 'typescript',
+      '.py': 'python',
+      '.css': 'css',
+      '.scss': 'scss',
+      '.json': 'json',
+      '.md': 'markdown',
+      '.yaml': 'yaml',
+      '.yml': 'yaml',
     };
-    return languageMap[ext] || "text";
+    return languageMap[ext] || 'text';
   }
 
   /**
@@ -174,23 +170,23 @@ class SemanticAnalyzer {
 
     if (!content) return elements;
 
-    if (language === "javascript" || language === "typescript") {
+    if (language === 'javascript' || language === 'typescript') {
       // Extract imports
       const importMatches = content.match(this.patterns.jsImport) || [];
       elements.imports = importMatches.map((m) => ({
-        type: "import",
+        type: 'import',
         content: m.trim(),
         source: this.extractImportSource(m),
       }));
 
       // Extract functions
       let match;
-      const funcRegex = new RegExp(this.patterns.jsFunction.source, "gm");
+      const funcRegex = new RegExp(this.patterns.jsFunction.source, 'gm');
       while ((match = funcRegex.exec(content)) !== null) {
         const name = match[1] || match[2] || match[3];
         if (name) {
           elements.functions.push({
-            type: "function",
+            type: 'function',
             name,
             content: this.extractFunctionBody(content, match.index),
             location: this.getLocation(content, match.index),
@@ -199,39 +195,39 @@ class SemanticAnalyzer {
       }
 
       // Extract classes
-      const classRegex = new RegExp(this.patterns.jsClass.source, "gm");
+      const classRegex = new RegExp(this.patterns.jsClass.source, 'gm');
       while ((match = classRegex.exec(content)) !== null) {
         elements.classes.push({
-          type: "class",
+          type: 'class',
           name: match[1],
           content: this.extractClassBody(content, match.index),
           location: this.getLocation(content, match.index),
         });
       }
-    } else if (language === "python") {
+    } else if (language === 'python') {
       // Extract Python imports
       const pyImportMatches = content.match(this.patterns.pyImport) || [];
       elements.imports = pyImportMatches.map((m) => ({
-        type: "import",
+        type: 'import',
         content: m.trim(),
       }));
 
       // Extract Python functions
       let match;
-      const pyFuncRegex = new RegExp(this.patterns.pyFunction.source, "gm");
+      const pyFuncRegex = new RegExp(this.patterns.pyFunction.source, 'gm');
       while ((match = pyFuncRegex.exec(content)) !== null) {
         elements.functions.push({
-          type: "function",
+          type: 'function',
           name: match[1],
           location: this.getLocation(content, match.index),
         });
       }
 
       // Extract Python classes
-      const pyClassRegex = new RegExp(this.patterns.pyClass.source, "gm");
+      const pyClassRegex = new RegExp(this.patterns.pyClass.source, 'gm');
       while ((match = pyClassRegex.exec(content)) !== null) {
         elements.classes.push({
-          type: "class",
+          type: 'class',
           name: match[1],
           location: this.getLocation(content, match.index),
         });
@@ -256,7 +252,7 @@ class SemanticAnalyzer {
         changes.push({
           changeType: ChangeType.IMPORT_ADDED,
           target: imp.content,
-          location: "imports",
+          location: 'imports',
         });
       }
     }
@@ -266,7 +262,7 @@ class SemanticAnalyzer {
         changes.push({
           changeType: ChangeType.IMPORT_REMOVED,
           target: imp.content,
-          location: "imports",
+          location: 'imports',
         });
       }
     }
@@ -326,7 +322,7 @@ class SemanticAnalyzer {
         changes.push({
           changeType: ChangeType.CLASS_REMOVED,
           target: name,
-          location: "class",
+          location: 'class',
         });
       }
     }
@@ -350,13 +346,13 @@ class SemanticAnalyzer {
   }
 
   getLocation(content, index) {
-    const lines = content.substring(0, index).split("\n");
+    const lines = content.substring(0, index).split('\n');
     return `line ${lines.length}`;
   }
 
   countChangedLines(before, after) {
-    const beforeLines = (before || "").split("\n").length;
-    const afterLines = (after || "").split("\n").length;
+    const beforeLines = (before || '').split('\n').length;
+    const afterLines = (after || '').split('\n').length;
     return Math.abs(afterLines - beforeLines);
   }
 }
@@ -383,7 +379,7 @@ class ConflictDetector {
         {
           compatible: true,
           strategy: MergeStrategy.COMBINE,
-          reason: "Different imports can coexist",
+          reason: 'Different imports can coexist',
         },
       ],
       [
@@ -391,7 +387,7 @@ class ConflictDetector {
         {
           compatible: true,
           strategy: MergeStrategy.COMBINE,
-          reason: "Different functions can coexist",
+          reason: 'Different functions can coexist',
         },
       ],
       [
@@ -399,7 +395,7 @@ class ConflictDetector {
         {
           compatible: true,
           strategy: MergeStrategy.COMBINE,
-          reason: "Function and import additions are independent",
+          reason: 'Function and import additions are independent',
         },
       ],
       [
@@ -407,7 +403,7 @@ class ConflictDetector {
         {
           compatible: true,
           strategy: MergeStrategy.COMBINE,
-          reason: "Class and function additions are independent",
+          reason: 'Class and function additions are independent',
         },
       ],
 
@@ -418,7 +414,7 @@ class ConflictDetector {
           compatible: false,
           strategy: MergeStrategy.AI_REQUIRED,
           severity: ConflictSeverity.MEDIUM,
-          reason: "Same function modified by multiple tasks",
+          reason: 'Same function modified by multiple tasks',
         },
       ],
       [
@@ -427,7 +423,7 @@ class ConflictDetector {
           compatible: false,
           strategy: MergeStrategy.AI_REQUIRED,
           severity: ConflictSeverity.HIGH,
-          reason: "Same class modified by multiple tasks",
+          reason: 'Same class modified by multiple tasks',
         },
       ],
       [
@@ -436,7 +432,7 @@ class ConflictDetector {
           compatible: false,
           strategy: MergeStrategy.HUMAN_REQUIRED,
           severity: ConflictSeverity.CRITICAL,
-          reason: "Function removed by one task, modified by another",
+          reason: 'Function removed by one task, modified by another',
         },
       ],
       [
@@ -445,7 +441,7 @@ class ConflictDetector {
           compatible: false,
           strategy: MergeStrategy.AI_REQUIRED,
           severity: ConflictSeverity.MEDIUM,
-          reason: "Import removed by one task, modified by another",
+          reason: 'Import removed by one task, modified by another',
         },
       ],
     ]);
@@ -497,10 +493,7 @@ class ConflictDetector {
     for (const changeA of changesA) {
       for (const changeB of changesB) {
         // Check if changes affect the same target
-        if (
-          changeA.target === changeB.target ||
-          changeA.location === changeB.location
-        ) {
+        if (changeA.target === changeB.target || changeA.location === changeB.location) {
           const ruleKey = `${changeA.changeType}:${changeB.changeType}`;
           const reverseKey = `${changeB.changeType}:${changeA.changeType}`;
 
@@ -533,16 +526,13 @@ class ConflictDetector {
   getCompatibility(changeTypeA, changeTypeB) {
     // Check custom rules first if loader is available
     if (this.rulesLoader) {
-      const customRule = this.rulesLoader.getCompatibilityRule(
-        changeTypeA,
-        changeTypeB,
-      );
+      const customRule = this.rulesLoader.getCompatibilityRule(changeTypeA, changeTypeB);
       if (customRule) {
         return {
           compatible: customRule.compatible ?? false,
           strategy: this.mapStrategy(customRule.strategy),
           severity: this.mapSeverity(customRule.severity),
-          reason: customRule.reason || "Custom rule",
+          reason: customRule.reason || 'Custom rule',
         };
       }
     }
@@ -556,7 +546,7 @@ class ConflictDetector {
         compatible: false,
         strategy: MergeStrategy.AI_REQUIRED,
         severity: ConflictSeverity.MEDIUM,
-        reason: "Unknown change type combination",
+        reason: 'Unknown change type combination',
       }
     );
   }
@@ -610,12 +600,12 @@ class AutoMerger {
     if (mergeStrategy !== MergeStrategy.COMBINE) {
       return {
         success: false,
-        reason: "Strategy requires AI resolution",
+        reason: 'Strategy requires AI resolution',
       };
     }
 
     // Handle import combinations
-    if (changeTypes.every((ct) => ct.includes("import_added"))) {
+    if (changeTypes.every((ct) => ct.includes('import_added'))) {
       return this.combineImports(baseContent, taskContents);
     }
 
@@ -626,7 +616,7 @@ class AutoMerger {
 
     return {
       success: false,
-      reason: "No auto-merge strategy available for this change combination",
+      reason: 'No auto-merge strategy available for this change combination',
     };
   }
 
@@ -647,27 +637,27 @@ class AutoMerger {
     const sortedImports = Array.from(allImports).sort();
 
     // Replace imports in base content
-    const result = baseContent.replace(importRegex, "");
+    const result = baseContent.replace(importRegex, '');
 
     // Find first non-empty, non-comment line to insert imports
-    const lines = result.split("\n");
+    const lines = result.split('\n');
     let insertIndex = 0;
     for (let i = 0; i < lines.length; i++) {
       if (
         lines[i].trim() &&
-        !lines[i].trim().startsWith("//") &&
-        !lines[i].trim().startsWith("#")
+        !lines[i].trim().startsWith('//') &&
+        !lines[i].trim().startsWith('#')
       ) {
         insertIndex = i;
         break;
       }
     }
 
-    lines.splice(insertIndex, 0, ...sortedImports, "");
+    lines.splice(insertIndex, 0, ...sortedImports, '');
 
     return {
       success: true,
-      mergedContent: lines.join("\n"),
+      mergedContent: lines.join('\n'),
       decision: MergeDecision.AUTO_MERGED,
       explanation: `Combined ${allImports.size} imports from ${Object.keys(taskContents).length} tasks`,
     };
@@ -685,13 +675,13 @@ class AutoMerger {
         // Check if function exists in this task's content but not in merged
         const funcRegex = new RegExp(
           `(?:export\\s+)?(?:async\\s+)?function\\s+${funcName}\\s*\\([^)]*\\)\\s*\\{[^}]*\\}`,
-          "g",
+          'g',
         );
 
         const match = content.match(funcRegex);
         if (match && !mergedContent.includes(`function ${funcName}`)) {
           // Append function to merged content
-          mergedContent += "\n\n" + match[0];
+          mergedContent += '\n\n' + match[0];
         }
       }
     }
@@ -758,7 +748,7 @@ class AIResolver {
       } else {
         return {
           decision: MergeDecision.NEEDS_HUMAN_REVIEW,
-          reason: "Could not parse AI response",
+          reason: 'Could not parse AI response',
           rawResponse: response,
           conflict,
         };
@@ -776,20 +766,20 @@ class AIResolver {
    * Build context for AI resolution
    */
   buildContext(conflict, baseContent, taskSnapshots) {
-    let context = "## Conflict Location\n";
+    let context = '## Conflict Location\n';
     context += `File: ${conflict.filePath}\n`;
     context += `Location: ${conflict.location}\n`;
     context += `Severity: ${conflict.severity}\n\n`;
 
     context += `## Original Code (baseline)\n\`\`\`\n${baseContent}\n\`\`\`\n\n`;
 
-    context += "## Task Changes\n";
+    context += '## Task Changes\n';
     for (const [taskId, snapshot] of Object.entries(taskSnapshots)) {
       if (conflict.tasksInvolved.includes(taskId)) {
         context += `### ${taskId}\n`;
-        context += `Intent: ${snapshot.intent || "Not specified"}\n`;
-        context += `Changes: ${snapshot.changes?.map((c) => c.changeType).join(", ")}\n`;
-        context += `\`\`\`\n${snapshot.content || ""}\n\`\`\`\n\n`;
+        context += `Intent: ${snapshot.intent || 'Not specified'}\n`;
+        context += `Changes: ${snapshot.changes?.map((c) => c.changeType).join(', ')}\n`;
+        context += `\`\`\`\n${snapshot.content || ''}\n\`\`\`\n\n`;
       }
     }
 
@@ -827,9 +817,9 @@ Provide ONLY the merged code in a code block. No explanations outside the code b
       try {
         // Use Claude CLI in print mode
         const result = execSync(
-          `claude --print --dangerously-skip-permissions -p "${prompt.replace(/"/g, '\\"').replace(/\n/g, "\\n")}"`,
+          `claude --print --dangerously-skip-permissions -p "${prompt.replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`,
           {
-            encoding: "utf8",
+            encoding: 'utf8',
             maxBuffer: 10 * 1024 * 1024,
             timeout: 120000,
           },
@@ -889,7 +879,7 @@ Provide ONLY the merged code in a code block. No explanations outside the code b
 class CustomRulesLoader {
   constructor(rootPath = process.cwd()) {
     this.rootPath = rootPath;
-    this.rulesPath = path.join(rootPath, ".aiox", "merge-rules.yaml");
+    this.rulesPath = path.join(rootPath, '.aiox', 'merge-rules.yaml');
     this.cache = {
       rules: null,
       lastLoad: null,
@@ -921,7 +911,7 @@ class CustomRulesLoader {
         return null;
       }
 
-      const content = fs.readFileSync(this.rulesPath, "utf8");
+      const content = fs.readFileSync(this.rulesPath, 'utf8');
       const rules = yaml.load(content);
 
       // Cache the rules
@@ -930,9 +920,7 @@ class CustomRulesLoader {
 
       return rules;
     } catch (error) {
-      console.warn(
-        `Warning: Could not load custom rules from ${this.rulesPath}: ${error.message}`,
-      );
+      console.warn(`Warning: Could not load custom rules from ${this.rulesPath}: ${error.message}`);
       return null;
     }
   }
@@ -953,33 +941,22 @@ class CustomRulesLoader {
       compatibility: { rules: {} },
       file_patterns: {
         skip: [
-          "node_modules/**",
-          ".git/**",
-          "package-lock.json",
-          "yarn.lock",
-          "*.log",
-          "*.min.*",
-          "dist/**",
-          "build/**",
+          'node_modules/**',
+          '.git/**',
+          'package-lock.json',
+          'yarn.lock',
+          '*.log',
+          '*.min.*',
+          'dist/**',
+          'build/**',
         ],
-        auto_merge: ["*.md", "*.txt", ".gitignore"],
-        human_review: ["package.json", "tsconfig.json", "*.config.js", ".env*"],
-        ai_preferred: [
-          "src/**/*.ts",
-          "src/**/*.tsx",
-          "src/**/*.js",
-          "src/**/*.jsx",
-        ],
+        auto_merge: ['*.md', '*.txt', '.gitignore'],
+        human_review: ['package.json', 'tsconfig.json', '*.config.js', '.env*'],
+        ai_preferred: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.js', 'src/**/*.jsx'],
       },
       languages: {
         javascript: {
-          patterns: {
-            imports: true,
-            functions: true,
-            classes: true,
-            variables: true,
-            jsx: true,
-          },
+          patterns: { imports: true, functions: true, classes: true, variables: true, jsx: true },
           imports: { deduplicate: true, sort: true, group: true },
         },
         typescript: {
@@ -1000,15 +977,15 @@ class CustomRulesLoader {
         },
         css: {
           patterns: { selectors: true, properties: true },
-          conflict_resolution: "take_newer",
+          conflict_resolution: 'take_newer',
         },
       },
       strategies: {
-        default: "ai_required",
+        default: 'ai_required',
         scenarios: {
-          parallel_additions: { strategy: "combine", order: "alphabetical" },
-          concurrent_modifications: { strategy: "ai_required" },
-          remove_vs_modify: { strategy: "human_required" },
+          parallel_additions: { strategy: 'combine', order: 'alphabetical' },
+          concurrent_modifications: { strategy: 'ai_required' },
+          remove_vs_modify: { strategy: 'human_required' },
         },
       },
       ai: {
@@ -1020,7 +997,7 @@ class CustomRulesLoader {
       severity: {
         lines_threshold: { low: 10, medium: 50, high: 100, critical: 200 },
         functions_threshold: { low: 1, medium: 3, high: 5, critical: 10 },
-        human_review_threshold: "high",
+        human_review_threshold: 'high',
       },
       hooks: {
         pre_merge: null,
@@ -1068,9 +1045,9 @@ class CustomRulesLoader {
       }
 
       if (
-        typeof source[key] === "object" &&
+        typeof source[key] === 'object' &&
         !Array.isArray(source[key]) &&
-        typeof target[key] === "object" &&
+        typeof target[key] === 'object' &&
         !Array.isArray(target[key])
       ) {
         result[key] = this.deepMerge(target[key] || {}, source[key]);
@@ -1094,11 +1071,11 @@ class CustomRulesLoader {
     for (const pattern of patterns) {
       // Escape special regex characters first, then convert glob patterns
       const regexPattern = pattern
-        .replace(/[.+^${}()|[\]\\]/g, "\\$&") // Escape regex special chars
-        .replace(/\*\*/g, "<<<GLOBSTAR>>>") // Temp placeholder for **
-        .replace(/\*/g, "[^/]*") // Single * = anything except /
-        .replace(/<<<GLOBSTAR>>>/g, ".*") // ** = anything including /
-        .replace(/\?/g, "."); // ? = single char
+        .replace(/[.+^${}()|[\]\\]/g, '\\$&') // Escape regex special chars
+        .replace(/\*\*/g, '<<<GLOBSTAR>>>') // Temp placeholder for **
+        .replace(/\*/g, '[^/]*') // Single * = anything except /
+        .replace(/<<<GLOBSTAR>>>/g, '.*') // ** = anything including /
+        .replace(/\?/g, '.'); // ? = single char
 
       // Allow pattern to match anywhere in the path (not just start)
       // For patterns like 'node_modules/**', match anywhere
@@ -1121,14 +1098,12 @@ class CustomRulesLoader {
     const rules = this.getMergedRules();
     const patterns = rules.file_patterns || {};
 
-    if (this.matchesPattern(filePath, patterns.skip)) return "skip";
-    if (this.matchesPattern(filePath, patterns.human_review))
-      return "human_review";
-    if (this.matchesPattern(filePath, patterns.auto_merge)) return "auto_merge";
-    if (this.matchesPattern(filePath, patterns.ai_preferred))
-      return "ai_preferred";
+    if (this.matchesPattern(filePath, patterns.skip)) return 'skip';
+    if (this.matchesPattern(filePath, patterns.human_review)) return 'human_review';
+    if (this.matchesPattern(filePath, patterns.auto_merge)) return 'auto_merge';
+    if (this.matchesPattern(filePath, patterns.ai_preferred)) return 'ai_preferred';
 
-    return "default";
+    return 'default';
   }
 
   /**
@@ -1164,13 +1139,7 @@ class CustomRulesLoader {
    */
   getAIConfig() {
     const rules = this.getMergedRules();
-    return (
-      rules.ai || {
-        enabled: true,
-        max_context_tokens: 4000,
-        confidence_threshold: 0.7,
-      }
-    );
+    return rules.ai || { enabled: true, max_context_tokens: 4000, confidence_threshold: 0.7 };
   }
 
   /**
@@ -1206,7 +1175,7 @@ class CustomRulesLoader {
     try {
       execSync(hookCommand, {
         cwd: this.rootPath,
-        encoding: "utf8",
+        encoding: 'utf8',
         env: {
           ...process.env,
           AIOX_MERGE_HOOK: hookName,
@@ -1237,24 +1206,20 @@ class SemanticMergeEngine extends EventEmitter {
     const aiConfig = this.rulesLoader.getAIConfig();
 
     // Apply config with custom rules as defaults
-    this.enableAI =
-      config.enableAI !== undefined ? config.enableAI : aiConfig.enabled;
-    this.confidenceThreshold =
-      config.confidenceThreshold || aiConfig.confidence_threshold || 0.7;
+    this.enableAI = config.enableAI !== undefined ? config.enableAI : aiConfig.enabled;
+    this.confidenceThreshold = config.confidenceThreshold || aiConfig.confidence_threshold || 0.7;
 
     // Initialize components
     this.analyzer = new SemanticAnalyzer();
     this.detector = new ConflictDetector(this.rulesLoader);
     this.autoMerger = new AutoMerger();
     this.aiResolver = new AIResolver({
-      maxContextTokens:
-        config.maxContextTokens || aiConfig.max_context_tokens || 4000,
+      maxContextTokens: config.maxContextTokens || aiConfig.max_context_tokens || 4000,
       confidenceThreshold: this.confidenceThreshold,
     });
 
     // Storage
-    this.storageDir =
-      config.storageDir || path.join(this.rootPath, ".aiox", "merge");
+    this.storageDir = config.storageDir || path.join(this.rootPath, '.aiox', 'merge');
   }
 
   /**
@@ -1263,7 +1228,7 @@ class SemanticMergeEngine extends EventEmitter {
    * @param {string} targetBranch - Branch to merge into
    * @returns {Promise<Object>} MergeReport
    */
-  async merge(taskRequests, targetBranch = "main") {
+  async merge(taskRequests, targetBranch = 'main') {
     const report = {
       startedAt: new Date().toISOString(),
       tasks: taskRequests.map((t) => t.taskId),
@@ -1276,15 +1241,15 @@ class SemanticMergeEngine extends EventEmitter {
       failed: 0,
       results: [],
       errors: [],
-      rulesUsed: this.rulesLoader ? "custom" : "default",
+      rulesUsed: this.rulesLoader ? 'custom' : 'default',
     };
 
-    this.emit("merge_started", { tasks: report.tasks, targetBranch });
+    this.emit('merge_started', { tasks: report.tasks, targetBranch });
 
     try {
       // Execute pre_merge hook if defined
       if (this.rulesLoader) {
-        await this.rulesLoader.executeHook("pre_merge", {
+        await this.rulesLoader.executeHook('pre_merge', {
           tasks: report.tasks,
           targetBranch,
         });
@@ -1305,11 +1270,7 @@ class SemanticMergeEngine extends EventEmitter {
 
       // Step 4: Process each file
       for (const filePath of modifiedFiles) {
-        const fileResult = await this.mergeFile(
-          filePath,
-          baseline[filePath] || "",
-          taskSnapshots,
-        );
+        const fileResult = await this.mergeFile(filePath, baseline[filePath] || '', taskSnapshots);
 
         report.results.push(fileResult);
 
@@ -1324,7 +1285,7 @@ class SemanticMergeEngine extends EventEmitter {
             report.needsHumanReview++;
             // Execute on_human_review hook
             if (this.rulesLoader) {
-              await this.rulesLoader.executeHook("on_human_review", {
+              await this.rulesLoader.executeHook('on_human_review', {
                 filePath,
                 conflicts: fileResult.conflicts,
               });
@@ -1336,12 +1297,8 @@ class SemanticMergeEngine extends EventEmitter {
         }
 
         // Execute on_conflict hook for files with conflicts
-        if (
-          fileResult.conflicts &&
-          fileResult.conflicts.length > 0 &&
-          this.rulesLoader
-        ) {
-          await this.rulesLoader.executeHook("on_conflict", {
+        if (fileResult.conflicts && fileResult.conflicts.length > 0 && this.rulesLoader) {
+          await this.rulesLoader.executeHook('on_conflict', {
             filePath,
             conflictCount: fileResult.conflicts.length,
           });
@@ -1356,16 +1313,16 @@ class SemanticMergeEngine extends EventEmitter {
       report.completedAt = new Date().toISOString();
       report.status =
         report.failed === 0 && report.needsHumanReview === 0
-          ? "success"
+          ? 'success'
           : report.needsHumanReview > 0
-            ? "needs_review"
-            : "partial";
+            ? 'needs_review'
+            : 'partial';
 
-      this.emit("merge_completed", report);
+      this.emit('merge_completed', report);
 
       // Execute post_merge hook if defined
       if (this.rulesLoader) {
-        await this.rulesLoader.executeHook("post_merge", {
+        await this.rulesLoader.executeHook('post_merge', {
           status: report.status,
           filesAnalyzed: report.filesAnalyzed,
           autoMerged: report.autoMerged,
@@ -1379,10 +1336,10 @@ class SemanticMergeEngine extends EventEmitter {
       return report;
     } catch (error) {
       report.errors.push(error.message);
-      report.status = "error";
+      report.status = 'error';
       report.completedAt = new Date().toISOString();
 
-      this.emit("merge_error", { error: error.message });
+      this.emit('merge_error', { error: error.message });
 
       return report;
     }
@@ -1392,13 +1349,13 @@ class SemanticMergeEngine extends EventEmitter {
    * Merge a single file from multiple tasks
    */
   async mergeFile(filePath, baseContent, taskSnapshots) {
-    this.emit("file_processing", { filePath });
+    this.emit('file_processing', { filePath });
 
     // Check file category for special handling
     const category = this.getFileCategory(filePath);
 
     // Handle human_review category
-    if (category === "human_review") {
+    if (category === 'human_review') {
       return {
         filePath,
         decision: MergeDecision.NEEDS_HUMAN_REVIEW,
@@ -1427,23 +1384,18 @@ class SemanticMergeEngine extends EventEmitter {
 
     // If only one task modified the file, no conflict
     if (Object.keys(taskAnalyses).length <= 1) {
-      const [taskId, content] = Object.entries(taskContents)[0] || [
-        null,
-        baseContent,
-      ];
+      const [taskId, content] = Object.entries(taskContents)[0] || [null, baseContent];
       return {
         filePath,
         decision: MergeDecision.AUTO_MERGED,
         mergedContent: content,
-        explanation: taskId
-          ? `Single task ${taskId} modified file`
-          : "No changes",
+        explanation: taskId ? `Single task ${taskId} modified file` : 'No changes',
         category,
       };
     }
 
     // Handle auto_merge category (simpler merge, take most recent)
-    if (category === "auto_merge") {
+    if (category === 'auto_merge') {
       // Take the content with most changes
       let maxChanges = 0;
       let bestContent = baseContent;
@@ -1471,27 +1423,19 @@ class SemanticMergeEngine extends EventEmitter {
 
     if (conflicts.length === 0) {
       // No conflicts - combine all changes
-      const combined = this.combineNonConflictingChanges(
-        baseContent,
-        taskContents,
-        taskAnalyses,
-      );
+      const combined = this.combineNonConflictingChanges(baseContent, taskContents, taskAnalyses);
       return {
         filePath,
         decision: MergeDecision.AUTO_MERGED,
         mergedContent: combined,
-        explanation: "No conflicts detected, changes combined",
+        explanation: 'No conflicts detected, changes combined',
       };
     }
 
     // Step 3: Try auto-merge for each conflict
     const results = [];
     for (const conflict of conflicts) {
-      const autoResult = this.autoMerger.tryAutoMerge(
-        conflict,
-        baseContent,
-        taskContents,
-      );
+      const autoResult = this.autoMerger.tryAutoMerge(conflict, baseContent, taskContents);
 
       if (autoResult.success) {
         results.push({
@@ -1499,10 +1443,7 @@ class SemanticMergeEngine extends EventEmitter {
           result: autoResult,
           decision: MergeDecision.AUTO_MERGED,
         });
-      } else if (
-        this.enableAI &&
-        conflict.mergeStrategy === MergeStrategy.AI_REQUIRED
-      ) {
+      } else if (this.enableAI && conflict.mergeStrategy === MergeStrategy.AI_REQUIRED) {
         // Step 4: Use AI for complex conflicts
         const aiResult = await this.aiResolver.resolveConflict(
           conflict,
@@ -1517,7 +1458,7 @@ class SemanticMergeEngine extends EventEmitter {
       } else {
         results.push({
           conflict,
-          result: { reason: "No auto-merge strategy and AI disabled" },
+          result: { reason: 'No auto-merge strategy and AI disabled' },
           decision: MergeDecision.NEEDS_HUMAN_REVIEW,
         });
       }
@@ -1528,11 +1469,7 @@ class SemanticMergeEngine extends EventEmitter {
     let finalDecision;
     let finalContent = baseContent;
 
-    if (
-      decisions.every(
-        (d) => d === MergeDecision.AUTO_MERGED || d === MergeDecision.AI_MERGED,
-      )
-    ) {
+    if (decisions.every((d) => d === MergeDecision.AUTO_MERGED || d === MergeDecision.AI_MERGED)) {
       finalDecision = decisions.includes(MergeDecision.AI_MERGED)
         ? MergeDecision.AI_MERGED
         : MergeDecision.AUTO_MERGED;
@@ -1586,17 +1523,17 @@ class SemanticMergeEngine extends EventEmitter {
       // Get list of files
       const fileList = execSync(`git ls-tree -r --name-only ${branch}`, {
         cwd: this.rootPath,
-        encoding: "utf8",
+        encoding: 'utf8',
       })
         .trim()
-        .split("\n");
+        .split('\n');
 
       for (const filePath of fileList) {
         if (this.shouldProcessFile(filePath)) {
           try {
             const content = execSync(`git show ${branch}:${filePath}`, {
               cwd: this.rootPath,
-              encoding: "utf8",
+              encoding: 'utf8',
             });
             files[filePath] = content;
           } catch {
@@ -1605,9 +1542,7 @@ class SemanticMergeEngine extends EventEmitter {
         }
       }
     } catch (error) {
-      console.warn(
-        `Warning: Could not get baseline from ${branch}: ${error.message}`,
-      );
+      console.warn(`Warning: Could not get baseline from ${branch}: ${error.message}`);
     }
 
     return files;
@@ -1629,22 +1564,19 @@ class SemanticMergeEngine extends EventEmitter {
 
     try {
       // Get modified files in this task
-      const diffOutput = execSync(
-        `git diff --name-only ${branch || "main"}...HEAD`,
-        {
-          cwd: workDir,
-          encoding: "utf8",
-        },
-      ).trim();
+      const diffOutput = execSync(`git diff --name-only ${branch || 'main'}...HEAD`, {
+        cwd: workDir,
+        encoding: 'utf8',
+      }).trim();
 
-      const modifiedFiles = diffOutput ? diffOutput.split("\n") : [];
+      const modifiedFiles = diffOutput ? diffOutput.split('\n') : [];
 
       for (const filePath of modifiedFiles) {
         if (this.shouldProcessFile(filePath)) {
           try {
             const fullPath = path.join(workDir, filePath);
             if (fs.existsSync(fullPath)) {
-              snapshot.files[filePath] = fs.readFileSync(fullPath, "utf8");
+              snapshot.files[filePath] = fs.readFileSync(fullPath, 'utf8');
             }
           } catch {
             // Skip files that can't be read
@@ -1652,9 +1584,7 @@ class SemanticMergeEngine extends EventEmitter {
         }
       }
     } catch (error) {
-      console.warn(
-        `Warning: Could not get snapshot for ${taskId}: ${error.message}`,
-      );
+      console.warn(`Warning: Could not get snapshot for ${taskId}: ${error.message}`);
     }
 
     return snapshot;
@@ -1683,7 +1613,7 @@ class SemanticMergeEngine extends EventEmitter {
     // Use custom rules if available
     if (this.rulesLoader) {
       const category = this.rulesLoader.getFileCategory(filePath);
-      return category !== "skip";
+      return category !== 'skip';
     }
 
     // Default skip patterns
@@ -1710,7 +1640,7 @@ class SemanticMergeEngine extends EventEmitter {
     if (this.rulesLoader) {
       return this.rulesLoader.getFileCategory(filePath);
     }
-    return "default";
+    return 'default';
   }
 
   /**
@@ -1752,11 +1682,8 @@ class SemanticMergeEngine extends EventEmitter {
           fs.mkdirSync(dir, { recursive: true });
         }
 
-        fs.writeFileSync(fullPath, result.mergedContent, "utf8");
-        this.emit("file_merged", {
-          filePath: result.filePath,
-          decision: result.decision,
-        });
+        fs.writeFileSync(fullPath, result.mergedContent, 'utf8');
+        this.emit('file_merged', { filePath: result.filePath, decision: result.decision });
       }
     }
   }
@@ -1771,13 +1698,13 @@ class SemanticMergeEngine extends EventEmitter {
 
     const reportPath = path.join(
       this.storageDir,
-      `merge-report-${new Date().toISOString().replace(/[:.]/g, "-")}.json`,
+      `merge-report-${new Date().toISOString().replace(/[:.]/g, '-')}.json`,
     );
 
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 
     // Also save latest
-    const latestPath = path.join(this.storageDir, "merge-report-latest.json");
+    const latestPath = path.join(this.storageDir, 'merge-report-latest.json');
     fs.writeFileSync(latestPath, JSON.stringify(report, null, 2));
   }
 

@@ -9,19 +9,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -189,7 +186,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -209,13 +205,14 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Description
 
 Create realistic 4-phase migration plan to gradually adopt design system without blocking sprints. Prioritizes high-impact patterns first, includes rollback procedures, tracks progress.
 
 ## Prerequisites
 
-- Tokenization completed (\*tokenize command run successfully)
+- Tokenization completed (*tokenize command run successfully)
 - .state.yaml contains consolidation and token data
 - Token files exist (tokens.yaml, exports)
 
@@ -351,7 +348,6 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Deploy tokens, zero visual changes
 
 **Tasks**:
-
 - [ ] Add token files to project (tokens.yaml, exports)
 - [ ] Configure build pipeline to process tokens
 - [ ] Update existing CSS to use CSS custom properties
@@ -366,7 +362,6 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Replace most-used components for immediate ROI
 
 **Priorities**:
-
 1. Button (327 instances → 3 variants) - 93% reduction
 2. Input (189 instances → 5 variants) - 87% reduction
 3. Card (145 instances → 2 variants) - 85% reduction
@@ -380,7 +375,6 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Consolidate remaining patterns
 
 **Tasks**:
-
 - [ ] Forms (23 variations → 5)
 - [ ] Modals (12 variations → 2)
 - [ ] Navigation (8 variations → 3)
@@ -392,7 +386,6 @@ This task uses interactive elicitation to customize migration strategy.
 **Goal**: Prevent regression
 
 **Tasks**:
-
 - [ ] Add CI/CD pattern validation
 - [ ] Deprecate old components
 - [ ] Block non-system patterns
@@ -418,12 +411,10 @@ This task uses interactive elicitation to customize migration strategy.
   - Prevention strategies
 
 **In every phase guide, include:**
-
 ```markdown
 ## Validation
 
 After executing migration scripts:
-
 1. Run migration-validation-checklist.md (ALL steps)
 2. Review migration-pitfalls.md for common issues
 3. Do NOT commit until validation passes
@@ -443,7 +434,7 @@ See: Squads/super-agentes/checklists/migration-validation-checklist.md
 
 ## Error Handling
 
-- **No tokenization data**: Exit with message to run \*tokenize first
+- **No tokenization data**: Exit with message to run *tokenize first
 - **Cannot estimate timeline**: Use defaults, warn user to adjust
 - **Insufficient pattern data**: Recommend re-running audit
 - **Team context missing**: Use conservative defaults
@@ -464,7 +455,6 @@ See: Squads/super-agentes/checklists/migration-validation-checklist.md
 ```
 
 Output:
-
 ```
 🔍 Brad: Generating phased migration strategy...
 
@@ -529,4 +519,4 @@ Phase 4: Enforcement (1 sprint)
 - CI/CD enforcement prevents regression (Phase 4 critical)
 - Timeline assumes team works on migration alongside features
 - Brad says: "Phased rollout = safe rollout. No big-bang rewrites."
-- After this, hand off to Atlas: \*agent atlas for component building
+- After this, hand off to Atlas: *agent atlas for component building

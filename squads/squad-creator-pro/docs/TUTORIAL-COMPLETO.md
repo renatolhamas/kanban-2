@@ -13,7 +13,6 @@ Vamos criar um **squad de copywriting** usando o modo **YOLO** (sem materiais).
 > **[Exemplo: Copywriting]** - O mesmo processo funciona para qualquer domínio.
 
 **Por que YOLO?**
-
 - É mais rápido para aprender
 - Não precisa ter livros/PDFs
 - Você pode melhorar depois
@@ -23,13 +22,11 @@ Vamos criar um **squad de copywriting** usando o modo **YOLO** (sem materiais).
 ## Passo 1: Ativar o Squad Creator
 
 **O que você digita:**
-
 ```
 @squad-creator
 ```
 
 **O que você vê:**
-
 ```
 🎨 Squad Architect ativado!
 
@@ -49,7 +46,6 @@ Como posso ajudar?
 ## Passo 2: Solicitar o Squad
 
 **O que você digita:**
-
 ```
 Quero um squad de copywriting
 ```
@@ -80,7 +76,6 @@ O Squad Architect identifica o domínio e faz uma pergunta inicial:
 ```
 
 **O que você responde:**
-
 ```
 YOLO
 ```
@@ -131,12 +126,10 @@ Criar agents baseados nestes minds? [sim/não/ajustar]
 ```
 
 **Por que Tier 0 e Tier 1?**
-
 - **Eugene Schwartz é Tier 0** porque seu framework (awareness levels) serve para DIAGNOSTICAR antes de escrever
 - **Os outros são Tier 1** porque são executores - escrevem copy diretamente
 
 **O que você responde:**
-
 ```
 sim
 ```
@@ -169,7 +162,6 @@ Buscando fontes secundárias (Tier 2):
 ```
 
 **Se falhar:**
-
 ```
 ⚠️ Eugene Schwartz: Apenas 4 fontes encontradas
    Mínimo necessário: 10
@@ -252,7 +244,6 @@ TEST 3: Resposta a Objeção
 ```
 
 **Se falhar:**
-
 ```
 ❌ TEST 2: Tomada de Decisão - FAIL (2/5)
 
@@ -327,7 +318,6 @@ Testando integração:
 ```
 
 **O que você responde:**
-
 ```
 DEPLOY
 ```
@@ -337,13 +327,11 @@ DEPLOY
 ## Passo 9: Usando o Squad
 
 **Ativar o squad:**
-
 ```
 @{squad-name}  # e.g., @copy
 ```
 
 **Resposta:**
-
 ```
 🎯 Copy Squad ativado!
 
@@ -358,13 +346,11 @@ Como posso ajudar com seu copy?
 ```
 
 **Pedir uma task:**
-
 ```
 Preciso escrever uma sales page para um curso de produtividade
 ```
 
 **O que acontece:**
-
 ```
 📋 Analisando request...
 
@@ -381,7 +367,6 @@ Sua resposta: ___
 ```
 
 Após responder:
-
 ```
 ✅ Classificado: Problem-aware
 
@@ -419,19 +404,16 @@ Tudo mais foi automático.
 ## Dicas para Sua Primeira Vez
 
 ### Antes de começar
-
 - [ ] Claude Code está funcionando?
 - [ ] Você está no diretório do projeto AIOS?
 - [ ] Sabe o domínio que quer criar?
 
 ### Durante a criação
-
 - [ ] YOLO é mais fácil para começar
 - [ ] Aceite as sugestões de minds (são boas)
 - [ ] Não se preocupe com fidelidade baixa - pode melhorar depois
 
 ### Após a criação
-
 - [ ] Teste o squad com requests reais
 - [ ] Se algo parecer errado, use `*validate-squad`
 - [ ] Para melhorar fidelidade, forneça materiais com `*update-mind`
@@ -464,8 +446,8 @@ Após seguir este tutorial, você deve conseguir:
 
 ## Navegação
 
-| Anterior                                  | Atual                 | Próximo                   |
-| ----------------------------------------- | --------------------- | ------------------------- |
+| Anterior | Atual | Próximo |
+|----------|-------|---------|
 | [POR-ONDE-COMECAR](./POR-ONDE-COMECAR.md) | **TUTORIAL-COMPLETO** | [COMMANDS](./COMMANDS.md) |
 
 **Dúvidas?** [FAQ.md](./FAQ.md) | **Erro?** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
@@ -473,4 +455,4 @@ Após seguir este tutorial, você deve conseguir:
 ---
 
 **Squad Creator | Tutorial Completo v1.0**
-_"Da primeira vez ao squad funcionando."_
+*"Da primeira vez ao squad funcionando."*

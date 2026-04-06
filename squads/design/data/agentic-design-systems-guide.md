@@ -7,27 +7,22 @@ Define how the Design Squad evolves from human-readable documentation into machi
 ## Principles
 
 1. **Registry-first distribution**
-
 - Components are distributed as source and registry entries, not opaque packages.
 
 2. **Token hierarchy is mandatory**
-
 - `primitives` -> `semantic` -> `component`.
 - No direct component hardcoding against primitive values.
 
 3. **Metadata is product surface**
-
 - Every component must publish a machine-readable contract.
 - Include props, variants, accessibility, and token dependencies.
 
 4. **Workspace boundaries are explicit**
-
 - `workspace/domains/design-system`: token source and metadata.
 - `workspace/system`: primitives and reusable patterns.
 - `workspace/ui`: final components and blocks.
 
 5. **MCP exposure for AI execution**
-
 - Agents query DS artifacts via MCP handlers.
 - Responses must be structured, deterministic, and schema-validated.
 

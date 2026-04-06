@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * G3 — Story Validation Gate
@@ -17,10 +17,8 @@
  * Source: IDS-5a, ids-principles.md G3 definition
  */
 
-const path = require("path");
-const { VerificationGate } = require(
-  path.resolve(__dirname, "../verification-gate.js"),
-);
+const path = require('path');
+const { VerificationGate } = require(path.resolve(__dirname, '../verification-gate.js'));
 
 class G3StoryValidationGate extends VerificationGate {
   /**
@@ -33,15 +31,15 @@ class G3StoryValidationGate extends VerificationGate {
    */
   constructor(options = {}) {
     if (!options.decisionEngine) {
-      throw new Error("[IDS-G3] decisionEngine is required");
+      throw new Error('[IDS-G3] decisionEngine is required');
     }
     if (!options.registryLoader) {
-      throw new Error("[IDS-G3] registryLoader is required");
+      throw new Error('[IDS-G3] registryLoader is required');
     }
 
     super({
-      gateId: "G3",
-      agent: "@po",
+      gateId: 'G3',
+      agent: '@po',
       blocking: true, // Soft block: blocks validation but can be overridden
       timeoutMs: options.timeoutMs,
       circuitBreakerOptions: options.circuitBreakerOptions,
@@ -65,7 +63,7 @@ class G3StoryValidationGate extends VerificationGate {
     if (!context || !context.intent) {
       return {
         passed: true,
-        warnings: ["No story intent provided for G3 verification"],
+        warnings: ['No story intent provided for G3 verification'],
         opportunities: [],
       };
     }
@@ -76,14 +74,12 @@ class G3StoryValidationGate extends VerificationGate {
 
     // Phase 1: Verify referenced artifacts exist in registry
     if (context.referencedArtifacts && context.referencedArtifacts.length > 0) {
-      const validationResult = this._validateReferences(
-        context.referencedArtifacts,
-      );
+      const validationResult = this._validateReferences(context.referencedArtifacts);
       if (validationResult.missingRefs.length > 0) {
         hasCriticalIssue = true;
         warnings.push(
           `${validationResult.missingRefs.length} referenced artifacts not found in registry: ` +
-            validationResult.missingRefs.join(", "),
+          validationResult.missingRefs.join(', '),
         );
       }
       if (validationResult.foundRefs.length > 0) {
@@ -132,9 +128,7 @@ class G3StoryValidationGate extends VerificationGate {
     }
 
     // Soft block: if critical issues found AND no override provided
-    const hasValidOverride = Boolean(
-      context.override && context.override.reason,
-    );
+    const hasValidOverride = Boolean(context.override && context.override.reason);
     const passed = !hasCriticalIssue || hasValidOverride;
 
     return {

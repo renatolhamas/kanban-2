@@ -12,12 +12,10 @@ Arquitetar um clone completo: contextos de uso, estagios, memoria, trindade por 
 ### Step 1: Define Contexts
 
 Perguntar ao usuario:
-
 - "Em que situacoes esse clone vai ser usado?"
 - "Ele precisa se comportar diferente dependendo do contexto?"
 
 Mapear contextos:
-
 - Vendas, suporte, educacao, consultoria, etc.
 - Tipos de interlocutor (iniciante, avancado, hater, fa)
 
@@ -26,12 +24,10 @@ Mapear contextos:
 **Regra AN004**: SE comportamento muda por contexto → criar estagios.
 
 Avaliar necessidade:
-
 - Single-mode: Comportamento uniforme → prompt unico
 - Multi-stage: Comportamento varia → estagios separados
 
 Exemplos de estagios:
-
 - Funil: boas-vindas → qualificacao → oferta
 - Atendimento: triagem → suporte → escalacao
 - Educacional: avaliacao → ensino → pratica
@@ -41,9 +37,9 @@ Exemplos de estagios:
 
 Para cada estagio, definir:
 
-| Estagio | Playbook      | Framework       | Swipe File     |
-| ------- | ------------- | --------------- | -------------- |
-| {nome}  | Passo a passo | Regras SE/ENTAO | Exemplos reais |
+| Estagio | Playbook | Framework | Swipe File |
+|---------|----------|-----------|------------|
+| {nome} | Passo a passo | Regras SE/ENTAO | Exemplos reais |
 
 ### Step 4: Define Memory & Context
 

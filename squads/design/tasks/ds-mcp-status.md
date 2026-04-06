@@ -32,7 +32,6 @@ Report the current status of the Design System MCP server: tools available, data
    - `node squads/design/scripts/design-system/test_mcp_tools.cjs`
 
 6. **Generate Status Report**
-
    ```
    MCP Server: design-system-mcp v1.0.0
    Status: HEALTHY | DEGRADED | DOWN
@@ -54,13 +53,13 @@ Report the current status of the Design System MCP server: tools available, data
 - [ ] All data sources verified
 - [ ] Validation scripts pass
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

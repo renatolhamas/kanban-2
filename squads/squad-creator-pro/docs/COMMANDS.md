@@ -28,7 +28,6 @@ Cria um squad completo através do workflow guiado.
 | `--materials` | Path para materiais | (nenhum) |
 
 **Fluxo:**
-
 1. Pre-flight (escolha de modo)
 2. Research (3-5 iterações)
 3. Aprovar minds
@@ -67,7 +66,6 @@ Cria workflow multi-fase (preferido sobre tasks standalone).
 ```
 
 **Quando usar:**
-
 - Operação tem 3+ fases
 - Múltiplos agents envolvidos
 - Precisa checkpoints entre fases
@@ -83,7 +81,6 @@ Cria task atômica (quando workflow é overkill).
 ```
 
 **Quando usar:**
-
 - Operação single-session
 - Um agent só é suficiente
 - Não precisa checkpoints
@@ -121,7 +118,6 @@ Executa clonagem completa (Voice + Thinking DNA).
 | `--auto-acquire` | true, false | true |
 
 **Output:**
-
 ```
 outputs/minds/{slug}/
 ├── sources_inventory.yaml
@@ -143,7 +139,6 @@ Extrai apenas Voice DNA (comunicação/escrita).
 ```
 
 **O que extrai:**
-
 - Power words
 - Signature phrases
 - Stories/anecdotes
@@ -163,7 +158,6 @@ Extrai apenas Thinking DNA (frameworks/decisões).
 ```
 
 **O que extrai:**
-
 - Recognition patterns
 - Primary framework
 - Secondary frameworks
@@ -192,7 +186,6 @@ Atualiza mind existente com novas fontes (brownfield).
 | `--mode` | merge, replace, selective | merge |
 
 **Output:**
-
 - DNA atualizado
 - Diff report do que mudou
 - Quality impact
@@ -208,7 +201,6 @@ Busca fontes automaticamente na web.
 ```
 
 **O que busca:**
-
 - YouTube transcripts
 - Book summaries
 - Podcast appearances
@@ -228,7 +220,6 @@ Valida squad inteiro com análise por componente.
 ```
 
 **Valida:**
-
 - Estrutura de diretórios
 - Todos os agents
 - Workflows e tasks
@@ -246,7 +237,6 @@ Valida agent individual contra AIOS 6-level structure.
 ```
 
 **Critérios:**
-
 - Lines >= 300
 - voice_dna presente
 - output_examples >= 3
@@ -285,7 +275,6 @@ Gera dashboard de qualidade para mind ou squad.
 ```
 
 **Métricas:**
-
 - Sources count & tier ratio
 - Voice score
 - Thinking score
@@ -318,7 +307,6 @@ Ativa o especialista em clonagem de mentes (DNA Mental™ 8-Layer).
 | `*diagnose-clone` | Diagnostica problemas de fidelidade |
 
 **Quando usar:**
-
 - Extração de DNA (voice, thinking)
 - Curadoria de fontes
 - Validação de fidelidade
@@ -348,7 +336,6 @@ Ativa o especialista em processos, tarefas e checklists.
 | `*veto-check` | Define condições de veto |
 
 **Quando usar:**
-
 - Design de workflows
 - Criação de checklists
 - Definição de veto conditions
@@ -400,7 +387,6 @@ Pesquisa MCPs, APIs, CLIs, Libraries e GitHub projects para um domínio.
 ```
 
 **O que pesquisa:**
-
 - MCP Servers (Model Context Protocol)
 - APIs REST/GraphQL
 - CLI tools
@@ -408,7 +394,6 @@ Pesquisa MCPs, APIs, CLIs, Libraries e GitHub projects para um domínio.
 - GitHub projects
 
 **Output:**
-
 - Matriz de priorização (Impacto vs Esforço)
 - Quick wins identificados
 - Plano de integração
@@ -426,7 +411,6 @@ Exibe o registro global de ferramentas (instaladas e recomendadas).
 ```
 
 **Mostra:**
-
 - Ferramentas instaladas
 - Ferramentas recomendadas por prioridade
 - Capabilities disponíveis
@@ -457,7 +441,6 @@ Lista todos os squads criados.
 ```
 
 **Output:**
-
 ```
 ┌──────────┬─────────────┬────────┬───────────┐
 │ Squad    │ Agents      │ Score  │ Status    │
@@ -490,7 +473,6 @@ Dashboard detalhado de analytics por squad.
 ```
 
 **Mostra:**
-
 - Agents por tier
 - Tasks por tipo
 - Workflows
@@ -509,7 +491,6 @@ Escaneia squads/ e atualiza registro.
 ```
 
 **Quando usar:**
-
 - Após criar squad manualmente
 - Após mover/renomear squads
 - Sincronizar estado

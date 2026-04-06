@@ -12,19 +12,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -192,7 +189,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -211,6 +207,7 @@ updated_at: 2025-11-17
 ```
 
 ---
+
 
 ## 📋 Description
 
@@ -231,33 +228,28 @@ Conduct comprehensive user research, interviews, surveys, and needs analysis to 
 ## 📊 Research Methods
 
 ### Method 1: User Interviews
-
 **When to use:** Deep qualitative insights, early discovery
 **Participants:** 5-10 users (representative sample)
 **Duration:** 30-60 minutes per interview
 **Output:** Interview transcripts, key quotes, themes
 
 ### Method 2: Surveys
-
 **When to use:** Quantitative validation, large sample
 **Participants:** 50+ users
 **Duration:** 10-15 minutes to complete
 **Output:** Statistical data, usage patterns, preferences
 
 ### Method 3: Analytics Review
-
 **When to use:** Behavioral data, existing products
 **Source:** Google Analytics, Mixpanel, Hotjar, etc.
 **Output:** Usage patterns, drop-off points, popular features
 
 ### Method 4: Competitor Analysis
-
 **When to use:** Market context, best practices
 **Scope:** 3-5 competitors
 **Output:** Feature comparison, UX patterns, opportunities
 
 ### Method 5: Contextual Inquiry
-
 **When to use:** Observe users in natural environment
 **Duration:** 2-4 hours per session
 **Output:** Workflow observations, environment insights
@@ -267,7 +259,6 @@ Conduct comprehensive user research, interviews, surveys, and needs analysis to 
 ## 🔄 Workflow
 
 ### Step 1: Define Research Objectives
-
 **Interactive Elicitation:**
 
 ```
@@ -285,7 +276,6 @@ Your selection: _____
 ```
 
 **Follow-up questions:**
-
 - Who are your target users? (Demographics, roles, tech-savviness)
 - What's your timeline? (Days/weeks available)
 - What resources do you have? (Budget, access to users)
@@ -294,7 +284,6 @@ Your selection: _____
 ---
 
 ### Step 2: Select Research Methods
-
 Based on objectives, recommend methods:
 
 ```
@@ -324,21 +313,18 @@ Your selection: _____
 ### Step 3: Prepare Research Materials
 
 **For Interviews:**
-
 - Create interview script (10-15 open-ended questions)
 - Prepare consent forms
 - Set up recording tools (with permission)
 - Schedule sessions
 
 **For Surveys:**
-
 - Draft survey questions (max 20 questions)
 - Use mix of multiple choice + open-ended
 - Set up survey tool (Google Forms, Typeform, SurveyMonkey)
 - Plan distribution channels
 
 **For Analytics:**
-
 - Define key metrics to review
 - Set date range for analysis
 - Prepare dashboard views
@@ -348,7 +334,6 @@ Your selection: _____
 ### Step 4: Conduct Research
 
 **Interview Tips:**
-
 - Build rapport first (5 min)
 - Ask open-ended questions ("Tell me about...")
 - Probe deeper ("Why is that important?")
@@ -357,7 +342,6 @@ Your selection: _____
 - Record key quotes verbatim
 
 **Survey Tips:**
-
 - Keep it short (10-15 min max)
 - Clear, unbiased questions
 - Include screening questions
@@ -368,7 +352,6 @@ Your selection: _____
 ### Step 5: Analyze Findings
 
 **Synthesis Process:**
-
 1. Review all data (transcripts, responses, analytics)
 2. Extract key insights and quotes
 3. Identify themes and patterns
@@ -376,7 +359,6 @@ Your selection: _____
 5. Prioritize by frequency and impact
 
 **Affinity Mapping:**
-
 - Write findings on sticky notes (digital or physical)
 - Group similar insights together
 - Name each group (theme)
@@ -392,36 +374,30 @@ Your selection: _____
 ## Persona: [Name]
 
 ### Demographics
-
 - Age: [Range]
 - Role: [Job title]
 - Tech Savviness: [Beginner/Intermediate/Expert]
 - Location: [Geography]
 
 ### Goals
-
 - [Primary goal]
 - [Secondary goal]
 - [Aspirational goal]
 
 ### Pain Points
-
 - [Frustration 1]
 - [Frustration 2]
 - [Frustration 3]
 
 ### Behaviors
-
 - [How they currently solve this problem]
 - [Tools they use]
 - [Typical workflow]
 
 ### Quote
-
 > "[Memorable quote from research]"
 
 ### Needs from Product
-
 - [Need 1]
 - [Need 2]
 - [Need 3]
@@ -434,7 +410,6 @@ Your selection: _____
 ### Step 7: Document User Journeys
 
 **Journey Map Components:**
-
 - **Stages:** Discovery → Consideration → Purchase → Use → Loyalty
 - **Actions:** What user does at each stage
 - **Thoughts:** What they're thinking ("Will this work for me?")
@@ -443,7 +418,6 @@ Your selection: _____
 - **Opportunities:** Where we can improve
 
 **Format:**
-
 ```
 Stage: [Stage Name]
 -----
@@ -476,7 +450,6 @@ Opportunities:
 ## Key Insight #[N]: [One-sentence insight]
 
 **Evidence:**
-
 - [Data point 1]
 - [Quote 1]
 - [Quote 2]
@@ -484,12 +457,10 @@ Opportunities:
 **Impact:** [HIGH/MEDIUM/LOW]
 
 **Implications for Design:**
-
 - [Design implication 1]
 - [Design implication 2]
 
 **Recommended Actions:**
-
 1. [Action 1]
 2. [Action 2]
 ```
@@ -503,7 +474,6 @@ Generate 5-10 key insights ranked by impact.
 All artifacts saved to: `outputs/ux-research/{project}/`
 
 ### Required Files:
-
 1. **research-summary.md** - Executive summary of findings
 2. **personas.md** - 2-4 user personas
 3. **user-journeys.md** - Journey maps for key scenarios
@@ -511,7 +481,6 @@ All artifacts saved to: `outputs/ux-research/{project}/`
 5. **raw-data/** - Interview transcripts, survey responses
 
 ### Optional Files:
-
 6. **interview-script.md** - Questions used
 7. **survey-questions.md** - Survey instrument
 8. **affinity-map.jpg** - Photo of synthesis work
@@ -537,14 +506,12 @@ All artifacts saved to: `outputs/ux-research/{project}/`
 ## 🔄 Integration with Other Tasks
 
 **Next Steps:**
-
 - `*wireframe` - Use personas and insights to inform wireframe design
 - `*create-front-end-spec` - Reference user needs in specifications
 - `*build` - Ensure components meet user requirements
 
 **State Management:**
 Updates `.state.yaml` with:
-
 - `user_research_complete: true`
 - `personas: [list of persona names]`
 - `key_insights: [list of insights]`
@@ -555,7 +522,6 @@ Updates `.state.yaml` with:
 ## 📚 Templates & Resources
 
 **Interview Script Starter:**
-
 ```
 1. Tell me about your role and how you currently [do task X]
 2. What are your main goals when [doing task X]?
@@ -570,7 +536,6 @@ Updates `.state.yaml` with:
 ```
 
 **Survey Question Types:**
-
 - Demographic (screening)
 - Multiple choice (quantify preferences)
 - Likert scale (measure sentiment 1-5)

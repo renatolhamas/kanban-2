@@ -10,13 +10,13 @@
 
 ### By Story Complexity
 
-| Complexity       | Estimated Hours | Mode                      | Rationale               |
-| ---------------- | --------------- | ------------------------- | ----------------------- |
-| **Trivial**      | < 2h            | YOLO                      | Fast, straightforward   |
-| **Simple**       | 2-4h            | YOLO or Interactive       | Depends on familiarity  |
-| **Moderate**     | 4-8h            | Interactive               | Balance needed          |
-| **Complex**      | 8-16h           | Interactive or Pre-Flight | Needs careful decisions |
-| **Very Complex** | > 16h           | Pre-Flight                | Requires planning       |
+| Complexity | Estimated Hours | Mode | Rationale |
+|-----------|----------------|------|-----------|
+| **Trivial** | < 2h | YOLO | Fast, straightforward |
+| **Simple** | 2-4h | YOLO or Interactive | Depends on familiarity |
+| **Moderate** | 4-8h | Interactive | Balance needed |
+| **Complex** | 8-16h | Interactive or Pre-Flight | Needs careful decisions |
+| **Very Complex** | > 16h | Pre-Flight | Requires planning |
 
 ### By Story Type
 
@@ -48,14 +48,12 @@ Critical    → Pre-Flight + Team Review
 ### YOLO Mode 🚀
 
 **Characteristics**:
-
 - Autonomous decision-making
 - Decision logging
 - 0-1 user prompts
 - Fastest execution
 
 **Best For**:
-
 - Stories with clear requirements
 - Experienced developers
 - Time-sensitive work
@@ -63,7 +61,6 @@ Critical    → Pre-Flight + Team Review
 - Non-critical systems
 
 **Not Recommended For**:
-
 - Ambiguous requirements
 - Critical architectural decisions
 - Learning new framework areas
@@ -76,21 +73,18 @@ Critical    → Pre-Flight + Team Review
 ### Interactive Mode 💬
 
 **Characteristics**:
-
 - Decision checkpoints
 - Educational explanations
 - 5-10 user prompts
 - Balanced speed/control
 
 **Best For**:
-
 - Most stories (default for a reason)
 - Learning framework patterns
 - Collaborative development
 - Moderate complexity
 
 **Not Recommended For**:
-
 - When maximum speed is critical
 - Very ambiguous stories
 - No time for interaction
@@ -102,14 +96,12 @@ Critical    → Pre-Flight + Team Review
 ### Pre-Flight Planning Mode ✈️
 
 **Characteristics**:
-
 - Upfront questionnaire
 - Comprehensive planning
 - Zero execution interruptions
 - All decisions documented
 
 **Best For**:
-
 - Ambiguous requirements
 - Multiple architectural decisions
 - Team consensus needed
@@ -117,7 +109,6 @@ Critical    → Pre-Flight + Team Review
 - Setting precedents
 
 **Not Recommended For**:
-
 - Simple, clear stories
 - When speed is priority
 - Solo development of straightforward work
@@ -131,14 +122,12 @@ Critical    → Pre-Flight + Team Review
 ### Use YOLO When...
 
 ✅ ALL of these are true:
-
 - Requirements are crystal clear
 - You've done similar work before
 - Story is low/medium risk
 - You're comfortable with autonomous decisions
 
 ❌ ANY of these are true:
-
 - Requirements are ambiguous
 - It's your first time in this area
 - Story is high risk
@@ -147,7 +136,6 @@ Critical    → Pre-Flight + Team Review
 ### Use Interactive When...
 
 ✅ AT LEAST ONE is true:
-
 - You want to learn
 - Requirements are mostly clear
 - Moderate complexity
@@ -158,7 +146,6 @@ Critical    → Pre-Flight + Team Review
 ### Use Pre-Flight When...
 
 ✅ AT LEAST ONE is true:
-
 - Multiple architectural decisions
 - Requirements have gaps
 - Team consensus required
@@ -171,35 +158,27 @@ Critical    → Pre-Flight + Team Review
 ### ❌ Don't Do This
 
 **Using YOLO for critical systems**
-
 ```
 ❌ *develop-yolo 4.1  # Authentication system rewrite
 ```
-
 **Why**: Critical decisions need human oversight
 
 **Using Pre-Flight for simple bug fixes**
-
 ```
 ❌ *develop-preflight 3.99  # Fix typo in documentation
 ```
-
 **Why**: Overkill - wastes time on trivial work
 
 **Ignoring decision logs in YOLO mode**
-
 ```
 ❌ Run YOLO mode and never review .ai/decision-log-*.md
 ```
-
 **Why**: Miss opportunity to verify autonomous choices
 
 **Rushing through Interactive checkpoints**
-
 ```
 ❌ User: [1] [1] [1] [1]  # Just picking first option every time
 ```
-
 **Why**: Defeats the purpose of decision checkpoints
 
 ---
@@ -212,13 +191,11 @@ Critical    → Pre-Flight + Team Review
 **Reasoning**: Educational value, learn patterns
 
 **Mode Usage**:
-
 - Interactive: 80%
 - Pre-Flight: 15% (when stuck)
 - YOLO: 5% (documentation, trivial fixes)
 
 **Tips**:
-
 - Ask "why" during explanations
 - Don't skip decision checkpoint explanations
 - Use Pre-Flight when overwhelmed
@@ -229,13 +206,11 @@ Critical    → Pre-Flight + Team Review
 **Secondary Mode**: YOLO for simple work
 
 **Mode Usage**:
-
 - Interactive: 60%
 - YOLO: 30%
 - Pre-Flight: 10% (complex stories)
 
 **Tips**:
-
 - Use YOLO for familiar patterns
 - Use Interactive for new areas
 - Use Pre-Flight for architectural work
@@ -246,13 +221,11 @@ Critical    → Pre-Flight + Team Review
 **Secondary Mode**: Interactive for collaboration
 
 **Mode Usage**:
-
 - YOLO: 60%
 - Interactive: 25%
 - Pre-Flight: 15% (critical decisions)
 
 **Tips**:
-
 - Review decision logs after YOLO
 - Use Interactive when mentoring
 - Use Pre-Flight for cross-team alignment
@@ -263,13 +236,11 @@ Critical    → Pre-Flight + Team Review
 **Secondary Mode**: Interactive
 
 **Mode Usage**:
-
 - Pre-Flight: 50% (architectural stories)
 - Interactive: 40%
 - YOLO: 10% (simple changes)
 
 **Tips**:
-
 - Share Pre-Flight questionnaires with team
 - Document architectural decisions
 - Use YOLO for documentation updates only
@@ -281,30 +252,25 @@ Critical    → Pre-Flight + Team Review
 ### When You Have...
 
 **< 30 minutes**:
-
 - Use YOLO for trivial fixes only
 - Don't start complex stories
 
 **30 minutes - 2 hours**:
-
 - YOLO for simple, clear stories
 - Interactive for moderate stories (might not finish)
 
 **2-4 hours** (half day):
-
 - YOLO for multiple simple stories
 - Interactive for 1-2 moderate stories
 - Pre-Flight analysis (don't execute yet)
 
 **4-8 hours** (full day):
-
 - Any mode for any single story
 - YOLO batch processing
 - Interactive for learning focus
 - Pre-Flight with execution for complex
 
 **Multiple days**:
-
 - Pre-Flight for complex stories
 - Interactive for collaborative work
 - YOLO + review sessions
@@ -344,7 +310,6 @@ YOLO → Auto Decisions → Post-Review → Fast Execution
 ### Solo Development
 
 **Recommended**: Match mode to story complexity
-
 - Simple → YOLO
 - Moderate → Interactive
 - Complex → Pre-Flight (self-review)
@@ -352,7 +317,6 @@ YOLO → Auto Decisions → Post-Review → Fast Execution
 ### Pair Programming
 
 **Recommended**: Interactive mode
-
 - Checkpoints facilitate discussion
 - Educational for both developers
 - Decisions documented
@@ -360,7 +324,6 @@ YOLO → Auto Decisions → Post-Review → Fast Execution
 ### Team Features
 
 **Recommended**: Pre-Flight mode
-
 - Share questionnaire with team first
 - Get consensus before execution
 - Document decisions for future reference
@@ -368,7 +331,6 @@ YOLO → Auto Decisions → Post-Review → Fast Execution
 ### Critical Systems
 
 **Recommended**: Pre-Flight + Architecture Review
-
 1. Pre-Flight questionnaire
 2. Team review of plan
 3. Architecture approval
@@ -410,7 +372,6 @@ YOLO → Auto Decisions → Post-Review → Fast Execution
 ### Weekly Reflection
 
 Ask yourself:
-
 1. Which mode did I use most? Was it appropriate?
 2. What decisions would I have made differently?
 3. Where did I waste time? Where did I save time?
@@ -419,7 +380,6 @@ Ask yourself:
 ### Monthly Review
 
 Review your decision logs:
-
 1. Are YOLO decisions getting better?
 2. Are Interactive checkpoints still valuable?
 3. Is Pre-Flight planning accurate?
@@ -427,7 +387,6 @@ Review your decision logs:
 ### Team Retro
 
 Discuss as team:
-
 1. Are we using modes effectively?
 2. What mode preferences do team members have?
 3. Should we standardize certain story types?
@@ -455,7 +414,6 @@ Discuss as team:
 ### Q: What if Pre-Flight questionnaire has too many questions?
 
 **A**: This means story requirements are very ambiguous. Consider:
-
 1. Refining the story with PO before development
 2. Breaking story into smaller pieces
 3. Proceeding with Pre-Flight (it's doing its job)
@@ -490,17 +448,17 @@ When in doubt      → Interactive 💬 (default)
 
 ## Summary
 
-| Scenario               | Mode                      | Why               |
-| ---------------------- | ------------------------- | ----------------- |
-| Trivial bug fix        | YOLO                      | Fast, clear       |
-| Documentation          | YOLO                      | Low risk, clear   |
-| Learning new area      | Interactive               | Educational       |
-| Moderate feature       | Interactive               | Balanced          |
-| Ambiguous story        | Pre-Flight                | Need clarity      |
-| Architectural decision | Pre-Flight                | Critical          |
-| Team collaboration     | Interactive or Pre-Flight | Discussion needed |
-| Time-sensitive         | YOLO                      | Speed priority    |
-| **When unsure**        | **Interactive** 💬        | **Safe default**  |
+| Scenario | Mode | Why |
+|----------|------|-----|
+| Trivial bug fix | YOLO | Fast, clear |
+| Documentation | YOLO | Low risk, clear |
+| Learning new area | Interactive | Educational |
+| Moderate feature | Interactive | Balanced |
+| Ambiguous story | Pre-Flight | Need clarity |
+| Architectural decision | Pre-Flight | Critical |
+| Team collaboration | Interactive or Pre-Flight | Discussion needed |
+| Time-sensitive | YOLO | Speed priority |
+| **When unsure** | **Interactive** 💬 | **Safe default** |
 
 ---
 

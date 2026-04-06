@@ -15,12 +15,12 @@
  * @created Story NOG-12 - State Persistence Hardening
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const IS_WINDOWS = process.platform === "win32";
+const IS_WINDOWS = process.platform === 'win32';
 
 /**
  * Write data to a file atomically.
@@ -34,7 +34,7 @@ const IS_WINDOWS = process.platform === "win32";
  * @param {string} [encoding='utf8'] - File encoding
  * @throws {Error} If write or rename fails (original file preserved)
  */
-function atomicWriteSync(filePath, data, encoding = "utf8") {
+function atomicWriteSync(filePath, data, encoding = 'utf8') {
   const tmpPath = `${filePath}.tmp.${process.pid}`;
 
   try {
@@ -52,7 +52,7 @@ function atomicWriteSync(filePath, data, encoding = "utf8") {
       try {
         fs.unlinkSync(filePath);
       } catch (err) {
-        if (err.code !== "ENOENT") {
+        if (err.code !== 'ENOENT') {
           throw err;
         }
         // ENOENT = target doesn't exist yet, that's fine
@@ -69,9 +69,7 @@ function atomicWriteSync(filePath, data, encoding = "utf8") {
       // Ignore cleanup errors
     }
 
-    console.error(
-      `[atomic-write] Failed to write ${filePath}: ${error.message}`,
-    );
+    console.error(`[atomic-write] Failed to write ${filePath}: ${error.message}`);
     throw error;
   }
 }

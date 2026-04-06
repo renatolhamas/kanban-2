@@ -10,7 +10,6 @@
 ## Purpose
 
 Validate that the model routing system is functional by:
-
 1. Running 3 haiku-tier tasks with explicit model parameter
 2. Comparing behavior with/without model parameter
 3. Logging results to metrics
@@ -93,7 +92,6 @@ Task(
 **Expected:** Task completes successfully using Haiku model.
 
 **Log result:**
-
 ```bash
 node squads/squad-creator-pro/scripts/model-usage-logger.cjs log smoke-test-haiku.md haiku 500 100 2000
 ```
@@ -159,13 +157,11 @@ Recommendation:
 ## Next Steps After Smoke Test
 
 If smoke test PASSES:
-
 1. Model routing capability is validated
 2. Priority: Create enforcement hook
 3. Start logging real task executions
 
 If smoke test FAILS:
-
 1. Identify failure point
 2. Fix before proceeding
 3. Re-run smoke test

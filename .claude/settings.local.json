@@ -28,7 +28,8 @@
       "Bash(curl -s -X POST http://localhost:3017/api/auth/login -H 'Content-Type: application/json' -d '{:*)",
       "WebFetch(domain:supabase.com)",
       "WebSearch",
-      "mcp__supabase__search_docs"
+      "mcp__supabase__search_docs",
+      "Bash(powershell -Command ':*)"
     ]
   },
   "enableAllProjectMcpServers": true,

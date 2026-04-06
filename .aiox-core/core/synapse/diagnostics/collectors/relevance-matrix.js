@@ -9,20 +9,20 @@
  * @created Story SYN-14
  */
 
-"use strict";
+'use strict';
 
-const path = require("path");
-const { safeReadJson } = require("./safe-read-json");
+const path = require('path');
+const { safeReadJson } = require('./safe-read-json');
 
 /**
  * Importance levels for context components.
  * @enum {string}
  */
 const IMPORTANCE = {
-  CRITICAL: "critical",
-  IMPORTANT: "important",
-  OPTIONAL: "optional",
-  IRRELEVANT: "irrelevant",
+  CRITICAL: 'critical',
+  IMPORTANT: 'important',
+  OPTIONAL: 'optional',
+  IRRELEVANT: 'irrelevant',
 };
 
 /**
@@ -46,7 +46,7 @@ const DEFAULT_RELEVANCE = {
   task: IMPORTANCE.OPTIONAL,
   squad: IMPORTANCE.IRRELEVANT,
   keyword: IMPORTANCE.OPTIONAL,
-  "star-command": IMPORTANCE.OPTIONAL,
+  'star-command': IMPORTANCE.OPTIONAL,
 };
 
 /**
@@ -96,16 +96,13 @@ const AGENT_OVERRIDES = {
  * }}
  */
 function collectRelevanceMatrix(projectRoot) {
-  const metricsDir = path.join(projectRoot, ".synapse", "metrics");
+  const metricsDir = path.join(projectRoot, '.synapse', 'metrics');
 
-  const uapData = safeReadJson(path.join(metricsDir, "uap-metrics.json"));
-  const hookData = safeReadJson(path.join(metricsDir, "hook-metrics.json"));
-  const bridgeData = safeReadJson(
-    path.join(projectRoot, ".synapse", "sessions", "_active-agent.json"),
-  );
+  const uapData = safeReadJson(path.join(metricsDir, 'uap-metrics.json'));
+  const hookData = safeReadJson(path.join(metricsDir, 'hook-metrics.json'));
+  const bridgeData = safeReadJson(path.join(projectRoot, '.synapse', 'sessions', '_active-agent.json'));
 
-  const agentId =
-    (uapData && uapData.agentId) || (bridgeData && bridgeData.id) || "unknown";
+  const agentId = (uapData && uapData.agentId) || (bridgeData && bridgeData.id) || 'unknown';
 
   if (!uapData && !hookData) {
     return { available: false, agentId, matrix: [], gaps: [], score: 0 };
@@ -124,10 +121,7 @@ function collectRelevanceMatrix(projectRoot) {
     totalWeight += weight;
 
     const status = _getComponentStatus(component, uapData, hookData);
-    const gap =
-      importance !== IMPORTANCE.IRRELEVANT &&
-      status !== "ok" &&
-      status !== "skipped";
+    const gap = importance !== IMPORTANCE.IRRELEVANT && status !== 'ok' && status !== 'skipped';
 
     if (gap && weight > 0) {
       gaps.push({ component, importance });
@@ -138,8 +132,7 @@ function collectRelevanceMatrix(projectRoot) {
     matrix.push({ component, importance, status, gap });
   }
 
-  const score =
-    totalWeight > 0 ? Math.round((achievedWeight / totalWeight) * 100) : 0;
+  const score = totalWeight > 0 ? Math.round((achievedWeight / totalWeight) * 100) : 0;
 
   return { available: true, agentId, matrix, gaps, score };
 }
@@ -164,13 +157,13 @@ function _getRelevanceForAgent(agentId) {
 function _getComponentStatus(component, uapData, hookData) {
   // Check UAP loaders
   if (uapData && uapData.loaders && uapData.loaders[component]) {
-    return uapData.loaders[component].status || "unknown";
+    return uapData.loaders[component].status || 'unknown';
   }
   // Check Hook layers
   if (hookData && hookData.perLayer && hookData.perLayer[component]) {
-    return hookData.perLayer[component].status || "unknown";
+    return hookData.perLayer[component].status || 'unknown';
   }
-  return "missing";
+  return 'missing';
 }
 
 module.exports = {

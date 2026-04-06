@@ -16,7 +16,7 @@ input:
   # Use existing mind for design validation
   target: "squads/squad-creator-pro/minds/pedro_valerio"
   params:
-    output_type: "specialist" # generalista | specialist
+    output_type: "specialist"  # generalista | specialist
   context_files:
     - "squads/squad-creator-pro/data/an-source-tiers.yaml"
 

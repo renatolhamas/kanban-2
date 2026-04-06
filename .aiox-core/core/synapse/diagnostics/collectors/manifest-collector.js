@@ -10,11 +10,11 @@
  * @created Story SYN-13
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const { parseManifest } = require("../../domain/domain-loader");
+const fs = require('fs');
+const path = require('path');
+const { parseManifest } = require('../../domain/domain-loader');
 
 /**
  * Collect manifest integrity data.
@@ -23,8 +23,8 @@ const { parseManifest } = require("../../domain/domain-loader");
  * @returns {{ entries: Array<{ domain: string, inManifest: string, fileExists: boolean, status: string }>, orphanedFiles: string[] }}
  */
 function collectManifestIntegrity(projectRoot) {
-  const synapsePath = path.join(projectRoot, ".synapse");
-  const manifestPath = path.join(synapsePath, "manifest");
+  const synapsePath = path.join(projectRoot, '.synapse');
+  const manifestPath = path.join(synapsePath, 'manifest');
   const entries = [];
   const orphanedFiles = [];
 
@@ -37,19 +37,17 @@ function collectManifestIntegrity(projectRoot) {
     const domainFilePath = path.join(synapsePath, fileName);
     const fileExists = fs.existsSync(domainFilePath);
 
-    const stateInfo = domainConfig.state || "unknown";
+    const stateInfo = domainConfig.state || 'unknown';
     const triggers = [];
-    if (domainConfig.agentTrigger)
-      triggers.push(`trigger=${domainConfig.agentTrigger}`);
-    if (domainConfig.workflowTrigger)
-      triggers.push(`trigger=${domainConfig.workflowTrigger}`);
-    if (domainConfig.alwaysOn) triggers.push("ALWAYS_ON");
+    if (domainConfig.agentTrigger) triggers.push(`trigger=${domainConfig.agentTrigger}`);
+    if (domainConfig.workflowTrigger) triggers.push(`trigger=${domainConfig.workflowTrigger}`);
+    if (domainConfig.alwaysOn) triggers.push('ALWAYS_ON');
 
     entries.push({
       domain: fileName,
-      inManifest: `${stateInfo}${triggers.length ? ", " + triggers.join(", ") : ""}`,
+      inManifest: `${stateInfo}${triggers.length ? ', ' + triggers.join(', ') : ''}`,
       fileExists,
-      status: fileExists ? "PASS" : "FAIL",
+      status: fileExists ? 'PASS' : 'FAIL',
     });
   }
 
@@ -62,8 +60,7 @@ function collectManifestIntegrity(projectRoot) {
     const allFiles = fs.readdirSync(synapsePath);
     const domainFiles = allFiles.filter((f) => {
       // Skip known non-domain files
-      if (f === "manifest" || f === ".gitignore" || f.startsWith("."))
-        return false;
+      if (f === 'manifest' || f === '.gitignore' || f.startsWith('.')) return false;
       // Skip directories
       const stat = fs.statSync(path.join(synapsePath, f));
       if (stat.isDirectory()) return false;

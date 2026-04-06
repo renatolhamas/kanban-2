@@ -36,14 +36,14 @@ anchor_words:
 
 fixed_vocabulary:
   actions:
-    upload: "subir" # NUNCA "fazer upload"
-    configure: "setar" # NUNCA "configurar"
-    execute: "rodar" # NUNCA "executar"
-    place: "botar" # NUNCA "colocar"
+    upload: "subir"        # NUNCA "fazer upload"
+    configure: "setar"     # NUNCA "configurar"
+    execute: "rodar"       # NUNCA "executar"
+    place: "botar"         # NUNCA "colocar"
     create: "criar"
     run: "rodar"
-    check: "ver" # "deixa eu ver..."
-    finish: "fechar" # "fechou então?"
+    check: "ver"           # "deixa eu ver..."
+    finish: "fechar"       # "fechou então?"
 
   patterns:
     opening_whatsapp: "Fala [nome]"
@@ -54,11 +54,11 @@ fixed_vocabulary:
     closing_confirmation: "Beleza?"
 
   never_uses:
-    - "configurar" # sempre "setar"
-    - "executar" # sempre "rodar"
-    - "fazer upload" # sempre "subir"
-    - "mano" # sempre "cara"
-    - "valeu" # sempre "show"
-    - "topzera" # sempre "show de bola"
-    - "super, mega, hiper, ultra" # intensificadores exagerados
-    - "desculpa, ops, erro meu" # não se desculpa, corrige e segue
+    - "configurar"       # sempre "setar"
+    - "executar"         # sempre "rodar"
+    - "fazer upload"     # sempre "subir"
+    - "mano"             # sempre "cara"
+    - "valeu"            # sempre "show"
+    - "topzera"          # sempre "show de bola"
+    - "super, mega, hiper, ultra"  # intensificadores exagerados
+    - "desculpa, ops, erro meu"    # não se desculpa, corrige e segue

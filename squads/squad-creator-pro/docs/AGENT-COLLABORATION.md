@@ -50,23 +50,21 @@ O Squad Creator opera com **3 agentes especializados** que trabalham em sinergia
 
 **Papel:** Ponto de entrada, coordenação geral, triagem e criação de squads.
 
-| Aspecto         | Descrição                                                              |
-| --------------- | ---------------------------------------------------------------------- |
-| **Ativação**    | `@squad-creator` ou `@squad-chief`                                     |
-| **Funções**     | Triagem, routing, criação de squads, extração de SOPs, validação final |
-| **Delega para** | @oalanicolas (DNA), @pedro-valerio (processos)                         |
-| **Recebe de**   | Usuário, @oalanicolas (DNA pronto), @pedro-valerio (artefatos)         |
+| Aspecto | Descrição |
+|---------|-----------|
+| **Ativação** | `@squad-creator` ou `@squad-chief` |
+| **Funções** | Triagem, routing, criação de squads, extração de SOPs, validação final |
+| **Delega para** | @oalanicolas (DNA), @pedro-valerio (processos) |
+| **Recebe de** | Usuário, @oalanicolas (DNA pronto), @pedro-valerio (artefatos) |
 
 **Quando o Chief age sozinho:**
-
 - Criar squad completo (orquestra os outros)
-- Extrair SOP de transcrição (\*extract-sop)
-- Pesquisar elite minds (\*create-squad)
-- Validar squad final (\*validate-squad)
+- Extrair SOP de transcrição (*extract-sop)
+- Pesquisar elite minds (*create-squad)
+- Validar squad final (*validate-squad)
 - Routing inicial (diagnóstico de necessidade)
 
 **Quando o Chief delega:**
-
 - Precisa extrair DNA de um mind → @oalanicolas
 - Precisa validar/criar workflow → @pedro-valerio
 - Precisa auditar processo → @pedro-valerio
@@ -77,15 +75,14 @@ O Squad Creator opera com **3 agentes especializados** que trabalham em sinergia
 
 **Papel:** Especialista em extração de conhecimento e clonagem de mentes.
 
-| Aspecto          | Descrição                                                            |
-| ---------------- | -------------------------------------------------------------------- |
-| **Ativação**     | `@squad-creator:oalanicolas`                                         |
-| **Funções**      | Curadoria de fontes, extração de Voice DNA, extração de Thinking DNA |
-| **Recebe de**    | @squad-chief (mind para clonar)                                      |
-| **Entrega para** | @pedro-valerio (insumos prontos) ou @squad-chief (DNA completo)      |
+| Aspecto | Descrição |
+|---------|-----------|
+| **Ativação** | `@squad-creator:oalanicolas` |
+| **Funções** | Curadoria de fontes, extração de Voice DNA, extração de Thinking DNA |
+| **Recebe de** | @squad-chief (mind para clonar) |
+| **Entrega para** | @pedro-valerio (insumos prontos) ou @squad-chief (DNA completo) |
 
 **Comandos exclusivos:**
-
 ```
 *assess-sources      - Avaliar fontes (ouro vs bronze)
 *extract-framework   - Extrair framework + Voice + Thinking DNA
@@ -96,7 +93,6 @@ O Squad Creator opera com **3 agentes especializados** que trabalham em sinergia
 ```
 
 **Filosofia:**
-
 - "Curadoria > Volume"
 - "Se entrar cocô, sai cocô"
 - "Clone minds, not create bots"
@@ -107,15 +103,14 @@ O Squad Creator opera com **3 agentes especializados** que trabalham em sinergia
 
 **Papel:** Especialista em processos, workflows, e validação.
 
-| Aspecto          | Descrição                                                             |
-| ---------------- | --------------------------------------------------------------------- |
-| **Ativação**     | `@squad-creator:pedro-valerio`                                        |
-| **Funções**      | Design de workflows, veto conditions, automação, criação de artefatos |
-| **Recebe de**    | @oalanicolas (insumos extraídos), @squad-chief (requests)             |
-| **Entrega para** | @squad-chief (artefatos prontos)                                      |
+| Aspecto | Descrição |
+|---------|-----------|
+| **Ativação** | `@squad-creator:pedro-valerio` |
+| **Funções** | Design de workflows, veto conditions, automação, criação de artefatos |
+| **Recebe de** | @oalanicolas (insumos extraídos), @squad-chief (requests) |
+| **Entrega para** | @squad-chief (artefatos prontos) |
 
 **Comandos exclusivos:**
-
 ```
 *eng-map          - Mapear processo completo
 *arq-structure    - Criar estrutura de sistema
@@ -128,7 +123,6 @@ O Squad Creator opera com **3 agentes especializados** que trabalham em sinergia
 ```
 
 **Filosofia:**
-
 - "A melhor coisa é impossibilitar caminhos errados"
 - "Nada volta num fluxo. NUNCA."
 - "Se repete 3x, tem que automatizar"
@@ -257,18 +251,16 @@ O Squad Creator opera com **3 agentes especializados** que trabalham em sinergia
 **Trigger:** Precisa extrair DNA de um mind
 
 **Contexto passado:**
-
 ```yaml
 handoff_to_oalanicolas:
   mind_name: "Gary Halbert"
   domain: "copywriting"
-  sources_path: "docs/research/gary-halbert/" # opcional
-  mode: "quality" # yolo | quality
-  focus: "both" # voice | thinking | both
+  sources_path: "docs/research/gary-halbert/"  # opcional
+  mode: "quality"  # yolo | quality
+  focus: "both"  # voice | thinking | both
 ```
 
 **Esperado de volta:**
-
 ```yaml
 return_from_oalanicolas:
   status: "complete"
@@ -291,7 +283,6 @@ return_from_oalanicolas:
 **Trigger:** Insumos prontos para virar artefatos (tasks, workflows, agents)
 
 **Formato: INSUMOS_READY**
-
 ```yaml
 insumos_ready:
   from: "@oalanicolas"
@@ -314,7 +305,6 @@ insumos_ready:
 ```
 
 **Veto Conditions (PV rejeita se):**
-
 - Conceitos sem `[SOURCE:]`
 - Inferências não marcadas
 - < 15 citações
@@ -329,7 +319,6 @@ insumos_ready:
 **Trigger:** Artefatos prontos para integração
 
 **Formato: ARTIFACTS_READY**
-
 ```yaml
 artifacts_ready:
   from: "@pedro-valerio"
@@ -356,24 +345,24 @@ artifacts_ready:
 
 ### Quem faz o quê?
 
-| Atividade                       | squad-chief | @oalanicolas | @pedro-valerio |
-| ------------------------------- | :---------: | :----------: | :------------: |
-| **Receber request do usuário**  |     ✅      |      -       |       -        |
-| **Triagem/Routing**             |     ✅      |      -       |       -        |
-| **Research elite minds**        |     ✅      |      -       |       -        |
-| **Coletar sources**             |      -      |      ✅      |       -        |
-| **Curar sources (ouro/bronze)** |      -      |      ✅      |       -        |
-| **Extrair Voice DNA**           |      -      |      ✅      |       -        |
-| **Extrair Thinking DNA**        |      -      |      ✅      |       -        |
-| **Criar agent.md**              |      -      |      -       |       ✅       |
-| **Criar task.md**               |      -      |      -       |       ✅       |
-| **Criar workflow.yaml**         |      -      |      -       |       ✅       |
-| **Definir veto conditions**     |      -      |      -       |       ✅       |
-| **Auditar processo**            |      -      |      -       |       ✅       |
-| **Gerar config.yaml**           |     ✅      |      -       |       -        |
-| **Gerar README.md**             |     ✅      |      -       |       -        |
-| **Validação final**             |     ✅      |      -       |       -        |
-| **Apresentar resultado**        |     ✅      |      -       |       -        |
+| Atividade | squad-chief | @oalanicolas | @pedro-valerio |
+|-----------|:-----------:|:------------:|:--------------:|
+| **Receber request do usuário** | ✅ | - | - |
+| **Triagem/Routing** | ✅ | - | - |
+| **Research elite minds** | ✅ | - | - |
+| **Coletar sources** | - | ✅ | - |
+| **Curar sources (ouro/bronze)** | - | ✅ | - |
+| **Extrair Voice DNA** | - | ✅ | - |
+| **Extrair Thinking DNA** | - | ✅ | - |
+| **Criar agent.md** | - | - | ✅ |
+| **Criar task.md** | - | - | ✅ |
+| **Criar workflow.yaml** | - | - | ✅ |
+| **Definir veto conditions** | - | - | ✅ |
+| **Auditar processo** | - | - | ✅ |
+| **Gerar config.yaml** | ✅ | - | - |
+| **Gerar README.md** | ✅ | - | - |
+| **Validação final** | ✅ | - | - |
+| **Apresentar resultado** | ✅ | - | - |
 
 ---
 
@@ -441,13 +430,13 @@ Checkpoint: Classificar fonte como OURO ou BRONZE?
 
 ### Tasks com Decision Checkpoints
 
-| Task                   | Checkpoints | Mental Models Consultados |
-| ---------------------- | ----------- | ------------------------- |
-| `an-assess-sources`    | 3           | VALUES, OBSESSIONS        |
-| `an-extract-framework` | 5           | MODELS, PARADOXES         |
-| `an-validate-clone`    | 4           | VALUES, MODELS            |
-| `pv-audit`             | 6           | MODELS, VALUES            |
-| `create-workflow`      | 4           | OBSESSIONS, MODELS        |
+| Task | Checkpoints | Mental Models Consultados |
+|------|-------------|---------------------------|
+| `an-assess-sources` | 3 | VALUES, OBSESSIONS |
+| `an-extract-framework` | 5 | MODELS, PARADOXES |
+| `an-validate-clone` | 4 | VALUES, MODELS |
+| `pv-audit` | 6 | MODELS, VALUES |
+| `create-workflow` | 4 | OBSESSIONS, MODELS |
 
 ---
 
@@ -455,32 +444,32 @@ Checkpoint: Classificar fonte como OURO ou BRONZE?
 
 ### @squad-chief - Vetos
 
-| Condição                              | Ação                              |
-| ------------------------------------- | --------------------------------- |
-| Squad já existe para domínio          | WARN + perguntar se quer estender |
-| < 3 elite minds encontrados           | BLOCK research                    |
-| Nenhum mind com framework documentado | BLOCK creation                    |
-| Quality score < 6.0                   | BLOCK release                     |
+| Condição | Ação |
+|----------|------|
+| Squad já existe para domínio | WARN + perguntar se quer estender |
+| < 3 elite minds encontrados | BLOCK research |
+| Nenhum mind com framework documentado | BLOCK creation |
+| Quality score < 6.0 | BLOCK release |
 
 ### @oalanicolas - Vetos
 
-| Condição                    | Ação             |
-| --------------------------- | ---------------- |
-| < 10 sources total          | BLOCK extraction |
-| < 3 sources ouro (Tier 0-1) | BLOCK synthesis  |
-| Voice score < 6/10          | WARN + retry     |
-| Thinking score < 5/9        | WARN + retry     |
-| Self-validation FAIL        | BLOCK handoff    |
+| Condição | Ação |
+|----------|------|
+| < 10 sources total | BLOCK extraction |
+| < 3 sources ouro (Tier 0-1) | BLOCK synthesis |
+| Voice score < 6/10 | WARN + retry |
+| Thinking score < 5/9 | WARN + retry |
+| Self-validation FAIL | BLOCK handoff |
 
 ### @pedro-valerio - Vetos
 
-| Condição                      | Ação                   |
-| ----------------------------- | ---------------------- |
-| Insumos sem [SOURCE:]         | REJECT + return to AN  |
-| < 15 citações                 | REJECT + return to AN  |
-| Workflow permite path reverso | BLOCK + fix            |
-| Automação sem guardrails      | BLOCK + add guardrails |
-| Smoke test FAIL               | BLOCK release          |
+| Condição | Ação |
+|----------|------|
+| Insumos sem [SOURCE:] | REJECT + return to AN |
+| < 15 citações | REJECT + return to AN |
+| Workflow permite path reverso | BLOCK + fix |
+| Automação sem guardrails | BLOCK + add guardrails |
+| Smoke test FAIL | BLOCK release |
 
 ---
 
@@ -520,7 +509,6 @@ squad-chief: "Delegando para @oalanicolas..."
 **Causa provável:** Self-validation falhou
 
 **Solução:**
-
 ```bash
 @oalanicolas
 *validate-extraction
@@ -535,7 +523,6 @@ squad-chief: "Delegando para @oalanicolas..."
 **Causa:** Citações insuficientes ou inferências não marcadas
 
 **Solução:**
-
 ```bash
 @oalanicolas
 *assess-sources  # Ver cobertura
@@ -549,7 +536,6 @@ squad-chief: "Delegando para @oalanicolas..."
 **Causa:** DNA extraction superficial
 
 **Solução:**
-
 ```bash
 @oalanicolas
 *diagnose-clone {slug}
@@ -620,4 +606,4 @@ squad-chief: "Delegando para @oalanicolas..."
 ---
 
 **Squad Creator | Agent Collaboration v3.0**
-_"3 agentes, 1 objetivo: criar squads de elite."_
+*"3 agentes, 1 objetivo: criar squads de elite."*

@@ -18,10 +18,10 @@ results:
     assessment_level: "BOOK (whole books)"
     sources_assessed: 4
     tier_distribution:
-      crown_jewel: 3 # All 3 books
+      crown_jewel: 3  # All 3 books
       ouro: 0
       mixed: 0
-      bronze: 1 # Tom Bilyeu (no content)
+      bronze: 1       # Tom Bilyeu (no content)
     average_quality: 4.15
     scores:
       $100M_Offers: { score: 4.8, tier: "crown_jewel" }
@@ -32,12 +32,12 @@ results:
   haiku_test:
     model: "haiku"
     assessment_level: "CHAPTER (granular)"
-    sources_assessed: 5 # Treated chapters as separate sources
+    sources_assessed: 5  # Treated chapters as separate sources
     tier_distribution:
-      crown_jewel: 1 # Only Cap 6
-      ouro: 3 # Cap 8, Leads I-II, Money Models
+      crown_jewel: 1  # Only Cap 6
+      ouro: 3         # Cap 8, Leads I-II, Money Models
       mixed: 0
-      bronze: 1 # Tom Bilyeu (no content)
+      bronze: 1       # Tom Bilyeu (no content)
     average_quality: 4.2
     scores:
       Cap_6_Equacao_Valor: { score: 5.0, tier: "crown_jewel" }
@@ -90,11 +90,11 @@ comparison:
 # ============================================================================
 
 veto_conditions:
-  MTQ_VC_001: # Score differs by >10%
+  MTQ_VC_001:  # Score differs by >10%
     triggered: false
     analysis: "Average quality 4.15 vs 4.2 = 1.2% variance"
 
-  MTQ_VC_004: # Different tier classification
+  MTQ_VC_004:  # Different tier classification
     triggered: true
     analysis: |
       - Opus: 3 books → all CROWN JEWEL
@@ -210,3 +210,4 @@ next_steps:
   - action: "Consider if scope fix could enable Haiku (future test)"
     priority: "low"
     note: "Would require re-testing with v2.1"
+

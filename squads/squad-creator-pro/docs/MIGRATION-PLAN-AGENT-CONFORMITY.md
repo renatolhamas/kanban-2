@@ -16,7 +16,6 @@ Este documento é um plano para **padronizar 3 arquivos de agent** do squad-crea
 ### Por que padronizar?
 
 O sistema AIOS tem um padrão de "activation" (como o agent se apresenta e lista comandos). Sem esse padrão:
-
 - Agents não seguem o pipeline unificado
 - Greeting (saudação) é inconsistente
 - Comandos não são filtrados por contexto
@@ -61,15 +60,14 @@ squads/squad-creator-pro/agents/
 | `[key]` | Aparece na saudação mínima (workflow) | 3-5 comandos |
 
 **Exemplo:**
-
 ```yaml
 commands:
   - name: "*create-task"
-    visibility: [full, quick, key] # Aparece em TODOS os contextos
+    visibility: [full, quick, key]    # Aparece em TODOS os contextos
   - name: "*audit"
-    visibility: [full, quick] # Aparece no help e saudação normal
+    visibility: [full, quick]         # Aparece no help e saudação normal
   - name: "*advanced-config"
-    visibility: [full] # Só aparece no *help
+    visibility: [full]                # Só aparece no *help
 ```
 
 ### signature_closing
@@ -79,7 +77,6 @@ commands:
 **Por que existe:** Reforça a identidade/filosofia do agent. É como a "tagline" do agent.
 
 **Exemplo:**
-
 ```yaml
 signature_closing: "— A melhor coisa é impossibilitar caminhos."
 ```
@@ -91,7 +88,6 @@ signature_closing: "— A melhor coisa é impossibilitar caminhos."
 **Por que existe:** Mostra como o agent deve responder. Serve como "few-shot examples" para o comportamento esperado.
 
 **Estrutura:**
-
 ```yaml
 output_examples:
   - input: "O que o usuário perguntou/pediu"
@@ -115,7 +111,7 @@ output_examples:
 
 Um arquivo de agent tem esta estrutura geral. As seções **EM NEGRITO** são as que vamos adicionar:
 
-````yaml
+```yaml
 # nome-do-agent
 
 > Descrição curta
@@ -152,7 +148,7 @@ persona:
   role: ...
   style: ...
   # ... resto do persona ...
-````
+```
 
 ## COMANDOS (ou commands:)
 
@@ -170,7 +166,6 @@ commands:
 ```
 
 ## VOICE DNA / THINKING DNA
-
 # ... seções existentes ...
 
 ## OUTPUT EXAMPLES (se não existir, adicionar)
@@ -192,7 +187,6 @@ output_examples:
 ```
 
 ## Handoff Rules / dependencies
-
 # ... seções existentes ...
 
 ```yaml
@@ -207,8 +201,7 @@ dependencies:
     - checklist1.md
     - checklist2.md
 ```
-
-````
+```
 
 ---
 
@@ -246,10 +239,9 @@ dependencies:
     archetypal: "⚙️ Pedro Valério — A melhor coisa é impossibilitar caminhos"
 
   signature_closing: "— A melhor coisa é impossibilitar caminhos."
-````
+```
 
 **ANTES:**
-
 ```yaml
 agent:
   name: Pedro Valério
@@ -263,7 +255,6 @@ persona:
 ```
 
 **DEPOIS:**
-
 ```yaml
 agent:
   name: Pedro Valério
@@ -288,7 +279,6 @@ persona:
 **ONDE:** O arquivo tem uma tabela de "Mission Keyword" no Step 3. Adicionar uma nova seção `commands:` com visibility ANTES dessa tabela.
 
 **O QUE ADICIONAR:** (inserir após "## Step 3: Execute Mission" e antes da tabela)
-
 ```yaml
 ## Command Visibility
 
@@ -330,8 +320,7 @@ commands:
 **ONDE:** Após a seção "## Completion Criteria" (final do arquivo)
 
 **O QUE ADICIONAR:**
-
-````yaml
+```yaml
 ## Output Examples
 
 output_examples:
@@ -411,14 +400,13 @@ output_examples:
       Processo não pode ser aprovado. Caminhos errados são possíveis.
 
       **Próximo passo:** Redesenhar com bloqueios físicos antes de aprovar.
-````
+```
 
 #### Passo 1.4: Adicionar dependencies.checklists
 
 **ONDE:** Não existe seção `dependencies:` explícita. Adicionar após "## Handoff Rules"
 
 **O QUE ADICIONAR:**
-
 ```yaml
 ## Dependencies
 
@@ -454,14 +442,13 @@ dependencies:
 **ONDE:** Dentro do bloco `agent:` na seção PERSONA (após `tier: 1`)
 
 **O QUE ADICIONAR:**
-
 ```yaml
-greeting_levels:
-  minimal: "🧠 oalanicolas ready"
-  named: "🧠 Alan Nicolas (Knowledge Architect) ready"
-  archetypal: "🧠 Alan Nicolas — Menos mas melhor"
+  greeting_levels:
+    minimal: "🧠 oalanicolas ready"
+    named: "🧠 Alan Nicolas (Knowledge Architect) ready"
+    archetypal: "🧠 Alan Nicolas — Menos mas melhor"
 
-signature_closing: "— Menos mas melhor."
+  signature_closing: "— Menos mas melhor."
 ```
 
 #### Passo 2.2: Adicionar visibility nos comandos
@@ -469,7 +456,6 @@ signature_closing: "— Menos mas melhor."
 **ONDE:** Após "## Step 3: Execute Mission" e antes da tabela de Mission Keyword
 
 **O QUE ADICIONAR:**
-
 ```yaml
 ## Command Visibility
 
@@ -508,8 +494,7 @@ commands:
 **ONDE:** Antes de "## Self-Validation Checklist"
 
 **O QUE ADICIONAR:**
-
-````yaml
+```yaml
 ## Output Examples
 
 output_examples:
@@ -596,14 +581,13 @@ output_examples:
       ```
 
       Curadoria > Volume. Pode passar pro PV construir os artefatos.
-````
+```
 
 #### Passo 2.4: Adicionar dependencies.checklists
 
 **ONDE:** Não existe seção `dependencies:` explícita. O arquivo tem "## Handoff Rules". Adicionar após essa seção.
 
 **O QUE ADICIONAR:**
-
 ```yaml
 ## Dependencies
 
@@ -641,7 +625,6 @@ dependencies:
 **Arquivo:** `squads/squad-creator-pro/agents/squad-chief.md`
 
 Este arquivo é mais complexo (1386 linhas). Já tem `output_examples` e `dependencies`. Só falta:
-
 - greeting_levels
 - signature_closing
 - visibility nos commands
@@ -651,7 +634,6 @@ Este arquivo é mais complexo (1386 linhas). Já tem `output_examples` e `depend
 **ONDE:** Dentro do bloco `agent:` (linha ~230), após `whenToUse:`
 
 **ANTES:**
-
 ```yaml
 agent:
   name: Squad Architect
@@ -663,7 +645,6 @@ agent:
 ```
 
 **DEPOIS:**
-
 ```yaml
 agent:
   name: Squad Architect
@@ -687,7 +668,6 @@ agent:
 **ONDE:** O arquivo tem uma seção `commands:` (linha ~299) que é uma lista simples. Transformar em estrutura com visibility.
 
 **ANTES:**
-
 ```yaml
 commands:
   # Creation Commands
@@ -697,7 +677,6 @@ commands:
 ```
 
 **DEPOIS:**
-
 ```yaml
 commands:
   # Creation Commands (visibility: key = aparece sempre, quick = sessão normal, full = só no *help)
@@ -749,12 +728,12 @@ Adicionar uma NOVA seção após a seção `commands:` existente:
 # Command Visibility Configuration
 # Controla quais comandos aparecem em cada contexto de greeting
 command_visibility:
-  key_commands: # Aparecem sempre (3-5 comandos)
+  key_commands:  # Aparecem sempre (3-5 comandos)
     - "*create-squad"
     - "*clone-mind"
     - "*validate-squad"
     - "*help"
-  quick_commands: # Aparecem em sessão normal (6-8 comandos)
+  quick_commands:  # Aparecem em sessão normal (6-8 comandos)
     - "*create-squad"
     - "*clone-mind"
     - "*validate-squad"
@@ -762,7 +741,7 @@ command_visibility:
     - "*create-workflow"
     - "*squad-analytics"
     - "*help"
-  full_commands: "all" # *help mostra todos
+  full_commands: "all"  # *help mostra todos
 ```
 
 ---
@@ -772,7 +751,6 @@ command_visibility:
 ### Após executar cada fase, verificar:
 
 #### Para pedro-valerio.md:
-
 ```
 [ ] grep "greeting_levels:" retorna 1 match
 [ ] grep "signature_closing:" retorna 1 match
@@ -782,7 +760,6 @@ command_visibility:
 ```
 
 #### Para oalanicolas.md:
-
 ```
 [ ] grep "greeting_levels:" retorna 1 match
 [ ] grep "signature_closing:" retorna 1 match
@@ -792,7 +769,6 @@ command_visibility:
 ```
 
 #### Para squad-chief.md:
-
 ```
 [ ] grep "greeting_levels:" retorna 1 match
 [ ] grep "signature_closing:" retorna 1 match
@@ -843,13 +819,13 @@ grep -c "input:" squad-chief.md    # >= 3
 
 ### Métricas de sucesso:
 
-| Antes                            | Depois |
-| -------------------------------- | ------ |
-| 0/3 agents com greeting_levels   | 3/3    |
-| 0/3 agents com visibility        | 3/3    |
-| 0/3 agents com signature_closing | 3/3    |
-| 1/3 agents com output_examples   | 3/3    |
-| Conformidade: ~60%               | ~98%   |
+| Antes | Depois |
+|-------|--------|
+| 0/3 agents com greeting_levels | 3/3 |
+| 0/3 agents com visibility | 3/3 |
+| 0/3 agents com signature_closing | 3/3 |
+| 1/3 agents com output_examples | 3/3 |
+| Conformidade: ~60% | ~98% |
 
 ---
 

@@ -82,19 +82,18 @@ review_result:
     - "..."
 ```
 
+
 ## Related Checklists
 
 - `squads/design/checklists/design-handoff-checklist.md`
 - `squads/design/checklists/design-team-health-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
 
 ## Success Criteria
-
 - [ ] Output artifact(s) generated and referenced.
 - [ ] Validation checks executed with evidence.
 - [ ] Next-step dependencies documented.

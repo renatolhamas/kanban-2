@@ -25,6 +25,7 @@ Quality gates protect everyone.]]
 1. **Code Quality:**
 
    [[LLM: Code must pass all quality checks]]
+
    - [ ] `npm run lint` passes with no errors
    - [ ] `npm run typecheck` passes (if TypeScript)
    - [ ] `npm run build` completes successfully
@@ -34,6 +35,7 @@ Quality gates protect everyone.]]
 2. **Testing:**
 
    [[LLM: Tests prove the code works]]
+
    - [ ] `npm test` passes with all tests green
    - [ ] No skipped tests without documented reason
    - [ ] Test coverage meets project standards
@@ -43,6 +45,7 @@ Quality gates protect everyone.]]
 3. **Security:**
 
    [[LLM: Security vulnerabilities must be caught before push]]
+
    - [ ] No hardcoded credentials or secrets
    - [ ] No API keys or tokens in code
    - [ ] `.env` files not staged for commit
@@ -52,6 +55,7 @@ Quality gates protect everyone.]]
 4. **CodeRabbit Review:**
 
    [[LLM: Automated code review catches issues humans miss]]
+
    - [ ] CodeRabbit review executed (if available)
    - [ ] No CRITICAL issues identified
    - [ ] HIGH issues addressed or documented
@@ -61,6 +65,7 @@ Quality gates protect everyone.]]
 5. **Git State:**
 
    [[LLM: Clean git state prevents merge problems]]
+
    - [ ] Working directory is clean (no uncommitted changes)
    - [ ] All intended changes are committed
    - [ ] Commit messages follow conventional commits format
@@ -70,6 +75,7 @@ Quality gates protect everyone.]]
 6. **Story Compliance:**
 
    [[LLM: Code should match story requirements]]
+
    - [ ] All story acceptance criteria met
    - [ ] Story status is "Ready for Review" or "Done"
    - [ ] File List in story is complete
@@ -79,6 +85,7 @@ Quality gates protect everyone.]]
 7. **Documentation:**
 
    [[LLM: Changes should be documented]]
+
    - [ ] README updated if needed
    - [ ] API documentation updated if endpoints changed
    - [ ] Breaking changes documented

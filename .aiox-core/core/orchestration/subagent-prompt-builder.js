@@ -13,9 +13,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs-extra');
+const path = require('path');
+const yaml = require('js-yaml');
 
 /**
  * Builds structured prompts for subagents using real task definitions
@@ -26,14 +26,14 @@ class SubagentPromptBuilder {
    */
   constructor(projectRoot) {
     this.projectRoot = projectRoot;
-    this.aioxCoreRoot = path.join(projectRoot, ".aiox-core");
+    this.aioxCoreRoot = path.join(projectRoot, '.aiox-core');
 
     // Paths to AIOX components
     this.paths = {
-      agents: path.join(this.aioxCoreRoot, "development", "agents"),
-      tasks: path.join(this.aioxCoreRoot, "development", "tasks"),
-      checklists: path.join(this.aioxCoreRoot, "product", "checklists"),
-      templates: path.join(this.aioxCoreRoot, "product", "templates"),
+      agents: path.join(this.aioxCoreRoot, 'development', 'agents'),
+      tasks: path.join(this.aioxCoreRoot, 'development', 'tasks'),
+      checklists: path.join(this.aioxCoreRoot, 'product', 'checklists'),
+      templates: path.join(this.aioxCoreRoot, 'product', 'templates'),
     };
   }
 
@@ -54,16 +54,10 @@ class SubagentPromptBuilder {
     const taskDef = await this.loadTaskDefinition(taskFile);
 
     // 3. Extract and load referenced checklists from task
-    const checklists = await this.extractAndLoadChecklists(
-      taskDef,
-      context.checklist,
-    );
+    const checklists = await this.extractAndLoadChecklists(taskDef, context.checklist);
 
     // 4. Extract and load referenced templates from task
-    const templates = await this.extractAndLoadTemplates(
-      taskDef,
-      context.template,
-    );
+    const templates = await this.extractAndLoadTemplates(taskDef, context.template);
 
     // 5. Build context section from previous phases
     const contextSection = this.formatContextSection(context);
@@ -88,19 +82,20 @@ class SubagentPromptBuilder {
    */
   async loadAgentDefinition(agentId) {
     // Try different file naming patterns
-    const patterns = [`${agentId}.md`, `${agentId.replace(/-/g, "_")}.md`];
+    const patterns = [
+      `${agentId}.md`,
+      `${agentId.replace(/-/g, '_')}.md`,
+    ];
 
     for (const pattern of patterns) {
       const filePath = path.join(this.paths.agents, pattern);
       if (await fs.pathExists(filePath)) {
-        return await fs.readFile(filePath, "utf8");
+        return await fs.readFile(filePath, 'utf8');
       }
     }
 
     // Agent not found - return minimal definition
-    console.warn(
-      `[SubagentPromptBuilder] Agent definition not found: ${agentId}`,
-    );
+    console.warn(`[SubagentPromptBuilder] Agent definition not found: ${agentId}`);
     return `# Agent: ${agentId}\nNo definition file found.`;
   }
 
@@ -111,25 +106,20 @@ class SubagentPromptBuilder {
    */
   async loadTaskDefinition(taskFile) {
     // Ensure .md extension
-    const fileName = taskFile.endsWith(".md") ? taskFile : `${taskFile}.md`;
+    const fileName = taskFile.endsWith('.md') ? taskFile : `${taskFile}.md`;
     const filePath = path.join(this.paths.tasks, fileName);
 
     if (await fs.pathExists(filePath)) {
-      return await fs.readFile(filePath, "utf8");
+      return await fs.readFile(filePath, 'utf8');
     }
 
     // Try to find by action name (e.g., 'document-project' -> 'document-project.md')
-    const altPath = path.join(
-      this.paths.tasks,
-      `${taskFile.replace("*", "")}.md`,
-    );
+    const altPath = path.join(this.paths.tasks, `${taskFile.replace('*', '')}.md`);
     if (await fs.pathExists(altPath)) {
-      return await fs.readFile(altPath, "utf8");
+      return await fs.readFile(altPath, 'utf8');
     }
 
-    console.warn(
-      `[SubagentPromptBuilder] Task definition not found: ${taskFile}`,
-    );
+    console.warn(`[SubagentPromptBuilder] Task definition not found: ${taskFile}`);
     return `# Task: ${taskFile}\nNo definition file found.`;
   }
 
@@ -179,13 +169,11 @@ class SubagentPromptBuilder {
    * @returns {Promise<string|null>} Checklist content or null
    */
   async loadChecklist(checklistName) {
-    const fileName = checklistName.endsWith(".md")
-      ? checklistName
-      : `${checklistName}.md`;
+    const fileName = checklistName.endsWith('.md') ? checklistName : `${checklistName}.md`;
     const filePath = path.join(this.paths.checklists, fileName);
 
     if (await fs.pathExists(filePath)) {
-      return await fs.readFile(filePath, "utf8");
+      return await fs.readFile(filePath, 'utf8');
     }
 
     return null;
@@ -238,13 +226,13 @@ class SubagentPromptBuilder {
    */
   async loadTemplate(templateName) {
     // Try both .yaml and .md extensions
-    const extensions = [".yaml", ".yml", ".md"];
-    const baseName = templateName.replace(/\.(yaml|yml|md)$/, "");
+    const extensions = ['.yaml', '.yml', '.md'];
+    const baseName = templateName.replace(/\.(yaml|yml|md)$/, '');
 
     for (const ext of extensions) {
       const filePath = path.join(this.paths.templates, `${baseName}${ext}`);
       if (await fs.pathExists(filePath)) {
-        return await fs.readFile(filePath, "utf8");
+        return await fs.readFile(filePath, 'utf8');
       }
     }
 
@@ -257,17 +245,12 @@ class SubagentPromptBuilder {
    * @returns {string} Formatted context section
    */
   formatContextSection(context) {
-    if (
-      !context.previousPhases ||
-      Object.keys(context.previousPhases).length === 0
-    ) {
-      return "(No previous phase outputs available)";
+    if (!context.previousPhases || Object.keys(context.previousPhases).length === 0) {
+      return '(No previous phase outputs available)';
     }
 
-    let section = "";
-    for (const [phaseNum, phaseData] of Object.entries(
-      context.previousPhases,
-    )) {
+    let section = '';
+    for (const [phaseNum, phaseData] of Object.entries(context.previousPhases)) {
       section += `### Phase ${phaseNum}: ${phaseData.agent}\n`;
       section += `- Action: ${phaseData.action}\n`;
       if (phaseData.result?.output_path) {
@@ -276,7 +259,7 @@ class SubagentPromptBuilder {
       if (phaseData.result?.summary) {
         section += `- Summary: ${phaseData.result.summary}\n`;
       }
-      section += "\n";
+      section += '\n';
     }
 
     return section;
@@ -314,10 +297,10 @@ ${agentDef}
 ## TASK TO EXECUTE
 
 **Task File:** ${taskFile}
-**Expected Output:** ${context.creates || "See task definition"}
-**Execution Mode:** ${context.yoloMode ? "YOLO (autonomous)" : "Interactive"}
-**Execution Profile:** ${context.executionProfile || "balanced"}
-**Elicitation Required:** ${context.elicit ? "Yes" : "No"}
+**Expected Output:** ${context.creates || 'See task definition'}
+**Execution Mode:** ${context.yoloMode ? 'YOLO (autonomous)' : 'Interactive'}
+**Execution Profile:** ${context.executionProfile || 'balanced'}
+**Elicitation Required:** ${context.elicit ? 'Yes' : 'No'}
 **Risk Policy:** ${JSON.stringify(context.executionPolicy || {}, null, 0)}
 
 ### Complete Task Definition:
@@ -329,8 +312,8 @@ ${taskDef}
 
     // Add checklists if available
     if (checklists.length > 0) {
-      prompt += "\n## QUALITY CHECKLISTS\n\n";
-      prompt += "Execute these checklists to validate your work:\n\n";
+      prompt += '\n## QUALITY CHECKLISTS\n\n';
+      prompt += 'Execute these checklists to validate your work:\n\n';
       for (const checklist of checklists) {
         prompt += `### ${checklist.name}\n\n`;
         prompt += `---\n${checklist.content}\n---\n\n`;
@@ -339,8 +322,8 @@ ${taskDef}
 
     // Add templates if available
     if (templates.length > 0) {
-      prompt += "\n## OUTPUT TEMPLATES\n\n";
-      prompt += "Use these templates as the basis for your output:\n\n";
+      prompt += '\n## OUTPUT TEMPLATES\n\n';
+      prompt += 'Use these templates as the basis for your output:\n\n';
       for (const template of templates) {
         prompt += `### ${template.name}\n\n`;
         prompt += `\`\`\`yaml\n${template.content}\n\`\`\`\n\n`;
@@ -348,7 +331,7 @@ ${taskDef}
     }
 
     // Add context from previous phases
-    prompt += "\n## CONTEXT FROM PREVIOUS PHASES\n\n";
+    prompt += '\n## CONTEXT FROM PREVIOUS PHASES\n\n';
     prompt += contextSection;
 
     // Add execution instructions
@@ -359,7 +342,7 @@ ${taskDef}
 2. **Follow the task definition exactly** - Do not improvise or skip steps
 3. **Use the templates provided** - They ensure consistency and quality
 4. **Run the checklists** - Validate your work before marking complete
-5. **Create the expected output** - Save to: ${context.creates || "as specified in task"}
+5. **Create the expected output** - Save to: ${context.creates || 'as specified in task'}
 
 ### Output Format
 
@@ -368,7 +351,7 @@ Return a structured result:
 \`\`\`json
 {
   "status": "success|failed",
-  "output_path": "${context.creates || "path/to/output"}",
+  "output_path": "${context.creates || 'path/to/output'}",
   "summary": "Brief summary of what was accomplished",
   "findings": ["Key findings or items discovered"],
   "next_phase_context": {

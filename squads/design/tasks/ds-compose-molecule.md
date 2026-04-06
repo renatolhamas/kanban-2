@@ -12,7 +12,6 @@
 Build molecule component by composing existing atoms following Atomic Design methodology. Examples: FormField (Label + Input), Card (Heading + Text + Button), SearchBar (Input + Button).
 
 ## Input Schema
-
 - **requires:** Output from `ds-build-component`
 - **format:** TypeScript source (atom components)
 - **location:** `outputs/design-system/{project}/components/{Atom}/`
@@ -46,7 +45,7 @@ Build molecule component by composing existing atoms following Atomic Design met
 
 ## Failure Handling
 
-- **Missing atom dependency:** If required atom component file does not exist in design-system directory, abort with "Atom {AtomName} not found. Run \*build {AtomName} first to generate required dependency."
+- **Missing atom dependency:** If required atom component file does not exist in design-system directory, abort with "Atom {AtomName} not found. Run *build {AtomName} first to generate required dependency."
 - **Atom API incompatibility:** If atom props interface does not accept required props for molecule composition, abort with "{AtomName} API incompatible: missing props {list}. Extend atom or use different atom."
 - **Molecule reimplements atom logic:** If molecule code duplicates atom styling or behavior (e.g., duplicate button styles), warn user "Molecule should compose atoms, not reimplement. Remove duplicate logic and use {AtomName} props instead."
 - **Atom interaction tests missing:** If test suite does not include tests for interactions between composed atoms (e.g., Label clicking focuses Input), abort with "Tests incomplete: add tests for atom interactions ({missing scenarios})."
@@ -97,11 +96,11 @@ export const FormField: React.FC<FormFieldProps> = ({
 - Atoms remain independent and reusable
 - Test atom interactions in molecule context
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

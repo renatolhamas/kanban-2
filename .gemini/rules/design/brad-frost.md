@@ -10,7 +10,7 @@ CRITICAL: Read the full YAML BLOCK that FOLLOWS IN THIS FILE to understand your 
 
 ## COMPLETE AGENT DEFINITION FOLLOWS - NO EXTERNAL FILES NEEDED
 
-````yaml
+```yaml
 # ============================================================
 # METADATA
 # ============================================================
@@ -1094,4 +1094,4 @@ status:
 
     36 commands, 25 tasks, 12 templates, 7 checklists, 9 data files.
     Integrates with AIOS via /SA:design-system skill.
-````
+```

@@ -1,4 +1,4 @@
-# Task: Modernization Score (\*modernization-score)
+# Task: Modernization Score (*modernization-score)
 
 > Pedro Valério | Loaded on-demand when `*modernization-score {workflow}` is invoked
 
@@ -26,20 +26,20 @@ Read the complete workflow file to be evaluated
 
 ### 3. Check Each Pattern
 
-| #   | Pattern              | Check For              | Legacy If          |
-| --- | -------------------- | ---------------------- | ------------------ |
-| 1   | Teams Architecture   | TeamCreate, TaskCreate | YAML declarativo   |
-| 2   | SKILL.md Frontmatter | name: + description:   | Sem frontmatter    |
-| 3   | Blocking Execution   | Task sem background    | Sleep loops        |
-| 4   | Parallel Execution   | Task COM background    | Sem paralelismo    |
-| 5   | Context Preamble     | git status, gotchas    | Sem context        |
-| 6   | File-Based Comm      | outputs/{slug}/        | Inline outputs     |
-| 7   | Agent File Refs      | Read agent file        | Hardcoded personas |
-| 8   | Task Dependencies    | blockedBy              | depends_on         |
-| 9   | bypassPermissions    | mode explícito         | Default            |
-| 10  | Proper Finalization  | shutdown + TeamDelete  | Sem cleanup        |
-| 11  | Anti-Pattern Docs    | NEVER DO THIS          | Sem docs           |
-| 12  | Artifact Directory   | outputs/ estruturado   | Arbitrário         |
+| # | Pattern | Check For | Legacy If |
+|---|---------|-----------|-----------|
+| 1 | Teams Architecture | TeamCreate, TaskCreate | YAML declarativo |
+| 2 | SKILL.md Frontmatter | name: + description: | Sem frontmatter |
+| 3 | Blocking Execution | Task sem background | Sleep loops |
+| 4 | Parallel Execution | Task COM background | Sem paralelismo |
+| 5 | Context Preamble | git status, gotchas | Sem context |
+| 6 | File-Based Comm | outputs/{slug}/ | Inline outputs |
+| 7 | Agent File Refs | Read agent file | Hardcoded personas |
+| 8 | Task Dependencies | blockedBy | depends_on |
+| 9 | bypassPermissions | mode explícito | Default |
+| 10 | Proper Finalization | shutdown + TeamDelete | Sem cleanup |
+| 11 | Anti-Pattern Docs | NEVER DO THIS | Sem docs |
+| 12 | Artifact Directory | outputs/ estruturado | Arbitrário |
 
 ### 4. Generate Score Report
 
@@ -67,13 +67,13 @@ modernization_score:
 
 ### Scoring Interpretation
 
-| Score   | Interpretation          | Action                 |
-| ------- | ----------------------- | ---------------------- |
-| 12/12   | Totalmente moderno      | Pronto para produção   |
-| 9-11/12 | Quase moderno           | Ajustes menores        |
-| 5-8/12  | Parcialmente moderno    | Refactor significativo |
-| 1-4/12  | Majoritariamente legado | Rewrite necessário     |
-| 0/12    | Completamente legado    | Rewrite total          |
+| Score | Interpretation | Action |
+|-------|---------------|--------|
+| 12/12 | Totalmente moderno | Pronto para produção |
+| 9-11/12 | Quase moderno | Ajustes menores |
+| 5-8/12 | Parcialmente moderno | Refactor significativo |
+| 1-4/12 | Majoritariamente legado | Rewrite necessário |
+| 0/12 | Completamente legado | Rewrite total |
 
 ## Completion Criteria
 

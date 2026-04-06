@@ -7,16 +7,16 @@
 
 ## Task Anatomy
 
-| Field                    | Value                                                  |
-| ------------------------ | ------------------------------------------------------ |
-| **task_name**            | Generate All Stories                                   |
-| **status**               | `pending`                                              |
-| **responsible_executor** | @storybook-expert                                      |
-| **execution_type**       | `Agent`                                                |
-| **input**                | Component directory, component list, story conventions |
-| **output**               | `.stories.tsx` file for every component                |
-| **action_items**         | 7 steps                                                |
-| **acceptance_criteria**  | 6 criteria                                             |
+| Field | Value |
+|-------|-------|
+| **task_name** | Generate All Stories |
+| **status** | `pending` |
+| **responsible_executor** | @storybook-expert |
+| **execution_type** | `Agent` |
+| **input** | Component directory, component list, story conventions |
+| **output** | `.stories.tsx` file for every component |
+| **action_items** | 7 steps |
+| **acceptance_criteria** | 6 criteria |
 
 ## Overview
 
@@ -62,29 +62,27 @@ Generate a `.stories.tsx` file for EVERY component in the project's UI directory
 
 Classify each component to determine story strategy:
 
-| Category                       | Examples                                                                                            | Story Strategy                                    |
-| ------------------------------ | --------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| **Simple (args-only)**         | Badge, Separator, Avatar, Progress, Skeleton                                                        | Default + variant stories, AllVariants gallery    |
-| **Form Controls**              | Input, Textarea, Select, Checkbox, Switch, Slider, RadioGroup, Toggle                               | Default + WithLabel + states (disabled, error)    |
+| Category | Examples | Story Strategy |
+|----------|----------|---------------|
+| **Simple (args-only)** | Badge, Separator, Avatar, Progress, Skeleton | Default + variant stories, AllVariants gallery |
+| **Form Controls** | Input, Textarea, Select, Checkbox, Switch, Slider, RadioGroup, Toggle | Default + WithLabel + states (disabled, error) |
 | **Compound (render required)** | Dialog, Sheet, Drawer, Popover, Tooltip, DropdownMenu, ContextMenu, Command, AlertDialog, HoverCard | Render function stories showing trigger + content |
-| **Layout**                     | Card, Table, Tabs, Accordion, Collapsible, Resizable, ScrollArea                                    | Render function with realistic content            |
-| **Navigation**                 | Breadcrumb, Pagination, NavigationMenu, Menubar, Sidebar                                            | Render function with navigation structure         |
-| **Notification**               | Alert, Sonner/Toast                                                                                 | Default + variants (success, error, warning)      |
-| **Utility**                    | AspectRatio, Calendar, Carousel, Chart, InputOTP                                                    | Specialized render per component                  |
-| **Custom**                     | Project-specific                                                                                    | Analyze props/variants and generate accordingly   |
+| **Layout** | Card, Table, Tabs, Accordion, Collapsible, Resizable, ScrollArea | Render function with realistic content |
+| **Navigation** | Breadcrumb, Pagination, NavigationMenu, Menubar, Sidebar | Render function with navigation structure |
+| **Notification** | Alert, Sonner/Toast | Default + variants (success, error, warning) |
+| **Utility** | AspectRatio, Calendar, Carousel, Chart, InputOTP | Specialized render per component |
+| **Custom** | Project-specific | Analyze props/variants and generate accordingly |
 
 ### Step 3: Generate Story Files
 
 For EACH component without an existing valid story:
 
 **3a. Read the component file:**
-
 ```
 Read(src/components/ui/{name}.tsx)
 ```
 
 **3b. Extract metadata:**
-
 - Component name and exports
 - Props interface (variants, sizes, states)
 - CVA variants (if using class-variance-authority)
@@ -119,7 +117,6 @@ export const Default: Story = {
 ```
 
 **3d. Content rules:**
-
 - ALL text content in Portuguese (pt-BR): "Abrir", "Salvar", "Cancelar", "Digite aqui..."
 - Use `fn()` from `storybook/test` for event handlers
 - Use `parameters: { layout: "padded" }` for layout components
@@ -141,7 +138,6 @@ import {
 ```
 
 The render function composes sub-components with realistic content:
-
 - Triggers use Button or text elements
 - Content shows representative UI
 - Include enough sub-components to demonstrate the API
@@ -166,12 +162,12 @@ npm run typecheck
 
 **Common TypeScript errors and fixes:**
 
-| Error                                               | Cause                                                       | Fix                                                        |
-| --------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Error | Cause | Fix |
+|-------|-------|-----|
 | `Type '...' not assignable to parameter of 'never'` | Story with render but no args, component has required props | Add required props to `args` even when render handles them |
-| `Cannot find module`                                | Wrong import path                                           | Verify component exports match imports                     |
-| `Property '...' does not exist`                     | Wrong prop name                                             | Check component props interface                            |
-| Unused imports                                      | Imported component not used in render                       | Remove unused imports                                      |
+| `Cannot find module` | Wrong import path | Verify component exports match imports |
+| `Property '...' does not exist` | Wrong prop name | Check component props interface |
+| Unused imports | Imported component not used in render | Remove unused imports |
 
 Fix ALL type errors before proceeding.
 
@@ -238,21 +234,18 @@ quality_gate:
 ## Error Handling
 
 ### Component Has No Exported Component
-
 - **Trigger:** File exports only utilities, types, or hooks (not a React component)
 - **Detection:** No JSX.Element or React.FC export found
 - **Recovery:** Skip this file — it doesnt need a story
 - **Prevention:** Step 1 filters by exported component presence
 
 ### Generated Story Has Type Errors
-
 - **Trigger:** Props interface doesnt match args
 - **Detection:** Step 6 typecheck
 - **Recovery:** Read component source again, fix args to match actual props
 - **Prevention:** Careful prop extraction in Step 3b
 
 ### Component Requires External Context
-
 - **Trigger:** Component crashes without Provider, Router, or Context
 - **Detection:** Runtime error in Storybook
 - **Recovery:** Add decorator with required Provider in story meta
@@ -274,11 +267,11 @@ quality_gate:
 
 ## Handoff
 
-| Attribute     | Value                       |
-| ------------- | --------------------------- |
-| **Next Task** | `sb-verify`                 |
-| **Trigger**   | All acceptance criteria met |
-| **Executor**  | @storybook-expert           |
+| Attribute | Value |
+|-----------|-------|
+| **Next Task** | `sb-verify` |
+| **Trigger** | All acceptance criteria met |
+| **Executor** | @storybook-expert |
 
 ### Handoff Package
 

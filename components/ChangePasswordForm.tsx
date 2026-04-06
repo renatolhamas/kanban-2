@@ -42,7 +42,7 @@ export function ChangePasswordForm({ token, onSuccess, onError }: ChangePassword
           if (errorData.error) {
             errorMessage = errorData.error;
           }
-        } catch (e) {
+        } catch (_e) { // eslint-disable-line @typescript-eslint/no-unused-vars
           // Keep default
         }
         throw new Error(errorMessage);

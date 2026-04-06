@@ -9,19 +9,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -189,7 +186,6 @@ token_usage: ~1,000-3,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Parallelize independent operations; reuse atom results; implement early exits
 
 ---
@@ -209,13 +205,14 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Description
 
 Generate production-ready React TypeScript component from design tokens. Output follows Shadcn-style Tailwind utility patterns with `cva` variants, optional Radix composition, tests, Storybook stories, and documentation. All styling uses tokens/variables (zero hardcoded values) and supports loading/accessibility states out of the box.
 
 ## Prerequisites
 
-- Setup completed (\*setup command run successfully)
+- Setup completed (*setup command run successfully)
 - Tokens loaded and accessible
 - React and TypeScript configured
 
@@ -416,7 +413,6 @@ export { Button };
 ```
 
 Output:
-
 ```
 🏗️ Atlas: Building Button component...
 
@@ -462,7 +458,6 @@ Atlas says: "Built right. Built once."
 ```
 
 Output includes additional features:
-
 - Validation states (error, success)
 - Helper text prop
 - Label integration

@@ -15,6 +15,7 @@ template:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 sections:
+
   # ─────────────────────────────────────────────────────────────────────────────
   # EXECUTIVE SUMMARY
   # ─────────────────────────────────────────────────────────────────────────────
@@ -52,6 +53,7 @@ sections:
   phase_risks:
     title: "Phase-Specific Risk Analysis"
     phases:
+
       discovery:
         name: "Discovery Phase"
         description: "Initial codebase analysis and documentation"

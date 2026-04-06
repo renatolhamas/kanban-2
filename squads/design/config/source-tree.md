@@ -33,24 +33,24 @@ squads/design/
 
 ## Responsibilities
 
-| Agent        | File                              | Responsibility                      |
-| ------------ | --------------------------------- | ----------------------------------- |
-| Design Chief | `agents/design-chief.md`          | triage, routing, orchestration      |
-| Brad Frost   | `agents/brad-frost.md`            | DS architecture, components, tokens |
-| Dan Mall     | `agents/dan-mall.md`              | DS buy-in, adoption messaging       |
-| Dave Malouf  | `agents/dave-malouf.md`           | design ops, process, governance     |
-| Nano Banana  | `agents/nano-banana-generator.md` | visual utility support              |
+| Agent | File | Responsibility |
+|---|---|---|
+| Design Chief | `agents/design-chief.md` | triage, routing, orchestration |
+| Brad Frost | `agents/brad-frost.md` | DS architecture, components, tokens |
+| Dan Mall | `agents/dan-mall.md` | DS buy-in, adoption messaging |
+| Dave Malouf | `agents/dave-malouf.md` | design ops, process, governance |
+| Nano Banana | `agents/nano-banana-generator.md` | visual utility support |
 
 ## Task Domains
 
-| Domain             | Prefix/Files                                                                                | Owner        |
-| ------------------ | ------------------------------------------------------------------------------------------- | ------------ |
-| Design System Core | `ds-*`                                                                                      | Brad Frost   |
-| Accessibility      | `a11y-audit`, `aria-audit`, `contrast-matrix`, `focus-order-audit`                          | Brad Frost   |
-| Atomic Refactor    | `atomic-refactor-*`                                                                         | Brad Frost   |
-| DesignOps          | `designops-*`, `design-process-optimization`, `design-team-scaling`, `design-tooling-audit` | Dave Malouf  |
-| Orchestration      | `design-triage`, `design-review-orchestration`                                              | Design Chief |
-| Utilities          | remaining utility tasks                                                                     | Mixed        |
+| Domain | Prefix/Files | Owner |
+|---|---|---|
+| Design System Core | `ds-*` | Brad Frost |
+| Accessibility | `a11y-audit`, `aria-audit`, `contrast-matrix`, `focus-order-audit` | Brad Frost |
+| Atomic Refactor | `atomic-refactor-*` | Brad Frost |
+| DesignOps | `designops-*`, `design-process-optimization`, `design-team-scaling`, `design-tooling-audit` | Dave Malouf |
+| Orchestration | `design-triage`, `design-review-orchestration` | Design Chief |
+| Utilities | remaining utility tasks | Mixed |
 
 ## Cross-Squad Policy
 

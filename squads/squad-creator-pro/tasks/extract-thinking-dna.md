@@ -85,17 +85,16 @@ attention_triggers:
 Todo expert tem UM framework que usa para TUDO. Encontre-o.
 
 **Perguntas para identificar:**
-
 - "Qual processo ele SEMPRE segue?"
 - "O que ele ensina primeiro para iniciantes?"
 - "Se pudesse ensinar apenas UMA coisa, o que seria?"
 
 ```yaml
 primary_framework:
-  name: "" # Nome do framework
-  creator: "{mind_name}" # Quem criou
-  acronym: "" # Se tiver (AIDA, PASTOR, etc)
-  purpose: "" # Para que serve
+  name: ""                    # Nome do framework
+  creator: "{mind_name}"      # Quem criou
+  acronym: ""                 # Se tiver (AIDA, PASTOR, etc)
+  purpose: ""                 # Para que serve
 
   steps:
     - step: 1
@@ -414,6 +413,7 @@ Cole diretamente no agent.md:
 # ═══════════════════════════════════════════════════════════════
 
 thinking_dna:
+
   # ─────────────────────────────────────────────────────────────
   # FRAMEWORKS OPERACIONAIS
   # ─────────────────────────────────────────────────────────────
@@ -573,6 +573,7 @@ thinking_dna:
 
 ```yaml
 thinking_dna:
+
   primary_framework:
     name: "Magnetic Marketing System"
     purpose: "Atrair clientes ideais ao invés de persegui-los"
@@ -649,4 +650,4 @@ thinking_dna:
 ---
 
 **Squad Architect | Thinking DNA Extractor v1.0**
-_"Clone how they think, not just what they say"_
+*"Clone how they think, not just what they say"*

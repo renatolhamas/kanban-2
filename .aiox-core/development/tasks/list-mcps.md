@@ -15,7 +15,6 @@ Display all MCP servers configured in Docker MCP Toolkit with their status and t
 ## Output
 
 Shows:
-
 - Server name and status (enabled/disabled)
 - Available tools per server
 - Connection status
@@ -23,7 +22,6 @@ Shows:
 ## Implementation
 
 Uses Docker MCP Toolkit CLI:
-
 ```bash
 docker mcp tools ls
 ```

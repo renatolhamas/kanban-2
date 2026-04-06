@@ -12,7 +12,7 @@
  * @created Story SYN-5 - Layer Processors L4-L7
  */
 
-const LayerProcessor = require("./layer-processor");
+const LayerProcessor = require('./layer-processor');
 
 /**
  * L4 Task Processor
@@ -24,7 +24,7 @@ const LayerProcessor = require("./layer-processor");
  */
 class L4TaskProcessor extends LayerProcessor {
   constructor() {
-    super({ name: "task", layer: 4, timeout: 20 });
+    super({ name: 'task', layer: 4, timeout: 20 });
   }
 
   /**

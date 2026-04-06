@@ -1,12 +1,7 @@
-"use strict";
+'use strict';
 
-const VALID_PROFILES = ["safe", "balanced", "aggressive"];
-const VALID_CONTEXTS = [
-  "production",
-  "migration",
-  "security-sensitive",
-  "development",
-];
+const VALID_PROFILES = ['safe', 'balanced', 'aggressive'];
+const VALID_CONTEXTS = ['production', 'migration', 'security-sensitive', 'development'];
 
 const PROFILE_POLICIES = {
   safe: {
@@ -17,7 +12,7 @@ const PROFILE_POLICIES = {
     allow_autonomous_refactors: false,
   },
   balanced: {
-    require_confirmation: "high-risk-only",
+    require_confirmation: 'high-risk-only',
     require_tests_before_handoff: true,
     max_parallel_changes: 3,
     allow_destructive_operations: false,
@@ -33,17 +28,13 @@ const PROFILE_POLICIES = {
 };
 
 function normalizeProfile(profile) {
-  const value = String(profile || "")
-    .trim()
-    .toLowerCase();
+  const value = String(profile || '').trim().toLowerCase();
   return VALID_PROFILES.includes(value) ? value : null;
 }
 
 function normalizeContext(context) {
-  const value = String(context || "")
-    .trim()
-    .toLowerCase();
-  return VALID_CONTEXTS.includes(value) ? value : "development";
+  const value = String(context || '').trim().toLowerCase();
+  return VALID_CONTEXTS.includes(value) ? value : 'development';
 }
 
 function resolveExecutionProfile(input = {}) {
@@ -59,50 +50,50 @@ function resolveExecutionProfile(input = {}) {
       context,
       policy: PROFILE_POLICIES[explicitProfile],
       reasons,
-      source: "explicit",
+      source: 'explicit',
     };
   }
 
-  if (context === "production" || context === "security-sensitive") {
+  if (context === 'production' || context === 'security-sensitive') {
     reasons.push(`context "${context}" enforces safe profile`);
     return {
-      profile: "safe",
+      profile: 'safe',
       context,
       policy: PROFILE_POLICIES.safe,
       reasons,
-      source: "context",
+      source: 'context',
     };
   }
 
-  if (context === "migration") {
-    reasons.push("migration context enforces balanced profile");
+  if (context === 'migration') {
+    reasons.push('migration context enforces balanced profile');
     return {
-      profile: "balanced",
+      profile: 'balanced',
       context,
       policy: PROFILE_POLICIES.balanced,
       reasons,
-      source: "context",
+      source: 'context',
     };
   }
 
   if (yolo) {
-    reasons.push("yolo mode enabled for non-critical context");
+    reasons.push('yolo mode enabled for non-critical context');
     return {
-      profile: "aggressive",
+      profile: 'aggressive',
       context,
       policy: PROFILE_POLICIES.aggressive,
       reasons,
-      source: "yolo",
+      source: 'yolo',
     };
   }
 
-  reasons.push("default profile for standard development context");
+  reasons.push('default profile for standard development context');
   return {
-    profile: "balanced",
+    profile: 'balanced',
     context,
     policy: PROFILE_POLICIES.balanced,
     reasons,
-    source: "default",
+    source: 'default',
   };
 }
 

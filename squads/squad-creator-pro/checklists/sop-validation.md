@@ -28,7 +28,7 @@ Validate that an extracted SOP meets all quality standards before handoff to squ
 - [ ] **PART 10:** Glossary
 - [ ] **PART 11:** Extraction Metadata
 
-**Score:** \_\_\_/11 parts | **Threshold:** 11/11 required
+**Score:** ___/11 parts | **Threshold:** 11/11 required
 
 ---
 
@@ -39,13 +39,13 @@ Validate that an extracted SOP meets all quality standards before handoff to squ
 For EACH process step, verify:
 
 | Step | task_name | status | executor | exec_type | est_time | inputs | outputs | actions | criteria |
-| ---- | --------- | ------ | -------- | --------- | -------- | ------ | ------- | ------- | -------- |
-| 1    | ☐         | ☐      | ☐        | ☐         | ☐        | ☐      | ☐       | ☐       | ☐        |
-| 2    | ☐         | ☐      | ☐        | ☐         | ☐        | ☐      | ☐       | ☐       | ☐        |
-| 3    | ☐         | ☐      | ☐        | ☐         | ☐        | ☐      | ☐       | ☐       | ☐        |
-| ...  |           |        |          |           |          |        |         |         |          |
+|------|-----------|--------|----------|-----------|----------|--------|---------|---------|----------|
+| 1 | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ |
+| 2 | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ |
+| 3 | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ |
+| ... | | | | | | | | | |
 
-**Score:** \_\_\_% steps with 8/8 fields | **Threshold:** 100%
+**Score:** ___% steps with 8/8 fields | **Threshold:** 100%
 
 ---
 
@@ -63,7 +63,7 @@ For EACH process step, verify:
 - [ ] Hybrid steps have checkpoint defined
 - [ ] Worker steps are 100% deterministic
 
-**Score:** \_\_\_% steps with justified executor | **Threshold:** 100%
+**Score:** ___% steps with justified executor | **Threshold:** 100%
 
 ---
 
@@ -80,7 +80,7 @@ For EACH process step, verify:
 - [ ] Non-automatable steps have "what requires human" documented
 - [ ] Partially automatable steps have "what agent can do" documented
 
-**Score:** \_\_\_% steps with cognitive analysis | **Threshold:** 100%
+**Score:** ___% steps with cognitive analysis | **Threshold:** 100%
 
 ---
 
@@ -96,7 +96,7 @@ For EACH process step, verify:
 - [ ] Heuristics translated to explicit IF/THEN rules
 - [ ] Rules marked as automatable or human-required
 
-**Score:** **_/_** decision points documented | **Threshold:** 100%
+**Score:** ___/___  decision points documented | **Threshold:** 100%
 
 ---
 
@@ -118,7 +118,7 @@ For EACH process step, verify:
   - [ ] Retry Logic (if external integration)
   - [ ] Rollback (if destructive)
 
-**Score:** \_\_\_% automatable steps with guardrails | **Threshold:** 100%
+**Score:** ___% automatable steps with guardrails | **Threshold:** 100%
 
 ---
 
@@ -126,20 +126,20 @@ For EACH process step, verify:
 
 ### 7.1 10 Dimensions Evaluated
 
-| #   | Dimension              | Score (0-10) | Above 6.0? |
-| --- | ---------------------- | ------------ | ---------- |
-| 1   | Truthfulness           |              | ☐          |
-| 2   | Coherence              |              | ☐          |
-| 3   | Strategic Alignment    |              | ☐          |
-| 4   | Operational Excellence |              | ☐          |
-| 5   | Innovation Capacity    |              | ☐          |
-| 6   | Risk Management        |              | ☐          |
-| 7   | Resource Optimization  |              | ☐          |
-| 8   | Stakeholder Value      |              | ☐          |
-| 9   | Sustainability         |              | ☐          |
-| 10  | Adaptability           |              | ☐          |
+| # | Dimension | Score (0-10) | Above 6.0? |
+|---|-----------|--------------|------------|
+| 1 | Truthfulness | | ☐ |
+| 2 | Coherence | | ☐ |
+| 3 | Strategic Alignment | | ☐ |
+| 4 | Operational Excellence | | ☐ |
+| 5 | Innovation Capacity | | ☐ |
+| 6 | Risk Management | | ☐ |
+| 7 | Resource Optimization | | ☐ |
+| 8 | Stakeholder Value | | ☐ |
+| 9 | Sustainability | | ☐ |
+| 10 | Adaptability | | ☐ |
 
-**Overall Score:** \_\_\_/10 | **Threshold:** ≥7.0
+**Overall Score:** ___/10 | **Threshold:** ≥7.0
 
 ---
 
@@ -164,7 +164,7 @@ For EACH process step, verify:
 - [ ] Handoffs are defined between phases
 - [ ] Checkpoints reference valid validators
 
-**Score:** Blueprint completeness \_\_\_% | **Threshold:** 100%
+**Score:** Blueprint completeness ___% | **Threshold:** 100%
 
 ---
 
@@ -186,7 +186,7 @@ For EACH process step, verify:
 - [ ] Undocumented exceptions flagged
 - [ ] Non-standardized variations noted
 
-**Score:** \_\_\_% gaps with clarifying questions | **Threshold:** 100%
+**Score:** ___% gaps with clarifying questions | **Threshold:** 100%
 
 ---
 
@@ -209,17 +209,17 @@ For EACH process step, verify:
 
 ## Validation Summary
 
-| Category                | Score | Threshold | Status        |
-| ----------------------- | ----- | --------- | ------------- |
-| Structure (11 parts)    | /11   | 11/11     | ☐ PASS ☐ FAIL |
-| Task Anatomy (8 fields) | %     | 100%      | ☐ PASS ☐ FAIL |
-| Executor Classification | %     | 100%      | ☐ PASS ☐ FAIL |
-| Cognitive Analysis      | %     | 100%      | ☐ PASS ☐ FAIL |
-| Decision Rules          | %     | 100%      | ☐ PASS ☐ FAIL |
-| Guardrails              | %     | 100%      | ☐ PASS ☐ FAIL |
-| META-AXIOMAS            | /10   | ≥7.0      | ☐ PASS ☐ FAIL |
-| Squad Blueprint         | %     | 100%      | ☐ PASS ☐ FAIL |
-| Gap Documentation       | %     | 100%      | ☐ PASS ☐ FAIL |
+| Category | Score | Threshold | Status |
+|----------|-------|-----------|--------|
+| Structure (11 parts) | /11 | 11/11 | ☐ PASS ☐ FAIL |
+| Task Anatomy (8 fields) | % | 100% | ☐ PASS ☐ FAIL |
+| Executor Classification | % | 100% | ☐ PASS ☐ FAIL |
+| Cognitive Analysis | % | 100% | ☐ PASS ☐ FAIL |
+| Decision Rules | % | 100% | ☐ PASS ☐ FAIL |
+| Guardrails | % | 100% | ☐ PASS ☐ FAIL |
+| META-AXIOMAS | /10 | ≥7.0 | ☐ PASS ☐ FAIL |
+| Squad Blueprint | % | 100% | ☐ PASS ☐ FAIL |
+| Gap Documentation | % | 100% | ☐ PASS ☐ FAIL |
 
 ---
 
@@ -230,7 +230,6 @@ For EACH process step, verify:
 - [ ] **REJECT** - SOP has critical gaps, requires re-extraction
 
 **Areas Needing Improvement:**
-
 1.
 2.
 3.
@@ -239,11 +238,11 @@ For EACH process step, verify:
 
 ## Handoff Authorization
 
-| Field                 | Value                                     |
-| --------------------- | ----------------------------------------- |
-| Validated By          |                                           |
-| Validation Date       |                                           |
-| Handoff To            | create-squad task                         |
+| Field | Value |
+|-------|-------|
+| Validated By | |
+| Validation Date | |
+| Handoff To | create-squad task |
 | Artifacts Transferred | sop_document, squad_blueprint, gap_report |
 
 ---

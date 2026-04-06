@@ -8,10 +8,10 @@
  */
 
 const STATUS_PREFIX = {
-  PASS: "[PASS]",
-  WARN: "[WARN]",
-  FAIL: "[FAIL]",
-  INFO: "[INFO]",
+  PASS: '[PASS]',
+  WARN: '[WARN]',
+  FAIL: '[FAIL]',
+  INFO: '[INFO]',
 };
 
 function formatText(output, options = {}) {
@@ -19,45 +19,41 @@ function formatText(output, options = {}) {
   const lines = [];
 
   lines.push(`AIOX Doctor v${output.version} — Environment Health Check`);
-  lines.push("");
+  lines.push('');
 
   for (const result of output.checks) {
-    const prefix = STATUS_PREFIX[result.status] || "[????]";
+    const prefix = STATUS_PREFIX[result.status] || '[????]';
     lines.push(`  ${prefix} ${result.check}: ${result.message}`);
   }
 
-  lines.push("");
+  lines.push('');
   const { pass, warn, fail, info } = output.summary;
-  lines.push(
-    `Summary: ${pass} PASS | ${warn} WARN | ${fail} FAIL | ${info} INFO`,
-  );
+  lines.push(`Summary: ${pass} PASS | ${warn} WARN | ${fail} FAIL | ${info} INFO`);
 
   if (!quiet) {
     const fixable = output.checks.filter(
-      (r) => (r.status === "WARN" || r.status === "FAIL") && r.fixCommand,
+      (r) => (r.status === 'WARN' || r.status === 'FAIL') && r.fixCommand,
     );
 
     if (fixable.length > 0) {
-      lines.push("");
-      lines.push("Fix suggestions:");
+      lines.push('');
+      lines.push('Fix suggestions:');
       fixable.forEach((r, i) => {
-        lines.push(
-          `  ${i + 1}. [${r.status}] ${r.check}: Run \`${r.fixCommand}\``,
-        );
+        lines.push(`  ${i + 1}. [${r.status}] ${r.check}: Run \`${r.fixCommand}\``);
       });
     }
   }
 
   if (output.fixResults) {
-    lines.push("");
-    lines.push("Fix results:");
+    lines.push('');
+    lines.push('Fix results:');
     for (const fr of output.fixResults) {
-      const icon = fr.applied ? "✓" : "✗";
+      const icon = fr.applied ? '✓' : '✗';
       lines.push(`  ${icon} ${fr.check}: ${fr.message}`);
     }
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 module.exports = { formatText };

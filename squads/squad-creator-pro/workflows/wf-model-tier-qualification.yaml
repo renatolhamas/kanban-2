@@ -50,9 +50,9 @@ philosophy:
       rule: "Se falhar, aplicar compensações e re-testar AUTOMATICAMENTE."
 
   cost_reference:
-    haiku: { input_per_mtok: 0.25, output_per_mtok: 1.25 }
-    sonnet: { input_per_mtok: 3.00, output_per_mtok: 15.00 }
-    opus: { input_per_mtok: 15.00, output_per_mtok: 75.00 }
+    haiku:  { input_per_mtok: 0.25,  output_per_mtok: 1.25  }
+    sonnet: { input_per_mtok: 3.00,  output_per_mtok: 15.00 }
+    opus:   { input_per_mtok: 15.00, output_per_mtok: 75.00 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # VETO CONDITIONS (Global)
@@ -102,7 +102,7 @@ test_input_registry:
     tested: false
 
   validate-squad:
-    target: "squads/copy" # Real squad to validate
+    target: "squads/copy"  # Real squad to validate
     type: "squad_directory"
     tested: false
 
@@ -660,7 +660,7 @@ batch_mode:
     wave_1:
       description: "Tasks com test_input definido e confidence: high"
       tasks:
-        - pv-axioma-assessment # ALREADY TESTED ✅
+        - pv-axioma-assessment     # ALREADY TESTED ✅
         - pv-modernization-score
         - validate-squad
         - validate-extraction

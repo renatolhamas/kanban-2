@@ -11,17 +11,17 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const EpicExecutor = require("./epic-executor");
+const fs = require('fs-extra');
+const path = require('path');
+const EpicExecutor = require('./epic-executor');
 
 /**
  * QA verdict types
  */
 const QAVerdict = {
-  APPROVED: "approved",
-  NEEDS_REVISION: "needs_revision",
-  BLOCKED: "blocked",
+  APPROVED: 'approved',
+  NEEDS_REVISION: 'needs_revision',
+  BLOCKED: 'blocked',
 };
 
 /**
@@ -44,12 +44,9 @@ class Epic6Executor extends EpicExecutor {
   _getQAOrchestrator() {
     if (!this._qaOrchestrator) {
       try {
-        this._qaOrchestrator = require("../../infrastructure/scripts/qa-loop-orchestrator");
+        this._qaOrchestrator = require('../../infrastructure/scripts/qa-loop-orchestrator');
       } catch (error) {
-        this._log(
-          `QA Loop Orchestrator not available: ${error.message}`,
-          "warn",
-        );
+        this._log(`QA Loop Orchestrator not available: ${error.message}`, 'warn');
       }
     }
     return this._qaOrchestrator;
@@ -67,8 +64,7 @@ class Epic6Executor extends EpicExecutor {
     this._startExecution();
 
     try {
-      const { buildResult, testResults, codeChanges, storyId, techStack } =
-        context;
+      const { buildResult, testResults, codeChanges, storyId, techStack } = context;
 
       this._log(`Starting QA loop for ${storyId}`);
 
@@ -76,10 +72,7 @@ class Epic6Executor extends EpicExecutor {
       let currentVerdict = QAVerdict.NEEDS_REVISION;
       const reviewHistory = [];
 
-      while (
-        iteration < this.maxIterations &&
-        currentVerdict === QAVerdict.NEEDS_REVISION
-      ) {
+      while (iteration < this.maxIterations && currentVerdict === QAVerdict.NEEDS_REVISION) {
         iteration++;
         this._log(`QA iteration ${iteration}/${this.maxIterations}`);
 
@@ -99,26 +92,19 @@ class Epic6Executor extends EpicExecutor {
         currentVerdict = reviewResult.verdict;
 
         if (currentVerdict === QAVerdict.BLOCKED) {
-          this._log("Review blocked - critical issues found", "error");
+          this._log('Review blocked - critical issues found', 'error');
           break;
         }
 
-        if (
-          currentVerdict === QAVerdict.NEEDS_REVISION &&
-          iteration < this.maxIterations
-        ) {
-          this._log("Review needs revision, applying fixes...");
+        if (currentVerdict === QAVerdict.NEEDS_REVISION && iteration < this.maxIterations) {
+          this._log('Review needs revision, applying fixes...');
           await this._applyFixes(reviewResult.issues, context);
         }
       }
 
       // Generate QA report
-      const reportPath = await this._generateReport(
-        storyId,
-        reviewHistory,
-        currentVerdict,
-      );
-      this._addArtifact("qa-report", reportPath);
+      const reportPath = await this._generateReport(storyId, reviewHistory, currentVerdict);
+      this._addArtifact('qa-report', reportPath);
 
       const passed = currentVerdict === QAVerdict.APPROVED;
 
@@ -155,7 +141,7 @@ class Epic6Executor extends EpicExecutor {
 
         return await orchestrator.runReview(context);
       } catch (error) {
-        this._log(`QA orchestrator error: ${error.message}`, "warn");
+        this._log(`QA orchestrator error: ${error.message}`, 'warn');
       }
     }
 
@@ -165,8 +151,8 @@ class Epic6Executor extends EpicExecutor {
     // Determine verdict based on issues
     let verdict = QAVerdict.APPROVED;
 
-    const criticalIssues = issues.filter((i) => i.severity === "critical");
-    const majorIssues = issues.filter((i) => i.severity === "major");
+    const criticalIssues = issues.filter((i) => i.severity === 'critical');
+    const majorIssues = issues.filter((i) => i.severity === 'major');
 
     if (criticalIssues.length > 0) {
       verdict = QAVerdict.BLOCKED;
@@ -190,18 +176,18 @@ class Epic6Executor extends EpicExecutor {
     const issues = [];
 
     // Check if tests exist
-    const testsDir = this._getPath("tests");
+    const testsDir = this._getPath('tests');
     if (!(await fs.pathExists(testsDir))) {
       issues.push({
-        type: "missing_tests",
-        severity: "major",
-        message: "No tests directory found",
+        type: 'missing_tests',
+        severity: 'major',
+        message: 'No tests directory found',
       });
     }
 
     // Check for lint errors (would run actual linter in full implementation)
     // For now, return stub
-    this._log("Basic quality checks completed");
+    this._log('Basic quality checks completed');
 
     return issues;
   }
@@ -225,16 +211,12 @@ class Epic6Executor extends EpicExecutor {
    * @private
    */
   async _generateReport(storyId, reviewHistory, finalVerdict) {
-    const reportPath = this._getPath(
-      ".aiox",
-      "qa-reports",
-      `${storyId}-${Date.now()}.md`,
-    );
+    const reportPath = this._getPath('.aiox', 'qa-reports', `${storyId}-${Date.now()}.md`);
 
     const verdictEmoji = {
-      [QAVerdict.APPROVED]: "✅",
-      [QAVerdict.NEEDS_REVISION]: "⚠️",
-      [QAVerdict.BLOCKED]: "❌",
+      [QAVerdict.APPROVED]: '✅',
+      [QAVerdict.NEEDS_REVISION]: '⚠️',
+      [QAVerdict.BLOCKED]: '❌',
     };
 
     let report = `# QA Report: ${storyId}
@@ -259,11 +241,11 @@ class Epic6Executor extends EpicExecutor {
 `;
 
       if (review.issues && review.issues.length > 0) {
-        report += "**Issues:**\n\n";
+        report += '**Issues:**\n\n';
         for (const issue of review.issues) {
           report += `- [${issue.severity}] ${issue.type}: ${issue.message}\n`;
         }
-        report += "\n";
+        report += '\n';
       }
     }
 

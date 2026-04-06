@@ -1,34 +1,33 @@
-import React, { useState } from "react";
-import { StatusBadge } from "./shared";
-import "./IssuesList.css";
+import React, { useState } from 'react';
+import { StatusBadge } from './shared';
+import './IssuesList.css';
 
 const TIER_LABELS = {
-  1: "Auto-Fix Available",
-  2: "Confirm to Fix",
-  3: "Manual Guide",
+  1: 'Auto-Fix Available',
+  2: 'Confirm to Fix',
+  3: 'Manual Guide'
 };
 
 /**
  * List of issues with actions
  */
 function IssuesList({ issues = {}, onAction, maxItems = 10 }) {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState('all');
 
   // Flatten issues from severity groups
   const allIssues = [];
-  ["critical", "high", "medium", "low"].forEach((severity) => {
+  ['critical', 'high', 'medium', 'low'].forEach(severity => {
     if (issues[severity]) {
-      issues[severity].forEach((issue) => {
+      issues[severity].forEach(issue => {
         allIssues.push({ ...issue, severity: severity.toUpperCase() });
       });
     }
   });
 
   // Filter issues
-  const filteredIssues =
-    filter === "all"
-      ? allIssues
-      : allIssues.filter((i) => i.severity.toLowerCase() === filter);
+  const filteredIssues = filter === 'all'
+    ? allIssues
+    : allIssues.filter(i => i.severity.toLowerCase() === filter);
 
   // Limit display
   const displayedIssues = filteredIssues.slice(0, maxItems);
@@ -46,26 +45,26 @@ function IssuesList({ issues = {}, onAction, maxItems = 10 }) {
         <h3 className="issues-title">Issues ({allIssues.length})</h3>
         <div className="issues-filters">
           <button
-            className={`filter-btn ${filter === "all" ? "active" : ""}`}
-            onClick={() => setFilter("all")}
+            className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+            onClick={() => setFilter('all')}
           >
             All
           </button>
           <button
-            className={`filter-btn filter-btn--critical ${filter === "critical" ? "active" : ""}`}
-            onClick={() => setFilter("critical")}
+            className={`filter-btn filter-btn--critical ${filter === 'critical' ? 'active' : ''}`}
+            onClick={() => setFilter('critical')}
           >
             Critical
           </button>
           <button
-            className={`filter-btn filter-btn--high ${filter === "high" ? "active" : ""}`}
-            onClick={() => setFilter("high")}
+            className={`filter-btn filter-btn--high ${filter === 'high' ? 'active' : ''}`}
+            onClick={() => setFilter('high')}
           >
             High
           </button>
           <button
-            className={`filter-btn filter-btn--medium ${filter === "medium" ? "active" : ""}`}
-            onClick={() => setFilter("medium")}
+            className={`filter-btn filter-btn--medium ${filter === 'medium' ? 'active' : ''}`}
+            onClick={() => setFilter('medium')}
           >
             Medium
           </button>
@@ -84,9 +83,7 @@ function IssuesList({ issues = {}, onAction, maxItems = 10 }) {
               <div className="issue-main">
                 <div className="issue-info">
                   <span className="issue-id">{issue.checkId}</span>
-                  <span className="issue-name">
-                    {issue.name || issue.message}
-                  </span>
+                  <span className="issue-name">{issue.name || issue.message}</span>
                 </div>
                 <div className="issue-meta">
                   <StatusBadge severity={issue.severity} size="sm" />
@@ -108,7 +105,7 @@ function IssuesList({ issues = {}, onAction, maxItems = 10 }) {
                   {issue.autoFix.tier === 1 && (
                     <button
                       className="action-btn action-btn--fix"
-                      onClick={() => handleAction(issue, "autofix")}
+                      onClick={() => handleAction(issue, 'autofix')}
                     >
                       Auto-Fix
                     </button>
@@ -116,7 +113,7 @@ function IssuesList({ issues = {}, onAction, maxItems = 10 }) {
                   {issue.autoFix.tier === 2 && (
                     <button
                       className="action-btn action-btn--confirm"
-                      onClick={() => handleAction(issue, "confirm")}
+                      onClick={() => handleAction(issue, 'confirm')}
                     >
                       Review & Fix
                     </button>
@@ -124,7 +121,7 @@ function IssuesList({ issues = {}, onAction, maxItems = 10 }) {
                   {issue.autoFix.tier === 3 && (
                     <button
                       className="action-btn action-btn--guide"
-                      onClick={() => handleAction(issue, "guide")}
+                      onClick={() => handleAction(issue, 'guide')}
                     >
                       View Guide
                     </button>

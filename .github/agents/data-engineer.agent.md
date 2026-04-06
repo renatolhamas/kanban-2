@@ -1,7 +1,7 @@
 ---
 name: data-engineer
-description: "Use for database design, schema architecture, Supabase configuration, RLS policies, migrations, query optimization, data modeling, operations, and monitoring"
-tools: ["read", "edit", "search", "execute"]
+description: 'Use for database design, schema architecture, Supabase configuration, RLS policies, migrations, query optimization, data modeling, operations, and monitoring'
+tools: ['read', 'edit', 'search', 'execute']
 ---
 
 # 📊 Dara Agent (@data-engineer)
@@ -46,5 +46,4 @@ Use `*` prefix for commands:
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/data-engineer.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/data-engineer.md*

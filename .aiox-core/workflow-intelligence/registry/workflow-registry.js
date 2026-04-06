@@ -5,11 +5,11 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
 
 /**
  * Default cache TTL in milliseconds (5 minutes)
@@ -21,10 +21,7 @@ const DEFAULT_CACHE_TTL = 5 * 60 * 1000;
  * Default path to workflow patterns file
  * @type {string}
  */
-const DEFAULT_PATTERNS_PATH = path.join(
-  __dirname,
-  "../../data/workflow-patterns.yaml",
-);
+const DEFAULT_PATTERNS_PATH = path.join(__dirname, '../../data/workflow-patterns.yaml');
 
 /**
  * WorkflowRegistry class for managing workflow patterns
@@ -55,13 +52,11 @@ class WorkflowRegistry {
     }
 
     try {
-      const content = fs.readFileSync(this.patternsPath, "utf8");
+      const content = fs.readFileSync(this.patternsPath, 'utf8');
       const parsed = yaml.load(content);
 
       if (!parsed || !parsed.workflows) {
-        throw new Error(
-          "Invalid workflow patterns file: missing workflows key",
-        );
+        throw new Error('Invalid workflow patterns file: missing workflows key');
       }
 
       this.cache = parsed.workflows;
@@ -69,10 +64,8 @@ class WorkflowRegistry {
 
       return this.cache;
     } catch (error) {
-      if (error.code === "ENOENT") {
-        throw new Error(
-          `Workflow patterns file not found: ${this.patternsPath}`,
-        );
+      if (error.code === 'ENOENT') {
+        throw new Error(`Workflow patterns file not found: ${this.patternsPath}`);
       }
       throw new Error(`Failed to load workflow patterns: ${error.message}`);
     }
@@ -127,9 +120,7 @@ class WorkflowRegistry {
     }
 
     const workflows = this.loadWorkflows();
-    const normalizedCommands = commands.map((cmd) =>
-      this.normalizeCommand(cmd),
-    );
+    const normalizedCommands = commands.map((cmd) => this.normalizeCommand(cmd));
 
     let bestMatch = null;
     let bestScore = 0;
@@ -143,10 +134,7 @@ class WorkflowRegistry {
           name,
           workflow,
           score,
-          matchedCommands: this.getMatchedCommands(
-            workflow,
-            normalizedCommands,
-          ),
+          matchedCommands: this.getMatchedCommands(workflow, normalizedCommands),
         };
       }
     }
@@ -165,9 +153,7 @@ class WorkflowRegistry {
       return 0;
     }
 
-    const keyCommands = workflow.key_commands.map((cmd) =>
-      this.normalizeCommand(cmd),
-    );
+    const keyCommands = workflow.key_commands.map((cmd) => this.normalizeCommand(cmd));
     let matches = 0;
 
     for (const cmd of commands) {
@@ -193,9 +179,7 @@ class WorkflowRegistry {
       return [];
     }
 
-    const keyCommands = workflow.key_commands.map((cmd) =>
-      this.normalizeCommand(cmd),
-    );
+    const keyCommands = workflow.key_commands.map((cmd) => this.normalizeCommand(cmd));
     const matched = [];
 
     for (const cmd of commands) {
@@ -254,9 +238,7 @@ class WorkflowRegistry {
       return [];
     }
 
-    return transition.next_steps.sort(
-      (a, b) => (a.priority || 99) - (b.priority || 99),
-    );
+    return transition.next_steps.sort((a, b) => (a.priority || 99) - (b.priority || 99));
   }
 
   /**
@@ -296,7 +278,7 @@ class WorkflowRegistry {
    */
   getWorkflowsByAgent(agentId) {
     const workflows = this.loadWorkflows();
-    const normalizedAgent = agentId.replace("@", "").toLowerCase();
+    const normalizedAgent = agentId.replace('@', '').toLowerCase();
     const results = [];
 
     for (const [name, workflow] of Object.entries(workflows)) {
@@ -319,14 +301,14 @@ class WorkflowRegistry {
    * @returns {string} Normalized command
    */
   normalizeCommand(command) {
-    if (!command) return "";
+    if (!command) return '';
 
     return command
       .toLowerCase()
-      .replace(/\s+completed\s*$/i, "")
-      .replace(/\s+successfully\s*$/i, "")
-      .replace(/^\*/, "")
-      .replace(/['"]/g, "")
+      .replace(/\s+completed\s*$/i, '')
+      .replace(/\s+successfully\s*$/i, '')
+      .replace(/^\*/, '')
+      .replace(/['"]/g, '')
       .trim();
   }
 

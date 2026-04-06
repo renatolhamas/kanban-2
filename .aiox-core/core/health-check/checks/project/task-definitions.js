@@ -8,9 +8,9 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const fs = require("fs").promises;
-const path = require("path");
-const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
+const fs = require('fs').promises;
+const path = require('path');
+const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 
 /**
  * Task definitions validation check
@@ -21,15 +21,15 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 class TaskDefinitionsCheck extends BaseCheck {
   constructor() {
     super({
-      id: "project.task-definitions",
-      name: "Task Definitions",
-      description: "Verifies task definition files are valid",
+      id: 'project.task-definitions',
+      name: 'Task Definitions',
+      description: 'Verifies task definition files are valid',
       domain: CheckDomain.PROJECT,
       severity: CheckSeverity.MEDIUM,
       timeout: 5000,
       cacheable: true,
       healingTier: 0, // Cannot auto-fix task definitions
-      tags: ["aiox", "tasks", "config"],
+      tags: ['aiox', 'tasks', 'config'],
     });
   }
 
@@ -41,8 +41,8 @@ class TaskDefinitionsCheck extends BaseCheck {
   async execute(context) {
     const projectRoot = context.projectRoot || process.cwd();
     const taskPaths = [
-      path.join(projectRoot, ".aiox-core", "development", "tasks"),
-      path.join(projectRoot, ".aiox-core", "infrastructure", "tasks"),
+      path.join(projectRoot, '.aiox-core', 'development', 'tasks'),
+      path.join(projectRoot, '.aiox-core', 'infrastructure', 'tasks'),
     ];
 
     const validTasks = [];
@@ -57,7 +57,7 @@ class TaskDefinitionsCheck extends BaseCheck {
           totalTasks++;
 
           try {
-            const content = await fs.readFile(file, "utf8");
+            const content = await fs.readFile(file, 'utf8');
             const validation = this.validateTaskDefinition(content, file);
 
             if (validation.valid) {
@@ -81,29 +81,21 @@ class TaskDefinitionsCheck extends BaseCheck {
     }
 
     if (totalTasks === 0) {
-      return this.pass(
-        "No task definitions found (framework may not be fully set up)",
-        {
-          details: { searchPaths: taskPaths },
-        },
-      );
+      return this.pass('No task definitions found (framework may not be fully set up)', {
+        details: { searchPaths: taskPaths },
+      });
     }
 
     if (invalidTasks.length > 0) {
-      const issues = invalidTasks.map(
-        (t) => `${t.file}: ${t.reasons.join(", ")}`,
-      );
-      return this.warning(
-        `${invalidTasks.length} task definition(s) have issues`,
-        {
-          recommendation: "Review and fix invalid task definition files",
-          details: {
-            valid: validTasks.length,
-            invalid: invalidTasks,
-            issues,
-          },
+      const issues = invalidTasks.map((t) => `${t.file}: ${t.reasons.join(', ')}`);
+      return this.warning(`${invalidTasks.length} task definition(s) have issues`, {
+        recommendation: 'Review and fix invalid task definition files',
+        details: {
+          valid: validTasks.length,
+          invalid: invalidTasks,
+          issues,
         },
-      );
+      });
     }
 
     return this.pass(`All ${validTasks.length} task definitions are valid`, {
@@ -132,10 +124,7 @@ class TaskDefinitionsCheck extends BaseCheck {
         if (entry.isDirectory()) {
           const subFiles = await this.findYamlFiles(fullPath);
           files.push(...subFiles);
-        } else if (
-          entry.name.endsWith(".yaml") ||
-          entry.name.endsWith(".yml")
-        ) {
+        } else if (entry.name.endsWith('.yaml') || entry.name.endsWith('.yml')) {
           files.push(fullPath);
         }
       }
@@ -160,11 +149,11 @@ class TaskDefinitionsCheck extends BaseCheck {
       // Try to load js-yaml if available
       let yaml;
       try {
-        yaml = require("js-yaml");
+        yaml = require('js-yaml');
       } catch {
         // If js-yaml not available, do basic validation
-        if (content.includes("\t")) {
-          errors.push("Contains tabs (use spaces)");
+        if (content.includes('\t')) {
+          errors.push('Contains tabs (use spaces)');
         }
         return { valid: errors.length === 0, errors };
       }
@@ -172,19 +161,19 @@ class TaskDefinitionsCheck extends BaseCheck {
       const parsed = yaml.load(content);
 
       if (!parsed) {
-        errors.push("Empty or invalid YAML");
+        errors.push('Empty or invalid YAML');
         return { valid: false, errors };
       }
 
       // Check for required task fields
       if (!parsed.name && !parsed.id) {
-        errors.push("Missing name or id field");
+        errors.push('Missing name or id field');
       }
 
       // Check for v2 task format
-      if (parsed.version === "2.0" || parsed.version === 2) {
+      if (parsed.version === '2.0' || parsed.version === 2) {
         if (!parsed.steps && !parsed.tasks) {
-          errors.push("V2 task missing steps or tasks");
+          errors.push('V2 task missing steps or tasks');
         }
       }
     } catch (parseError) {

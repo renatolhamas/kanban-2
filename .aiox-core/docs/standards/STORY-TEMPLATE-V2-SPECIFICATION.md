@@ -26,13 +26,13 @@ The Story Template v2.0 standardizes story documentation across the AIOX project
 
 ### What's New in v2.0
 
-| Feature                | v1.x     | v2.0                                     |
-| ---------------------- | -------- | ---------------------------------------- |
-| Cross-Story Decisions  | ❌       | ✅ Required section                      |
-| CodeRabbit Integration | ❌       | ✅ Story Type Analysis, Agent Assignment |
-| Dev Agent Record       | ❌       | ✅ Execution logging                     |
-| QA Results             | ❌       | ✅ Structured test results               |
-| Testing Checklist      | Informal | ✅ Standardized format                   |
+| Feature | v1.x | v2.0 |
+|---------|------|------|
+| Cross-Story Decisions | ❌ | ✅ Required section |
+| CodeRabbit Integration | ❌ | ✅ Story Type Analysis, Agent Assignment |
+| Dev Agent Record | ❌ | ✅ Execution logging |
+| QA Results | ❌ | ✅ Structured test results |
+| Testing Checklist | Informal | ✅ Standardized format |
 
 ### Design Principles
 
@@ -48,7 +48,7 @@ The Story Template v2.0 standardizes story documentation across the AIOX project
 
 ### Complete Template
 
-````markdown
+```markdown
 # Story X.X: [Title]
 
 **Epic:** [Parent Epic Name]
@@ -64,8 +64,8 @@ The Story Template v2.0 standardizes story documentation across the AIOX project
 
 ## 🔀 Cross-Story Decisions
 
-| Decision        | Source             | Impact on This Story        |
-| --------------- | ------------------ | --------------------------- |
+| Decision | Source | Impact on This Story |
+|----------|--------|----------------------|
 | [Decision Name] | [Story ID/Meeting] | [How it affects this story] |
 
 ---
@@ -107,7 +107,6 @@ WHEN [action performed]
 THEN [expected outcome]
 AND [additional outcomes]
 ```
-````
 
 ---
 
@@ -115,20 +114,20 @@ AND [additional outcomes]
 
 ### Story Type Analysis
 
-| Attribute         | Value                                             | Rationale             |
-| ----------------- | ------------------------------------------------- | --------------------- |
-| Type              | [Infrastructure/Feature/Documentation/Validation] | [Why this type]       |
-| Complexity        | [Low/Medium/High]                                 | [Why this complexity] |
-| Test Requirements | [Unit/Integration/E2E/Manual]                     | [Why these tests]     |
-| Review Focus      | [Performance/Security/Logic/Documentation]        | [Key review areas]    |
+| Attribute | Value | Rationale |
+|-----------|-------|-----------|
+| Type | [Infrastructure/Feature/Documentation/Validation] | [Why this type] |
+| Complexity | [Low/Medium/High] | [Why this complexity] |
+| Test Requirements | [Unit/Integration/E2E/Manual] | [Why these tests] |
+| Review Focus | [Performance/Security/Logic/Documentation] | [Key review areas] |
 
 ### Agent Assignment
 
-| Role      | Agent    | Responsibility    |
-| --------- | -------- | ----------------- |
-| Primary   | @[agent] | [Main task]       |
+| Role | Agent | Responsibility |
+|------|-------|----------------|
+| Primary | @[agent] | [Main task] |
 | Secondary | @[agent] | [Supporting task] |
-| Review    | @[agent] | [Review task]     |
+| Review | @[agent] | [Review task] |
 
 ### Self-Healing Config
 
@@ -156,20 +155,18 @@ chat:
 ## 🔗 Dependencies
 
 **Blocked by:**
-
 - [Dependency 1 - status]
 - [Dependency 2 - status]
 
 **Blocks:**
-
 - [What this story blocks]
 
 ---
 
 ## ⚠️ Risks & Mitigations
 
-| Risk               | Impact            | Mitigation        |
-| ------------------ | ----------------- | ----------------- |
+| Risk | Impact | Mitigation |
+|------|--------|------------|
 | [Risk description] | [High/Medium/Low] | [How to mitigate] |
 
 ---
@@ -204,12 +201,10 @@ path/to/relevant/files
 ### Testing Checklist
 
 #### [Test Category 1]
-
 - [ ] [Test item 1]
 - [ ] [Test item 2]
 
 #### [Test Category 2]
-
 - [ ] [Test item 1]
 - [ ] [Test item 2]
 
@@ -221,9 +216,9 @@ path/to/relevant/files
 
 ### Execution Log
 
-| Timestamp | Phase | Action             | Result |
-| --------- | ----- | ------------------ | ------ |
-| -         | -     | Awaiting execution | -      |
+| Timestamp | Phase | Action | Result |
+|-----------|-------|--------|--------|
+| - | - | Awaiting execution | - |
 
 ### Implementation Notes
 
@@ -241,20 +236,20 @@ _None yet - story not started._
 
 ### Test Execution Summary
 
-| Category    | Tests | Passed | Failed | Skipped |
-| ----------- | ----- | ------ | ------ | ------- |
-| Unit        | -     | -      | -      | -       |
-| Integration | -     | -      | -      | -       |
-| E2E         | -     | -      | -      | -       |
+| Category | Tests | Passed | Failed | Skipped |
+|----------|-------|--------|--------|---------|
+| Unit | - | - | - | - |
+| Integration | - | - | - | - |
+| E2E | - | - | - | - |
 
 ### Validation Checklist
 
-| Check               | Status | Notes |
-| ------------------- | ------ | ----- |
-| Acceptance criteria | ⏳     |       |
-| DoD items           | ⏳     |       |
-| Edge cases          | ⏳     |       |
-| Documentation       | ⏳     |       |
+| Check | Status | Notes |
+|-------|--------|-------|
+| Acceptance criteria | ⏳ | |
+| DoD items | ⏳ | |
+| Edge cases | ⏳ | |
+| Documentation | ⏳ | |
 
 ### QA Sign-off
 
@@ -270,17 +265,16 @@ _None yet - story not started._
 
 ## 📜 Change Log
 
-| Date   | Version | Changes                | Author   |
-| ------ | ------- | ---------------------- | -------- |
-| [Date] | 1.0.0   | Initial story creation | @[agent] |
+| Date | Version | Changes | Author |
+|------|---------|---------|--------|
+| [Date] | 1.0.0 | Initial story creation | @[agent] |
 
 ---
 
 **Criado por:** [Agent Name] ([Role])
 **Data:** [Creation Date]
 **Atualizado:** [Last Update] ([Change description])
-
-````
+```
 
 ---
 
@@ -336,21 +330,20 @@ GIVEN [precondition]
 WHEN [action]
 THEN [expected result]
 AND [additional result]
-````
+```
 
 ### CodeRabbit Integration (NEW in v2.0)
 
-| Sub-section         | Purpose                       |
-| ------------------- | ----------------------------- |
+| Sub-section | Purpose |
+|-------------|---------|
 | Story Type Analysis | Helps CodeRabbit focus review |
-| Agent Assignment    | Assigns responsibility        |
-| Self-Healing Config | YAML for auto-configuration   |
-| Focus Areas         | Key review points             |
+| Agent Assignment | Assigns responsibility |
+| Self-Healing Config | YAML for auto-configuration |
+| Focus Areas | Key review points |
 
 ### Dev Agent Record (NEW in v2.0)
 
 Tracks execution by @dev agent:
-
 - Execution Log: Timestamped actions
 - Implementation Notes: Technical details
 - Issues Encountered: Problems and solutions
@@ -358,7 +351,6 @@ Tracks execution by @dev agent:
 ### QA Results (NEW in v2.0)
 
 Tracks validation by @qa agent:
-
 - Test Execution Summary: Test metrics
 - Validation Checklist: Manual checks
 - QA Sign-off: Final approval
@@ -370,20 +362,17 @@ Tracks validation by @qa agent:
 ### 🔧 Infrastructure
 
 **Characteristics:**
-
 - CI/CD changes
 - Configuration updates
 - Tool setup
 - Migration scripts
 
 **Review Focus:**
-
 - Security implications
 - Backwards compatibility
 - Rollback procedures
 
 **Example Tasks:**
-
 - Update GitHub Actions
 - Configure CodeRabbit
 - Setup Husky hooks
@@ -391,19 +380,16 @@ Tracks validation by @qa agent:
 ### 💻 Feature
 
 **Characteristics:**
-
 - New functionality
 - User-facing changes
 - Business logic
 
 **Review Focus:**
-
 - Requirements alignment
 - UX impact
 - Test coverage
 
 **Example Tasks:**
-
 - Implement API endpoint
 - Create UI component
 - Add validation logic
@@ -411,19 +397,16 @@ Tracks validation by @qa agent:
 ### 📖 Documentation
 
 **Characteristics:**
-
 - Standards updates
 - Architecture docs
 - Guides and tutorials
 
 **Review Focus:**
-
 - Accuracy
 - Completeness
 - Terminology consistency
 
 **Example Tasks:**
-
 - Update README
 - Create architecture diagram
 - Write API documentation
@@ -431,19 +414,16 @@ Tracks validation by @qa agent:
 ### ✅ Validation
 
 **Characteristics:**
-
 - Testing improvements
 - Quality gates
 - Audit activities
 
 **Review Focus:**
-
 - Test coverage
 - Edge cases
 - Automation
 
 **Example Tasks:**
-
 - Add integration tests
 - Create validation checklist
 - Implement E2E tests
@@ -451,19 +431,16 @@ Tracks validation by @qa agent:
 ### 🐛 Bug Fix
 
 **Characteristics:**
-
 - Defect correction
 - Regression fixes
 - Performance issues
 
 **Review Focus:**
-
 - Root cause
 - Side effects
 - Regression tests
 
 **Example Tasks:**
-
 - Fix authentication bug
 - Resolve memory leak
 - Correct calculation error
@@ -477,7 +454,6 @@ Tracks validation by @qa agent:
 Use this checklist when creating or reviewing stories:
 
 #### Required Sections
-
 - [ ] Header with all required fields
 - [ ] Cross-Story Decisions (even if empty table)
 - [ ] User Story in proper format
@@ -490,7 +466,6 @@ Use this checklist when creating or reviewing stories:
 - [ ] Change Log
 
 #### Quality Checks
-
 - [ ] Story type matches content
 - [ ] Priority justified
 - [ ] Points appropriate for scope
@@ -499,7 +474,6 @@ Use this checklist when creating or reviewing stories:
 - [ ] Testing strategy clear
 
 #### Terminology
-
 - [ ] Uses "Squad" not "Squad"
 - [ ] Uses "@aiox/" npm scope
 - [ ] References v4.0.4 architecture
@@ -525,8 +499,8 @@ Use this checklist when creating or reviewing stories:
 
 ## 🔀 Cross-Story Decisions
 
-| Decision                | Source          | Impact            |
-| ----------------------- | --------------- | ----------------- |
+| Decision | Source | Impact |
+|----------|--------|--------|
 | Use Ubuntu runners only | Sprint 5 Review | Simplifies matrix |
 
 ---
@@ -555,10 +529,10 @@ Use this checklist when creating or reviewing stories:
 
 ## 🔀 Cross-Story Decisions
 
-| Decision             | Source       | Impact                                      |
-| -------------------- | ------------ | ------------------------------------------- |
+| Decision | Source | Impact |
+|----------|--------|--------|
 | Multi-repo structure | OSR-2/OSR-11 | Standards must document 3-repo architecture |
-| Squad terminology    | OSR-4        | Replace all "Squad" references              |
+| Squad terminology | OSR-4 | Replace all "Squad" references |
 ```
 
 ---

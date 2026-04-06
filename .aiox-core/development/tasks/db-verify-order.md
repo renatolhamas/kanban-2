@@ -11,19 +11,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -191,7 +188,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -210,6 +206,7 @@ updated_at: 2025-11-17
 ```
 
 ---
+
 
 ## Inputs
 
@@ -287,7 +284,6 @@ echo "✓ Ordering looks reasonable by heuristics"
 ### 4. Report Results
 
 **If all checks pass:**
-
 ```
 ✅ DDL Ordering Validation Passed
 
@@ -304,14 +300,13 @@ Order appears correct. Safe to proceed with:
 ```
 
 **If issues found:**
-
 ```
 ❌ DDL Ordering Issues Detected
 
 Problems:
   - Functions defined before tables (line X vs line Y)
   - Triggers reference functions not yet created
-
+  
 Recommended fixes:
   1. Move CREATE EXTENSION to top
   2. Group CREATE TABLE statements
@@ -343,7 +338,7 @@ CREATE OR REPLACE FUNCTION current_user_id() ...;
 CREATE OR REPLACE FUNCTION update_timestamp() ...;
 
 -- 4. Triggers
-CREATE TRIGGER set_timestamp
+CREATE TRIGGER set_timestamp 
 BEFORE UPDATE ON users ...;
 
 -- 5. RLS
@@ -358,7 +353,7 @@ CREATE VIEW user_fragments_view AS ...;
 
 ```sql
 -- ❌ Function before table it references
-CREATE FUNCTION get_user_name(user_id UUID)
+CREATE FUNCTION get_user_name(user_id UUID) 
 RETURNS TEXT AS $$
   SELECT name FROM users WHERE id = user_id;  -- users doesn't exist yet!
 $$ LANGUAGE sql;
@@ -410,12 +405,12 @@ CREATE TABLE posts (
 
 ```sql
 -- First: Base view
-CREATE VIEW active_users AS
+CREATE VIEW active_users AS 
 SELECT * FROM users WHERE deleted_at IS NULL;
 
 -- Second: View on view
 CREATE VIEW active_users_with_posts AS
-SELECT u.*, COUNT(p.id)
+SELECT u.*, COUNT(p.id) 
 FROM active_users u  -- Safe, active_users exists
 LEFT JOIN posts p ON p.user_id = u.id;
 ```
@@ -478,7 +473,6 @@ cat /tmp/creates.txt
 ```
 
 Look for:
-
 - Table → Foreign Key → Other Table
 - Function → Calls → Other Function
 - Trigger → Calls → Function
@@ -512,10 +506,10 @@ This is a heuristic check, not a full parser:
 
 ✅ **Catches**: Most common ordering issues  
 ✅ **Fast**: Runs in < 1 second  
-✅ **Safe**: No database connection needed
+✅ **Safe**: No database connection needed  
 
 ❌ **Misses**: Complex cross-file dependencies  
 ❌ **Misses**: Dynamic SQL  
-❌ **Misses**: Subtle type dependencies
+❌ **Misses**: Subtle type dependencies  
 
 For 100% validation, use: `*dry-run {path}`

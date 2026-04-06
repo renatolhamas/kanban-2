@@ -9,8 +9,8 @@
  * @created Story SYN-1 - Domain Loader + Manifest Parser
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Resolve the .synapse/ directory path from a given working directory
@@ -22,8 +22,8 @@ const path = require("path");
  * @returns {{ exists: boolean, synapsePath: string, manifestPath: string }}
  */
 function resolveSynapsePath(cwd) {
-  const synapsePath = path.join(cwd, ".synapse");
-  const manifestPath = path.join(synapsePath, "manifest");
+  const synapsePath = path.join(cwd, '.synapse');
+  const manifestPath = path.join(synapsePath, 'manifest');
 
   let exists = false;
   try {

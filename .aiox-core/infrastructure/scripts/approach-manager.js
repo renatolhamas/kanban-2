@@ -22,9 +22,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs");
-const fsPromises = require("fs").promises;
-const path = require("path");
+const fs = require('fs');
+const fsPromises = require('fs').promises;
+const path = require('path');
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              CONFIGURATION
@@ -32,13 +32,13 @@ const path = require("path");
 
 const CONFIG = {
   // AC6: Template file location
-  templatePath: ".aiox-core/product/templates/current-approach-tmpl.md",
+  templatePath: '.aiox-core/product/templates/current-approach-tmpl.md',
   // AC1: Current approach file name
-  currentApproachFile: "current-approach.md",
+  currentApproachFile: 'current-approach.md',
   // AC7: History file name
-  historyFile: "approach-history.json",
+  historyFile: 'approach-history.json',
   // Recovery directory name
-  recoveryDir: "recovery",
+  recoveryDir: 'recovery',
   // Maximum history entries per subtask
   maxHistoryPerSubtask: 10,
 };
@@ -58,7 +58,7 @@ class ApproachManager {
    */
   constructor(options) {
     if (!options?.storyId) {
-      throw new Error("storyId is required");
+      throw new Error('storyId is required');
     }
 
     this.storyId = options.storyId;
@@ -72,17 +72,14 @@ class ApproachManager {
     } else {
       this.recoveryPath = path.join(
         this.rootPath,
-        "docs/stories",
+        'docs/stories',
         this.storyId,
-        CONFIG.recoveryDir,
+        CONFIG.recoveryDir
       );
     }
 
     // File paths
-    this.currentApproachPath = path.join(
-      this.recoveryPath,
-      CONFIG.currentApproachFile,
-    );
+    this.currentApproachPath = path.join(this.recoveryPath, CONFIG.currentApproachFile);
     this.historyPath = path.join(this.recoveryPath, CONFIG.historyFile);
     this.templatePath = path.join(this.rootPath, CONFIG.templatePath);
 
@@ -108,7 +105,7 @@ class ApproachManager {
    */
   _loadTemplate() {
     if (fs.existsSync(this.templatePath)) {
-      return fs.readFileSync(this.templatePath, "utf-8");
+      return fs.readFileSync(this.templatePath, 'utf-8');
     }
 
     // Fallback template if file not found
@@ -164,26 +161,26 @@ class ApproachManager {
       (match, arrayKey, itemTemplate) => {
         const array = data[arrayKey];
         if (!Array.isArray(array) || array.length === 0) {
-          return "- (none specified)";
+          return '- (none specified)';
         }
 
         return array
           .map((item) => {
-            if (typeof item === "string") {
+            if (typeof item === 'string') {
               return itemTemplate.replace(/\{\{this\}\}/g, item).trim();
             }
             // Handle object items
             let rendered = itemTemplate;
             for (const [key, value] of Object.entries(item)) {
               rendered = rendered.replace(
-                new RegExp(`\\{\\{this\\.${key}\\}\\}`, "g"),
-                String(value),
+                new RegExp(`\\{\\{this\\.${key}\\}\\}`, 'g'),
+                String(value)
               );
             }
             return rendered.trim();
           })
-          .join("\n");
-      },
+          .join('\n');
+      }
     );
 
     return result;
@@ -216,12 +213,12 @@ class ApproachManager {
       subtaskId,
       storyId: this.storyId,
       attemptNumber,
-      summary: approachData.summary || "",
+      summary: approachData.summary || '',
       decisions: approachData.decisions || [],
       files: approachData.files || [],
       expectedChallenges: approachData.expectedChallenges || [],
-      phase: approachData.phase || "",
-      notes: approachData.notes || "",
+      phase: approachData.phase || '',
+      notes: approachData.notes || '',
       startedAt: timestamp,
       endedAt: null,
       success: null,
@@ -261,7 +258,7 @@ class ApproachManager {
     };
 
     const content = this._renderTemplate(template, data);
-    await fsPromises.writeFile(this.currentApproachPath, content, "utf-8");
+    await fsPromises.writeFile(this.currentApproachPath, content, 'utf-8');
   }
 
   /**
@@ -279,7 +276,7 @@ class ApproachManager {
     // Try to load from file
     if (fs.existsSync(this.currentApproachPath)) {
       try {
-        const content = fs.readFileSync(this.currentApproachPath, "utf-8");
+        const content = fs.readFileSync(this.currentApproachPath, 'utf-8');
         // Parse basic info from markdown
         const approach = this._parseApproachFromMarkdown(content);
         if (approach && approach.subtaskId === subtaskId) {
@@ -304,7 +301,7 @@ class ApproachManager {
   _parseApproachFromMarkdown(content) {
     const approach = {
       subtaskId: null,
-      summary: "",
+      summary: '',
       decisions: [],
       files: [],
       expectedChallenges: [],
@@ -325,24 +322,20 @@ class ApproachManager {
     }
 
     // Extract decisions
-    const decisionsMatch = content.match(
-      /## Key Decisions\n([\s\S]*?)(?=\n##|$)/,
-    );
+    const decisionsMatch = content.match(/## Key Decisions\n([\s\S]*?)(?=\n##|$)/);
     if (decisionsMatch) {
-      const lines = decisionsMatch[1].trim().split("\n");
+      const lines = decisionsMatch[1].trim().split('\n');
       approach.decisions = lines
-        .filter((line) => line.startsWith("- "))
+        .filter((line) => line.startsWith('- '))
         .map((line) => line.substring(2).trim());
     }
 
     // Extract files
-    const filesMatch = content.match(
-      /## Files Being Modified\n([\s\S]*?)(?=\n##|$)/,
-    );
+    const filesMatch = content.match(/## Files Being Modified\n([\s\S]*?)(?=\n##|$)/);
     if (filesMatch) {
-      const lines = filesMatch[1].trim().split("\n");
+      const lines = filesMatch[1].trim().split('\n');
       approach.files = lines
-        .filter((line) => line.startsWith("- "))
+        .filter((line) => line.startsWith('- '))
         .map((line) => {
           const fileMatch = line.match(/`([^`]+)`\s*\((\w+)\)/);
           if (fileMatch) {
@@ -378,7 +371,7 @@ class ApproachManager {
    * @returns {Promise<Object>} Archived approach record
    */
   async clearApproach(subtaskId, options = {}) {
-    const { success = true, notes = "" } = options;
+    const { success = true, notes = '' } = options;
 
     const approach = this.getCurrentApproach(subtaskId);
     if (!approach) {
@@ -389,7 +382,7 @@ class ApproachManager {
     approach.endedAt = new Date().toISOString();
     approach.success = success;
     if (notes) {
-      approach.notes = (approach.notes ? approach.notes + "\n" : "") + notes;
+      approach.notes = (approach.notes ? approach.notes + '\n' : '') + notes;
     }
 
     // AC7: Archive to history
@@ -416,9 +409,7 @@ class ApproachManager {
     const history = await this._loadHistory();
 
     // Find or create subtask history
-    let subtaskHistory = history.subtasks.find(
-      (s) => s.subtaskId === subtaskId,
-    );
+    let subtaskHistory = history.subtasks.find((s) => s.subtaskId === subtaskId);
     if (!subtaskHistory) {
       subtaskHistory = {
         subtaskId,
@@ -435,23 +426,18 @@ class ApproachManager {
       endedAt: approach.endedAt,
       success: approach.success,
       decisions: approach.decisions,
-      files: approach.files.map((f) => (typeof f === "string" ? f : f.path)),
+      files: approach.files.map((f) => (typeof f === 'string' ? f : f.path)),
       notes: approach.notes,
     });
 
     // Trim history if needed
     if (subtaskHistory.approaches.length > CONFIG.maxHistoryPerSubtask) {
-      subtaskHistory.approaches = subtaskHistory.approaches.slice(
-        -CONFIG.maxHistoryPerSubtask,
-      );
+      subtaskHistory.approaches = subtaskHistory.approaches.slice(-CONFIG.maxHistoryPerSubtask);
     }
 
     // Update metadata
     history.lastUpdated = new Date().toISOString();
-    history.totalAttempts = history.subtasks.reduce(
-      (sum, s) => sum + s.approaches.length,
-      0,
-    );
+    history.totalAttempts = history.subtasks.reduce((sum, s) => sum + s.approaches.length, 0);
 
     await this._saveHistory(history);
   }
@@ -468,7 +454,7 @@ class ApproachManager {
 
     if (fs.existsSync(this.historyPath)) {
       try {
-        const content = await fsPromises.readFile(this.historyPath, "utf-8");
+        const content = await fsPromises.readFile(this.historyPath, 'utf-8');
         this._history = JSON.parse(content);
         return this._history;
       } catch {
@@ -478,7 +464,7 @@ class ApproachManager {
 
     // Initialize new history
     this._history = {
-      version: "1.0.0",
+      version: '1.0.0',
       storyId: this.storyId,
       createdAt: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
@@ -496,11 +482,7 @@ class ApproachManager {
    */
   async _saveHistory(history) {
     await this._ensureRecoveryDir();
-    await fsPromises.writeFile(
-      this.historyPath,
-      JSON.stringify(history, null, 2),
-      "utf-8",
-    );
+    await fsPromises.writeFile(this.historyPath, JSON.stringify(history, null, 2), 'utf-8');
     this._history = history;
   }
 
@@ -512,9 +494,7 @@ class ApproachManager {
    */
   async getApproachHistory(subtaskId) {
     const history = await this._loadHistory();
-    const subtaskHistory = history.subtasks.find(
-      (s) => s.subtaskId === subtaskId,
-    );
+    const subtaskHistory = history.subtasks.find((s) => s.subtaskId === subtaskId);
 
     if (!subtaskHistory) {
       return {
@@ -544,25 +524,20 @@ class ApproachManager {
    */
   async getSuggestions(subtaskId) {
     const history = await this.getApproachHistory(subtaskId);
-    const failedApproaches = history.approaches.filter(
-      (a) => a.success === false,
-    );
+    const failedApproaches = history.approaches.filter((a) => a.success === false);
 
     const suggestions = {
       subtaskId,
       totalAttempts: history.approaches.length,
       failedAttempts: failedApproaches.length,
-      successfulAttempts: history.approaches.filter((a) => a.success === true)
-        .length,
+      successfulAttempts: history.approaches.filter((a) => a.success === true).length,
       previousDecisions: [],
       avoidPatterns: [],
       recommendedActions: [],
     };
 
     if (failedApproaches.length === 0) {
-      suggestions.recommendedActions.push(
-        "No previous failures - proceed with current approach",
-      );
+      suggestions.recommendedActions.push('No previous failures - proceed with current approach');
       return suggestions;
     }
 
@@ -593,25 +568,17 @@ class ApproachManager {
     // Generate recommendations
     if (failedApproaches.length >= 3) {
       suggestions.recommendedActions.push(
-        "Consider fundamentally different approach - multiple attempts have failed",
+        'Consider fundamentally different approach - multiple attempts have failed'
       );
       suggestions.recommendedActions.push(
-        "Review story requirements for possible misunderstanding",
+        'Review story requirements for possible misunderstanding'
       );
-      suggestions.recommendedActions.push(
-        "Check if dependencies are blocking progress",
-      );
+      suggestions.recommendedActions.push('Check if dependencies are blocking progress');
     } else if (failedApproaches.length >= 2) {
-      suggestions.recommendedActions.push(
-        "Try alternative implementation strategy",
-      );
-      suggestions.recommendedActions.push(
-        "Review error patterns from previous attempts",
-      );
+      suggestions.recommendedActions.push('Try alternative implementation strategy');
+      suggestions.recommendedActions.push('Review error patterns from previous attempts');
     } else {
-      suggestions.recommendedActions.push(
-        "Analyze why previous attempt failed before retrying",
-      );
+      suggestions.recommendedActions.push('Analyze why previous attempt failed before retrying');
     }
 
     // Add specific file-based suggestions
@@ -638,9 +605,8 @@ class ApproachManager {
     return (
       this._currentApproaches.has(subtaskId) ||
       (fs.existsSync(this.currentApproachPath) &&
-        this._parseApproachFromMarkdown(
-          fs.readFileSync(this.currentApproachPath, "utf-8"),
-        )?.subtaskId === subtaskId)
+        this._parseApproachFromMarkdown(fs.readFileSync(this.currentApproachPath, 'utf-8'))
+          ?.subtaskId === subtaskId)
     );
   }
 
@@ -655,9 +621,8 @@ class ApproachManager {
       throw new Error(`No current approach found for subtask ${subtaskId}`);
     }
 
-    const timestamp = new Date().toISOString().split("T")[1].split(".")[0];
-    approach.notes =
-      (approach.notes ? approach.notes + "\n" : "") + `[${timestamp}] ${note}`;
+    const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+    approach.notes = (approach.notes ? approach.notes + '\n' : '') + `[${timestamp}] ${note}`;
 
     this._currentApproaches.set(subtaskId, approach);
     await this._writeCurrentApproachFile(approach);
@@ -742,7 +707,7 @@ async function getSuggestions(storyId, subtaskId) {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length < 1 || args.includes("--help") || args.includes("-h")) {
+  if (args.length < 1 || args.includes('--help') || args.includes('-h')) {
     console.log(`
 Approach Manager - AIOX Recovery System (Story 5.3)
 
@@ -787,54 +752,54 @@ Acceptance Criteria Coverage:
   AC6: Template structured for consistency
   AC7: History maintained in approach-history.json
 `);
-    process.exit(args.includes("--help") || args.includes("-h") ? 0 : 1);
+    process.exit(args.includes('--help') || args.includes('-h') ? 0 : 1);
   }
 
   // Parse arguments
   let storyId = null;
   let command = null;
   let subtaskId = null;
-  let summary = "";
+  let summary = '';
   let decisions = [];
   let files = [];
   let challenges = [];
-  let notes = "";
+  let notes = '';
   let recoveryPath = null;
   let jsonOutput = false;
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
 
-    if (arg === "--summary" && args[i + 1]) {
+    if (arg === '--summary' && args[i + 1]) {
       summary = args[++i];
-    } else if (arg === "--decisions" && args[i + 1]) {
+    } else if (arg === '--decisions' && args[i + 1]) {
       try {
         decisions = JSON.parse(args[++i]);
       } catch {
-        console.error("Error: --decisions must be valid JSON");
+        console.error('Error: --decisions must be valid JSON');
         process.exit(1);
       }
-    } else if (arg === "--files" && args[i + 1]) {
+    } else if (arg === '--files' && args[i + 1]) {
       try {
         files = JSON.parse(args[++i]);
       } catch {
-        console.error("Error: --files must be valid JSON");
+        console.error('Error: --files must be valid JSON');
         process.exit(1);
       }
-    } else if (arg === "--challenges" && args[i + 1]) {
+    } else if (arg === '--challenges' && args[i + 1]) {
       try {
         challenges = JSON.parse(args[++i]);
       } catch {
-        console.error("Error: --challenges must be valid JSON");
+        console.error('Error: --challenges must be valid JSON');
         process.exit(1);
       }
-    } else if (arg === "--notes" && args[i + 1]) {
+    } else if (arg === '--notes' && args[i + 1]) {
       notes = args[++i];
-    } else if (arg === "--recovery-path" && args[i + 1]) {
+    } else if (arg === '--recovery-path' && args[i + 1]) {
       recoveryPath = args[++i];
-    } else if (arg === "--json") {
+    } else if (arg === '--json') {
       jsonOutput = true;
-    } else if (!arg.startsWith("-")) {
+    } else if (!arg.startsWith('-')) {
       if (!storyId) {
         storyId = arg;
       } else if (!command) {
@@ -846,7 +811,7 @@ Acceptance Criteria Coverage:
   }
 
   if (!storyId) {
-    console.error("Error: Story ID required");
+    console.error('Error: Story ID required');
     process.exit(1);
   }
 
@@ -859,9 +824,9 @@ Acceptance Criteria Coverage:
     let result;
 
     switch (command) {
-      case "start":
+      case 'start':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for start command");
+          console.error('Error: subtask ID required for start command');
           process.exit(1);
         }
         result = await manager.startApproach(subtaskId, {
@@ -875,15 +840,15 @@ Acceptance Criteria Coverage:
           console.log(JSON.stringify(result, null, 2));
         } else {
           console.log(
-            `Started approach for subtask ${subtaskId} (attempt #${result.attemptNumber})`,
+            `Started approach for subtask ${subtaskId} (attempt #${result.attemptNumber})`
           );
           console.log(`Current approach file: ${manager.currentApproachPath}`);
         }
         break;
 
-      case "current":
+      case 'current':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for current command");
+          console.error('Error: subtask ID required for current command');
           process.exit(1);
         }
         result = manager.getCurrentApproach(subtaskId);
@@ -903,15 +868,12 @@ Acceptance Criteria Coverage:
         }
         break;
 
-      case "clear":
+      case 'clear':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for clear command");
+          console.error('Error: subtask ID required for clear command');
           process.exit(1);
         }
-        result = await manager.clearApproach(subtaskId, {
-          success: true,
-          notes,
-        });
+        result = await manager.clearApproach(subtaskId, { success: true, notes });
         if (jsonOutput) {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -920,15 +882,12 @@ Acceptance Criteria Coverage:
         }
         break;
 
-      case "fail":
+      case 'fail':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for fail command");
+          console.error('Error: subtask ID required for fail command');
           process.exit(1);
         }
-        result = await manager.clearApproach(subtaskId, {
-          success: false,
-          notes,
-        });
+        result = await manager.clearApproach(subtaskId, { success: false, notes });
         if (jsonOutput) {
           console.log(JSON.stringify(result, null, 2));
         } else {
@@ -937,9 +896,9 @@ Acceptance Criteria Coverage:
         }
         break;
 
-      case "history":
+      case 'history':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for history command");
+          console.error('Error: subtask ID required for history command');
           process.exit(1);
         }
         result = await manager.getApproachHistory(subtaskId);
@@ -951,20 +910,18 @@ Acceptance Criteria Coverage:
           for (const approach of result.approaches) {
             const status =
               approach.success === true
-                ? "SUCCESS"
+                ? 'SUCCESS'
                 : approach.success === false
-                  ? "FAILED"
-                  : "UNKNOWN";
-            console.log(
-              `  #${approach.attemptNumber}: ${status} - ${approach.summary}`,
-            );
+                  ? 'FAILED'
+                  : 'UNKNOWN';
+            console.log(`  #${approach.attemptNumber}: ${status} - ${approach.summary}`);
           }
         }
         break;
 
-      case "suggest":
+      case 'suggest':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for suggest command");
+          console.error('Error: subtask ID required for suggest command');
           process.exit(1);
         }
         result = await manager.getSuggestions(subtaskId);
@@ -988,7 +945,7 @@ Acceptance Criteria Coverage:
         }
         break;
 
-      case "full-history":
+      case 'full-history':
         result = await manager.getFullHistory();
         if (jsonOutput) {
           console.log(JSON.stringify(result, null, 2));
@@ -997,26 +954,22 @@ Acceptance Criteria Coverage:
           console.log(`  Total attempts: ${result.totalAttempts}`);
           console.log(`  Subtasks tracked: ${result.subtasks.length}`);
           for (const subtask of result.subtasks) {
-            const successes = subtask.approaches.filter(
-              (a) => a.success === true,
-            ).length;
-            const failures = subtask.approaches.filter(
-              (a) => a.success === false,
-            ).length;
+            const successes = subtask.approaches.filter((a) => a.success === true).length;
+            const failures = subtask.approaches.filter((a) => a.success === false).length;
             console.log(
-              `  ${subtask.subtaskId}: ${subtask.approaches.length} attempts (${successes} success, ${failures} failed)`,
+              `  ${subtask.subtaskId}: ${subtask.approaches.length} attempts (${successes} success, ${failures} failed)`
             );
           }
         }
         break;
 
-      case "note":
+      case 'note':
         if (!subtaskId) {
-          console.error("Error: subtask ID required for note command");
+          console.error('Error: subtask ID required for note command');
           process.exit(1);
         }
         if (!notes) {
-          console.error("Error: --notes required for note command");
+          console.error('Error: --notes required for note command');
           process.exit(1);
         }
         await manager.addNote(subtaskId, notes);

@@ -1,6 +1,6 @@
-const fs = require("fs").promises;
-const path = require("path");
-const chalk = require("chalk");
+const fs = require('fs').promises;
+const path = require('path');
+const chalk = require('chalk');
 
 /**
  * Usage pattern analyzer for Synkra AIOX framework components
@@ -17,7 +17,10 @@ class UsageAnalytics {
         /import .* from ['"`]([^'"`]+)['"`]/g,
         /import\(['"`]([^'"`]+)['"`]\)/g,
       ],
-      taskCalls: [/\*([a-zA-Z-]+)/g, /executeTask\(['"`]([^'"`]+)['"`]\)/g],
+      taskCalls: [
+        /\*([a-zA-Z-]+)/g,
+        /executeTask\(['"`]([^'"`]+)['"`]\)/g,
+      ],
       agentReferences: [
         /aiox-developer/g,
         /meta-agent/g,
@@ -47,7 +50,7 @@ class UsageAnalytics {
     };
 
     try {
-      console.log(chalk.blue("Analyzing component usage patterns..."));
+      console.log(chalk.blue('Analyzing component usage patterns...'));
 
       // Analyze usage for each component
       for (const component of components) {
@@ -57,20 +60,15 @@ class UsageAnalytics {
 
       // Calculate derived metrics
       usage.hotspots = this.identifyHotspots(usage.component_usage);
-      usage.unused_components = this.findUnusedComponents(
-        usage.component_usage,
-      );
-      usage.popular_components = this.findPopularComponents(
-        usage.component_usage,
-      );
+      usage.unused_components = this.findUnusedComponents(usage.component_usage);
+      usage.popular_components = this.findPopularComponents(usage.component_usage);
       usage.cross_references = await this.analyzeCrossReferences(components);
       usage.efficiency_score = this.calculateEfficiencyScore(usage);
       usage.recommendations = this.generateUsageRecommendations(usage);
 
-      console.log(
-        chalk.green(`✅ Analyzed usage for ${components.length} components`),
-      );
+      console.log(chalk.green(`✅ Analyzed usage for ${components.length} components`));
       return usage;
+
     } catch (error) {
       console.error(chalk.red(`Usage analysis failed: ${error.message}`));
       throw error;
@@ -82,7 +80,7 @@ class UsageAnalytics {
    */
   async analyzeComponentUsage(component) {
     const cacheKey = `${component.id}-${component.last_modified}`;
-
+    
     if (this.usageCache.has(cacheKey)) {
       const cached = this.usageCache.get(cacheKey);
       if (Date.now() - cached.timestamp < this.cacheTimeout) {
@@ -99,7 +97,7 @@ class UsageAnalytics {
       usage_contexts: [],
       popularity_score: 0,
       last_used: null,
-      usage_frequency: "never",
+      usage_frequency: 'never',
       dependency_depth: 0,
       integration_points: [],
     };
@@ -115,10 +113,7 @@ class UsageAnalytics {
       usage.indirect_references = indirectRefs.count;
 
       // Analyze usage contexts
-      usage.usage_contexts = await this.analyzeUsageContexts(
-        component,
-        directRefs.files,
-      );
+      usage.usage_contexts = await this.analyzeUsageContexts(component, directRefs.files);
 
       // Calculate metrics
       usage.popularity_score = this.calculatePopularityScore(usage);
@@ -134,12 +129,9 @@ class UsageAnalytics {
       });
 
       return usage;
+
     } catch (error) {
-      console.warn(
-        chalk.yellow(
-          `Failed to analyze usage for ${component.id}: ${error.message}`,
-        ),
-      );
+      console.warn(chalk.yellow(`Failed to analyze usage for ${component.id}: ${error.message}`));
       return usage;
     }
   }
@@ -156,10 +148,10 @@ class UsageAnalytics {
 
     try {
       const searchPaths = [
-        path.join(this.rootPath, "aiox-core"),
-        path.join(this.rootPath, "tests"),
-        path.join(this.rootPath, "docs"),
-        path.join(this.rootPath, "examples"),
+        path.join(this.rootPath, 'aiox-core'),
+        path.join(this.rootPath, 'tests'),
+        path.join(this.rootPath, 'docs'),
+        path.join(this.rootPath, 'examples'),
       ];
 
       for (const searchPath of searchPaths) {
@@ -170,6 +162,7 @@ class UsageAnalytics {
           // Directory doesn't exist, skip
         }
       }
+
     } catch (error) {
       console.warn(`Direct reference search failed: ${error.message}`);
     }
@@ -205,22 +198,22 @@ class UsageAnalytics {
    */
   async searchInFile(filePath, component, references) {
     try {
-      const content = await fs.readFile(filePath, "utf-8");
+      const content = await fs.readFile(filePath, 'utf-8');
       const relativePath = path.relative(this.rootPath, filePath);
       let foundReferences = false;
 
       // Search based on component type
       switch (component.type) {
-        case "agent":
+        case 'agent':
           foundReferences = this.searchAgentReferences(content, component);
           break;
-        case "task":
+        case 'task':
           foundReferences = this.searchTaskReferences(content, component);
           break;
-        case "workflow":
+        case 'workflow':
           foundReferences = this.searchWorkflowReferences(content, component);
           break;
-        case "utility":
+        case 'utility':
           foundReferences = this.searchUtilityReferences(content, component);
           break;
         default:
@@ -232,8 +225,8 @@ class UsageAnalytics {
         if (!references.files.includes(relativePath)) {
           references.files.push(relativePath);
         }
-
-        foundReferences.locations.forEach((loc) => {
+        
+        foundReferences.locations.forEach(loc => {
           references.locations.push({
             file: relativePath,
             line: loc.line,
@@ -242,6 +235,7 @@ class UsageAnalytics {
           });
         });
       }
+
     } catch (error) {
       // File not readable, skip
     }
@@ -252,24 +246,24 @@ class UsageAnalytics {
    */
   searchAgentReferences(content, component) {
     const results = { count: 0, locations: [] };
-    const lines = content.split("\n");
+    const lines = content.split('\n');
 
     // Look for agent name mentions
     const agentPatterns = [
-      new RegExp(`@agent\\s+${component.id}`, "gi"),
-      new RegExp(`agent:\\s*['"\`]${component.id}['"\`]`, "gi"),
-      new RegExp(`${component.name}`, "gi"),
+      new RegExp(`@agent\\s+${component.id}`, 'gi'),
+      new RegExp(`agent:\\s*['"\`]${component.id}['"\`]`, 'gi'),
+      new RegExp(`${component.name}`, 'gi'),
     ];
 
     lines.forEach((line, index) => {
-      agentPatterns.forEach((pattern) => {
+      agentPatterns.forEach(pattern => {
         const matches = line.match(pattern);
         if (matches) {
           results.count += matches.length;
           results.locations.push({
             line: index + 1,
             context: line.trim(),
-            type: "agent_reference",
+            type: 'agent_reference',
           });
         }
       });
@@ -283,24 +277,24 @@ class UsageAnalytics {
    */
   searchTaskReferences(content, component) {
     const results = { count: 0, locations: [] };
-    const lines = content.split("\n");
+    const lines = content.split('\n');
 
     // Look for task calls
     const taskPatterns = [
-      new RegExp(`\\*${component.id}`, "gi"),
-      new RegExp(`executeTask\\(['"\`]${component.id}['"\`]\\)`, "gi"),
-      new RegExp(`task:\\s*['"\`]${component.id}['"\`]`, "gi"),
+      new RegExp(`\\*${component.id}`, 'gi'),
+      new RegExp(`executeTask\\(['"\`]${component.id}['"\`]\\)`, 'gi'),
+      new RegExp(`task:\\s*['"\`]${component.id}['"\`]`, 'gi'),
     ];
 
     lines.forEach((line, index) => {
-      taskPatterns.forEach((pattern) => {
+      taskPatterns.forEach(pattern => {
         const matches = line.match(pattern);
         if (matches) {
           results.count += matches.length;
           results.locations.push({
             line: index + 1,
             context: line.trim(),
-            type: "task_call",
+            type: 'task_call',
           });
         }
       });
@@ -314,24 +308,24 @@ class UsageAnalytics {
    */
   searchWorkflowReferences(content, component) {
     const results = { count: 0, locations: [] };
-    const lines = content.split("\n");
+    const lines = content.split('\n');
 
     // Look for workflow references
     const workflowPatterns = [
-      new RegExp(`workflow:\\s*['"\`]${component.id}['"\`]`, "gi"),
-      new RegExp(`${component.id}\\.yaml`, "gi"),
-      new RegExp(`${component.name}`, "gi"),
+      new RegExp(`workflow:\\s*['"\`]${component.id}['"\`]`, 'gi'),
+      new RegExp(`${component.id}\\.yaml`, 'gi'),
+      new RegExp(`${component.name}`, 'gi'),
     ];
 
     lines.forEach((line, index) => {
-      workflowPatterns.forEach((pattern) => {
+      workflowPatterns.forEach(pattern => {
         const matches = line.match(pattern);
         if (matches) {
           results.count += matches.length;
           results.locations.push({
             line: index + 1,
             context: line.trim(),
-            type: "workflow_reference",
+            type: 'workflow_reference',
           });
         }
       });
@@ -345,24 +339,24 @@ class UsageAnalytics {
    */
   searchUtilityReferences(content, component) {
     const results = { count: 0, locations: [] };
-    const lines = content.split("\n");
+    const lines = content.split('\n');
 
     // Look for utility imports and calls
     const utilPatterns = [
-      new RegExp(`require\\(['"\`][^'"\`]*${component.id}['"\`]\\)`, "gi"),
-      new RegExp(`from ['"\`][^'"\`]*${component.id}['"\`]`, "gi"),
-      new RegExp(`import.*${component.id}`, "gi"),
+      new RegExp(`require\\(['"\`][^'"\`]*${component.id}['"\`]\\)`, 'gi'),
+      new RegExp(`from ['"\`][^'"\`]*${component.id}['"\`]`, 'gi'),
+      new RegExp(`import.*${component.id}`, 'gi'),
     ];
 
     lines.forEach((line, index) => {
-      utilPatterns.forEach((pattern) => {
+      utilPatterns.forEach(pattern => {
         const matches = line.match(pattern);
         if (matches) {
           results.count += matches.length;
           results.locations.push({
             line: index + 1,
             context: line.trim(),
-            type: "utility_import",
+            type: 'utility_import',
           });
         }
       });
@@ -376,10 +370,10 @@ class UsageAnalytics {
    */
   searchGenericReferences(content, component) {
     const results = { count: 0, locations: [] };
-    const lines = content.split("\n");
+    const lines = content.split('\n');
 
     // Look for generic mentions
-    const namePattern = new RegExp(component.name || component.id, "gi");
+    const namePattern = new RegExp(component.name || component.id, 'gi');
 
     lines.forEach((line, index) => {
       const matches = line.match(namePattern);
@@ -388,7 +382,7 @@ class UsageAnalytics {
         results.locations.push({
           line: index + 1,
           context: line.trim(),
-          type: "generic_mention",
+          type: 'generic_mention',
         });
       }
     });
@@ -401,7 +395,7 @@ class UsageAnalytics {
    */
   async findIndirectReferences(component) {
     const indirectRefs = { count: 0, files: [] };
-
+    
     // This would analyze dependency chains to find indirect usage
     // For now, return basic implementation
     return indirectRefs;
@@ -413,12 +407,11 @@ class UsageAnalytics {
   async analyzeUsageContexts(component, referencingFiles) {
     const contexts = [];
 
-    for (const file of referencingFiles.slice(0, 10)) {
-      // Limit analysis
+    for (const file of referencingFiles.slice(0, 10)) { // Limit analysis
       try {
         const fullPath = path.join(this.rootPath, file);
-        const content = await fs.readFile(fullPath, "utf-8");
-
+        const content = await fs.readFile(fullPath, 'utf-8');
+        
         const context = this.extractUsageContext(content, component, file);
         if (context) {
           contexts.push(context);
@@ -450,15 +443,12 @@ class UsageAnalytics {
     const directWeight = 1.0;
     const indirectWeight = 0.3;
     const fileWeight = 0.1;
-
-    return (
-      Math.round(
-        (usage.direct_references * directWeight +
-          usage.indirect_references * indirectWeight +
-          usage.referencing_files.length * fileWeight) *
-          10,
-      ) / 10
-    );
+    
+    return Math.round(
+      (usage.direct_references * directWeight +
+       usage.indirect_references * indirectWeight +
+       usage.referencing_files.length * fileWeight) * 10,
+    ) / 10;
   }
 
   /**
@@ -474,11 +464,11 @@ class UsageAnalytics {
    * Calculate usage frequency
    */
   calculateUsageFrequency(usage) {
-    if (usage.direct_references === 0) return "never";
-    if (usage.direct_references < 3) return "rare";
-    if (usage.direct_references < 10) return "occasional";
-    if (usage.direct_references < 25) return "frequent";
-    return "very_frequent";
+    if (usage.direct_references === 0) return 'never';
+    if (usage.direct_references < 3) return 'rare';
+    if (usage.direct_references < 10) return 'occasional';
+    if (usage.direct_references < 25) return 'frequent';
+    return 'very_frequent';
   }
 
   /**
@@ -517,10 +507,7 @@ class UsageAnalytics {
    */
   findUnusedComponents(componentUsage) {
     return Object.entries(componentUsage)
-      .filter(
-        ([_, usage]) =>
-          usage.direct_references === 0 && usage.indirect_references === 0,
-      )
+      .filter(([_, usage]) => usage.direct_references === 0 && usage.indirect_references === 0)
       .map(([id, usage]) => ({
         component_id: id,
         type: usage.type,
@@ -549,7 +536,7 @@ class UsageAnalytics {
    */
   async analyzeCrossReferences(components) {
     const crossRefs = {};
-
+    
     // This would analyze how components reference each other
     // For now, return basic structure
     return crossRefs;
@@ -562,7 +549,7 @@ class UsageAnalytics {
     const totalComponents = Object.keys(usage.component_usage).length;
     const usedComponents = totalComponents - usage.unused_components.length;
     const utilizationRate = usedComponents / totalComponents;
-
+    
     return Math.round(utilizationRate * 100);
   }
 
@@ -575,10 +562,10 @@ class UsageAnalytics {
     // Unused components
     if (usage.unused_components.length > 0) {
       recommendations.push({
-        type: "cleanup",
-        priority: "medium",
+        type: 'cleanup',
+        priority: 'medium',
         message: `Consider reviewing ${usage.unused_components.length} unused components for potential removal`,
-        components: usage.unused_components.map((c) => c.component_id),
+        components: usage.unused_components.map(c => c.component_id),
       });
     }
 
@@ -587,8 +574,8 @@ class UsageAnalytics {
       const topHotspot = usage.hotspots[0];
       if (topHotspot.popularity_score > 50) {
         recommendations.push({
-          type: "optimization",
-          priority: "high",
+          type: 'optimization',
+          priority: 'high',
           message: `Component '${topHotspot.component_id}' is heavily used - consider optimization or caching`,
           component: topHotspot.component_id,
         });
@@ -598,8 +585,8 @@ class UsageAnalytics {
     // Low efficiency
     if (usage.efficiency_score < 70) {
       recommendations.push({
-        type: "architecture",
-        priority: "medium",
+        type: 'architecture',
+        priority: 'medium',
         message: `Framework efficiency is ${usage.efficiency_score}% - consider component consolidation`,
         score: usage.efficiency_score,
       });
@@ -610,45 +597,37 @@ class UsageAnalytics {
 
   // Helper methods
   isExcludedDirectory(name) {
-    const excludes = [
-      "node_modules",
-      ".git",
-      ".aiox",
-      "dist",
-      "build",
-      "coverage",
-    ];
-    return excludes.includes(name) || name.startsWith(".");
+    const excludes = ['node_modules', '.git', '.aiox', 'dist', 'build', 'coverage'];
+    return excludes.includes(name) || name.startsWith('.');
   }
 
   isSearchableFile(name) {
-    const extensions = [".js", ".mjs", ".ts", ".md", ".yaml", ".yml", ".json"];
-    return extensions.some((ext) => name.endsWith(ext));
+    const extensions = ['.js', '.mjs', '.ts', '.md', '.yaml', '.yml', '.json'];
+    return extensions.some(ext => name.endsWith(ext));
   }
 
   determineContextType(filePath) {
-    if (filePath.includes("/tests/")) return "test";
-    if (filePath.includes("/docs/")) return "documentation";
-    if (filePath.includes("/utils/")) return "utility";
-    if (filePath.includes("/tasks/")) return "task";
-    if (filePath.includes("/agents/")) return "agent";
-    return "general";
+    if (filePath.includes('/tests/')) return 'test';
+    if (filePath.includes('/docs/')) return 'documentation';
+    if (filePath.includes('/utils/')) return 'utility';
+    if (filePath.includes('/tasks/')) return 'task';
+    if (filePath.includes('/agents/')) return 'agent';
+    return 'general';
   }
 
   identifyUsagePattern(content, component) {
     // Analyze how the component is used
-    if (content.includes("require(")) return "import";
-    if (content.includes("*" + component.id)) return "task_call";
-    if (content.includes("@agent")) return "agent_reference";
-    return "mention";
+    if (content.includes('require(')) return 'import';
+    if (content.includes('*' + component.id)) return 'task_call';
+    if (content.includes('@agent')) return 'agent_reference';
+    return 'mention';
   }
 
   calculateUsageComplexity(content, component) {
     // Simple complexity based on usage patterns
-    const lines = content.split("\n").length;
-    const mentions = (content.match(new RegExp(component.id, "g")) || [])
-      .length;
-    return Math.min(5, Math.round((mentions / lines) * 100));
+    const lines = content.split('\n').length;
+    const mentions = (content.match(new RegExp(component.id, 'g')) || []).length;
+    return Math.min(5, Math.round(mentions / lines * 100));
   }
 }
 

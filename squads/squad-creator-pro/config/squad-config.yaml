@@ -12,6 +12,7 @@ squad_config:
   # Pattern: SC-DS-001 (Data Source Abstraction)
   # =========================================
   data_sources:
+
     # -----------------------------------------
     # Transcript Sources (for SOP extraction)
     # -----------------------------------------
@@ -27,17 +28,7 @@ squad_config:
             key_env: SUPABASE_SERVICE_KEY
           query:
             table: transcripts
-            select:
-              [
-                id,
-                content,
-                source_type,
-                source_url,
-                duration_seconds,
-                participants,
-                created_at,
-                metadata,
-              ]
+            select: [id, content, source_type, source_url, duration_seconds, participants, created_at, metadata]
             filters:
               - field: status
                 operator: eq
@@ -84,16 +75,7 @@ squad_config:
       # Standard schema for normalized transcript
       schema:
         required: [transcript_id, transcript_content]
-        optional:
-          [
-            transcript_source,
-            transcript_url,
-            transcript_duration,
-            transcript_participants,
-            transcript_date,
-            transcript_language,
-            transcript_metadata,
-          ]
+        optional: [transcript_source, transcript_url, transcript_duration, transcript_participants, transcript_date, transcript_language, transcript_metadata]
 
     # -----------------------------------------
     # Output Destinations (for extracted SOPs)
@@ -110,17 +92,7 @@ squad_config:
         supabase:
           type: database
           table: sops
-          fields:
-            [
-              process_code,
-              process_name,
-              content,
-              squad_blueprint,
-              automation_analysis,
-              gaps,
-              metadata,
-              created_at,
-            ]
+          fields: [process_code, process_name, content, squad_blueprint, automation_analysis, gaps, metadata, created_at]
 
   # =========================================
   # Processing Configuration
@@ -139,9 +111,9 @@ squad_config:
     speaker_detection:
       enabled: true
       patterns:
-        - "^\\[([^\\]]+)\\]:" # [Speaker]:
-        - "^([A-Z][a-z]+):" # Name:
-        - "^Speaker (\\d+):" # Speaker 1:
+        - "^\\[([^\\]]+)\\]:"     # [Speaker]:
+        - "^([A-Z][a-z]+):"        # Name:
+        - "^Speaker (\\d+):"       # Speaker 1:
 
   # =========================================
   # Validation Configuration
@@ -161,7 +133,7 @@ squad_config:
     automation_analysis:
       enabled: true
       heuristic: PV_PM_001
-      frequency_threshold: 2 # per month
+      frequency_threshold: 2  # per month
       require_guardrails: true
 
   # =========================================

@@ -44,7 +44,7 @@ description: |
   no documented process we can replicate.
 
 orchestrator: "@squad-chief"
-mode: YOLO # 100% autonomous, executes all iterations
+mode: YOLO  # 100% autonomous, executes all iterations
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # SPECIALIST AGENTS
@@ -235,7 +235,7 @@ phases:
         source_mentions: 0.8
         original_work: 0.9
         practical_results: 0.9
-        framework_documented: 1.0 # VETO power
+        framework_documented: 1.0  # VETO power
 
       thresholds:
         source_mentions: 3
@@ -379,7 +379,7 @@ phases:
       from_framework: "decision-heuristics-framework"
 
       weights:
-        framework_documented: 1.0 # VETO power
+        framework_documented: 1.0  # VETO power
         process_extractable: 0.9
         artifacts_available: 0.8
         examples_exist: 0.8

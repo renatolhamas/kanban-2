@@ -359,4 +359,3 @@ Button: variants [primary, secondary], sizes [sm, md], states [default, hover, p
 Button tokens: container.bg=semantic.action.primary.bg, label.color=semantic.action.primary.fg
 
 — Atlas, estruturando sistemas.
-```

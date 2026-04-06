@@ -28,13 +28,13 @@ validation_report:
       has_orchestrator: true
       has_tier_organization: true
       real_person_names_in_agents: true
-      task_agent_ratio: 3.13 # 75 tasks / 24 agents
+      task_agent_ratio: 3.13  # 75 tasks / 24 agents
       has_heuristic_validation: false
       has_persona_profile_pattern: true
     scoring:
-      expert_score: 8 # 24 agents (+2), voice_dna in 91%+ (+3), tier org (+1), real person names (+2)
-      pipeline_score: 5 # has orchestrator (+2), workflows (+3), ratio ~3 (neutral)
-      hybrid_score: 1 # persona patterns present (+1), no heuristic IDs (0)
+      expert_score: 8  # 24 agents (+2), voice_dna in 91%+ (+3), tier org (+1), real person names (+2)
+      pipeline_score: 5  # has orchestrator (+2), workflows (+3), ratio ~3 (neutral)
+      hybrid_score: 1  # persona patterns present (+1), no heuristic IDs (0)
     determination: "Expert squad - overwhelmingly expert signals: 24 agents (all real copywriter names), voice_dna in 22/24 agents, strong tier organization (0-3 + Tool)"
 
   # ═══════════════════════════════════════════════════════════════════════════
@@ -151,9 +151,9 @@ validation_report:
     status: "PASS"
     metrics:
       checklist_coverage:
-        complex_tasks_count: 55 # tasks with >500 lines
+        complex_tasks_count: 55  # tasks with >500 lines
         checklists_count: 55
-        ratio: 1.00 # 100% - excellent coverage
+        ratio: 1.00  # 100% - excellent coverage
         threshold: 0.30
         result: "PASS (100% >> 30% threshold)"
       orphan_tasks:
@@ -162,17 +162,12 @@ validation_report:
         orphan_list: []
         result: "PASS (0 orphans, all tasks referenced in agents, config, or workflows)"
       phase_coverage:
-        applies: false # Not a pipeline squad, but workflows exist
+        applies: false  # Not a pipeline squad, but workflows exist
         note: "Expert squad - phase coverage not required. However, 14 workflows exist and all referenced workflow files are present."
       data_usage:
         total_data_files: 16
         referenced_data_files: 13
-        unreferenced:
-          [
-            "boron-letters-collier-dna.yaml",
-            "copy-scripts-extracted.yaml",
-            "plc-criteria-extracted.yaml",
-          ]
+        unreferenced: ["boron-letters-collier-dna.yaml", "copy-scripts-extracted.yaml", "plc-criteria-extracted.yaml"]
         usage_percentage: 81.25
         threshold: 0.50
         result: "PASS (81.25% > 50% threshold)"
@@ -192,8 +187,9 @@ validation_report:
       checklist_actionability: 7.5
       documentation: 9.0
       optimization_opportunities: 5.0
-    weighted_total: 7.64 # (8.7*0.25 + 8.0*0.25 + 7.5*0.25 + 9.0*0.25) = 8.3 (old), now with 20% opt: (8.7*0.20 + 8.0*0.20 + 7.5*0.20 + 9.0*0.20 + 5.0*0.20) = 7.64
+    weighted_total: 7.64  # (8.7*0.25 + 8.0*0.25 + 7.5*0.25 + 9.0*0.25) = 8.3 (old), now with 20% opt: (8.7*0.20 + 8.0*0.20 + 7.5*0.20 + 9.0*0.20 + 5.0*0.20) = 7.64
     details:
+
       # 3.1 Prompt Quality (sampled 3 tasks)
       prompt_quality_assessment:
         sampled_tasks:
@@ -291,7 +287,7 @@ validation_report:
           error_handling: "0.5/1 - Error recovery in yolo_mode but not centralized in docs"
           dependencies: "0.5/1 - Listed in config but no explicit external dependency doc"
           changelog_separation: "0/1 - Changelog embedded in config.yaml comments, no separate CHANGELOG.md"
-        normalized: 9.0 # 9.0/11 * 10 = 8.18, but README quality is exceptional, overall 9.0
+        normalized: 9.0  # 9.0/11 * 10 = 8.18, but README quality is exceptional, overall 9.0
 
       # 3.5 Optimization Opportunities
       optimization_assessment:
@@ -323,7 +319,7 @@ validation_report:
         score: 9.0
         evidence:
           agents_with_voice_dna: 22
-          agents_without_voice_dna: 2 # clayton-makepeace (519 lines, compact), joe-sugarman (tool)
+          agents_without_voice_dna: 2  # clayton-makepeace (519 lines, compact), joe-sugarman (tool)
           coverage_percentage: 91.7
           quality_assessment:
             sentence_starters: "Present in 22/24 agents with context-specific variants (orchestration_mode, quality_control_mode, teaching_mode for copy-chief)"
@@ -377,7 +373,7 @@ validation_report:
           tier_assignments_documented: true
           orchestrator_defined: true
           orchestrator_agent: "copy-chief"
-          tier_count: 5 # Tier 0, 1, 2, 3, Tool
+          tier_count: 5  # Tier 0, 1, 2, 3, Tool
           agents_per_tier:
             tier_0: 3
             tier_1: 8
@@ -389,7 +385,7 @@ validation_report:
             - "Well-documented in ARCHITECTURE.md, README.md, and config.yaml"
             - "Tier 0 mandatory-first workflow enforced in copy-chief"
 
-    weighted_score: 8.9 # (9.0*0.30) + (9.5*0.25) + (8.5*0.25) + (9.0*0.20) = 2.70 + 2.375 + 2.125 + 1.80 = 9.0 -> rounded 8.9
+    weighted_score: 8.9  # (9.0*0.30) + (9.5*0.25) + (8.5*0.25) + (9.0*0.20) = 2.70 + 2.375 + 2.125 + 1.80 = 9.0 -> rounded 8.9
 
   # ═══════════════════════════════════════════════════════════════════════════
   # PHASE 5: VETO CHECK
@@ -451,7 +447,7 @@ validation_report:
     tier_3_score: 7.64
     tier_4_score: 8.9
     formula: "(7.64 * 0.80) + (8.9 * 0.20)"
-    final_score: 7.89 # 6.112 + 1.78 = 7.892 -> 7.89
+    final_score: 7.89  # 6.112 + 1.78 = 7.892 -> 7.89
     result: "PASS"
     interpretation: "7.0-8.9 = PASS - Production ready"
 

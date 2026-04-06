@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Format graph data as Graphviz DOT string.
@@ -11,9 +11,9 @@ function formatAsDot(graphData) {
   const edges = graphData.edges || [];
   const lines = [];
 
-  lines.push("digraph G {");
-  lines.push("  rankdir=TB;");
-  lines.push("  node [shape=box, style=rounded];");
+  lines.push('digraph G {');
+  lines.push('  rankdir=TB;');
+  lines.push('  node [shape=box, style=rounded];');
 
   for (const node of nodes) {
     const label = _escapeDot(node.label || node.id);
@@ -27,9 +27,9 @@ function formatAsDot(graphData) {
     lines.push(`  "${from}" -> "${to}";`);
   }
 
-  lines.push("}");
+  lines.push('}');
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -39,7 +39,7 @@ function formatAsDot(graphData) {
  * @private
  */
 function _escapeDot(str) {
-  return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return String(str).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
 module.exports = { formatAsDot, _escapeDot };

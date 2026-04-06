@@ -8,10 +8,10 @@
  * @story 2.11 - MCP System Global
  */
 
-const osDetector = require("./os-detector");
-const globalConfigManager = require("./global-config-manager");
-const symlinkManager = require("./symlink-manager");
-const configMigrator = require("./config-migrator");
+const osDetector = require('./os-detector');
+const globalConfigManager = require('./global-config-manager');
+const symlinkManager = require('./symlink-manager');
+const configMigrator = require('./config-migrator');
 
 module.exports = {
   // OS Detection

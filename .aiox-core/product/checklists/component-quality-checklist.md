@@ -70,5 +70,5 @@
 
 ---
 
-**Reviewer:** **\_\_\_\_** **Date:** **\_\_\_\_**
+**Reviewer:** ________ **Date:** ________
 **Quality Gate:** [ ] PASS [ ] FAIL

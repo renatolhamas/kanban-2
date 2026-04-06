@@ -13,12 +13,11 @@ Variables are enclosed in double curly braces:
 ```
 
 ### Example:
-
 ```yaml
 agent:
-  name: { { AGENT_NAME } }
-  title: { { AGENT_TITLE } }
-  icon: { { AGENT_ICON } }
+  name: {{AGENT_NAME}}
+  title: {{AGENT_TITLE}}
+  icon: {{AGENT_ICON}}
 ```
 
 ## Conditional Blocks
@@ -32,7 +31,6 @@ Content to include if VARIABLE is true
 ```
 
 ### Example:
-
 ```yaml
 {{#IF_SECURITY}}
 security:
@@ -52,7 +50,6 @@ Loops iterate over arrays to generate repeated content:
 ```
 
 ### Loop Variables:
-
 - `{{ITEM}}` - Current item value
 - `{{INDEX}}` - Current item index (0-based)
 - `{{#IF_FIRST}}` - True for first item
@@ -60,7 +57,6 @@ Loops iterate over arrays to generate repeated content:
 - `{{#UNLESS_LAST}}` - True for all except last item
 
 ### Example with Objects:
-
 ```yaml
 commands:
 {{#EACH_COMMANDS}}
@@ -102,7 +98,6 @@ workflows:
 ## Special Characters
 
 ### Escaping Braces
-
 To include literal braces in your output, escape them with backslashes:
 
 ```
@@ -110,7 +105,6 @@ This is a literal \{{variable}} that won't be replaced
 ```
 
 ### Handling Quotes
-
 Variables containing quotes are automatically handled:
 
 ```yaml
@@ -127,7 +121,6 @@ If `DESCRIPTION` contains quotes, they will be properly escaped.
 4. **Boolean negation** uses `UNLESS_`
 
 ### Standard Variable Prefixes:
-
 - `IF_` - Boolean conditions
 - `EACH_` - Array iterations
 - `UNLESS_` - Negative conditions
@@ -137,7 +130,6 @@ If `DESCRIPTION` contains quotes, they will be properly escaped.
 ## Common Template Variables
 
 ### Agent Templates:
-
 - `AGENT_NAME` - Lowercase hyphenated name
 - `AGENT_TITLE` - Human-readable title
 - `AGENT_ID` - Unique identifier
@@ -149,7 +141,6 @@ If `DESCRIPTION` contains quotes, they will be properly escaped.
 - `PERSONA_VERBOSITY` - Response detail level
 
 ### Task Templates:
-
 - `TASK_ID` - Task identifier
 - `TASK_TITLE` - Task title
 - `AGENT_NAME` - Associated agent
@@ -159,7 +150,6 @@ If `DESCRIPTION` contains quotes, they will be properly escaped.
 - `EACH_INPUTS` - Input parameters
 
 ### Workflow Templates:
-
 - `WORKFLOW_ID` - Workflow identifier
 - `WORKFLOW_NAME` - Workflow name
 - `WORKFLOW_TYPE` - sequential/parallel
@@ -169,13 +159,11 @@ If `DESCRIPTION` contains quotes, they will be properly escaped.
 ## Advanced Features
 
 ### Conditional with Defaults
-
 ```yaml
 priority: {{#IF_PRIORITY}}{{PRIORITY}}{{/IF_PRIORITY}}{{#UNLESS_PRIORITY}}medium{{/UNLESS_PRIORITY}}
 ```
 
 ### Complex Object Arrays
-
 ```yaml
 {{#EACH_COMPONENTS}}
 - type: {{COMPONENT_TYPE}}
@@ -190,7 +178,6 @@ priority: {{#IF_PRIORITY}}{{PRIORITY}}{{/IF_PRIORITY}}{{#UNLESS_PRIORITY}}medium
 ```
 
 ### Preserving Indentation
-
 The template engine preserves indentation within loops:
 
 ```yaml
@@ -218,7 +205,6 @@ services:
 ## Error Handling
 
 The template engine handles errors gracefully:
-
 - Missing variables are left as-is: `{{MISSING_VAR}}`
 - Malformed conditionals are preserved in output
 - Empty arrays result in no output for that section
@@ -227,11 +213,10 @@ The template engine handles errors gracefully:
 ## Examples
 
 ### Complete Agent Template Example:
-
 ```yaml
 # {{AGENT_TITLE}}
 
-**Agent ID:** {{AGENT_ID}}
+**Agent ID:** {{AGENT_ID}}  
 **Agent Name:** {{AGENT_NAME}}
 
 ## When to Use
@@ -249,7 +234,7 @@ The template engine handles errors gracefully:
 
 {{#IF_PERSONA}}
 ## Persona
-**Tone:** {{PERSONA_TONE}}
+**Tone:** {{PERSONA_TONE}}  
 **Verbosity:** {{PERSONA_VERBOSITY}}
 {{#IF_PERSONA_INSTRUCTIONS}}
 
@@ -260,7 +245,7 @@ The template engine handles errors gracefully:
 
 {{#IF_SECURITY}}
 ## Security Configuration
-**Level:** {{SECURITY_LEVEL}}
+**Level:** {{SECURITY_LEVEL}}  
 **Requires Approval:** {{REQUIRES_APPROVAL}}
 {{/IF_SECURITY}}
 ```
@@ -276,9 +261,7 @@ The template engine handles errors gracefully:
 5. **Escaped characters appearing**: Use double backslashes for literal output
 
 ### Debug Mode:
-
 Enable template debugging by setting `DEBUG_TEMPLATES=true` to see:
-
 - Variable resolution process
 - Conditional evaluation
 - Loop iteration details

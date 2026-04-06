@@ -9,13 +9,13 @@
  * @story INS-4.1
  */
 
-const path = require("path");
-const { loadChecks } = require("./checks");
-const { formatText } = require("./formatters/text");
-const { formatJson } = require("./formatters/json");
-const { applyFixes } = require("./fix-handler");
+const path = require('path');
+const { loadChecks } = require('./checks');
+const { formatText } = require('./formatters/text');
+const { formatJson } = require('./formatters/json');
+const { applyFixes } = require('./fix-handler');
 
-const DOCTOR_VERSION = "2.0.0";
+const DOCTOR_VERSION = '2.0.0';
 
 /**
  * Run all doctor checks
@@ -39,7 +39,7 @@ async function runDoctorChecks(options = {}) {
 
   const context = {
     projectRoot,
-    frameworkRoot: path.resolve(__dirname, "..", "..", ".."),
+    frameworkRoot: path.resolve(__dirname, '..', '..', '..'),
     options: { fix, json, dryRun, quiet },
   };
 
@@ -53,8 +53,8 @@ async function runDoctorChecks(options = {}) {
       results.push(result);
     } catch (error) {
       results.push({
-        check: checkModule.name || "unknown",
-        status: "FAIL",
+        check: checkModule.name || 'unknown',
+        status: 'FAIL',
         message: `Check threw error: ${error.message}`,
         fixCommand: null,
       });
@@ -69,10 +69,10 @@ async function runDoctorChecks(options = {}) {
 
   // Build summary
   const summary = {
-    pass: results.filter((r) => r.status === "PASS").length,
-    warn: results.filter((r) => r.status === "WARN").length,
-    fail: results.filter((r) => r.status === "FAIL").length,
-    info: results.filter((r) => r.status === "INFO").length,
+    pass: results.filter((r) => r.status === 'PASS').length,
+    warn: results.filter((r) => r.status === 'WARN').length,
+    fail: results.filter((r) => r.status === 'FAIL').length,
+    info: results.filter((r) => r.status === 'INFO').length,
   };
 
   const output = {

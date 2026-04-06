@@ -282,11 +282,7 @@
         }
       },
       "then": {
-        "required": [
-          "existingSystemAnalysis",
-          "integrationPoints",
-          "migrationStrategy"
-        ],
+        "required": ["existingSystemAnalysis", "integrationPoints", "migrationStrategy"],
         "properties": {
           "existingSystemAnalysis": {
             "minLength": 50

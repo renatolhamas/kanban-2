@@ -11,19 +11,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -191,7 +188,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -211,10 +207,10 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Overview
 
 This task performs a thorough audit of your database schema, checking for:
-
 - Design best practices
 - Performance issues
 - Security gaps
@@ -592,7 +588,7 @@ EOF
 
 Create comprehensive report:
 
-````bash
+```bash
 REPORT_FILE="supabase/docs/schema-audit-$(date +%Y%m%d%H%M%S).md"
 mkdir -p supabase/docs
 
@@ -707,12 +703,11 @@ CREATE POLICY "{table}_policy" ON {table} FOR ALL TO authenticated
 -- Fix 4: Add timestamps
 ALTER TABLE {table} ADD COLUMN created_at TIMESTAMPTZ DEFAULT NOW();
 ALTER TABLE {table} ADD COLUMN updated_at TIMESTAMPTZ;
-````
+```
 
 MDEOF
 
 echo "✓ Audit report: $REPORT_FILE"
-
 ```
 
 ---
@@ -722,15 +717,14 @@ echo "✓ Audit report: $REPORT_FILE"
 Display audit summary:
 
 ```
-
 ✅ SCHEMA AUDIT COMPLETE
 
 Database: [redacted]
-Tables: {count}
-Size: {size}
+Tables:   {count}
+Size:     {size}
 
 Critical Issues: {count} 🔴
-Warnings: {count} ⚠️
+Warnings:        {count} ⚠️
 Recommendations: {count} 💡
 
 Overall Score: {score}/100
@@ -738,19 +732,16 @@ Overall Score: {score}/100
 Report: supabase/docs/schema-audit-{timestamp}.md
 
 Top Issues:
-
 1. {issue_1}
 2. {issue_2}
 3. {issue_3}
 
 Next Steps:
-
 1. Review full report: cat {report_file}
 2. Prioritize fixes
 3. Create migrations for P0 issues
 4. Re-run audit after fixes
-
-````
+```
 
 ---
 
@@ -856,10 +847,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE TRIGGER audit_trigger_row
   AFTER INSERT OR UPDATE OR DELETE ON users
   FOR EACH ROW EXECUTE FUNCTION audit.if_modified_func();
-````
+```
 
 **Benefits:**
-
 - Complete audit trail of all changes
 - Forensic analysis capabilities
 - Compliance requirements (GDPR, SOX, HIPAA)
@@ -890,7 +880,6 @@ ALTER ROLE auditor SET pgaudit.log = 'write';
 ```
 
 **What gets logged:**
-
 - All DDL operations (CREATE, ALTER, DROP)
 - All DML operations (INSERT, UPDATE, DELETE) based on config
 - Parameter values (for forensics)
@@ -901,13 +890,11 @@ ALTER ROLE auditor SET pgaudit.log = 'write';
 **Purpose:** Unit tests for database schema, constraints, and data
 
 **Installation:**
-
 ```sql
 CREATE EXTENSION IF NOT EXISTS pgtap;
 ```
 
 **Example test suite:**
-
 ```sql
 -- File: tests/schema_tests.sql
 BEGIN;
@@ -942,13 +929,11 @@ ROLLBACK;
 ```
 
 **Run tests:**
-
 ```bash
 psql "$DB_URL" -f tests/schema_tests.sql
 ```
 
 **CI/CD Integration:**
-
 ```yaml
 # .github/workflows/test.yml
 - name: Run pgTAP tests
@@ -959,13 +944,11 @@ psql "$DB_URL" -f tests/schema_tests.sql
 ### 4. Named Constraints (Best Practice)
 
 **Why naming matters:**
-
 - Error messages become informative
 - Easier to troubleshoot constraint violations
 - Explicit documentation of business rules
 
 **Examples:**
-
 ```sql
 -- ❌ BAD: Unnamed constraints
 CREATE TABLE users (
@@ -987,7 +970,6 @@ CREATE TABLE users (
 ```
 
 **Naming conventions:**
-
 ```
 {table}_{column}_{type}
 {table}_{columns}_{type}
@@ -1001,7 +983,6 @@ Types:
 ```
 
 **Audit query for unnamed constraints:**
-
 ```sql
 -- Find constraints without descriptive names
 SELECT

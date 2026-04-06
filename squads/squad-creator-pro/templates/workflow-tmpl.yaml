@@ -30,24 +30,24 @@ template:
 
 workflow_anatomy:
   required_sections:
-    - header # ID, name, duration, description
-    - best_for # When to use this workflow
-    - decision_matrix # Awareness/sophistication fit
-    - phases # PHASE-1 through PHASE-N
+    - header           # ID, name, duration, description
+    - best_for         # When to use this workflow
+    - decision_matrix  # Awareness/sophistication fit
+    - phases           # PHASE-1 through PHASE-N
     - completion_signals
-    - outputs # Artifacts produced
-    - agents_by_phase # Agent assignments
+    - outputs          # Artifacts produced
+    - agents_by_phase  # Agent assignments
     - quality_checklist # Final validation
     - metadata
 
   phase_requirements:
-    - id # PHASE-1, PHASE-2, etc.
-    - name # Human-readable name
-    - days # Timing estimate (e.g., "1-2")
-    - tier # 0=foundation, 1=core, 2=advanced, 3=polish
-    - description # What happens in this phase
-    - tasks # Array of task references
-    - checkpoint # Validation criteria + human_review flag
+    - id               # PHASE-1, PHASE-2, etc.
+    - name             # Human-readable name
+    - days             # Timing estimate (e.g., "1-2")
+    - tier             # 0=foundation, 1=core, 2=advanced, 3=polish
+    - description      # What happens in this phase
+    - tasks            # Array of task references
+    - checkpoint       # Validation criteria + human_review flag
 
 # ============================================================================
 # TEMPLATE STRUCTURE

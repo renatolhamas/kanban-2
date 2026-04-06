@@ -19,13 +19,13 @@ const {
   MANIFEST_FILES,
   DEFAULT_SQUADS_PATH,
   ErrorCodes,
-} = require("./squad-loader");
+} = require('./squad-loader');
 
 const {
   SquadValidator,
   ValidationErrorCodes,
   TASK_REQUIRED_FIELDS,
-} = require("./squad-validator");
+} = require('./squad-validator');
 
 const {
   SquadGenerator,
@@ -38,19 +38,19 @@ const {
   SQUAD_DESIGN_SCHEMA_PATH,
   isValidSquadName,
   getGitUserName,
-} = require("./squad-generator");
+} = require('./squad-generator');
 
 const {
   SquadDesigner,
   SquadDesignerError,
   DesignerErrorCodes,
-} = require("./squad-designer");
+} = require('./squad-designer');
 
 const {
   SquadMigrator,
   SquadMigratorError,
   MigratorErrorCodes,
-} = require("./squad-migrator");
+} = require('./squad-migrator');
 
 const {
   SquadDownloader,
@@ -58,7 +58,7 @@ const {
   DownloaderErrorCodes,
   REGISTRY_URL,
   GITHUB_API_BASE,
-} = require("./squad-downloader");
+} = require('./squad-downloader');
 
 const {
   SquadPublisher,
@@ -68,7 +68,7 @@ const {
   SAFE_NAME_PATTERN,
   sanitizeForShell,
   isValidName,
-} = require("./squad-publisher");
+} = require('./squad-publisher');
 
 module.exports = {
   // Squad Loader (SQS-2)

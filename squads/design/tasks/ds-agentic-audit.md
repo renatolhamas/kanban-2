@@ -11,7 +11,6 @@
 Calculate an AI-readiness score (0-100) for your design system by checking structured token formats, component API documentation, machine-parseable metadata, and MCP integration readiness. Outputs an AI-readiness score (0-100) with specific gaps and recommendations.
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/agentic/agentic-readiness-report.json`
 - **format:** JSON data
 - **consumed_by:** ds-agentic-setup
@@ -91,11 +90,11 @@ Calculate an AI-readiness score (0-100) for your design system by checking struc
 - Every gap has a specific, actionable recommendation
 - Report includes quick wins (< 1 day effort) vs. strategic investments
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

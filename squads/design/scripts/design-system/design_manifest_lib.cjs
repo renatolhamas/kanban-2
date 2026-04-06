@@ -1,33 +1,33 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
 
 function readYaml(filePath) {
-  return yaml.load(fs.readFileSync(filePath, "utf8")) || {};
+  return yaml.load(fs.readFileSync(filePath, 'utf8')) || {};
 }
 
 function writeYaml(filePath, data) {
   const text = yaml.dump(data, {
     lineWidth: 120,
     noRefs: true,
-    sortKeys: false,
+    sortKeys: false
   });
-  fs.writeFileSync(filePath, text, "utf8");
+  fs.writeFileSync(filePath, text, 'utf8');
 }
 
 function normalizeDescription(value) {
-  if (typeof value !== "string") {
-    return "";
+  if (typeof value !== 'string') {
+    return '';
   }
 
   return value
-    .split("\n")
+    .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
     .slice(0, 2)
-    .join(" ");
+    .join(' ');
 }
 
 function buildTierSystem(squad, currentConfig) {
@@ -38,37 +38,32 @@ function buildTierSystem(squad, currentConfig) {
     tier_0_foundation: {
       description:
         (source.tier_0_foundation && source.tier_0_foundation.purpose) ||
-        (fallback.tier_0_foundation &&
-          fallback.tier_0_foundation.description) ||
-        "Entry point agents for diagnosis and strategy",
-      agents:
-        (source.tier_0_foundation && source.tier_0_foundation.agents) || [],
+        (fallback.tier_0_foundation && fallback.tier_0_foundation.description) ||
+        'Entry point agents for diagnosis and strategy',
+      agents: (source.tier_0_foundation && source.tier_0_foundation.agents) || []
     },
     tier_1_masters: {
       description:
         (source.tier_1_masters && source.tier_1_masters.purpose) ||
         (fallback.tier_1_masters && fallback.tier_1_masters.description) ||
-        "Execution masters with specialized expertise",
-      agents: (source.tier_1_masters && source.tier_1_masters.agents) || [],
+        'Execution masters with specialized expertise',
+      agents: (source.tier_1_masters && source.tier_1_masters.agents) || []
     },
     tier_2_specialists: {
       description:
         (source.tier_2_specialists && source.tier_2_specialists.purpose) ||
-        (fallback.tier_2_specialists &&
-          fallback.tier_2_specialists.description) ||
-        "Deep specialists for specific deliverables",
-      agents:
-        (source.tier_2_specialists && source.tier_2_specialists.agents) || [],
+        (fallback.tier_2_specialists && fallback.tier_2_specialists.description) ||
+        'Deep specialists for specific deliverables',
+      agents: (source.tier_2_specialists && source.tier_2_specialists.agents) || []
     },
     orchestrator: {
       description:
-        (fallback.orchestrator && fallback.orchestrator.description) ||
-        "Routes requests to appropriate agents",
+        (fallback.orchestrator && fallback.orchestrator.description) || 'Routes requests to appropriate agents',
       agent:
         (currentConfig && currentConfig.entry_agent) ||
         (squad.config && squad.config.default_agent) ||
-        "design-chief",
-    },
+        'design-chief'
+    }
   };
 }
 
@@ -80,19 +75,18 @@ function buildGeneratedConfig(squad, currentConfig) {
     name: metadata.name || currentConfig.name,
     version: metadata.version || currentConfig.version,
     title: metadata.display_name || currentConfig.title,
-    description:
-      normalizeDescription(squad.description) || currentConfig.description,
+    description: normalizeDescription(squad.description) || currentConfig.description,
     entry_agent:
       currentConfig.entry_agent ||
       (squad.config && squad.config.default_agent) ||
-      "design-chief",
+      'design-chief',
     tier_system: buildTierSystem(squad, currentConfig),
     agents: (squad.agents || []).map((agent) => agent.id),
     tasks: (squad.tasks || []).map((task) => task.id),
     templates: (squad.templates || []).map((template) => template.id),
     checklists: (squad.checklists || []).map((checklist) => checklist.id),
     workflows: (squad.workflows || []).map((workflow) => workflow.id),
-    tags: squad.tags || currentConfig.tags || [],
+    tags: squad.tags || currentConfig.tags || []
   };
 }
 
@@ -107,7 +101,7 @@ function getCanonicalProjection(config) {
     templates: config.templates,
     checklists: config.checklists,
     workflows: config.workflows,
-    tags: config.tags,
+    tags: config.tags
   };
 }
 
@@ -115,7 +109,7 @@ function sortObjectDeep(value) {
   if (Array.isArray(value)) {
     return value.map(sortObjectDeep);
   }
-  if (value && typeof value === "object") {
+  if (value && typeof value === 'object') {
     const keys = Object.keys(value).sort();
     const sorted = {};
     for (const key of keys) {
@@ -131,10 +125,10 @@ function stableJson(value) {
 }
 
 function getDesignPaths(rootDir) {
-  const base = path.join(rootDir, "squads/design");
+  const base = path.join(rootDir, 'squads/design');
   return {
-    squadPath: path.join(base, "squad.yaml"),
-    configPath: path.join(base, "config.yaml"),
+    squadPath: path.join(base, 'squad.yaml'),
+    configPath: path.join(base, 'config.yaml')
   };
 }
 
@@ -144,5 +138,5 @@ module.exports = {
   getDesignPaths,
   readYaml,
   stableJson,
-  writeYaml,
+  writeYaml
 };

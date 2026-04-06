@@ -8,32 +8,28 @@
  * @story INS-4.1
  */
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const name = "settings-json";
+const name = 'settings-json';
 
 /**
  * Checks that core-config.yaml boundary.protected paths are covered by deny rules.
  * Returns array of unprotected boundary paths.
  */
 function checkBoundaryAlignment(context, denyRules) {
-  const configPath = path.join(
-    context.projectRoot,
-    ".aiox-core",
-    "core-config.yaml",
-  );
+  const configPath = path.join(context.projectRoot, '.aiox-core', 'core-config.yaml');
   if (!fs.existsSync(configPath)) return []; // No config = skip boundary check
 
   let content;
   try {
-    content = fs.readFileSync(configPath, "utf8");
+    content = fs.readFileSync(configPath, 'utf8');
   } catch {
     return [];
   }
 
   // Extract boundary.protected paths from YAML (simple line parsing)
-  const lines = content.split("\n");
+  const lines = content.split('\n');
   const protectedPaths = [];
   let inProtected = false;
 
@@ -55,10 +51,10 @@ function checkBoundaryAlignment(context, denyRules) {
   if (protectedPaths.length === 0) return [];
 
   // Check each boundary path has at least one matching deny rule
-  const denyStr = denyRules.join("\n");
+  const denyStr = denyRules.join('\n');
   const unprotected = protectedPaths.filter((bp) => {
     // Strip glob suffixes for base path matching
-    const basePath = bp.replace(/\/\*\*$/, "").replace(/\/\*$/, "");
+    const basePath = bp.replace(/\/\*\*$/, '').replace(/\/\*$/, '');
     return !denyStr.includes(basePath);
   });
 
@@ -66,30 +62,26 @@ function checkBoundaryAlignment(context, denyRules) {
 }
 
 async function run(context) {
-  const settingsPath = path.join(
-    context.projectRoot,
-    ".claude",
-    "settings.json",
-  );
+  const settingsPath = path.join(context.projectRoot, '.claude', 'settings.json');
 
   if (!fs.existsSync(settingsPath)) {
     return {
       check: name,
-      status: "FAIL",
-      message: "settings.json not found",
-      fixCommand: "npx aiox-core install --force",
+      status: 'FAIL',
+      message: 'settings.json not found',
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
   let settings;
   try {
-    settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));
+    settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
   } catch {
     return {
       check: name,
-      status: "FAIL",
-      message: "settings.json is invalid JSON",
-      fixCommand: "npx aiox-core install --force",
+      status: 'FAIL',
+      message: 'settings.json is invalid JSON',
+      fixCommand: 'npx aiox-core install --force',
     };
   }
 
@@ -101,9 +93,9 @@ async function run(context) {
   if (denyCount < 40) {
     return {
       check: name,
-      status: "WARN",
+      status: 'WARN',
       message: `Deny rules below threshold (${denyCount} rules, expected >= 40)`,
-      fixCommand: "aiox doctor --fix",
+      fixCommand: 'aiox doctor --fix',
     };
   }
 
@@ -112,15 +104,15 @@ async function run(context) {
   if (boundaryIssues.length > 0) {
     return {
       check: name,
-      status: "WARN",
-      message: `Deny rules present (${denyCount}) but missing boundary coverage: ${boundaryIssues.join(", ")}`,
-      fixCommand: "aiox doctor --fix",
+      status: 'WARN',
+      message: `Deny rules present (${denyCount}) but missing boundary coverage: ${boundaryIssues.join(', ')}`,
+      fixCommand: 'aiox doctor --fix',
     };
   }
 
   return {
     check: name,
-    status: "PASS",
+    status: 'PASS',
     message: `Deny rules present (${denyCount} rules, ${allowCount} allows)`,
     fixCommand: null,
   };

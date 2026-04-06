@@ -15,21 +15,17 @@
 //   node .aiox-core/data/mcp-discipline.js --enable <server>  # Re-enable specific
 // =============================================================================
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const PROJECT_ROOT = path.resolve(__dirname, "../..");
-const MCP_JSON_PATH = path.join(PROJECT_ROOT, ".mcp.json");
-const BACKUP_PATH = path.join(PROJECT_ROOT, ".aiox", "mcp-backup.json");
-const CAPABILITIES_PATH = path.join(
-  PROJECT_ROOT,
-  ".aiox",
-  "runtime-capabilities.json",
-);
+const PROJECT_ROOT = path.resolve(__dirname, '../..');
+const MCP_JSON_PATH = path.join(PROJECT_ROOT, '.mcp.json');
+const BACKUP_PATH = path.join(PROJECT_ROOT, '.aiox', 'mcp-backup.json');
+const CAPABILITIES_PATH = path.join(PROJECT_ROOT, '.aiox', 'runtime-capabilities.json');
 
 function loadCapabilities() {
   try {
-    return JSON.parse(fs.readFileSync(CAPABILITIES_PATH, "utf8"));
+    return JSON.parse(fs.readFileSync(CAPABILITIES_PATH, 'utf8'));
   } catch {
     return null;
   }
@@ -37,15 +33,15 @@ function loadCapabilities() {
 
 function loadMcpConfig() {
   try {
-    return JSON.parse(fs.readFileSync(MCP_JSON_PATH, "utf8"));
+    return JSON.parse(fs.readFileSync(MCP_JSON_PATH, 'utf8'));
   } catch {
-    console.error("❌ Could not read .mcp.json");
+    console.error('❌ Could not read .mcp.json');
     process.exit(1);
   }
 }
 
 function saveMcpConfig(config) {
-  fs.writeFileSync(MCP_JSON_PATH, JSON.stringify(config, null, 2) + "\n");
+  fs.writeFileSync(MCP_JSON_PATH, JSON.stringify(config, null, 2) + '\n');
 }
 
 function backupConfig(config) {
@@ -59,10 +55,10 @@ function backupConfig(config) {
 function getEssentialServers() {
   const caps = loadCapabilities();
   if (caps && caps.essentialServers) {
-    return caps.essentialServers.map((s) => s.name);
+    return caps.essentialServers.map(s => s.name);
   }
   // Hardcoded fallback
-  return ["nogic", "code-graph"];
+  return ['nogic', 'code-graph'];
 }
 
 function apply() {
@@ -84,21 +80,19 @@ function apply() {
   }
 
   saveMcpConfig(config);
-  console.log(
-    `\n📋 MCP Discipline applied: ${disabled} servers disabled, ${essential.length} essential kept`,
-  );
+  console.log(`\n📋 MCP Discipline applied: ${disabled} servers disabled, ${essential.length} essential kept`);
   console.log(`   Backup saved to: ${BACKUP_PATH}`);
 }
 
 function restore() {
   if (!fs.existsSync(BACKUP_PATH)) {
-    console.log("⚠️  No backup found. Nothing to restore.");
+    console.log('⚠️  No backup found. Nothing to restore.');
     return;
   }
 
-  const backup = JSON.parse(fs.readFileSync(BACKUP_PATH, "utf8"));
+  const backup = JSON.parse(fs.readFileSync(BACKUP_PATH, 'utf8'));
   saveMcpConfig(backup);
-  console.log("✅ MCP config restored from backup");
+  console.log('✅ MCP config restored from backup');
 }
 
 function enableServer(serverName) {
@@ -121,25 +115,23 @@ function status() {
   const servers = config.mcpServers || {};
   const essential = getEssentialServers();
 
-  console.log("=== MCP Server Status ===\n");
+  console.log('=== MCP Server Status ===\n');
 
   if (caps) {
     console.log(`Strategy: ${caps.strategy.primary}`);
-    console.log(
-      `Tool Search: ${caps.runtime.toolSearch.available ? "AVAILABLE" : "NOT AVAILABLE"}\n`,
-    );
+    console.log(`Tool Search: ${caps.runtime.toolSearch.available ? 'AVAILABLE' : 'NOT AVAILABLE'}\n`);
   }
 
   for (const [name, serverConfig] of Object.entries(servers)) {
     const isEssential = essential.includes(name);
     const isDisabled = serverConfig.disabled === true;
-    const status = isDisabled ? "🔒 DISABLED" : "✅ ACTIVE";
-    const badge = isEssential ? "[ESSENTIAL]" : "[non-essential]";
+    const status = isDisabled ? '🔒 DISABLED' : '✅ ACTIVE';
+    const badge = isEssential ? '[ESSENTIAL]' : '[non-essential]';
     console.log(`  ${status} ${name} ${badge}`);
   }
 
   console.log(`\nTotal: ${Object.keys(servers).length} servers`);
-  console.log(`Backup exists: ${fs.existsSync(BACKUP_PATH) ? "YES" : "NO"}`);
+  console.log(`Backup exists: ${fs.existsSync(BACKUP_PATH) ? 'YES' : 'NO'}`);
 }
 
 // CLI handling
@@ -147,28 +139,28 @@ const args = process.argv.slice(2);
 const command = args[0];
 
 switch (command) {
-  case "--apply":
-    console.log("=== Applying MCP Discipline ===\n");
+  case '--apply':
+    console.log('=== Applying MCP Discipline ===\n');
     apply();
     break;
-  case "--restore":
+  case '--restore':
     restore();
     break;
-  case "--enable":
+  case '--enable':
     if (!args[1]) {
-      console.log("Usage: --enable <server-name>");
+      console.log('Usage: --enable <server-name>');
       process.exit(1);
     }
     enableServer(args[1]);
     break;
-  case "--status":
+  case '--status':
     status();
     break;
   default:
-    console.log("MCP Discipline Fallback Module");
-    console.log("Usage:");
-    console.log("  --apply          Disable non-essential MCP servers");
-    console.log("  --restore        Restore from backup");
-    console.log("  --enable <name>  Re-enable specific server");
-    console.log("  --status         Show current status");
+    console.log('MCP Discipline Fallback Module');
+    console.log('Usage:');
+    console.log('  --apply          Disable non-essential MCP servers');
+    console.log('  --restore        Restore from backup');
+    console.log('  --enable <name>  Re-enable specific server');
+    console.log('  --status         Show current status');
 }

@@ -31,37 +31,37 @@ Extract complete knowledge triplet (Framework + SOP + Checklist) from author/exp
 
 ## Task Anatomy (HO-TP-001)
 
-| Field                | Value                                              |
-| -------------------- | -------------------------------------------------- |
-| task_name            | Extract Knowledge from Author Sources              |
-| status               | pending                                            |
-| responsible_executor | @tim-ferriss                                       |
-| execution_type       | Hybrid (Agent extracts, Human validates)           |
-| estimated_time       | 2-4h per triplet                                   |
-| input                | author_name, topic, sources_path                   |
-| output               | framework.md, sop.md, blueprint.yaml, checklist.md |
-| action_items         | See Execution section                              |
-| acceptance_criteria  | All gates passed, 50+ citations, zero invention    |
+| Field | Value |
+|-------|-------|
+| task_name | Extract Knowledge from Author Sources |
+| status | pending |
+| responsible_executor | @tim-ferriss |
+| execution_type | Hybrid (Agent extracts, Human validates) |
+| estimated_time | 2-4h per triplet |
+| input | author_name, topic, sources_path |
+| output | framework.md, sop.md, blueprint.yaml, checklist.md |
+| action_items | See Execution section |
+| acceptance_criteria | All gates passed, 50+ citations, zero invention |
 
 ## Inputs
 
-| Input        | Type   | Required | Description                                          |
-| ------------ | ------ | -------- | ---------------------------------------------------- |
-| author_name  | string | Yes      | Author/expert name (e.g., "Alex Hormozi")            |
-| topic        | string | Yes      | Specific topic to extract (e.g., "Value Equation")   |
-| sources_path | path   | Yes      | Path to source materials (books, transcripts, etc.)  |
-| output_squad | string | No       | Target squad (default: inferred from author)         |
-| format       | enum   | No       | `triplet` (default), `framework`, `sop`, `checklist` |
-| depth        | enum   | No       | `quick`, `standard` (default), `deep`                |
+| Input | Type | Required | Description |
+|-------|------|----------|-------------|
+| author_name | string | Yes | Author/expert name (e.g., "Alex Hormozi") |
+| topic | string | Yes | Specific topic to extract (e.g., "Value Equation") |
+| sources_path | path | Yes | Path to source materials (books, transcripts, etc.) |
+| output_squad | string | No | Target squad (default: inferred from author) |
+| format | enum | No | `triplet` (default), `framework`, `sop`, `checklist` |
+| depth | enum | No | `quick`, `standard` (default), `deep` |
 
 ## Outputs
 
-| Output    | Type | Location                                                | Description                             |
-| --------- | ---- | ------------------------------------------------------- | --------------------------------------- |
-| framework | MD   | `squads/{squad}/docs/frameworks/{topic}-framework.md`   | Conceptual model (formulas, principles) |
-| sop       | MD   | `squads/{squad}/docs/sops/{topic}-sop.md`               | Operational process (steps, executors)  |
-| blueprint | YAML | `squads/{squad}/docs/sops/{topic}-squad-blueprint.yaml` | Agent configuration                     |
-| checklist | MD   | `squads/{squad}/checklists/{topic}-sop-checklist.md`    | Validation checklist                    |
+| Output | Type | Location | Description |
+|--------|------|----------|-------------|
+| framework | MD | `squads/{squad}/docs/frameworks/{topic}-framework.md` | Conceptual model (formulas, principles) |
+| sop | MD | `squads/{squad}/docs/sops/{topic}-sop.md` | Operational process (steps, executors) |
+| blueprint | YAML | `squads/{squad}/docs/sops/{topic}-squad-blueprint.yaml` | Agent configuration |
+| checklist | MD | `squads/{squad}/checklists/{topic}-sop-checklist.md` | Validation checklist |
 
 ---
 
@@ -87,12 +87,12 @@ output:
 
 For each source, evaluate:
 
-| Criterion         | Question                         | Score |
-| ----------------- | -------------------------------- | ----- |
-| Direct mention    | Source mentions {topic} by name? | 0-3   |
-| Process explained | Author explains how to do it?    | 0-3   |
-| Examples given    | Practical examples included?     | 0-2   |
-| Quotable content  | Has usable quotes?               | 0-2   |
+| Criterion | Question | Score |
+|-----------|----------|-------|
+| Direct mention | Source mentions {topic} by name? | 0-3 |
+| Process explained | Author explains how to do it? | 0-3 |
+| Examples given | Practical examples included? | 0-2 |
+| Quotable content | Has usable quotes? | 0-2 |
 
 **Threshold:** Include sources with score ≥ 5/10
 
@@ -112,7 +112,6 @@ decision:
 ```
 
 **Elicit if NO_GO:**
-
 ```
 ❌ Fontes insuficientes para extração de "{topic}".
 
@@ -151,7 +150,6 @@ output:
 ```
 
 **Example:**
-
 ```
 Value = (Dream Outcome × Perceived Likelihood) / (Time Delay × Effort & Sacrifice)
 [SOURCE: $100M Offers, Chapter 6, p.47]
@@ -223,14 +221,14 @@ format: |
 
 #### Framework Quality Gate
 
-| Criterion      | Requirement                   | Status |
-| -------------- | ----------------------------- | ------ |
-| Core formula   | Identified with citation      | [ ]    |
-| Components     | 3+ documented                 | [ ]    |
-| Principles     | 5+ extracted                  | [ ]    |
-| Examples       | 3+ from author (not invented) | [ ]    |
-| Quotes         | 15+ with sources              | [ ]    |
-| Zero invention | No unsourced claims           | [ ]    |
+| Criterion | Requirement | Status |
+|-----------|-------------|--------|
+| Core formula | Identified with citation | [ ] |
+| Components | 3+ documented | [ ] |
+| Principles | 5+ extracted | [ ] |
+| Examples | 3+ from author (not invented) | [ ] |
+| Quotes | 15+ with sources | [ ] |
+| Zero invention | No unsourced claims | [ ] |
 
 **Threshold:** 6/6 required
 
@@ -288,16 +286,16 @@ step_template:
 
 **Cognitive Type Guide:**
 
-| Author Signal                    | Cognitive Type |
-| -------------------------------- | -------------- |
-| "Look at...", "Notice..."        | Perception     |
-| "Remember that...", "Recall..."  | Memory         |
-| "Compare...", "Evaluate..."      | Analysis       |
-| "Combine...", "Create..."        | Synthesis      |
-| "Decide...", "Choose..."         | Judgment       |
-| "Invent...", "Brainstorm..."     | Creativity     |
-| "Understand their...", "Feel..." | Empathy        |
-| "Track...", "Measure..."         | Accountability |
+| Author Signal | Cognitive Type |
+|---------------|----------------|
+| "Look at...", "Notice..." | Perception |
+| "Remember that...", "Recall..." | Memory |
+| "Compare...", "Evaluate..." | Analysis |
+| "Combine...", "Create..." | Synthesis |
+| "Decide...", "Choose..." | Judgment |
+| "Invent...", "Brainstorm..." | Creativity |
+| "Understand their...", "Feel..." | Empathy |
+| "Track...", "Measure..." | Accountability |
 
 #### Step 2.3: Extract Decision Rules
 
@@ -356,19 +354,18 @@ format: |
 
 #### SOP Quality Gate
 
-| Criterion        | Requirement       | Status |
-| ---------------- | ----------------- | ------ |
-| Steps documented | 8+ steps          | [ ]    |
-| Task Anatomy     | 8 fields per step | [ ]    |
-| Decision rules   | All forks covered | [ ]    |
-| Appendix D       | 50+ references    | [ ]    |
-| Zero invention   | All steps sourced | [ ]    |
-| Logical flow     | Start to finish   | [ ]    |
+| Criterion | Requirement | Status |
+|-----------|-------------|--------|
+| Steps documented | 8+ steps | [ ] |
+| Task Anatomy | 8 fields per step | [ ] |
+| Decision rules | All forks covered | [ ] |
+| Appendix D | 50+ references | [ ] |
+| Zero invention | All steps sourced | [ ] |
+| Logical flow | Start to finish | [ ] |
 
 **Threshold:** 6/6 required
 
 **Output:**
-
 - `{topic}-sop.md`
 - `{topic}-squad-blueprint.yaml`
 
@@ -402,22 +399,18 @@ For each SOP step:
 ### Step X: [Step Name]
 
 **Preconditions:**
-
 - [ ] [Precondition 1 from SOP]
 - [ ] [Precondition 2 from SOP]
 
 **Execution:**
-
 - [ ] [Action item 1 from SOP]
 - [ ] [Action item 2 from SOP]
 
 **Output Validation:**
-
 - [ ] [Output 1] produced
 - [ ] [Output 1] meets [quality criteria from SOP]
 
 **Guardrails:**
-
 - [ ] [Guardrail 1] verified
 - [ ] [Guardrail 2] verified
 ```
@@ -435,7 +428,6 @@ For each quality gate in SOP:
 - [ ] Minimum score achieved: [X/Y]
 
 **Decision:**
-
 - [ ] PASS → Proceed to next phase
 - [ ] FAIL → Return to [step] for remediation
 ```
@@ -454,13 +446,13 @@ validation:
 
 #### Checklist Quality Gate
 
-| Criterion        | Requirement           | Status |
-| ---------------- | --------------------- | ------ |
-| Step coverage    | 100% of SOP steps     | [ ]    |
-| Checkbox mapping | Each → SOP element    | [ ]    |
-| Zero invention   | No "safety" additions | [ ]    |
-| Gates included   | All quality gates     | [ ]    |
-| Logical sequence | Matches SOP order     | [ ]    |
+| Criterion | Requirement | Status |
+|-----------|-------------|--------|
+| Step coverage | 100% of SOP steps | [ ] |
+| Checkbox mapping | Each → SOP element | [ ] |
+| Zero invention | No "safety" additions | [ ] |
+| Gates included | All quality gates | [ ] |
+| Logical sequence | Matches SOP order | [ ] |
 
 **Threshold:** 5/5 required
 
@@ -512,12 +504,12 @@ validation:
 
 **Quality Gate Summary:**
 
-| Gate              | Phase | Blocking | Status |
-| ----------------- | ----- | -------- | ------ |
-| SOURCE_COVERAGE   | 0     | Yes      | [ ]    |
-| FRAMEWORK_QUALITY | 1     | Yes      | [ ]    |
-| SOP_QUALITY       | 2     | Yes      | [ ]    |
-| CHECKLIST_QUALITY | 3     | Yes      | [ ]    |
+| Gate | Phase | Blocking | Status |
+|------|-------|----------|--------|
+| SOURCE_COVERAGE | 0 | Yes | [ ] |
+| FRAMEWORK_QUALITY | 1 | Yes | [ ] |
+| SOP_QUALITY | 2 | Yes | [ ] |
+| CHECKLIST_QUALITY | 3 | Yes | [ ] |
 
 ---
 
@@ -539,26 +531,24 @@ handoff:
 
 ## Error Handling
 
-| Error                    | Cause                 | Resolution                              |
-| ------------------------ | --------------------- | --------------------------------------- |
-| SOURCE_COVERAGE failed   | Insufficient material | Request more sources, run Deep Research |
-| FRAMEWORK_QUALITY failed | Missing citations     | Return to sources, find literal quotes  |
-| SOP_QUALITY failed       | <50 references        | Expand Appendix D, cite more            |
-| CHECKLIST_QUALITY failed | Invented checkboxes   | Remove non-SOP items                    |
-| Invention detected       | Unsourced claim       | Delete or find source                   |
+| Error | Cause | Resolution |
+|-------|-------|------------|
+| SOURCE_COVERAGE failed | Insufficient material | Request more sources, run Deep Research |
+| FRAMEWORK_QUALITY failed | Missing citations | Return to sources, find literal quotes |
+| SOP_QUALITY failed | <50 references | Expand Appendix D, cite more |
+| CHECKLIST_QUALITY failed | Invented checkboxes | Remove non-SOP items |
+| Invention detected | Unsourced claim | Delete or find source |
 
 ---
 
 ## Examples
 
 **Good extraction signals:**
-
 - `> "The formula is X = Y / Z" [SOURCE: p.47]` → Literal quote
 - `Step derived from: "First, do X, then Y" [SOURCE: min 23:45]` → Traceable
 - `Example from author: Gym Launch case [SOURCE: Ch.5]` → Author's example
 
 **Red flag signals:**
-
 - "Generally, experts recommend..." → NO SOURCE
 - "Best practice is to..." → GENERIC
 - "It's common to add..." → INVENTED

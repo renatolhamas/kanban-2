@@ -1,22 +1,18 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-
 # QUALITY DASHBOARD - {SQUAD_NAME}
-
 # Generated: {DATE}
-
 # Version: 1.0.0
-
 # ═══════════════════════════════════════════════════════════════════════════════
 
 ## 📊 Squad Overview
 
-| Metric               | Value                   | Status       |
-| -------------------- | ----------------------- | ------------ |
-| **Squad Name**       | {squad_name}            | -            |
-| **Domain**           | {domain}                | -            |
-| **Agents**           | {agent_count}           | -            |
-| **Creation Mode**    | {YOLO\|QUALITY\|HYBRID} | -            |
-| **Overall Fidelity** | {avg_fidelity}%         | {🟢\|🟡\|🔴} |
+| Metric | Value | Status |
+|--------|-------|--------|
+| **Squad Name** | {squad_name} | - |
+| **Domain** | {domain} | - |
+| **Agents** | {agent_count} | - |
+| **Creation Mode** | {YOLO\|QUALITY\|HYBRID} | - |
+| **Overall Fidelity** | {avg_fidelity}% | {🟢\|🟡\|🔴} |
 
 ---
 
@@ -34,7 +30,6 @@
 ```
 
 **Status Legend:**
-
 - ✅ = Pronto para produção (fidelity ≥ 80%)
 - ⚠️ = Funcional, melhorias possíveis (fidelity 60-79%)
 - ❌ = Precisa trabalho (fidelity < 60%)
@@ -288,4 +283,4 @@ special_considerations:
 ---
 
 **Squad Architect | Quality Dashboard v1.0**
-_Generated: {DATE}_
+*Generated: {DATE}*

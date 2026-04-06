@@ -538,70 +538,70 @@ capability_mapping:
 domain_recommendations:
   copywriting:
     essential:
-      - exa # Research competitors, swipe files
-      - web_fetch # Analyze landing pages
+      - exa  # Research competitors, swipe files
+      - web_fetch  # Analyze landing pages
     recommended:
-      - playwright # Screenshot landing pages
+      - playwright  # Screenshot landing pages
     optional:
-      - grammarly-api # Grammar/style checking
+      - grammarly-api  # Grammar/style checking
 
   legal:
     essential:
-      - exa # Legal research
-      - desktop-commander # PDF contract analysis
+      - exa  # Legal research
+      - desktop-commander  # PDF contract analysis
     recommended:
-      - postgres # Case database
+      - postgres  # Case database
     optional:
-      - docusign-api # Contract signing
+      - docusign-api  # Contract signing
 
   data_engineering:
     essential:
-      - postgres # Database operations
-      - desktop-commander # File processing
+      - postgres  # Database operations
+      - desktop-commander  # File processing
     recommended:
-      - sqlite # Local data storage
+      - sqlite  # Local data storage
     optional:
-      - snowflake-api # Cloud data warehouse
+      - snowflake-api  # Cloud data warehouse
 
   cybersecurity:
     essential:
-      - bash # Security tools (nmap, etc.)
-      - exa # Threat intelligence
+      - bash  # Security tools (nmap, etc.)
+      - exa  # Threat intelligence
     recommended:
-      - shodan-api # Network scanning
+      - shodan-api  # Network scanning
     optional:
-      - virustotal-api # Malware analysis
+      - virustotal-api  # Malware analysis
 
   design:
     essential:
-      - desktop-commander # File operations
-      - playwright # Screenshots
+      - desktop-commander  # File operations
+      - playwright  # Screenshots
     recommended:
-      - figma-api # Design files
+      - figma-api  # Design files
     optional:
-      - cloudinary-api # Image optimization
+      - cloudinary-api  # Image optimization
 
   marketing:
     essential:
-      - exa # Market research
-      - web_fetch # Competitor analysis
+      - exa  # Market research
+      - web_fetch  # Competitor analysis
     recommended:
       - google-analytics-api
       - social-media-apis
     optional:
-      - mailchimp-api # Email marketing
+      - mailchimp-api  # Email marketing
 
   development:
     essential:
-      - github # Repo management
-      - context7 # Documentation
-      - bash # Build tools
+      - github  # Repo management
+      - context7  # Documentation
+      - bash  # Build tools
     recommended:
-      - postgres # Database
-      - docker-mcp # Containerization
+      - postgres  # Database
+      - docker-mcp  # Containerization
     optional:
-      - vercel-api # Deployment
-      - sentry-api # Error tracking
+      - vercel-api  # Deployment
+      - sentry-api  # Error tracking
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DISCOVERY QUERIES (for discover-tools.md task)

@@ -10,11 +10,11 @@
  * @version 1.0.0
  */
 
-const EpicExecutor = require("./epic-executor");
-const Epic3Executor = require("./epic-3-executor");
-const Epic4Executor = require("./epic-4-executor");
-const Epic5Executor = require("./epic-5-executor");
-const Epic6Executor = require("./epic-6-executor");
+const EpicExecutor = require('./epic-executor');
+const Epic3Executor = require('./epic-3-executor');
+const Epic4Executor = require('./epic-4-executor');
+const Epic5Executor = require('./epic-5-executor');
+const Epic6Executor = require('./epic-6-executor');
 
 const { ExecutionStatus } = EpicExecutor;
 const { RecoveryStrategy } = Epic5Executor;

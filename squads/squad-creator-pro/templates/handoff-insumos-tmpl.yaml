@@ -52,7 +52,7 @@ insumos:
       - id: "{ID}"
         name: "{nome}"
         rule: "SE {condição} → ENTÃO {ação}"
-        when: "{contexto de aplicação}" # OBRIGATÓRIO
+        when: "{contexto de aplicação}"  # OBRIGATÓRIO
         source: "[SOURCE:]"
     veto_conditions:
       - trigger: "{o que dispara}"
@@ -62,7 +62,7 @@ insumos:
       weights:
         - "{fator}: {peso}"
 
-  sop_extracted: # se aplicável
+  sop_extracted:  # se aplicável
     name: "{nome do procedimento}"
     steps:
       - step: 1
@@ -85,10 +85,10 @@ insumos:
 # ═══════════════════════════════════════════════════════════════════════════════
 
 validation:
-  citations_count: 0 # mínimo 15
-  signature_phrases_count: 0 # mínimo 5
-  inferred_concepts_count: 0 # deve ser 0
-  heuristics_with_when: 0 # todas devem ter QUANDO
+  citations_count: 0          # mínimo 15
+  signature_phrases_count: 0  # mínimo 5
+  inferred_concepts_count: 0  # deve ser 0
+  heuristics_with_when: 0     # todas devem ter QUANDO
 
   checklist:
     - item: "15+ citações com [SOURCE:]"

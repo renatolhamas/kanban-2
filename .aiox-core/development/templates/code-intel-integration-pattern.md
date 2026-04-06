@@ -19,9 +19,9 @@ All code intelligence integrations MUST follow this 4-step pattern:
 ## Complete Example
 
 ```javascript
-"use strict";
+'use strict';
 
-const { getEnricher, getClient, isCodeIntelAvailable } = require("../index");
+const { getEnricher, getClient, isCodeIntelAvailable } = require('../index');
 
 /**
  * ModuleDoc — describe the helper's purpose and target agent/task.
@@ -76,15 +76,11 @@ async function multiCapabilityFunction(param) {
 
     try {
       dataA = await enricher.describeProject(param);
-    } catch {
-      /* skip — partial result ok */
-    }
+    } catch { /* skip — partial result ok */ }
 
     try {
       dataB = await client.findReferences(param);
-    } catch {
-      /* skip — partial result ok */
-    }
+    } catch { /* skip — partial result ok */ }
 
     // Return null only if we got nothing at all
     if (!dataA && !dataB) return null;
@@ -100,26 +96,26 @@ async function multiCapabilityFunction(param) {
 
 ### Enricher (composite — via `getEnricher()`)
 
-| Capability                     | Input                 | Output                                    | Use Case               |
-| ------------------------------ | --------------------- | ----------------------------------------- | ---------------------- |
-| `describeProject(path)`        | Path string           | `{ codebase, stats }`                     | Project overview       |
-| `getConventions(path)`         | Path string           | `{ patterns, stats }`                     | Naming/coding patterns |
-| `detectDuplicates(desc, opts)` | Description + options | `{ matches, codebaseOverview }`           | Duplicate detection    |
-| `assessImpact(files)`          | File array            | `{ blastRadius, references, complexity }` | Change impact          |
-| `findTests(symbol)`            | Symbol name           | Test file references                      | Test discovery         |
+| Capability | Input | Output | Use Case |
+|-----------|-------|--------|----------|
+| `describeProject(path)` | Path string | `{ codebase, stats }` | Project overview |
+| `getConventions(path)` | Path string | `{ patterns, stats }` | Naming/coding patterns |
+| `detectDuplicates(desc, opts)` | Description + options | `{ matches, codebaseOverview }` | Duplicate detection |
+| `assessImpact(files)` | File array | `{ blastRadius, references, complexity }` | Change impact |
+| `findTests(symbol)` | Symbol name | Test file references | Test discovery |
 
 ### Client (primitive — via `getClient()`)
 
-| Capability                  | Input       | Output                      | Use Case              |
-| --------------------------- | ----------- | --------------------------- | --------------------- |
-| `findReferences(symbol)`    | Symbol name | `[{ file, line, context }]` | Symbol usage          |
-| `findDefinition(symbol)`    | Symbol name | `{ file, line, column }`    | Symbol definition     |
-| `analyzeDependencies(path)` | Path string | `{ nodes, edges }`          | Dependency graph      |
-| `findCallers(symbol)`       | Symbol name | Caller references           | Call graph (inbound)  |
-| `findCallees(symbol)`       | Symbol name | Callee references           | Call graph (outbound) |
-| `analyzeComplexity(path)`   | Path string | Complexity metrics          | Code complexity       |
-| `analyzeCodebase(path)`     | Path string | Codebase overview           | Full analysis         |
-| `getProjectStats(path)`     | Path string | Project statistics          | Stats only            |
+| Capability | Input | Output | Use Case |
+|-----------|-------|--------|----------|
+| `findReferences(symbol)` | Symbol name | `[{ file, line, context }]` | Symbol usage |
+| `findDefinition(symbol)` | Symbol name | `{ file, line, column }` | Symbol definition |
+| `analyzeDependencies(path)` | Path string | `{ nodes, edges }` | Dependency graph |
+| `findCallers(symbol)` | Symbol name | Caller references | Call graph (inbound) |
+| `findCallees(symbol)` | Symbol name | Callee references | Call graph (outbound) |
+| `analyzeComplexity(path)` | Path string | Complexity metrics | Code complexity |
+| `analyzeCodebase(path)` | Path string | Codebase overview | Full analysis |
+| `getProjectStats(path)` | Path string | Project statistics | Stats only |
 
 ## Testing Pattern
 
@@ -127,7 +123,7 @@ async function multiCapabilityFunction(param) {
 
 ```javascript
 // Mock the code-intel module at the top of your test file
-jest.mock("../../.aiox-core/core/code-intel/index", () => ({
+jest.mock('../../.aiox-core/core/code-intel/index', () => ({
   isCodeIntelAvailable: jest.fn(),
   getEnricher: jest.fn(),
   getClient: jest.fn(),
@@ -137,7 +133,7 @@ const {
   isCodeIntelAvailable,
   getEnricher,
   getClient,
-} = require("../../.aiox-core/core/code-intel/index");
+} = require('../../.aiox-core/core/code-intel/index');
 ```
 
 ### Required Test Scenarios
@@ -189,15 +185,15 @@ function createMockClient(overrides = {}) {
 
 ## Existing Helpers (Reference)
 
-| Helper               | Agent         | Functions                                                                        | Story |
-| -------------------- | ------------- | -------------------------------------------------------------------------------- | ----- |
-| `dev-helper.js`      | @dev          | checkBeforeWriting, suggestReuse, getConventionsForPath, assessRefactoringImpact | NOG-3 |
-| `qa-helper.js`       | @qa           | validateTestCoverage, detectRegressionRisk                                       | NOG-4 |
-| `planning-helper.js` | @architect    | analyzeComplexity, suggestArchitecture                                           | NOG-5 |
-| `story-helper.js`    | @sm/@po       | detectDuplicateStory, suggestRelevantFiles, validateNoDuplicates                 | NOG-6 |
-| `devops-helper.js`   | @devops       | assessDeploymentRisk, validatePipelineImpact                                     | NOG-7 |
-| `creation-helper.js` | squad-creator | getCodebaseContext, checkDuplicateArtefact, enrichRegistryEntry                  | NOG-8 |
+| Helper | Agent | Functions | Story |
+|--------|-------|-----------|-------|
+| `dev-helper.js` | @dev | checkBeforeWriting, suggestReuse, getConventionsForPath, assessRefactoringImpact | NOG-3 |
+| `qa-helper.js` | @qa | validateTestCoverage, detectRegressionRisk | NOG-4 |
+| `planning-helper.js` | @architect | analyzeComplexity, suggestArchitecture | NOG-5 |
+| `story-helper.js` | @sm/@po | detectDuplicateStory, suggestRelevantFiles, validateNoDuplicates | NOG-6 |
+| `devops-helper.js` | @devops | assessDeploymentRisk, validatePipelineImpact | NOG-7 |
+| `creation-helper.js` | squad-creator | getCodebaseContext, checkDuplicateArtefact, enrichRegistryEntry | NOG-8 |
 
 ---
 
-_Template created for Story NOG-8 — Code Intelligence Integration Pattern_
+*Template created for Story NOG-8 — Code Intelligence Integration Pattern*

@@ -16,12 +16,12 @@ Compares a design reference (screenshot, Figma export, or image) against impleme
 
 ## Why Not Pixel-Perfect Comparison?
 
-| Challenge           | Reality                                         |
-| ------------------- | ----------------------------------------------- |
-| Size differences    | Figma 1440px vs browser 1512px                  |
-| Font rendering      | Browser anti-aliasing differs from design tools |
-| Dynamic content     | Real text vs placeholder                        |
-| Responsive behavior | Design is static, code adapts                   |
+| Challenge | Reality |
+|-----------|---------|
+| Size differences | Figma 1440px vs browser 1512px |
+| Font rendering | Browser anti-aliasing differs from design tools |
+| Dynamic content | Real text vs placeholder |
+| Responsive behavior | Design is static, code adapts |
 
 **Solution:** Semantic token extraction + comparison with tolerance thresholds.
 
@@ -30,20 +30,16 @@ Compares a design reference (screenshot, Figma export, or image) against impleme
 ## Input Parameters
 
 ### Reference (required)
-
 Design source - one of:
-
 - Image path: `./designs/dashboard.png`
 - Pasted image: User pastes screenshot
 - URL: `https://figma.com/file/xxx` (if accessible)
 
 ### Implementation (required)
-
 Code source - one of:
-
 - Component path: `./app/components/Dashboard.tsx`
 - Folder path: `./app/components/dashboard/`
-- URL: `http://localhost:3017/dashboard` (takes screenshot)
+- URL: `http://localhost:3000/dashboard` (takes screenshot)
 
 ---
 
@@ -122,7 +118,6 @@ design_tokens:
 Parse the component(s) to extract actual values:
 
 #### 2.1 Tailwind Classes
-
 ```typescript
 // Input
 <div className="bg-[#1a1a2e] p-6 rounded-xl shadow-lg">
@@ -137,7 +132,6 @@ Parse the component(s) to extract actual values:
 ```
 
 #### 2.2 CSS Custom Properties
-
 ```css
 /* Input */
 --color-bg-primary: #1a1a2e;
@@ -151,7 +145,6 @@ Parse the component(s) to extract actual values:
 ```
 
 #### 2.3 Inline Styles
-
 ```typescript
 // Input
 <div style={{ backgroundColor: '#252540', padding: '20px' }}>
@@ -164,7 +157,6 @@ Parse the component(s) to extract actual values:
 ```
 
 #### 2.4 Design Token Usage
-
 ```typescript
 // Input
 <div className="bg-primary p-card rounded-card">
@@ -183,15 +175,15 @@ Parse the component(s) to extract actual values:
 comparison_thresholds:
   colors:
     method: "HSL distance"
-    tolerance: 5% # 5% HSL difference = match
+    tolerance: 5%  # 5% HSL difference = match
 
   spacing:
     method: "absolute"
-    tolerance: 4px # ±4px = match
+    tolerance: 4px  # ±4px = match
 
   typography:
     size_tolerance: 2px
-    weight_exact: true # must match exactly
+    weight_exact: true  # must match exactly
 
   radius:
     tolerance: 2px
@@ -211,7 +203,7 @@ function compareColor(design: string, code: string): ComparisonResult {
     distance,
     design,
     code,
-    fix: distance > 0.05 ? `Change to ${design}` : null,
+    fix: distance > 0.05 ? `Change to ${design}` : null
   };
 }
 
@@ -223,10 +215,7 @@ function compareSpacing(design: number, code: number): ComparisonResult {
     diff,
     design: `${design}px`,
     code: `${code}px`,
-    fix:
-      diff > 4
-        ? `Use ${getTailwindClass(design)} instead of ${getTailwindClass(code)}`
-        : null,
+    fix: diff > 4 ? `Use ${getTailwindClass(design)} instead of ${getTailwindClass(code)}` : null
   };
 }
 ```
@@ -235,7 +224,7 @@ function compareSpacing(design: number, code: number): ComparisonResult {
 
 Output template:
 
-````markdown
+```markdown
 # Design Fidelity Report
 
 **Reference:** dashboard-mockup.png
@@ -247,57 +236,57 @@ Output template:
 
 ## Summary
 
-| Category    | Matches | Total  | Score   |
-| ----------- | ------- | ------ | ------- |
-| Colors      | 8       | 10     | 80%     |
-| Spacing     | 5       | 6      | 83%     |
-| Typography  | 3       | 4      | 75%     |
-| Effects     | 4       | 4      | 100%    |
-| **Overall** | **20**  | **24** | **82%** |
+| Category | Matches | Total | Score |
+|----------|---------|-------|-------|
+| Colors | 8 | 10 | 80% |
+| Spacing | 5 | 6 | 83% |
+| Typography | 3 | 4 | 75% |
+| Effects | 4 | 4 | 100% |
+| **Overall** | **20** | **24** | **82%** |
 
 ---
 
 ## Color Comparison
 
-| Token          | Design  | Code    | Match | Fix                       |
-| -------------- | ------- | ------- | ----- | ------------------------- |
-| bg-main        | #1a1a2e | #1a1a2e | PASS  | -                         |
-| bg-card        | #252540 | #252540 | PASS  | -                         |
-| accent         | #D4AF37 | #d4af37 | PASS  | -                         |
-| text-primary   | #FFFFFF | #F5F5F5 | FAIL  | Use text-white            |
-| text-secondary | #A0A0A0 | #888888 | FAIL  | Use #A0A0A0 or text-muted |
+| Token | Design | Code | Match | Fix |
+|-------|--------|------|-------|-----|
+| bg-main | #1a1a2e | #1a1a2e | PASS | - |
+| bg-card | #252540 | #252540 | PASS | - |
+| accent | #D4AF37 | #d4af37 | PASS | - |
+| text-primary | #FFFFFF | #F5F5F5 | FAIL | Use text-white |
+| text-secondary | #A0A0A0 | #888888 | FAIL | Use #A0A0A0 or text-muted |
 
 ---
 
 ## Spacing Comparison
 
-| Location     | Design | Code | Match | Fix                    |
-| ------------ | ------ | ---- | ----- | ---------------------- |
-| Card padding | 24px   | 20px | FAIL  | Use p-6 instead of p-5 |
-| Section gap  | 16px   | 16px | PASS  | -                      |
-| Item gap     | 12px   | 12px | PASS  | -                      |
-| Page margin  | 32px   | 24px | FAIL  | Use m-8 instead of m-6 |
+| Location | Design | Code | Match | Fix |
+|----------|--------|------|-------|-----|
+| Card padding | 24px | 20px | FAIL | Use p-6 instead of p-5 |
+| Section gap | 16px | 16px | PASS | - |
+| Item gap | 12px | 12px | PASS | - |
+| Page margin | 32px | 24px | FAIL | Use m-8 instead of m-6 |
 
 ---
 
 ## Typography Comparison
 
-| Element          | Design | Code     | Match | Fix                              |
-| ---------------- | ------ | -------- | ----- | -------------------------------- |
-| Heading size     | 24px   | 24px     | PASS  | -                                |
-| Heading weight   | bold   | semibold | FAIL  | Use font-bold                    |
-| Body size        | 16px   | 14px     | FAIL  | Use text-base instead of text-sm |
-| Body line-height | 1.5    | 1.5      | PASS  | -                                |
+| Element | Design | Code | Match | Fix |
+|---------|--------|------|-------|-----|
+| Heading size | 24px | 24px | PASS | - |
+| Heading weight | bold | semibold | FAIL | Use font-bold |
+| Body size | 16px | 14px | FAIL | Use text-base instead of text-sm |
+| Body line-height | 1.5 | 1.5 | PASS | - |
 
 ---
 
 ## Effects Comparison
 
-| Effect      | Design     | Code            | Match |
-| ----------- | ---------- | --------------- | ----- |
-| Card shadow | 0 4px 12px | shadow-lg       | PASS  |
-| Card radius | 12px       | rounded-xl      | PASS  |
-| Border      | 1px #333   | border-zinc-700 | PASS  |
+| Effect | Design | Code | Match |
+|--------|--------|------|-------|
+| Card shadow | 0 4px 12px | shadow-lg | PASS |
+| Card radius | 12px | rounded-xl | PASS |
+| Border | 1px #333 | border-zinc-700 | PASS |
 
 ---
 
@@ -335,13 +324,12 @@ Based on this analysis, consider adding these tokens:
 # Add to tokens.yaml
 colors:
   text:
-    secondary: "#A0A0A0" # Currently hardcoded as #888
+    secondary: "#A0A0A0"  # Currently hardcoded as #888
 
 spacing:
   page:
-    margin: "32px" # Currently using 24px
+    margin: "32px"  # Currently using 24px
 ```
-````
 
 ---
 
@@ -352,8 +340,7 @@ spacing:
 3. [ ] Apply Priority 3 fixes (1 change, 1 instance)
 4. [ ] Re-run `*design-compare` to validate
 5. [ ] Update tokens.yaml with recommendations
-
-````
+```
 
 ---
 
@@ -388,23 +375,23 @@ spacing:
 *design-compare ./designs/card.png ./app/components/ui/card/
 
 # Compare with live URL (takes screenshot first)
-*design-compare ./designs/home.png http://localhost:3017/
+*design-compare ./designs/home.png http://localhost:3000/
 
 # User pastes image directly
 *design-compare
 # [Brad prompts for reference image]
 # [Brad prompts for implementation path]
-````
+```
 
 ---
 
 ## Integration with Other Commands
 
-| After `*design-compare` | Use Case                                |
-| ----------------------- | --------------------------------------- |
-| `*validate-tokens`      | Ensure fixes use design tokens          |
-| `*contrast-check`       | Validate accessibility of color changes |
-| `*scan`                 | Deep analysis of the design reference   |
+| After `*design-compare` | Use Case |
+|-------------------------|----------|
+| `*validate-tokens` | Ensure fixes use design tokens |
+| `*contrast-check` | Validate accessibility of color changes |
+| `*scan` | Deep analysis of the design reference |
 
 ---
 
@@ -418,10 +405,10 @@ outputs/design-system/{project}/fidelity/
 └── {timestamp}-{name}-diff.yaml     # Comparison data
 ```
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

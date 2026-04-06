@@ -14,9 +14,9 @@ trigger:
   manual: "*create-doc {artefato}"
 
 templates:
-  - agent-flow-doc-tmpl # SC-DP-001
-  - workflow-doc-tmpl # SC-DP-002
-  - squad-readme-tmpl # SC-DP-003
+  - agent-flow-doc-tmpl      # SC-DP-001
+  - workflow-doc-tmpl        # SC-DP-002
+  - squad-readme-tmpl        # SC-DP-003
 
 patterns:
   - SC-DP-001: Agent Flow Documentation
@@ -34,7 +34,7 @@ rationale: |
 **Squad:** squad-creator
 **Phase:** Operationalization (Fase 3 do pipeline)
 **Agent:** @pedro-valerio
-**Pattern:** SC-DP-\* (Documentation Patterns)
+**Pattern:** SC-DP-* (Documentation Patterns)
 
 ## Purpose
 
@@ -46,13 +46,13 @@ Criar documentação completa e padronizada para cada artefato do squad-creator.
 
 ## Veto Conditions
 
-| Trigger                          | Ação                                               |
-| -------------------------------- | -------------------------------------------------- |
-| Agent criado sem agent-flow doc  | **VETO** - criar documentação antes de marcar done |
+| Trigger | Ação |
+|---------|------|
+| Agent criado sem agent-flow doc | **VETO** - criar documentação antes de marcar done |
 | Workflow criado sem workflow doc | **VETO** - criar documentação antes de marcar done |
-| Squad criado sem README completo | **VETO** - criar README antes de marcar done       |
-| Doc sem diagrama Mermaid         | **VETO** - adicionar diagrama                      |
-| Doc sem troubleshooting          | **VETO** - adicionar seção                         |
+| Squad criado sem README completo | **VETO** - criar README antes de marcar done |
+| Doc sem diagrama Mermaid | **VETO** - adicionar diagrama |
+| Doc sem troubleshooting | **VETO** - adicionar seção |
 
 ---
 
@@ -61,7 +61,6 @@ Criar documentação completa e padronizada para cada artefato do squad-creator.
 ### Automática
 
 Triggered automaticamente após:
-
 - `*create-agent` → Cria agent-flow doc
 - `*create-workflow` → Cria workflow doc
 - `*create-squad` → Cria/atualiza README
@@ -74,7 +73,6 @@ Triggered automaticamente após:
 ```
 
 **Exemplos:**
-
 - `*create-doc hormozi-offers` → Cria agent-flow doc
 - `*create-doc wf-create-squad` → Cria workflow doc
 - `*create-doc hormozi` → Atualiza README do squad
@@ -83,11 +81,11 @@ Triggered automaticamente após:
 
 ## Roteamento por Tipo de Artefato
 
-| Artefato Criado | Tipo de Doc    | Template                 | Destino                                             |
-| --------------- | -------------- | ------------------------ | --------------------------------------------------- |
-| Agent           | Agent Flow Doc | `agent-flow-doc-tmpl.md` | `docs/guides/aios-agent-flows/{agent}-system.md`    |
-| Workflow        | Workflow Doc   | `workflow-doc-tmpl.md`   | `docs/guides/aios-workflows/{workflow}-workflow.md` |
-| Squad           | README         | `squad-readme-tmpl.md`   | `squads/{squad}/README.md`                          |
+| Artefato Criado | Tipo de Doc | Template | Destino |
+|-----------------|-------------|----------|---------|
+| Agent | Agent Flow Doc | `agent-flow-doc-tmpl.md` | `docs/guides/aios-agent-flows/{agent}-system.md` |
+| Workflow | Workflow Doc | `workflow-doc-tmpl.md` | `docs/guides/aios-workflows/{workflow}-workflow.md` |
+| Squad | README | `squad-readme-tmpl.md` | `squads/{squad}/README.md` |
 
 ---
 
@@ -95,47 +93,47 @@ Triggered automaticamente após:
 
 ### SC-DP-001: Agent Flow Doc
 
-| Seção                          | Obrigatório |
-| ------------------------------ | ----------- |
-| Visão geral com propósito      | ✅          |
-| Lista completa de arquivos     | ✅          |
-| Flowchart Mermaid do sistema   | ✅          |
-| Mapeamento comando → task      | ✅          |
-| Diagrama de colaboração        | ✅          |
-| Best practices                 | ✅          |
-| Troubleshooting (3+ problemas) | ✅          |
-| Referências                    | ✅          |
-| Changelog                      | ✅          |
+| Seção | Obrigatório |
+|-------|-------------|
+| Visão geral com propósito | ✅ |
+| Lista completa de arquivos | ✅ |
+| Flowchart Mermaid do sistema | ✅ |
+| Mapeamento comando → task | ✅ |
+| Diagrama de colaboração | ✅ |
+| Best practices | ✅ |
+| Troubleshooting (3+ problemas) | ✅ |
+| Referências | ✅ |
+| Changelog | ✅ |
 
 ### SC-DP-002: Workflow Doc
 
-| Seção                                                | Obrigatório |
-| ---------------------------------------------------- | ----------- |
-| Visão geral com objetivo                             | ✅          |
-| **3 diagramas Mermaid** (flowchart, state, sequence) | ✅          |
-| Steps detalhados com inputs/outputs                  | ✅          |
-| Veto conditions por step                             | ✅          |
-| Agentes participantes com comandos                   | ✅          |
-| Mapa de tasks por fase                               | ✅          |
-| Pré-requisitos                                       | ✅          |
-| Entradas e saídas do workflow                        | ✅          |
-| Pontos de decisão com diagrama                       | ✅          |
-| Condições de bloqueio (HALT)                         | ✅          |
-| Troubleshooting (3+ problemas)                       | ✅          |
-| Changelog                                            | ✅          |
+| Seção | Obrigatório |
+|-------|-------------|
+| Visão geral com objetivo | ✅ |
+| **3 diagramas Mermaid** (flowchart, state, sequence) | ✅ |
+| Steps detalhados com inputs/outputs | ✅ |
+| Veto conditions por step | ✅ |
+| Agentes participantes com comandos | ✅ |
+| Mapa de tasks por fase | ✅ |
+| Pré-requisitos | ✅ |
+| Entradas e saídas do workflow | ✅ |
+| Pontos de decisão com diagrama | ✅ |
+| Condições de bloqueio (HALT) | ✅ |
+| Troubleshooting (3+ problemas) | ✅ |
+| Changelog | ✅ |
 
 ### SC-DP-003: Squad README
 
-| Seção                        | Obrigatório |
-| ---------------------------- | ----------- |
-| Descrição clara do propósito | ✅          |
-| Tabela de agents com papéis  | ✅          |
-| Estrutura de diretórios      | ✅          |
-| Quick start funcional        | ✅          |
-| Lista de workflows           | ✅          |
-| Comandos por agent           | ✅          |
-| Veto conditions              | ✅          |
-| Links para docs completas    | ✅          |
+| Seção | Obrigatório |
+|-------|-------------|
+| Descrição clara do propósito | ✅ |
+| Tabela de agents com papéis | ✅ |
+| Estrutura de diretórios | ✅ |
+| Quick start funcional | ✅ |
+| Lista de workflows | ✅ |
+| Comandos por agent | ✅ |
+| Veto conditions | ✅ |
+| Links para docs completas | ✅ |
 
 ---
 
@@ -177,12 +175,12 @@ AN extrai conhecimento → PV operacionaliza → PV documenta → Chief monta
 
 ### Posição no Fluxo
 
-| Fase  | Responsável        | Ação                              | Task                          |
-| ----- | ------------------ | --------------------------------- | ----------------------------- |
-| 1     | @oalanicolas       | Extrai conhecimento               | `extract-*.md`                |
-| 2     | @pedro-valerio     | Operacionaliza (SOPs, checklists) | `extract-sop.md`, etc         |
-| **3** | **@pedro-valerio** | **Documenta**                     | **`create-documentation.md`** |
-| 4     | @squad-chief       | Monta squad final                 | `create-squad.md`             |
+| Fase | Responsável | Ação | Task |
+|------|-------------|------|------|
+| 1 | @oalanicolas | Extrai conhecimento | `extract-*.md` |
+| 2 | @pedro-valerio | Operacionaliza (SOPs, checklists) | `extract-sop.md`, etc |
+| **3** | **@pedro-valerio** | **Documenta** | **`create-documentation.md`** |
+| 4 | @squad-chief | Monta squad final | `create-squad.md` |
 
 ---
 
@@ -190,17 +188,17 @@ AN extrai conhecimento → PV operacionaliza → PV documenta → Chief monta
 
 ### Chamado Automaticamente Por
 
-| Task                 | Quando                                  |
-| -------------------- | --------------------------------------- |
-| `create-agent.md`    | Após agent criado com sucesso           |
-| `create-workflow.md` | Após workflow criado com sucesso        |
-| `create-squad.md`    | Após squad criado com sucesso           |
-| `upgrade-squad.md`   | Se doc não existe ou está desatualizada |
+| Task | Quando |
+|------|--------|
+| `create-agent.md` | Após agent criado com sucesso |
+| `create-workflow.md` | Após workflow criado com sucesso |
+| `create-squad.md` | Após squad criado com sucesso |
+| `upgrade-squad.md` | Se doc não existe ou está desatualizada |
 
 ### Pode Chamar
 
-| Task                | Quando                     |
-| ------------------- | -------------------------- |
+| Task | Quando |
+|------|--------|
 | `validate-squad.md` | Após criar README do squad |
 
 ---
@@ -236,25 +234,25 @@ documentation_output:
 
 ## Completion Criteria
 
-| Critério                       | Obrigatório |
-| ------------------------------ | ----------- |
-| Doc criada no path correto     | ✅          |
-| Template seguido 100%          | ✅          |
-| Diagramas Mermaid presentes    | ✅          |
-| Troubleshooting com 3+ itens   | ✅          |
-| README do diretório atualizado | ✅          |
-| Checklist de qualidade 100%    | ✅          |
+| Critério | Obrigatório |
+|----------|-------------|
+| Doc criada no path correto | ✅ |
+| Template seguido 100% | ✅ |
+| Diagramas Mermaid presentes | ✅ |
+| Troubleshooting com 3+ itens | ✅ |
+| README do diretório atualizado | ✅ |
+| Checklist de qualidade 100% | ✅ |
 
 ---
 
 ## Templates
 
-| Pattern ID | Nome                     | Arquivo                            |
-| ---------- | ------------------------ | ---------------------------------- |
-| SC-DP-001  | Agent Flow Documentation | `templates/agent-flow-doc-tmpl.md` |
-| SC-DP-002  | Workflow Documentation   | `templates/workflow-doc-tmpl.md`   |
-| SC-DP-003  | Squad README             | `templates/squad-readme-tmpl.md`   |
+| Pattern ID | Nome | Arquivo |
+|------------|------|---------|
+| SC-DP-001 | Agent Flow Documentation | `templates/agent-flow-doc-tmpl.md` |
+| SC-DP-002 | Workflow Documentation | `templates/workflow-doc-tmpl.md` |
+| SC-DP-003 | Squad README | `templates/squad-readme-tmpl.md` |
 
 ---
 
-_Task criada por @pedro-valerio — "Se não está documentado, não existe"_
+*Task criada por @pedro-valerio — "Se não está documentado, não existe"*

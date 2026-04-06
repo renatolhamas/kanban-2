@@ -10,10 +10,10 @@
  * @story 2.10 - Quality Gate Manager
  */
 
-const { spawn } = require("child_process");
-const fs = require("fs").promises;
-const path = require("path");
-const { BaseLayer } = require("./base-layer");
+const { spawn } = require('child_process');
+const fs = require('fs').promises;
+const path = require('path');
+const { BaseLayer } = require('./base-layer');
 
 /**
  * Layer 2: PR Automation checks
@@ -25,7 +25,7 @@ class Layer2PRAutomation extends BaseLayer {
    * @param {Object} config - Layer 2 configuration
    */
   constructor(config = {}) {
-    super("Layer 2: PR Automation", config);
+    super('Layer 2: PR Automation', config);
     this.coderabbit = config.coderabbit || {};
     this.quinn = config.quinn || {};
   }
@@ -43,18 +43,18 @@ class Layer2PRAutomation extends BaseLayer {
 
     if (!this.enabled) {
       this.addResult({
-        check: "layer2",
+        check: 'layer2',
         pass: true,
         skipped: true,
-        message: "Layer 2 disabled",
+        message: 'Layer 2 disabled',
       });
       this.stopTimer();
       return this.getSummary();
     }
 
     if (verbose) {
-      console.log("\n🤖 Layer 2: PR Automation");
-      console.log("━".repeat(50));
+      console.log('\n🤖 Layer 2: PR Automation');
+      console.log('━'.repeat(50));
     }
 
     // Run CodeRabbit
@@ -73,9 +73,9 @@ class Layer2PRAutomation extends BaseLayer {
 
     if (verbose) {
       const summary = this.getSummary();
-      const icon = summary.pass ? "✅" : "⚠️";
+      const icon = summary.pass ? '✅' : '⚠️';
       console.log(
-        `\n${icon} Layer 2 ${summary.pass ? "PASSED" : "HAS ISSUES"} (${this.formatDuration(summary.duration)})`,
+        `\n${icon} Layer 2 ${summary.pass ? 'PASSED' : 'HAS ISSUES'} (${this.formatDuration(summary.duration)})`,
       );
     }
 
@@ -92,7 +92,7 @@ class Layer2PRAutomation extends BaseLayer {
     const timeout = this.coderabbit.timeout || 900000; // 15 minutes default
 
     if (verbose) {
-      console.log("  🐰 Running CodeRabbit review...");
+      console.log('  🐰 Running CodeRabbit review...');
     }
 
     try {
@@ -106,23 +106,19 @@ class Layer2PRAutomation extends BaseLayer {
       // Parse CodeRabbit output for issues
       const issues = this.parseCodeRabbitOutput(result.stdout + result.stderr);
 
-      const criticalCount = issues.filter(
-        (i) => i.severity === "CRITICAL",
-      ).length;
-      const highCount = issues.filter((i) => i.severity === "HIGH").length;
-      const mediumCount = issues.filter((i) => i.severity === "MEDIUM").length;
-      const lowCount = issues.filter((i) => i.severity === "LOW").length;
+      const criticalCount = issues.filter((i) => i.severity === 'CRITICAL').length;
+      const highCount = issues.filter((i) => i.severity === 'HIGH').length;
+      const mediumCount = issues.filter((i) => i.severity === 'MEDIUM').length;
+      const lowCount = issues.filter((i) => i.severity === 'LOW').length;
 
       // Block on CRITICAL issues
-      const blockOn = this.coderabbit.blockOn || ["CRITICAL"];
-      const hasBlockingIssues = issues.some((i) =>
-        blockOn.includes(i.severity),
-      );
+      const blockOn = this.coderabbit.blockOn || ['CRITICAL'];
+      const hasBlockingIssues = issues.some((i) => blockOn.includes(i.severity));
 
       const pass = !hasBlockingIssues;
 
       const coderabbitResult = {
-        check: "coderabbit",
+        check: 'coderabbit',
         pass,
         issues: {
           critical: criticalCount,
@@ -139,7 +135,7 @@ class Layer2PRAutomation extends BaseLayer {
       };
 
       if (verbose) {
-        const icon = pass ? "✓" : "⚠️";
+        const icon = pass ? '✓' : '⚠️';
         console.log(
           `  ${icon} CodeRabbit: ${criticalCount} CRITICAL, ${highCount} HIGH, ${mediumCount} MEDIUM`,
         );
@@ -148,23 +144,20 @@ class Layer2PRAutomation extends BaseLayer {
       return coderabbitResult;
     } catch (error) {
       // CodeRabbit not installed or not accessible - graceful degradation
-      if (
-        error.message.includes("not found") ||
-        error.message.includes("command not found")
-      ) {
+      if (error.message.includes('not found') || error.message.includes('command not found')) {
         if (verbose) {
-          console.log("  ⏭️ CodeRabbit: Skipped (not installed)");
+          console.log('  ⏭️ CodeRabbit: Skipped (not installed)');
         }
         return {
-          check: "coderabbit",
+          check: 'coderabbit',
           pass: true,
           skipped: true,
-          message: "CodeRabbit not installed - skipping (graceful degradation)",
+          message: 'CodeRabbit not installed - skipping (graceful degradation)',
         };
       }
 
       return {
-        check: "coderabbit",
+        check: 'coderabbit',
         pass: false,
         error: error.message,
         message: `CodeRabbit error: ${error.message}`,
@@ -182,10 +175,10 @@ class Layer2PRAutomation extends BaseLayer {
 
     // Match patterns like "CRITICAL:", "HIGH:", etc.
     const patterns = [
-      { regex: /\bCRITICAL\b[:\s]+([^\n]+)/gi, severity: "CRITICAL" },
-      { regex: /\bHIGH\b[:\s]+([^\n]+)/gi, severity: "HIGH" },
-      { regex: /\bMEDIUM\b[:\s]+([^\n]+)/gi, severity: "MEDIUM" },
-      { regex: /\bLOW\b[:\s]+([^\n]+)/gi, severity: "LOW" },
+      { regex: /\bCRITICAL\b[:\s]+([^\n]+)/gi, severity: 'CRITICAL' },
+      { regex: /\bHIGH\b[:\s]+([^\n]+)/gi, severity: 'HIGH' },
+      { regex: /\bMEDIUM\b[:\s]+([^\n]+)/gi, severity: 'MEDIUM' },
+      { regex: /\bLOW\b[:\s]+([^\n]+)/gi, severity: 'LOW' },
     ];
 
     patterns.forEach(({ regex, severity }) => {
@@ -211,7 +204,7 @@ class Layer2PRAutomation extends BaseLayer {
     const { verbose = false } = context;
 
     if (verbose) {
-      console.log("  🧪 Running Quinn (@qa) review...");
+      console.log('  🧪 Running Quinn (@qa) review...');
     }
 
     try {
@@ -226,7 +219,7 @@ class Layer2PRAutomation extends BaseLayer {
       const pass = blockingSuggestions.length === 0;
 
       const quinnResult = {
-        check: "quinn",
+        check: 'quinn',
         pass,
         suggestions: suggestions.length,
         blocking: blockingSuggestions.length,
@@ -237,7 +230,7 @@ class Layer2PRAutomation extends BaseLayer {
       };
 
       if (verbose) {
-        const icon = pass ? "✓" : "⚠️";
+        const icon = pass ? '✓' : '⚠️';
         console.log(
           `  ${icon} Quinn: ${suggestions.length} suggestions, ${blockingSuggestions.length} blocking`,
         );
@@ -246,7 +239,7 @@ class Layer2PRAutomation extends BaseLayer {
       return quinnResult;
     } catch (error) {
       return {
-        check: "quinn",
+        check: 'quinn',
         pass: true, // Don't block on Quinn errors
         skipped: true,
         error: error.message,
@@ -301,14 +294,14 @@ class Layer2PRAutomation extends BaseLayer {
 
       const child = spawn(command, [], options);
 
-      let stdout = "";
-      let stderr = "";
+      let stdout = '';
+      let stderr = '';
 
-      child.stdout.on("data", (data) => {
+      child.stdout.on('data', (data) => {
         stdout += data.toString();
       });
 
-      child.stderr.on("data", (data) => {
+      child.stderr.on('data', (data) => {
         stderr += data.toString();
       });
 
@@ -317,7 +310,7 @@ class Layer2PRAutomation extends BaseLayer {
         reject(new Error(`Command timed out after ${timeout}ms`));
       }, timeout);
 
-      child.on("close", (exitCode) => {
+      child.on('close', (exitCode) => {
         clearTimeout(timer);
         resolve({
           exitCode,
@@ -327,7 +320,7 @@ class Layer2PRAutomation extends BaseLayer {
         });
       });
 
-      child.on("error", (error) => {
+      child.on('error', (error) => {
         clearTimeout(timer);
         reject(error);
       });

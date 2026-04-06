@@ -151,7 +151,6 @@ FOR each decision:
 ## Quick Reference Cards
 
 ### For Code Changes
-
 ```
 VERIFY (1) → Does file exist?
 REUSE (2) → Component exists?
@@ -162,7 +161,6 @@ VALIDATE (9) → Tests pass?
 ```
 
 ### For Creating New Things
-
 ```
 VERIFY (1) → Requirements clear?
 REUSE (2) → Similar exists?
@@ -174,7 +172,6 @@ CHOOSE (10) → Ready to ship?
 ```
 
 ### For Debugging
-
 ```
 VERIFY (1) → Physical state correct?
 PRESERVE (5) → What changed?
@@ -183,7 +180,6 @@ VALIDATE (9) → Fix works?
 ```
 
 ### For Feedback/Criticism
-
 ```
 SILENCE (7) → Don't justify, just fix
 VALIDATE (9) → Fix verified?

@@ -9,9 +9,9 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const MarkdownReporter = require("./markdown");
-const JSONReporter = require("./json");
-const ConsoleReporter = require("./console");
+const MarkdownReporter = require('./markdown');
+const JSONReporter = require('./json');
+const ConsoleReporter = require('./console');
 
 /**
  * Reporter Manager
@@ -30,7 +30,7 @@ class ReporterManager {
    */
   constructor(config = {}) {
     this.config = config;
-    this.defaultFormat = config.output?.format || "console";
+    this.defaultFormat = config.output?.format || 'console';
     this.verbose = config.output?.verbose || false;
 
     // Initialize reporters
@@ -102,8 +102,8 @@ class ReporterManager {
    * @param {Object} reporter - Reporter instance
    */
   registerReporter(name, reporter) {
-    if (typeof reporter.generate !== "function") {
-      throw new Error("Reporter must implement generate() method");
+    if (typeof reporter.generate !== 'function') {
+      throw new Error('Reporter must implement generate() method');
     }
     this.reporters[name] = reporter;
   }

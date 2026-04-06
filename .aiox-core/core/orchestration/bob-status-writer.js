@@ -17,17 +17,17 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs-extra");
-const path = require("path");
-const os = require("os");
+const fs = require('fs-extra');
+const path = require('path');
+const os = require('os');
 
 /**
  * Bob Status Schema version
  * @constant {string}
  */
-const BOB_STATUS_VERSION = "1.0";
+const BOB_STATUS_VERSION = '1.0';
 
 /**
  * Bob Status Schema (Story 12.6 - AC9: Single source of truth)
@@ -69,12 +69,12 @@ const BOB_STATUS_VERSION = "1.0";
  * @constant {string[]}
  */
 const DEFAULT_PIPELINE_STAGES = [
-  "validation",
-  "development",
-  "self_healing",
-  "quality_gate",
-  "push",
-  "checkpoint",
+  'validation',
+  'development',
+  'self_healing',
+  'quality_gate',
+  'push',
+  'checkpoint',
 ];
 
 /**
@@ -87,14 +87,14 @@ function createDefaultBobStatus() {
     timestamp: new Date().toISOString(),
     orchestration: {
       active: false,
-      mode: "bob",
+      mode: 'bob',
       epic_id: null,
       current_story: null,
     },
     pipeline: {
       stages: DEFAULT_PIPELINE_STAGES,
       current_stage: null,
-      story_progress: "0/0",
+      story_progress: '0/0',
       completed_stages: [],
     },
     current_agent: {
@@ -130,8 +130,8 @@ class BobStatusWriter {
    * @param {boolean} [options.debug=false] - Enable debug logging
    */
   constructor(projectRoot, options = {}) {
-    if (!projectRoot || typeof projectRoot !== "string") {
-      throw new Error("projectRoot is required and must be a string");
+    if (!projectRoot || typeof projectRoot !== 'string') {
+      throw new Error('projectRoot is required and must be a string');
     }
 
     this.projectRoot = projectRoot;
@@ -140,8 +140,8 @@ class BobStatusWriter {
       ...options,
     };
 
-    this.dashboardDir = path.join(projectRoot, ".aiox", "dashboard");
-    this.statusPath = path.join(this.dashboardDir, "bob-status.json");
+    this.dashboardDir = path.join(projectRoot, '.aiox', 'dashboard');
+    this.statusPath = path.join(this.dashboardDir, 'bob-status.json');
 
     // Internal state tracking
     this._status = createDefaultBobStatus();
@@ -159,7 +159,7 @@ class BobStatusWriter {
     this._status.orchestration.active = true;
     this._sessionStartTime = Date.now();
     await this.writeBobStatus(this._status);
-    this._log("BobStatusWriter initialized");
+    this._log('BobStatusWriter initialized');
   }
 
   /**
@@ -176,13 +176,9 @@ class BobStatusWriter {
 
       // Update elapsed times
       const now = Date.now();
-      state.elapsed.session_seconds = Math.floor(
-        (now - this._sessionStartTime) / 1000,
-      );
+      state.elapsed.session_seconds = Math.floor((now - this._sessionStartTime) / 1000);
       if (this._storyStartTime) {
-        state.elapsed.story_seconds = Math.floor(
-          (now - this._storyStartTime) / 1000,
-        );
+        state.elapsed.story_seconds = Math.floor((now - this._storyStartTime) / 1000);
       }
 
       // Atomic write: write to temp file, then rename
@@ -191,9 +187,7 @@ class BobStatusWriter {
       await fs.move(tempPath, this.statusPath, { overwrite: true });
 
       this._status = state;
-      this._log(
-        `Status written: stage=${state.pipeline.current_stage}, agent=${state.current_agent.id}`,
-      );
+      this._log(`Status written: stage=${state.pipeline.current_stage}, agent=${state.current_agent.id}`);
     } catch (error) {
       this._log(`Failed to write status: ${error.message}`);
       // Silent failure - never interrupt CLI (CLI First principle)
@@ -206,10 +200,7 @@ class BobStatusWriter {
    * @returns {Promise<void>}
    */
   async updateOrchestration(orchestration) {
-    this._status.orchestration = {
-      ...this._status.orchestration,
-      ...orchestration,
-    };
+    this._status.orchestration = { ...this._status.orchestration, ...orchestration };
     await this.writeBobStatus(this._status);
   }
 
@@ -296,9 +287,7 @@ class BobStatusWriter {
    * @returns {Promise<void>}
    */
   async removeTerminal(pid) {
-    this._status.active_terminals = this._status.active_terminals.filter(
-      (t) => t.pid !== pid,
-    );
+    this._status.active_terminals = this._status.active_terminals.filter((t) => t.pid !== pid);
     await this.writeBobStatus(this._status);
   }
 
@@ -326,9 +315,7 @@ class BobStatusWriter {
    * @returns {Promise<void>}
    */
   async resolveSurfaceDecision(criteria) {
-    const decision = this._status.surface_decisions.find(
-      (d) => d.criteria === criteria && !d.resolved,
-    );
+    const decision = this._status.surface_decisions.find((d) => d.criteria === criteria && !d.resolved);
     if (decision) {
       decision.resolved = true;
       decision.resolved_at = new Date().toISOString();
@@ -429,7 +416,7 @@ class BobStatusWriter {
   async complete() {
     this._status.orchestration.active = false;
     await this.writeBobStatus(this._status);
-    this._log("BobStatusWriter completed");
+    this._log('BobStatusWriter completed');
   }
 
   /**

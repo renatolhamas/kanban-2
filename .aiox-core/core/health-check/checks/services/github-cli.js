@@ -8,8 +8,8 @@
  * @story HCS-2 - Health Check System Implementation
  */
 
-const { execSync } = require("child_process");
-const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
+const { execSync } = require('child_process');
+const { BaseCheck, CheckSeverity, CheckDomain } = require('../../base-check');
 
 /**
  * GitHub CLI check
@@ -20,15 +20,15 @@ const { BaseCheck, CheckSeverity, CheckDomain } = require("../../base-check");
 class GithubCliCheck extends BaseCheck {
   constructor() {
     super({
-      id: "services.github-cli",
-      name: "GitHub CLI",
-      description: "Verifies GitHub CLI (gh) installation and authentication",
+      id: 'services.github-cli',
+      name: 'GitHub CLI',
+      description: 'Verifies GitHub CLI (gh) installation and authentication',
       domain: CheckDomain.SERVICES,
       severity: CheckSeverity.MEDIUM,
       timeout: 5000,
       cacheable: true,
       healingTier: 3, // Manual installation
-      tags: ["github", "cli", "integration"],
+      tags: ['github', 'cli', 'integration'],
     });
   }
 
@@ -47,25 +47,25 @@ class GithubCliCheck extends BaseCheck {
 
     // Check if gh is installed
     try {
-      const version = execSync("gh --version", {
-        encoding: "utf8",
+      const version = execSync('gh --version', {
+        encoding: 'utf8',
         timeout: 5000,
         windowsHide: true,
       }).trim();
 
       const versionMatch = version.match(/(\d+\.\d+\.\d+)/);
       details.installed = true;
-      details.version = versionMatch ? versionMatch[1] : "unknown";
+      details.version = versionMatch ? versionMatch[1] : 'unknown';
     } catch {
-      return this.pass("GitHub CLI (gh) not installed (optional)", {
+      return this.pass('GitHub CLI (gh) not installed (optional)', {
         details,
       });
     }
 
     // Check authentication status
     try {
-      const authStatus = execSync("gh auth status", {
-        encoding: "utf8",
+      const authStatus = execSync('gh auth status', {
+        encoding: 'utf8',
         timeout: 10000,
         windowsHide: true,
       });
@@ -81,21 +81,15 @@ class GithubCliCheck extends BaseCheck {
       // Not authenticated
       details.authenticated = false;
 
-      return this.warning(
-        `GitHub CLI installed (v${details.version}) but not authenticated`,
-        {
-          recommendation: "Run: gh auth login",
-          details,
-        },
-      );
+      return this.warning(`GitHub CLI installed (v${details.version}) but not authenticated`, {
+        recommendation: 'Run: gh auth login',
+        details,
+      });
     }
 
-    return this.pass(
-      `GitHub CLI v${details.version} authenticated as ${details.user || "user"}`,
-      {
-        details,
-      },
-    );
+    return this.pass(`GitHub CLI v${details.version} authenticated as ${details.user || 'user'}`, {
+      details,
+    });
   }
 
   /**
@@ -103,17 +97,17 @@ class GithubCliCheck extends BaseCheck {
    */
   getHealer() {
     return {
-      name: "github-cli-setup",
-      action: "manual",
-      manualGuide: "Set up GitHub CLI",
+      name: 'github-cli-setup',
+      action: 'manual',
+      manualGuide: 'Set up GitHub CLI',
       steps: [
-        "Install gh: https://cli.github.com/",
-        "Run: gh auth login",
-        "Select GitHub.com or Enterprise",
-        "Choose authentication method (browser recommended)",
-        "Verify with: gh auth status",
+        'Install gh: https://cli.github.com/',
+        'Run: gh auth login',
+        'Select GitHub.com or Enterprise',
+        'Choose authentication method (browser recommended)',
+        'Verify with: gh auth status',
       ],
-      documentation: "https://cli.github.com/manual/",
+      documentation: 'https://cli.github.com/manual/',
     };
   }
 }

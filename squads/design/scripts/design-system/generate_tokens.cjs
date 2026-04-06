@@ -15,25 +15,19 @@
  *   - tailwind.theme.css (Tailwind v4 @theme)
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const ROOT = process.cwd();
-const EXTRACTION_DIR = path.join(
-  ROOT,
-  "workspace",
-  "domains",
-  "design-system",
-  "extraction",
-);
-const CURATED_DIR = path.join(EXTRACTION_DIR, "curated");
-const OUTPUT_DIR = path.join(ROOT, "workspace", "ui", "clickmax");
+const EXTRACTION_DIR = path.join(ROOT, 'workspace', 'domains', 'design-system', 'extraction');
+const CURATED_DIR = path.join(EXTRACTION_DIR, 'curated');
+const OUTPUT_DIR = path.join(ROOT, 'workspace', 'ui', 'clickmax');
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function readCurated(name) {
   const filePath = path.join(CURATED_DIR, name);
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
 function writeCSS(relativePath, content) {
@@ -50,8 +44,8 @@ function cssHeader(title) {
 // ── Generate Primitives ────────────────────────────────────────────────────
 
 function generatePrimitiveColors(colors) {
-  let css = cssHeader("Primitive Color Tokens — OKLCH");
-  css += ":root {\n";
+  let css = cssHeader('Primitive Color Tokens — OKLCH');
+  css += ':root {\n';
 
   // Sort palette by classification then count
   const palette = colors.palette || [];
@@ -59,7 +53,7 @@ function generatePrimitiveColors(colors) {
   // Group by classification
   const groups = new Map();
   for (const color of palette) {
-    const cls = color.classification || "unknown";
+    const cls = color.classification || 'unknown';
     if (!groups.has(cls)) groups.set(cls, []);
     groups.get(cls).push(color);
   }
@@ -70,7 +64,7 @@ function generatePrimitiveColors(colors) {
       css += `  --color-${classification}: ${colorGroup[0].hex};\n`;
     } else {
       colorGroup.forEach((c, i) => {
-        const suffix = i === 0 ? "" : `-${i + 1}`;
+        const suffix = i === 0 ? '' : `-${i + 1}`;
         css += `  --color-${classification}${suffix}: ${c.hex};\n`;
       });
     }
@@ -85,68 +79,68 @@ function generatePrimitiveColors(colors) {
     }
   }
 
-  css += "}\n";
+  css += '}\n';
   return css;
 }
 
 function generatePrimitiveSpacing(spacing) {
-  let css = cssHeader("Primitive Spacing Tokens — 4px grid");
-  css += ":root {\n";
+  let css = cssHeader('Primitive Spacing Tokens — 4px grid');
+  css += ':root {\n';
 
   for (const step of spacing.scale || []) {
-    const varName = `--spacing-${step.name.replace(".", "_")}`;
+    const varName = `--spacing-${step.name.replace('.', '_')}`;
     css += `  ${varName}: ${step.rem}rem; /* ${step.px}px */\n`;
   }
 
-  css += "}\n";
+  css += '}\n';
   return css;
 }
 
 function generatePrimitiveTypography(typography) {
-  let css = cssHeader("Primitive Typography Tokens");
-  css += ":root {\n";
+  let css = cssHeader('Primitive Typography Tokens');
+  css += ':root {\n';
 
   // Font families
-  css += "\n  /* Font Families */\n";
+  css += '\n  /* Font Families */\n';
   for (const family of typography.families || []) {
-    css += `  --font-family-${family.role}: '${family.name}', ${family.role === "mono" ? "monospace" : "sans-serif"};\n`;
+    css += `  --font-family-${family.role}: '${family.name}', ${family.role === 'mono' ? 'monospace' : 'sans-serif'};\n`;
   }
 
   // Font sizes
-  css += "\n  /* Font Sizes */\n";
+  css += '\n  /* Font Sizes */\n';
   for (const size of typography.sizeScale || []) {
     css += `  --font-size-${size.name}: ${size.rem}rem; /* ${size.px}px */\n`;
   }
 
   // Font weights
-  css += "\n  /* Font Weights */\n";
+  css += '\n  /* Font Weights */\n';
   for (const weight of typography.weights || []) {
     css += `  --font-weight-${weight.name}: ${weight.value};\n`;
   }
 
   // Line heights
-  css += "\n  /* Line Heights */\n";
+  css += '\n  /* Line Heights */\n';
   for (const lh of typography.lineHeights || []) {
     css += `  --line-height-${lh.name}: ${lh.value};\n`;
   }
 
   // Letter spacing
-  css += "\n  /* Letter Spacing */\n";
+  css += '\n  /* Letter Spacing */\n';
   for (const ls of typography.letterSpacing || []) {
     css += `  --letter-spacing-${ls.name}: ${ls.em}em;\n`;
   }
 
-  css += "}\n";
+  css += '}\n';
   return css;
 }
 
 // ── Generate Shadows & Radius ──────────────────────────────────────────────
 
 function generateShadows(shadows) {
-  let css = cssHeader("Shadow Tokens — Depth Levels");
-  css += ":root {\n";
-  css += "  --color-shadow: rgba(0, 0, 0, 0.1);\n";
-  css += "  --color-shadow-strong: rgba(0, 0, 0, 0.25);\n\n";
+  let css = cssHeader('Shadow Tokens — Depth Levels');
+  css += ':root {\n';
+  css += '  --color-shadow: rgba(0, 0, 0, 0.1);\n';
+  css += '  --color-shadow-strong: rgba(0, 0, 0, 0.25);\n\n';
 
   for (const shadow of shadows.shadows || []) {
     css += `  ${shadow.cssVar}: ${shadow.css};\n`;
@@ -156,121 +150,113 @@ function generateShadows(shadows) {
     css += `  ${shadow.cssVar}: ${shadow.css};\n`;
   }
 
-  css += "\n  --shadow-none: none;\n";
-  css += "}\n";
+  css += '\n  --shadow-none: none;\n';
+  css += '}\n';
   return css;
 }
 
 function generateRadius(radius) {
-  let css = cssHeader("Border Radius Tokens — Harmonic Scale");
-  css += ":root {\n";
+  let css = cssHeader('Border Radius Tokens — Harmonic Scale');
+  css += ':root {\n';
 
   for (const r of radius.scale || []) {
-    const value = r.name === "full" ? "9999px" : `${r.rem}`;
+    const value = r.name === 'full' ? '9999px' : `${r.rem}`;
     css += `  ${r.cssVar}: ${value}; /* ${r.px}px */\n`;
   }
 
-  css += "}\n";
+  css += '}\n';
   return css;
 }
 
 // ── Generate Semantic Colors ───────────────────────────────────────────────
 
 function generateSemanticColors(colors) {
-  let css = cssHeader("Semantic Color Tokens");
-  css += ":root {\n";
+  let css = cssHeader('Semantic Color Tokens');
+  css += ':root {\n';
 
   // Try to identify semantic colors from the palette
   const palette = colors.palette || [];
 
   // Find accent/brand color (highest-count chromatic)
-  const chromatic = palette.filter(
-    (c) =>
-      !["white", "black"].includes(c.classification) &&
-      !c.classification.startsWith("gray"),
-  );
+  const chromatic = palette.filter((c) => !['white', 'black'].includes(c.classification) && !c.classification.startsWith('gray'));
   const accent = chromatic[0];
 
-  css += "  /* Brand */\n";
+  css += '  /* Brand */\n';
   if (accent) css += `  --color-primary: ${accent.hex};\n`;
   if (chromatic[1]) css += `  --color-secondary: ${chromatic[1].hex};\n`;
 
   // Semantic states
   const findByClass = (cls) => palette.find((c) => c.classification === cls);
-  const green = findByClass("green") || findByClass("teal");
-  const red = findByClass("red") || findByClass("pink");
-  const yellow = findByClass("yellow") || findByClass("orange");
-  const blue = findByClass("blue") || findByClass("indigo");
+  const green = findByClass('green') || findByClass('teal');
+  const red = findByClass('red') || findByClass('pink');
+  const yellow = findByClass('yellow') || findByClass('orange');
+  const blue = findByClass('blue') || findByClass('indigo');
 
-  css += "\n  /* Feedback */\n";
+  css += '\n  /* Feedback */\n';
   if (green) css += `  --color-success: ${green.hex};\n`;
   if (red) css += `  --color-destructive: ${red.hex};\n`;
   if (yellow) css += `  --color-warning: ${yellow.hex};\n`;
   if (blue) css += `  --color-info: ${blue.hex};\n`;
 
   // Surfaces
-  css += "\n  /* Surfaces */\n";
-  css += "  --color-background: #ffffff;\n";
-  css += "  --color-foreground: #0a0a0a;\n";
-  css += "  --color-muted: #f5f5f5;\n";
-  css += "  --color-muted-foreground: #737373;\n";
-  css += "  --color-border: #e5e5e5;\n";
-  css += "  --color-ring: var(--color-primary);\n";
+  css += '\n  /* Surfaces */\n';
+  css += '  --color-background: #ffffff;\n';
+  css += '  --color-foreground: #0a0a0a;\n';
+  css += '  --color-muted: #f5f5f5;\n';
+  css += '  --color-muted-foreground: #737373;\n';
+  css += '  --color-border: #e5e5e5;\n';
+  css += '  --color-ring: var(--color-primary);\n';
 
-  css += "}\n";
+  css += '}\n';
   return css;
 }
 
 // ── Generate Themes ────────────────────────────────────────────────────────
 
 function generateLightTheme() {
-  let css = cssHeader("Light Theme");
+  let css = cssHeader('Light Theme');
   css += '[data-theme="light"], :root {\n';
-  css += "  color-scheme: light;\n";
-  css += "  --color-background: #ffffff;\n";
-  css += "  --color-foreground: #0a0a0a;\n";
-  css += "  --color-muted: #f5f5f5;\n";
-  css += "  --color-muted-foreground: #737373;\n";
-  css += "  --color-border: #e5e5e5;\n";
-  css += "  --color-card: #ffffff;\n";
-  css += "  --color-card-foreground: #0a0a0a;\n";
-  css += "  --color-popover: #ffffff;\n";
-  css += "  --color-popover-foreground: #0a0a0a;\n";
-  css += "}\n";
+  css += '  color-scheme: light;\n';
+  css += '  --color-background: #ffffff;\n';
+  css += '  --color-foreground: #0a0a0a;\n';
+  css += '  --color-muted: #f5f5f5;\n';
+  css += '  --color-muted-foreground: #737373;\n';
+  css += '  --color-border: #e5e5e5;\n';
+  css += '  --color-card: #ffffff;\n';
+  css += '  --color-card-foreground: #0a0a0a;\n';
+  css += '  --color-popover: #ffffff;\n';
+  css += '  --color-popover-foreground: #0a0a0a;\n';
+  css += '}\n';
   return css;
 }
 
 function generateDarkTheme() {
-  let css = cssHeader("Dark Theme");
+  let css = cssHeader('Dark Theme');
   css += '[data-theme="dark"] {\n';
-  css += "  color-scheme: dark;\n";
-  css += "  --color-background: #0a0a0a;\n";
-  css += "  --color-foreground: #fafafa;\n";
-  css += "  --color-muted: #262626;\n";
-  css += "  --color-muted-foreground: #a3a3a3;\n";
-  css += "  --color-border: #262626;\n";
-  css += "  --color-card: #0a0a0a;\n";
-  css += "  --color-card-foreground: #fafafa;\n";
-  css += "  --color-popover: #0a0a0a;\n";
-  css += "  --color-popover-foreground: #fafafa;\n";
-  css += "}\n";
+  css += '  color-scheme: dark;\n';
+  css += '  --color-background: #0a0a0a;\n';
+  css += '  --color-foreground: #fafafa;\n';
+  css += '  --color-muted: #262626;\n';
+  css += '  --color-muted-foreground: #a3a3a3;\n';
+  css += '  --color-border: #262626;\n';
+  css += '  --color-card: #0a0a0a;\n';
+  css += '  --color-card-foreground: #fafafa;\n';
+  css += '  --color-popover: #0a0a0a;\n';
+  css += '  --color-popover-foreground: #fafafa;\n';
+  css += '}\n';
   return css;
 }
 
 // ── Generate Tailwind v4 @theme ────────────────────────────────────────────
 
 function generateTailwindTheme(colors, spacing, typography, shadows, radius) {
-  let css = cssHeader("Tailwind v4 @theme — Generated from curated tokens");
-  css += "@theme {\n";
+  let css = cssHeader('Tailwind v4 @theme — Generated from curated tokens');
+  css += '@theme {\n';
 
   // Colors
-  css += "  /* Colors */\n";
+  css += '  /* Colors */\n';
   const palette = colors.palette || [];
-  const chromatic = palette.filter(
-    (c) =>
-      !["white", "black"].includes(c.classification) &&
-      !c.classification.startsWith("gray"),
-  );
+  const chromatic = palette.filter((c) => !['white', 'black'].includes(c.classification) && !c.classification.startsWith('gray'));
   if (chromatic[0]) css += `  --color-primary: ${chromatic[0].hex};\n`;
   if (chromatic[1]) css += `  --color-secondary: ${chromatic[1].hex};\n`;
 
@@ -283,79 +269,73 @@ function generateTailwindTheme(colors, spacing, typography, shadows, radius) {
   }
 
   // Spacing
-  css += "\n  /* Spacing */\n";
+  css += '\n  /* Spacing */\n';
   for (const step of (spacing.scale || []).slice(0, 20)) {
-    css += `  --spacing-${step.name.replace(".", "_")}: ${step.rem}rem;\n`;
+    css += `  --spacing-${step.name.replace('.', '_')}: ${step.rem}rem;\n`;
   }
 
   // Typography
-  css += "\n  /* Font Families */\n";
+  css += '\n  /* Font Families */\n';
   for (const family of typography.families || []) {
-    css += `  --font-${family.role}: '${family.name}', ${family.role === "mono" ? "monospace" : "sans-serif"};\n`;
+    css += `  --font-${family.role}: '${family.name}', ${family.role === 'mono' ? 'monospace' : 'sans-serif'};\n`;
   }
 
-  css += "\n  /* Font Sizes */\n";
+  css += '\n  /* Font Sizes */\n';
   for (const size of typography.sizeScale || []) {
     css += `  --text-${size.name}: ${size.rem}rem;\n`;
   }
 
   // Radius
-  css += "\n  /* Border Radius */\n";
+  css += '\n  /* Border Radius */\n';
   for (const r of radius.scale || []) {
-    const name = r.name.replace("radius-", "");
-    const value = name === "full" ? "9999px" : r.rem;
+    const name = r.name.replace('radius-', '');
+    const value = name === 'full' ? '9999px' : r.rem;
     css += `  --radius-${name}: ${value};\n`;
   }
 
   // Shadows
-  css += "\n  /* Shadows */\n";
+  css += '\n  /* Shadows */\n';
   for (const shadow of shadows.shadows || []) {
     css += `  ${shadow.cssVar}: ${shadow.css};\n`;
   }
 
-  css += "}\n";
+  css += '}\n';
   return css;
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────
 
 function main() {
-  console.log("=== CSS TOKEN GENERATION ===\n");
+  console.log('=== CSS TOKEN GENERATION ===\n');
 
-  const colors = readCurated("curated-colors.json");
-  const spacing = readCurated("curated-spacing.json");
-  const typography = readCurated("curated-typography.json");
-  const shadows = readCurated("curated-shadows.json");
-  const radius = readCurated("curated-radius.json");
+  const colors = readCurated('curated-colors.json');
+  const spacing = readCurated('curated-spacing.json');
+  const typography = readCurated('curated-typography.json');
+  const shadows = readCurated('curated-shadows.json');
+  const radius = readCurated('curated-radius.json');
 
-  console.log("Generating CSS files:");
+  console.log('Generating CSS files:');
 
   // Primitives
-  writeCSS("tokens/primitives/colors.css", generatePrimitiveColors(colors));
-  writeCSS("tokens/primitives/spacing.css", generatePrimitiveSpacing(spacing));
-  writeCSS(
-    "tokens/primitives/typography.css",
-    generatePrimitiveTypography(typography),
-  );
+  writeCSS('tokens/primitives/colors.css', generatePrimitiveColors(colors));
+  writeCSS('tokens/primitives/spacing.css', generatePrimitiveSpacing(spacing));
+  writeCSS('tokens/primitives/typography.css', generatePrimitiveTypography(typography));
 
   // Semantic
-  writeCSS("tokens/semantic/colors.css", generateSemanticColors(colors));
+  writeCSS('tokens/semantic/colors.css', generateSemanticColors(colors));
 
   // Component
-  writeCSS("tokens/component/shadows.css", generateShadows(shadows));
-  writeCSS("tokens/component/radius.css", generateRadius(radius));
+  writeCSS('tokens/component/shadows.css', generateShadows(shadows));
+  writeCSS('tokens/component/radius.css', generateRadius(radius));
 
   // Themes
-  writeCSS("themes/light.css", generateLightTheme());
-  writeCSS("themes/dark.css", generateDarkTheme());
+  writeCSS('themes/light.css', generateLightTheme());
+  writeCSS('themes/dark.css', generateDarkTheme());
 
   // Tailwind v4
-  writeCSS(
-    "tailwind.theme.css",
-    generateTailwindTheme(colors, spacing, typography, shadows, radius),
-  );
+  writeCSS('tailwind.theme.css', generateTailwindTheme(colors, spacing, typography, shadows, radius));
 
-  console.log("\n=== TOKEN GENERATION COMPLETE ===");
+  console.log('\n=== TOKEN GENERATION COMPLETE ===');
   console.log(`Output directory: ${OUTPUT_DIR}`);
 }
 

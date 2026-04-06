@@ -111,13 +111,13 @@ TERMINATION: Always document search + decision
 
 ## Similarity Assessment
 
-| Aspect         | Weight | How to Assess         |
-| -------------- | ------ | --------------------- |
-| Purpose/intent | 0.3    | Same goal?            |
-| Structure      | 0.2    | Same architecture?    |
-| Components     | 0.2    | Same building blocks? |
-| Interface      | 0.15   | Same inputs/outputs?  |
-| Domain         | 0.15   | Same context?         |
+| Aspect | Weight | How to Assess |
+|--------|--------|---------------|
+| Purpose/intent | 0.3 | Same goal? |
+| Structure | 0.2 | Same architecture? |
+| Components | 0.2 | Same building blocks? |
+| Interface | 0.15 | Same inputs/outputs? |
+| Domain | 0.15 | Same context? |
 
 ## Before Creating Anything
 

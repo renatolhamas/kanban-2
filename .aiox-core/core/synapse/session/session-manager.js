@@ -15,11 +15,11 @@
  * @created Story SYN-2 - Session Manager
  */
 
-const fs = require("fs");
-const path = require("path");
-const { atomicWriteSync } = require("../utils/atomic-write");
+const fs = require('fs');
+const path = require('path');
+const { atomicWriteSync } = require('../utils/atomic-write');
 
-const SCHEMA_VERSION = "2.0";
+const SCHEMA_VERSION = '2.0';
 const DEFAULT_MAX_AGE_HOURS = 24;
 const MAX_TITLE_LENGTH = 50;
 
@@ -47,17 +47,9 @@ function buildDefaultSession(sessionId, cwd) {
     active_workflow: null,
     active_squad: null,
     active_task: null,
-    context: {
-      last_bracket: "FRESH",
-      last_tokens_used: 0,
-      last_context_percent: 100,
-    },
+    context: { last_bracket: 'FRESH', last_tokens_used: 0, last_context_percent: 100 },
     overrides: {},
-    history: {
-      star_commands_used: [],
-      domains_loaded_last: [],
-      agents_activated: [],
-    },
+    history: { star_commands_used: [], domains_loaded_last: [], agents_activated: [] },
   };
 }
 
@@ -69,28 +61,16 @@ function buildDefaultSession(sessionId, cwd) {
  */
 function resolveSessionFile(sessionId, sessionsDir) {
   // Sanitize sessionId to prevent path traversal
-  if (
-    typeof sessionId !== "string" ||
-    sessionId.includes("..") ||
-    sessionId.includes("/") ||
-    sessionId.includes("\\")
-  ) {
-    throw new Error(
-      "[synapse:session] Invalid sessionId: contains path separators or traversal",
-    );
+  if (typeof sessionId !== 'string' || sessionId.includes('..') || sessionId.includes('/') || sessionId.includes('\\')) {
+    throw new Error('[synapse:session] Invalid sessionId: contains path separators or traversal');
   }
 
   const filePath = path.join(sessionsDir, `${sessionId}.json`);
   const resolved = path.resolve(filePath);
   const resolvedDir = path.resolve(sessionsDir);
 
-  if (
-    !resolved.startsWith(resolvedDir + path.sep) &&
-    resolved !== resolvedDir
-  ) {
-    throw new Error(
-      "[synapse:session] Invalid sessionId: resolved path escapes sessions directory",
-    );
+  if (!resolved.startsWith(resolvedDir + path.sep) && resolved !== resolvedDir) {
+    throw new Error('[synapse:session] Invalid sessionId: resolved path escapes sessions directory');
   }
 
   return filePath;
@@ -113,21 +93,21 @@ function ensureDir(dirPath) {
  * @param {string} synapsePath - Path to .synapse/ directory
  */
 function ensureGitignore(synapsePath) {
-  const gitignorePath = path.join(synapsePath, ".gitignore");
+  const gitignorePath = path.join(synapsePath, '.gitignore');
 
   if (fs.existsSync(gitignorePath)) {
     return;
   }
 
   const content = [
-    "# SYNAPSE runtime data (auto-generated)",
-    "sessions/",
-    "cache/",
-    "",
-  ].join("\n");
+    '# SYNAPSE runtime data (auto-generated)',
+    'sessions/',
+    'cache/',
+    '',
+  ].join('\n');
 
   ensureDir(synapsePath);
-  fs.writeFileSync(gitignorePath, content, "utf8");
+  fs.writeFileSync(gitignorePath, content, 'utf8');
 }
 
 /**
@@ -142,7 +122,7 @@ function ensureGitignore(synapsePath) {
  * @returns {object} Created session object
  */
 function createSession(sessionId, cwd, sessionsDir) {
-  const dir = sessionsDir || path.join(cwd, ".synapse", "sessions");
+  const dir = sessionsDir || path.join(cwd, '.synapse', 'sessions');
   ensureDir(dir);
 
   // Ensure .gitignore exists in .synapse/
@@ -155,10 +135,8 @@ function createSession(sessionId, cwd, sessionsDir) {
   try {
     atomicWriteSync(filePath, JSON.stringify(session, null, 2));
   } catch (error) {
-    if (error.code === "EACCES" || error.code === "EPERM") {
-      console.error(
-        `[synapse:session] Error: Permission denied creating session ${sessionId}`,
-      );
+    if (error.code === 'EACCES' || error.code === 'EPERM') {
+      console.error(`[synapse:session] Error: Permission denied creating session ${sessionId}`);
       return null;
     }
     throw error;
@@ -182,7 +160,7 @@ function loadSession(sessionId, sessionsDir) {
       return null;
     }
 
-    const raw = fs.readFileSync(filePath, "utf8");
+    const raw = fs.readFileSync(filePath, 'utf8');
     const session = JSON.parse(raw);
 
     if (session.schema_version !== SCHEMA_VERSION) {
@@ -195,15 +173,11 @@ function loadSession(sessionId, sessionsDir) {
     return session;
   } catch (error) {
     if (error instanceof SyntaxError) {
-      console.warn(
-        `[synapse:session] Warning: Corrupted JSON for session ${sessionId}`,
-      );
+      console.warn(`[synapse:session] Warning: Corrupted JSON for session ${sessionId}`);
       return null;
     }
-    if (error.code === "EACCES" || error.code === "EPERM") {
-      console.error(
-        `[synapse:session] Error: Permission denied reading session ${sessionId}`,
-      );
+    if (error.code === 'EACCES' || error.code === 'EPERM') {
+      console.error(`[synapse:session] Error: Permission denied reading session ${sessionId}`);
       return null;
     }
     throw error;
@@ -230,28 +204,16 @@ function updateSession(sessionId, sessionsDir, updates) {
 
   // Shallow merge top-level fields
   for (const [key, value] of Object.entries(updates)) {
-    if (key === "history" && typeof value === "object" && value !== null) {
+    if (key === 'history' && typeof value === 'object' && value !== null) {
       // Merge history arrays by appending unique values
       session.history = mergeHistory(session.history, value);
-    } else if (
-      key === "overrides" &&
-      typeof value === "object" &&
-      value !== null
-    ) {
+    } else if (key === 'overrides' && typeof value === 'object' && value !== null) {
       // Merge overrides
       Object.assign(session.overrides, value);
-    } else if (
-      key === "context" &&
-      typeof value === "object" &&
-      value !== null
-    ) {
+    } else if (key === 'context' && typeof value === 'object' && value !== null) {
       // Merge context
       Object.assign(session.context, value);
-    } else if (
-      key === "active_agent" &&
-      typeof value === "object" &&
-      value !== null
-    ) {
+    } else if (key === 'active_agent' && typeof value === 'object' && value !== null) {
       // Replace active_agent entirely
       session.active_agent = value;
     } else {
@@ -268,10 +230,8 @@ function updateSession(sessionId, sessionsDir, updates) {
   try {
     atomicWriteSync(filePath, JSON.stringify(session, null, 2));
   } catch (error) {
-    if (error.code === "EACCES" || error.code === "EPERM") {
-      console.error(
-        `[synapse:session] Error: Permission denied writing session ${sessionId}`,
-      );
+    if (error.code === 'EACCES' || error.code === 'EPERM') {
+      console.error(`[synapse:session] Error: Permission denied writing session ${sessionId}`);
       return null;
     }
     throw error;
@@ -325,10 +285,8 @@ function deleteSession(sessionId, sessionsDir) {
     fs.unlinkSync(filePath);
     return true;
   } catch (error) {
-    if (error.code === "EACCES" || error.code === "EPERM") {
-      console.error(
-        `[synapse:session] Error: Permission denied deleting session ${sessionId}`,
-      );
+    if (error.code === 'EACCES' || error.code === 'EPERM') {
+      console.error(`[synapse:session] Error: Permission denied deleting session ${sessionId}`);
       return false;
     }
     throw error;
@@ -360,14 +318,14 @@ function cleanStaleSessions(sessionsDir, maxAgeHours = DEFAULT_MAX_AGE_HOURS) {
   }
 
   for (const file of files) {
-    if (!file.endsWith(".json")) {
+    if (!file.endsWith('.json')) {
       continue;
     }
 
     const filePath = path.join(sessionsDir, file);
 
     try {
-      const raw = fs.readFileSync(filePath, "utf8");
+      const raw = fs.readFileSync(filePath, 'utf8');
       const session = JSON.parse(raw);
 
       if (session.last_activity) {
@@ -398,19 +356,19 @@ function cleanStaleSessions(sessionsDir, maxAgeHours = DEFAULT_MAX_AGE_HOURS) {
  * @returns {string|null} Generated title, or null if prompt is not title-worthy
  */
 function generateTitle(prompt) {
-  if (!prompt || typeof prompt !== "string") {
+  if (!prompt || typeof prompt !== 'string') {
     return null;
   }
 
   const trimmed = prompt.trim();
 
   // Ignore *commands
-  if (trimmed.startsWith("*")) {
+  if (trimmed.startsWith('*')) {
     return null;
   }
 
   // Ignore single words
-  if (!trimmed.includes(" ")) {
+  if (!trimmed.includes(' ')) {
     return null;
   }
 
@@ -425,7 +383,7 @@ function generateTitle(prompt) {
   }
 
   const truncated = trimmed.substring(0, MAX_TITLE_LENGTH);
-  const lastSpace = truncated.lastIndexOf(" ");
+  const lastSpace = truncated.lastIndexOf(' ');
 
   if (lastSpace > 0) {
     return truncated.substring(0, lastSpace);

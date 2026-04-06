@@ -13,34 +13,34 @@
  * @version 1.1.0
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs").promises;
-const fsSync = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs').promises;
+const fsSync = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
 
 // Constants
-const SESSION_STATE_VERSION = "1.2";
-const SESSION_STATE_FILENAME = ".session-state.yaml";
+const SESSION_STATE_VERSION = '1.2';
+const SESSION_STATE_FILENAME = '.session-state.yaml';
 const CRASH_THRESHOLD_MINUTES = 30;
-const LEGACY_WORKFLOW_STATE_DIR = ".aiox/workflow-state";
+const LEGACY_WORKFLOW_STATE_DIR = '.aiox/workflow-state';
 
 /**
  * Action types for session state tracking
  * @enum {string}
  */
 const ActionType = {
-  GO: "GO",
-  PAUSE: "PAUSE",
-  REVIEW: "REVIEW",
-  ABORT: "ABORT",
-  PHASE_CHANGE: "PHASE_CHANGE",
-  EPIC_STARTED: "EPIC_STARTED",
-  STORY_STARTED: "STORY_STARTED",
-  STORY_COMPLETED: "STORY_COMPLETED",
-  CHECKPOINT_REACHED: "CHECKPOINT_REACHED",
-  ERROR_OCCURRED: "ERROR_OCCURRED",
+  GO: 'GO',
+  PAUSE: 'PAUSE',
+  REVIEW: 'REVIEW',
+  ABORT: 'ABORT',
+  PHASE_CHANGE: 'PHASE_CHANGE',
+  EPIC_STARTED: 'EPIC_STARTED',
+  STORY_STARTED: 'STORY_STARTED',
+  STORY_COMPLETED: 'STORY_COMPLETED',
+  CHECKPOINT_REACHED: 'CHECKPOINT_REACHED',
+  ERROR_OCCURRED: 'ERROR_OCCURRED',
 };
 
 /**
@@ -48,12 +48,12 @@ const ActionType = {
  * @enum {string}
  */
 const Phase = {
-  VALIDATION: "validation",
-  DEVELOPMENT: "development",
-  SELF_HEALING: "self_healing",
-  QUALITY_GATE: "quality_gate",
-  PUSH: "push",
-  CHECKPOINT: "checkpoint",
+  VALIDATION: 'validation',
+  DEVELOPMENT: 'development',
+  SELF_HEALING: 'self_healing',
+  QUALITY_GATE: 'quality_gate',
+  PUSH: 'push',
+  CHECKPOINT: 'checkpoint',
 };
 
 /**
@@ -61,10 +61,10 @@ const Phase = {
  * @enum {string}
  */
 const ResumeOption = {
-  CONTINUE: "continue",
-  REVIEW: "review",
-  RESTART: "restart",
-  DISCARD: "discard",
+  CONTINUE: 'continue',
+  REVIEW: 'review',
+  RESTART: 'restart',
+  DISCARD: 'discard',
 };
 
 /**
@@ -84,11 +84,7 @@ class SessionState {
       ...options,
     };
 
-    this.stateFilePath = path.join(
-      projectRoot,
-      "docs/stories",
-      SESSION_STATE_FILENAME,
-    );
+    this.stateFilePath = path.join(projectRoot, 'docs/stories', SESSION_STATE_FILENAME);
     this.legacyStatePath = path.join(projectRoot, LEGACY_WORKFLOW_STATE_DIR);
     this.state = null;
   }
@@ -124,7 +120,7 @@ class SessionState {
    * @param {string} branch - Git branch name
    * @returns {Promise<Object>} Created session state
    */
-  async createSessionState(epicInfo, branch = "main") {
+  async createSessionState(epicInfo, branch = 'main') {
     const now = new Date().toISOString();
 
     this.state = {
@@ -190,9 +186,7 @@ class SessionState {
     await this.save();
 
     if (this.options.debug) {
-      console.log(
-        `[SessionState] Created new session state: ${this.stateFilePath}`,
-      );
+      console.log(`[SessionState] Created new session state: ${this.stateFilePath}`);
     }
 
     return this.state;
@@ -205,13 +199,11 @@ class SessionState {
   async loadSessionState() {
     // Check for existing session state
     if (await this.exists()) {
-      const content = await fs.readFile(this.stateFilePath, "utf8");
+      const content = await fs.readFile(this.stateFilePath, 'utf8');
       this.state = yaml.load(content);
 
       if (this.options.debug) {
-        console.log(
-          `[SessionState] Loaded session state from: ${this.stateFilePath}`,
-        );
+        console.log(`[SessionState] Loaded session state from: ${this.stateFilePath}`);
       }
 
       return this.state;
@@ -235,9 +227,7 @@ class SessionState {
    */
   async updateSessionState(updates) {
     if (!this.state) {
-      throw new Error(
-        "Session state not initialized. Call loadSessionState() or createSessionState() first.",
-      );
+      throw new Error('Session state not initialized. Call loadSessionState() or createSessionState() first.');
     }
 
     const now = new Date().toISOString();
@@ -283,15 +273,14 @@ class SessionState {
     }
 
     // Regenerate resume instructions
-    this.state.session_state.resume_instructions =
-      this.generateResumeInstructions({
-        epicTitle: this.state.session_state.epic.title,
-        currentStory: this.state.session_state.progress.current_story,
-        storiesDone: this.state.session_state.progress.stories_done.length,
-        totalStories: this.state.session_state.epic.total_stories,
-        lastPhase: this.state.session_state.last_action.phase,
-        lastExecutor: this.state.session_state.context_snapshot.last_executor,
-      });
+    this.state.session_state.resume_instructions = this.generateResumeInstructions({
+      epicTitle: this.state.session_state.epic.title,
+      currentStory: this.state.session_state.progress.current_story,
+      storiesDone: this.state.session_state.progress.stories_done.length,
+      totalStories: this.state.session_state.epic.total_stories,
+      lastPhase: this.state.session_state.last_action.phase,
+      lastExecutor: this.state.session_state.context_snapshot.last_executor,
+    });
 
     await this.save();
 
@@ -322,8 +311,7 @@ class SessionState {
 
     // Update executor distribution
     if (this.state && executor) {
-      const distribution =
-        this.state.session_state.context_snapshot.executor_distribution || {};
+      const distribution = this.state.session_state.context_snapshot.executor_distribution || {};
       distribution[executor] = (distribution[executor] || 0) + 1;
       updates.context_snapshot.executor_distribution = distribution;
     }
@@ -338,18 +326,14 @@ class SessionState {
    * @returns {Promise<Object>} Updated session state
    */
   async recordStoryCompleted(storyId, nextStoryId = null) {
-    const storiesDone = [
-      ...this.state.session_state.progress.stories_done,
-      storyId,
-    ];
-    const storiesPending =
-      this.state.session_state.progress.stories_pending.filter(
-        (id) => id !== storyId,
-      );
+    const storiesDone = [...this.state.session_state.progress.stories_done, storyId];
+    const storiesPending = this.state.session_state.progress.stories_pending.filter(
+      (id) => id !== storyId,
+    );
 
     return this.updateSessionState({
       progress: {
-        current_story: nextStoryId || storiesPending[0] || null,
+        current_story: nextStoryId || (storiesPending[0] || null),
         stories_done: storiesDone,
         stories_pending: storiesPending,
       },
@@ -392,9 +376,7 @@ class SessionState {
    */
   async setSessionOverride(key, value) {
     if (!this.state) {
-      throw new Error(
-        "Session state not initialized. Call loadSessionState() or createSessionState() first.",
-      );
+      throw new Error('Session state not initialized. Call loadSessionState() or createSessionState() first.');
     }
 
     const now = new Date().toISOString();
@@ -457,13 +439,12 @@ class SessionState {
    * @returns {string} Resume instructions text
    */
   generateResumeInstructions(context) {
-    const { currentStory, storiesDone, totalStories, lastPhase, lastExecutor } =
-      context;
+    const { currentStory, storiesDone, totalStories, lastPhase, lastExecutor } = context;
 
-    let instructions = "";
+    let instructions = '';
 
     if (currentStory) {
-      instructions += `Story ${currentStory} estava em fase de ${lastPhase || "início"}.\n`;
+      instructions += `Story ${currentStory} estava em fase de ${lastPhase || 'início'}.\n`;
     }
 
     if (lastExecutor) {
@@ -471,8 +452,7 @@ class SessionState {
     }
 
     instructions += `Progresso: ${storiesDone} de ${totalStories} stories completas.\n`;
-    instructions +=
-      "Próximo passo: continuar implementação ou revisar o que foi feito.";
+    instructions += 'Próximo passo: continuar implementação ou revisar o que foi feito.';
 
     return instructions;
   }
@@ -487,7 +467,7 @@ class SessionState {
     }
 
     if (!this.state) {
-      return { isCrash: false, reason: "No session state found" };
+      return { isCrash: false, reason: 'No session state found' };
     }
 
     const lastUpdated = new Date(this.state.session_state.last_updated);
@@ -500,14 +480,8 @@ class SessionState {
     // Crash detected if:
     // - last_updated > 30 min AND
     // - last_action.type is NOT PAUSE or COMPLETE (STORY_COMPLETED)
-    const normalEndStates = [
-      ActionType.PAUSE,
-      ActionType.STORY_COMPLETED,
-      ActionType.ABORT,
-    ];
-    const isCrash =
-      minutesSinceUpdate > CRASH_THRESHOLD_MINUTES &&
-      !normalEndStates.includes(lastActionType);
+    const normalEndStates = [ActionType.PAUSE, ActionType.STORY_COMPLETED, ActionType.ABORT];
+    const isCrash = minutesSinceUpdate > CRASH_THRESHOLD_MINUTES && !normalEndStates.includes(lastActionType);
 
     return {
       isCrash,
@@ -517,7 +491,7 @@ class SessionState {
       lastStory: this.state.session_state.last_action.story,
       reason: isCrash
         ? `Session appears to have crashed ${Math.round(minutesSinceUpdate)} minutes ago during ${lastActionType}`
-        : "Session ended normally",
+        : 'Session ended normally',
     };
   }
 
@@ -528,20 +502,20 @@ class SessionState {
   getResumeOptions() {
     return {
       [ResumeOption.CONTINUE]: {
-        label: "Continuar de onde parou",
-        description: "Resume from last saved state",
+        label: 'Continuar de onde parou',
+        description: 'Resume from last saved state',
       },
       [ResumeOption.REVIEW]: {
-        label: "Revisar o que foi feito",
-        description: "Show progress summary before continuing",
+        label: 'Revisar o que foi feito',
+        description: 'Show progress summary before continuing',
       },
       [ResumeOption.RESTART]: {
         label: `Recomeçar story ${this.state?.session_state.progress.current_story} do zero`,
-        description: "Restart current story from beginning",
+        description: 'Restart current story from beginning',
       },
       [ResumeOption.DISCARD]: {
-        label: "Iniciar novo épico (descarta sessão)",
-        description: "Discard current session and start fresh",
+        label: 'Iniciar novo épico (descarta sessão)',
+        description: 'Discard current session and start fresh',
       },
     };
   }
@@ -552,7 +526,7 @@ class SessionState {
    */
   getResumeSummary() {
     if (!this.state) {
-      return "No session state loaded.";
+      return 'No session state loaded.';
     }
 
     const { epic, progress, last_action } = this.state.session_state;
@@ -562,7 +536,7 @@ class SessionState {
 Epic: ${epic.title}
 Progresso: ${progress.stories_done.length} de ${epic.total_stories} stories completas
 Último story: ${progress.current_story}
-Fase quando pausou: ${last_action.phase || "N/A"}
+Fase quando pausou: ${last_action.phase || 'N/A'}
 
 O que você quer fazer?
 
@@ -581,14 +555,14 @@ O que você quer fazer?
     switch (option) {
       case ResumeOption.CONTINUE:
         return {
-          action: "continue",
+          action: 'continue',
           story: this.state.session_state.progress.current_story,
           phase: this.state.session_state.workflow.current_phase,
         };
 
       case ResumeOption.REVIEW:
         return {
-          action: "review",
+          action: 'review',
           summary: this.getProgressSummary(),
         };
 
@@ -608,15 +582,15 @@ O que você quer fazer?
           },
         });
         return {
-          action: "restart",
+          action: 'restart',
           story: this.state.session_state.progress.current_story,
         };
 
       case ResumeOption.DISCARD:
         await this.discard();
         return {
-          action: "discard",
-          message: "Session discarded. Ready for new epic.",
+          action: 'discard',
+          message: 'Session discarded. Ready for new epic.',
         };
 
       default:
@@ -633,8 +607,7 @@ O que você quer fazer?
       return null;
     }
 
-    const { epic, progress, workflow, context_snapshot } =
-      this.state.session_state;
+    const { epic, progress, workflow, context_snapshot } = this.state.session_state;
 
     return {
       epic: {
@@ -645,12 +618,9 @@ O que você quer fazer?
       progress: {
         completed: progress.stories_done.length,
         total: epic.total_stories,
-        percentage:
-          epic.total_stories > 0
-            ? Math.round(
-                (progress.stories_done.length / epic.total_stories) * 100,
-              )
-            : 0,
+        percentage: epic.total_stories > 0
+          ? Math.round((progress.stories_done.length / epic.total_stories) * 100)
+          : 0,
         storiesDone: progress.stories_done,
         storiesPending: progress.stories_pending,
         currentStory: progress.current_story,
@@ -681,23 +651,21 @@ O que você quer fazer?
 
       // Find state files in legacy directory
       const files = await fs.readdir(this.legacyStatePath);
-      const stateFiles = files.filter((f) => f.endsWith("-state.yaml"));
+      const stateFiles = files.filter((f) => f.endsWith('-state.yaml'));
 
       if (stateFiles.length === 0) {
         return false;
       }
 
       if (this.options.debug) {
-        console.log(
-          `[SessionState] Found ${stateFiles.length} legacy workflow state files to migrate`,
-        );
+        console.log(`[SessionState] Found ${stateFiles.length} legacy workflow state files to migrate`);
       }
 
       // Read the most recent state file
       const latestStateFile = stateFiles.sort().pop();
       const legacyContent = await fs.readFile(
         path.join(this.legacyStatePath, latestStateFile),
-        "utf8",
+        'utf8',
       );
       const legacyState = yaml.load(legacyContent);
 
@@ -709,8 +677,8 @@ O que você quer fazer?
 
           // Create minimal epic context (will need to be updated)
           epic: {
-            id: "migrated",
-            title: "Migrated from Workflow State",
+            id: 'migrated',
+            title: 'Migrated from Workflow State',
             total_stories: 1,
           },
 
@@ -742,11 +710,10 @@ O que você quer fazer?
             files_modified: 0,
             executor_distribution: {},
             last_executor: legacyState.executor || null,
-            branch: "main",
+            branch: 'main',
           },
 
-          resume_instructions:
-            "Migrated from legacy workflow state. Please review and continue.",
+          resume_instructions: 'Migrated from legacy workflow state. Please review and continue.',
 
           // Story 12.7: Initialize overrides (empty on migration)
           overrides: {
@@ -766,9 +733,7 @@ O que você quer fazer?
       }
 
       if (this.options.debug) {
-        console.log(
-          "[SessionState] Migration complete. Legacy files archived.",
-        );
+        console.log('[SessionState] Migration complete. Legacy files archived.');
       }
 
       return true;
@@ -786,7 +751,7 @@ O que você quer fazer?
    */
   async save() {
     if (!this.state) {
-      throw new Error("No state to save");
+      throw new Error('No state to save');
     }
 
     // Ensure directory exists
@@ -799,7 +764,7 @@ O que você quer fazer?
       noRefs: true,
     });
 
-    await fs.writeFile(this.stateFilePath, content, "utf8");
+    await fs.writeFile(this.stateFilePath, content, 'utf8');
   }
 
   /**
@@ -829,7 +794,7 @@ O que você quer fazer?
     const errors = [];
 
     if (!state?.session_state) {
-      errors.push("Missing session_state root");
+      errors.push('Missing session_state root');
       return { isValid: false, errors };
     }
 
@@ -837,41 +802,27 @@ O que você quer fazer?
 
     // Validate version
     if (!ss.version) {
-      errors.push("Missing version field");
+      errors.push('Missing version field');
     }
 
     // Validate epic (AC2)
-    if (
-      !ss.epic?.id ||
-      !ss.epic?.title ||
-      ss.epic?.total_stories === undefined
-    ) {
-      errors.push("Invalid epic field: requires id, title, total_stories");
+    if (!ss.epic?.id || !ss.epic?.title || ss.epic?.total_stories === undefined) {
+      errors.push('Invalid epic field: requires id, title, total_stories');
     }
 
     // Validate progress (AC3)
-    if (
-      !ss.progress ||
-      !Array.isArray(ss.progress.stories_done) ||
-      !Array.isArray(ss.progress.stories_pending)
-    ) {
-      errors.push(
-        "Invalid progress field: requires current_story, stories_done[], stories_pending[]",
-      );
+    if (!ss.progress || !Array.isArray(ss.progress.stories_done) || !Array.isArray(ss.progress.stories_pending)) {
+      errors.push('Invalid progress field: requires current_story, stories_done[], stories_pending[]');
     }
 
     // Validate last_action (AC4)
     if (!ss.last_action?.type || !ss.last_action?.timestamp) {
-      errors.push(
-        "Invalid last_action field: requires type, timestamp, story, phase",
-      );
+      errors.push('Invalid last_action field: requires type, timestamp, story, phase');
     }
 
     // Validate context_snapshot (AC5)
     if (ss.context_snapshot?.files_modified === undefined) {
-      errors.push(
-        "Invalid context_snapshot field: requires files_modified, executor_distribution, branch",
-      );
+      errors.push('Invalid context_snapshot field: requires files_modified, executor_distribution, branch');
     }
 
     return {

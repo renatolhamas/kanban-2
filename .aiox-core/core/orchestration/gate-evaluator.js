@@ -18,9 +18,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs-extra');
+const path = require('path');
+const yaml = require('js-yaml');
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              GATE VERDICTS (AC2)
@@ -31,11 +31,11 @@ const yaml = require("js-yaml");
  */
 const GateVerdict = {
   /** Output meets all quality criteria */
-  APPROVED: "approved",
+  APPROVED: 'approved',
   /** Output needs revision, return to previous epic */
-  NEEDS_REVISION: "needs_revision",
+  NEEDS_REVISION: 'needs_revision',
   /** Critical issue, halt pipeline */
-  BLOCKED: "blocked",
+  BLOCKED: 'blocked',
 };
 
 /**
@@ -47,14 +47,14 @@ const DEFAULT_GATE_CONFIG = {
     blocking: true,
     minScore: 3.0,
     requireApproval: false,
-    checks: ["spec_exists", "complexity_assessed", "requirements_defined"],
+    checks: ['spec_exists', 'complexity_assessed', 'requirements_defined'],
   },
   // Epic 4 -> Epic 6 gate
   epic4_to_epic6: {
     blocking: true,
     requireTests: true,
     minTestCoverage: 0,
-    checks: ["plan_complete", "implementation_exists", "no_critical_errors"],
+    checks: ['plan_complete', 'implementation_exists', 'no_critical_errors'],
   },
 };
 
@@ -92,24 +92,17 @@ class GateEvaluator {
     }
 
     try {
-      const configPath = path.join(
-        this.projectRoot,
-        ".aiox-core",
-        "core-config.yaml",
-      );
+      const configPath = path.join(this.projectRoot, '.aiox-core', 'core-config.yaml');
       if (await fs.pathExists(configPath)) {
-        const content = await fs.readFile(configPath, "utf8");
+        const content = await fs.readFile(configPath, 'utf8');
         const config = yaml.load(content);
 
         if (config?.autoClaude?.orchestrator?.gates) {
-          return {
-            ...DEFAULT_GATE_CONFIG,
-            ...config.autoClaude.orchestrator.gates,
-          };
+          return { ...DEFAULT_GATE_CONFIG, ...config.autoClaude.orchestrator.gates };
         }
       }
     } catch (error) {
-      this._log(`Failed to load gate config: ${error.message}`, "warn");
+      this._log(`Failed to load gate config: ${error.message}`, 'warn');
     }
 
     return DEFAULT_GATE_CONFIG;
@@ -133,7 +126,7 @@ class GateEvaluator {
    */
   async evaluate(fromEpic, toEpic, epicResult) {
     const gateKey = this._getGateKey(fromEpic, toEpic);
-    this._log(`Evaluating gate: ${gateKey}`, "info");
+    this._log(`Evaluating gate: ${gateKey}`, 'info');
 
     const config = await this._loadConfig();
     const gateConfig = config[gateKey] || { blocking: false };
@@ -152,12 +145,7 @@ class GateEvaluator {
 
     try {
       // Run gate checks
-      const checks = await this._runGateChecks(
-        fromEpic,
-        toEpic,
-        epicResult,
-        gateConfig,
-      );
+      const checks = await this._runGateChecks(fromEpic, toEpic, epicResult, gateConfig);
       result.checks = checks;
 
       // Calculate score
@@ -170,24 +158,21 @@ class GateEvaluator {
         .map((c) => ({
           check: c.name,
           message: c.message,
-          severity: c.severity || "medium",
+          severity: c.severity || 'medium',
         }));
 
       // Determine verdict (AC2)
       result.verdict = this._determineVerdict(result, gateConfig);
 
-      this._log(
-        `Gate ${gateKey}: ${result.verdict} (score: ${result.score.toFixed(1)})`,
-        "info",
-      );
+      this._log(`Gate ${gateKey}: ${result.verdict} (score: ${result.score.toFixed(1)})`, 'info');
     } catch (error) {
       result.verdict = GateVerdict.BLOCKED;
       result.issues.push({
-        check: "gate_evaluation",
+        check: 'gate_evaluation',
         message: error.message,
-        severity: "critical",
+        severity: 'critical',
       });
-      this._log(`Gate evaluation failed: ${error.message}`, "error");
+      this._log(`Gate evaluation failed: ${error.message}`, 'error');
     }
 
     // Store result (AC6)
@@ -204,16 +189,10 @@ class GateEvaluator {
     const checks = [];
 
     // Get check list for this gate
-    const checkNames =
-      gateConfig.checks || this._getDefaultChecks(fromEpic, toEpic);
+    const checkNames = gateConfig.checks || this._getDefaultChecks(fromEpic, toEpic);
 
     for (const checkName of checkNames) {
-      const checkResult = await this._runCheck(
-        checkName,
-        fromEpic,
-        epicResult,
-        gateConfig,
-      );
+      const checkResult = await this._runCheck(checkName, fromEpic, epicResult, gateConfig);
       checks.push(checkResult);
     }
 
@@ -221,10 +200,10 @@ class GateEvaluator {
     // Only check minScore if epic actually provides a score
     if (gateConfig.minScore !== undefined && epicResult.score !== undefined) {
       checks.push({
-        name: "min_score",
+        name: 'min_score',
         passed: epicResult.score >= gateConfig.minScore,
-        message: `Epic score ${epicResult.score} ${epicResult.score >= gateConfig.minScore ? ">=" : "<"} min ${gateConfig.minScore}`,
-        severity: "high",
+        message: `Epic score ${epicResult.score} ${epicResult.score >= gateConfig.minScore ? '>=' : '<'} min ${gateConfig.minScore}`,
+        severity: 'high',
       });
     }
 
@@ -234,34 +213,27 @@ class GateEvaluator {
       // Handle both array format (actual test results) and object format (status)
       const isArray = Array.isArray(epicResult.testResults);
       const testsSkipped =
-        !isArray &&
-        (epicResult.testResults?.skipped ||
-          epicResult.testResults?.ran === false);
-      const hasTests = isArray
-        ? epicResult.testResults.length > 0
-        : epicResult.testsRun > 0;
+        !isArray && (epicResult.testResults?.skipped || epicResult.testResults?.ran === false);
+      const hasTests = isArray ? epicResult.testResults.length > 0 : epicResult.testsRun > 0;
 
       // Only fail if tests were expected AND not skipped AND didn't run
       if (!testsSkipped) {
         checks.push({
-          name: "require_tests",
+          name: 'require_tests',
           passed: hasTests,
-          message: hasTests ? "Tests were executed" : "No tests were run",
-          severity: "high",
+          message: hasTests ? 'Tests were executed' : 'No tests were run',
+          severity: 'high',
         });
       }
     }
 
-    if (
-      gateConfig.minTestCoverage !== undefined &&
-      gateConfig.minTestCoverage > 0
-    ) {
+    if (gateConfig.minTestCoverage !== undefined && gateConfig.minTestCoverage > 0) {
       const coverage = epicResult.testCoverage || 0;
       checks.push({
-        name: "min_coverage",
+        name: 'min_coverage',
         passed: coverage >= gateConfig.minTestCoverage,
-        message: `Test coverage ${coverage}% ${coverage >= gateConfig.minTestCoverage ? ">=" : "<"} min ${gateConfig.minTestCoverage}%`,
-        severity: "medium",
+        message: `Test coverage ${coverage}% ${coverage >= gateConfig.minTestCoverage ? '>=' : '<'} min ${gateConfig.minTestCoverage}%`,
+        severity: 'medium',
       });
     }
 
@@ -276,99 +248,78 @@ class GateEvaluator {
     const result = {
       name: checkName,
       passed: false,
-      message: "",
-      severity: "medium",
+      message: '',
+      severity: 'medium',
     };
 
     switch (checkName) {
       // Epic 3 checks
-      case "spec_exists":
+      case 'spec_exists':
         result.passed =
-          !!epicResult.specPath ||
-          !!epicResult.artifacts?.find((a) => a.type === "spec");
-        result.message = result.passed
-          ? "Spec file exists"
-          : "No spec file generated";
-        result.severity = "critical";
+          !!epicResult.specPath || !!epicResult.artifacts?.find((a) => a.type === 'spec');
+        result.message = result.passed ? 'Spec file exists' : 'No spec file generated';
+        result.severity = 'critical';
         break;
 
-      case "complexity_assessed":
+      case 'complexity_assessed':
         result.passed = !!epicResult.complexity;
         result.message = result.passed
           ? `Complexity: ${epicResult.complexity}`
-          : "Complexity not assessed";
-        result.severity = "medium";
+          : 'Complexity not assessed';
+        result.severity = 'medium';
         break;
 
-      case "requirements_defined":
+      case 'requirements_defined':
         result.passed =
-          Array.isArray(epicResult.requirements) &&
-          epicResult.requirements.length > 0;
+          Array.isArray(epicResult.requirements) && epicResult.requirements.length > 0;
         result.message = result.passed
           ? `${epicResult.requirements?.length || 0} requirements defined`
-          : "No requirements defined";
-        result.severity = "medium"; // Medium severity - requirements can be implicit
+          : 'No requirements defined';
+        result.severity = 'medium'; // Medium severity - requirements can be implicit
         break;
 
       // Epic 4 checks
-      case "plan_complete":
-        result.passed =
-          !!epicResult.planPath || epicResult.planComplete === true;
-        result.message = result.passed
-          ? "Implementation plan complete"
-          : "Plan not complete";
-        result.severity = "high";
+      case 'plan_complete':
+        result.passed = !!epicResult.planPath || epicResult.planComplete === true;
+        result.message = result.passed ? 'Implementation plan complete' : 'Plan not complete';
+        result.severity = 'high';
         break;
 
-      case "implementation_exists":
-        result.passed =
-          !!epicResult.implementationPath || epicResult.codeChanges?.length > 0;
-        result.message = result.passed
-          ? "Implementation exists"
-          : "No implementation found";
-        result.severity = "critical";
+      case 'implementation_exists':
+        result.passed = !!epicResult.implementationPath || epicResult.codeChanges?.length > 0;
+        result.message = result.passed ? 'Implementation exists' : 'No implementation found';
+        result.severity = 'critical';
         break;
 
-      case "no_critical_errors": {
-        const criticalErrors = (epicResult.errors || []).filter(
-          (e) => e.severity === "critical",
-        );
+      case 'no_critical_errors': {
+        const criticalErrors = (epicResult.errors || []).filter((e) => e.severity === 'critical');
         result.passed = criticalErrors.length === 0;
         result.message = result.passed
-          ? "No critical errors"
+          ? 'No critical errors'
           : `${criticalErrors.length} critical errors found`;
-        result.severity = "critical";
+        result.severity = 'critical';
         break;
       }
 
       // Epic 6 checks
-      case "qa_report_exists":
+      case 'qa_report_exists':
         result.passed = !!epicResult.reportPath || !!epicResult.qaReport;
-        result.message = result.passed ? "QA report generated" : "No QA report";
-        result.severity = "medium";
+        result.message = result.passed ? 'QA report generated' : 'No QA report';
+        result.severity = 'medium';
         break;
 
-      case "verdict_generated":
+      case 'verdict_generated':
         result.passed = !!epicResult.verdict;
-        result.message = result.passed
-          ? `QA verdict: ${epicResult.verdict}`
-          : "No QA verdict";
-        result.severity = "medium";
+        result.message = result.passed ? `QA verdict: ${epicResult.verdict}` : 'No QA verdict';
+        result.severity = 'medium';
         break;
 
-      case "tests_pass": {
-        const hasResults =
-          Array.isArray(epicResult.testResults) &&
-          epicResult.testResults.length > 0;
-        const allPass =
-          hasResults && epicResult.testResults.every((t) => t.passed);
+      case 'tests_pass': {
+        const hasResults = Array.isArray(epicResult.testResults) && epicResult.testResults.length > 0;
+        const allPass = hasResults && epicResult.testResults.every((t) => t.passed);
         result.passed = allPass;
-        result.message = !hasResults
-          ? "No test results"
-          : allPass
-            ? "All tests pass"
-            : "Some tests failed";
-        result.severity = "high";
+        result.message = !hasResults ? 'No test results' : (allPass ? 'All tests pass' : 'Some tests failed');
+        result.severity = 'high';
         break;
       }
 
@@ -376,7 +327,7 @@ class GateEvaluator {
         // Unknown check - pass by default
         result.passed = true;
         result.message = `Unknown check: ${checkName}`;
-        result.severity = "low";
+        result.severity = 'low';
     }
 
     return result;
@@ -389,11 +340,11 @@ class GateEvaluator {
   _getDefaultChecks(fromEpic, _toEpic) {
     switch (fromEpic) {
       case 3:
-        return ["spec_exists", "complexity_assessed"];
+        return ['spec_exists', 'complexity_assessed'];
       case 4:
-        return ["plan_complete", "no_critical_errors"];
+        return ['plan_complete', 'no_critical_errors'];
       case 6:
-        return ["qa_report_exists", "verdict_generated"];
+        return ['qa_report_exists', 'verdict_generated'];
       default:
         return [];
     }
@@ -410,38 +361,27 @@ class GateEvaluator {
     }
 
     // Check for critical issues
-    const criticalIssues = result.issues.filter(
-      (i) => i.severity === "critical",
-    );
+    const criticalIssues = result.issues.filter((i) => i.severity === 'critical');
     if (criticalIssues.length > 0) {
       return GateVerdict.BLOCKED;
     }
 
     // Check minimum score if configured
-    if (
-      gateConfig.minScore !== undefined &&
-      result.score < gateConfig.minScore
-    ) {
-      return gateConfig.blocking
-        ? GateVerdict.BLOCKED
-        : GateVerdict.NEEDS_REVISION;
+    if (gateConfig.minScore !== undefined && result.score < gateConfig.minScore) {
+      return gateConfig.blocking ? GateVerdict.BLOCKED : GateVerdict.NEEDS_REVISION;
     }
 
     // Check for high severity issues
-    const highIssues = result.issues.filter((i) => i.severity === "high");
+    const highIssues = result.issues.filter((i) => i.severity === 'high');
     if (highIssues.length > 0) {
       // If gate is blocking, block; otherwise needs revision
-      return gateConfig.blocking
-        ? GateVerdict.BLOCKED
-        : GateVerdict.NEEDS_REVISION;
+      return gateConfig.blocking ? GateVerdict.BLOCKED : GateVerdict.NEEDS_REVISION;
     }
 
     // Allow minor issues if configured
     if (
       gateConfig.allowMinorIssues &&
-      result.issues.every(
-        (i) => i.severity === "low" || i.severity === "medium",
-      )
+      result.issues.every((i) => i.severity === 'low' || i.severity === 'medium')
     ) {
       return GateVerdict.APPROVED;
     }
@@ -499,15 +439,11 @@ class GateEvaluator {
    * @returns {Object} Summary of all gate evaluations
    */
   getSummary() {
-    const approved = this.results.filter(
-      (r) => r.verdict === GateVerdict.APPROVED,
-    ).length;
+    const approved = this.results.filter((r) => r.verdict === GateVerdict.APPROVED).length;
     const needsRevision = this.results.filter(
       (r) => r.verdict === GateVerdict.NEEDS_REVISION,
     ).length;
-    const blocked = this.results.filter(
-      (r) => r.verdict === GateVerdict.BLOCKED,
-    ).length;
+    const blocked = this.results.filter((r) => r.verdict === GateVerdict.BLOCKED).length;
 
     return {
       total: this.results.length,
@@ -517,8 +453,7 @@ class GateEvaluator {
       allPassed: blocked === 0 && needsRevision === 0,
       averageScore:
         this.results.length > 0
-          ? this.results.reduce((sum, r) => sum + r.score, 0) /
-            this.results.length
+          ? this.results.reduce((sum, r) => sum + r.score, 0) / this.results.length
           : 0,
     };
   }
@@ -535,7 +470,7 @@ class GateEvaluator {
    * Log message
    * @private
    */
-  _log(message, level = "info") {
+  _log(message, level = 'info') {
     const timestamp = new Date().toISOString();
     this.logs.push({ timestamp, level, message });
   }

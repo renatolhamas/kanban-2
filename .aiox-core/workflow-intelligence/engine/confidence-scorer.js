@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
 /**
  * Scoring weights for confidence calculation
@@ -61,22 +61,10 @@ class ConfidenceScorer {
       return 0;
     }
 
-    const commandMatch = this.matchCommand(
-      suggestion.trigger,
-      context.lastCommand,
-    );
-    const agentMatch = this.matchAgent(
-      suggestion.agentSequence,
-      context.agentId,
-    );
-    const historyDepth = this.matchHistory(
-      suggestion.keyCommands,
-      context.lastCommands,
-    );
-    const projectState = this.matchProjectState(
-      suggestion,
-      context.projectState,
-    );
+    const commandMatch = this.matchCommand(suggestion.trigger, context.lastCommand);
+    const agentMatch = this.matchAgent(suggestion.agentSequence, context.agentId);
+    const historyDepth = this.matchHistory(suggestion.keyCommands, context.lastCommands);
+    const projectState = this.matchProjectState(suggestion, context.projectState);
 
     const rawScore =
       commandMatch * this.weights.COMMAND_MATCH +
@@ -112,7 +100,7 @@ class ConfidenceScorer {
     }
 
     // Command contains trigger keyword
-    if (normalizedLast.includes(normalizedTrigger.split(" ")[0])) {
+    if (normalizedLast.includes(normalizedTrigger.split(' ')[0])) {
       return 0.7;
     }
 
@@ -139,12 +127,10 @@ class ConfidenceScorer {
       return 0;
     }
 
-    const normalizedAgent = currentAgent.replace("@", "").toLowerCase();
+    const normalizedAgent = currentAgent.replace('@', '').toLowerCase();
 
     // Check if current agent is in the sequence
-    const agentIndex = agentSequence.findIndex(
-      (agent) => agent.toLowerCase() === normalizedAgent,
-    );
+    const agentIndex = agentSequence.findIndex((agent) => agent.toLowerCase() === normalizedAgent);
 
     if (agentIndex === -1) {
       return 0;
@@ -173,9 +159,7 @@ class ConfidenceScorer {
     }
 
     const normalizedKeys = keyCommands.map((cmd) => this.normalizeCommand(cmd));
-    const normalizedHistory = lastCommands.map((cmd) =>
-      this.normalizeCommand(cmd),
-    );
+    const normalizedHistory = lastCommands.map((cmd) => this.normalizeCommand(cmd));
 
     let matchCount = 0;
     let recentBonus = 0;
@@ -222,9 +206,9 @@ class ConfidenceScorer {
     if (projectState.hasUncommittedChanges) {
       // Git-related suggestions get higher score
       if (
-        suggestion.trigger?.includes("git") ||
-        suggestion.trigger?.includes("commit") ||
-        suggestion.trigger?.includes("push")
+        suggestion.trigger?.includes('git') ||
+        suggestion.trigger?.includes('commit') ||
+        suggestion.trigger?.includes('push')
       ) {
         factors.push(0.3);
       }
@@ -234,9 +218,9 @@ class ConfidenceScorer {
     if (projectState.failingTests) {
       // QA-related suggestions get higher score
       if (
-        suggestion.trigger?.includes("test") ||
-        suggestion.trigger?.includes("qa") ||
-        suggestion.trigger?.includes("fix")
+        suggestion.trigger?.includes('test') ||
+        suggestion.trigger?.includes('qa') ||
+        suggestion.trigger?.includes('fix')
       ) {
         factors.push(0.3);
       }
@@ -258,14 +242,14 @@ class ConfidenceScorer {
    * @returns {string} Normalized command
    */
   normalizeCommand(command) {
-    if (!command) return "";
+    if (!command) return '';
 
     return command
       .toLowerCase()
-      .replace(/\s+completed\s*$/i, "")
-      .replace(/\s+successfully\s*$/i, "")
-      .replace(/^\*/, "")
-      .replace(/['"]/g, "")
+      .replace(/\s+completed\s*$/i, '')
+      .replace(/\s+successfully\s*$/i, '')
+      .replace(/^\*/, '')
+      .replace(/['"]/g, '')
       .trim();
   }
 

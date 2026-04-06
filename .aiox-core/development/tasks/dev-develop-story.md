@@ -11,19 +11,16 @@ Execute story development with selectable automation modes to accommodate differ
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -31,7 +28,6 @@ Execute story development with selectable automation modes to accommodate differ
 **Parameter:** `mode` (optional, default: `interactive`)
 
 **Usage**:
-
 ```
 *develop {story-id}           # Uses interactive mode (default)
 *develop {story-id} yolo      # Uses YOLO mode
@@ -39,7 +35,6 @@ Execute story development with selectable automation modes to accommodate differ
 ```
 
 **Edge Case Handling**:
-
 - Invalid mode → Default to interactive with warning
 - User cancellation → Exit gracefully with message
 - Missing story file → Clear error message, halt execution
@@ -133,8 +128,8 @@ constitutional_gate:
 
   validation:
     - If story involves new functionality:
-        - CLI implementation SHOULD exist or be created first
-        - UI components SHOULD NOT be created before CLI is functional
+      - CLI implementation SHOULD exist or be created first
+      - UI components SHOULD NOT be created before CLI is functional
 
   on_violation:
     action: WARN
@@ -255,7 +250,6 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -275,6 +269,7 @@ updated_at: 2025-11-17
 
 ---
 
+
 ## Mode: YOLO (Autonomous)
 
 ### Workflow
@@ -282,15 +277,14 @@ updated_at: 2025-11-17
 **CRITICAL: Decision Logging Integration (Story 6.1.2.6.2 Phase 2)**
 
 Before starting, load decision logging infrastructure:
-
 ```javascript
 const {
   initializeDecisionLogging,
   recordDecision,
   trackFile,
   trackTest,
-  completeDecisionLogging,
-} = require("./.aiox-core/scripts/decision-recorder");
+  completeDecisionLogging
+} = require('./.aiox-core/scripts/decision-recorder');
 ```
 
 1. **Initialization** (On Yolo Mode Start)
@@ -298,8 +292,8 @@ const {
    - Extract story path from context
    - **Initialize decision logging**:
      ```javascript
-     const context = await initializeDecisionLogging("dev", storyPath, {
-       agentLoadTime: loadTimeInMs, // From agent startup metrics
+     const context = await initializeDecisionLogging('dev', storyPath, {
+       agentLoadTime: loadTimeInMs  // From agent startup metrics
      });
      ```
    - Identify all tasks and acceptance criteria
@@ -310,60 +304,54 @@ const {
    - **Make autonomous decisions** and LOG immediately:
 
      **Architecture choices**:
-
      ```javascript
      recordDecision({
-       description: "Use microservices architecture for user service",
-       reason: "Better scalability and independent deployment",
-       alternatives: ["Monolithic architecture", "Serverless functions"],
-       type: "architecture",
-       priority: "high",
+       description: 'Use microservices architecture for user service',
+       reason: 'Better scalability and independent deployment',
+       alternatives: ['Monolithic architecture', 'Serverless functions'],
+       type: 'architecture',
+       priority: 'high'
      });
      ```
 
      **Library selections**:
-
      ```javascript
      recordDecision({
-       description: "Use Axios for HTTP client",
-       reason:
-         "Better error handling, interceptor support, TypeScript definitions",
-       alternatives: ["Fetch API (native)", "Got library", "node-fetch"],
-       type: "library-choice",
-       priority: "medium",
+       description: 'Use Axios for HTTP client',
+       reason: 'Better error handling, interceptor support, TypeScript definitions',
+       alternatives: ['Fetch API (native)', 'Got library', 'node-fetch'],
+       type: 'library-choice',
+       priority: 'medium'
      });
      ```
 
      **Algorithm implementations**:
-
      ```javascript
      recordDecision({
-       description: "Use binary search for user lookup",
-       reason: "O(log n) performance vs O(n) linear search",
-       alternatives: ["Linear search", "Hash map lookup"],
-       type: "algorithm",
-       priority: "medium",
+       description: 'Use binary search for user lookup',
+       reason: 'O(log n) performance vs O(n) linear search',
+       alternatives: ['Linear search', 'Hash map lookup'],
+       type: 'algorithm',
+       priority: 'medium'
      });
      ```
 
    - Implement task and subtasks
    - **Track file modifications**:
-
      ```javascript
-     trackFile("src/api/users.js", "created");
-     trackFile("package.json", "modified");
-     trackFile("src/legacy/old-api.js", "deleted");
+     trackFile('src/api/users.js', 'created');
+     trackFile('package.json', 'modified');
+     trackFile('src/legacy/old-api.js', 'deleted');
      ```
 
    - Write tests
    - Execute validations
    - **Track test execution**:
-
      ```javascript
      trackTest({
-       name: "users.test.js",
+       name: 'users.test.js',
        passed: true,
-       duration: 125, // milliseconds
+       duration: 125  // milliseconds
      });
      ```
 
@@ -385,7 +373,7 @@ const {
    - Set status: "Ready for Review"
    - **Generate decision log**:
      ```javascript
-     const logPath = await completeDecisionLogging(storyId, "completed");
+     const logPath = await completeDecisionLogging(storyId, 'completed');
      console.log(`📝 Decision log saved: ${logPath}`);
      ```
    - **Summary**: Decision log summary displayed automatically
@@ -506,7 +494,6 @@ const {
 ### Story File Updates (All Modes)
 
 **CRITICAL**: ONLY update these sections:
-
 - Tasks / Subtasks checkboxes
 - Dev Agent Record section and all subsections
 - Agent Model Used
@@ -521,7 +508,6 @@ const {
 ### Blocking Conditions (All Modes)
 
 **HALT and ask user if**:
-
 - Unapproved dependencies needed
 - Ambiguous requirements after checking story
 - 3 failures attempting to implement or fix something
@@ -612,7 +598,7 @@ async function runCodeRabbitSelfHealing(storyPath) {
   const maxIterations = 2;
   let iteration = 0;
 
-  console.log("🐰 Starting CodeRabbit Self-Healing Loop...");
+  console.log('🐰 Starting CodeRabbit Self-Healing Loop...');
   console.log(`   Mode: Light (CRITICAL only)`);
   console.log(`   Max Iterations: ${maxIterations}\n`);
 
@@ -620,32 +606,26 @@ async function runCodeRabbitSelfHealing(storyPath) {
     console.log(`📋 Iteration ${iteration + 1}/${maxIterations}`);
 
     // Run CodeRabbit CLI
-    const output = await runCodeRabbitCLI("uncommitted");
+    const output = await runCodeRabbitCLI('uncommitted');
     const issues = parseCodeRabbitOutput(output);
 
-    const criticalIssues = issues.filter((i) => i.severity === "CRITICAL");
-    const highIssues = issues.filter((i) => i.severity === "HIGH");
+    const criticalIssues = issues.filter(i => i.severity === 'CRITICAL');
+    const highIssues = issues.filter(i => i.severity === 'HIGH');
 
-    console.log(
-      `   Found: ${criticalIssues.length} CRITICAL, ${highIssues.length} HIGH`,
-    );
+    console.log(`   Found: ${criticalIssues.length} CRITICAL, ${highIssues.length} HIGH`);
 
     // No CRITICAL issues = success
     if (criticalIssues.length === 0) {
       if (highIssues.length > 0) {
-        console.log(
-          `\n📝 Documenting ${highIssues.length} HIGH issues in story Dev Notes...`,
-        );
+        console.log(`\n📝 Documenting ${highIssues.length} HIGH issues in story Dev Notes...`);
         await documentIssuesInStory(storyPath, highIssues);
       }
-      console.log("\n✅ CodeRabbit Self-Healing: PASSED");
+      console.log('\n✅ CodeRabbit Self-Healing: PASSED');
       return { success: true, iterations: iteration + 1 };
     }
 
     // Attempt auto-fix for CRITICAL issues
-    console.log(
-      `\n🔧 Attempting auto-fix for ${criticalIssues.length} CRITICAL issues...`,
-    );
+    console.log(`\n🔧 Attempting auto-fix for ${criticalIssues.length} CRITICAL issues...`);
     for (const issue of criticalIssues) {
       await attemptAutoFix(issue);
     }
@@ -654,11 +634,9 @@ async function runCodeRabbitSelfHealing(storyPath) {
   }
 
   // Max iterations reached with CRITICAL issues
-  console.log("\n❌ CodeRabbit Self-Healing: FAILED");
+  console.log('\n❌ CodeRabbit Self-Healing: FAILED');
   console.log(`   CRITICAL issues remain after ${maxIterations} iterations.`);
-  console.log(
-    "   HALTING - Please fix manually before marking story complete.",
-  );
+  console.log('   HALTING - Please fix manually before marking story complete.');
 
   return { success: false, iterations: maxIterations };
 }
@@ -666,12 +644,12 @@ async function runCodeRabbitSelfHealing(storyPath) {
 
 ### Severity Handling
 
-| Severity     | Behavior                    | Notes                                   |
-| ------------ | --------------------------- | --------------------------------------- |
-| **CRITICAL** | Auto-fix (max 2 attempts)   | Security vulnerabilities, breaking bugs |
-| **HIGH**     | Document in story Dev Notes | Recommend fix before QA                 |
-| **MEDIUM**   | Ignore                      | @qa will handle                         |
-| **LOW**      | Ignore                      | Nits, not blocking                      |
+| Severity | Behavior | Notes |
+|----------|----------|-------|
+| **CRITICAL** | Auto-fix (max 2 attempts) | Security vulnerabilities, breaking bugs |
+| **HIGH** | Document in story Dev Notes | Recommend fix before QA |
+| **MEDIUM** | Ignore | @qa will handle |
+| **LOW** | Ignore | Nits, not blocking |
 
 ### Timeout
 
@@ -685,14 +663,14 @@ async function runCodeRabbitSelfHealing(storyPath) {
 try {
   await runCodeRabbitSelfHealing(storyPath);
 } catch (error) {
-  if (error.message.includes("command not found")) {
-    console.warn("⚠️  CodeRabbit not installed in WSL");
-    console.warn("   Skipping self-healing. Manual review required.");
+  if (error.message.includes('command not found')) {
+    console.warn('⚠️  CodeRabbit not installed in WSL');
+    console.warn('   Skipping self-healing. Manual review required.');
     return; // Continue without self-healing
   }
-  if (error.message.includes("timeout")) {
-    console.warn("⚠️  CodeRabbit review timed out");
-    console.warn("   Skipping self-healing. Manual review required.");
+  if (error.message.includes('timeout')) {
+    console.warn('⚠️  CodeRabbit review timed out');
+    console.warn('   Skipping self-healing. Manual review required.');
     return;
   }
   throw error; // Re-throw unknown errors
@@ -701,11 +679,11 @@ try {
 
 ### Integration with Execution Modes
 
-| Mode            | Self-Healing Behavior      |
-| --------------- | -------------------------- |
-| **YOLO**        | Automatic, no prompts      |
+| Mode | Self-Healing Behavior |
+|------|----------------------|
+| **YOLO** | Automatic, no prompts |
 | **Interactive** | Shows progress, no prompts |
-| **Pre-Flight**  | Included in execution plan |
+| **Pre-Flight** | Included in execution plan |
 
 ---
 
@@ -715,10 +693,10 @@ try {
 
 ```javascript
 function validateMode(mode) {
-  const validModes = ["yolo", "interactive", "preflight"];
+  const validModes = ['yolo', 'interactive', 'preflight'];
 
   if (!mode) {
-    return "interactive"; // Default
+    return 'interactive'; // Default
   }
 
   if (validModes.includes(mode.toLowerCase())) {
@@ -726,8 +704,8 @@ function validateMode(mode) {
   }
 
   console.warn(`Invalid mode '${mode}'. Defaulting to 'interactive'.`);
-  console.warn(`Valid modes: ${validModes.join(", ")}`);
-  return "interactive";
+  console.warn(`Valid modes: ${validModes.join(', ')}`);
+  return 'interactive';
 }
 ```
 
@@ -735,8 +713,8 @@ function validateMode(mode) {
 
 ```javascript
 function handleCancellation() {
-  console.log("Development cancelled by user.");
-  console.log("Story progress saved. You can resume with *develop {story-id}.");
+  console.log('Development cancelled by user.');
+  console.log('Story progress saved. You can resume with *develop {story-id}.');
   process.exit(0);
 }
 ```
@@ -767,7 +745,6 @@ function validateStoryFile(storyId) {
 **Format**: ADR (Architecture Decision Record) - automatically generated by `completeDecisionLogging()`
 
 **Sections**:
-
 1. **Context** - Story info, execution time, files modified, tests run
 2. **Decisions Made** - All autonomous decisions with type/priority classification
 3. **Rationale & Alternatives** - Why each choice was made, what else was considered
@@ -775,7 +752,6 @@ function validateStoryFile(storyId) {
 5. **Consequences & Rollback** - Git commit hash, rollback instructions, performance impact
 
 **Example Output**:
-
 ```markdown
 # Decision Log: Story 6.1.2.6.2
 
@@ -810,7 +786,6 @@ function validateStoryFile(storyId) {
 **Reason:** Better error handling, interceptor support, and TypeScript definitions
 
 **Alternatives Considered:**
-
 - Fetch API (native)
 - Got library
 - node-fetch
@@ -835,13 +810,10 @@ function validateStoryFile(storyId) {
 ### Rollback Instructions
 
 \`\`\`bash
-
 # Full rollback
-
 git reset --hard abc123def456
 
 # Selective file rollback
-
 git checkout abc123def456 -- <file-path>
 \`\`\`
 
@@ -865,7 +837,6 @@ git checkout abc123def456 -- <file-path>
 ```
 
 **Output**:
-
 ```
 🚀 YOLO Mode - Autonomous Development
 📋 Story 3.14: GitHub DevOps Agent
@@ -887,7 +858,6 @@ git checkout abc123def456 -- <file-path>
 ```
 
 **Output**:
-
 ```
 💬 Interactive Mode - Balanced Development
 📋 Story 3.15: Squad Auto Configuration
@@ -908,7 +878,6 @@ git checkout abc123def456 -- <file-path>
 ```
 
 **Output**:
-
 ```
 ✈️ Pre-Flight Planning Mode
 📋 Story 3.16: Data Architecture Capability
@@ -947,11 +916,9 @@ Found 5 technical decisions needed.
 - **Scope Drift Prevention**: Pre-flight mode eliminates mid-development ambiguity
 
 ## Handoff
-
 next_agent: @qa
-next_command: \*review {story-id}
+next_command: *review {story-id}
 condition: Story status is Ready for Review
 alternatives:
-
-- agent: @qa, command: \*gate {story-id}, condition: Quick gate decision needed
-- agent: @dev, command: \*apply-qa-fixes, condition: Self-identified issues during dev
+  - agent: @qa, command: *gate {story-id}, condition: Quick gate decision needed
+  - agent: @dev, command: *apply-qa-fixes, condition: Self-identified issues during dev

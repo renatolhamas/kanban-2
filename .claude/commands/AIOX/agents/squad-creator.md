@@ -55,14 +55,14 @@ agent:
   name: Craft
   id: squad-creator
   title: Squad Creator
-  icon: "🏗️"
-  aliases: ["craft"]
-  whenToUse: "Use to create, validate, publish and manage squads"
+  icon: '🏗️'
+  aliases: ['craft']
+  whenToUse: 'Use to create, validate, publish and manage squads'
   customization:
 
 persona_profile:
   archetype: Builder
-  zodiac: "♑ Capricorn"
+  zodiac: '♑ Capricorn'
 
   communication:
     tone: systematic
@@ -78,11 +78,11 @@ persona_profile:
       - task-first
 
     greeting_levels:
-      minimal: "🏗️ squad-creator Agent ready"
+      minimal: '🏗️ squad-creator Agent ready'
       named: "🏗️ Craft (Builder) ready. Let's build squads!"
-      archetypal: "🏗️ Craft the Architect ready to create!"
+      archetypal: '🏗️ Craft the Architect ready to create!'
 
-    signature_closing: "— Craft, sempre estruturando 🏗️"
+    signature_closing: '— Craft, sempre estruturando 🏗️'
 
 persona:
   role: Squad Architect & Builder
@@ -102,58 +102,58 @@ commands:
   # Squad Management
   - name: help
     visibility: [full, quick, key]
-    description: "Show all available commands with descriptions"
+    description: 'Show all available commands with descriptions'
   - name: design-squad
     visibility: [full, quick, key]
-    description: "Design squad from documentation with intelligent recommendations"
+    description: 'Design squad from documentation with intelligent recommendations'
   - name: create-squad
     visibility: [full, quick, key]
-    description: "Create new squad following task-first architecture"
+    description: 'Create new squad following task-first architecture'
   - name: validate-squad
     visibility: [full, quick, key]
-    description: "Validate squad against JSON Schema and AIOX standards"
+    description: 'Validate squad against JSON Schema and AIOX standards'
   - name: list-squads
     visibility: [full, quick]
-    description: "List all local squads in the project"
+    description: 'List all local squads in the project'
   - name: migrate-squad
     visibility: [full, quick]
-    description: "Migrate legacy squad to AIOX 2.1 format"
+    description: 'Migrate legacy squad to AIOX 2.1 format'
     task: squad-creator-migrate.md
 
   # Analysis & Extension (Sprint 14)
   - name: analyze-squad
     visibility: [full, quick, key]
-    description: "Analyze squad structure, coverage, and get improvement suggestions"
+    description: 'Analyze squad structure, coverage, and get improvement suggestions'
     task: squad-creator-analyze.md
   - name: extend-squad
     visibility: [full, quick, key]
-    description: "Add new components (agents, tasks, templates, etc.) to existing squad"
+    description: 'Add new components (agents, tasks, templates, etc.) to existing squad'
     task: squad-creator-extend.md
 
   # Distribution (Sprint 8 - Placeholders)
   - name: download-squad
     visibility: [full]
-    description: "Download public squad from aiox-squads repository (Sprint 8)"
+    description: 'Download public squad from aiox-squads repository (Sprint 8)'
     status: placeholder
   - name: publish-squad
     visibility: [full]
-    description: "Publish squad to aiox-squads repository (Sprint 8)"
+    description: 'Publish squad to aiox-squads repository (Sprint 8)'
     status: placeholder
   - name: sync-squad-synkra
     visibility: [full]
-    description: "Sync squad to Synkra API marketplace (Sprint 8)"
+    description: 'Sync squad to Synkra API marketplace (Sprint 8)'
     status: placeholder
 
   # Utilities
   - name: guide
     visibility: [full]
-    description: "Show comprehensive usage guide for this agent"
+    description: 'Show comprehensive usage guide for this agent'
   - name: yolo
     visibility: [full]
-    description: "Toggle permission mode (cycle: ask > auto > explore)"
+    description: 'Toggle permission mode (cycle: ask > auto > explore)'
   - name: exit
     visibility: [full, quick, key]
-    description: "Exit squad-creator mode"
+    description: 'Exit squad-creator mode'
 
 dependencies:
   tasks:
@@ -185,21 +185,21 @@ dependencies:
 squad_distribution:
   levels:
     local:
-      path: "./squads/"
-      description: "Private, project-specific squads"
-      command: "*create-squad"
+      path: './squads/'
+      description: 'Private, project-specific squads'
+      command: '*create-squad'
     public:
-      repo: "github.com/SynkraAI/aiox-squads"
-      description: "Community squads (free)"
-      command: "*publish-squad"
+      repo: 'github.com/SynkraAI/aiox-squads'
+      description: 'Community squads (free)'
+      command: '*publish-squad'
     marketplace:
-      api: "api.synkra.dev/squads"
-      description: "Premium squads via Synkra API"
-      command: "*sync-squad-synkra"
+      api: 'api.synkra.dev/squads'
+      description: 'Premium squads via Synkra API'
+      command: '*sync-squad-synkra'
 
 autoClaude:
-  version: "3.0"
-  migratedAt: "2026-01-29T02:24:28.509Z"
+  version: '3.0'
+  migratedAt: '2026-01-29T02:24:28.509Z'
   execution:
     canCreatePlan: true
     canCreateContext: false
@@ -340,7 +340,5 @@ Type `*help` to see all commands, or `*guide` for detailed usage.
 - **@devops (Gage)** - Handles deployment
 
 ---
-
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/squad-creator.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/squad-creator.md*

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const { CodeIntelProvider } = require("./provider-interface");
+const fs = require('fs');
+const path = require('path');
+const { CodeIntelProvider } = require('./provider-interface');
 
 // Layer priority for disambiguation (lower index = higher priority)
 const LAYER_PRIORITY = { L1: 0, L2: 1, L3: 2, L4: 3 };
@@ -17,17 +17,17 @@ const LAYER_PRIORITY = { L1: 0, L2: 1, L3: 2, L4: 3 };
  */
 class RegistryProvider extends CodeIntelProvider {
   constructor(options = {}) {
-    super("registry", options);
+    super('registry', options);
 
     this._registryPath = options.registryPath || null;
     this._registry = null;
     this._registryMtime = null;
 
     // In-memory indexes (built on first load)
-    this._byName = null; // Map<string, Array<Entity>>
-    this._byPath = null; // Map<string, Entity>
+    this._byName = null;   // Map<string, Array<Entity>>
+    this._byPath = null;   // Map<string, Entity>
     this._byCategory = null; // Map<string, Array<Entity>>
-    this._byKeyword = null; // Map<string, Array<Entity>> (inverted index)
+    this._byKeyword = null;  // Map<string, Array<Entity>> (inverted index)
   }
 
   /**
@@ -36,9 +36,7 @@ class RegistryProvider extends CodeIntelProvider {
    */
   isAvailable() {
     this._ensureLoaded();
-    return (
-      this._registry !== null && this._byName !== null && this._byName.size > 0
-    );
+    return this._registry !== null && this._byName !== null && this._byName.size > 0;
   }
 
   // --- Lazy Loading ---
@@ -53,12 +51,7 @@ class RegistryProvider extends CodeIntelProvider {
 
     // Default: resolve from project root
     const projectRoot = this.options.projectRoot || process.cwd();
-    const defaultPath = path.join(
-      projectRoot,
-      ".aiox-core",
-      "data",
-      "entity-registry.yaml",
-    );
+    const defaultPath = path.join(projectRoot, '.aiox-core', 'data', 'entity-registry.yaml');
 
     if (fs.existsSync(defaultPath)) {
       this._registryPath = defaultPath;
@@ -84,15 +77,15 @@ class RegistryProvider extends CodeIntelProvider {
       // Already loaded and file hasn't changed
       if (this._registry && this._registryMtime === currentMtime) return;
 
-      const content = fs.readFileSync(filePath, "utf8");
+      const content = fs.readFileSync(filePath, 'utf8');
 
       // Use js-yaml with JSON_SCHEMA for safe parsing (no arbitrary types)
       let yaml;
       try {
-        yaml = require("js-yaml");
+        yaml = require('js-yaml');
       } catch (_e) {
         // Fallback to yaml package
-        yaml = require("yaml");
+        yaml = require('yaml');
         const parsed = yaml.parse(content);
         this._buildIndexes(parsed);
         this._registryMtime = currentMtime;
@@ -136,7 +129,7 @@ class RegistryProvider extends CodeIntelProvider {
     const entities = parsed.entities;
 
     for (const [category, categoryEntities] of Object.entries(entities)) {
-      if (!categoryEntities || typeof categoryEntities !== "object") continue;
+      if (!categoryEntities || typeof categoryEntities !== 'object') continue;
 
       // byCategory
       if (!this._byCategory.has(category)) {
@@ -144,10 +137,10 @@ class RegistryProvider extends CodeIntelProvider {
       }
 
       for (const [entityName, entityData] of Object.entries(categoryEntities)) {
-        if (!entityData || typeof entityData !== "object") continue;
+        if (!entityData || typeof entityData !== 'object') continue;
 
         // Validate path: reject entries with '..' segments (defense-in-depth)
-        if (entityData.path && entityData.path.includes("..")) continue;
+        if (entityData.path && entityData.path.includes('..')) continue;
 
         const entity = {
           name: entityName,
@@ -221,8 +214,8 @@ class RegistryProvider extends CodeIntelProvider {
       .sort((a, b) => {
         if (b.score !== a.score) return b.score - a.score;
         // Tie-break: alphabetical path
-        const pathA = a.entity.path || "";
-        const pathB = b.entity.path || "";
+        const pathA = a.entity.path || '';
+        const pathB = b.entity.path || '';
         return pathA.localeCompare(pathB);
       })
       .map((item) => item.entity);
@@ -247,12 +240,11 @@ class RegistryProvider extends CodeIntelProvider {
     const seen = new Set();
 
     // 1. Exact name match (may return multiple for duplicate names)
-    const exactMatches =
-      this._byName.get(symbol) || this._byName.get(symbolLower) || [];
+    const exactMatches = this._byName.get(symbol) || this._byName.get(symbolLower) || [];
     for (const entity of exactMatches) {
       const key = `${entity.name}:${entity.category}:${entity.path}`;
       if (!seen.has(key)) {
-        results.push({ entity, matchType: "exact", score: 100 });
+        results.push({ entity, matchType: 'exact', score: 100 });
         seen.add(key);
       }
     }
@@ -264,7 +256,7 @@ class RegistryProvider extends CodeIntelProvider {
           for (const entity of entities) {
             const key = `${entity.name}:${entity.category}:${entity.path}`;
             if (!seen.has(key)) {
-              results.push({ entity, matchType: "exact-ci", score: 90 });
+              results.push({ entity, matchType: 'exact-ci', score: 90 });
               seen.add(key);
             }
           }
@@ -277,7 +269,7 @@ class RegistryProvider extends CodeIntelProvider {
       const key = `${entity.name}:${entity.category}:${entity.path}`;
       if (seen.has(key)) continue;
       if (filePath.toLowerCase().includes(symbolLower)) {
-        results.push({ entity, matchType: "path", score: 60 });
+        results.push({ entity, matchType: 'path', score: 60 });
         seen.add(key);
       }
     }
@@ -287,7 +279,7 @@ class RegistryProvider extends CodeIntelProvider {
     for (const entity of keywordMatches) {
       const key = `${entity.name}:${entity.category}:${entity.path}`;
       if (seen.has(key)) continue;
-      results.push({ entity, matchType: "keyword", score: 40 });
+      results.push({ entity, matchType: 'keyword', score: 40 });
       seen.add(key);
     }
 
@@ -298,7 +290,7 @@ class RegistryProvider extends CodeIntelProvider {
         const layerA = LAYER_PRIORITY[a.entity.layer] ?? 99;
         const layerB = LAYER_PRIORITY[b.entity.layer] ?? 99;
         if (layerA !== layerB) return layerA - layerB;
-        return (a.entity.path || "").localeCompare(b.entity.path || "");
+        return (a.entity.path || '').localeCompare(b.entity.path || '');
       })
       .map((r) => r.entity);
   }
@@ -312,8 +304,7 @@ class RegistryProvider extends CodeIntelProvider {
     const matches = this._fuzzyMatch(symbol, options);
     if (matches.length === 0) return null;
 
-    const best =
-      this._rankCandidates(matches, symbol, options)[0] || matches[0];
+    const best = this._rankCandidates(matches, symbol, options)[0] || matches[0];
 
     return {
       file: best.path || null,
@@ -331,22 +322,14 @@ class RegistryProvider extends CodeIntelProvider {
     const symbolLower = symbol.toLowerCase();
 
     // Search usedBy and dependencies fields across all entities
-    for (const [_category, categoryEntities] of Object.entries(
-      this._registry.entities,
-    )) {
-      if (!categoryEntities || typeof categoryEntities !== "object") continue;
+    for (const [_category, categoryEntities] of Object.entries(this._registry.entities)) {
+      if (!categoryEntities || typeof categoryEntities !== 'object') continue;
 
-      for (const [_entityName, entityData] of Object.entries(
-        categoryEntities,
-      )) {
-        if (!entityData || typeof entityData !== "object") continue;
+      for (const [_entityName, entityData] of Object.entries(categoryEntities)) {
+        if (!entityData || typeof entityData !== 'object') continue;
 
-        const usedBy = Array.isArray(entityData.usedBy)
-          ? entityData.usedBy
-          : [];
-        const deps = Array.isArray(entityData.dependencies)
-          ? entityData.dependencies
-          : [];
+        const usedBy = Array.isArray(entityData.usedBy) ? entityData.usedBy : [];
+        const deps = Array.isArray(entityData.dependencies) ? entityData.dependencies : [];
 
         // Check if this entity references the symbol
         const referencesSymbol =
@@ -422,9 +405,7 @@ class RegistryProvider extends CodeIntelProvider {
         category: entity.category || null,
       });
 
-      const deps = Array.isArray(entity.dependencies)
-        ? entity.dependencies
-        : [];
+      const deps = Array.isArray(entity.dependencies) ? entity.dependencies : [];
       for (const depName of deps) {
         const depEntities = this._byName.get(depName);
         if (depEntities && depEntities.length > 0) {
@@ -475,7 +456,7 @@ class RegistryProvider extends CodeIntelProvider {
       for (const entity of entities) {
         if (entity.path) files.push(entity.path);
 
-        const layer = entity.layer || "unknown";
+        const layer = entity.layer || 'unknown';
         if (!structure[category].layers[layer]) {
           structure[category].layers[layer] = 0;
         }
@@ -509,7 +490,7 @@ class RegistryProvider extends CodeIntelProvider {
       }
 
       // Detect language from file extension
-      const ext = path.extname(entity.path || "").slice(1);
+      const ext = path.extname(entity.path || '').slice(1);
       if (ext) {
         languages[ext] = (languages[ext] || 0) + 1;
       }
@@ -522,10 +503,7 @@ class RegistryProvider extends CodeIntelProvider {
       layers: layerCounts,
       categories: this._byCategory.size,
       totalEntities: this._byName
-        ? Array.from(this._byName.values()).reduce(
-            (sum, arr) => sum + arr.length,
-            0,
-          )
+        ? Array.from(this._byName.values()).reduce((sum, arr) => sum + arr.length, 0)
         : 0,
     };
   }

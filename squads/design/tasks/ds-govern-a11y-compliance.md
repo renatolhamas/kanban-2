@@ -30,7 +30,6 @@ npm run checklists:a11y:generate
 ```
 
 Expected:
-
 - `squads/design/checklists/ds-accessibility-wcag-checklist.md` atualizado/sincronizado.
 - Counts: `87 total`, `86 active`, `1 removed`.
 
@@ -42,7 +41,6 @@ node squads/design/scripts/validate-a11y-integration.cjs
 ```
 
 Validation must fail when:
-
 - IDs are missing/duplicated,
 - counts diverge,
 - manifest is stale,
@@ -51,7 +49,6 @@ Validation must fail when:
 ### Step 3: Execute release gate checklist
 
 Checklist:
-
 - `squads/design/checklists/ds-a11y-release-gate-checklist.md`
 
 Mark gate as **APPROVED** only when all checks pass.
@@ -59,11 +56,9 @@ Mark gate as **APPROVED** only when all checks pass.
 ### Step 4: Emit governance report
 
 Write a short report in:
-
 - `outputs/design-system/accessibility/governance-report.md`
 
 Include:
-
 - date/time
 - command outputs summary
 - pass/fail status
@@ -91,8 +86,8 @@ Include:
 - `squads/design/checklists/ds-accessibility-wcag-checklist.md`
 - `squads/design/checklists/ds-a11y-release-gate-checklist.md`
 
-## Process Guards
 
+## Process Guards
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

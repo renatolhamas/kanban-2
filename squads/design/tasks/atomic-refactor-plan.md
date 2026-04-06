@@ -10,7 +10,6 @@
 > **Dependencies:** depends_on: `[]` · enables: `[atomic-refactor-execute]` · workflow: `refactoring`
 
 ## Output Schema
-
 - **produces:** `outputs/design-system/{project}/refactoring/refactor-plan.yaml`
 - **format:** YAML data
 - **consumed_by:** atomic-refactor-execute
@@ -18,7 +17,6 @@
 ## ⛔ LIÇÃO APRENDIDA (LER PRIMEIRO)
 
 Em Jan/2026 atomizamos 22 componentes. Resultado em alguns casos:
-
 - FragmentsTab: 475 → 1003 linhas (+111%)
 - 73% dos hooks criados sem reuso externo
 - 476 arquivos <30 linhas (boilerplate)
@@ -88,26 +86,26 @@ This task automates the analysis workflow used to create `docs/refactoring/COMPO
    - Find repeated UI patterns → molecules
    - Check: each component has render function count + useState count + repeated pattern count — log "Pattern analysis: {hooks} hooks, {renders} render fns, {patterns} repeated patterns"
 
-6. **Distribute Work**
+5. **Distribute Work**
    - Group domains into N agents
    - Balance line count across agents (±20%)
    - Ensure no domain split across agents
-   - Check: max agent line count <= min agent line count \* 1.4 (within 20% balance) — log "Distribution: {N} agents, range {min}-{max} lines, variance {pct}%"
+   - Check: max agent line count <= min agent line count * 1.4 (within 20% balance) — log "Distribution: {N} agents, range {min}-{max} lines, variance {pct}%"
 
-7. **Generate Shared Components List**
+6. **Generate Shared Components List**
    - Identify commonly needed molecules
    - List hooks that can be generalized
    - Create shared component checklist
    - Check: shared component list count >= 0 AND generalized hooks list exists — log "{N} shared molecules, {M} generalizable hooks identified"
 
-8. **Generate Agent Prompts**
+7. **Generate Agent Prompts**
    - Create detailed prompt for each agent
    - Include domain assignments
    - Add checklist and rules
    - Include reference to existing pattern
    - Check: prompt file count == agent count AND each file size > 0 — abort with "Prompt generation failed for agent {N}"
 
-9. **Generate Documentation**
+8. **Generate Documentation**
    - Update/create COMPONENT_REFACTORING_ROADMAP.md
    - Update/create PARALLEL_REFACTORING_PLAN.md
    - Create SHARED_REQUESTS.md template
@@ -131,7 +129,6 @@ This task automates the analysis workflow used to create `docs/refactoring/COMPO
 # Refactoring Analysis Complete
 
 ## Summary
-
 - Components found: {count}
 - Total lines: {lines}
 - Domains: {domains}
@@ -139,16 +136,15 @@ This task automates the analysis workflow used to create `docs/refactoring/COMPO
 
 ## Distribution
 
-| Agent | Domains                         | Components | Lines   |
-| ----- | ------------------------------- | ---------- | ------- |
-| 1     | creator/, lms/                  | 21         | ~12,600 |
-| 2     | ops/, books/, auth/             | 39         | ~20,400 |
-| 3     | shared/, design-system/, minds/ | 69         | ~35,300 |
+| Agent | Domains | Components | Lines |
+|-------|---------|------------|-------|
+| 1 | creator/, lms/ | 21 | ~12,600 |
+| 2 | ops/, books/, auth/ | 39 | ~20,400 |
+| 3 | shared/, design-system/, minds/ | 69 | ~35,300 |
 
 ## Prompts Ready
 
 Copy the prompt for each agent from:
-
 - docs/refactoring/prompts/agent-1-prompt.md
 - docs/refactoring/prompts/agent-2-prompt.md
 - docs/refactoring/prompts/agent-3-prompt.md
@@ -157,7 +153,7 @@ Copy the prompt for each agent from:
 ## Failure Handling
 
 - **Component too complex to refactor atomically:** Decompose into sub-components first. Create intermediate refactoring step
-- **Missing design tokens for component:** Run \*tokenize for the component's patterns before planning refactor
+- **Missing design tokens for component:** Run *tokenize for the component's patterns before planning refactor
 - **Breaking changes unavoidable:** Document all consumers. Create compatibility layer with deprecation timeline (minimum 2 sprints)
 - **No test coverage on target component:** Write characterization tests BEFORE refactoring to prevent regressions
 
@@ -186,7 +182,6 @@ Copy the prompt for each agent from:
 ```
 
 Output:
-
 ```
 🔍 Uma: Analyzing codebase for refactoring opportunities...
 
@@ -235,11 +230,11 @@ Analyzes only `creator/` with custom settings.
 
 ## Tier Classification Reference
 
-| Tier | Lines   | Priority | Typical Effort |
-| ---- | ------- | -------- | -------------- |
-| 1    | >800    | Critical | 2-4 hours      |
-| 2    | 500-800 | Medium   | 1-2 hours      |
-| 3    | 300-500 | Lower    | 30-60 min      |
+| Tier | Lines | Priority | Typical Effort |
+|------|-------|----------|----------------|
+| 1 | >800 | Critical | 2-4 hours |
+| 2 | 500-800 | Medium | 1-2 hours |
+| 3 | 300-500 | Lower | 30-60 min |
 
 ## Agent Prompt Template
 
@@ -262,6 +257,6 @@ Each generated prompt includes:
 - Update status in ROADMAP.md as components are completed
 - Use SHARED_REQUESTS.md to coordinate cross-agent dependencies
 
-## Process Guards
 
+## Process Guards
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

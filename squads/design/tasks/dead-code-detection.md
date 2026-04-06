@@ -8,7 +8,6 @@
 ## Overview
 
 This task identifies dead code in the design system:
-
 - Unused design tokens
 - Unexported/unused components
 - Dead CSS classes
@@ -45,7 +44,6 @@ done
 ```
 
 **Output:**
-
 ```
 Unused Components Detected
 ==========================
@@ -163,93 +161,89 @@ done
 
 ### Step 7: Generate Dead Code Report
 
-````markdown
+```markdown
 # Dead Code Detection Report
-
 Generated: {timestamp}
 Path: {path}
 
 ## Summary
 
-| Category          | Count  | Lines   | Est. Size |
-| ----------------- | ------ | ------- | --------- |
-| Unused Components | 3      | 450     | 22KB      |
-| Unused Exports    | 12     | -       | -         |
-| Orphaned Files    | 2      | 180     | 9KB       |
-| Unused Tokens     | 9      | -       | -         |
-| Unused Types      | 8      | 45      | 2KB       |
-| **Total**         | **34** | **675** | **33KB**  |
+| Category | Count | Lines | Est. Size |
+|----------|-------|-------|-----------|
+| Unused Components | 3 | 450 | 22KB |
+| Unused Exports | 12 | - | - |
+| Orphaned Files | 2 | 180 | 9KB |
+| Unused Tokens | 9 | - | - |
+| Unused Types | 8 | 45 | 2KB |
+| **Total** | **34** | **675** | **33KB** |
 
 ## Unused Components
 
-| Component     | File                 | Lines | Last Modified |
-| ------------- | -------------------- | ----- | ------------- |
-| LegacyButton  | ui/legacy-button.tsx | 120   | 2024-08-15    |
-| OldModal      | shared/old-modal.tsx | 230   | 2024-06-22    |
-| TestComponent | test-component.tsx   | 100   | 2024-09-01    |
+| Component | File | Lines | Last Modified |
+|-----------|------|-------|---------------|
+| LegacyButton | ui/legacy-button.tsx | 120 | 2024-08-15 |
+| OldModal | shared/old-modal.tsx | 230 | 2024-06-22 |
+| TestComponent | test-component.tsx | 100 | 2024-09-01 |
 
 **Action:** Delete or archive these files
 
 ## Unused Exports
 
-| Export           | Source          | Recommendation     |
-| ---------------- | --------------- | ------------------ |
-| formatLegacyDate | utils/date.ts   | Remove from barrel |
-| OldTheme         | themes/index.ts | Remove             |
-| ...              | ...             | ...                |
+| Export | Source | Recommendation |
+|--------|--------|----------------|
+| formatLegacyDate | utils/date.ts | Remove from barrel |
+| OldTheme | themes/index.ts | Remove |
+| ... | ... | ... |
 
 ## Orphaned Files
 
-| File                              | Lines | Reason           |
-| --------------------------------- | ----- | ---------------- |
-| components/wip/draft.tsx          | 80    | Never imported   |
-| components/deprecated/v1-card.tsx | 100   | Replaced by Card |
+| File | Lines | Reason |
+|------|-------|--------|
+| components/wip/draft.tsx | 80 | Never imported |
+| components/deprecated/v1-card.tsx | 100 | Replaced by Card |
 
 **Action:** Delete or move to archive folder
 
 ## Unused Design Tokens
 
-| Token         | Category   | Recommendation     |
-| ------------- | ---------- | ------------------ |
-| studio-accent | Color      | Remove from spec   |
-| p-20          | Spacing    | Remove from scale  |
-| font-serif    | Typography | Remove or document |
-| ...           | ...        | ...                |
+| Token | Category | Recommendation |
+|-------|----------|----------------|
+| studio-accent | Color | Remove from spec |
+| p-20 | Spacing | Remove from scale |
+| font-serif | Typography | Remove or document |
+| ... | ... | ... |
 
 ## Unused Types
 
-| Type       | File            | Recommendation |
-| ---------- | --------------- | -------------- |
-| LegacyUser | types/user.ts   | Remove         |
-| OldConfig  | types/config.ts | Remove         |
-| ...        | ...             | ...            |
+| Type | File | Recommendation |
+|------|------|----------------|
+| LegacyUser | types/user.ts | Remove |
+| OldConfig | types/config.ts | Remove |
+| ... | ... | ... |
 
 ## Impact Analysis
 
 ### If All Dead Code Removed:
 
-| Metric      | Before | After  | Savings |
-| ----------- | ------ | ------ | ------- |
-| Total Files | 234    | 229    | 2%      |
-| Total Lines | 45,000 | 44,325 | 1.5%    |
-| Bundle Size | 150KB  | 117KB  | 22%     |
-| Build Time  | 30s    | 28s    | 7%      |
+| Metric | Before | After | Savings |
+|--------|--------|-------|---------|
+| Total Files | 234 | 229 | 2% |
+| Total Lines | 45,000 | 44,325 | 1.5% |
+| Bundle Size | 150KB | 117KB | 22% |
+| Build Time | 30s | 28s | 7% |
 
 ## Recommendations
 
 ### Immediate Actions (Safe to Delete)
-
 1. `ui/legacy-button.tsx` - No references anywhere
 2. `shared/old-modal.tsx` - Replaced by Dialog
 3. `test-component.tsx` - Test file in production
 
 ### Review Before Deleting
-
 1. `themes/old-theme.ts` - May be used dynamically
 2. `utils/legacy.ts` - Check for string imports
 
 ### Keep But Document
-
 1. `font-serif` token - May be needed for content pages
 2. `p-20` spacing - Used in marketing pages
 
@@ -272,12 +266,10 @@ rm app/components/test-component.tsx
 mkdir -p .archive/deprecated
 mv app/components/deprecated/* .archive/deprecated/
 ```
-````
 
 ## Verification Commands
 
 After cleanup, run:
-
 ```bash
 # Verify no broken imports
 npx tsc --noEmit
@@ -288,18 +280,15 @@ npm run build
 # Verify tests pass
 npm test
 ```
-
 ```
 
 ## Output Location
 
 ```
-
 outputs/design-system/{project}/
 ├── dead-code-report-{date}.md
 ├── dead-code.json
 └── cleanup-script.sh (generated, review before running)
-
 ```
 
 ## Failure Handling
@@ -338,4 +327,3 @@ outputs/design-system/{project}/
 
 ## Process Guards
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.
-```

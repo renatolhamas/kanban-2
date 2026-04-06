@@ -53,7 +53,7 @@ activation-instructions:
 
 triage:
   philosophy: "Diagnose before acting, route before creating"
-  max_questions: 3 # Rapid triage - never more than 3 questions
+  max_questions: 3  # Rapid triage - never more than 3 questions
 
   # Quick diagnosis on ANY request
   diagnostic_flow:
@@ -115,9 +115,9 @@ duplicate-detection:
     - "5. If no match - proceed with mind-research-loop"
 
   lookup_fields:
-    - "squads.{name}.keywords" # Primary keyword match
-    - "squads.{name}.domain" # Domain match
-    - "domain_index.{keyword}" # Indexed lookup
+    - "squads.{name}.keywords"  # Primary keyword match
+    - "squads.{name}.domain"    # Domain match
+    - "domain_index.{keyword}"  # Indexed lookup
 
   response_if_exists: |
     I found an existing squad that covers this domain:
@@ -174,13 +174,7 @@ design_rules:
     rule: "Squad DEVE ser self-contained - tudo dentro da pasta do squad. Referências READ-ONLY ao workspace/ são permitidas para alinhamento com domínios e produtos."
     check: "Agent ESCREVE arquivo fora de squads/{squad-name}/? → VETO. Agent LÊ workspace/ para contexto? → PERMITIDO."
     allowed: ["agents/", "tasks/", "data/", "checklists/", "minds/"]
-    read_only_allowed:
-      [
-        "workspace/workspace.yaml",
-        "workspace/domains/",
-        "workspace/products/",
-        "workspace/config.md",
-      ]
+    read_only_allowed: ["workspace/workspace.yaml", "workspace/domains/", "workspace/products/", "workspace/config.md"]
     forbidden: ["outputs/minds/", ".aios-core/", "docs/"]
 
   functional_over_philosophical:
@@ -454,13 +448,13 @@ command_aliases_ptbr:
 # Command Visibility Configuration
 # Controla quais comandos aparecem em cada contexto de greeting
 command_visibility:
-  key_commands: # Aparecem sempre (3-5 comandos)
+  key_commands:  # Aparecem sempre (3-5 comandos)
     - "*create-squad"
     - "*create-squad-smart"
     - "*clone-mind"
     - "*validate-squad"
     - "*help"
-  quick_commands: # Aparecem em sessão normal (6-8 comandos)
+  quick_commands:  # Aparecem em sessão normal (6-8 comandos)
     - "*create-squad"
     - "*create-squad-smart"
     - "*clone-mind"
@@ -471,7 +465,7 @@ command_visibility:
     - "*next-squad"
     - "*squad-analytics"
     - "*help"
-  full_commands: "all" # *help mostra todos
+  full_commands: "all"  # *help mostra todos
 
 # Command Categories for *guide grouping
 # When adding a new command, also add it to the appropriate category below.
@@ -479,31 +473,13 @@ command_visibility:
 command_categories:
   CRIACAO:
     display: "CRIACAO"
-    commands:
-      [
-        "*create-squad",
-        "*create-squad-smart",
-        "*brownfield-upgrade",
-        "*create-agent",
-        "*create-workflow",
-        "*create-task",
-        "*create-template",
-        "*create-pipeline",
-      ]
+    commands: ["*create-squad", "*create-squad-smart", "*brownfield-upgrade", "*create-agent", "*create-workflow", "*create-task", "*create-template", "*create-pipeline"]
   TOOL_DISCOVERY:
     display: "TOOL DISCOVERY"
     commands: ["*discover-tools", "*show-tools", "*add-tool"]
   MIND_CLONING:
     display: "MIND CLONING (MMOS-lite)"
-    commands:
-      [
-        "*clone-mind",
-        "*extract-voice-dna",
-        "*extract-thinking-dna",
-        "*update-mind",
-        "*auto-acquire-sources",
-        "*quality-dashboard",
-      ]
+    commands: ["*clone-mind", "*extract-voice-dna", "*extract-thinking-dna", "*update-mind", "*auto-acquire-sources", "*quality-dashboard"]
   UPGRADE:
     display: "UPGRADE & MANUTENCAO"
     commands: ["*upgrade-squad"]
@@ -512,16 +488,7 @@ command_categories:
     commands: ["*review-extraction", "*review-artifacts"]
   VALIDACAO:
     display: "VALIDACAO"
-    commands:
-      [
-        "*validate-squad",
-        "*validate-final-artifacts",
-        "*validate-agent",
-        "*validate-task",
-        "*validate-workflow",
-        "*validate-template",
-        "*validate-checklist",
-      ]
+    commands: ["*validate-squad", "*validate-final-artifacts", "*validate-agent", "*validate-task", "*validate-workflow", "*validate-template", "*validate-checklist"]
   RECOVERY:
     display: "RECOVERY"
     commands: ["*reexecute-phase"]
@@ -530,19 +497,7 @@ command_categories:
     commands: ["*optimize", "*optimize-workflow"]
   UTILIDADES:
     display: "ANALYTICS & UTILIDADES"
-    commands:
-      [
-        "*guide",
-        "*list-squads",
-        "*show-registry",
-        "*squad-analytics",
-        "*refresh-registry",
-        "*sync",
-        "*show-context",
-        "*chat-mode",
-        "*help",
-        "*exit",
-      ]
+    commands: ["*guide", "*list-squads", "*show-registry", "*squad-analytics", "*refresh-registry", "*sync", "*show-context", "*chat-mode", "*help", "*exit"]
 
 # Post-Command Hooks - Auto-trigger tasks after certain commands
 post-command-hooks:
@@ -702,7 +657,7 @@ model_routing:
 
 dependencies:
   workflows:
-    - mind-research-loop.md # CRITICAL: Iterative research loop for best minds
+    - mind-research-loop.md  # CRITICAL: Iterative research loop for best minds
     - wf-research-then-create-agent.yaml
     - wf-context-aware-create-squad.yaml
     - wf-brownfield-upgrade-squad.yaml
@@ -712,75 +667,75 @@ dependencies:
     # Creation tasks
     - create-squad.md
     - create-agent.md
-    - create-workflow.md # Multi-phase workflow creation
+    - create-workflow.md  # Multi-phase workflow creation
     - create-task.md
     - create-template.md
     - deep-research-pre-agent.md
     # Pipeline scaffolding
-    - create-pipeline.md # Generate pipeline code (state, progress, runner) for squads with multi-phase processing
-    - detect-squad-context.md # Context router (greenfield/resume/brownfield)
-    - parallel-discovery.md # Parallel discovery with deterministic merge
+    - create-pipeline.md         # Generate pipeline code (state, progress, runner) for squads with multi-phase processing
+    - detect-squad-context.md    # Context router (greenfield/resume/brownfield)
+    - parallel-discovery.md      # Parallel discovery with deterministic merge
     # Tool Discovery tasks
-    - discover-tools.md # Lightweight version (for standalone use)
+    - discover-tools.md   # Lightweight version (for standalone use)
     # Mind Cloning tasks (MMOS-lite)
-    - collect-sources.md # Source collection & validation (BLOCKING GATE)
-    - auto-acquire-sources.md # Auto-fetch YouTube, podcasts, articles
-    - extract-voice-dna.md # Communication/writing style extraction
-    - extract-thinking-dna.md # Frameworks/heuristics/decisions extraction
-    - update-mind.md # Brownfield: update existing mind DNA
+    - collect-sources.md       # Source collection & validation (BLOCKING GATE)
+    - auto-acquire-sources.md  # Auto-fetch YouTube, podcasts, articles
+    - extract-voice-dna.md     # Communication/writing style extraction
+    - extract-thinking-dna.md  # Frameworks/heuristics/decisions extraction
+    - update-mind.md           # Brownfield: update existing mind DNA
     # Upgrade & Maintenance tasks
-    - upgrade-squad.md # Upgrade existing squad to current standards (audit→plan→execute)
+    - upgrade-squad.md    # Upgrade existing squad to current standards (audit→plan→execute)
     # Validation tasks
-    - validate-squad.md # Granular squad validation (component-by-component)
+    - validate-squad.md   # Granular squad validation (component-by-component)
     - validate-final-artifacts.md # Final deliverables hard gate
-    - reexecute-squad-phase.md # Backup + phase reexecution for safe brownfield updates
+    - reexecute-squad-phase.md    # Backup + phase reexecution for safe brownfield updates
     # Optimization tasks
-    - optimize.md # Otimiza execução de tasks + análise de economia
-    - optimize-workflow.md # Otimiza execução de workflows (6 dimensões)
+    - optimize.md  # Otimiza execução de tasks + análise de economia
+    - optimize-workflow.md  # Otimiza execução de workflows (6 dimensões)
     # Registry & Analytics tasks
     - refresh-registry.md # Scan squads/ and update squad-registry.yaml
-    - squad-analytics.md # Detailed analytics dashboard for all squads
+    - squad-analytics.md  # Detailed analytics dashboard for all squads
     # Documentation tasks
-    - squad-overview.md # Generate comprehensive SQUAD-OVERVIEW.md for any squad
+    - squad-overview.md   # Generate comprehensive SQUAD-OVERVIEW.md for any squad
     # Planning tasks
-    - next-squad.md # Analyze ecosystem and recommend next squad to create/improve
+    - next-squad.md       # Analyze ecosystem and recommend next squad to create/improve
   templates:
     - config-tmpl.yaml
     - readme-tmpl.md
     - agent-tmpl.md
     - task-tmpl.md
-    - workflow-tmpl.yaml # Multi-phase workflow template (AIOS standard)
+    - workflow-tmpl.yaml  # Multi-phase workflow template (AIOS standard)
     - template-tmpl.yaml
-    - quality-dashboard-tmpl.md # Quality metrics dashboard
+    - quality-dashboard-tmpl.md  # Quality metrics dashboard
     # Pipeline scaffolding templates
-    - pipeline-state-tmpl.py # PipelineState + PipelineStateManager scaffold
-    - pipeline-progress-tmpl.py # ProgressTracker + SimpleProgress + factory scaffold
-    - pipeline-runner-tmpl.py # PhaseRunner + PhaseDefinition scaffold
+    - pipeline-state-tmpl.py     # PipelineState + PipelineStateManager scaffold
+    - pipeline-progress-tmpl.py  # ProgressTracker + SimpleProgress + factory scaffold
+    - pipeline-runner-tmpl.py    # PhaseRunner + PhaseDefinition scaffold
   checklists:
     - squad-checklist.md
-    - mind-validation.md # Mind validation before squad inclusion
+    - mind-validation.md          # Mind validation before squad inclusion
     - deep-research-quality.md
-    - agent-quality-gate.md # Agent validation (SC_AGT_001)
-    - task-anatomy-checklist.md # Task validation (8 fields)
-    - quality-gate-checklist.md # General quality gates
-    - smoke-test-agent.md # 3 smoke tests obrigatórios (comportamento real)
+    - agent-quality-gate.md       # Agent validation (SC_AGT_001)
+    - task-anatomy-checklist.md   # Task validation (8 fields)
+    - quality-gate-checklist.md   # General quality gates
+    - smoke-test-agent.md         # 3 smoke tests obrigatórios (comportamento real)
     - squad-overview-checklist.md # SQUAD-OVERVIEW.md quality validation (100-point scoring)
   data:
     # Reference files (load ON-DEMAND when needed, NOT on activation)
-    - squad-registry.yaml # Ecosystem awareness - load only for *create-squad, *show-registry
-    - tool-registry.yaml # Global tool catalog (MCPs, APIs, CLIs, Libraries) - load for *discover-tools, *show-tools
-    - internal-infrastructure-library.yaml # Internal-first catalog - MUST load before external search in *discover-tools
+    - squad-registry.yaml         # Ecosystem awareness - load only for *create-squad, *show-registry
+    - tool-registry.yaml          # Global tool catalog (MCPs, APIs, CLIs, Libraries) - load for *discover-tools, *show-tools
+    - internal-infrastructure-library.yaml  # Internal-first catalog - MUST load before external search in *discover-tools
   config:
-    - model-routing.yaml # Token economy - model tier per task (load before spawning agents)
-    - squad-analytics-guide.md # Documentation for *squad-analytics command
-    - squad-kb.md # Load when creating squads
-    - best-practices.md # Load when validating
-    - decision-heuristics-framework.md # Load for quality checks
-    - quality-dimensions-framework.md # Load for scoring
-    - tier-system-framework.md # Load for agent organization
-    - executor-matrix-framework.md # Load for executor profiles (reference)
-    - executor-decision-tree.md # PRIMARY: Executor assignment via 6-question elicitation (Worker vs Agent vs Hybrid vs Human)
-    - pipeline-patterns.md # Pipeline patterns reference (state, progress, runner) - load for *create-pipeline
+    - model-routing.yaml          # Token economy - model tier per task (load before spawning agents)
+    - squad-analytics-guide.md    # Documentation for *squad-analytics command
+    - squad-kb.md                 # Load when creating squads
+    - best-practices.md           # Load when validating
+    - decision-heuristics-framework.md    # Load for quality checks
+    - quality-dimensions-framework.md     # Load for scoring
+    - tier-system-framework.md            # Load for agent organization
+    - executor-matrix-framework.md        # Load for executor profiles (reference)
+    - executor-decision-tree.md           # PRIMARY: Executor assignment via 6-question elicitation (Worker vs Agent vs Hybrid vs Human)
+    - pipeline-patterns.md                 # Pipeline patterns reference (state, progress, runner) - load for *create-pipeline
 
 knowledge_areas:
   - Squad architecture and structure
@@ -1158,28 +1113,17 @@ behavioral_states:
   triage_mode:
     trigger: "New request arrives"
     output: "Classified request with routing decision"
-    signals:
-      ["Analyzing request...", "Routing to...", "Checking existing coverage..."]
+    signals: ["Analyzing request...", "Routing to...", "Checking existing coverage..."]
     duration: "1-2 min"
   research_phase:
     trigger: "Squad creation for new domain"
     output: "6+ elite minds with frameworks"
-    signals:
-      [
-        "Iteration N:",
-        "Devil's advocate:",
-        "Validating framework documentation...",
-      ]
+    signals: ["Iteration N:", "Devil's advocate:", "Validating framework documentation..."]
     duration: "15-30 min"
   creation_phase:
     trigger: "Elite minds validated"
     output: "Complete squad with agents"
-    signals:
-      [
-        "Creating agent based on...",
-        "Tier classification:",
-        "Applying quality gate...",
-      ]
+    signals: ["Creating agent based on...", "Tier classification:", "Applying quality gate..."]
     duration: "30-60 min"
   validation_phase:
     trigger: "Squad creation complete"
@@ -1223,7 +1167,7 @@ handoff_to:
 review_checkpoints:
   review_extraction:
     description: "Conferir trabalho do @oalanicolas antes de passar pro @pedro-valerio"
-    quality_gate: "QG-SC-5.1" # DNA Review gate
+    quality_gate: "QG-SC-5.1"  # DNA Review gate
     checks:
       - "15+ citações com [SOURCE:]?"
       - "5+ signature phrases verificáveis?"
@@ -1235,7 +1179,7 @@ review_checkpoints:
 
   review_artifacts:
     description: "Conferir trabalho do @pedro-valerio antes de finalizar"
-    quality_gate: "QG-SC-6.1" # Squad Review gate
+    quality_gate: "QG-SC-6.1"  # Squad Review gate
     checks:
       - "3 smoke tests PASSAM?"
       - "Veto conditions existem?"
@@ -1294,6 +1238,7 @@ self_awareness:
   # ─────────────────────────────────────────────────────────────────────────────
 
   core_capabilities:
+
     squad_creation:
       description: "Criar squads com roteamento inteligente por contexto"
       command: "*create-squad-smart"

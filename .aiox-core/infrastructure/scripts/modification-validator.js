@@ -1,9 +1,9 @@
-const fs = require("fs").promises;
-const path = require("path");
-const yaml = require("js-yaml");
-const { validateYAML } = require("./yaml-validator");
-const DependencyAnalyzer = require("./dependency-analyzer");
-const SecurityChecker = require("./security-checker");
+const fs = require('fs').promises;
+const path = require('path');
+const yaml = require('js-yaml');
+const { validateYAML } = require('./yaml-validator');
+const DependencyAnalyzer = require('./dependency-analyzer');
+const SecurityChecker = require('./security-checker');
 
 /**
  * Validates component modifications before applying them
@@ -28,12 +28,7 @@ class ModificationValidator {
    * @param {Object} options - Validation options
    * @returns {Object} Validation result with errors and warnings
    */
-  async validateModification(
-    componentType,
-    originalContent,
-    modifiedContent,
-    options = {},
-  ) {
+  async validateModification(componentType, originalContent, modifiedContent, options = {}) {
     const result = {
       valid: true,
       errors: [],
@@ -45,7 +40,7 @@ class ModificationValidator {
     // Basic validation
     if (!originalContent || !modifiedContent) {
       result.valid = false;
-      result.errors.push("Original or modified content is empty");
+      result.errors.push('Original or modified content is empty');
       return result;
     }
 
@@ -58,16 +53,11 @@ class ModificationValidator {
       );
       this.mergeResults(result, typeResult);
     } else {
-      result.warnings.push(
-        `No specific validation rules for component type: ${componentType}`,
-      );
+      result.warnings.push(`No specific validation rules for component type: ${componentType}`);
     }
 
     // Run security validation
-    const securityResult = await this.validateSecurity(
-      modifiedContent,
-      componentType,
-    );
+    const securityResult = await this.validateSecurity(modifiedContent, componentType);
     this.mergeResults(result, securityResult);
 
     // Check for breaking changes
@@ -111,7 +101,7 @@ class ModificationValidator {
       const modifiedMeta = yaml.load(modifiedParts.yaml);
 
       // Check required fields
-      const requiredFields = ["name", "id", "title", "icon", "whenToUse"];
+      const requiredFields = ['name', 'id', 'title', 'icon', 'whenToUse'];
       for (const field of requiredFields) {
         if (!modifiedMeta[field]) {
           result.errors.push(`Required field missing: ${field}`);
@@ -120,16 +110,14 @@ class ModificationValidator {
 
       // Validate dependencies
       if (modifiedMeta.dependencies) {
-        const depValidation = await this.validateDependencies(
-          modifiedMeta.dependencies,
-        );
+        const depValidation = await this.validateDependencies(modifiedMeta.dependencies);
         this.mergeResults(result, depValidation);
       }
 
       // Check command structure
       if (modifiedMeta.commands) {
         for (const [cmd, desc] of Object.entries(modifiedMeta.commands)) {
-          if (!desc || typeof desc !== "string") {
+          if (!desc || typeof desc !== 'string') {
             result.errors.push(`Invalid command description for: ${cmd}`);
           }
         }
@@ -137,20 +125,18 @@ class ModificationValidator {
 
       // Check for removed commands (breaking change)
       if (originalMeta.commands && modifiedMeta.commands) {
-        const removedCommands = Object.keys(originalMeta.commands).filter(
-          (cmd) => !modifiedMeta.commands[cmd],
-        );
-
+        const removedCommands = Object.keys(originalMeta.commands)
+          .filter(cmd => !modifiedMeta.commands[cmd]);
+        
         if (removedCommands.length > 0) {
-          result.warnings.push(
-            `Commands removed: ${removedCommands.join(", ")}`,
-          );
+          result.warnings.push(`Commands removed: ${removedCommands.join(', ')}`);
         }
       }
 
       // Validate markdown content
       const markdownValidation = this.validateMarkdown(modifiedParts.markdown);
       this.mergeResults(result, markdownValidation);
+
     } catch (error) {
       result.valid = false;
       result.errors.push(`Failed to parse agent content: ${error.message}`);
@@ -172,7 +158,7 @@ class ModificationValidator {
     };
 
     // Check for required sections
-    const requiredSections = ["## Purpose", "## Task Execution"];
+    const requiredSections = ['## Purpose', '## Task Execution'];
     for (const section of requiredSections) {
       if (!modifiedContent.includes(section)) {
         result.errors.push(`Required section missing: ${section}`);
@@ -180,11 +166,10 @@ class ModificationValidator {
     }
 
     // Validate elicitation blocks
-    const elicitationBlocks =
-      modifiedContent.match(/\[\[LLM:([\s\S]*?)\]\]/g) || [];
+    const elicitationBlocks = modifiedContent.match(/\[\[LLM:([\s\S]*?)\]\]/g) || [];
     for (const block of elicitationBlocks) {
-      if (!block.includes("]]")) {
-        result.errors.push("Unclosed elicitation block found");
+      if (!block.includes(']]')) {
+        result.errors.push('Unclosed elicitation block found');
       }
     }
 
@@ -193,25 +178,21 @@ class ModificationValidator {
     const expectedSteps = taskSteps.length;
     for (let i = 1; i <= expectedSteps; i++) {
       if (!modifiedContent.includes(`### ${i}.`)) {
-        result.warnings.push(
-          `Task step ${i} appears to be missing or misnumbered`,
-        );
+        result.warnings.push(`Task step ${i} appears to be missing or misnumbered`);
       }
     }
 
     // Validate output format if specified
-    const outputMatch = modifiedContent.match(
-      /## Output Format[\s\S]*?```([\s\S]*?)```/,
-    );
+    const outputMatch = modifiedContent.match(/## Output Format[\s\S]*?```([\s\S]*?)```/);
     if (outputMatch) {
       const outputFormat = outputMatch[1].trim();
-      if (outputFormat.startsWith("json")) {
+      if (outputFormat.startsWith('json')) {
         try {
           // Extract JSON and validate
-          const jsonContent = outputFormat.replace(/^json\s*/, "");
+          const jsonContent = outputFormat.replace(/^json\s*/, '');
           JSON.parse(jsonContent);
         } catch (error) {
-          result.warnings.push("Output format contains invalid JSON example");
+          result.warnings.push('Output format contains invalid JSON example');
         }
       }
     }
@@ -223,11 +204,7 @@ class ModificationValidator {
    * Validate workflow modifications
    * @private
    */
-  async validateWorkflowModification(
-    originalContent,
-    modifiedContent,
-    options,
-  ) {
+  async validateWorkflowModification(originalContent, modifiedContent, options) {
     const result = {
       valid: true,
       errors: [],
@@ -249,21 +226,16 @@ class ModificationValidator {
 
       // Check required fields
       if (!modifiedWorkflow.name) {
-        result.errors.push("Workflow name is required");
+        result.errors.push('Workflow name is required');
       }
 
-      if (
-        !modifiedWorkflow.phases ||
-        Object.keys(modifiedWorkflow.phases).length === 0
-      ) {
-        result.errors.push("Workflow must have at least one phase");
+      if (!modifiedWorkflow.phases || Object.keys(modifiedWorkflow.phases).length === 0) {
+        result.errors.push('Workflow must have at least one phase');
       }
 
       // Validate phase structure
       const phaseSequences = [];
-      for (const [phaseName, phase] of Object.entries(
-        modifiedWorkflow.phases || {},
-      )) {
+      for (const [phaseName, phase] of Object.entries(modifiedWorkflow.phases || {})) {
         if (!phase.sequence) {
           result.errors.push(`Phase '${phaseName}' missing sequence number`);
         } else {
@@ -271,18 +243,14 @@ class ModificationValidator {
         }
 
         if (!phase.agents || phase.agents.length === 0) {
-          result.errors.push(
-            `Phase '${phaseName}' must have at least one agent`,
-          );
+          result.errors.push(`Phase '${phaseName}' must have at least one agent`);
         }
 
         // Validate agent references
         for (const agent of phase.agents || []) {
           const agentExists = await this.checkAgentExists(agent);
           if (!agentExists) {
-            result.warnings.push(
-              `Agent '${agent}' referenced in phase '${phaseName}' not found`,
-            );
+            result.warnings.push(`Agent '${agent}' referenced in phase '${phaseName}' not found`);
           }
         }
       }
@@ -290,15 +258,13 @@ class ModificationValidator {
       // Check for sequence gaps
       phaseSequences.sort((a, b) => a - b);
       for (let i = 1; i < phaseSequences.length; i++) {
-        if (phaseSequences[i] - phaseSequences[i - 1] > 2) {
-          result.warnings.push("Large gap in phase sequences detected");
+        if (phaseSequences[i] - phaseSequences[i-1] > 2) {
+          result.warnings.push('Large gap in phase sequences detected');
         }
       }
 
       // Validate entry/exit criteria references
-      for (const [phaseName, phase] of Object.entries(
-        modifiedWorkflow.phases || {},
-      )) {
+      for (const [phaseName, phase] of Object.entries(modifiedWorkflow.phases || {})) {
         if (phase.entry_criteria) {
           for (const criteria of phase.entry_criteria) {
             // Check if criteria references valid artifacts or phases
@@ -314,6 +280,7 @@ class ModificationValidator {
           }
         }
       }
+
     } catch (error) {
       result.valid = false;
       result.errors.push(`Failed to parse workflow: ${error.message}`);
@@ -326,11 +293,7 @@ class ModificationValidator {
    * Validate template modifications
    * @private
    */
-  async validateTemplateModification(
-    originalContent,
-    modifiedContent,
-    options,
-  ) {
+  async validateTemplateModification(originalContent, modifiedContent, options) {
     const result = {
       valid: true,
       errors: [],
@@ -345,7 +308,7 @@ class ModificationValidator {
     // Warn about unreplaced placeholders
     if (uniquePlaceholders.length > 0) {
       result.suggestions.push(
-        `Template contains ${uniquePlaceholders.length} placeholders: ${uniquePlaceholders.join(", ")}`,
+        `Template contains ${uniquePlaceholders.length} placeholders: ${uniquePlaceholders.join(', ')}`,
       );
     }
 
@@ -353,9 +316,7 @@ class ModificationValidator {
     const llmBlocks = modifiedContent.match(/\[\[LLM:([\s\S]*?)\]\]/g) || [];
     for (const block of llmBlocks) {
       if (block.length > 1000) {
-        result.warnings.push(
-          "LLM instruction block exceeds recommended length (1000 chars)",
-        );
+        result.warnings.push('LLM instruction block exceeds recommended length (1000 chars)');
       }
     }
 
@@ -373,13 +334,13 @@ class ModificationValidator {
       warnings: [],
     };
 
-    const baseDir = path.join(process.cwd(), "aiox-core");
+    const baseDir = path.join(process.cwd(), 'aiox-core');
 
     for (const [type, files] of Object.entries(dependencies)) {
       if (!Array.isArray(files)) continue;
 
       const typeDir = path.join(baseDir, type);
-
+      
       for (const file of files) {
         const filePath = path.join(typeDir, file);
         try {
@@ -408,16 +369,16 @@ class ModificationValidator {
     const internalLinks = content.match(/\[([^\]]+)\]\(#[^)]+\)/g) || [];
     for (const link of internalLinks) {
       const anchor = link.match(/#([^)]+)/)[1];
-      const headingRegex = new RegExp(`^#+.*${anchor}`, "mi");
+      const headingRegex = new RegExp(`^#+.*${anchor}`, 'mi');
       if (!headingRegex.test(content)) {
         result.warnings.push(`Broken internal link: ${link}`);
       }
     }
 
     // Check for code block closure
-    const codeBlocks = content.split("```");
+    const codeBlocks = content.split('```');
     if (codeBlocks.length % 2 === 0) {
-      result.errors.push("Unclosed code block detected");
+      result.errors.push('Unclosed code block detected');
     }
 
     return result;
@@ -435,10 +396,10 @@ class ModificationValidator {
     };
 
     const securityIssues = await this.securityChecker.checkContent(content);
-
+    
     if (securityIssues.length > 0) {
       for (const issue of securityIssues) {
-        if (issue.severity === "high") {
+        if (issue.severity === 'high') {
           result.errors.push(`Security issue: ${issue.message}`);
         } else {
           result.warnings.push(`Security concern: ${issue.message}`);
@@ -457,7 +418,7 @@ class ModificationValidator {
     const breakingChanges = [];
 
     switch (componentType) {
-      case "agent":
+      case 'agent':
         // Check for removed commands
         try {
           const originalParts = this.parseAgentContent(originalContent);
@@ -466,16 +427,14 @@ class ModificationValidator {
           const modifiedMeta = yaml.load(modifiedParts.yaml);
 
           if (originalMeta.commands && modifiedMeta.commands) {
-            const removedCommands = Object.keys(originalMeta.commands).filter(
-              (cmd) => !modifiedMeta.commands[cmd],
-            );
-
+            const removedCommands = Object.keys(originalMeta.commands)
+              .filter(cmd => !modifiedMeta.commands[cmd]);
+            
             if (removedCommands.length > 0) {
               breakingChanges.push({
-                type: "removed_commands",
+                type: 'removed_commands',
                 items: removedCommands,
-                impact:
-                  "Users relying on these commands will need to update their workflows",
+                impact: 'Users relying on these commands will need to update their workflows',
               });
             }
           }
@@ -484,28 +443,20 @@ class ModificationValidator {
         }
         break;
 
-      case "task":
+      case 'task':
         // Check for changed output format
-        const originalOutput = originalContent.match(
-          /## Output Format[\s\S]*?```[\s\S]*?```/,
-        );
-        const modifiedOutput = modifiedContent.match(
-          /## Output Format[\s\S]*?```[\s\S]*?```/,
-        );
-
-        if (
-          originalOutput &&
-          modifiedOutput &&
-          originalOutput[0] !== modifiedOutput[0]
-        ) {
+        const originalOutput = originalContent.match(/## Output Format[\s\S]*?```[\s\S]*?```/);
+        const modifiedOutput = modifiedContent.match(/## Output Format[\s\S]*?```[\s\S]*?```/);
+        
+        if (originalOutput && modifiedOutput && originalOutput[0] !== modifiedOutput[0]) {
           breakingChanges.push({
-            type: "output_format_changed",
-            impact: "Components consuming this task output may need updates",
+            type: 'output_format_changed',
+            impact: 'Components consuming this task output may need updates',
           });
         }
         break;
 
-      case "workflow":
+      case 'workflow':
         // Check for removed phases
         try {
           const originalWorkflow = yaml.load(originalContent);
@@ -514,15 +465,13 @@ class ModificationValidator {
           const originalPhases = Object.keys(originalWorkflow.phases || {});
           const modifiedPhases = Object.keys(modifiedWorkflow.phases || {});
 
-          const removedPhases = originalPhases.filter(
-            (p) => !modifiedPhases.includes(p),
-          );
-
+          const removedPhases = originalPhases.filter(p => !modifiedPhases.includes(p));
+          
           if (removedPhases.length > 0) {
             breakingChanges.push({
-              type: "removed_phases",
+              type: 'removed_phases',
               items: removedPhases,
-              impact: "Projects using this workflow may fail at removed phases",
+              impact: 'Projects using this workflow may fail at removed phases',
             });
           }
         } catch (error) {
@@ -541,7 +490,7 @@ class ModificationValidator {
   parseAgentContent(content) {
     const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
     if (!match) {
-      throw new Error("Invalid agent content format");
+      throw new Error('Invalid agent content format');
     }
 
     return {
@@ -555,12 +504,7 @@ class ModificationValidator {
    * @private
    */
   async checkAgentExists(agentName) {
-    const agentPath = path.join(
-      process.cwd(),
-      "aiox-core",
-      "agents",
-      `${agentName}.md`,
-    );
+    const agentPath = path.join(process.cwd(), 'aiox-core', 'agents', `${agentName}.md`);
     try {
       await fs.access(agentPath);
       return true;
@@ -576,10 +520,10 @@ class ModificationValidator {
   validateCriteriaReferences(criteria, workflow) {
     // Simple check - could be enhanced
     const artifacts = new Set();
-
+    
     for (const phase of Object.values(workflow.phases || {})) {
       if (phase.artifacts) {
-        phase.artifacts.forEach((a) => artifacts.add(a));
+        phase.artifacts.forEach(a => artifacts.add(a));
       }
     }
 
@@ -601,7 +545,7 @@ class ModificationValidator {
     target.errors.push(...(source.errors || []));
     target.warnings.push(...(source.warnings || []));
     target.suggestions.push(...(source.suggestions || []));
-
+    
     if (source.valid === false) {
       target.valid = false;
     }

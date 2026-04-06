@@ -68,7 +68,7 @@ workflow:
   # EXECUTION MODE
   # ─────────────────────────────────────────────────────────────────────────────
   execution:
-    mode: "hybrid" # Script + AI
+    mode: "hybrid"  # Script + AI
     script: "scripts/validate-squad.sh"
     task: "tasks/validate-squad.md"
 
@@ -130,7 +130,7 @@ workflow:
 
         - id: "T1-CFG-002"
           name: "config.yaml valid YAML"
-          command: 'python3 -c "import yaml; yaml.safe_load(open(''{squad_path}/config.yaml''))"'
+          command: "python3 -c \"import yaml; yaml.safe_load(open('{squad_path}/config.yaml'))\""
           severity: "BLOCKING"
 
         - id: "T1-CFG-003"

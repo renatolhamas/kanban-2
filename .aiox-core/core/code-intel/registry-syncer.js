@@ -1,23 +1,20 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
-const { getClient, isCodeIntelAvailable } = require("../code-intel");
-const {
-  RegistryLoader,
-  DEFAULT_REGISTRY_PATH,
-} = require("../ids/registry-loader");
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+const { getClient, isCodeIntelAvailable } = require('../code-intel');
+const { RegistryLoader, DEFAULT_REGISTRY_PATH } = require('../ids/registry-loader');
 
 // Role inference from entity path (order matters: more specific patterns first)
 const ROLE_MAP = [
-  ["tasks/", "task"],
-  ["templates/", "template"],
-  ["agents/", "agent"],
-  ["workflows/", "workflow"],
-  ["scripts/", "script"],
-  ["/data/", "config"],
-  ["/core/", "module"],
+  ['tasks/', 'task'],
+  ['templates/', 'template'],
+  ['agents/', 'agent'],
+  ['workflows/', 'workflow'],
+  ['scripts/', 'script'],
+  ['/data/', 'config'],
+  ['/core/', 'module'],
 ];
 
 /**
@@ -26,12 +23,12 @@ const ROLE_MAP = [
  * @returns {string} Inferred role
  */
 function inferRole(entityPath) {
-  if (!entityPath) return "unknown";
-  const normalized = entityPath.replace(/\\/g, "/");
+  if (!entityPath) return 'unknown';
+  const normalized = entityPath.replace(/\\/g, '/');
   for (const [pattern, role] of ROLE_MAP) {
     if (normalized.includes(pattern)) return role;
   }
-  return "unknown";
+  return 'unknown';
 }
 
 /**
@@ -53,7 +50,7 @@ class RegistrySyncer {
    */
   constructor(options = {}) {
     this._registryPath = options.registryPath || DEFAULT_REGISTRY_PATH;
-    this._repoRoot = options.repoRoot || path.resolve(__dirname, "../../../");
+    this._repoRoot = options.repoRoot || path.resolve(__dirname, '../../../');
     this._client = options.client || null;
     this._logger = options.logger || console.log;
     this._stats = { processed: 0, skipped: 0, errors: 0, total: 0 };
@@ -79,9 +76,7 @@ class RegistrySyncer {
 
     // AC5: Fallback — check provider availability first
     if (!this._isProviderAvailable()) {
-      this._logger(
-        "[registry-syncer] No code intelligence provider available, skipping enrichment",
-      );
+      this._logger('[registry-syncer] No code intelligence provider available, skipping enrichment');
       return { processed: 0, skipped: 0, errors: 0, total: 0, aborted: true };
     }
 
@@ -93,21 +88,14 @@ class RegistrySyncer {
     // Flatten all entities for iteration
     const allEntities = [];
     for (const [category, categoryEntities] of Object.entries(entities)) {
-      if (!categoryEntities || typeof categoryEntities !== "object") continue;
+      if (!categoryEntities || typeof categoryEntities !== 'object') continue;
       for (const [entityId, entityData] of Object.entries(categoryEntities)) {
         allEntities.push({ id: entityId, category, data: entityData });
       }
     }
 
-    this._stats = {
-      processed: 0,
-      skipped: 0,
-      errors: 0,
-      total: allEntities.length,
-    };
-    this._logger(
-      `[registry-syncer] Starting ${isFull ? "full" : "incremental"} sync of ${allEntities.length} entities`,
-    );
+    this._stats = { processed: 0, skipped: 0, errors: 0, total: allEntities.length };
+    this._logger(`[registry-syncer] Starting ${isFull ? 'full' : 'incremental'} sync of ${allEntities.length} entities`);
 
     // Iterate and enrich
     for (const entity of allEntities) {
@@ -120,9 +108,7 @@ class RegistrySyncer {
         }
       } catch (error) {
         this._stats.errors++;
-        this._logger(
-          `[registry-syncer] Error enriching ${entity.id}: ${error.message}`,
-        );
+        this._logger(`[registry-syncer] Error enriching ${entity.id}: ${error.message}`);
       }
     }
 
@@ -134,9 +120,7 @@ class RegistrySyncer {
     // Atomic write
     this._atomicWrite(this._registryPath, registry);
 
-    this._logger(
-      `[registry-syncer] Sync complete: ${this._stats.processed} processed, ${this._stats.skipped} skipped, ${this._stats.errors} errors`,
-    );
+    this._logger(`[registry-syncer] Sync complete: ${this._stats.processed} processed, ${this._stats.skipped} skipped, ${this._stats.errors} errors`);
     return { ...this._stats };
   }
 
@@ -185,9 +169,7 @@ class RegistrySyncer {
       callerCount,
       role: inferRole(sourcePath),
       lastSynced: now,
-      provider: client._activeProvider
-        ? client._activeProvider.name
-        : "unknown",
+      provider: client._activeProvider ? client._activeProvider.name : 'unknown',
     };
 
     return true;
@@ -200,7 +182,7 @@ class RegistrySyncer {
    */
   _isProviderAvailable() {
     if (this._client) {
-      return typeof this._client.findReferences === "function";
+      return typeof this._client.findReferences === 'function';
     }
     return isCodeIntelAvailable();
   }
@@ -231,9 +213,7 @@ class RegistrySyncer {
       return stat.mtimeMs <= lastSyncedMs;
     } catch (_error) {
       // File doesn't exist — clear metadata and skip
-      this._logger(
-        `[registry-syncer] Warning: source file not found for ${sourcePath}, skipping`,
-      );
+      this._logger(`[registry-syncer] Warning: source file not found for ${sourcePath}, skipping`);
       return true;
     }
   }
@@ -255,7 +235,7 @@ class RegistrySyncer {
       const usedByIds = [];
       for (const ref of references) {
         const refPath = ref.file || ref.path || ref;
-        if (typeof refPath !== "string") continue;
+        if (typeof refPath !== 'string') continue;
 
         const matchedId = this._findEntityByPath(refPath, entities);
         if (matchedId && matchedId !== entityId) {
@@ -292,13 +272,9 @@ class RegistrySyncer {
 
       for (const dep of items) {
         const depPath = dep.path || dep.source || dep;
-        if (typeof depPath !== "string") continue;
+        if (typeof depPath !== 'string') continue;
         // Internal deps: relative paths or project paths (not node_modules)
-        if (
-          depPath.startsWith(".") ||
-          depPath.startsWith("/") ||
-          depPath.includes(".aiox-core")
-        ) {
+        if (depPath.startsWith('.') || depPath.startsWith('/') || depPath.includes('.aiox-core')) {
           deps.push(depPath);
         }
       }
@@ -317,14 +293,11 @@ class RegistrySyncer {
    * @private
    */
   _findEntityByPath(filePath, entities) {
-    const normalized = filePath.replace(/\\/g, "/");
+    const normalized = filePath.replace(/\\/g, '/');
     for (const [_category, categoryEntities] of Object.entries(entities)) {
-      if (!categoryEntities || typeof categoryEntities !== "object") continue;
+      if (!categoryEntities || typeof categoryEntities !== 'object') continue;
       for (const [entityId, entityData] of Object.entries(categoryEntities)) {
-        if (
-          entityData.path &&
-          normalized.includes(entityData.path.replace(/\\/g, "/"))
-        ) {
+        if (entityData.path && normalized.includes(entityData.path.replace(/\\/g, '/'))) {
           return entityId;
         }
       }
@@ -340,9 +313,9 @@ class RegistrySyncer {
    * @private
    */
   _atomicWrite(registryPath, registry) {
-    const tmpPath = registryPath + ".tmp";
+    const tmpPath = registryPath + '.tmp';
     const content = yaml.dump(registry, { lineWidth: 120, noRefs: true });
-    fs.writeFileSync(tmpPath, content, "utf8");
+    fs.writeFileSync(tmpPath, content, 'utf8');
     fs.renameSync(tmpPath, registryPath);
   }
 

@@ -9,8 +9,8 @@
  * @story 2.13 - Manifest System
  */
 
-const fs = require("fs").promises;
-const path = require("path");
+const fs = require('fs').promises;
+const path = require('path');
 
 /**
  * Parse CSV content into rows
@@ -28,7 +28,7 @@ function parseCSV(content) {
   const rows = records.slice(1).map((values, index) => {
     const row = {};
     header.forEach((col, i) => {
-      row[col] = values[i] || "";
+      row[col] = values[i] || '';
     });
     row._lineNumber = index + 2; // 1-based, accounting for header
     return row;
@@ -45,7 +45,7 @@ function parseCSV(content) {
 function parseCSVContent(content) {
   const records = [];
   let currentRecord = [];
-  let currentValue = "";
+  let currentValue = '';
   let inQuotes = false;
 
   for (let i = 0; i < content.length; i++) {
@@ -61,19 +61,19 @@ function parseCSVContent(content) {
         // Toggle quote state
         inQuotes = !inQuotes;
       }
-    } else if (char === "," && !inQuotes) {
+    } else if (char === ',' && !inQuotes) {
       // End of field
       currentRecord.push(currentValue);
-      currentValue = "";
-    } else if (char === "\n" && !inQuotes) {
+      currentValue = '';
+    } else if (char === '\n' && !inQuotes) {
       // End of record
       currentRecord.push(currentValue);
-      if (currentRecord.some((v) => v !== "")) {
+      if (currentRecord.some(v => v !== '')) {
         records.push(currentRecord);
       }
       currentRecord = [];
-      currentValue = "";
-    } else if (char === "\r") {
+      currentValue = '';
+    } else if (char === '\r') {
       // Skip carriage return
       continue;
     } else {
@@ -82,9 +82,9 @@ function parseCSVContent(content) {
   }
 
   // Don't forget the last field and record
-  if (currentValue !== "" || currentRecord.length > 0) {
+  if (currentValue !== '' || currentRecord.length > 0) {
     currentRecord.push(currentValue);
-    if (currentRecord.some((v) => v !== "")) {
+    if (currentRecord.some(v => v !== '')) {
       records.push(currentRecord);
     }
   }
@@ -99,7 +99,7 @@ function parseCSVContent(content) {
  */
 function parseCSVLine(line) {
   const values = [];
-  let current = "";
+  let current = '';
   let inQuotes = false;
 
   for (let i = 0; i < line.length; i++) {
@@ -113,9 +113,9 @@ function parseCSVLine(line) {
       } else {
         inQuotes = !inQuotes;
       }
-    } else if (char === "," && !inQuotes) {
+    } else if (char === ',' && !inQuotes) {
       values.push(current);
-      current = "";
+      current = '';
     } else {
       current += char;
     }
@@ -131,8 +131,8 @@ function parseCSVLine(line) {
 class ManifestValidator {
   constructor(options = {}) {
     this.basePath = options.basePath || process.cwd();
-    this.aioxCoreDir = path.join(this.basePath, ".aiox-core");
-    this.manifestDir = path.join(this.aioxCoreDir, "manifests");
+    this.aioxCoreDir = path.join(this.basePath, '.aiox-core');
+    this.manifestDir = path.join(this.aioxCoreDir, 'manifests');
     this.verbose = options.verbose || false;
   }
 
@@ -157,9 +157,9 @@ class ManifestValidator {
     try {
       // Validate all manifests in parallel
       const [agents, workers, tasks] = await Promise.all([
-        this.validateManifest("agents.csv", this.getAgentsSchema()),
-        this.validateManifest("workers.csv", this.getWorkersSchema()),
-        this.validateManifest("tasks.csv", this.getTasksSchema()),
+        this.validateManifest('agents.csv', this.getAgentsSchema()),
+        this.validateManifest('workers.csv', this.getWorkersSchema()),
+        this.validateManifest('tasks.csv', this.getTasksSchema()),
       ]);
 
       results.agents = agents;
@@ -167,12 +167,13 @@ class ManifestValidator {
       results.tasks = tasks;
 
       // Build summary
-      [agents, workers, tasks].forEach((r) => {
+      [agents, workers, tasks].forEach(r => {
         if (r.valid) results.summary.valid++;
         else results.summary.invalid++;
         results.summary.missing.push(...r.missingFiles);
         results.summary.orphan.push(...r.orphanFiles);
       });
+
     } catch (error) {
       results.error = error.message;
     }
@@ -210,7 +211,7 @@ class ManifestValidator {
       }
 
       // Read and parse CSV
-      const content = await fs.readFile(filePath, "utf8");
+      const content = await fs.readFile(filePath, 'utf8');
       const { header, rows } = parseCSV(content);
 
       result.rowCount = rows.length;
@@ -229,9 +230,7 @@ class ManifestValidator {
         // Check for duplicate IDs
         if (row.id) {
           if (idsSeen.has(row.id)) {
-            result.errors.push(
-              `Duplicate ID '${row.id}' at line ${row._lineNumber}`,
-            );
+            result.errors.push(`Duplicate ID '${row.id}' at line ${row._lineNumber}`);
             result.valid = false;
           }
           idsSeen.add(row.id);
@@ -239,22 +238,15 @@ class ManifestValidator {
 
         // Validate required fields
         for (const col of schema.required) {
-          if (!row[col] || row[col].trim() === "") {
-            result.errors.push(
-              `Missing required field '${col}' at line ${row._lineNumber}`,
-            );
+          if (!row[col] || row[col].trim() === '') {
+            result.errors.push(`Missing required field '${col}' at line ${row._lineNumber}`);
             result.valid = false;
           }
         }
 
         // Validate status
-        if (
-          row.status &&
-          !["active", "deprecated", "experimental"].includes(row.status)
-        ) {
-          result.warnings.push(
-            `Invalid status '${row.status}' at line ${row._lineNumber}`,
-          );
+        if (row.status && !['active', 'deprecated', 'experimental'].includes(row.status)) {
+          result.warnings.push(`Invalid status '${row.status}' at line ${row._lineNumber}`);
         }
 
         // Check file existence
@@ -275,6 +267,7 @@ class ManifestValidator {
 
       // Check for orphan files (files on disk not in manifest)
       await this.checkOrphanFiles(result, schema);
+
     } catch (error) {
       result.valid = false;
       result.errors.push(`Error validating ${filename}: ${error.message}`);
@@ -314,10 +307,10 @@ class ManifestValidator {
 
     try {
       const files = await fs.readdir(sourceDir);
-      const csvContent = await fs.readFile(result.path, "utf8");
+      const csvContent = await fs.readFile(result.path, 'utf8');
 
       for (const file of files) {
-        if (!file.endsWith(".md")) continue;
+        if (!file.endsWith('.md')) continue;
 
         const relPath = `${schema.sourceDir}/${file}`;
         if (!csvContent.includes(relPath)) {
@@ -338,9 +331,9 @@ class ManifestValidator {
    */
   getAgentsSchema() {
     return {
-      required: ["id", "name", "version", "status", "file_path"],
-      optional: ["archetype", "icon", "when_to_use"],
-      sourceDir: ".aiox-core/development/agents",
+      required: ['id', 'name', 'version', 'status', 'file_path'],
+      optional: ['archetype', 'icon', 'when_to_use'],
+      sourceDir: '.aiox-core/development/agents',
     };
   }
 
@@ -350,8 +343,8 @@ class ManifestValidator {
    */
   getWorkersSchema() {
     return {
-      required: ["id", "name", "category", "file_path", "status"],
-      optional: ["subcategory", "executor_types", "tags"],
+      required: ['id', 'name', 'category', 'file_path', 'status'],
+      optional: ['subcategory', 'executor_types', 'tags'],
       sourceDir: null, // Workers come from registry
     };
   }
@@ -362,9 +355,9 @@ class ManifestValidator {
    */
   getTasksSchema() {
     return {
-      required: ["id", "name", "category", "file_path", "status"],
-      optional: ["format", "has_elicitation"],
-      sourceDir: ".aiox-core/development/tasks",
+      required: ['id', 'name', 'category', 'file_path', 'status'],
+      optional: ['format', 'has_elicitation'],
+      sourceDir: '.aiox-core/development/tasks',
     };
   }
 
@@ -377,14 +370,11 @@ class ManifestValidator {
     const lines = [];
 
     for (const [type, result] of Object.entries(results)) {
-      if (type === "summary" || type === "error") continue;
+      if (type === 'summary' || type === 'error') continue;
 
-      const status = result.valid ? "✓" : "✗";
-      const errorInfo =
-        result.errors.length > 0 ? `, ${result.errors.length} errors` : "";
-      lines.push(
-        `${status} ${result.filename}: ${result.rowCount} entries${errorInfo}`,
-      );
+      const status = result.valid ? '✓' : '✗';
+      const errorInfo = result.errors.length > 0 ? `, ${result.errors.length} errors` : '';
+      lines.push(`${status} ${result.filename}: ${result.rowCount} entries${errorInfo}`);
 
       if (this.verbose) {
         for (const error of result.errors) {
@@ -406,26 +396,22 @@ class ManifestValidator {
     const totalInvalid = results.summary.invalid;
     const allValid = totalInvalid === 0;
 
-    lines.push("");
+    lines.push('');
     if (allValid) {
-      lines.push("✅ All manifests valid!");
+      lines.push('✅ All manifests valid!');
     } else {
-      lines.push(
-        `❌ Validation failed: ${totalInvalid} manifest(s) with errors`,
-      );
+      lines.push(`❌ Validation failed: ${totalInvalid} manifest(s) with errors`);
     }
 
     if (results.summary.missing.length > 0) {
-      lines.push(
-        `⚠  ${results.summary.missing.length} missing file(s) detected`,
-      );
+      lines.push(`⚠  ${results.summary.missing.length} missing file(s) detected`);
     }
 
     if (results.summary.orphan.length > 0) {
       lines.push(`⚠  ${results.summary.orphan.length} orphan file(s) detected`);
     }
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 }
 

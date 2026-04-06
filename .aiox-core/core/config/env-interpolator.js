@@ -16,7 +16,7 @@
  * @see docs/architecture/adr/adr-pro-002-configuration-hierarchy.md
  */
 
-const { isPlainObject } = require("./merge-utils");
+const { isPlainObject } = require('./merge-utils');
 
 /**
  * Regex for ${ENV_VAR} and ${ENV_VAR:-default_value}
@@ -48,7 +48,7 @@ function interpolateString(value, options = {}) {
 
     // Missing required env var (no default)
     warnings.push(`Missing environment variable: ${varName} (no default set)`);
-    return "";
+    return '';
   });
 }
 
@@ -65,12 +65,12 @@ function interpolateString(value, options = {}) {
 function interpolateEnvVars(config, options = {}) {
   const warnings = options.warnings || [];
 
-  if (typeof config === "string") {
+  if (typeof config === 'string') {
     return interpolateString(config, { warnings });
   }
 
   if (Array.isArray(config)) {
-    return config.map((item) => interpolateEnvVars(item, { warnings }));
+    return config.map(item => interpolateEnvVars(item, { warnings }));
   }
 
   if (isPlainObject(config)) {
@@ -97,24 +97,20 @@ function lintEnvPatterns(config, sourceFile) {
   const findings = [];
 
   function walk(obj, path) {
-    if (typeof obj === "string" && ENV_VAR_PATTERN.test(obj)) {
+    if (typeof obj === 'string' && ENV_VAR_PATTERN.test(obj)) {
       // Reset regex lastIndex after test()
       ENV_VAR_PATTERN.lastIndex = 0;
-      findings.push(
-        `${sourceFile}: ${path} contains env variable pattern: ${obj}`,
-      );
+      findings.push(`${sourceFile}: ${path} contains env variable pattern: ${obj}`);
     } else if (isPlainObject(obj)) {
       for (const [key, value] of Object.entries(obj)) {
         walk(value, path ? `${path}.${key}` : key);
       }
     } else if (Array.isArray(obj)) {
-      obj.forEach((item, i) => {
-        walk(item, `${path}[${i}]`);
-      });
+      obj.forEach((item, i) => { walk(item, `${path}[${i}]`); });
     }
   }
 
-  walk(config, "");
+  walk(config, '');
   return findings;
 }
 

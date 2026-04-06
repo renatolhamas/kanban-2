@@ -12,7 +12,6 @@
 Analysis of squad-creator system revealed **107 deterministic operations** that can be handled by Python scripts, and **38 LLM-required operations** that need semantic understanding.
 
 This RFC proposes separating these concerns for:
-
 - Faster validation (no LLM latency)
 - Lower cost (no token usage for file checks)
 - More reliable results (deterministic = reproducible)
@@ -36,7 +35,6 @@ Result: Mixed deterministic + semantic in one pass
 ```
 
 **Problems:**
-
 1. Slow: LLM processes everything sequentially
 2. Expensive: Tokens spent on file counting
 3. Inconsistent: LLM might miss structural issues
@@ -106,7 +104,6 @@ squad_path: str  # "squads/{squad-name}/"
 ```
 
 **What it does:**
-
 - `os.path.exists()` for directory checks
 - `glob.glob()` for file counting
 - `pathlib` for path operations
@@ -137,7 +134,6 @@ expected_keys: list  # ["agent", "persona", "commands", "voice_dna"]
 ```
 
 **What it does:**
-
 - `yaml.safe_load()` for parsing
 - Recursive key checking
 - Array length counting
@@ -171,7 +167,6 @@ agent_file: str  # "squads/{squad-name}/agents/{agent-name}.md"
 ```
 
 **What it does:**
-
 - Parse YAML `dependencies` block
 - Check each referenced file exists
 - Scan for files not referenced by any agent
@@ -199,7 +194,6 @@ squad_path: str
 ```
 
 **What it does:**
-
 - Regex patterns: `^[a-z0-9]+(-[a-z0-9]+)*\.md$` for kebab-case
 - Regex patterns: `^[a-z][a-zA-Z0-9]*$` for camelCase
 - String comparison for config name vs folder
@@ -236,7 +230,6 @@ thresholds: dict  # {"min_lines": 300, "min_examples": 3, ...}
 ```
 
 **What it does:**
-
 - Count lines: `len(file.readlines())`
 - Count YAML array items
 - Compare against thresholds
@@ -280,7 +273,6 @@ weights: dict
 ```
 
 **What it does:**
-
 - Multiply scores by weights
 - Sum weighted scores
 - Compare to thresholds
@@ -313,7 +305,6 @@ registry_path: str  # "data/squad-registry.yaml"
 ```
 
 **What it does:**
-
 - Parse squad-registry.yaml
 - Search domain_index
 - Search keywords arrays
@@ -325,26 +316,26 @@ registry_path: str  # "data/squad-registry.yaml"
 
 ### DETERMINISTIC (107 operations)
 
-| Category                     | Count | Script                     |
-| ---------------------------- | ----- | -------------------------- |
-| File/directory existence     | 30    | script_inventory.py        |
-| YAML structure validation    | 25    | script_yaml_validator.py   |
-| Reference/dependency checks  | 20    | script_dependency_check.py |
-| Naming convention validation | 8     | script_naming_validator.py |
-| Threshold comparisons        | 15    | script_quality_gate.py     |
-| Score calculation            | 10    | script_scoring.py          |
+| Category | Count | Script |
+|----------|-------|--------|
+| File/directory existence | 30 | script_inventory.py |
+| YAML structure validation | 25 | script_yaml_validator.py |
+| Reference/dependency checks | 20 | script_dependency_check.py |
+| Naming convention validation | 8 | script_naming_validator.py |
+| Threshold comparisons | 15 | script_quality_gate.py |
+| Score calculation | 10 | script_scoring.py |
 
 ### LLM-REQUIRED (38 operations)
 
-| Category                   | Count | Why LLM Needed         |
-| -------------------------- | ----- | ---------------------- |
-| Content quality judgment   | 12    | Semantic understanding |
-| Voice/persona consistency  | 6     | Style analysis         |
-| Example realism assessment | 5     | Domain knowledge       |
-| Architecture design        | 5     | Creative judgment      |
-| Domain viability           | 4     | Business judgment      |
-| Gap analysis               | 3     | Problem identification |
-| Tier classification        | 3     | Expert judgment        |
+| Category | Count | Why LLM Needed |
+|----------|-------|----------------|
+| Content quality judgment | 12 | Semantic understanding |
+| Voice/persona consistency | 6 | Style analysis |
+| Example realism assessment | 5 | Domain knowledge |
+| Architecture design | 5 | Creative judgment |
+| Domain viability | 4 | Business judgment |
+| Gap analysis | 3 | Problem identification |
+| Tier classification | 3 | Expert judgment |
 
 ---
 
@@ -431,24 +422,24 @@ script_scoring.py:
 
 ## Benefits
 
-| Metric          | Before                | After                      |
-| --------------- | --------------------- | -------------------------- |
-| Validation time | ~30s (all LLM)        | ~5s (scripts) + ~10s (LLM) |
-| Token cost      | High (counting files) | Low (only semantic)        |
-| Reliability     | Variable              | Deterministic base         |
-| Error messages  | Generic               | Precise (line numbers)     |
-| Caching         | None                  | Script results cached      |
+| Metric | Before | After |
+|--------|--------|-------|
+| Validation time | ~30s (all LLM) | ~5s (scripts) + ~10s (LLM) |
+| Token cost | High (counting files) | Low (only semantic) |
+| Reliability | Variable | Deterministic base |
+| Error messages | Generic | Precise (line numbers) |
+| Caching | None | Script results cached |
 
 ---
 
 ## Risks & Mitigations
 
-| Risk                           | Mitigation                                         |
-| ------------------------------ | -------------------------------------------------- |
-| Script bugs give wrong results | Comprehensive unit tests                           |
-| Scripts and LLM disagree       | LLM can override with justification                |
-| Maintenance burden             | Single source of truth (scripts), clear interfaces |
-| Over-engineering               | Start with 3 core scripts, expand as needed        |
+| Risk | Mitigation |
+|------|------------|
+| Script bugs give wrong results | Comprehensive unit tests |
+| Scripts and LLM disagree | LLM can override with justification |
+| Maintenance burden | Single source of truth (scripts), clear interfaces |
+| Over-engineering | Start with 3 core scripts, expand as needed |
 
 ---
 

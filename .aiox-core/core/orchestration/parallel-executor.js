@@ -8,7 +8,7 @@
  * @version 1.0.0
  */
 
-const chalk = require("chalk");
+const chalk = require('chalk');
 
 /**
  * Manages parallel execution of workflow phases
@@ -31,62 +31,48 @@ class ParallelExecutor {
     const results = [];
     const errors = [];
 
-    console.log(
-      chalk.yellow(
-        `\n⚡ Executing ${phases.length} phases in parallel (max ${maxConcurrency} concurrent)`,
-      ),
-    );
+    console.log(chalk.yellow(`\n⚡ Executing ${phases.length} phases in parallel (max ${maxConcurrency} concurrent)`));
 
     // Use Promise.allSettled for resilient parallel execution
     const promises = phases.map(async (phase) => {
       const phaseId = phase.phase || phase.step;
-      this.runningTasks.set(phaseId, {
-        status: "running",
-        startTime: Date.now(),
-      });
+      this.runningTasks.set(phaseId, { status: 'running', startTime: Date.now() });
 
       try {
         const result = await executePhase(phase);
         this.runningTasks.set(phaseId, {
-          status: "completed",
+          status: 'completed',
           endTime: Date.now(),
           result,
         });
-        return { phase: phaseId, status: "fulfilled", result };
+        return { phase: phaseId, status: 'fulfilled', result };
       } catch (error) {
         this.runningTasks.set(phaseId, {
-          status: "failed",
+          status: 'failed',
           endTime: Date.now(),
           error: error.message,
         });
-        return { phase: phaseId, status: "rejected", error: error.message };
+        return { phase: phaseId, status: 'rejected', error: error.message };
       }
     });
 
     // Execute with concurrency limit
-    const settled = await this._executeWithConcurrencyLimit(
-      promises,
-      maxConcurrency,
-    );
+    const settled = await this._executeWithConcurrencyLimit(promises, maxConcurrency);
 
     // Process results
     for (const result of settled) {
-      if (result.status === "fulfilled") {
+      if (result.status === 'fulfilled') {
         results.push(result.result);
       } else {
         errors.push(result.error);
-        console.log(
-          chalk.red(`   ❌ Phase ${result.phase} failed: ${result.error}`),
-        );
+        console.log(chalk.red(`   ❌ Phase ${result.phase} failed: ${result.error}`));
       }
     }
 
     // Summary
     const successCount = results.length;
     const failCount = errors.length;
-    console.log(
-      chalk.gray(`   Completed: ${successCount} success, ${failCount} failed`),
-    );
+    console.log(chalk.gray(`   Completed: ${successCount} success, ${failCount} failed`));
 
     return {
       results,
@@ -145,7 +131,7 @@ class ParallelExecutor {
    */
   hasRunningTasks() {
     for (const [, status] of this.runningTasks) {
-      if (status.status === "running") {
+      if (status.status === 'running') {
         return true;
       }
     }
@@ -162,9 +148,9 @@ class ParallelExecutor {
 
     while (this.hasRunningTasks()) {
       if (Date.now() - startTime > timeout) {
-        throw new Error("Timeout waiting for parallel tasks to complete");
+        throw new Error('Timeout waiting for parallel tasks to complete');
       }
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 
@@ -174,10 +160,10 @@ class ParallelExecutor {
    */
   cancelAll() {
     for (const [id, status] of this.runningTasks) {
-      if (status.status === "running") {
+      if (status.status === 'running') {
         this.runningTasks.set(id, {
           ...status,
-          status: "cancelled",
+          status: 'cancelled',
           cancelledAt: Date.now(),
         });
       }
@@ -211,16 +197,16 @@ class ParallelExecutor {
 
     for (const [, status] of this.runningTasks) {
       switch (status.status) {
-        case "completed":
+        case 'completed':
           completed++;
           if (status.startTime && status.endTime) {
             totalDuration += status.endTime - status.startTime;
           }
           break;
-        case "failed":
+        case 'failed':
           failed++;
           break;
-        case "running":
+        case 'running':
           running++;
           break;
       }
@@ -231,8 +217,7 @@ class ParallelExecutor {
       completed,
       failed,
       running,
-      averageDuration:
-        completed > 0 ? Math.round(totalDuration / completed) : 0,
+      averageDuration: completed > 0 ? Math.round(totalDuration / completed) : 0,
     };
   }
 }

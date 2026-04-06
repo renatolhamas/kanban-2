@@ -86,13 +86,13 @@ heuristics_engine:
       Truthfulness (authenticity to source) has VETO power.
 
     weights:
-      dna_authenticity: 1.0 # VETO power
+      dna_authenticity: 1.0     # VETO power
       voice_coherence: 0.9
       thinking_coherence: 0.8
       behavior_consistency: 0.7
 
     thresholds:
-      dna_authenticity: 0.7 # Must be authentic
+      dna_authenticity: 0.7     # Must be authentic
       voice_coherence: 0.7
       thinking_coherence: 0.7
       behavior_consistency: 0.8
@@ -172,7 +172,7 @@ heuristics_engine:
       task_frequency: 0.7
       task_complexity: 0.8
       automation_feasibility: 0.8
-      guardrails_present: 1.0 # VETO power
+      guardrails_present: 1.0   # VETO power
 
     thresholds:
       frequency: "2x per workflow run"
@@ -749,13 +749,5 @@ heuristics_engine:
         source: "DNA Extraction Pipeline"
       methodology_heuristics:
         count: 6
-        ids:
-          [
-            "AN_HE_004",
-            "AN_HE_005",
-            "AN_HE_006",
-            "AN_HE_007",
-            "AN_HE_008",
-            "AN_HE_009",
-          ]
+        ids: ["AN_HE_004", "AN_HE_005", "AN_HE_006", "AN_HE_007", "AN_HE_008", "AN_HE_009"]
         source: "CLAUDE.md - Alan's Personal Rules"

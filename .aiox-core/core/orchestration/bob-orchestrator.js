@@ -21,43 +21,43 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const { resolveConfig } = require("../config/config-resolver");
-const ExecutorAssignment = require("./executor-assignment");
-const { WorkflowExecutor } = require("./workflow-executor");
-const { SurfaceChecker } = require("./surface-checker");
-const { SessionState } = require("./session-state");
-const LockManager = require("./lock-manager");
-const { DataLifecycleManager } = require("./data-lifecycle-manager");
+const { resolveConfig } = require('../config/config-resolver');
+const ExecutorAssignment = require('./executor-assignment');
+const { WorkflowExecutor } = require('./workflow-executor');
+const { SurfaceChecker } = require('./surface-checker');
+const { SessionState } = require('./session-state');
+const LockManager = require('./lock-manager');
+const { DataLifecycleManager } = require('./data-lifecycle-manager');
 
 // Story 12.8: Brownfield Handler
-const { BrownfieldHandler } = require("./brownfield-handler");
+const { BrownfieldHandler } = require('./brownfield-handler');
 
 // Story 12.13: Greenfield Handler
-const { GreenfieldHandler } = require("./greenfield-handler");
+const { GreenfieldHandler } = require('./greenfield-handler');
 
 // Story 12.6: Observability Panel Integration + Dashboard Bridge
-const { ObservabilityPanel, PanelMode } = require("../ui/observability-panel");
-const { BobStatusWriter } = require("./bob-status-writer");
-const { getDashboardEmitter } = require("../events/dashboard-emitter");
+const { ObservabilityPanel, PanelMode } = require('../ui/observability-panel');
+const { BobStatusWriter } = require('./bob-status-writer');
+const { getDashboardEmitter } = require('../events/dashboard-emitter');
 
 // Story 12.7: Educational Mode
-const { MessageFormatter } = require("./message-formatter");
-const { setUserConfigValue } = require("../config/config-resolver");
+const { MessageFormatter } = require('./message-formatter');
+const { setUserConfigValue } = require('../config/config-resolver');
 
 /**
  * Project state enum — detected by decision tree
  * @enum {string}
  */
 const ProjectState = {
-  NO_CONFIG: "NO_CONFIG",
-  EXISTING_NO_DOCS: "EXISTING_NO_DOCS",
-  EXISTING_WITH_DOCS: "EXISTING_WITH_DOCS",
-  GREENFIELD: "GREENFIELD",
+  NO_CONFIG: 'NO_CONFIG',
+  EXISTING_NO_DOCS: 'EXISTING_NO_DOCS',
+  EXISTING_WITH_DOCS: 'EXISTING_WITH_DOCS',
+  GREENFIELD: 'GREENFIELD',
 };
 
 /**
@@ -81,8 +81,8 @@ class BobOrchestrator {
    * @param {boolean} [options.debug=false] - Enable debug logging
    */
   constructor(projectRoot, options = {}) {
-    if (!projectRoot || typeof projectRoot !== "string") {
-      throw new Error("projectRoot is required and must be a string");
+    if (!projectRoot || typeof projectRoot !== 'string') {
+      throw new Error('projectRoot is required and must be a string');
     }
 
     this.projectRoot = projectRoot;
@@ -93,20 +93,12 @@ class BobOrchestrator {
 
     // Initialize Epic 11 dependencies
     this.surfaceChecker = new SurfaceChecker();
-    this.sessionState = new SessionState(projectRoot, {
-      debug: this.options.debug,
-    });
-    this.workflowExecutor = new WorkflowExecutor(projectRoot, {
-      debug: this.options.debug,
-    });
-    this.lockManager = new LockManager(projectRoot, {
-      debug: this.options.debug,
-    });
+    this.sessionState = new SessionState(projectRoot, { debug: this.options.debug });
+    this.workflowExecutor = new WorkflowExecutor(projectRoot, { debug: this.options.debug });
+    this.lockManager = new LockManager(projectRoot, { debug: this.options.debug });
 
     // Story 12.5: Data Lifecycle Manager
-    this.dataLifecycleManager = new DataLifecycleManager(projectRoot, {
-      debug: this.options.debug,
-    });
+    this.dataLifecycleManager = new DataLifecycleManager(projectRoot, { debug: this.options.debug });
 
     // Story 12.8: Brownfield Handler
     this.brownfieldHandler = new BrownfieldHandler(projectRoot, {
@@ -127,9 +119,7 @@ class BobOrchestrator {
     // Story 12.7: Educational Mode (AC1-2)
     // Educational mode is resolved from: session override > user config > default (false)
     this.educationalMode = this._resolveEducationalMode();
-    this.messageFormatter = new MessageFormatter({
-      educationalMode: this.educationalMode,
-    });
+    this.messageFormatter = new MessageFormatter({ educationalMode: this.educationalMode });
 
     // Story 12.6: Observability Panel Integration (AC1-5)
     // Story 12.7: Panel mode based on educational mode (AC2, AC7)
@@ -139,15 +129,13 @@ class BobOrchestrator {
     });
 
     // Story 12.6: Dashboard Bridge (AC6-11)
-    this.bobStatusWriter = new BobStatusWriter(projectRoot, {
-      debug: this.options.debug,
-    });
+    this.bobStatusWriter = new BobStatusWriter(projectRoot, { debug: this.options.debug });
     this.dashboardEmitter = getDashboardEmitter();
 
     // Story 12.6: Wire up callbacks (AC1, AC2)
     this._setupObservabilityCallbacks();
 
-    this._log("BobOrchestrator initialized");
+    this._log('BobOrchestrator initialized');
   }
 
   /**
@@ -157,30 +145,30 @@ class BobOrchestrator {
   _setupObservabilityCallbacks() {
     // Map phase ID to pipeline stage
     const stageMap = {
-      "1_validation": "validation",
-      "2_development": "development",
-      "3_self_healing": "self_healing",
-      "4_quality_gate": "quality_gate",
-      "5_push": "push",
-      "6_checkpoint": "checkpoint",
+      '1_validation': 'validation',
+      '2_development': 'development',
+      '3_self_healing': 'self_healing',
+      '4_quality_gate': 'quality_gate',
+      '5_push': 'push',
+      '6_checkpoint': 'checkpoint',
     };
 
     // Map agent ID to agent name
     const agentNameMap = {
-      "@dev": "Dex",
-      "@qa": "Quinn",
-      "@architect": "Aria",
-      "@devops": "Gage",
-      "@pm": "Morgan",
-      "@po": "Pax",
-      "@sm": "River",
-      dev: "Dex",
-      qa: "Quinn",
-      architect: "Aria",
-      devops: "Gage",
-      pm: "Morgan",
-      po: "Pax",
-      sm: "River",
+      '@dev': 'Dex',
+      '@qa': 'Quinn',
+      '@architect': 'Aria',
+      '@devops': 'Gage',
+      '@pm': 'Morgan',
+      '@po': 'Pax',
+      '@sm': 'River',
+      dev: 'Dex',
+      qa: 'Quinn',
+      architect: 'Aria',
+      devops: 'Gage',
+      pm: 'Morgan',
+      po: 'Pax',
+      sm: 'River',
     };
 
     // AC2: Phase change callback
@@ -189,9 +177,7 @@ class BobOrchestrator {
 
       // CLI Panel update (AC2)
       this.observabilityPanel.setPipelineStage(stageName);
-      this._log(
-        `Panel updated: phase=${stageName}, story=${storyId}, executor=${executor}`,
-      );
+      this._log(`Panel updated: phase=${stageName}, story=${storyId}, executor=${executor}`);
 
       // Dashboard Bridge: bob-status.json update (AC6)
       this.bobStatusWriter.updatePhase(stageName).catch((err) => {
@@ -199,35 +185,29 @@ class BobOrchestrator {
       });
 
       // Dashboard Bridge: WebSocket event (AC7)
-      this.dashboardEmitter
-        .emitBobPhaseChange(stageName, storyId, executor)
-        .catch((err) => {
-          this._log(`DashboardEmitter error: ${err.message}`);
-        });
+      this.dashboardEmitter.emitBobPhaseChange(stageName, storyId, executor).catch((err) => {
+        this._log(`DashboardEmitter error: ${err.message}`);
+      });
     });
 
     // AC1: Agent spawn callback
     this.workflowExecutor.onAgentSpawn((agent, task) => {
-      const agentId = agent.startsWith("@") ? agent : `@${agent}`;
+      const agentId = agent.startsWith('@') ? agent : `@${agent}`;
       const agentName = agentNameMap[agent] || agent;
       const reason = `Assigned for ${task}`;
 
       // CLI Panel update (AC1)
       this.observabilityPanel.setCurrentAgent(agentId, agentName, task, reason);
-      this._log(
-        `Panel updated: agent=${agentId}, name=${agentName}, task=${task}`,
-      );
+      this._log(`Panel updated: agent=${agentId}, name=${agentName}, task=${task}`);
 
       // Dashboard Bridge: bob-status.json update (AC6)
-      this.bobStatusWriter
-        .updateAgent(agentId, agentName, task, reason)
-        .catch((err) => {
-          this._log(`BobStatusWriter error: ${err.message}`);
-        });
+      this.bobStatusWriter.updateAgent(agentId, agentName, task, reason).catch((err) => {
+        this._log(`BobStatusWriter error: ${err.message}`);
+      });
     });
 
     // Story 12.13: Greenfield handler observability callbacks (AC10)
-    this.greenfieldHandler.on("phaseStart", ({ phase }) => {
+    this.greenfieldHandler.on('phaseStart', ({ phase }) => {
       this.observabilityPanel.setPipelineStage(phase);
       this._log(`Greenfield panel updated: phase=${phase}`);
       this.bobStatusWriter.updatePhase(phase).catch((err) => {
@@ -235,46 +215,32 @@ class BobOrchestrator {
       });
     });
 
-    this.greenfieldHandler.on("agentSpawn", ({ agent, task }) => {
-      const agentId = agent.startsWith("@") ? agent : `@${agent}`;
-      const agentName =
-        agentNameMap[agent] || agentNameMap[agent.replace("@", "")] || agent;
-      this.observabilityPanel.setCurrentAgent(
-        agentId,
-        agentName,
-        task,
-        `Greenfield: ${task}`,
-      );
+    this.greenfieldHandler.on('agentSpawn', ({ agent, task }) => {
+      const agentId = agent.startsWith('@') ? agent : `@${agent}`;
+      const agentName = agentNameMap[agent] || agentNameMap[agent.replace('@', '')] || agent;
+      this.observabilityPanel.setCurrentAgent(agentId, agentName, task, `Greenfield: ${task}`);
       this._log(`Greenfield panel updated: agent=${agentId}, task=${task}`);
-      this.bobStatusWriter
-        .updateAgent(agentId, agentName, task, `Greenfield: ${task}`)
-        .catch((err) => {
-          this._log(`BobStatusWriter error: ${err.message}`);
-        });
+      this.bobStatusWriter.updateAgent(agentId, agentName, task, `Greenfield: ${task}`).catch((err) => {
+        this._log(`BobStatusWriter error: ${err.message}`);
+      });
     });
 
-    this.greenfieldHandler.on("terminalSpawn", ({ agent, pid, task }) => {
+    this.greenfieldHandler.on('terminalSpawn', ({ agent, pid, task }) => {
       this.observabilityPanel.addTerminal(agent, pid, task);
-      this._log(
-        `Greenfield panel updated: terminal agent=${agent}, pid=${pid}`,
-      );
+      this._log(`Greenfield panel updated: terminal agent=${agent}, pid=${pid}`);
       this.bobStatusWriter.addTerminal(agent, pid, task).catch((err) => {
         this._log(`BobStatusWriter error: ${err.message}`);
       });
-      this.dashboardEmitter
-        .emitBobAgentSpawned(agent, pid, task)
-        .catch((err) => {
-          this._log(`DashboardEmitter error: ${err.message}`);
-        });
+      this.dashboardEmitter.emitBobAgentSpawned(agent, pid, task).catch((err) => {
+        this._log(`DashboardEmitter error: ${err.message}`);
+      });
     });
 
     // AC1: Terminal spawn callback
     this.workflowExecutor.onTerminalSpawn((agent, pid, task) => {
       // CLI Panel update (AC1)
       this.observabilityPanel.addTerminal(agent, pid, task);
-      this._log(
-        `Panel updated: terminal added agent=${agent}, pid=${pid}, task=${task}`,
-      );
+      this._log(`Panel updated: terminal added agent=${agent}, pid=${pid}, task=${task}`);
 
       // Dashboard Bridge: bob-status.json update (AC6)
       this.bobStatusWriter.addTerminal(agent, pid, task).catch((err) => {
@@ -282,11 +248,9 @@ class BobOrchestrator {
       });
 
       // Dashboard Bridge: WebSocket event (AC7)
-      this.dashboardEmitter
-        .emitBobAgentSpawned(agent, pid, task)
-        .catch((err) => {
-          this._log(`DashboardEmitter error: ${err.message}`);
-        });
+      this.dashboardEmitter.emitBobAgentSpawned(agent, pid, task).catch((err) => {
+        this._log(`DashboardEmitter error: ${err.message}`);
+      });
     });
   }
 
@@ -300,8 +264,7 @@ class BobOrchestrator {
    */
   _resolveEducationalMode() {
     // 1. Check session override (highest priority)
-    const sessionOverride =
-      this.sessionState.getSessionOverride("educational_mode");
+    const sessionOverride = this.sessionState.getSessionOverride('educational_mode');
     if (sessionOverride !== null) {
       this._log(`Educational mode from session override: ${sessionOverride}`);
       return Boolean(sessionOverride);
@@ -311,9 +274,7 @@ class BobOrchestrator {
     try {
       const configResult = resolveConfig(this.projectRoot, { skipCache: true });
       if (configResult?.config?.educational_mode !== undefined) {
-        this._log(
-          `Educational mode from user config: ${configResult.config.educational_mode}`,
-        );
+        this._log(`Educational mode from user config: ${configResult.config.educational_mode}`);
         return Boolean(configResult.config.educational_mode);
       }
     } catch {
@@ -321,7 +282,7 @@ class BobOrchestrator {
     }
 
     // 3. Default: OFF
-    this._log("Educational mode defaulting to false");
+    this._log('Educational mode defaulting to false');
     return false;
   }
 
@@ -338,7 +299,7 @@ class BobOrchestrator {
    * @returns {string} result.command - Matched command
    */
   _detectEducationalModeToggle(userInput) {
-    if (!userInput || typeof userInput !== "string") {
+    if (!userInput || typeof userInput !== 'string') {
       return null;
     }
 
@@ -390,43 +351,37 @@ class BobOrchestrator {
    * @param {string} [persistenceType='session'] - 'session' or 'permanent'
    * @returns {Promise<Object>} Toggle result
    */
-  async handleEducationalModeToggle(enable, persistenceType = "session") {
-    this._log(
-      `Handling educational mode toggle: enable=${enable}, persistence=${persistenceType}`,
-    );
+  async handleEducationalModeToggle(enable, persistenceType = 'session') {
+    this._log(`Handling educational mode toggle: enable=${enable}, persistence=${persistenceType}`);
 
     // Update internal state
     this.educationalMode = enable;
     this.messageFormatter.setEducationalMode(enable);
 
     // Update observability panel mode (AC7)
-    this.observabilityPanel.setMode(
-      enable ? PanelMode.DETAILED : PanelMode.MINIMAL,
-    );
+    this.observabilityPanel.setMode(enable ? PanelMode.DETAILED : PanelMode.MINIMAL);
 
     // Clear/fill tradeoffs based on mode (AC7)
     if (enable) {
       // DETAILED mode: tradeoffs will be populated during execution
-      this._log("Educational mode ON: Panel set to DETAILED");
+      this._log('Educational mode ON: Panel set to DETAILED');
     } else {
       // MINIMAL mode: clear tradeoffs and reasoning
       this.observabilityPanel.updateState({ tradeoffs: [], next_steps: [] });
-      this._log(
-        "Educational mode OFF: Panel set to MINIMAL, tradeoffs cleared",
-      );
+      this._log('Educational mode OFF: Panel set to MINIMAL, tradeoffs cleared');
     }
 
     // Persist based on type (AC6)
-    if (persistenceType === "permanent") {
+    if (persistenceType === 'permanent') {
       // Write to user config (L5)
-      setUserConfigValue("educational_mode", enable);
-      this._log("Educational mode persisted permanently to user config");
+      setUserConfigValue('educational_mode', enable);
+      this._log('Educational mode persisted permanently to user config');
     } else {
       // Write to session state
       const sessionExists = await this.sessionState.exists();
       if (sessionExists) {
-        await this.sessionState.setSessionOverride("educational_mode", enable);
-        this._log("Educational mode persisted to session override");
+        await this.sessionState.setSessionOverride('educational_mode', enable);
+        this._log('Educational mode persisted to session override');
       }
     }
 
@@ -456,21 +411,19 @@ class BobOrchestrator {
    * @returns {Promise<OrchestrationResult>} Orchestration result
    */
   async orchestrate(context = {}) {
-    const resource = "bob-orchestration";
+    const resource = 'bob-orchestration';
 
     // Story 12.7: Detect educational mode toggle BEFORE any routing (AC5)
     // This allows toggle to work regardless of project state
     if (context.userGoal) {
       const toggleResult = this._detectEducationalModeToggle(context.userGoal);
       if (toggleResult !== null) {
-        this._log(
-          `Educational mode toggle detected: enable=${toggleResult.enable}`,
-        );
+        this._log(`Educational mode toggle detected: enable=${toggleResult.enable}`);
         // Return early with toggle prompt for persistence choice
         return {
           success: true,
           projectState: null,
-          action: "educational_mode_toggle",
+          action: 'educational_mode_toggle',
           data: {
             enable: toggleResult.enable,
             command: toggleResult.command,
@@ -487,9 +440,8 @@ class BobOrchestrator {
         return {
           success: false,
           projectState: null,
-          action: "lock_failed",
-          error:
-            "Another Bob orchestration is already running. Wait or check .aiox/locks/",
+          action: 'lock_failed',
+          error: 'Another Bob orchestration is already running. Wait or check .aiox/locks/',
         };
       }
 
@@ -497,18 +449,16 @@ class BobOrchestrator {
       // Session state might have been loaded by previous operations
       this.educationalMode = this._resolveEducationalMode();
       this.messageFormatter.setEducationalMode(this.educationalMode);
-      this.observabilityPanel.setMode(
-        this.educationalMode ? PanelMode.DETAILED : PanelMode.MINIMAL,
-      );
+      this.observabilityPanel.setMode(this.educationalMode ? PanelMode.DETAILED : PanelMode.MINIMAL);
       this._log(`Educational mode resolved: ${this.educationalMode}`);
 
       // Story 12.6: Start observability panel (AC1, AC3, AC7)
       this.observabilityPanel.start();
-      this._log("Observability panel started");
+      this._log('Observability panel started');
 
       // Story 12.6: Initialize Dashboard Bridge (AC6, AC11)
       await this.bobStatusWriter.initialize();
-      this._log("Bob status writer initialized");
+      this._log('Bob status writer initialized');
 
       // Story 12.5: Run data lifecycle cleanup BEFORE session check (AC8-11)
       const cleanupResult = await this.dataLifecycleManager.runStartupCleanup();
@@ -537,7 +487,7 @@ class BobOrchestrator {
           return {
             success: true,
             projectState,
-            action: "resume_prompt",
+            action: 'resume_prompt',
             data: {
               surfaceResult,
               resumeOptions: this.sessionState.getResumeOptions(),
@@ -556,7 +506,7 @@ class BobOrchestrator {
       // Story 12.6: Stop observability panel and complete status (AC7)
       this.observabilityPanel.stop();
       await this.bobStatusWriter.complete();
-      this._log("Observability panel stopped");
+      this._log('Observability panel stopped');
 
       // Release lock
       await this.lockManager.releaseLock(resource);
@@ -578,7 +528,7 @@ class BobOrchestrator {
       return {
         success: false,
         projectState: null,
-        action: "error",
+        action: 'error',
         error: `Orchestration failed: ${error.message}`,
       };
     }
@@ -617,17 +567,17 @@ class BobOrchestrator {
     // Format elapsed time string
     let elapsedString;
     if (elapsedDays > 0) {
-      elapsedString = `${elapsedDays} dia${elapsedDays > 1 ? "s" : ""}`;
+      elapsedString = `${elapsedDays} dia${elapsedDays > 1 ? 's' : ''}`;
     } else if (elapsedHours > 0) {
-      elapsedString = `${elapsedHours} hora${elapsedHours > 1 ? "s" : ""}`;
+      elapsedString = `${elapsedHours} hora${elapsedHours > 1 ? 's' : ''}`;
     } else {
-      elapsedString = `${elapsedMinutes} minuto${elapsedMinutes > 1 ? "s" : ""}`;
+      elapsedString = `${elapsedMinutes} minuto${elapsedMinutes > 1 ? 's' : ''}`;
     }
 
     // AC2: Build formatted message
-    const epicTitle = state.session_state.epic?.title || "Unknown Epic";
-    const currentStory = state.session_state.progress?.current_story || "N/A";
-    const currentPhase = state.session_state.workflow?.current_phase || "N/A";
+    const epicTitle = state.session_state.epic?.title || 'Unknown Epic';
+    const currentStory = state.session_state.progress?.current_story || 'N/A';
+    const currentPhase = state.session_state.workflow?.current_phase || 'N/A';
 
     let formattedMessage = `Bem-vindo de volta! Você pausou há ${elapsedString}. Epic: ${epicTitle}, Story: ${currentStory}, Fase: ${currentPhase}`;
 
@@ -661,53 +611,50 @@ class BobOrchestrator {
     const result = await this.sessionState.handleResumeOption(option);
 
     switch (result.action) {
-      case "continue":
+      case 'continue':
         // AC3 [1]: Continue from where user paused
-        this._log(
-          `Continuing story ${result.story} from phase ${result.phase}`,
-        );
+        this._log(`Continuing story ${result.story} from phase ${result.phase}`);
         return {
           success: true,
-          action: "continue",
+          action: 'continue',
           storyPath: this._resolveStoryPath(result.story),
           phase: result.phase,
           message: `Continuando story ${result.story} da fase ${result.phase}`,
         };
 
-      case "review":
+      case 'review':
         // AC3 [2]: Show details and re-prompt
         return {
           success: true,
-          action: "review",
+          action: 'review',
           summary: result.summary,
-          message:
-            "Detalhes da sessão disponíveis. Escolha uma opção após revisar.",
+          message: 'Detalhes da sessão disponíveis. Escolha uma opção após revisar.',
           needsReprompt: true,
         };
 
-      case "restart":
+      case 'restart':
         // AC3 [3]: Reset story (keep epic progress, clear story workflow state)
         this._log(`Restarting story ${result.story}`);
         return {
           success: true,
-          action: "restart",
+          action: 'restart',
           storyPath: this._resolveStoryPath(result.story),
           message: `Recomeçando story ${result.story} do início`,
         };
 
-      case "discard":
+      case 'discard':
         // AC3 [4]: Delete session state and start fresh
-        this._log("Session discarded");
+        this._log('Session discarded');
         return {
           success: true,
-          action: "discard",
-          message: "Sessão descartada. Pronto para novo épico.",
+          action: 'discard',
+          message: 'Sessão descartada. Pronto para novo épico.',
         };
 
       default:
         return {
           success: false,
-          action: "unknown",
+          action: 'unknown',
           error: `Unknown resume option: ${option}`,
         };
     }
@@ -721,24 +668,16 @@ class BobOrchestrator {
    */
   _resolveStoryPath(storyId) {
     // Normalize story ID
-    const normalizedId = storyId.replace("story-", "").replace(".story", "");
+    const normalizedId = storyId.replace('story-', '').replace('.story', '');
 
     // Try active stories first
-    const activePath = path.join(
-      this.projectRoot,
-      "docs/stories/active",
-      `${normalizedId}.story.md`,
-    );
+    const activePath = path.join(this.projectRoot, 'docs/stories/active', `${normalizedId}.story.md`);
     if (fs.existsSync(activePath)) {
       return activePath;
     }
 
     // Try docs/stories root
-    const rootPath = path.join(
-      this.projectRoot,
-      "docs/stories",
-      `${normalizedId}.story.md`,
-    );
+    const rootPath = path.join(this.projectRoot, 'docs/stories', `${normalizedId}.story.md`);
     if (fs.existsSync(rootPath)) {
       return rootPath;
     }
@@ -758,11 +697,9 @@ class BobOrchestrator {
   detectProjectState(projectRoot = this.projectRoot) {
     // Check 1: Is this a greenfield project? (AC6)
     // No package.json, no .git, no docs/ → brand new project
-    const hasPackageJson = fs.existsSync(
-      path.join(projectRoot, "package.json"),
-    );
-    const hasGit = fs.existsSync(path.join(projectRoot, ".git"));
-    const hasDocs = fs.existsSync(path.join(projectRoot, "docs"));
+    const hasPackageJson = fs.existsSync(path.join(projectRoot, 'package.json'));
+    const hasGit = fs.existsSync(path.join(projectRoot, '.git'));
+    const hasDocs = fs.existsSync(path.join(projectRoot, 'docs'));
 
     if (!hasPackageJson && !hasGit && !hasDocs) {
       return ProjectState.GREENFIELD;
@@ -772,8 +709,7 @@ class BobOrchestrator {
     let configExists = false;
     try {
       const result = resolveConfig(projectRoot, { skipCache: true });
-      configExists =
-        result && result.config && Object.keys(result.config).length > 0;
+      configExists = result && result.config && Object.keys(result.config).length > 0;
     } catch {
       configExists = false;
     }
@@ -783,9 +719,7 @@ class BobOrchestrator {
     }
 
     // Check 3: Does AIOX documentation exist? (AC4, AC5)
-    const hasArchDocs = fs.existsSync(
-      path.join(projectRoot, "docs/architecture"),
-    );
+    const hasArchDocs = fs.existsSync(path.join(projectRoot, 'docs/architecture'));
 
     if (!hasArchDocs) {
       return ProjectState.EXISTING_NO_DOCS;
@@ -820,7 +754,7 @@ class BobOrchestrator {
 
       default:
         return {
-          action: "unknown_state",
+          action: 'unknown_state',
           error: `Unknown project state: ${projectState}`,
         };
     }
@@ -833,14 +767,13 @@ class BobOrchestrator {
    * @private
    */
   async _handleNoConfig(_context) {
-    this._log("No config detected — triggering onboarding");
+    this._log('No config detected — triggering onboarding');
 
     return {
-      action: "onboarding",
+      action: 'onboarding',
       data: {
-        message:
-          "Projeto sem configuração AIOX detectado. Iniciando onboarding...",
-        nextStep: "run_aiox_init",
+        message: 'Projeto sem configuração AIOX detectado. Iniciando onboarding...',
+        nextStep: 'run_aiox_init',
       },
     };
   }
@@ -861,9 +794,7 @@ class BobOrchestrator {
    * @private
    */
   async _handleBrownfield(context) {
-    this._log(
-      "🔍 First execution detected — project has code but no AIOX docs",
-    );
+    this._log('🔍 First execution detected — project has code but no AIOX docs');
 
     // Delegate to BrownfieldHandler (Story 12.8 - Task 3.6)
     return this.brownfieldHandler.handle(context);
@@ -879,7 +810,7 @@ class BobOrchestrator {
    * @returns {Promise<Object>} Next step result
    */
   async handleBrownfieldDecision(accepted, context = {}) {
-    this._log(`Brownfield decision: ${accepted ? "ACCEPTED" : "DECLINED"}`);
+    this._log(`Brownfield decision: ${accepted ? 'ACCEPTED' : 'DECLINED'}`);
     return this.brownfieldHandler.handleUserDecision(accepted, context);
   }
 
@@ -895,11 +826,7 @@ class BobOrchestrator {
    */
   async handleBrownfieldPhaseFailure(phase, action, context = {}) {
     this._log(`Brownfield phase failure action: ${action} for ${phase}`);
-    return this.brownfieldHandler.handlePhaseFailureAction(
-      phase,
-      action,
-      context,
-    );
+    return this.brownfieldHandler.handlePhaseFailureAction(phase, action, context);
   }
 
   /**
@@ -913,10 +840,7 @@ class BobOrchestrator {
    */
   async handlePostDiscoveryChoice(choice, context = {}) {
     this._log(`Post-discovery choice: ${choice}`);
-    return this.brownfieldHandler.handle({
-      ...context,
-      postDiscoveryChoice: choice,
-    });
+    return this.brownfieldHandler.handle({ ...context, postDiscoveryChoice: choice });
   }
 
   /**
@@ -926,7 +850,7 @@ class BobOrchestrator {
    * @private
    */
   async _handleExistingProject(context) {
-    this._log("Existing project with docs — asking objective");
+    this._log('Existing project with docs — asking objective');
 
     // If user already provided a story, execute it directly (AC8-10)
     if (context.storyPath) {
@@ -937,18 +861,18 @@ class BobOrchestrator {
     const surfaceResult = this.surfaceChecker.shouldSurface({
       valid_options_count: 4,
       options_with_tradeoffs: [
-        "1. Feature — Adicionar funcionalidade nova",
-        "2. Bug Fix — Corrigir um problema",
-        "3. Refactor — Melhorar código existente",
-        "4. Tech Debt — Resolver dívida técnica",
-      ].join("\n"),
+        '1. Feature — Adicionar funcionalidade nova',
+        '2. Bug Fix — Corrigir um problema',
+        '3. Refactor — Melhorar código existente',
+        '4. Tech Debt — Resolver dívida técnica',
+      ].join('\n'),
     });
 
     return {
-      action: "ask_objective",
+      action: 'ask_objective',
       data: {
-        message: "Projeto configurado. O que você quer fazer?",
-        options: ["feature", "bug", "refactor", "debt"],
+        message: 'Projeto configurado. O que você quer fazer?',
+        options: ['feature', 'bug', 'refactor', 'debt'],
         surfaceResult,
       },
     };
@@ -967,7 +891,7 @@ class BobOrchestrator {
    * @private
    */
   async _handleGreenfield(context) {
-    this._log("Greenfield project — delegating to greenfield-handler");
+    this._log('Greenfield project — delegating to greenfield-handler');
 
     // Delegate to GreenfieldHandler (Story 12.13)
     return this.greenfieldHandler.handle(context);
@@ -984,14 +908,8 @@ class BobOrchestrator {
    * @returns {Promise<Object>} Next step result
    */
   async handleGreenfieldSurfaceDecision(decision, nextPhase, context = {}) {
-    this._log(
-      `Greenfield surface decision: ${decision}, next phase: ${nextPhase}`,
-    );
-    return this.greenfieldHandler.handleSurfaceDecision(
-      decision,
-      nextPhase,
-      context,
-    );
+    this._log(`Greenfield surface decision: ${decision}, next phase: ${nextPhase}`);
+    return this.greenfieldHandler.handleSurfaceDecision(decision, nextPhase, context);
   }
 
   /**
@@ -1006,11 +924,7 @@ class BobOrchestrator {
    */
   async handleGreenfieldPhaseFailure(phase, action, context = {}) {
     this._log(`Greenfield phase failure: action=${action}, phase=${phase}`);
-    return this.greenfieldHandler.handlePhaseFailureAction(
-      phase,
-      action,
-      context,
-    );
+    return this.greenfieldHandler.handlePhaseFailureAction(phase, action, context);
   }
 
   /**
@@ -1031,14 +945,11 @@ class BobOrchestrator {
     this._log(`Executing story: ${storyPath}`);
 
     // AC8: Assign executor using story content
-    const storyContent = fs.readFileSync(storyPath, "utf8");
-    const assignment =
-      ExecutorAssignment.assignExecutorFromContent(storyContent);
-    const storyId = path.basename(storyPath, ".story.md");
+    const storyContent = fs.readFileSync(storyPath, 'utf8');
+    const assignment = ExecutorAssignment.assignExecutorFromContent(storyContent);
+    const storyId = path.basename(storyPath, '.story.md');
 
-    this._log(
-      `Assigned executor: ${assignment.executor}, gate: ${assignment.quality_gate}`,
-    );
+    this._log(`Assigned executor: ${assignment.executor}, gate: ${assignment.quality_gate}`);
 
     // Ensure session state is loaded
     const sessionExists = await this.sessionState.exists();
@@ -1047,32 +958,32 @@ class BobOrchestrator {
     }
 
     // Story 12.5 AC5: Track validation phase
-    await this._updatePhase("validation", storyId, assignment.executor);
+    await this._updatePhase('validation', storyId, assignment.executor);
 
     // Story 12.5 AC5: Track development phase
-    await this._updatePhase("development", storyId, assignment.executor);
+    await this._updatePhase('development', storyId, assignment.executor);
 
     // AC10: Execute development cycle via WorkflowExecutor
     const result = await this.workflowExecutor.execute(storyPath);
 
     // Story 12.5 AC5: Track self_healing phase (if applicable)
     if (result.selfHealing) {
-      await this._updatePhase("self_healing", storyId, assignment.executor);
+      await this._updatePhase('self_healing', storyId, assignment.executor);
     }
 
     // Story 12.5 AC5: Track quality_gate phase
-    await this._updatePhase("quality_gate", storyId, assignment.quality_gate);
+    await this._updatePhase('quality_gate', storyId, assignment.quality_gate);
 
     // Story 12.5 AC5: Track push phase (if applicable)
     if (result.success) {
-      await this._updatePhase("push", storyId, "@devops");
+      await this._updatePhase('push', storyId, '@devops');
     }
 
     // Story 12.5 AC5: Track checkpoint
-    await this._updatePhase("checkpoint", storyId, assignment.executor);
+    await this._updatePhase('checkpoint', storyId, assignment.executor);
 
     return {
-      action: "story_executed",
+      action: 'story_executed',
       data: {
         assignment,
         result,

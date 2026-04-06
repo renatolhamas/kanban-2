@@ -128,13 +128,13 @@ PRIORITY: Focus on 0.8% first, eliminate 80% aggressively
 
 ## Classification Matrix
 
-| Impacto | Singularidade | Valor | Flow | Zone    | Action      |
-| ------- | ------------- | ----- | ---- | ------- | ----------- |
-| Alto    | Alta          | Alto  | Sim  | 0,8% 🔥 | PROTEGER    |
-| Alto    | Alta          | Alto  | Não  | 4% 💎   | DESENVOLVER |
-| Alto    | Média         | Médio | -    | 4% 💎   | DESENVOLVER |
-| Médio   | Baixa         | Médio | -    | 20% 🚀  | MANTER      |
-| Baixo   | Baixa         | Baixo | -    | 80% 💩  | ELIMINAR    |
+| Impacto | Singularidade | Valor | Flow | Zone | Action |
+|---------|---------------|-------|------|------|--------|
+| Alto | Alta | Alto | Sim | 0,8% 🔥 | PROTEGER |
+| Alto | Alta | Alto | Não | 4% 💎 | DESENVOLVER |
+| Alto | Média | Médio | - | 4% 💎 | DESENVOLVER |
+| Médio | Baixa | Médio | - | 20% 🚀 | MANTER |
+| Baixo | Baixa | Baixo | - | 80% 💩 | ELIMINAR |
 
 ## Application Examples
 
@@ -219,7 +219,6 @@ performance:
 ## Failure Modes
 
 ### Over-Classification in Genius Zone
-
 - **Trigger:** Ego, attachment to activities
 - **Manifestation:** 20%+ items in "genius zone"
 - **Detection:** Zone 0.8% has > 5 items
@@ -227,7 +226,6 @@ performance:
 - **Prevention:** Limit zone 0.8% to max 3-5 items
 
 ### Under-Elimination of Waste
-
 - **Trigger:** Fear of missing out, sunk cost
 - **Manifestation:** Zone 80% has < 50% of items
 - **Detection:** Still feeling overwhelmed after classification

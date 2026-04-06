@@ -18,9 +18,9 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const EventEmitter = require("events");
+const fs = require('fs-extra');
+const path = require('path');
+const EventEmitter = require('events');
 
 // ═══════════════════════════════════════════════════════════════════════════════════
 //                              SUPPORTED AGENTS (AC2)
@@ -31,46 +31,46 @@ const EventEmitter = require("events");
  */
 const SUPPORTED_AGENTS = {
   pm: {
-    name: "pm",
-    displayName: "Project Manager",
-    file: "pm.md",
-    capabilities: ["planning", "coordination", "story-management"],
+    name: 'pm',
+    displayName: 'Project Manager',
+    file: 'pm.md',
+    capabilities: ['planning', 'coordination', 'story-management'],
   },
   architect: {
-    name: "architect",
-    displayName: "Architect",
-    file: "architect.md",
-    capabilities: ["design", "architecture", "technical-decisions"],
+    name: 'architect',
+    displayName: 'Architect',
+    file: 'architect.md',
+    capabilities: ['design', 'architecture', 'technical-decisions'],
   },
   analyst: {
-    name: "analyst",
-    displayName: "Business Analyst",
-    file: "analyst.md",
-    capabilities: ["requirements", "analysis", "documentation"],
+    name: 'analyst',
+    displayName: 'Business Analyst',
+    file: 'analyst.md',
+    capabilities: ['requirements', 'analysis', 'documentation'],
   },
   dev: {
-    name: "dev",
-    displayName: "Developer",
-    file: "dev.md",
-    capabilities: ["implementation", "coding", "debugging"],
+    name: 'dev',
+    displayName: 'Developer',
+    file: 'dev.md',
+    capabilities: ['implementation', 'coding', 'debugging'],
   },
   qa: {
-    name: "qa",
-    displayName: "QA Engineer",
-    file: "qa.md",
-    capabilities: ["testing", "quality", "validation"],
+    name: 'qa',
+    displayName: 'QA Engineer',
+    file: 'qa.md',
+    capabilities: ['testing', 'quality', 'validation'],
   },
   devops: {
-    name: "devops",
-    displayName: "DevOps Engineer",
-    file: "devops.md",
-    capabilities: ["deployment", "infrastructure", "ci-cd"],
+    name: 'devops',
+    displayName: 'DevOps Engineer',
+    file: 'devops.md',
+    capabilities: ['deployment', 'infrastructure', 'ci-cd'],
   },
   po: {
-    name: "po",
-    displayName: "Product Owner",
-    file: "po.md",
-    capabilities: ["backlog", "prioritization", "acceptance"],
+    name: 'po',
+    displayName: 'Product Owner',
+    file: 'po.md',
+    capabilities: ['backlog', 'prioritization', 'acceptance'],
   },
 };
 
@@ -78,10 +78,10 @@ const SUPPORTED_AGENTS = {
  * Invocation result status
  */
 const InvocationStatus = {
-  SUCCESS: "success",
-  FAILED: "failed",
-  TIMEOUT: "timeout",
-  SKIPPED: "skipped",
+  SUCCESS: 'success',
+  FAILED: 'failed',
+  TIMEOUT: 'timeout',
+  SKIPPED: 'skipped',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════════
@@ -110,18 +110,8 @@ class AgentInvoker extends EventEmitter {
     this.executor = options.executor || null;
 
     // Paths
-    this.agentsDir = path.join(
-      this.projectRoot,
-      ".aiox-core",
-      "development",
-      "agents",
-    );
-    this.tasksDir = path.join(
-      this.projectRoot,
-      ".aiox-core",
-      "development",
-      "tasks",
-    );
+    this.agentsDir = path.join(this.projectRoot, '.aiox-core', 'development', 'agents');
+    this.tasksDir = path.join(this.projectRoot, '.aiox-core', 'development', 'tasks');
 
     // Audit log (AC7)
     this.invocations = [];
@@ -140,7 +130,7 @@ class AgentInvoker extends EventEmitter {
     const invocationId = this._generateId();
     const startTime = Date.now();
 
-    this._log(`Invoking @${agentName} for ${taskPath}`, "info");
+    this._log(`Invoking @${agentName} for ${taskPath}`, 'info');
 
     // Record invocation start (AC7)
     const invocation = {
@@ -149,7 +139,7 @@ class AgentInvoker extends EventEmitter {
       taskPath,
       inputs,
       startedAt: new Date().toISOString(),
-      status: "in_progress",
+      status: 'in_progress',
       result: null,
       error: null,
       duration: null,
@@ -174,12 +164,9 @@ class AgentInvoker extends EventEmitter {
       const context = this._buildContext(agent, task, inputs);
 
       // Execute with retry logic (AC6)
-      const result = await this._executeWithRetry(
-        () => this._executeTask(agent, task, context),
-        {
-          invocation,
-        },
-      );
+      const result = await this._executeWithRetry(() => this._executeTask(agent, task, context), {
+        invocation,
+      });
 
       // Validate output if schema exists (AC5)
       if (this.validateOutput && task.outputSchema) {
@@ -192,11 +179,8 @@ class AgentInvoker extends EventEmitter {
       invocation.duration = Date.now() - startTime;
       invocation.completedAt = new Date().toISOString();
 
-      this._log(
-        `@${agentName} completed ${taskPath} in ${invocation.duration}ms`,
-        "info",
-      );
-      this.emit("invocationComplete", invocation);
+      this._log(`@${agentName} completed ${taskPath} in ${invocation.duration}ms`, 'info');
+      this.emit('invocationComplete', invocation);
 
       return {
         success: true,
@@ -212,8 +196,8 @@ class AgentInvoker extends EventEmitter {
       invocation.duration = Date.now() - startTime;
       invocation.completedAt = new Date().toISOString();
 
-      this._log(`@${agentName} failed ${taskPath}: ${error.message}`, "error");
-      this.emit("invocationFailed", invocation);
+      this._log(`@${agentName} failed ${taskPath}: ${error.message}`, 'error');
+      this.emit('invocationFailed', invocation);
 
       return {
         success: false,
@@ -232,19 +216,19 @@ class AgentInvoker extends EventEmitter {
    */
   async _loadAgent(agentName) {
     // Normalize agent name (remove @ prefix if present)
-    const name = agentName.replace(/^@/, "").toLowerCase();
+    const name = agentName.replace(/^@/, '').toLowerCase();
 
     // Check if supported
     const agentConfig = SUPPORTED_AGENTS[name];
     if (!agentConfig) {
-      this._log(`Agent ${name} not in supported list`, "warn");
+      this._log(`Agent ${name} not in supported list`, 'warn');
       return null;
     }
 
     // Load agent file
     const agentPath = path.join(this.agentsDir, agentConfig.file);
     if (!(await fs.pathExists(agentPath))) {
-      this._log(`Agent file not found: ${agentPath}`, "warn");
+      this._log(`Agent file not found: ${agentPath}`, 'warn');
       // Return config without file content
       return {
         ...agentConfig,
@@ -253,7 +237,7 @@ class AgentInvoker extends EventEmitter {
       };
     }
 
-    const content = await fs.readFile(agentPath, "utf8");
+    const content = await fs.readFile(agentPath, 'utf8');
 
     return {
       ...agentConfig,
@@ -272,7 +256,7 @@ class AgentInvoker extends EventEmitter {
     let fullPath = taskPath;
     if (!path.isAbsolute(taskPath)) {
       // Try as task name first
-      const taskName = taskPath.endsWith(".md") ? taskPath : `${taskPath}.md`;
+      const taskName = taskPath.endsWith('.md') ? taskPath : `${taskPath}.md`;
       fullPath = path.join(this.tasksDir, taskName);
 
       // If not found, try as relative path from project root
@@ -282,18 +266,18 @@ class AgentInvoker extends EventEmitter {
     }
 
     if (!(await fs.pathExists(fullPath))) {
-      this._log(`Task file not found: ${fullPath}`, "warn");
+      this._log(`Task file not found: ${fullPath}`, 'warn');
       return null;
     }
 
-    const content = await fs.readFile(fullPath, "utf8");
+    const content = await fs.readFile(fullPath, 'utf8');
 
     // Parse task metadata from frontmatter
     const metadata = this._parseTaskMetadata(content);
 
     return {
       path: fullPath,
-      name: path.basename(fullPath, ".md"),
+      name: path.basename(fullPath, '.md'),
       content,
       ...metadata,
     };
@@ -317,11 +301,11 @@ class AgentInvoker extends EventEmitter {
     const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
     if (frontmatterMatch) {
       try {
-        const yaml = require("js-yaml");
+        const yaml = require('js-yaml');
         const parsed = yaml.load(frontmatterMatch[1]);
         Object.assign(metadata, parsed);
       } catch (error) {
-        this._log(`Failed to parse task frontmatter: ${error.message}`, "warn");
+        this._log(`Failed to parse task frontmatter: ${error.message}`, 'warn');
       }
     }
 
@@ -380,7 +364,7 @@ class AgentInvoker extends EventEmitter {
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
       try {
         if (attempt > 0) {
-          this._log(`Retry attempt ${attempt}/${this.maxRetries}`, "info");
+          this._log(`Retry attempt ${attempt}/${this.maxRetries}`, 'info');
           if (invocation) {
             invocation.retries = attempt;
           }
@@ -397,7 +381,7 @@ class AgentInvoker extends EventEmitter {
           throw error;
         }
 
-        this._log(`Transient error: ${error.message}`, "warn");
+        this._log(`Transient error: ${error.message}`, 'warn');
       }
     }
 
@@ -420,7 +404,7 @@ class AgentInvoker extends EventEmitter {
     // Default: return simulated result
     // In production, this would interface with Claude/LLM
     return {
-      status: "simulated",
+      status: 'simulated',
       message: `Task ${task.name} executed by @${agent.name}`,
       context: {
         agentName: agent.name,
@@ -438,10 +422,7 @@ class AgentInvoker extends EventEmitter {
     return Promise.race([
       fn(),
       new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error("Task execution timed out")),
-          timeout,
-        ),
+        setTimeout(() => reject(new Error('Task execution timed out')), timeout),
       ),
     ]);
   }
@@ -468,20 +449,16 @@ class AgentInvoker extends EventEmitter {
     if (schema.properties) {
       for (const [field, spec] of Object.entries(schema.properties)) {
         if (result[field] !== undefined && spec.type) {
-          const actualType = Array.isArray(result[field])
-            ? "array"
-            : typeof result[field];
+          const actualType = Array.isArray(result[field]) ? 'array' : typeof result[field];
           if (actualType !== spec.type) {
-            errors.push(
-              `Field ${field}: expected ${spec.type}, got ${actualType}`,
-            );
+            errors.push(`Field ${field}: expected ${spec.type}, got ${actualType}`);
           }
         }
       }
     }
 
     if (errors.length > 0) {
-      throw new Error(`Output validation failed: ${errors.join(", ")}`);
+      throw new Error(`Output validation failed: ${errors.join(', ')}`);
     }
   }
 
@@ -518,7 +495,7 @@ class AgentInvoker extends EventEmitter {
    * @returns {boolean}
    */
   isAgentSupported(agentName) {
-    const name = agentName.replace(/^@/, "").toLowerCase();
+    const name = agentName.replace(/^@/, '').toLowerCase();
     return SUPPORTED_AGENTS[name] !== undefined;
   }
 
@@ -545,7 +522,7 @@ class AgentInvoker extends EventEmitter {
    * @returns {Object[]} Invocation records for agent
    */
   getInvocationsForAgent(agentName) {
-    const name = agentName.replace(/^@/, "").toLowerCase();
+    const name = agentName.replace(/^@/, '').toLowerCase();
     return this.invocations.filter((i) => i.agentName === name);
   }
 
@@ -609,7 +586,7 @@ class AgentInvoker extends EventEmitter {
    * Log message (AC7)
    * @private
    */
-  _log(message, level = "info") {
+  _log(message, level = 'info') {
     const timestamp = new Date().toISOString();
     this.logs.push({ timestamp, level, message });
   }

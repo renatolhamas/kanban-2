@@ -62,13 +62,13 @@ Generate `.cursorrules` and `.claude-rules.md` files from the design system meta
 - [ ] Accessibility rules cover all component a11y contracts
 - [ ] No conflicts with existing .claude/ rules
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **Execution Type:** `Hybrid`
 - **Dependencies:** depends_on: `[]` · enables: `[]` · workflow: `design-system`
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

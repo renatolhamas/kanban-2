@@ -18,14 +18,14 @@
  * @version 1.0.0
  */
 
-const fs = require("fs-extra");
-const path = require("path");
-const MasterOrchestrator = require("./master-orchestrator");
+const fs = require('fs-extra');
+const path = require('path');
+const MasterOrchestrator = require('./master-orchestrator');
 
 // Optional chalk for colored output
 let chalk;
 try {
-  chalk = require("chalk");
+  chalk = require('chalk');
 } catch {
   chalk = {
     blue: (s) => s,
@@ -62,17 +62,13 @@ async function orchestrate(storyId, options = {}) {
     return {
       success: false,
       exitCode: 3,
-      error: "Story ID is required",
+      error: 'Story ID is required',
     };
   }
 
-  console.log(
-    chalk.cyan("\n═══════════════════════════════════════════════════════════"),
-  );
+  console.log(chalk.cyan('\n═══════════════════════════════════════════════════════════'));
   console.log(chalk.cyan.bold(`  🚀 AIOX Orchestrator: ${storyId}`));
-  console.log(
-    chalk.cyan("═══════════════════════════════════════════════════════════\n"),
-  );
+  console.log(chalk.cyan('═══════════════════════════════════════════════════════════\n'));
 
   // Dry run mode (AC6)
   if (options.dryRun) {
@@ -99,7 +95,7 @@ async function orchestrate(storyId, options = {}) {
       console.log(chalk.yellow(`Starting from Epic ${options.epic}...`));
       result = await orchestrator.resumeFromEpic(options.epic);
     } else {
-      console.log(chalk.green("Starting full pipeline..."));
+      console.log(chalk.green('Starting full pipeline...'));
       result = await orchestrator.executeFullPipeline();
     }
 
@@ -129,7 +125,7 @@ async function orchestrate(storyId, options = {}) {
  * @private
  */
 async function orchestrateDryRun(storyId, options) {
-  console.log(chalk.yellow("🔍 DRY RUN MODE - No actual execution\n"));
+  console.log(chalk.yellow('🔍 DRY RUN MODE - No actual execution\n'));
 
   const projectRoot = options.projectRoot || process.cwd();
   const orchestrator = new MasterOrchestrator(projectRoot, {
@@ -141,8 +137,8 @@ async function orchestrateDryRun(storyId, options) {
   await orchestrator.initialize();
 
   // Display what would happen
-  console.log(chalk.bold("Pipeline Preview:"));
-  console.log(chalk.gray("─".repeat(50)));
+  console.log(chalk.bold('Pipeline Preview:'));
+  console.log(chalk.gray('─'.repeat(50)));
 
   const epicConfig = orchestrator.constructor.EPIC_CONFIG;
   const startEpic = options.epic || 3;
@@ -156,36 +152,26 @@ async function orchestrateDryRun(storyId, options) {
   for (const epicNum of epicNums) {
     const config = epicConfig[epicNum];
     if (epicNum < startEpic) {
-      console.log(
-        chalk.gray(`  ⏭️  Epic ${epicNum}: ${config.name} (skipped)`),
-      );
+      console.log(chalk.gray(`  ⏭️  Epic ${epicNum}: ${config.name} (skipped)`));
     } else {
       console.log(chalk.cyan(`  ▶️  Epic ${epicNum}: ${config.name}`));
     }
   }
 
-  console.log(chalk.gray("─".repeat(50)));
+  console.log(chalk.gray('─'.repeat(50)));
 
   if (orchestrator.executionState.techStackProfile) {
-    console.log(chalk.bold("\nDetected Tech Stack:"));
+    console.log(chalk.bold('\nDetected Tech Stack:'));
     const tech = orchestrator.executionState.techStackProfile;
     if (tech.hasDatabase)
-      console.log(
-        chalk.green(`  ✓ Database: ${tech.database?.type || "detected"}`),
-      );
+      console.log(chalk.green(`  ✓ Database: ${tech.database?.type || 'detected'}`));
     if (tech.hasFrontend)
-      console.log(
-        chalk.green(`  ✓ Frontend: ${tech.frontend?.framework || "detected"}`),
-      );
+      console.log(chalk.green(`  ✓ Frontend: ${tech.frontend?.framework || 'detected'}`));
     if (tech.hasBackend)
-      console.log(
-        chalk.green(`  ✓ Backend: ${tech.backend?.framework || "detected"}`),
-      );
+      console.log(chalk.green(`  ✓ Backend: ${tech.backend?.framework || 'detected'}`));
   }
 
-  console.log(
-    chalk.yellow("\n✅ Dry run complete. Run without --dry-run to execute.\n"),
-  );
+  console.log(chalk.yellow('\n✅ Dry run complete. Run without --dry-run to execute.\n'));
 
   return {
     success: true,
@@ -213,26 +199,19 @@ async function orchestrateStatus(storyId, options = {}) {
     return {
       success: false,
       exitCode: 3,
-      error: "Story ID is required",
+      error: 'Story ID is required',
     };
   }
 
-  const statePath = path.join(
-    projectRoot,
-    ".aiox",
-    "master-orchestrator",
-    `${storyId}.json`,
-  );
+  const statePath = path.join(projectRoot, '.aiox', 'master-orchestrator', `${storyId}.json`);
 
   if (!(await fs.pathExists(statePath))) {
-    console.log(
-      chalk.yellow(`\n⚠️  No orchestrator state found for ${storyId}`),
-    );
+    console.log(chalk.yellow(`\n⚠️  No orchestrator state found for ${storyId}`));
     console.log(chalk.gray(`   Run *orchestrate ${storyId} to start.\n`));
     return {
       success: false,
       exitCode: 1,
-      error: "State not found",
+      error: 'State not found',
     };
   }
 
@@ -240,18 +219,18 @@ async function orchestrateStatus(storyId, options = {}) {
     const state = await fs.readJson(statePath);
 
     console.log(chalk.cyan(`\n📊 Orchestrator Status: ${storyId}`));
-    console.log(chalk.gray("═".repeat(50)));
+    console.log(chalk.gray('═'.repeat(50)));
 
     // State
     console.log(`\nState: ${formatState(state.status)}`);
-    console.log(`Current Epic: ${state.currentEpic || "N/A"}`);
+    console.log(`Current Epic: ${state.currentEpic || 'N/A'}`);
 
     // Progress
     const progress = calculateProgress(state);
     console.log(`Progress: ${formatProgress(progress)}%`);
 
     // Epic status
-    console.log(chalk.bold("\nEpic Status:"));
+    console.log(chalk.bold('\nEpic Status:'));
     const epicConfig = MasterOrchestrator.EPIC_CONFIG;
     for (const [num, epic] of Object.entries(state.epics || {})) {
       const config = epicConfig[num] || { name: `Epic ${num}` };
@@ -261,20 +240,16 @@ async function orchestrateStatus(storyId, options = {}) {
     }
 
     // Timing
-    console.log(chalk.bold("\nTiming:"));
+    console.log(chalk.bold('\nTiming:'));
     console.log(`  Started: ${formatDate(state.startedAt)}`);
     console.log(`  Updated: ${formatDate(state.updatedAt)}`);
 
     // Errors
     const errorCount = (state.errors || []).length;
-    console.log(
-      `\nErrors: ${errorCount > 0 ? chalk.red(errorCount) : chalk.green("0")}`,
-    );
-    console.log(
-      `Blocked: ${state.status === "blocked" ? chalk.red("Yes") : chalk.green("No")}`,
-    );
+    console.log(`\nErrors: ${errorCount > 0 ? chalk.red(errorCount) : chalk.green('0')}`);
+    console.log(`Blocked: ${state.status === 'blocked' ? chalk.red('Yes') : chalk.green('No')}`);
 
-    console.log(chalk.gray("\n" + "═".repeat(50) + "\n"));
+    console.log(chalk.gray('\n' + '═'.repeat(50) + '\n'));
 
     return {
       success: true,
@@ -310,25 +285,18 @@ async function orchestrateStop(storyId, options = {}) {
     return {
       success: false,
       exitCode: 3,
-      error: "Story ID is required",
+      error: 'Story ID is required',
     };
   }
 
-  const statePath = path.join(
-    projectRoot,
-    ".aiox",
-    "master-orchestrator",
-    `${storyId}.json`,
-  );
+  const statePath = path.join(projectRoot, '.aiox', 'master-orchestrator', `${storyId}.json`);
 
   if (!(await fs.pathExists(statePath))) {
-    console.log(
-      chalk.yellow(`\n⚠️  No orchestrator state found for ${storyId}\n`),
-    );
+    console.log(chalk.yellow(`\n⚠️  No orchestrator state found for ${storyId}\n`));
     return {
       success: false,
       exitCode: 1,
-      error: "State not found",
+      error: 'State not found',
     };
   }
 
@@ -338,19 +306,17 @@ async function orchestrateStop(storyId, options = {}) {
     const state = await fs.readJson(statePath);
 
     // Update state to stopped
-    state.status = "stopped";
+    state.status = 'stopped';
     state.updatedAt = new Date().toISOString();
 
     await fs.writeJson(statePath, state, { spaces: 2 });
 
     console.log(chalk.gray(`\nCurrent state: ${state.status}`));
-    console.log(chalk.gray(`Current epic: ${state.currentEpic || "N/A"}`));
+    console.log(chalk.gray(`Current epic: ${state.currentEpic || 'N/A'}`));
     console.log(chalk.gray(`\nState saved at: ${statePath}`));
 
-    console.log(chalk.green("\n✅ Orchestrator stopped successfully."));
-    console.log(
-      chalk.gray(`   Run *orchestrate-resume ${storyId} to continue.\n`),
-    );
+    console.log(chalk.green('\n✅ Orchestrator stopped successfully.'));
+    console.log(chalk.gray(`   Run *orchestrate-resume ${storyId} to continue.\n`));
 
     return {
       success: true,
@@ -385,16 +351,11 @@ async function orchestrateResume(storyId, options = {}) {
     return {
       success: false,
       exitCode: 3,
-      error: "Story ID is required",
+      error: 'Story ID is required',
     };
   }
 
-  const statePath = path.join(
-    projectRoot,
-    ".aiox",
-    "master-orchestrator",
-    `${storyId}.json`,
-  );
+  const statePath = path.join(projectRoot, '.aiox', 'master-orchestrator', `${storyId}.json`);
 
   if (!(await fs.pathExists(statePath))) {
     console.log(chalk.yellow(`\n⚠️  No saved state found for ${storyId}`));
@@ -402,7 +363,7 @@ async function orchestrateResume(storyId, options = {}) {
     return {
       success: false,
       exitCode: 1,
-      error: "State not found",
+      error: 'State not found',
     };
   }
 
@@ -410,33 +371,31 @@ async function orchestrateResume(storyId, options = {}) {
     const state = await fs.readJson(statePath);
 
     // Check if resumable
-    if (state.status === "complete") {
+    if (state.status === 'complete') {
       console.log(chalk.green(`\n✅ Story ${storyId} already completed.`));
-      console.log(
-        chalk.gray(`   Run *orchestrate ${storyId} --epic 3 to restart.\n`),
-      );
+      console.log(chalk.gray(`   Run *orchestrate ${storyId} --epic 3 to restart.\n`));
       return {
         success: false,
         exitCode: 2,
-        error: "Already completed",
+        error: 'Already completed',
       };
     }
 
     console.log(chalk.cyan(`\n🔄 Resuming orchestrator for ${storyId}...`));
     console.log(chalk.gray(`\nLoading state from: ${statePath}`));
 
-    console.log(chalk.bold("\nPrevious state:"));
+    console.log(chalk.bold('\nPrevious state:'));
     console.log(chalk.gray(`  Status: ${state.status}`));
-    console.log(chalk.gray(`  Last Epic: ${state.currentEpic || "N/A"}`));
+    console.log(chalk.gray(`  Last Epic: ${state.currentEpic || 'N/A'}`));
     console.log(chalk.gray(`  Stopped at: ${formatDate(state.updatedAt)}`));
 
     // Find resume point
     let resumeEpic = state.currentEpic || 3;
     const epicState = state.epics?.[resumeEpic];
-    if (epicState?.status === "completed") {
+    if (epicState?.status === 'completed') {
       // Find next incomplete epic
       for (const num of [3, 4, 6, 7]) {
-        if (state.epics?.[num]?.status !== "completed") {
+        if (state.epics?.[num]?.status !== 'completed') {
           resumeEpic = num;
           break;
         }
@@ -483,24 +442,20 @@ async function orchestrateResume(storyId, options = {}) {
  * @private
  */
 function setupEventHandlers(orchestrator) {
-  orchestrator.on("stateChange", (data) => {
+  orchestrator.on('stateChange', (data) => {
     console.log(chalk.gray(`   📊 State: ${data.oldState} → ${data.newState}`));
   });
 
-  orchestrator.on("epicStart", (data) => {
+  orchestrator.on('epicStart', (data) => {
     const epicConfig = orchestrator.constructor.EPIC_CONFIG;
     const config = epicConfig[data.epicNum] || {};
-    console.log(
-      chalk.cyan(
-        `\n📝 Starting Epic ${data.epicNum}: ${config.name || "Unknown"}`,
-      ),
-    );
+    console.log(chalk.cyan(`\n📝 Starting Epic ${data.epicNum}: ${config.name || 'Unknown'}`));
     if (config.description) {
       console.log(chalk.gray(`   ${config.description}`));
     }
   });
 
-  orchestrator.on("epicComplete", (data) => {
+  orchestrator.on('epicComplete', (data) => {
     console.log(chalk.green(`   ✅ Epic ${data.epicNum} complete`));
     if (data.gateResult) {
       console.log(chalk.gray(`   Gate: ${data.gateResult.verdict}`));
@@ -513,26 +468,20 @@ function setupEventHandlers(orchestrator) {
  * @private
  */
 function displayResult(result) {
-  console.log(
-    chalk.cyan("\n═══════════════════════════════════════════════════════════"),
-  );
+  console.log(chalk.cyan('\n═══════════════════════════════════════════════════════════'));
 
   if (result.success) {
-    console.log(chalk.green.bold("  ✅ ORCHESTRATION COMPLETE"));
+    console.log(chalk.green.bold('  ✅ ORCHESTRATION COMPLETE'));
   } else if (result.blocked) {
-    console.log(chalk.red.bold("  🚫 ORCHESTRATION BLOCKED"));
+    console.log(chalk.red.bold('  🚫 ORCHESTRATION BLOCKED'));
   } else {
-    console.log(chalk.red.bold("  ❌ ORCHESTRATION FAILED"));
+    console.log(chalk.red.bold('  ❌ ORCHESTRATION FAILED'));
   }
 
-  console.log(
-    chalk.cyan("═══════════════════════════════════════════════════════════"),
-  );
+  console.log(chalk.cyan('═══════════════════════════════════════════════════════════'));
 
-  console.log(chalk.gray(`\nDuration: ${result.duration || "N/A"}`));
-  console.log(
-    chalk.gray(`Epics Executed: ${result.epics?.executed?.length || 0}`),
-  );
+  console.log(chalk.gray(`\nDuration: ${result.duration || 'N/A'}`));
+  console.log(chalk.gray(`Epics Executed: ${result.epics?.executed?.length || 0}`));
 
   if (result.errors?.length > 0) {
     console.log(chalk.red(`\nErrors: ${result.errors.length}`));
@@ -541,7 +490,7 @@ function displayResult(result) {
     }
   }
 
-  console.log("");
+  console.log('');
 }
 
 /**
@@ -567,13 +516,13 @@ function formatState(status) {
  */
 function formatEpicStatus(status) {
   const icons = {
-    pending: "⏸️",
-    in_progress: "⏳",
-    completed: "✅",
-    failed: "❌",
-    skipped: "⏭️",
+    pending: '⏸️',
+    in_progress: '⏳',
+    completed: '✅',
+    failed: '❌',
+    skipped: '⏭️',
   };
-  return icons[status] || "⬜";
+  return icons[status] || '⬜';
 }
 
 /**
@@ -591,7 +540,7 @@ function formatProgress(progress) {
  * @private
  */
 function formatDate(dateStr) {
-  if (!dateStr) return "N/A";
+  if (!dateStr) return 'N/A';
   try {
     return new Date(dateStr).toLocaleString();
   } catch {
@@ -607,9 +556,7 @@ function calculateProgress(state) {
   if (!state.epics) return 0;
 
   const epics = [3, 4, 6, 7];
-  const completed = epics.filter(
-    (num) => state.epics[num]?.status === "completed",
-  ).length;
+  const completed = epics.filter((num) => state.epics[num]?.status === 'completed').length;
   return Math.round((completed / epics.length) * 100);
 }
 
@@ -626,8 +573,8 @@ module.exports = {
   // Aliases for command parsing
   commands: {
     orchestrate: orchestrate,
-    "orchestrate-status": orchestrateStatus,
-    "orchestrate-stop": orchestrateStop,
-    "orchestrate-resume": orchestrateResume,
+    'orchestrate-status': orchestrateStatus,
+    'orchestrate-stop': orchestrateStop,
+    'orchestrate-resume': orchestrateResume,
   },
 };

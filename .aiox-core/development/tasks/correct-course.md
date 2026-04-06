@@ -182,7 +182,6 @@ token_usage: ~2,000-8,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Iterative analysis with depth limits; cache intermediate results; batch similar operations
 
 ---
@@ -203,11 +202,9 @@ updated_at: 2025-11-17
 ---
 
 tools:
-
-- github-cli
-  checklists:
-- change-checklist.md
-
+  - github-cli
+checklists:
+  - change-checklist.md
 ---
 
 # Correct Course Task
@@ -280,3 +277,4 @@ tools:
   - A summary of the change-checklist analysis (issue, impact, rationale for the chosen path).
   - Specific, clearly drafted proposed edits for all affected project artifacts.
 - **Implicit:** An annotated change-checklist (or the record of its completion) reflecting the discussions, findings, and decisions made during the process.
+ 

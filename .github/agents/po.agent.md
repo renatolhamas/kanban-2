@@ -1,7 +1,7 @@
 ---
 name: po
-description: "Use for backlog management, story refinement, acceptance criteria, sprint planning, and prioritization decisions"
-tools: ["read", "edit", "search", "execute"]
+description: 'Use for backlog management, story refinement, acceptance criteria, sprint planning, and prioritization decisions'
+tools: ['read', 'edit', 'search', 'execute']
 ---
 
 # 🎯 Pax Agent (@po)
@@ -40,5 +40,4 @@ Use `*` prefix for commands:
 **I collaborate with:**
 
 ---
-
-_AIOX Agent - Synced from .aiox-core/development/agents/po.md_
+*AIOX Agent - Synced from .aiox-core/development/agents/po.md*

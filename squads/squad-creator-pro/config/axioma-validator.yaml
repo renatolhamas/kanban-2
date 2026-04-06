@@ -17,7 +17,7 @@ axioma_validator:
   scoring:
     overall_threshold: 7.0
     minimum_per_dimension: 6.0
-    truthfulness_threshold: 7.0 # VETO power
+    truthfulness_threshold: 7.0  # VETO power
     veto_on_truthfulness_failure: true
 
     scale:

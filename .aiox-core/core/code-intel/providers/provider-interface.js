@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * CodeIntelProvider — Abstract base class for all code intelligence providers.
@@ -104,14 +104,14 @@ class CodeIntelProvider {
 }
 
 const CAPABILITIES = [
-  "findDefinition",
-  "findReferences",
-  "findCallers",
-  "findCallees",
-  "analyzeDependencies",
-  "analyzeComplexity",
-  "analyzeCodebase",
-  "getProjectStats",
+  'findDefinition',
+  'findReferences',
+  'findCallers',
+  'findCallees',
+  'analyzeDependencies',
+  'analyzeComplexity',
+  'analyzeCodebase',
+  'getProjectStats',
 ];
 
 module.exports = { CodeIntelProvider, CAPABILITIES };

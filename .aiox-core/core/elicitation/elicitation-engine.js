@@ -6,24 +6,22 @@
  * @migrated Story 2.2 - Core Module Creation
  */
 
-const inquirer = require("inquirer");
-const fs = require("fs-extra");
-const path = require("path");
-const chalk = require("chalk");
+const inquirer = require('inquirer');
+const fs = require('fs-extra');
+const path = require('path');
+const chalk = require('chalk');
 
 // Import session manager from same module
-const ElicitationSessionManager = require("./session-manager");
+const ElicitationSessionManager = require('./session-manager');
 
 // Optional security checker - graceful fallback if not available
 // This resolves the cross-module dependency issue from Story 2.2
 let SecurityChecker = null;
 try {
-  SecurityChecker = require("../../infrastructure/scripts/security-checker");
+  SecurityChecker = require('../../infrastructure/scripts/security-checker');
 } catch (_e) {
   // Security checker not available - will use basic validation
-  console.warn(
-    "[ElicitationEngine] SecurityChecker not found, using basic validation",
-  );
+  console.warn('[ElicitationEngine] SecurityChecker not found, using basic validation');
 }
 
 /**
@@ -43,7 +41,7 @@ class BasicInputValidator {
       if (pattern.test(String(input))) {
         return {
           valid: false,
-          errors: [{ message: "Potentially unsafe input detected" }],
+          errors: [{ message: 'Potentially unsafe input detected' }],
         };
       }
     }
@@ -57,7 +55,7 @@ class BasicInputValidator {
  * @returns {boolean} True if the pattern is safe
  */
 function isSafePattern(pattern) {
-  if (typeof pattern !== "string") {
+  if (typeof pattern !== 'string') {
     return false;
   }
 
@@ -66,15 +64,15 @@ function isSafePattern(pattern) {
     // - Nested quantifiers: (a+)+ or (a*)*
     // - Overlapping alternations with quantifiers: (a|a)+
     const reDoSPatterns = [
-      /\(\.\*\)\{2,\}/, // (.*){2,} - nested quantifiers
-      /\(\.\+\)\{2,\}/, // (.+){2,} - nested quantifiers
-      /\(\[.*\]\+\)\+/, // ([...]+)+ - nested quantifiers
-      /\(\[.*\]\*\)\*/, // ([...]*)*  - nested quantifiers
-      /\(\.\+\)\+/, // (.+)+ - catastrophic backtracking
-      /\(\.\*\)\+/, // (.*)+  - catastrophic backtracking
-      /\(\.\+\)\*/, // (.+)* - catastrophic backtracking
-      /\(\.\*\)\*/, // (.*)* - catastrophic backtracking
-      /\(\?!/, // Negative lookahead (can be slow)
+      /\(\.\*\)\{2,\}/,           // (.*){2,} - nested quantifiers
+      /\(\.\+\)\{2,\}/,           // (.+){2,} - nested quantifiers
+      /\(\[.*\]\+\)\+/,           // ([...]+)+ - nested quantifiers
+      /\(\[.*\]\*\)\*/,           // ([...]*)*  - nested quantifiers
+      /\(\.\+\)\+/,               // (.+)+ - catastrophic backtracking
+      /\(\.\*\)\+/,               // (.*)+  - catastrophic backtracking
+      /\(\.\+\)\*/,               // (.+)* - catastrophic backtracking
+      /\(\.\*\)\*/,               // (.*)* - catastrophic backtracking
+      /\(\?!/,                     // Negative lookahead (can be slow)
     ];
 
     for (const reDoSPattern of reDoSPatterns) {
@@ -94,9 +92,7 @@ function isSafePattern(pattern) {
 class ElicitationEngine {
   constructor() {
     // Use SecurityChecker if available, otherwise use basic validator
-    this.securityChecker = SecurityChecker
-      ? new SecurityChecker()
-      : new BasicInputValidator();
+    this.securityChecker = SecurityChecker ? new SecurityChecker() : new BasicInputValidator();
     this.sessionManager = new ElicitationSessionManager();
     this.sessionData = {};
     this.sessionFile = null;
@@ -125,7 +121,7 @@ class ElicitationEngine {
     if (options.saveSession) {
       this.sessionFile = path.join(
         process.cwd(),
-        ".aiox-sessions",
+        '.aiox-sessions',
         `${componentType}-${Date.now()}.json`,
       );
       await fs.ensureDir(path.dirname(this.sessionFile));
@@ -144,20 +140,14 @@ class ElicitationEngine {
       return this.mockedAnswers;
     }
 
-    console.log(
-      chalk.blue(
-        `\n🚀 Starting ${this.sessionData.componentType} creation wizard...\n`,
-      ),
-    );
+    console.log(chalk.blue(`\n🚀 Starting ${this.sessionData.componentType} creation wizard...\n`));
 
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
       this.sessionData.currentStep = i;
 
       // Show step header
-      console.log(
-        chalk.yellow(`\n📋 Step ${i + 1}/${steps.length}: ${step.title}`),
-      );
+      console.log(chalk.yellow(`\n📋 Step ${i + 1}/${steps.length}: ${step.title}`));
       if (step.description) {
         console.log(chalk.gray(step.description));
       }
@@ -178,7 +168,7 @@ class ElicitationEngine {
 
       // Allow early exit if requested
       if (stepAnswers._exit) {
-        console.log(chalk.yellow("\n⚠️  Elicitation cancelled by user"));
+        console.log(chalk.yellow('\n⚠️  Elicitation cancelled by user'));
         return null;
       }
     }
@@ -191,14 +181,14 @@ class ElicitationEngine {
    * @private
    */
   async runStep(step) {
-    const questions = step.questions.map((q) => this.enhanceQuestion(q, step));
+    const questions = step.questions.map(q => this.enhanceQuestion(q, step));
 
     // Add contextual help if available
     if (step.help) {
       questions.unshift({
-        type: "confirm",
-        name: "_showHelp",
-        message: "Would you like to see help for this step?",
+        type: 'confirm',
+        name: '_showHelp',
+        message: 'Would you like to see help for this step?',
         default: false,
       });
     }
@@ -207,7 +197,7 @@ class ElicitationEngine {
 
     // Show help if requested
     if (answers._showHelp && step.help) {
-      console.log(chalk.cyan("\n💡 " + step.help));
+      console.log(chalk.cyan('\n💡 ' + step.help));
       delete answers._showHelp;
       return this.runStep(step); // Re-run the step
     }
@@ -215,8 +205,8 @@ class ElicitationEngine {
     // Validate answers
     const validation = await this.validateStepAnswers(answers, step);
     if (!validation.valid) {
-      console.log(chalk.red("\n❌ Validation errors:"));
-      validation.errors.forEach((err) => console.log(chalk.red(`  - ${err}`)));
+      console.log(chalk.red('\n❌ Validation errors:'));
+      validation.errors.forEach(err => console.log(chalk.red(`  - ${err}`)));
       return this.runStep(step); // Re-run the step
     }
 
@@ -239,14 +229,14 @@ class ElicitationEngine {
     const originalValidate = enhanced.validate;
     enhanced.validate = async (input) => {
       // Type validation
-      if (typeof input !== "string" && question.type === "input") {
-        return "Invalid input type";
+      if (typeof input !== 'string' && question.type === 'input') {
+        return 'Invalid input type';
       }
 
       // Security validation using the security checker (or basic validator)
       const securityResult = this.securityChecker.checkCode(String(input));
       if (!securityResult.valid) {
-        return `Security check failed: ${securityResult.errors[0]?.message || "Invalid input"}`;
+        return `Security check failed: ${securityResult.errors[0]?.message || 'Invalid input'}`;
       }
 
       // Original validation
@@ -267,9 +257,7 @@ class ElicitationEngine {
 
     // Add examples to message if available
     if (question.examples && question.examples.length > 0) {
-      enhanced.message += chalk.gray(
-        ` (e.g., ${question.examples.join(", ")})`,
-      );
+      enhanced.message += chalk.gray(` (e.g., ${question.examples.join(', ')})`);
     }
 
     return enhanced;
@@ -283,19 +271,17 @@ class ElicitationEngine {
     const { type, source, transform } = smartDefaultConfig;
 
     switch (type) {
-      case "fromAnswer": {
+      case 'fromAnswer': {
         const value = this.sessionData.answers[source];
         return transform ? transform(value) : value;
       }
 
-      case "generated":
+      case 'generated':
         return this.generateDefault(smartDefaultConfig);
 
-      case "conditional": {
+      case 'conditional': {
         const condition = this.evaluateCondition(smartDefaultConfig.condition);
-        return condition
-          ? smartDefaultConfig.ifTrue
-          : smartDefaultConfig.ifFalse;
+        return condition ? smartDefaultConfig.ifTrue : smartDefaultConfig.ifFalse;
       }
 
       default:
@@ -309,22 +295,19 @@ class ElicitationEngine {
    */
   generateDefault(config) {
     switch (config.generator) {
-      case "kebabCase": {
-        const source = this.sessionData.answers[config.source] || "";
-        return source
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, "");
+      case 'kebabCase': {
+        const source = this.sessionData.answers[config.source] || '';
+        return source.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
       }
 
-      case "timestamp":
+      case 'timestamp':
         return new Date().toISOString();
 
-      case "version":
-        return "1.0.0";
+      case 'version':
+        return '1.0.0';
 
       default:
-        return "";
+        return '';
     }
   }
 
@@ -337,13 +320,13 @@ class ElicitationEngine {
     const fieldValue = this.sessionData.answers[field];
 
     switch (operator) {
-      case "equals":
+      case 'equals':
         return fieldValue === value;
-      case "notEquals":
+      case 'notEquals':
         return fieldValue !== value;
-      case "includes":
+      case 'includes':
         return Array.isArray(fieldValue) && fieldValue.includes(value);
-      case "exists":
+      case 'exists':
         return fieldValue !== undefined && fieldValue !== null;
       default:
         return true;
@@ -387,22 +370,22 @@ class ElicitationEngine {
    * @private
    */
   async runValidator(validator, value) {
-    if (typeof validator === "function") {
+    if (typeof validator === 'function') {
       return validator(value);
     }
 
-    if (typeof validator === "object") {
+    if (typeof validator === 'object') {
       switch (validator.type) {
-        case "regex": {
+        case 'regex': {
           // Security: Validate pattern before RegExp construction to prevent ReDoS
           if (!isSafePattern(validator.pattern)) {
-            return validator.message || "Invalid or unsafe regex pattern";
+            return validator.message || 'Invalid or unsafe regex pattern';
           }
           const regex = new RegExp(validator.pattern);
           return regex.test(value) || validator.message;
         }
 
-        case "length":
+        case 'length':
           if (validator.min && value.length < validator.min) {
             return `Must be at least ${validator.min} characters`;
           }
@@ -411,7 +394,7 @@ class ElicitationEngine {
           }
           return true;
 
-        case "unique": {
+        case 'unique': {
           const exists = await this.checkExists(validator.path, value);
           return !exists || `${value} already exists`;
         }
@@ -429,7 +412,7 @@ class ElicitationEngine {
    * @private
    */
   async checkExists(pathTemplate, name) {
-    const filePath = pathTemplate.replace("{name}", name);
+    const filePath = pathTemplate.replace('{name}', name);
     return fs.pathExists(filePath);
   }
 
@@ -454,10 +437,7 @@ class ElicitationEngine {
       this.sessionFile = sessionPath;
       return this.sessionData;
     } catch (error) {
-      console.error(
-        `Failed to load session from ${sessionPath}:`,
-        error.message,
-      );
+      console.error(`Failed to load session from ${sessionPath}:`, error.message);
       return null;
     }
   }
@@ -471,9 +451,8 @@ class ElicitationEngine {
       componentType: this.sessionData.componentType,
       completedSteps: this.sessionData.currentStep + 1,
       answers: Object.keys(this.sessionData.answers).length,
-      duration: this.sessionData.startTime
-        ? Date.now() - new Date(this.sessionData.startTime).getTime()
-        : 0,
+      duration: this.sessionData.startTime ?
+        Date.now() - new Date(this.sessionData.startTime).getTime() : 0,
     };
   }
 

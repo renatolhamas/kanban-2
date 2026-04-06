@@ -76,15 +76,14 @@ class ConditionEvaluator {
 
       // Database-specific conditions
       supabase_configured: () =>
-        this.profile.database.type === "supabase" &&
-        this.profile.database.envVarsConfigured,
+        this.profile.database.type === 'supabase' && this.profile.database.envVarsConfigured,
       database_has_rls: () => this.profile.database.hasRLS,
       database_has_migrations: () => this.profile.database.hasMigrations,
 
       // Frontend-specific conditions
-      frontend_has_react: () => this.profile.frontend.framework === "react",
-      frontend_has_vue: () => this.profile.frontend.framework === "vue",
-      frontend_has_tailwind: () => this.profile.frontend.styling === "tailwind",
+      frontend_has_react: () => this.profile.frontend.framework === 'react',
+      frontend_has_vue: () => this.profile.frontend.framework === 'vue',
+      frontend_has_tailwind: () => this.profile.frontend.styling === 'tailwind',
 
       // Workflow state conditions
       qa_review_approved: () => this._checkQAApproval(),
@@ -97,9 +96,7 @@ class ConditionEvaluator {
 
       // Composite conditions
       has_any_data_to_analyze: () =>
-        this.profile.hasDatabase ||
-        this.profile.hasFrontend ||
-        this.profile.hasBackend,
+        this.profile.hasDatabase || this.profile.hasFrontend || this.profile.hasBackend,
     };
 
     // Check for built-in evaluator
@@ -109,42 +106,42 @@ class ConditionEvaluator {
     }
 
     // Handle negation first
-    if (condition.startsWith("!")) {
+    if (condition.startsWith('!')) {
       return !this.evaluate(condition.substring(1).trim());
     }
 
     // Handle complex condition expressions
     // LIMITATION: Mixed && and || without parentheses uses left-to-right evaluation
     // For predictable behavior, use only && or only || in a single expression
-    const hasAnd = condition.includes("&&");
-    const hasOr = condition.includes("||");
+    const hasAnd = condition.includes('&&');
+    const hasOr = condition.includes('||');
 
     if (hasAnd && hasOr) {
       // Warn about mixed operators - evaluate as && groups separated by ||
       // e.g., "a && b || c && d" becomes ["a && b", "c && d"], any group passing = true
       console.warn(
         `[ConditionEvaluator] Mixed && and || in condition: "${condition}". ` +
-          "Using OR-of-ANDs evaluation. Consider using only one operator type.",
+          'Using OR-of-ANDs evaluation. Consider using only one operator type.',
       );
-      const orGroups = condition.split("||").map((g) => g.trim());
+      const orGroups = condition.split('||').map((g) => g.trim());
       return orGroups.some((group) => {
-        if (group.includes("&&")) {
-          return group.split("&&").every((c) => this.evaluate(c.trim()));
+        if (group.includes('&&')) {
+          return group.split('&&').every((c) => this.evaluate(c.trim()));
         }
         return this.evaluate(group);
       });
     }
 
     if (hasAnd) {
-      return condition.split("&&").every((c) => this.evaluate(c.trim()));
+      return condition.split('&&').every((c) => this.evaluate(c.trim()));
     }
 
     if (hasOr) {
-      return condition.split("||").some((c) => this.evaluate(c.trim()));
+      return condition.split('||').some((c) => this.evaluate(c.trim()));
     }
 
     // Handle dot-notation access to profile
-    if (condition.includes(".")) {
+    if (condition.includes('.')) {
       return this._evaluateDotNotation(condition);
     }
 
@@ -161,9 +158,7 @@ class ConditionEvaluator {
    */
   _evaluateDotNotation(condition) {
     // Handle equality checks
-    const eqMatch = condition.match(
-      /^(\w+(?:\.\w+)*)\s*===?\s*["']?(\w+)["']?$/,
-    );
+    const eqMatch = condition.match(/^(\w+(?:\.\w+)*)\s*===?\s*["']?(\w+)["']?$/);
     if (eqMatch) {
       const [, path, value] = eqMatch;
       const actualValue = this._getProfileValue(path);
@@ -182,7 +177,7 @@ class ConditionEvaluator {
    * @returns {any}
    */
   _getProfileValue(path) {
-    const parts = path.split(".");
+    const parts = path.split('.');
     let value = this.profile;
 
     for (const part of parts) {
@@ -210,8 +205,8 @@ class ConditionEvaluator {
     const qaOutput = this._phaseOutputs[7];
     if (qaOutput) {
       return (
-        qaOutput.status === "approved" ||
-        qaOutput.status === "success" ||
+        qaOutput.status === 'approved' ||
+        qaOutput.status === 'success' ||
         (qaOutput.result && qaOutput.result.approved)
       );
     }
@@ -232,7 +227,7 @@ class ConditionEvaluator {
     }
 
     // Phase is complete if status is success or skipped
-    return output.status === "success" || output.status === "skipped";
+    return output.status === 'success' || output.status === 'skipped';
   }
 
   /**
@@ -245,7 +240,7 @@ class ConditionEvaluator {
     if (!phase.condition) {
       return {
         shouldExecute: true,
-        reason: "no_condition",
+        reason: 'no_condition',
       };
     }
 
@@ -253,7 +248,7 @@ class ConditionEvaluator {
 
     return {
       shouldExecute: result,
-      reason: result ? "condition_met" : `condition_not_met:${phase.condition}`,
+      reason: result ? 'condition_met' : `condition_not_met:${phase.condition}`,
     };
   }
 
@@ -269,12 +264,12 @@ class ConditionEvaluator {
       return failed;
     }
 
-    const hasAnd = phase.condition.includes("&&");
-    const hasOr = phase.condition.includes("||");
+    const hasAnd = phase.condition.includes('&&');
+    const hasOr = phase.condition.includes('||');
 
     // Handle mixed operators: OR-of-ANDs
     if (hasAnd && hasOr) {
-      const orGroups = phase.condition.split("||").map((g) => g.trim());
+      const orGroups = phase.condition.split('||').map((g) => g.trim());
       // For OR groups, only report failures if ALL groups fail
       const groupResults = orGroups.map((group) => ({
         group,
@@ -297,7 +292,7 @@ class ConditionEvaluator {
 
     // Handle pure OR conditions
     if (hasOr) {
-      const conditions = phase.condition.split("||").map((c) => c.trim());
+      const conditions = phase.condition.split('||').map((c) => c.trim());
       // For OR, only fail if ALL conditions fail
       const allFailed = conditions.every((c) => !this.evaluate(c));
       if (allFailed) {
@@ -311,7 +306,7 @@ class ConditionEvaluator {
 
     // Handle pure AND conditions (original behavior)
     const conditions = hasAnd
-      ? phase.condition.split("&&").map((c) => c.trim())
+      ? phase.condition.split('&&').map((c) => c.trim())
       : [phase.condition];
 
     for (const condition of conditions) {
@@ -332,23 +327,20 @@ class ConditionEvaluator {
     const failed = this.getFailedConditions(phase);
 
     if (failed.length === 0) {
-      return "Phase should execute (all conditions met)";
+      return 'Phase should execute (all conditions met)';
     }
 
     const explanations = {
-      project_has_database: "No database detected in project",
-      project_has_frontend: "No frontend framework detected",
-      project_has_backend: "No backend framework detected",
-      supabase_configured:
-        "Supabase not configured or missing environment variables",
-      qa_review_approved: "QA review not yet approved",
+      project_has_database: 'No database detected in project',
+      project_has_frontend: 'No frontend framework detected',
+      project_has_backend: 'No backend framework detected',
+      supabase_configured: 'Supabase not configured or missing environment variables',
+      qa_review_approved: 'QA review not yet approved',
     };
 
-    const reasons = failed.map(
-      (c) => explanations[c] || `Condition not met: ${c}`,
-    );
+    const reasons = failed.map((c) => explanations[c] || `Condition not met: ${c}`);
 
-    return reasons.join("; ");
+    return reasons.join('; ');
   }
 
   /**

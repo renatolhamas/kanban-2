@@ -13,15 +13,11 @@
  * @migrated Story 2.2 - Core Module Creation
  */
 
-const fs = require("fs");
-const path = require("path");
-const { atomicWriteSync } = require("../synapse/utils/atomic-write");
+const fs = require('fs');
+const path = require('path');
+const { atomicWriteSync } = require('../synapse/utils/atomic-write');
 
-const SESSION_STATE_PATH = path.join(
-  process.cwd(),
-  ".aiox",
-  "session-state.json",
-);
+const SESSION_STATE_PATH = path.join(process.cwd(), '.aiox', 'session-state.json');
 const SESSION_TTL = 60 * 60 * 1000; // 1 hour
 
 class ContextDetector {
@@ -31,10 +27,7 @@ class ContextDetector {
    * @param {string} sessionFilePath - Optional custom session file path
    * @returns {string} 'new' | 'existing' | 'workflow'
    */
-  detectSessionType(
-    conversationHistory = [],
-    sessionFilePath = SESSION_STATE_PATH,
-  ) {
+  detectSessionType(conversationHistory = [], sessionFilePath = SESSION_STATE_PATH) {
     // Hybrid approach: Prefer conversation history
     // FIX: Check for null/undefined explicitly to avoid empty array bypassing file detection
     if (conversationHistory != null && conversationHistory.length > 0) {
@@ -53,7 +46,7 @@ class ContextDetector {
    */
   _detectFromConversation(conversationHistory) {
     if (conversationHistory.length === 0) {
-      return "new";
+      return 'new';
     }
 
     // Extract last 10 commands from conversation
@@ -61,11 +54,11 @@ class ContextDetector {
 
     // Check for workflow patterns
     if (this._detectWorkflowPattern(recentCommands)) {
-      return "workflow";
+      return 'workflow';
     }
 
     // Has history but no workflow
-    return "existing";
+    return 'existing';
   }
 
   /**
@@ -77,41 +70,34 @@ class ContextDetector {
   _detectFromFile(sessionFilePath) {
     try {
       if (!fs.existsSync(sessionFilePath)) {
-        return "new";
+        return 'new';
       }
 
-      const sessionData = JSON.parse(fs.readFileSync(sessionFilePath, "utf8"));
+      const sessionData = JSON.parse(fs.readFileSync(sessionFilePath, 'utf8'));
 
       // Check if session expired (TTL)
       const now = Date.now();
       const lastActivity = sessionData.lastActivity || 0;
 
       if (now - lastActivity > SESSION_TTL) {
-        return "new";
+        return 'new';
       }
 
       // Check for active workflow
-      if (
-        sessionData.workflowActive &&
-        sessionData.lastCommands &&
-        sessionData.lastCommands.length > 0
-      ) {
-        return "workflow";
+      if (sessionData.workflowActive && sessionData.lastCommands && sessionData.lastCommands.length > 0) {
+        return 'workflow';
       }
 
       // Valid session with some history
       if (sessionData.lastCommands && sessionData.lastCommands.length > 0) {
-        return "existing";
+        return 'existing';
       }
 
-      return "new";
+      return 'new';
     } catch (error) {
       // File read error or invalid JSON - assume new session
-      console.warn(
-        "[ContextDetector] File read error, defaulting to new session:",
-        error.message,
-      );
-      return "new";
+      console.warn('[ContextDetector] File read error, defaulting to new session:', error.message);
+      return 'new';
     }
   }
 
@@ -129,7 +115,7 @@ class ContextDetector {
     const recentMessages = conversationHistory.slice(-10);
 
     for (const message of recentMessages) {
-      const text = message.content || message.text || "";
+      const text = message.content || message.text || '';
       const matches = text.matchAll(commandPattern);
 
       for (const match of matches) {
@@ -153,13 +139,9 @@ class ContextDetector {
 
     // Common workflow patterns (simplified detection)
     const workflows = {
-      story_development: ["validate-story-draft", "develop", "review-qa"],
-      epic_creation: ["create-epic", "create-story", "validate-story-draft"],
-      backlog_management: [
-        "backlog-review",
-        "backlog-prioritize",
-        "backlog-schedule",
-      ],
+      story_development: ['validate-story-draft', 'develop', 'review-qa'],
+      epic_creation: ['create-epic', 'create-story', 'validate-story-draft'],
+      backlog_management: ['backlog-review', 'backlog-prioritize', 'backlog-schedule'],
     };
 
     // Check if recent commands match any workflow sequence
@@ -181,7 +163,7 @@ class ContextDetector {
    */
   _matchesPattern(commands, pattern) {
     // Simple containment check - commands contain at least 2 from pattern
-    const matchCount = pattern.filter((p) => commands.includes(p)).length;
+    const matchCount = pattern.filter(p => commands.includes(p)).length;
     return matchCount >= 2;
   }
 
@@ -206,10 +188,7 @@ class ContextDetector {
 
       atomicWriteSync(sessionFilePath, JSON.stringify(sessionData, null, 2));
     } catch (error) {
-      console.warn(
-        "[ContextDetector] Failed to update session state:",
-        error.message,
-      );
+      console.warn('[ContextDetector] Failed to update session state:', error.message);
     }
   }
 
@@ -232,7 +211,7 @@ class ContextDetector {
         return;
       }
 
-      const sessionData = JSON.parse(fs.readFileSync(sessionFilePath, "utf8"));
+      const sessionData = JSON.parse(fs.readFileSync(sessionFilePath, 'utf8'));
       const now = Date.now();
       const lastActivity = sessionData.lastActivity || 0;
 
@@ -240,10 +219,7 @@ class ContextDetector {
         fs.unlinkSync(sessionFilePath);
       }
     } catch (error) {
-      console.warn(
-        "[ContextDetector] Failed to clear expired session:",
-        error.message,
-      );
+      console.warn('[ContextDetector] Failed to clear expired session:', error.message);
     }
   }
 }

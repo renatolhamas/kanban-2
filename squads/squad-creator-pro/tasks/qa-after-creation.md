@@ -8,14 +8,12 @@
 
 **Process Specialist:** @pedro-valerio
 **Specialist Guidance:**
-
 - Use Process Absolutism principles for validation
 - Define VETO conditions that BLOCK, not just warn
 - For workflow/process validation, invoke: `@pedro-valerio *audit`
 - For designing quality gates, invoke: `@pedro-valerio *design-heuristic`
 
 **Core Philosophy:**
-
 ```
 Every created component must pass QA before being considered complete.
 QA is not optional - it's the final gate before delivery.
@@ -28,13 +26,13 @@ Find problems NOW, not when the user tries to use it.
 
 This task is triggered automatically after:
 
-| Trigger Task       | What Was Created | QA Scope                 |
-| ------------------ | ---------------- | ------------------------ |
-| `*create-squad`    | New squad        | Full squad validation    |
-| `*create-agent`    | New agent        | Agent-only validation    |
-| `*create-task`     | New task         | Task-only validation     |
-| `*create-workflow` | New workflow     | Workflow-only validation |
-| `*create-template` | New template     | Template-only validation |
+| Trigger Task | What Was Created | QA Scope |
+|--------------|------------------|----------|
+| `*create-squad` | New squad | Full squad validation |
+| `*create-agent` | New agent | Agent-only validation |
+| `*create-task` | New task | Task-only validation |
+| `*create-workflow` | New workflow | Workflow-only validation |
+| `*create-template` | New template | Template-only validation |
 
 ---
 
@@ -121,7 +119,7 @@ quick_checks:
 
   - id: "QC-002"
     check: "Valid YAML syntax (if .yaml/.yml)"
-    action: 'python -c ''import yaml; yaml.safe_load(open("{file}"))'''
+    action: "python -c 'import yaml; yaml.safe_load(open(\"{file}\"))'"
     on_fail: "ABORT - Invalid YAML syntax"
 
   - id: "QC-003"
@@ -394,7 +392,7 @@ post_creation:
     task: "qa-after-creation"
     params:
       created_component: "{output_path}"
-      component_type: "squad" # or agent, task, etc.
+      component_type: "squad"  # or agent, task, etc.
       creation_task: "{current_task}"
 ```
 
@@ -440,22 +438,22 @@ Output: "✅ Squad 'my-new-squad' created and validated (Score: 7.8/10)"
 
 ## Outputs
 
-| Output           | Location                               | Description        |
-| ---------------- | -------------------------------------- | ------------------ |
-| QA Report        | Console                                | Immediate feedback |
-| Report File      | `{component}/docs/qa-report-{date}.md` | Detailed report    |
-| Validation Badge | `{component}/docs/VALIDATED.md`        | If passed          |
+| Output | Location | Description |
+|--------|----------|-------------|
+| QA Report | Console | Immediate feedback |
+| Report File | `{component}/docs/qa-report-{date}.md` | Detailed report |
+| Validation Badge | `{component}/docs/VALIDATED.md` | If passed |
 
 ---
 
 ## Related Tasks
 
-| Task             | Purpose                                     |
-| ---------------- | ------------------------------------------- |
+| Task | Purpose |
+|------|---------|
 | `validate-squad` | Full squad validation (called by this task) |
-| `create-squad`   | Triggers this task on completion            |
-| `create-agent`   | Triggers this task on completion            |
-| `fix-issues`     | Attempt to fix QA issues                    |
+| `create-squad` | Triggers this task on completion |
+| `create-agent` | Triggers this task on completion |
+| `fix-issues` | Attempt to fix QA issues |
 
 ---
 

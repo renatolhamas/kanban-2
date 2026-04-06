@@ -12,16 +12,11 @@
  * - Numbered list formatting for user selection
  */
 
-const fs = require("fs");
-const path = require("path");
-const yaml = require("js-yaml");
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
 
-const WORKFLOW_PATTERNS_PATH = path.join(
-  process.cwd(),
-  ".aiox-core",
-  "data",
-  "workflow-patterns.yaml",
-);
+const WORKFLOW_PATTERNS_PATH = path.join(process.cwd(), '.aiox-core', 'data', 'workflow-patterns.yaml');
 
 class WorkflowNavigator {
   constructor() {
@@ -42,16 +37,12 @@ class WorkflowNavigator {
     const lastCommand = commandHistory[commandHistory.length - 1];
 
     // Check each workflow's transitions
-    for (const [workflowName, workflowDef] of Object.entries(
-      this.patterns.workflows || {},
-    )) {
+    for (const [workflowName, workflowDef] of Object.entries(this.patterns.workflows || {})) {
       if (!workflowDef.transitions) {
         continue;
       }
 
-      for (const [stateName, transition] of Object.entries(
-        workflowDef.transitions,
-      )) {
+      for (const [stateName, transition] of Object.entries(workflowDef.transitions)) {
         if (this._matchesTrigger(lastCommand, transition.trigger)) {
           return {
             workflow: workflowName,
@@ -86,14 +77,11 @@ class WorkflowNavigator {
     }
 
     // Generate suggestions with pre-populated templates
-    const suggestions = transition.next_steps.map((step) => {
-      const command = this.populateTemplate(
-        step.args_template,
-        workflowState.context,
-      );
+    const suggestions = transition.next_steps.map(step => {
+      const command = this.populateTemplate(step.args_template, workflowState.context);
       return {
-        command: `*${step.command}${command ? " " + command : ""}`,
-        description: step.description || "",
+        command: `*${step.command}${command ? ' ' + command : ''}`,
+        description: step.description || '',
         raw_command: step.command,
         args: command,
       };
@@ -110,7 +98,7 @@ class WorkflowNavigator {
    */
   populateTemplate(template, context) {
     if (!template) {
-      return "";
+      return '';
     }
 
     let result = template;
@@ -118,9 +106,9 @@ class WorkflowNavigator {
     // Replace ${variable} with context values
     const variables = template.match(/\$\{([^}]+)\}/g);
     if (variables) {
-      variables.forEach((variable) => {
+      variables.forEach(variable => {
         const key = variable.slice(2, -1); // Remove ${ and }
-        const value = context[key] || "";
+        const value = context[key] || '';
         result = result.replace(variable, value);
       });
     }
@@ -134,20 +122,20 @@ class WorkflowNavigator {
    * @param {string} header - Optional header text
    * @returns {string} Formatted suggestions
    */
-  formatSuggestions(suggestions, header = "Next steps:") {
+  formatSuggestions(suggestions, header = 'Next steps:') {
     if (!suggestions || suggestions.length === 0) {
-      return "";
+      return '';
     }
 
-    const lines = [header, ""];
+    const lines = [header, ''];
 
     suggestions.forEach((suggestion, index) => {
       const number = index + 1;
-      const desc = suggestion.description ? ` - ${suggestion.description}` : "";
+      const desc = suggestion.description ? ` - ${suggestion.description}` : '';
       lines.push(`${number}. \`${suggestion.command}\`${desc}`);
     });
 
-    return lines.join("\n");
+    return lines.join('\n');
   }
 
   /**
@@ -157,9 +145,9 @@ class WorkflowNavigator {
    */
   extractContext(rawContext = {}) {
     return {
-      story_path: rawContext.story_path || rawContext.currentStory || "",
-      branch: rawContext.branch || rawContext.gitBranch || "",
-      epic: rawContext.epic || rawContext.currentEpic || "",
+      story_path: rawContext.story_path || rawContext.currentStory || '',
+      branch: rawContext.branch || rawContext.gitBranch || '',
+      epic: rawContext.epic || rawContext.currentEpic || '',
     };
   }
 
@@ -179,7 +167,7 @@ class WorkflowNavigator {
     // Examples:
     // - "validate-story-draft completed successfully"
     // - "develop completed"
-    const triggerCommand = trigger.split(" ")[0]; // Get command name
+    const triggerCommand = trigger.split(' ')[0]; // Get command name
     return command.includes(triggerCommand);
   }
 
@@ -191,17 +179,14 @@ class WorkflowNavigator {
   _loadPatterns() {
     try {
       if (!fs.existsSync(WORKFLOW_PATTERNS_PATH)) {
-        console.warn("[WorkflowNavigator] Patterns file not found");
+        console.warn('[WorkflowNavigator] Patterns file not found');
         return { workflows: {} };
       }
 
-      const content = fs.readFileSync(WORKFLOW_PATTERNS_PATH, "utf8");
+      const content = fs.readFileSync(WORKFLOW_PATTERNS_PATH, 'utf8');
       return yaml.load(content) || { workflows: {} };
     } catch (error) {
-      console.warn(
-        "[WorkflowNavigator] Failed to load patterns:",
-        error.message,
-      );
+      console.warn('[WorkflowNavigator] Failed to load patterns:', error.message);
       return { workflows: {} };
     }
   }
@@ -217,10 +202,10 @@ class WorkflowNavigator {
         return null;
       }
 
-      const content = fs.readFileSync(stateFilePath, "utf8");
+      const content = fs.readFileSync(stateFilePath, 'utf8');
       const stateData = yaml.load(content);
 
-      if (!stateData || stateData.status !== "active") {
+      if (!stateData || stateData.status !== 'active') {
         return null;
       }
 
@@ -232,14 +217,9 @@ class WorkflowNavigator {
       if (currentStep && this.patterns.workflows) {
         const wfDef = this.patterns.workflows[stateData.workflow_id];
         if (wfDef && wfDef.transitions) {
-          for (const [stateName, transition] of Object.entries(
-            wfDef.transitions,
-          )) {
-            if (
-              transition.trigger &&
-              currentStep.agent &&
-              transition.trigger.includes(currentStep.agent)
-            ) {
+          for (const [stateName, transition] of Object.entries(wfDef.transitions)) {
+            if (transition.trigger && currentStep.agent &&
+                transition.trigger.includes(currentStep.agent)) {
               semanticState = stateName;
               break;
             }
@@ -259,10 +239,7 @@ class WorkflowNavigator {
         stateData,
       };
     } catch (error) {
-      console.warn(
-        "[WorkflowNavigator] Failed to load state file:",
-        error.message,
-      );
+      console.warn('[WorkflowNavigator] Failed to load state file:', error.message);
       return null;
     }
   }
@@ -273,15 +250,11 @@ class WorkflowNavigator {
    * @returns {Array} Array of suggestions
    */
   suggestNextCommandsFromState(state) {
-    if (!state || state.status !== "active") {
+    if (!state || state.status !== 'active') {
       return [];
     }
 
-    if (
-      !Array.isArray(state.steps) ||
-      state.current_step_index < 0 ||
-      state.current_step_index >= state.steps.length
-    ) {
+    if (!Array.isArray(state.steps) || state.current_step_index < 0 || state.current_step_index >= state.steps.length) {
       return [];
     }
 
@@ -296,7 +269,7 @@ class WorkflowNavigator {
     suggestions.push({
       command: `*run-workflow ${state.workflow_id} continue`,
       description: `Continue workflow — ${currentStep.phase}`,
-      raw_command: "run-workflow",
+      raw_command: 'run-workflow',
       args: `${state.workflow_id} continue`,
     });
 
@@ -304,9 +277,9 @@ class WorkflowNavigator {
     if (currentStep.agent) {
       suggestions.push({
         command: `@${currentStep.agent}`,
-        description: "Activate agent for current step",
+        description: 'Activate agent for current step',
         raw_command: currentStep.agent,
-        args: "",
+        args: '',
       });
     }
 
@@ -314,8 +287,8 @@ class WorkflowNavigator {
     if (currentStep.optional) {
       suggestions.push({
         command: `*run-workflow ${state.workflow_id} skip`,
-        description: "Skip optional step",
-        raw_command: "run-workflow",
+        description: 'Skip optional step',
+        raw_command: 'run-workflow',
         args: `${state.workflow_id} skip`,
       });
     }
@@ -323,8 +296,8 @@ class WorkflowNavigator {
     // Status check
     suggestions.push({
       command: `*run-workflow ${state.workflow_id} status`,
-      description: "View workflow progress",
-      raw_command: "run-workflow",
+      description: 'View workflow progress',
+      raw_command: 'run-workflow',
       args: `${state.workflow_id} status`,
     });
 
@@ -338,16 +311,16 @@ class WorkflowNavigator {
    */
   getGreetingMessage(workflowState) {
     if (!workflowState || !workflowState.workflow || !workflowState.state) {
-      return "";
+      return '';
     }
 
     const workflow = this.patterns.workflows[workflowState.workflow];
     if (!workflow || !workflow.transitions) {
-      return "";
+      return '';
     }
 
     const transition = workflow.transitions[workflowState.state];
-    return transition?.greeting_message || "";
+    return transition?.greeting_message || '';
   }
 }
 

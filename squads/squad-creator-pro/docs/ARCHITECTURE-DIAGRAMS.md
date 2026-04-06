@@ -1431,36 +1431,36 @@ flowchart TD
 
 ## Changelog
 
-| Versão | Data       | Mudanças                                                                                                                                                                                                                                       |
-| ------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| v2.1   | 2026-02-05 | Atualizado referências: todos workflows agora em .yaml (mind-research-loop.md → wf-mind-research-loop.yaml, research-then-create-agent.md → wf-research-then-create-agent.yaml). Seção 6 atualizada com lista completa de workflows.           |
-| v2.0   | 2026-02-05 | **100% Coverage!** Adicionados 5 workflows faltantes: mind-research-loop (seções 8, 8.1), wf-discover-tools (seções 9, 9.1), validate-squad (seções 10, 10.1), wf-squad-fusion (seções 11, 11.1), research-then-create-agent (seções 12, 12.1) |
-| v1.1   | 2026-02-05 | Adicionado: wf-auto-acquire-sources (seções 4, 4.1, 4.2), Tool Fallback Chain, Integration diagram                                                                                                                                             |
-| v1.0   | 2026-02-01 | Versão inicial com fluxos principais                                                                                                                                                                                                           |
+| Versão | Data | Mudanças |
+|--------|------|----------|
+| v2.1 | 2026-02-05 | Atualizado referências: todos workflows agora em .yaml (mind-research-loop.md → wf-mind-research-loop.yaml, research-then-create-agent.md → wf-research-then-create-agent.yaml). Seção 6 atualizada com lista completa de workflows. |
+| v2.0 | 2026-02-05 | **100% Coverage!** Adicionados 5 workflows faltantes: mind-research-loop (seções 8, 8.1), wf-discover-tools (seções 9, 9.1), validate-squad (seções 10, 10.1), wf-squad-fusion (seções 11, 11.1), research-then-create-agent (seções 12, 12.1) |
+| v1.1 | 2026-02-05 | Adicionado: wf-auto-acquire-sources (seções 4, 4.1, 4.2), Tool Fallback Chain, Integration diagram |
+| v1.0 | 2026-02-01 | Versão inicial com fluxos principais |
 
 ---
 
 ## Coverage Summary
 
-| Workflow                           | Seções      | Status |
-| ---------------------------------- | ----------- | ------ |
-| wf-create-squad.yaml               | 1           | ✅     |
-| wf-clone-mind.yaml                 | 2           | ✅     |
-| collect-sources (task)             | 3           | ✅     |
-| wf-auto-acquire-sources.yaml       | 4, 4.1, 4.2 | ✅     |
-| smoke-tests (checklist)            | 5           | ✅     |
-| YOLO vs QUALITY modes              | 5           | ✅     |
-| File Structure                     | 6           | ✅     |
-| Quality Gates                      | 7           | ✅     |
-| wf-mind-research-loop.yaml         | 8, 8.1      | ✅     |
-| wf-discover-tools.yaml             | 9, 9.1      | ✅     |
-| validate-squad.yaml                | 10, 10.1    | ✅     |
-| wf-squad-fusion.yaml               | 11, 11.1    | ✅     |
-| wf-research-then-create-agent.yaml | 12, 12.1    | ✅     |
+| Workflow | Seções | Status |
+|----------|--------|--------|
+| wf-create-squad.yaml | 1 | ✅ |
+| wf-clone-mind.yaml | 2 | ✅ |
+| collect-sources (task) | 3 | ✅ |
+| wf-auto-acquire-sources.yaml | 4, 4.1, 4.2 | ✅ |
+| smoke-tests (checklist) | 5 | ✅ |
+| YOLO vs QUALITY modes | 5 | ✅ |
+| File Structure | 6 | ✅ |
+| Quality Gates | 7 | ✅ |
+| wf-mind-research-loop.yaml | 8, 8.1 | ✅ |
+| wf-discover-tools.yaml | 9, 9.1 | ✅ |
+| validate-squad.yaml | 10, 10.1 | ✅ |
+| wf-squad-fusion.yaml | 11, 11.1 | ✅ |
+| wf-research-then-create-agent.yaml | 12, 12.1 | ✅ |
 
 **Total Coverage: 100%** (8/8 workflows documentados - todos em YAML)
 
 ---
 
 **Squad Architect | Architecture Diagrams v2.1**
-_"A picture is worth a thousand lines of YAML."_
+*"A picture is worth a thousand lines of YAML."*

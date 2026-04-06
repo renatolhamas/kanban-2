@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-"use strict";
+'use strict';
 
 /**
  * Default validation rules
@@ -17,12 +17,12 @@ const DEFAULT_VALIDATION_RULES = {
   minOccurrences: 2,
   minSuccessRate: 0.8,
   requiredKeyCommands: [
-    "develop",
-    "review-qa",
-    "create-story",
-    "validate-story-draft",
-    "apply-qa-fixes",
-    "run-tests",
+    'develop',
+    'review-qa',
+    'create-story',
+    'validate-story-draft',
+    'apply-qa-fixes',
+    'run-tests',
   ],
   similarityThreshold: 0.85, // For fuzzy duplicate detection
 };
@@ -32,28 +32,28 @@ const DEFAULT_VALIDATION_RULES = {
  * @type {Set<string>}
  */
 const KNOWN_COMMANDS = new Set([
-  "develop",
-  "develop-yolo",
-  "develop-interactive",
-  "develop-preflight",
-  "review-qa",
-  "apply-qa-fixes",
-  "run-tests",
-  "create-story",
-  "create-next-story",
-  "validate-story-draft",
-  "create-pr",
-  "push",
-  "backlog-debt",
-  "help",
-  "exit",
-  "guide",
-  "explain",
-  "session-info",
-  "load-full",
-  "clear-cache",
-  "patterns",
-  "next",
+  'develop',
+  'develop-yolo',
+  'develop-interactive',
+  'develop-preflight',
+  'review-qa',
+  'apply-qa-fixes',
+  'run-tests',
+  'create-story',
+  'create-next-story',
+  'validate-story-draft',
+  'create-pr',
+  'push',
+  'backlog-debt',
+  'help',
+  'exit',
+  'guide',
+  'explain',
+  'session-info',
+  'load-full',
+  'clear-cache',
+  'patterns',
+  'next',
 ]);
 
 /**
@@ -80,19 +80,11 @@ class PatternValidator {
 
     // Check required fields
     if (!pattern) {
-      return {
-        valid: false,
-        errors: ["Pattern is null or undefined"],
-        warnings: [],
-      };
+      return { valid: false, errors: ['Pattern is null or undefined'], warnings: [] };
     }
 
     if (!pattern.sequence || !Array.isArray(pattern.sequence)) {
-      return {
-        valid: false,
-        errors: ["Missing or invalid sequence"],
-        warnings: [],
-      };
+      return { valid: false, errors: ['Missing or invalid sequence'], warnings: [] };
     }
 
     // Rule 1: Minimum sequence length
@@ -110,20 +102,14 @@ class PatternValidator {
     }
 
     // Rule 3: Minimum occurrences for promotion
-    if (
-      pattern.occurrences !== undefined &&
-      pattern.occurrences < this.rules.minOccurrences
-    ) {
+    if (pattern.occurrences !== undefined && pattern.occurrences < this.rules.minOccurrences) {
       warnings.push(
         `Low occurrences: ${pattern.occurrences} < minimum ${this.rules.minOccurrences} for promotion`,
       );
     }
 
     // Rule 4: Minimum success rate
-    if (
-      pattern.successRate !== undefined &&
-      pattern.successRate < this.rules.minSuccessRate
-    ) {
+    if (pattern.successRate !== undefined && pattern.successRate < this.rules.minSuccessRate) {
       errors.push(
         `Success rate too low: ${(pattern.successRate * 100).toFixed(1)}% < ${(this.rules.minSuccessRate * 100).toFixed(1)}%`,
       );
@@ -134,15 +120,13 @@ class PatternValidator {
       this.rules.requiredKeyCommands.some((key) => cmd.includes(key)),
     );
     if (!hasKeyCommand) {
-      errors.push("Sequence must contain at least one key workflow command");
+      errors.push('Sequence must contain at least one key workflow command');
     }
 
     // Rule 6: All commands should exist in AIOX task registry
-    const unknownCommands = pattern.sequence.filter(
-      (cmd) => !this._isKnownCommand(cmd),
-    );
+    const unknownCommands = pattern.sequence.filter((cmd) => !this._isKnownCommand(cmd));
     if (unknownCommands.length > 0) {
-      warnings.push(`Unknown commands: ${unknownCommands.join(", ")}`);
+      warnings.push(`Unknown commands: ${unknownCommands.join(', ')}`);
     }
 
     // Rule 7: No duplicate consecutive commands
@@ -150,14 +134,14 @@ class PatternValidator {
       (cmd, i) => i > 0 && cmd === pattern.sequence[i - 1],
     );
     if (hasDuplicateConsecutive) {
-      warnings.push("Pattern contains duplicate consecutive commands");
+      warnings.push('Pattern contains duplicate consecutive commands');
     }
 
     return {
       valid: errors.length === 0,
       errors: errors,
       warnings: warnings,
-      reason: errors.length > 0 ? errors.join("; ") : null,
+      reason: errors.length > 0 ? errors.join('; ') : null,
     };
   }
 
@@ -184,10 +168,7 @@ class PatternValidator {
       }
 
       // Then similarity check
-      const similarity = this._calculateSimilarity(
-        pattern.sequence,
-        existing.sequence,
-      );
+      const similarity = this._calculateSimilarity(pattern.sequence, existing.sequence);
 
       if (similarity >= this.rules.similarityThreshold) {
         return {
@@ -244,7 +225,7 @@ class PatternValidator {
    * @private
    */
   _isKnownCommand(command) {
-    const normalized = command.toLowerCase().replace(/^\*/, "").trim();
+    const normalized = command.toLowerCase().replace(/^\*/, '').trim();
 
     // Direct match
     if (KNOWN_COMMANDS.has(normalized)) {

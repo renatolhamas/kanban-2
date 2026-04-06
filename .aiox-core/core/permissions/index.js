@@ -23,8 +23,8 @@
  * }
  */
 
-const { PermissionMode } = require("./permission-mode");
-const { OperationGuard } = require("./operation-guard");
+const { PermissionMode } = require('./permission-mode');
+const { OperationGuard } = require('./operation-guard');
 
 /**
  * Create a pre-configured guard instance
@@ -101,21 +101,17 @@ async function cycleMode(projectRoot = process.cwd()) {
  *   - { action: 'prompt', message: string } - Must ask user for confirmation
  *   - { action: 'deny', message: string } - Operation is blocked
  */
-async function enforcePermission(
-  tool,
-  params = {},
-  projectRoot = process.cwd(),
-) {
+async function enforcePermission(tool, params = {}, projectRoot = process.cwd()) {
   const { guard } = await createGuard(projectRoot);
   const result = await guard.guard(tool, params);
 
   if (result.proceed) {
-    return { action: "allow", operation: result.operation };
+    return { action: 'allow', operation: result.operation };
   }
 
   if (result.needsConfirmation) {
     return {
-      action: "prompt",
+      action: 'prompt',
       operation: result.operation,
       tool: result.tool,
       params: result.params,
@@ -125,7 +121,7 @@ async function enforcePermission(
 
   // Blocked
   return {
-    action: "deny",
+    action: 'deny',
     operation: result.operation,
     message: result.message,
   };

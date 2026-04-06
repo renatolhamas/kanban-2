@@ -7,7 +7,7 @@
  * @created 2025-12-05 (Story 4.1)
  */
 
-const path = require("path");
+const path = require('path');
 
 /**
  * Validates a file path to prevent path traversal attacks
@@ -26,9 +26,9 @@ function validatePath(filePath, options = {}) {
   };
 
   // Check for null/undefined input
-  if (!filePath || typeof filePath !== "string") {
+  if (!filePath || typeof filePath !== 'string') {
     result.valid = false;
-    result.errors.push("Path must be a non-empty string");
+    result.errors.push('Path must be a non-empty string');
     return result;
   }
 
@@ -37,21 +37,21 @@ function validatePath(filePath, options = {}) {
   result.normalized = normalized;
 
   // Check for path traversal attempts (../ or ..\)
-  if (filePath.includes("..") || normalized.includes("..")) {
+  if (filePath.includes('..') || normalized.includes('..')) {
     result.valid = false;
     result.errors.push('Path traversal detected: ".." is not allowed');
   }
 
   // Check for null bytes (null byte injection)
-  if (filePath.includes("\0")) {
+  if (filePath.includes('\0')) {
     result.valid = false;
-    result.errors.push("Null byte detected in path");
+    result.errors.push('Null byte detected in path');
   }
 
   // Check for absolute paths if not allowed
   if (!options.allowAbsolute && path.isAbsolute(normalized)) {
     result.valid = false;
-    result.errors.push("Absolute paths are not allowed");
+    result.errors.push('Absolute paths are not allowed');
   }
 
   // If basePath is provided, ensure the resolved path stays within it
@@ -59,12 +59,9 @@ function validatePath(filePath, options = {}) {
     const resolvedPath = path.resolve(options.basePath, normalized);
     const resolvedBase = path.resolve(options.basePath);
 
-    if (
-      !resolvedPath.startsWith(resolvedBase + path.sep) &&
-      resolvedPath !== resolvedBase
-    ) {
+    if (!resolvedPath.startsWith(resolvedBase + path.sep) && resolvedPath !== resolvedBase) {
       result.valid = false;
-      result.errors.push("Path escapes the allowed base directory");
+      result.errors.push('Path escapes the allowed base directory');
     }
   }
 
@@ -78,48 +75,48 @@ function validatePath(filePath, options = {}) {
  * @param {string} type - Type of sanitization ('general'|'filename'|'identifier'|'shell'|'html')
  * @returns {string} Sanitized input
  */
-function sanitizeInput(input, type = "general") {
-  if (typeof input !== "string") {
+function sanitizeInput(input, type = 'general') {
+  if (typeof input !== 'string') {
     return input;
   }
 
   // Remove null bytes from all inputs
-  let sanitized = input.replace(/\0/g, "");
+  let sanitized = input.replace(/\0/g, '');
 
   switch (type) {
-    case "filename":
+    case 'filename':
       // Allow only safe filename characters
-      sanitized = sanitized.replace(/[^a-zA-Z0-9\-_.]/g, "_");
+      sanitized = sanitized.replace(/[^a-zA-Z0-9\-_.]/g, '_');
       // Prevent hidden files/directories
-      sanitized = sanitized.replace(/^\.+/, "");
+      sanitized = sanitized.replace(/^\.+/, '');
       break;
 
-    case "identifier":
+    case 'identifier':
       // Allow only alphanumeric, dash, and underscore
-      sanitized = sanitized.replace(/[^a-zA-Z0-9\-_]/g, "_");
+      sanitized = sanitized.replace(/[^a-zA-Z0-9\-_]/g, '_');
       break;
 
-    case "shell":
+    case 'shell':
       // Escape shell special characters
-      sanitized = sanitized.replace(/[;&|`$(){}[\]<>!#*?\\'"]/g, "");
+      sanitized = sanitized.replace(/[;&|`$(){}[\]<>!#*?\\'"]/g, '');
       break;
 
-    case "html":
+    case 'html':
       // Escape HTML entities
       sanitized = sanitized
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#x27;")
-        .replace(/\//g, "&#x2F;");
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;')
+        .replace(/\//g, '&#x2F;');
       break;
 
-    case "general":
+    case 'general':
     default:
       // Basic sanitization - remove control characters except newlines and tabs
       // eslint-disable-next-line no-control-regex
-      sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "");
+      sanitized = sanitized.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
       break;
   }
 
@@ -144,9 +141,9 @@ function validateJSON(jsonString, options = {}) {
   };
 
   // Check for null/undefined input
-  if (!jsonString || typeof jsonString !== "string") {
+  if (!jsonString || typeof jsonString !== 'string') {
     result.valid = false;
-    result.error = "JSON input must be a non-empty string";
+    result.error = 'JSON input must be a non-empty string';
     return result;
   }
 
@@ -182,13 +179,13 @@ function validateJSON(jsonString, options = {}) {
  * @private
  */
 function getObjectDepth(obj, currentDepth = 0) {
-  if (typeof obj !== "object" || obj === null) {
+  if (typeof obj !== 'object' || obj === null) {
     return currentDepth;
   }
 
   let maxDepth = currentDepth;
   for (const value of Object.values(obj)) {
-    if (typeof value === "object" && value !== null) {
+    if (typeof value === 'object' && value !== null) {
       const depth = getObjectDepth(value, currentDepth + 1);
       maxDepth = Math.max(maxDepth, depth);
     }
@@ -232,14 +229,13 @@ class RateLimiter {
     }
 
     // Remove old requests outside the window
-    history = history.filter((timestamp) => timestamp > windowStart);
+    history = history.filter(timestamp => timestamp > windowStart);
     this.requests.set(key, history);
 
     // Check if limit exceeded
     const allowed = history.length < this.maxRequests;
     const remaining = Math.max(0, this.maxRequests - history.length);
-    const resetTime =
-      history.length > 0 ? history[0] + this.windowMs : now + this.windowMs;
+    const resetTime = history.length > 0 ? history[0] + this.windowMs : now + this.windowMs;
 
     // Record this request if allowed
     if (allowed) {
@@ -277,7 +273,7 @@ class RateLimiter {
     const windowStart = now - this.windowMs;
 
     for (const [key, history] of this.requests.entries()) {
-      const filtered = history.filter((timestamp) => timestamp > windowStart);
+      const filtered = history.filter(timestamp => timestamp > windowStart);
       if (filtered.length === 0) {
         this.requests.delete(key);
       } else {
@@ -312,7 +308,7 @@ function safePath(basePath, ...segments) {
  * @returns {boolean} True if safe
  */
 function isSafeString(value) {
-  if (typeof value !== "string") {
+  if (typeof value !== 'string') {
     return false;
   }
 
@@ -320,12 +316,12 @@ function isSafeString(value) {
   const dangerousPatterns = [
     // eslint-disable-next-line no-control-regex
     /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/, // Control characters
-    /\.\.\//, // Path traversal
-    /\$\{/, // Template injection
-    /\0/, // Null byte
+    /\.\.\//,  // Path traversal
+    /\$\{/,    // Template injection
+    /\0/,      // Null byte
   ];
 
-  return !dangerousPatterns.some((pattern) => pattern.test(value));
+  return !dangerousPatterns.some(pattern => pattern.test(value));
 }
 
 module.exports = {

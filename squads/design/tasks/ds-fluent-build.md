@@ -11,7 +11,6 @@
 Generate a production-ready component following Microsoft Fluent 2 design patterns: compound component architecture, slot-based customization, built-in accessibility, and token-based styling.
 
 ## Input Schema
-
 - **requires:** Output from `ds-fluent-audit`
 - **format:** JSON data
 - **location:** `outputs/design-system/{project}/fluent/fluent-alignment-report.json`
@@ -101,11 +100,11 @@ Generate a production-ready component following Microsoft Fluent 2 design patter
 - Tests pass with >80% coverage
 - Storybook story renders all variants
 
+
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 - `squads/design/checklists/ds-pattern-audit-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

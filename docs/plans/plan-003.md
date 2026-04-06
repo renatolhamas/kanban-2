@@ -37,7 +37,7 @@ This plan was successfully implemented and integrated into Story 1.3. All delive
 | `components/LoginForm.tsx` | ✅ Completo | 2026-04-04 | Adicionar links "Password issues" |
 | TypeScript compile | ✅ Completo | 2026-04-04 | ✅ Sem erros |
 | ESLint linting | ✅ Completo | 2026-04-04 | ✅ Sem warnings |
-| Testes e validação | ⏳ Pendente | — | — |
+| Testes e validação | ✅ Completo | 2026-04-05 | Email chegou, DB atualizado, login funcionou |
 
 ---
 

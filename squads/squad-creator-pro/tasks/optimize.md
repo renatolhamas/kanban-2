@@ -12,16 +12,16 @@
 
 ## Task Anatomy
 
-| Field                    | Value                                        |
-| ------------------------ | -------------------------------------------- |
-| **task_name**            | Optimize Squad/Task Execution                |
-| **status**               | `active`                                     |
-| **responsible_executor** | @squad-chief                                 |
-| **execution_type**       | Agent                                        |
-| **input**                | `target` (task, squad, ou "all")             |
-| **output**               | Relatório de otimização + economia de tokens |
-| **action_items**         | Analisar, converter, medir economia          |
-| **acceptance_criteria**  | Tasks otimizadas + relatório de ROI          |
+| Field | Value |
+|-------|-------|
+| **task_name** | Optimize Squad/Task Execution |
+| **status** | `active` |
+| **responsible_executor** | @squad-chief |
+| **execution_type** | Agent |
+| **input** | `target` (task, squad, ou "all") |
+| **output** | Relatório de otimização + economia de tokens |
+| **action_items** | Analisar, converter, medir economia |
+| **acceptance_criteria** | Tasks otimizadas + relatório de ROI |
 
 ---
 
@@ -95,7 +95,7 @@ parse_target:
     action: "Listar todas tasks de todos squads"
     glob: "squads/*/tasks/*.md"
     exclude:
-      - "squads/squad-creator-pro/*" # Meta-squad, não analisar
+      - "squads/squad-creator-pro/*"  # Meta-squad, não analisar
 ```
 
 ### Step 0.2: Load Tasks
@@ -145,7 +145,8 @@ mandatory_dependency:
 
 ```yaml
 decompose_task:
-  for_each_task: 1. Read the task file COMPLETELY
+  for_each_task:
+    1. Read the task file COMPLETELY
     2. Identify EVERY action/step in the task
     3. List each action as a separate row for analysis
 
@@ -215,11 +216,10 @@ analyze_action:
 ```markdown
 ## Task: {task_name}
 
-| Step | Ação     | Q1 Det?  | Q2 Pura? | Q2a Lib? | Q3 NL? | Q4 Impacto?      | Executor                  | Justificativa |
-| ---- | -------- | -------- | -------- | -------- | ------ | ---------------- | ------------------------- | ------------- |
-| 1.1  | {action} | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌  | Alto/Médio/Baixo | Worker/Agent/Hybrid/Human | {why}         |
-| 1.2  | {action} | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌  | Alto/Médio/Baixo | Worker/Agent/Hybrid/Human | {why}         |
-
+| Step | Ação | Q1 Det? | Q2 Pura? | Q2a Lib? | Q3 NL? | Q4 Impacto? | Executor | Justificativa |
+|------|------|---------|----------|----------|--------|-------------|----------|---------------|
+| 1.1 | {action} | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌ | Alto/Médio/Baixo | Worker/Agent/Hybrid/Human | {why} |
+| 1.2 | {action} | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌/⚠️ | ✅/❌ | Alto/Médio/Baixo | Worker/Agent/Hybrid/Human | {why} |
 ...
 ```
 
@@ -228,13 +228,13 @@ analyze_action:
 ```markdown
 ## Task: db-health-check.md
 
-| Step | Ação              | Q1 Det?    | Q2 Pura? | Q2a Lib?    | Q3 NL? | Q4 Impacto? | Executor | Justificativa                            |
-| ---- | ----------------- | ---------- | -------- | ----------- | ------ | ----------- | -------- | ---------------------------------------- |
-| 1.1  | Conectar ao banco | ✅ SIM     | ✅ SIM   | ✅ SIM (pg) | -      | -           | Worker   | Connection string + lib = determinístico |
-| 1.2  | Verificar pool    | ✅ SIM     | ✅ SIM   | ✅ SIM (pg) | -      | -           | Worker   | Query fixa retorna métricas fixas        |
-| 1.3  | EXPLAIN queries   | ✅ SIM     | ✅ SIM   | ✅ SIM (pg) | -      | -           | Worker   | EXPLAIN é comando SQL determinístico     |
-| 1.4  | Checar tamanhos   | ✅ SIM     | ✅ SIM   | ✅ SIM      | -      | -           | Worker   | pg_relation_size() é determinístico      |
-| 1.5  | Gerar relatório   | ⚠️ PARCIAL | ❌ NÃO   | -           | ✅ SIM | Baixo       | Agent    | Interpretar dados e sugerir melhorias    |
+| Step | Ação | Q1 Det? | Q2 Pura? | Q2a Lib? | Q3 NL? | Q4 Impacto? | Executor | Justificativa |
+|------|------|---------|----------|----------|--------|-------------|----------|---------------|
+| 1.1 | Conectar ao banco | ✅ SIM | ✅ SIM | ✅ SIM (pg) | - | - | Worker | Connection string + lib = determinístico |
+| 1.2 | Verificar pool | ✅ SIM | ✅ SIM | ✅ SIM (pg) | - | - | Worker | Query fixa retorna métricas fixas |
+| 1.3 | EXPLAIN queries | ✅ SIM | ✅ SIM | ✅ SIM (pg) | - | - | Worker | EXPLAIN é comando SQL determinístico |
+| 1.4 | Checar tamanhos | ✅ SIM | ✅ SIM | ✅ SIM | - | - | Worker | pg_relation_size() é determinístico |
+| 1.5 | Gerar relatório | ⚠️ PARCIAL | ❌ NÃO | - | ✅ SIM | Baixo | Agent | Interpretar dados e sugerir melhorias |
 
 **Conclusão:** 4/5 ações são Worker, 1/5 é Agent → Task é HYBRID ou pode ter script + agent no final
 ```
@@ -281,6 +281,7 @@ classify_task:
     - If any Human → Task requires HUMAN involvement
 
   categories:
+
     SHOULD_BE_WORKER:
       criteria:
         - "ALL actions are deterministic (Q1=SIM)"
@@ -366,7 +367,7 @@ calculate_roi:
 
 ### Step 3.1: Generate Report
 
-````yaml
+```yaml
 report_template: |
   # Determinism Analysis Report
 
@@ -409,78 +410,71 @@ report_template: |
   ```python
   # Sugestão de implementação
   {code_suggestion}
-````
+  ```
 
-**ROI:**
+  **ROI:**
+  - Current cost: ${current}/month
+  - After conversion: ${after}/month
+  - Savings: ${savings}/month
+  - Conversion effort: {hours}h
+  - Payback: {days} days
 
-- Current cost: ${current}/month
-- After conversion: ${after}/month
-- Savings: ${savings}/month
-- Conversion effort: {hours}h
-- Payback: {days} days
+  ---
 
----
+  ## 🟡 MEDIUM PRIORITY: Could Be Worker
 
-## 🟡 MEDIUM PRIORITY: Could Be Worker
+  Tasks que poderiam ser Worker com algumas modificações:
 
-Tasks que poderiam ser Worker com algumas modificações:
+  ### {task_name}
 
-### {task_name}
+  **Current:** Agent
+  **Recommended:** Worker with fallback to Agent
+  **Reason:** {analysis}
 
-**Current:** Agent
-**Recommended:** Worker with fallback to Agent
-**Reason:** {analysis}
+  **Blockers:**
+  - {blocker_1}
+  - {blocker_2}
 
-**Blockers:**
+  **Path to Worker:**
+  1. {step_1}
+  2. {step_2}
+  3. {step_3}
 
-- {blocker_1}
-- {blocker_2}
+  ---
 
-**Path to Worker:**
+  ## ✅ CORRECTLY CLASSIFIED: Agent
 
-1. {step_1}
-2. {step_2}
-3. {step_3}
+  Tasks que corretamente usam LLM:
 
----
+  | Task | Reason |
+  |------|--------|
+  | {task_name} | {reason} |
 
-## ✅ CORRECTLY CLASSIFIED: Agent
+  ---
 
-Tasks que corretamente usam LLM:
+  ## ⚠️ SHOULD ADD VALIDATION: Hybrid
 
-| Task        | Reason   |
-| ----------- | -------- |
-| {task_name} | {reason} |
+  Tasks Agent que deveriam ter validação humana:
 
----
+  | Task | Impact Level | Recommendation |
+  |------|--------------|----------------|
+  | {task_name} | {level} | Add human review |
 
-## ⚠️ SHOULD ADD VALIDATION: Hybrid
+  ---
 
-Tasks Agent que deveriam ter validação humana:
+  ## Action Items
 
-| Task        | Impact Level | Recommendation   |
-| ----------- | ------------ | ---------------- |
-| {task_name} | {level}      | Add human review |
+  ### Immediate (this week)
+  - [ ] Convert {task_1} to Worker
+  - [ ] Convert {task_2} to Worker
 
----
+  ### Short-term (this month)
+  - [ ] Evaluate {task_3} for conversion
+  - [ ] Add Hybrid validation to {task_4}
 
-## Action Items
-
-### Immediate (this week)
-
-- [ ] Convert {task_1} to Worker
-- [ ] Convert {task_2} to Worker
-
-### Short-term (this month)
-
-- [ ] Evaluate {task_3} for conversion
-- [ ] Add Hybrid validation to {task_4}
-
-### Backlog
-
-- [ ] Monitor {task_5} for patterns
-
-````
+  ### Backlog
+  - [ ] Monitor {task_5} for patterns
+```
 
 ---
 
@@ -534,7 +528,7 @@ code_generation:
             # Example usage
             result = {function_name}({example_input})
             print(result)
-````
+```
 
 ---
 
@@ -543,7 +537,6 @@ code_generation:
 ### Example 1: Analyzing Single Task (CORRECT FORMAT)
 
 <!-- Example - replace with your squad and task -->
-
 ```
 User: *optimize squads/{squad-name}/tasks/{task-name}.md
 
@@ -593,7 +586,6 @@ Actions found in {task-name}.md:
 ### Example 2: Analyzing Mixed Task (Worker + Agent)
 
 <!-- Example - replace with your squad and task -->
-
 ```
 User: *optimize squads/{squad-name}/tasks/{task-name}.md
 
@@ -633,10 +625,8 @@ Actions found:
 
 **Implementation Strategy:**
 ```
-
 scripts/db-health-checker.sh → Executa queries, coleta dados
 Agent → Recebe dados, interpreta, gera recomendações
-
 ```
 
 ## ROI Calculation
@@ -790,8 +780,8 @@ inventory_changes:
 token_economics:
   model: "claude-opus"
   pricing:
-    input_per_1m: 15.00 # $15/1M tokens
-    output_per_1m: 75.00 # $75/1M tokens
+    input_per_1m: 15.00   # $15/1M tokens
+    output_per_1m: 75.00  # $75/1M tokens
     avg_ratio: "80% input / 20% output"
     blended_per_1m: 27.00 # ~$0.027/1K tokens
 
@@ -984,7 +974,8 @@ WRONG:
 
 CORRECT:
   input: "*optimize design"
-  action: 1. Read squads/design/tasks/thumbnail-design.md completely
+  action:
+    1. Read squads/design/tasks/thumbnail-design.md completely
     2. Decompose into individual actions
     3. Apply Q1-Q6 to EACH action
     4. Show table with all columns
@@ -998,7 +989,8 @@ WRONG:
   why_wrong: "Framework not loaded, criteria not standardized"
 
 CORRECT:
-  process: 1. READ squads/squad-creator-pro/data/executor-decision-tree.md
+  process:
+    1. READ squads/squad-creator-pro/data/executor-decision-tree.md
     2. THEN analyze tasks using the exact Q1-Q6 flow
 ```
 

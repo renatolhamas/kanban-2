@@ -4,10 +4,10 @@ Pre-built agent squads installed during `npx aiox-core install` after Pro licens
 
 ## Available Squads
 
-| Squad                 | Agents | Description                                                        |
-| --------------------- | ------ | ------------------------------------------------------------------ |
-| **squad-creator-pro** | 3      | Meta-squad for creating AI agent squads based on real elite minds  |
-| **design**            | 8      | Design System squad — tokens, components, accessibility, DesignOps |
+| Squad | Agents | Description |
+|-------|--------|-------------|
+| **squad-creator-pro** | 3 | Meta-squad for creating AI agent squads based on real elite minds |
+| **design** | 8 | Design System squad — tokens, components, accessibility, DesignOps |
 
 ## How It Works
 

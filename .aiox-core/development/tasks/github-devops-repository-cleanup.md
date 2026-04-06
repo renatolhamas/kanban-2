@@ -11,19 +11,16 @@
 **Choose your execution mode:**
 
 ### 1. YOLO Mode - Fast, Autonomous (0-1 prompts)
-
 - Autonomous decision making with logging
 - Minimal user interaction
 - **Best for:** Simple, deterministic tasks
 
 ### 2. Interactive Mode - Balanced, Educational (5-10 prompts) **[DEFAULT]**
-
 - Explicit decision checkpoints
 - Educational explanations
 - **Best for:** Learning, complex decisions
 
 ### 3. Pre-Flight Planning - Comprehensive Upfront Planning
-
 - Task analysis phase (identify all ambiguities)
 - Zero ambiguity execution
 - **Best for:** Ambiguous requirements, critical work
@@ -191,7 +188,6 @@ token_usage: ~3,000-10,000 tokens
 ```
 
 **Optimization Notes:**
-
 - Break into smaller workflows; implement checkpointing; use async processing where possible
 
 ---
@@ -211,8 +207,8 @@ updated_at: 2025-11-17
 
 ---
 
-## Prerequisites
 
+## Prerequisites
 - Git repository
 - GitHub CLI for remote branch operations
 - Repository context detected
@@ -224,35 +220,25 @@ updated_at: 2025-11-17
 **Definition**: Merged branches older than 30 days
 
 ```javascript
-const { execSync } = require("child_process");
+const { execSync } = require('child_process');
 
 function findStaleBranches(projectRoot) {
   // Get all merged branches
-  const mergedBranches = execSync("git branch --merged", {
-    cwd: projectRoot,
-  })
-    .toString()
-    .split("\n")
-    .map((b) => b.trim())
-    .filter(
-      (b) =>
-        b &&
-        b !== "* main" &&
-        b !== "* master" &&
-        b !== "main" &&
-        b !== "master",
-    );
+  const mergedBranches = execSync('git branch --merged', {
+    cwd: projectRoot
+  }).toString()
+    .split('\n')
+    .map(b => b.trim())
+    .filter(b => b && b !== '* main' && b !== '* master' && b !== 'main' && b !== 'master');
 
   const staleBranches = [];
-  const thirtyDaysAgo = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
 
   for (const branch of mergedBranches) {
     try {
       const lastCommitDate = execSync(`git log -1 --format=%ct ${branch}`, {
-        cwd: projectRoot,
-      })
-        .toString()
-        .trim();
+        cwd: projectRoot
+      }).toString().trim();
 
       const commitTimestamp = parseInt(lastCommitDate) * 1000;
 
@@ -260,9 +246,7 @@ function findStaleBranches(projectRoot) {
         staleBranches.push({
           name: branch,
           lastCommit: new Date(commitTimestamp).toISOString(),
-          daysOld: Math.floor(
-            (Date.now() - commitTimestamp) / (24 * 60 * 60 * 1000),
-          ),
+          daysOld: Math.floor((Date.now() - commitTimestamp) / (24 * 60 * 60 * 1000))
         });
       }
     } catch (error) {
@@ -277,15 +261,15 @@ function findStaleBranches(projectRoot) {
 ### 2. Identify Temporary Files
 
 ```javascript
-const glob = require("glob");
+const glob = require('glob');
 
 function findTemporaryFiles(projectRoot) {
   const patterns = [
-    "**/.DS_Store",
-    "**/Thumbs.db",
-    "**/*.tmp",
-    "**/*.log",
-    "**/.eslintcache",
+    '**/.DS_Store',
+    '**/Thumbs.db',
+    '**/*.tmp',
+    '**/*.log',
+    '**/.eslintcache'
   ];
 
   const tempFiles = [];
@@ -293,7 +277,7 @@ function findTemporaryFiles(projectRoot) {
   for (const pattern of patterns) {
     const files = glob.sync(pattern, {
       cwd: projectRoot,
-      ignore: ["node_modules/**", ".git/**"],
+      ignore: ['node_modules/**', '.git/**']
     });
 
     tempFiles.push(...files);
@@ -343,9 +327,7 @@ async function executeCleanup(staleBranches, tempFiles, projectRoot) {
 
       // Try to delete remote branch
       try {
-        execSync(`git push origin --delete ${branch.name}`, {
-          cwd: projectRoot,
-        });
+        execSync(`git push origin --delete ${branch.name}`, { cwd: projectRoot });
         console.log(`✓ Deleted remote branch: ${branch.name}`);
       } catch (error) {
         console.warn(`⚠️  Unable to delete remote branch ${branch.name}`);

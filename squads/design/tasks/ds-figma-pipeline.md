@@ -40,7 +40,7 @@ Configure the Figma MCP Server to connect design files with AI coding tools. Est
    - Map Figma variants → code component props
    - Map Figma auto-layout → CSS flex/grid patterns
    - Document unmapped components (gaps between design and code)
-   - Check: (mapped components / total Figma components) \* 100 >= 80 — log "Mapping coverage: {pct}% ({mapped}/{total}), unmapped: {list}"
+   - Check: (mapped components / total Figma components) * 100 >= 80 — log "Mapping coverage: {pct}% ({mapped}/{total}), unmapped: {list}"
 
 3. **Configure Token Sync**
    - Export Figma Variables as W3C DTCG tokens
@@ -82,14 +82,14 @@ Configure the Figma MCP Server to connect design files with AI coding tools. Est
 ## Success Criteria
 
 - MCP Server returns accurate Figma component data
-- > 80% of Figma components mapped to code equivalents
+- >80% of Figma components mapped to code equivalents
 - Token values synchronized (zero drift)
 - AI-generated code uses correct DS components
+
 
 ## Related Checklists
 
 - `squads/design/checklists/ds-component-quality-checklist.md`
 
 ## Process Guards
-
 - **On Fail:** Stop execution, capture evidence, and return remediation steps before proceeding.

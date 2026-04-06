@@ -5,12 +5,17 @@
   "categories": {
     "checklist": {
       "count": 6,
-      "subcategories": ["quality"],
+      "subcategories": [
+        "quality"
+      ],
       "description": "Quality validation checklists"
     },
     "data": {
       "count": 3,
-      "subcategories": ["configuration", "knowledge"],
+      "subcategories": [
+        "configuration",
+        "knowledge"
+      ],
       "description": "Knowledge base and configuration data"
     },
     "script": {
@@ -39,12 +44,19 @@
     },
     "template": {
       "count": 19,
-      "subcategories": ["document", "ide-rules", "personalized"],
+      "subcategories": [
+        "document",
+        "ide-rules",
+        "personalized"
+      ],
       "description": "Document and code templates"
     },
     "workflow": {
       "count": 6,
-      "subcategories": ["brownfield", "greenfield"],
+      "subcategories": [
+        "brownfield",
+        "greenfield"
+      ],
       "description": "Multi-step workflow definitions"
     }
   },
@@ -57,16 +69,25 @@
       "subcategory": "quality",
       "inputs": [],
       "outputs": [],
-      "tags": ["checklist", "quality", "architect", "validation"],
+      "tags": [
+        "checklist",
+        "quality",
+        "architect",
+        "validation"
+      ],
       "path": ".aiox-core/product/checklists/architect-checklist.md",
       "taskFormat": "CHECKLIST",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "2m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["architect"],
+      "agents": [
+        "architect"
+      ],
       "metadata": {
         "source": "product",
         "addedVersion": "1.0.0"
@@ -80,10 +101,17 @@
       "subcategory": "quality",
       "inputs": [],
       "outputs": [],
-      "tags": ["checklist", "quality", "change", "validation"],
+      "tags": [
+        "checklist",
+        "quality",
+        "change",
+        "validation"
+      ],
       "path": ".aiox-core/product/checklists/change-checklist.md",
       "taskFormat": "CHECKLIST",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "2m",
         "cacheable": false,
@@ -103,16 +131,24 @@
       "subcategory": "quality",
       "inputs": [],
       "outputs": [],
-      "tags": ["checklist", "quality", "validation"],
+      "tags": [
+        "checklist",
+        "quality",
+        "validation"
+      ],
       "path": ".aiox-core/product/checklists/pm-checklist.md",
       "taskFormat": "CHECKLIST",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "2m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["pm"],
+      "agents": [
+        "pm"
+      ],
       "metadata": {
         "source": "product",
         "addedVersion": "1.0.0"
@@ -126,16 +162,26 @@
       "subcategory": "quality",
       "inputs": [],
       "outputs": [],
-      "tags": ["checklist", "quality", "master", "validation", "product"],
+      "tags": [
+        "checklist",
+        "quality",
+        "master",
+        "validation",
+        "product"
+      ],
       "path": ".aiox-core/product/checklists/po-master-checklist.md",
       "taskFormat": "CHECKLIST",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "2m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "product",
         "addedVersion": "1.0.0"
@@ -149,10 +195,19 @@
       "subcategory": "quality",
       "inputs": [],
       "outputs": [],
-      "tags": ["checklist", "quality", "story", "dod", "validation", "product"],
+      "tags": [
+        "checklist",
+        "quality",
+        "story",
+        "dod",
+        "validation",
+        "product"
+      ],
       "path": ".aiox-core/product/checklists/story-dod-checklist.md",
       "taskFormat": "CHECKLIST",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "2m",
         "cacheable": false,
@@ -182,7 +237,9 @@
       ],
       "path": ".aiox-core/product/checklists/story-draft-checklist.md",
       "taskFormat": "CHECKLIST",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "2m",
         "cacheable": false,
@@ -202,10 +259,18 @@
       "subcategory": "configuration",
       "inputs": [],
       "outputs": [],
-      "tags": ["data", "configuration", "agent", "config", "requirements"],
+      "tags": [
+        "data",
+        "configuration",
+        "agent",
+        "config",
+        "requirements"
+      ],
       "path": ".aiox-core/core/data/agent-config-requirements.yaml",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "50ms",
         "cacheable": true,
@@ -225,10 +290,16 @@
       "subcategory": "knowledge",
       "inputs": [],
       "outputs": [],
-      "tags": ["data", "knowledge", "aiox"],
+      "tags": [
+        "data",
+        "knowledge",
+        "aiox"
+      ],
       "path": ".aiox-core/core/data/aiox-kb.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "50ms",
         "cacheable": true,
@@ -248,10 +319,17 @@
       "subcategory": "configuration",
       "inputs": [],
       "outputs": [],
-      "tags": ["data", "configuration", "workflow", "patterns"],
+      "tags": [
+        "data",
+        "configuration",
+        "workflow",
+        "patterns"
+      ],
       "path": ".aiox-core/core/data/workflow-patterns.yaml",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "50ms",
         "cacheable": true,
@@ -271,10 +349,18 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "aiox", "validator"],
+      "tags": [
+        "script",
+        "validation",
+        "aiox",
+        "validator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/aiox-validator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -294,10 +380,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "approval", "workflow"],
+      "tags": [
+        "script",
+        "utility",
+        "approval",
+        "workflow"
+      ],
       "path": ".aiox-core/infrastructure/scripts/approval-workflow.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -317,10 +411,19 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "atomic", "layer", "classifier"],
+      "tags": [
+        "script",
+        "utility",
+        "atomic",
+        "layer",
+        "classifier"
+      ],
       "path": ".aiox-core/infrastructure/scripts/atomic-layer-classifier.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -340,10 +443,18 @@
       "subcategory": "management",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "management", "backup", "manager"],
+      "tags": [
+        "script",
+        "management",
+        "backup",
+        "manager"
+      ],
       "path": ".aiox-core/infrastructure/scripts/backup-manager.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -363,10 +474,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "batch", "creator"],
+      "tags": [
+        "script",
+        "utility",
+        "batch",
+        "creator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/batch-creator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -386,10 +505,18 @@
       "subcategory": "management",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "management", "branch", "manager"],
+      "tags": [
+        "script",
+        "management",
+        "branch",
+        "manager"
+      ],
       "path": ".aiox-core/infrastructure/scripts/branch-manager.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -409,10 +536,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "analysis", "capability", "analyzer"],
+      "tags": [
+        "script",
+        "analysis",
+        "capability",
+        "analyzer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/capability-analyzer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -432,10 +567,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "clickup", "helpers"],
+      "tags": [
+        "script",
+        "utility",
+        "clickup",
+        "helpers"
+      ],
       "path": ".aiox-core/infrastructure/scripts/clickup-helpers.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -455,10 +598,19 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "code", "quality", "improver"],
+      "tags": [
+        "script",
+        "utility",
+        "code",
+        "quality",
+        "improver"
+      ],
       "path": ".aiox-core/infrastructure/scripts/code-quality-improver.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -478,10 +630,19 @@
       "subcategory": "generation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "generation", "commit", "message", "generator"],
+      "tags": [
+        "script",
+        "generation",
+        "commit",
+        "message",
+        "generator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/commit-message-generator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -501,10 +662,19 @@
       "subcategory": "generation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "generation", "component", "generator", "product"],
+      "tags": [
+        "script",
+        "generation",
+        "component",
+        "generator",
+        "product"
+      ],
       "path": ".aiox-core/infrastructure/scripts/component-generator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -524,10 +694,19 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "component", "metadata", "product"],
+      "tags": [
+        "script",
+        "utility",
+        "component",
+        "metadata",
+        "product"
+      ],
       "path": ".aiox-core/infrastructure/scripts/component-metadata.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -547,10 +726,19 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "component", "search", "product"],
+      "tags": [
+        "script",
+        "utility",
+        "component",
+        "search",
+        "product"
+      ],
       "path": ".aiox-core/infrastructure/scripts/component-search.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -570,10 +758,18 @@
       "subcategory": "configuration",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "configuration", "config", "cache"],
+      "tags": [
+        "script",
+        "configuration",
+        "config",
+        "cache"
+      ],
       "path": ".aiox-core/infrastructure/scripts/config-cache.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -593,10 +789,18 @@
       "subcategory": "configuration",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "configuration", "config", "loader"],
+      "tags": [
+        "script",
+        "configuration",
+        "config",
+        "loader"
+      ],
       "path": ".aiox-core/infrastructure/scripts/config-loader.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -616,10 +820,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "conflict", "resolver"],
+      "tags": [
+        "script",
+        "utility",
+        "conflict",
+        "resolver"
+      ],
       "path": ".aiox-core/infrastructure/scripts/conflict-resolver.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -639,10 +851,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "analysis", "coverage", "analyzer"],
+      "tags": [
+        "script",
+        "analysis",
+        "coverage",
+        "analyzer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/coverage-analyzer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -662,10 +882,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "analysis", "dependency", "analyzer"],
+      "tags": [
+        "script",
+        "analysis",
+        "dependency",
+        "analyzer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/dependency-analyzer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -685,10 +913,19 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "analysis", "dependency", "impact", "analyzer"],
+      "tags": [
+        "script",
+        "analysis",
+        "dependency",
+        "impact",
+        "analyzer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/dependency-impact-analyzer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -708,10 +945,18 @@
       "subcategory": "generation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "generation", "diff", "generator"],
+      "tags": [
+        "script",
+        "generation",
+        "diff",
+        "generator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/diff-generator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -731,10 +976,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "documentation", "synchronizer"],
+      "tags": [
+        "script",
+        "utility",
+        "documentation",
+        "synchronizer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/documentation-synchronizer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -754,10 +1007,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "analysis", "framework", "analyzer"],
+      "tags": [
+        "script",
+        "analysis",
+        "framework",
+        "analyzer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/framework-analyzer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -777,10 +1038,19 @@
       "subcategory": "configuration",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "configuration", "git", "config", "detector"],
+      "tags": [
+        "script",
+        "configuration",
+        "git",
+        "config",
+        "detector"
+      ],
       "path": ".aiox-core/infrastructure/scripts/git-config-detector.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -800,10 +1070,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "git", "wrapper"],
+      "tags": [
+        "script",
+        "utility",
+        "git",
+        "wrapper"
+      ],
       "path": ".aiox-core/infrastructure/scripts/git-wrapper.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -823,10 +1101,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "improvement", "engine"],
+      "tags": [
+        "script",
+        "utility",
+        "improvement",
+        "engine"
+      ],
       "path": ".aiox-core/infrastructure/scripts/improvement-engine.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -846,10 +1132,18 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "improvement", "validator"],
+      "tags": [
+        "script",
+        "validation",
+        "improvement",
+        "validator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/improvement-validator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -869,10 +1163,19 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "modification", "risk", "assessment"],
+      "tags": [
+        "script",
+        "utility",
+        "modification",
+        "risk",
+        "assessment"
+      ],
       "path": ".aiox-core/infrastructure/scripts/modification-risk-assessment.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -892,10 +1195,18 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "modification", "validator"],
+      "tags": [
+        "script",
+        "validation",
+        "modification",
+        "validator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/modification-validator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -915,10 +1226,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "output", "formatter"],
+      "tags": [
+        "script",
+        "utility",
+        "output",
+        "formatter"
+      ],
       "path": ".aiox-core/infrastructure/scripts/output-formatter.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -938,10 +1257,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "analysis", "performance", "analyzer"],
+      "tags": [
+        "script",
+        "analysis",
+        "performance",
+        "analyzer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/performance-analyzer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -961,10 +1288,20 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "performance", "and", "error", "resolver"],
+      "tags": [
+        "script",
+        "utility",
+        "performance",
+        "and",
+        "error",
+        "resolver"
+      ],
       "path": ".aiox-core/infrastructure/scripts/performance-and-error-resolver.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -984,10 +1321,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "performance", "optimizer"],
+      "tags": [
+        "script",
+        "utility",
+        "performance",
+        "optimizer"
+      ],
       "path": ".aiox-core/infrastructure/scripts/performance-optimizer.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1007,10 +1352,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "performance", "tracker"],
+      "tags": [
+        "script",
+        "utility",
+        "performance",
+        "tracker"
+      ],
       "path": ".aiox-core/infrastructure/scripts/performance-tracker.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1030,16 +1383,25 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "adapter"],
+      "tags": [
+        "script",
+        "utility",
+        "adapter"
+      ],
       "path": ".aiox-core/infrastructure/scripts/pm-adapter.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
         "parallelizable": true
       },
-      "agents": ["pm"],
+      "agents": [
+        "pm"
+      ],
       "metadata": {
         "source": "infrastructure",
         "addedVersion": "1.0.0"
@@ -1053,16 +1415,26 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "adapter", "factory"],
+      "tags": [
+        "script",
+        "utility",
+        "adapter",
+        "factory"
+      ],
       "path": ".aiox-core/infrastructure/scripts/pm-adapter-factory.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
         "parallelizable": true
       },
-      "agents": ["pm"],
+      "agents": [
+        "pm"
+      ],
       "metadata": {
         "source": "infrastructure",
         "addedVersion": "1.0.0"
@@ -1076,10 +1448,19 @@
       "subcategory": "configuration",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "configuration", "project", "status", "loader"],
+      "tags": [
+        "script",
+        "configuration",
+        "project",
+        "status",
+        "loader"
+      ],
       "path": ".aiox-core/infrastructure/scripts/project-status-loader.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1099,10 +1480,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "refactoring", "suggester"],
+      "tags": [
+        "script",
+        "utility",
+        "refactoring",
+        "suggester"
+      ],
       "path": ".aiox-core/infrastructure/scripts/refactoring-suggester.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1122,10 +1511,19 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "repository", "detector", "product"],
+      "tags": [
+        "script",
+        "utility",
+        "repository",
+        "detector",
+        "product"
+      ],
       "path": ".aiox-core/infrastructure/scripts/repository-detector.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1145,10 +1543,19 @@
       "subcategory": "testing",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "testing", "sandbox", "tester", "database"],
+      "tags": [
+        "script",
+        "testing",
+        "sandbox",
+        "tester",
+        "database"
+      ],
       "path": ".aiox-core/infrastructure/scripts/sandbox-tester.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1168,10 +1575,18 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "security", "checker"],
+      "tags": [
+        "script",
+        "validation",
+        "security",
+        "checker"
+      ],
       "path": ".aiox-core/infrastructure/scripts/security-checker.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1191,10 +1606,20 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "spot", "check", "validator", "product"],
+      "tags": [
+        "script",
+        "validation",
+        "spot",
+        "check",
+        "validator",
+        "product"
+      ],
       "path": ".aiox-core/infrastructure/scripts/spot-check-validator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1214,10 +1639,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "status", "mapper"],
+      "tags": [
+        "script",
+        "utility",
+        "status",
+        "mapper"
+      ],
       "path": ".aiox-core/infrastructure/scripts/status-mapper.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1237,10 +1670,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "template", "engine"],
+      "tags": [
+        "script",
+        "utility",
+        "template",
+        "engine"
+      ],
       "path": ".aiox-core/infrastructure/scripts/template-engine.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1260,10 +1701,18 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "template", "validator"],
+      "tags": [
+        "script",
+        "validation",
+        "template",
+        "validator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/template-validator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1283,10 +1732,19 @@
       "subcategory": "generation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "generation", "test", "generator", "testing"],
+      "tags": [
+        "script",
+        "generation",
+        "test",
+        "generator",
+        "testing"
+      ],
       "path": ".aiox-core/infrastructure/scripts/test-generator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1306,10 +1764,19 @@
       "subcategory": "testing",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "testing", "test", "quality", "assessment"],
+      "tags": [
+        "script",
+        "testing",
+        "test",
+        "quality",
+        "assessment"
+      ],
       "path": ".aiox-core/infrastructure/scripts/test-quality-assessment.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1329,10 +1796,18 @@
       "subcategory": "testing",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "testing", "test", "utilities"],
+      "tags": [
+        "script",
+        "testing",
+        "test",
+        "utilities"
+      ],
       "path": ".aiox-core/infrastructure/scripts/test-utilities.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1352,10 +1827,19 @@
       "subcategory": "testing",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "testing", "test", "utilities", "fast"],
+      "tags": [
+        "script",
+        "testing",
+        "test",
+        "utilities",
+        "fast"
+      ],
       "path": ".aiox-core/infrastructure/scripts/test-utilities-fast.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1375,10 +1859,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "tool", "resolver"],
+      "tags": [
+        "script",
+        "utility",
+        "tool",
+        "resolver"
+      ],
       "path": ".aiox-core/infrastructure/scripts/tool-resolver.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1398,10 +1890,18 @@
       "subcategory": "management",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "management", "transaction", "manager"],
+      "tags": [
+        "script",
+        "management",
+        "transaction",
+        "manager"
+      ],
       "path": ".aiox-core/infrastructure/scripts/transaction-manager.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1421,10 +1921,18 @@
       "subcategory": "utility",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "utility", "usage", "analytics"],
+      "tags": [
+        "script",
+        "utility",
+        "usage",
+        "analytics"
+      ],
       "path": ".aiox-core/infrastructure/scripts/usage-analytics.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1454,7 +1962,10 @@
       ],
       "path": ".aiox-core/infrastructure/scripts/validate-output-pattern.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1474,10 +1985,19 @@
       "subcategory": "generation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "generation", "visual", "impact", "generator"],
+      "tags": [
+        "script",
+        "generation",
+        "visual",
+        "impact",
+        "generator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/visual-impact-generator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1497,10 +2017,18 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["script", "validation", "yaml", "validator"],
+      "tags": [
+        "script",
+        "validation",
+        "yaml",
+        "validator"
+      ],
       "path": ".aiox-core/infrastructure/scripts/yaml-validator.js",
       "taskFormat": "SCRIPT",
-      "executorTypes": ["CLI", "Script"],
+      "executorTypes": [
+        "CLI",
+        "Script"
+      ],
       "performance": {
         "avgDuration": "500ms",
         "cacheable": true,
@@ -1520,10 +2048,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "advanced", "elicitation"],
+      "tags": [
+        "task",
+        "general",
+        "advanced",
+        "elicitation"
+      ],
       "path": ".aiox-core/development/tasks/advanced-elicitation.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1543,16 +2079,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "analyst", "facilitate", "brainstorming"],
+      "tags": [
+        "task",
+        "general",
+        "analyst",
+        "facilitate",
+        "brainstorming"
+      ],
       "path": ".aiox-core/development/tasks/analyst-facilitate-brainstorming.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["analyst"],
+      "agents": [
+        "analyst"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -1566,10 +2113,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "analysis", "analyze", "framework"],
+      "tags": [
+        "task",
+        "analysis",
+        "analyze",
+        "framework"
+      ],
       "path": ".aiox-core/development/tasks/analyze-framework.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1589,10 +2144,18 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "analysis", "analyze", "performance"],
+      "tags": [
+        "task",
+        "analysis",
+        "analyze",
+        "performance"
+      ],
       "path": ".aiox-core/development/tasks/analyze-performance.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1612,10 +2175,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "apply", "fixes", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "apply",
+        "fixes",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/apply-qa-fixes.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1635,16 +2207,27 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "analysis", "architect", "analyze", "impact"],
+      "tags": [
+        "task",
+        "analysis",
+        "architect",
+        "analyze",
+        "impact"
+      ],
       "path": ".aiox-core/development/tasks/architect-analyze-impact.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["architect"],
+      "agents": [
+        "architect"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -1658,10 +2241,19 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "audit", "codebase", "analysis"],
+      "tags": [
+        "task",
+        "validation",
+        "audit",
+        "codebase",
+        "analysis"
+      ],
       "path": ".aiox-core/development/tasks/audit-codebase.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1681,10 +2273,20 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "audit", "tailwind", "config", "analysis"],
+      "tags": [
+        "task",
+        "validation",
+        "audit",
+        "tailwind",
+        "config",
+        "analysis"
+      ],
       "path": ".aiox-core/development/tasks/audit-tailwind-config.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1704,10 +2306,19 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "audit", "utilities", "analysis"],
+      "tags": [
+        "task",
+        "validation",
+        "audit",
+        "utilities",
+        "analysis"
+      ],
       "path": ".aiox-core/development/tasks/audit-utilities.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1727,10 +2338,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "bootstrap", "shadcn", "library"],
+      "tags": [
+        "task",
+        "general",
+        "bootstrap",
+        "shadcn",
+        "library"
+      ],
       "path": ".aiox-core/development/tasks/bootstrap-shadcn-library.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1750,10 +2370,19 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "brownfield", "create", "epic"],
+      "tags": [
+        "task",
+        "creation",
+        "brownfield",
+        "create",
+        "epic"
+      ],
       "path": ".aiox-core/development/tasks/brownfield-create-epic.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1773,10 +2402,20 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "brownfield", "create", "story", "product"],
+      "tags": [
+        "task",
+        "creation",
+        "brownfield",
+        "create",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/brownfield-create-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1796,10 +2435,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "build", "component", "product"],
+      "tags": [
+        "task",
+        "general",
+        "build",
+        "component",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/build-component.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1819,10 +2467,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "calculate", "roi"],
+      "tags": [
+        "task",
+        "general",
+        "calculate",
+        "roi"
+      ],
       "path": ".aiox-core/development/tasks/calculate-roi.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1842,10 +2498,17 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "configuration"],
+      "tags": [
+        "task",
+        "general",
+        "configuration"
+      ],
       "path": ".aiox-core/development/tasks/ci-cd-configuration.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1865,10 +2528,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "cleanup", "utilities"],
+      "tags": [
+        "task",
+        "general",
+        "cleanup",
+        "utilities"
+      ],
       "path": ".aiox-core/development/tasks/cleanup-utilities.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1888,10 +2559,18 @@
       "subcategory": "modification",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "modification", "collaborative", "edit"],
+      "tags": [
+        "task",
+        "modification",
+        "collaborative",
+        "edit"
+      ],
       "path": ".aiox-core/development/tasks/collaborative-edit.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1911,10 +2590,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "compose", "molecule", "product"],
+      "tags": [
+        "task",
+        "general",
+        "compose",
+        "molecule",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/compose-molecule.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1934,10 +2622,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "consolidate", "patterns"],
+      "tags": [
+        "task",
+        "general",
+        "consolidate",
+        "patterns"
+      ],
       "path": ".aiox-core/development/tasks/consolidate-patterns.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1957,10 +2653,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "correct", "course"],
+      "tags": [
+        "task",
+        "general",
+        "correct",
+        "course"
+      ],
       "path": ".aiox-core/development/tasks/correct-course.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -1980,10 +2684,18 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "agent"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "agent"
+      ],
       "path": ".aiox-core/development/tasks/create-agent.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2003,10 +2715,20 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "brownfield", "story", "product"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "brownfield",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/create-brownfield-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2026,10 +2748,20 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "deep", "research", "prompt"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "deep",
+        "research",
+        "prompt"
+      ],
       "path": ".aiox-core/development/tasks/create-deep-research-prompt.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2049,10 +2781,18 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "doc"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "doc"
+      ],
       "path": ".aiox-core/development/tasks/create-doc.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2072,10 +2812,20 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "next", "story", "product"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "next",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/create-next-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2095,10 +2845,18 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "suite"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "suite"
+      ],
       "path": ".aiox-core/development/tasks/create-suite.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2118,10 +2876,17 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create"],
+      "tags": [
+        "task",
+        "creation",
+        "create"
+      ],
       "path": ".aiox-core/development/tasks/create-task.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2141,10 +2906,18 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "workflow"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "workflow"
+      ],
       "path": ".aiox-core/development/tasks/create-workflow.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2164,16 +2937,27 @@
       "subcategory": "analysis",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "analysis", "analyze", "hotpaths", "database"],
+      "tags": [
+        "task",
+        "analysis",
+        "analyze",
+        "hotpaths",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-analyze-hotpaths.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2187,16 +2971,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "apply", "migration", "database"],
+      "tags": [
+        "task",
+        "general",
+        "apply",
+        "migration",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-apply-migration.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2210,16 +3005,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "bootstrap", "database"],
+      "tags": [
+        "task",
+        "general",
+        "bootstrap",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-bootstrap.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2233,16 +3038,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "domain", "modeling", "database"],
+      "tags": [
+        "task",
+        "general",
+        "domain",
+        "modeling",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-domain-modeling.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2256,16 +3072,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "dry", "run", "database"],
+      "tags": [
+        "task",
+        "general",
+        "dry",
+        "run",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-dry-run.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2279,16 +3106,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "env", "check", "database", "validation"],
+      "tags": [
+        "task",
+        "general",
+        "env",
+        "check",
+        "database",
+        "validation"
+      ],
       "path": ".aiox-core/development/tasks/db-env-check.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2312,13 +3151,18 @@
       ],
       "path": ".aiox-core/development/tasks/db-expansion-pack-integration.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2332,16 +3176,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "explain", "database"],
+      "tags": [
+        "task",
+        "general",
+        "explain",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-explain.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2355,16 +3209,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "impersonate", "database"],
+      "tags": [
+        "task",
+        "general",
+        "impersonate",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-impersonate.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2378,16 +3242,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "load", "csv", "database"],
+      "tags": [
+        "task",
+        "general",
+        "load",
+        "csv",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-load-csv.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2401,16 +3276,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "policy", "apply", "database", "product"],
+      "tags": [
+        "task",
+        "general",
+        "policy",
+        "apply",
+        "database",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/db-policy-apply.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2424,16 +3311,28 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "rls", "audit", "database", "analysis"],
+      "tags": [
+        "task",
+        "validation",
+        "rls",
+        "audit",
+        "database",
+        "analysis"
+      ],
       "path": ".aiox-core/development/tasks/db-rls-audit.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2447,16 +3346,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "rollback", "database"],
+      "tags": [
+        "task",
+        "general",
+        "rollback",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-rollback.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2470,16 +3379,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "run", "sql", "database"],
+      "tags": [
+        "task",
+        "general",
+        "run",
+        "sql",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-run-sql.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2493,16 +3413,28 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "schema", "audit", "database", "analysis"],
+      "tags": [
+        "task",
+        "validation",
+        "schema",
+        "audit",
+        "database",
+        "analysis"
+      ],
       "path": ".aiox-core/development/tasks/db-schema-audit.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2516,16 +3448,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "seed", "database"],
+      "tags": [
+        "task",
+        "general",
+        "seed",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-seed.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2539,16 +3481,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "smoke", "test", "testing", "database"],
+      "tags": [
+        "task",
+        "general",
+        "smoke",
+        "test",
+        "testing",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-smoke-test.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2562,16 +3516,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "snapshot", "database"],
+      "tags": [
+        "task",
+        "general",
+        "snapshot",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-snapshot.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2585,16 +3549,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "supabase", "setup", "database"],
+      "tags": [
+        "task",
+        "general",
+        "supabase",
+        "setup",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-supabase-setup.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2608,16 +3583,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "verify", "order", "database"],
+      "tags": [
+        "task",
+        "general",
+        "verify",
+        "order",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/db-verify-order.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["db-sage"],
+      "agents": [
+        "db-sage"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2631,10 +3617,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "deprecate", "component", "product"],
+      "tags": [
+        "task",
+        "general",
+        "deprecate",
+        "component",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/deprecate-component.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2665,13 +3660,18 @@
       ],
       "path": ".aiox-core/development/tasks/dev-apply-qa-fixes.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2685,16 +3685,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "dev", "backlog", "debt", "development"],
+      "tags": [
+        "task",
+        "general",
+        "dev",
+        "backlog",
+        "debt",
+        "development"
+      ],
       "path": ".aiox-core/development/tasks/dev-backlog-debt.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2719,13 +3731,18 @@
       ],
       "path": ".aiox-core/development/tasks/dev-develop-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2750,13 +3767,18 @@
       ],
       "path": ".aiox-core/development/tasks/dev-improve-code-quality.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2780,13 +3802,18 @@
       ],
       "path": ".aiox-core/development/tasks/dev-optimize-performance.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2810,13 +3837,18 @@
       ],
       "path": ".aiox-core/development/tasks/dev-suggest-refactoring.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2842,13 +3874,18 @@
       ],
       "path": ".aiox-core/development/tasks/dev-validate-next-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["dev"],
+      "agents": [
+        "dev"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -2862,10 +3899,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "document", "project"],
+      "tags": [
+        "task",
+        "general",
+        "document",
+        "project"
+      ],
       "path": ".aiox-core/development/tasks/document-project.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2885,10 +3930,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "execute", "checklist", "validation"],
+      "tags": [
+        "task",
+        "general",
+        "execute",
+        "checklist",
+        "validation"
+      ],
       "path": ".aiox-core/development/tasks/execute-checklist.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2919,7 +3973,10 @@
       ],
       "path": ".aiox-core/development/tasks/export-design-tokens-dtcg.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2939,10 +3996,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "extend", "pattern"],
+      "tags": [
+        "task",
+        "general",
+        "extend",
+        "pattern"
+      ],
       "path": ".aiox-core/development/tasks/extend-pattern.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2962,10 +4027,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "extract", "tokens"],
+      "tags": [
+        "task",
+        "general",
+        "extract",
+        "tokens"
+      ],
       "path": ".aiox-core/development/tasks/extract-tokens.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -2985,10 +4058,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "facilitate", "brainstorming", "session"],
+      "tags": [
+        "task",
+        "general",
+        "facilitate",
+        "brainstorming",
+        "session"
+      ],
       "path": ".aiox-core/development/tasks/facilitate-brainstorming-session.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3008,10 +4090,20 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "generate", "frontend", "prompt", "creation"],
+      "tags": [
+        "task",
+        "general",
+        "generate",
+        "frontend",
+        "prompt",
+        "creation"
+      ],
       "path": ".aiox-core/development/tasks/generate-ai-frontend-prompt.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3031,10 +4123,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "generate", "documentation", "creation"],
+      "tags": [
+        "task",
+        "general",
+        "generate",
+        "documentation",
+        "creation"
+      ],
       "path": ".aiox-core/development/tasks/generate-documentation.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3064,7 +4165,10 @@
       ],
       "path": ".aiox-core/development/tasks/generate-migration-strategy.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3095,7 +4199,10 @@
       ],
       "path": ".aiox-core/development/tasks/generate-shock-report.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3126,13 +4233,18 @@
       ],
       "path": ".aiox-core/development/tasks/github-devops-github-pr-automation.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["github-devops"],
+      "agents": [
+        "github-devops"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3160,13 +4272,18 @@
       ],
       "path": ".aiox-core/development/tasks/github-devops-pre-push-quality-gate.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["github-devops"],
+      "agents": [
+        "github-devops"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3193,13 +4310,18 @@
       ],
       "path": ".aiox-core/development/tasks/github-devops-repository-cleanup.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["github-devops"],
+      "agents": [
+        "github-devops"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3225,13 +4347,18 @@
       ],
       "path": ".aiox-core/development/tasks/github-devops-version-management.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["github-devops"],
+      "agents": [
+        "github-devops"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3245,10 +4372,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "improve", "self"],
+      "tags": [
+        "task",
+        "general",
+        "improve",
+        "self"
+      ],
       "path": ".aiox-core/development/tasks/improve-self.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3268,10 +4403,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "index", "docs"],
+      "tags": [
+        "task",
+        "general",
+        "index",
+        "docs"
+      ],
       "path": ".aiox-core/development/tasks/index-docs.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3291,10 +4434,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "init", "project", "status"],
+      "tags": [
+        "task",
+        "general",
+        "init",
+        "project",
+        "status"
+      ],
       "path": ".aiox-core/development/tasks/init-project-status.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3314,10 +4466,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "integrate", "expansion", "pack"],
+      "tags": [
+        "task",
+        "general",
+        "integrate",
+        "expansion",
+        "pack"
+      ],
       "path": ".aiox-core/development/tasks/integrate-expansion-pack.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3337,10 +4498,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "mode", "interaction"],
+      "tags": [
+        "task",
+        "general",
+        "mode",
+        "interaction"
+      ],
       "path": ".aiox-core/development/tasks/kb-mode-interaction.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3360,10 +4529,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "learn", "patterns"],
+      "tags": [
+        "task",
+        "general",
+        "learn",
+        "patterns"
+      ],
       "path": ".aiox-core/development/tasks/learn-patterns.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3383,10 +4560,18 @@
       "subcategory": "modification",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "modification", "modify", "agent"],
+      "tags": [
+        "task",
+        "modification",
+        "modify",
+        "agent"
+      ],
       "path": ".aiox-core/development/tasks/modify-agent.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3406,10 +4591,17 @@
       "subcategory": "modification",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "modification", "modify"],
+      "tags": [
+        "task",
+        "modification",
+        "modify"
+      ],
       "path": ".aiox-core/development/tasks/modify-task.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3429,10 +4621,18 @@
       "subcategory": "modification",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "modification", "modify", "workflow"],
+      "tags": [
+        "task",
+        "modification",
+        "modify",
+        "workflow"
+      ],
       "path": ".aiox-core/development/tasks/modify-workflow.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3452,16 +4652,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "backlog", "add", "product"],
+      "tags": [
+        "task",
+        "general",
+        "backlog",
+        "add",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/po-backlog-add.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3475,16 +4686,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "manage", "story", "backlog", "product"],
+      "tags": [
+        "task",
+        "general",
+        "manage",
+        "story",
+        "backlog",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/po-manage-story-backlog.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3498,16 +4721,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "pull", "story", "product"],
+      "tags": [
+        "task",
+        "general",
+        "pull",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/po-pull-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3532,13 +4766,18 @@
       ],
       "path": ".aiox-core/development/tasks/po-pull-story-from-clickup.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3552,16 +4791,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "stories", "index", "product"],
+      "tags": [
+        "task",
+        "general",
+        "stories",
+        "index",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/po-stories-index.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3575,16 +4825,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "sync", "story", "product"],
+      "tags": [
+        "task",
+        "general",
+        "sync",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/po-sync-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3598,16 +4859,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "sync", "story", "clickup", "product"],
+      "tags": [
+        "task",
+        "general",
+        "sync",
+        "story",
+        "clickup",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/po-sync-story-to-clickup.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["po"],
+      "agents": [
+        "po"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3621,10 +4894,17 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "automation"],
+      "tags": [
+        "task",
+        "general",
+        "automation"
+      ],
       "path": ".aiox-core/development/tasks/pr-automation.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3644,10 +4924,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "propose", "modification", "product"],
+      "tags": [
+        "task",
+        "general",
+        "propose",
+        "modification",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/propose-modification.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3667,16 +4956,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "backlog", "add", "followup", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "backlog",
+        "add",
+        "followup",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-backlog-add-followup.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3690,16 +4991,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "gate", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "gate",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-gate.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3713,16 +5024,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "generate", "tests", "testing", "creation"],
+      "tags": [
+        "task",
+        "general",
+        "generate",
+        "tests",
+        "testing",
+        "creation"
+      ],
       "path": ".aiox-core/development/tasks/qa-generate-tests.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3736,16 +5059,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "nfr", "assess", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "nfr",
+        "assess",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-nfr-assess.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3759,16 +5093,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "review", "proposal", "testing", "product"],
+      "tags": [
+        "task",
+        "general",
+        "review",
+        "proposal",
+        "testing",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/qa-review-proposal.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3782,16 +5128,28 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "review", "story", "testing", "product"],
+      "tags": [
+        "task",
+        "general",
+        "review",
+        "story",
+        "testing",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/qa-review-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3805,16 +5163,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "risk", "profile", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "risk",
+        "profile",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-risk-profile.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3828,16 +5197,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "run", "tests", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "run",
+        "tests",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-run-tests.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3851,16 +5231,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "test", "design", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "test",
+        "design",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-test-design.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3874,16 +5265,27 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "trace", "requirements", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "trace",
+        "requirements",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/qa-trace-requirements.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["qa"],
+      "agents": [
+        "qa"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -3897,10 +5299,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "release", "management"],
+      "tags": [
+        "task",
+        "general",
+        "release",
+        "management"
+      ],
       "path": ".aiox-core/development/tasks/release-management.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3920,10 +5330,19 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "security", "audit", "analysis"],
+      "tags": [
+        "task",
+        "validation",
+        "security",
+        "audit",
+        "analysis"
+      ],
       "path": ".aiox-core/development/tasks/security-audit.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3943,10 +5362,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "security", "scan"],
+      "tags": [
+        "task",
+        "general",
+        "security",
+        "scan"
+      ],
       "path": ".aiox-core/development/tasks/security-scan.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3966,10 +5393,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "setup", "database"],
+      "tags": [
+        "task",
+        "general",
+        "setup",
+        "database"
+      ],
       "path": ".aiox-core/development/tasks/setup-database.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -3989,10 +5424,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "setup", "design", "system"],
+      "tags": [
+        "task",
+        "general",
+        "setup",
+        "design",
+        "system"
+      ],
       "path": ".aiox-core/development/tasks/setup-design-system.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4012,10 +5456,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "shard", "doc"],
+      "tags": [
+        "task",
+        "general",
+        "shard",
+        "doc"
+      ],
       "path": ".aiox-core/development/tasks/shard-doc.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4035,16 +5487,28 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "next", "story", "product"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "next",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/sm-create-next-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["sm"],
+      "agents": [
+        "sm"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -4058,10 +5522,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "sync", "documentation"],
+      "tags": [
+        "task",
+        "general",
+        "sync",
+        "documentation"
+      ],
       "path": ".aiox-core/development/tasks/sync-documentation.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4081,10 +5553,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "tailwind", "upgrade"],
+      "tags": [
+        "task",
+        "general",
+        "tailwind",
+        "upgrade"
+      ],
       "path": ".aiox-core/development/tasks/tailwind-upgrade.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4104,10 +5584,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "test", "user", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "test",
+        "user",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/test-as-user.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4127,10 +5616,19 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "test", "validation", "testing"],
+      "tags": [
+        "task",
+        "general",
+        "test",
+        "validation",
+        "testing"
+      ],
       "path": ".aiox-core/development/tasks/test-validation-task.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4150,10 +5648,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "undo", "last"],
+      "tags": [
+        "task",
+        "general",
+        "undo",
+        "last"
+      ],
       "path": ".aiox-core/development/tasks/undo-last.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4173,10 +5679,18 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "update", "manifest"],
+      "tags": [
+        "task",
+        "general",
+        "update",
+        "manifest"
+      ],
       "path": ".aiox-core/development/tasks/update-manifest.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4196,16 +5710,26 @@
       "subcategory": "creation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "creation", "create", "wireframe"],
+      "tags": [
+        "task",
+        "creation",
+        "create",
+        "wireframe"
+      ],
       "path": ".aiox-core/development/tasks/ux-create-wireframe.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["ux-expert"],
+      "agents": [
+        "ux-expert"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -4219,16 +5743,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "scan", "artifact"],
+      "tags": [
+        "task",
+        "general",
+        "scan",
+        "artifact"
+      ],
       "path": ".aiox-core/development/tasks/ux-ds-scan-artifact.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["ux-expert"],
+      "agents": [
+        "ux-expert"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -4242,16 +5776,26 @@
       "subcategory": "general",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "general", "user", "research"],
+      "tags": [
+        "task",
+        "general",
+        "user",
+        "research"
+      ],
       "path": ".aiox-core/development/tasks/ux-user-research.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
         "parallelizable": false
       },
-      "agents": ["ux-expert"],
+      "agents": [
+        "ux-expert"
+      ],
       "metadata": {
         "source": "development",
         "addedVersion": "1.0.0"
@@ -4265,10 +5809,20 @@
       "subcategory": "validation",
       "inputs": [],
       "outputs": [],
-      "tags": ["task", "validation", "validate", "next", "story", "product"],
+      "tags": [
+        "task",
+        "validation",
+        "validate",
+        "next",
+        "story",
+        "product"
+      ],
       "path": ".aiox-core/development/tasks/validate-next-story.md",
       "taskFormat": "TASK-FORMAT-V1",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "1m",
         "cacheable": false,
@@ -4288,10 +5842,17 @@
       "subcategory": "document",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "document", "activation", "instructions"],
+      "tags": [
+        "template",
+        "document",
+        "activation",
+        "instructions"
+      ],
       "path": ".aiox-core/product/templates/activation-instructions-template.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4311,10 +5872,17 @@
       "subcategory": "ide-rules",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "ide-rules", "antigravity", "rules"],
+      "tags": [
+        "template",
+        "ide-rules",
+        "antigravity",
+        "rules"
+      ],
       "path": ".aiox-core/product/templates/ide-rules/antigravity-rules.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4334,10 +5902,17 @@
       "subcategory": "ide-rules",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "ide-rules", "claude", "rules"],
+      "tags": [
+        "template",
+        "ide-rules",
+        "claude",
+        "rules"
+      ],
       "path": ".aiox-core/product/templates/ide-rules/claude-rules.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4357,10 +5932,18 @@
       "subcategory": "document",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "document", "command", "rationalization", "matrix"],
+      "tags": [
+        "template",
+        "document",
+        "command",
+        "rationalization",
+        "matrix"
+      ],
       "path": ".aiox-core/product/templates/command-rationalization-matrix.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4380,10 +5963,17 @@
       "subcategory": "ide-rules",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "ide-rules", "copilot", "rules"],
+      "tags": [
+        "template",
+        "ide-rules",
+        "copilot",
+        "rules"
+      ],
       "path": ".aiox-core/product/templates/ide-rules/copilot-rules.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4403,10 +5993,17 @@
       "subcategory": "ide-rules",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "ide-rules", "cursor", "rules"],
+      "tags": [
+        "template",
+        "ide-rules",
+        "cursor",
+        "rules"
+      ],
       "path": ".aiox-core/product/templates/ide-rules/cursor-rules.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4426,10 +6023,17 @@
       "subcategory": "document",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "document", "artifact", "analysis"],
+      "tags": [
+        "template",
+        "document",
+        "artifact",
+        "analysis"
+      ],
       "path": ".aiox-core/product/templates/ds-artifact-analysis.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4449,10 +6053,17 @@
       "subcategory": "ide-rules",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "ide-rules", "gemini", "rules"],
+      "tags": [
+        "template",
+        "ide-rules",
+        "gemini",
+        "rules"
+      ],
       "path": ".aiox-core/product/templates/ide-rules/gemini-rules.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4472,10 +6083,18 @@
       "subcategory": "document",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "document", "migration", "strategy", "tmpl"],
+      "tags": [
+        "template",
+        "document",
+        "migration",
+        "strategy",
+        "tmpl"
+      ],
       "path": ".aiox-core/product/templates/migration-strategy-tmpl.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4495,10 +6114,16 @@
       "subcategory": "personalized",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "personalized", "agent"],
+      "tags": [
+        "template",
+        "personalized",
+        "agent"
+      ],
       "path": ".aiox-core/product/templates/personalized-agent-template.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4518,10 +6143,17 @@
       "subcategory": "personalized",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "personalized", "checklist", "validation"],
+      "tags": [
+        "template",
+        "personalized",
+        "checklist",
+        "validation"
+      ],
       "path": ".aiox-core/product/templates/personalized-checklist-template.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4541,10 +6173,16 @@
       "subcategory": "personalized",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "personalized", "task"],
+      "tags": [
+        "template",
+        "personalized",
+        "task"
+      ],
       "path": ".aiox-core/product/templates/personalized-task-template.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4564,10 +6202,16 @@
       "subcategory": "personalized",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "personalized", "task"],
+      "tags": [
+        "template",
+        "personalized",
+        "task"
+      ],
       "path": ".aiox-core/product/templates/personalized-task-template-v2.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4597,7 +6241,9 @@
       ],
       "path": ".aiox-core/product/templates/task-execution-report.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4617,10 +6263,16 @@
       "subcategory": "document",
       "inputs": [],
       "outputs": [],
-      "tags": ["template", "document", "task"],
+      "tags": [
+        "template",
+        "document",
+        "task"
+      ],
       "path": ".aiox-core/product/templates/task-template.md",
       "taskFormat": "TEMPLATE",
-      "executorTypes": ["Agent"],
+      "executorTypes": [
+        "Agent"
+      ],
       "performance": {
         "avgDuration": "100ms",
         "cacheable": true,
@@ -4640,10 +6292,17 @@
       "subcategory": "brownfield",
       "inputs": [],
       "outputs": [],
-      "tags": ["workflow", "brownfield", "fullstack"],
+      "tags": [
+        "workflow",
+        "brownfield",
+        "fullstack"
+      ],
       "path": ".aiox-core/development/workflows/brownfield-fullstack.yaml",
       "taskFormat": "WORKFLOW",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "5m",
         "cacheable": false,
@@ -4663,10 +6322,17 @@
       "subcategory": "brownfield",
       "inputs": [],
       "outputs": [],
-      "tags": ["workflow", "brownfield", "service"],
+      "tags": [
+        "workflow",
+        "brownfield",
+        "service"
+      ],
       "path": ".aiox-core/development/workflows/brownfield-service.yaml",
       "taskFormat": "WORKFLOW",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "5m",
         "cacheable": false,
@@ -4686,10 +6352,16 @@
       "subcategory": "brownfield",
       "inputs": [],
       "outputs": [],
-      "tags": ["workflow", "brownfield"],
+      "tags": [
+        "workflow",
+        "brownfield"
+      ],
       "path": ".aiox-core/development/workflows/brownfield-ui.yaml",
       "taskFormat": "WORKFLOW",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "5m",
         "cacheable": false,
@@ -4709,10 +6381,17 @@
       "subcategory": "greenfield",
       "inputs": [],
       "outputs": [],
-      "tags": ["workflow", "greenfield", "fullstack"],
+      "tags": [
+        "workflow",
+        "greenfield",
+        "fullstack"
+      ],
       "path": ".aiox-core/development/workflows/greenfield-fullstack.yaml",
       "taskFormat": "WORKFLOW",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "5m",
         "cacheable": false,
@@ -4732,10 +6411,17 @@
       "subcategory": "greenfield",
       "inputs": [],
       "outputs": [],
-      "tags": ["workflow", "greenfield", "service"],
+      "tags": [
+        "workflow",
+        "greenfield",
+        "service"
+      ],
       "path": ".aiox-core/development/workflows/greenfield-service.yaml",
       "taskFormat": "WORKFLOW",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "5m",
         "cacheable": false,
@@ -4755,10 +6441,16 @@
       "subcategory": "greenfield",
       "inputs": [],
       "outputs": [],
-      "tags": ["workflow", "greenfield"],
+      "tags": [
+        "workflow",
+        "greenfield"
+      ],
       "path": ".aiox-core/development/workflows/greenfield-ui.yaml",
       "taskFormat": "WORKFLOW",
-      "executorTypes": ["Agent", "Worker"],
+      "executorTypes": [
+        "Agent",
+        "Worker"
+      ],
       "performance": {
         "avgDuration": "5m",
         "cacheable": false,

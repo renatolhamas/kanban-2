@@ -29,9 +29,7 @@ class LayerProcessor {
    */
   constructor({ name, layer, timeout = 15 }) {
     if (new.target === LayerProcessor) {
-      throw new Error(
-        "LayerProcessor is abstract and cannot be instantiated directly",
-      );
+      throw new Error('LayerProcessor is abstract and cannot be instantiated directly');
     }
     this.name = name;
     this.layer = layer;
@@ -71,9 +69,7 @@ class LayerProcessor {
       const result = this.process(context);
       const elapsed = Date.now() - start;
       if (elapsed > this.timeout) {
-        console.warn(
-          `[synapse:${this.name}] Warning: Layer exceeded timeout (${elapsed}ms > ${this.timeout}ms)`,
-        );
+        console.warn(`[synapse:${this.name}] Warning: Layer exceeded timeout (${elapsed}ms > ${this.timeout}ms)`);
       }
       return result;
     } catch (error) {

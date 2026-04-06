@@ -103,14 +103,7 @@
         "pipeline": {
           "type": "string",
           "description": "Which pipeline this task belongs to",
-          "enum": [
-            "spec",
-            "execution",
-            "recovery",
-            "qa",
-            "worktree",
-            "migration"
-          ]
+          "enum": ["spec", "execution", "recovery", "qa", "worktree", "migration"]
         },
         "phase": {
           "type": "string",

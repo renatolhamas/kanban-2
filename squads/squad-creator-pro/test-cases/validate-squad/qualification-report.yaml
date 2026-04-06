@@ -88,8 +88,7 @@ qualification_report:
         - Contextual judgment (weighing expert vs pipeline signals)
         - Cascading decisions (type → checks → scores → result)
       THEN: OPUS_REQUIRED, no exceptions
-    similar_tasks:
-      ["pv-modernization-score", "an-fidelity-score", "an-validate-clone"]
+    similar_tasks: ["pv-modernization-score", "an-fidelity-score", "an-validate-clone"]
 
   evidence_files:
     - "opus-baseline.yaml"

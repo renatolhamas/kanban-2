@@ -8,7 +8,6 @@
 **Quality Standard:** AIOS Level (comprehensive research, validated sources)
 
 **Frameworks Used:**
-
 - `data/tool-registry.yaml` → Known tools and capability mapping
 - `data/quality-dimensions-framework.md` → Tool quality scoring
 - `data/decision-heuristics-framework.md` → Tool selection logic
@@ -66,13 +65,13 @@ OUTPUT: Tool Discovery Report + Updated tool-registry.yaml
 
 ## Inputs
 
-| Parameter         | Type   | Required | Description                                 | Example                               |
-| ----------------- | ------ | -------- | ------------------------------------------- | ------------------------------------- |
-| `domain`          | string | Yes      | Squad domain                                | `"copywriting"`, `"legal"`, `"data"`  |
-| `use_cases`       | list   | Yes      | Key squad use cases                         | `["sales pages", "email sequences"]`  |
-| `existing_tools`  | list   | No       | Tools already in use                        | `["exa", "web_fetch"]`                |
-| `capability_gaps` | list   | No       | Known capability gaps                       | `["pdf_processing", "email_sending"]` |
-| `budget_tier`     | enum   | No       | `"free_only"`, `"low_cost"`, `"enterprise"` | `"low_cost"`                          |
+| Parameter | Type | Required | Description | Example |
+|-----------|------|----------|-------------|---------|
+| `domain` | string | Yes | Squad domain | `"copywriting"`, `"legal"`, `"data"` |
+| `use_cases` | list | Yes | Key squad use cases | `["sales pages", "email sequences"]` |
+| `existing_tools` | list | No | Tools already in use | `["exa", "web_fetch"]` |
+| `capability_gaps` | list | No | Known capability gaps | `["pdf_processing", "email_sending"]` |
+| `budget_tier` | enum | No | `"free_only"`, `"low_cost"`, `"enterprise"` | `"low_cost"` |
 
 ---
 
@@ -95,7 +94,6 @@ OUTPUT: Tool Discovery Report + Updated tool-registry.yaml
 ### Step 0.1: Map Required Capabilities
 
 **Actions:**
-
 ```yaml
 capability_mapping:
   for_each_use_case:
@@ -108,33 +106,32 @@ capability_mapping:
 
       derive:
         input_capabilities:
-          - "web_research" # If needs external info
-          - "file_reading" # If needs local files
-          - "user_input" # If needs user data
-          - "api_data" # If needs external data
+          - "web_research"        # If needs external info
+          - "file_reading"        # If needs local files
+          - "user_input"          # If needs user data
+          - "api_data"            # If needs external data
 
         processing_capabilities:
-          - "text_analysis" # NLP, sentiment, etc.
+          - "text_analysis"       # NLP, sentiment, etc.
           - "data_transformation" # ETL, formatting
-          - "code_generation" # If creates code
-          - "image_processing" # If handles images
+          - "code_generation"     # If creates code
+          - "image_processing"    # If handles images
 
         output_capabilities:
-          - "file_generation" # Creates files
-          - "api_calls" # Sends to external services
-          - "notifications" # Alerts/messages
-          - "reports" # Structured reports
+          - "file_generation"     # Creates files
+          - "api_calls"           # Sends to external services
+          - "notifications"       # Alerts/messages
+          - "reports"             # Structured reports
 
         enhancement_capabilities:
-          - "automation" # Reduces manual work
-          - "quality_checks" # Validates output
-          - "integration" # Connects to other tools
+          - "automation"          # Reduces manual work
+          - "quality_checks"      # Validates output
+          - "integration"         # Connects to other tools
 ```
 
 ### Step 0.2: Check Existing Tool Coverage
 
 **Actions:**
-
 ```yaml
 coverage_analysis:
   load: "data/tool-registry.yaml"
@@ -145,28 +142,27 @@ coverage_analysis:
 
       result:
         covered: ["tool1", "tool2"]
-        partially_covered: ["tool3"] # Has capability but limited
+        partially_covered: ["tool3"]  # Has capability but limited
         not_covered: true/false
 
   output:
     coverage_report:
       fully_covered: []
       partially_covered: []
-      gaps: [] # These need tool discovery
+      gaps: []  # These need tool discovery
 ```
 
 ### Step 0.3: Prioritize Gaps
 
 **Actions:**
-
 ```yaml
 gap_prioritization:
   for_each_gap:
     - capability: "{gap}"
       score:
-        impact: 0-10 # How much value does filling this gap add?
-        frequency: 0-10 # How often is this capability needed?
-        user_dependency: 0-10 # How much does gap require user intervention?
+        impact: 0-10  # How much value does filling this gap add?
+        frequency: 0-10  # How often is this capability needed?
+        user_dependency: 0-10  # How much does gap require user intervention?
 
       priority: (impact * 0.4) + (frequency * 0.3) + (user_dependency * 0.3)
 
@@ -178,7 +174,6 @@ gap_prioritization:
 ```
 
 **Output (PHASE 0):**
-
 ```yaml
 phase_0_output:
   total_capabilities_needed: 15
@@ -205,7 +200,6 @@ phase_0_output:
 ### Step 1.1: Search Official MCP Repositories
 
 **Actions:**
-
 ```yaml
 official_mcp_search:
   sources:
@@ -241,7 +235,6 @@ official_mcp_search:
 ### Step 1.2: Search GitHub for Community MCPs
 
 **Actions:**
-
 ```yaml
 github_mcp_search:
   queries:
@@ -262,13 +255,12 @@ github_mcp_search:
     validate:
       - has_installation_docs: true
       - has_usage_examples: true
-      - compatible_with_claude: true # Check for anthropic/claude mentions
+      - compatible_with_claude: true  # Check for anthropic/claude mentions
 ```
 
 ### Step 1.3: Score and Rank MCP Findings
 
 **Actions:**
-
 ```yaml
 mcp_scoring:
   criteria:
@@ -297,7 +289,6 @@ mcp_scoring:
 ```
 
 **Output (PHASE 1):**
-
 ```yaml
 phase_1_output:
   mcps_found: 12
@@ -321,7 +312,6 @@ phase_1_output:
 ### Step 2.1: Search API Directories
 
 **Actions:**
-
 ```yaml
 api_directory_search:
   sources:
@@ -351,7 +341,6 @@ api_directory_search:
 ### Step 2.2: Evaluate API Quality
 
 **Actions:**
-
 ```yaml
 api_evaluation:
   for_each_api:
@@ -383,7 +372,6 @@ api_evaluation:
 ### Step 2.3: Match APIs to Capabilities
 
 **Actions:**
-
 ```yaml
 api_capability_matching:
   for_each_gap:
@@ -405,7 +393,6 @@ api_capability_matching:
 ```
 
 **Output (PHASE 2):**
-
 ```yaml
 phase_2_output:
   apis_found: 25
@@ -430,7 +417,6 @@ phase_2_output:
 ### Step 3.1: Search Awesome Lists
 
 **Actions:**
-
 ```yaml
 awesome_list_search:
   sources:
@@ -447,7 +433,6 @@ awesome_list_search:
 ### Step 3.2: Check Package Managers
 
 **Actions:**
-
 ```yaml
 package_manager_search:
   homebrew:
@@ -459,14 +444,13 @@ package_manager_search:
     filter: "downloads > 1000/week"
 
   pip:
-    query: "pip search {domain}" # or pypi.org search
+    query: "pip search {domain}"  # or pypi.org search
     filter: "downloads > 5000/month"
 ```
 
 ### Step 3.3: Validate CLI Tools
 
 **Actions:**
-
 ```yaml
 cli_validation:
   for_each_tool:
@@ -479,7 +463,6 @@ cli_validation:
 ```
 
 **Output (PHASE 3):**
-
 ```yaml
 phase_3_output:
   cli_tools_found: 18
@@ -502,7 +485,6 @@ phase_3_output:
 ### Step 4.1: Search GitHub Topics
 
 **Actions:**
-
 ```yaml
 github_topic_search:
   queries:
@@ -524,7 +506,6 @@ github_topic_search:
 ### Step 4.2: Analyze Project Relevance
 
 **Actions:**
-
 ```yaml
 project_analysis:
   for_each_project:
@@ -540,7 +521,7 @@ project_analysis:
 
     score:
       - relevance_to_domain: 0-10
-      - reusability: 0-10 # Can components be extracted?
+      - reusability: 0-10  # Can components be extracted?
       - maintenance: 0-10
       - documentation: 0-10
 ```
@@ -548,7 +529,6 @@ project_analysis:
 ### Step 4.3: Identify Reusable Components
 
 **Actions:**
-
 ```yaml
 component_extraction:
   for_each_project:
@@ -561,7 +541,6 @@ component_extraction:
 ```
 
 **Output (PHASE 4):**
-
 ```yaml
 phase_4_output:
   projects_found: 45
@@ -585,7 +564,6 @@ phase_4_output:
 ### Step 5.1: Search Package Registries
 
 **Actions:**
-
 ```yaml
 library_search:
   pypi:
@@ -600,7 +578,7 @@ library_search:
   npm:
     queries:
       - "{domain}"
-      - "@{company}/{domain}" # Scoped packages
+      - "@{company}/{domain}"  # Scoped packages
     filters:
       - downloads: "> 5000/week"
       - node_version: ">= 16"
@@ -609,7 +587,6 @@ library_search:
 ### Step 5.2: Evaluate Library Quality
 
 **Actions:**
-
 ```yaml
 library_evaluation:
   for_each_library:
@@ -623,7 +600,6 @@ library_evaluation:
 ```
 
 **Output (PHASE 5):**
-
 ```yaml
 phase_5_output:
   libraries_found: 30
@@ -646,15 +622,14 @@ phase_5_output:
 ### Step 6.1: Consolidate All Findings
 
 **Actions:**
-
 ```yaml
 consolidation:
   combine:
-    - phase_1_output # MCPs
-    - phase_2_output # APIs
-    - phase_3_output # CLIs
-    - phase_4_output # GitHub projects
-    - phase_5_output # Libraries
+    - phase_1_output  # MCPs
+    - phase_2_output  # APIs
+    - phase_3_output  # CLIs
+    - phase_4_output  # GitHub projects
+    - phase_5_output  # Libraries
 
   deduplicate:
     - "Same tool found in multiple searches"
@@ -667,14 +642,13 @@ consolidation:
 ### Step 6.2: Calculate Impact vs Effort Matrix
 
 **Actions:**
-
 ```yaml
 impact_effort_matrix:
   for_each_tool:
     impact_score:
-      - capability_coverage: 0-10 # How much of gap does it fill?
-      - quality_improvement: 0-10 # How much better is output?
-      - automation_gain: 0-10 # How much manual work saved?
+      - capability_coverage: 0-10  # How much of gap does it fill?
+      - quality_improvement: 0-10  # How much better is output?
+      - automation_gain: 0-10      # How much manual work saved?
 
     effort_score:
       - installation_complexity: 0-10
@@ -694,25 +668,24 @@ impact_effort_matrix:
 ### Step 6.3: Generate Integration Plan
 
 **Actions:**
-
 ```yaml
 integration_plan:
-  immediate_actions: # Quick wins
+  immediate_actions:  # Quick wins
     - tool: "jq"
       action: "Add to CLI dependencies"
       effort: "5 minutes"
 
-  short_term: # This week
+  short_term:  # This week
     - tool: "mcp-server-pdf"
       action: "Install and configure MCP"
       effort: "1 hour"
 
-  medium_term: # This month
+  medium_term:  # This month
     - tool: "SendGrid API"
       action: "Create email integration task"
       effort: "4 hours"
 
-  evaluate_later: # Need more info
+  evaluate_later:  # Need more info
     - tool: "Enterprise API X"
       reason: "Need to verify pricing"
 ```
@@ -720,7 +693,6 @@ integration_plan:
 ### Step 6.4: Update Tool Registry
 
 **Actions:**
-
 ```yaml
 update_registry:
   file: "data/tool-registry.yaml"
@@ -739,7 +711,6 @@ update_registry:
 ```
 
 **Checkpoint SC_TDR_001:**
-
 ```yaml
 heuristic_id: SC_TDR_001
 name: "Tool Discovery Report Complete"
@@ -756,12 +727,12 @@ criteria:
 
 ## Outputs
 
-| Output                | Location                                           | Description                              |
-| --------------------- | -------------------------------------------------- | ---------------------------------------- |
-| Tool Discovery Report | `squads/{pack_name}/docs/tool-discovery-report.md` | Comprehensive research findings          |
-| Updated Registry      | `data/tool-registry.yaml`                          | New tools added to global registry       |
-| Integration Plan      | `squads/{pack_name}/docs/tool-integration-plan.md` | Prioritized implementation steps         |
-| Capability Map        | `squads/{pack_name}/data/capability-tools.yaml`    | Squad-specific capability → tool mapping |
+| Output | Location | Description |
+|--------|----------|-------------|
+| Tool Discovery Report | `squads/{pack_name}/docs/tool-discovery-report.md` | Comprehensive research findings |
+| Updated Registry | `data/tool-registry.yaml` | New tools added to global registry |
+| Integration Plan | `squads/{pack_name}/docs/tool-integration-plan.md` | Prioritized implementation steps |
+| Capability Map | `squads/{pack_name}/data/capability-tools.yaml` | Squad-specific capability → tool mapping |
 
 ---
 
@@ -783,17 +754,17 @@ criteria:
 
 ## Capability Gaps Identified
 
-| Capability | Priority   | Tools Found | Recommended |
-| ---------- | ---------- | ----------- | ----------- |
-| {gap}      | {priority} | {count}     | {tool_name} |
+| Capability | Priority | Tools Found | Recommended |
+|------------|----------|-------------|-------------|
+| {gap} | {priority} | {count} | {tool_name} |
 
 ## Top Recommendations
 
 ### Quick Wins (Implement Now)
 
-| Tool   | Type          | Fills Gap | Effort   | Impact   |
-| ------ | ------------- | --------- | -------- | -------- |
-| {tool} | {mcp/api/cli} | {gap}     | {effort} | {impact} |
+| Tool | Type | Fills Gap | Effort | Impact |
+|------|------|-----------|--------|--------|
+| {tool} | {mcp/api/cli} | {gap} | {effort} | {impact} |
 
 ### Strategic (Plan for)
 
@@ -802,37 +773,29 @@ criteria:
 ## Detailed Findings
 
 ### MCP Servers
-
 {detailed MCP findings}
 
 ### APIs
-
 {detailed API findings}
 
 ### CLI Tools
-
 {detailed CLI findings}
 
 ### GitHub Projects
-
 {detailed project findings}
 
 ### Libraries
-
 {detailed library findings}
 
 ## Integration Plan
 
 ### Immediate (Today)
-
 - [ ] {action}
 
 ### Short-term (This Week)
-
 - [ ] {action}
 
 ### Medium-term (This Month)
-
 - [ ] {action}
 
 ## Next Steps
@@ -850,7 +813,6 @@ criteria:
 This task should be executed:
 
 1. **During Squad Creation** - Phase 0.5 (after Discovery, before Research)
-
    ```yaml
    # In wf-create-squad.yaml
    - id: phase_0_5
@@ -881,19 +843,16 @@ feeds_into:
 ## Validation Criteria
 
 ### Research Quality
-
 - [ ] All priority gaps researched
 - [ ] At least 3 sources searched per category
 - [ ] Results validated (not just listed)
 
 ### Recommendations Quality
-
 - [ ] Each recommendation has score
 - [ ] Impact vs effort calculated
 - [ ] Integration effort estimated
 
 ### Actionability
-
 - [ ] Integration plan has concrete steps
 - [ ] Quick wins identified
 - [ ] Dependencies listed
@@ -924,7 +883,6 @@ error_handling:
 ### Example 1: Copywriting Squad
 
 **Input:**
-
 ```yaml
 domain: "copywriting"
 use_cases: ["sales pages", "email sequences", "headlines"]
@@ -932,25 +890,23 @@ capability_gaps: ["competitor_analysis", "headline_testing", "email_automation"]
 ```
 
 **Output (Summarized):**
-
 ```yaml
 tools_discovered: 23
 top_recommendations:
   mcp:
-    - mcp-server-playwright # Screenshot competitor pages
+    - mcp-server-playwright  # Screenshot competitor pages
   apis:
-    - sendgrid # Email delivery
+    - sendgrid              # Email delivery
     - headline-analyzer-api # A/B headline scoring
   cli:
-    - lighthouse # Page performance analysis
+    - lighthouse            # Page performance analysis
   github:
-    - swipe-file-analyzer # Analyze competitor copy
+    - swipe-file-analyzer   # Analyze competitor copy
 ```
 
 ### Example 2: Legal Squad
 
 **Input:**
-
 ```yaml
 domain: "legal"
 use_cases: ["contract review", "compliance check", "legal research"]
@@ -958,29 +914,28 @@ capability_gaps: ["pdf_extraction", "legal_database", "signature_verification"]
 ```
 
 **Output (Summarized):**
-
 ```yaml
 tools_discovered: 18
 top_recommendations:
   mcp:
-    - mcp-server-pdf # PDF processing
+    - mcp-server-pdf        # PDF processing
   apis:
-    - case-law-api # Legal precedents
-    - docusign-api # E-signatures
+    - case-law-api          # Legal precedents
+    - docusign-api          # E-signatures
   libraries:
-    - pdfplumber # Python PDF extraction
-    - spacy-legal # Legal NER
+    - pdfplumber            # Python PDF extraction
+    - spacy-legal           # Legal NER
 ```
 
 ---
 
 ## Heuristics Reference
 
-| Heuristic ID | Name                  | Where Applied | Blocking |
-| ------------ | --------------------- | ------------- | -------- |
-| SC_MCP_001   | MCP Discovery Gate    | Phase 1       | No       |
-| SC_API_001   | API Discovery Gate    | Phase 2       | No       |
-| SC_TDR_001   | Tool Discovery Report | Phase 6       | Yes      |
+| Heuristic ID | Name | Where Applied | Blocking |
+|--------------|------|---------------|----------|
+| SC_MCP_001 | MCP Discovery Gate | Phase 1 | No |
+| SC_API_001 | API Discovery Gate | Phase 2 | No |
+| SC_TDR_001 | Tool Discovery Report | Phase 6 | Yes |
 
 ---
 

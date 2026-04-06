@@ -11,8 +11,9 @@
 import { SignJWT } from 'jose';
 import { TEST_USERS, TEST_TENANTS } from './rls-test-data';
 
-// Mock signing key (for testing only - NOT SECURE)
-const SECRET_KEY = new TextEncoder().encode('test-secret-key-for-rls-validation-only');
+// Get JWT secret from environment (Supabase uses this to validate JWTs)
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SUPABASE_JWT_SECRET || 'd0934902-888c-4f61-bcf1-39e7d5bb91d2';
+const SECRET_KEY = new TextEncoder().encode(JWT_SECRET);
 
 // ============================================================================
 // JWT Token Interfaces
@@ -65,9 +66,9 @@ export async function generateValidJWT(
     exp: now + 60 * 60, // 1 hour expiry
   };
 
-  // Note: This creates a mock JWT structure.
-  // In actual tests, use Supabase's own JWT generation or mock the auth context
-  return createMockJWT(payload);
+  // Note: This creates a properly signed JWT using the JWT_SECRET
+  // Supabase validates the signature, so it must match their secret
+  return await createMockJWT(payload);
 }
 
 /**
@@ -89,7 +90,7 @@ export async function generateForgedJWT(
     email: user.email,
   };
 
-  return createMockJWT(payload);
+  return await createMockJWT(payload);
 }
 
 /**
@@ -106,7 +107,7 @@ export async function generateMalformedJWT(): Promise<string> {
     exp: now + 60 * 60,
   };
 
-  return createMockJWT(payload);
+  return await createMockJWT(payload);
 }
 
 // ============================================================================
@@ -114,25 +115,15 @@ export async function generateMalformedJWT(): Promise<string> {
 // ============================================================================
 
 /**
- * Create mock JWT structure
+ * Create properly signed JWT
  *
- * Format: header.payload.signature
- * For testing RLS policies that depend on JWT claims,
- * not signature validation
+ * Uses jose library to sign with the Supabase JWT secret
+ * Supabase validates the signature, so it must be correct
  */
-function createMockJWT(payload: any): string {
-  const header = {
-    alg: 'HS256',
-    typ: 'JWT',
-  };
-
-  const headerB64 = Buffer.from(JSON.stringify(header)).toString('base64url');
-  const payloadB64 = Buffer.from(JSON.stringify(payload)).toString('base64url');
-
-  // Mock signature (not verified in these tests)
-  const mockSignature = 'mock_signature_not_validated_in_tests';
-
-  return `${headerB64}.${payloadB64}.${mockSignature}`;
+async function createMockJWT(payload: any): Promise<string> {
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+    .sign(SECRET_KEY);
 }
 
 // ============================================================================

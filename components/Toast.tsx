@@ -9,10 +9,14 @@ interface ToastProps {
   onClose?: () => void;
 }
 
-export function Toast({ message, type, duration = 5000, onClose }: ToastProps) {
+export function Toast({ message, type, duration = Infinity, onClose }: ToastProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    if (duration === Infinity) {
+      return; // No auto-close
+    }
+
     const timer = setTimeout(() => {
       setIsVisible(false);
       onClose?.();

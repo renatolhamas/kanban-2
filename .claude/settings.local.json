@@ -29,7 +29,9 @@
       "WebFetch(domain:supabase.com)",
       "WebSearch",
       "mcp__supabase__search_docs",
-      "Bash(powershell -Command ':*)"
+      "Bash(powershell -Command ':*)",
+      "Bash(xargs grep:*)",
+      "Bash(node squads/design/scripts/design-system/generate_components_metadata.cjs)"
     ]
   },
   "enableAllProjectMcpServers": true,

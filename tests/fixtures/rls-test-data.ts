@@ -123,7 +123,6 @@ export function createTestConversation(tenant_id: string, index: number = 1) {
   return {
     id: uuidv4(),
     tenant_id,
-    title: `Conversation ${index}`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -151,7 +150,8 @@ export function createTestAutomaticMessage(tenant_id: string, index: number = 1)
     tenant_id,
     title: `Template ${index}`,
     body: `Automatic message template ${index}`,
-    trigger: 'manual',
+    scheduled_interval_minutes: 60,
+    scheduled_kanban_id: uuidv4(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

@@ -96,7 +96,7 @@ export function createTestColumn(kanban_id: string, index: number = 1) {
     id: uuidv4(),
     kanban_id,
     name: `Column ${index}`,
-    position: index,
+    order_position: index,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

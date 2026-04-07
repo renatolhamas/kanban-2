@@ -1,10 +1,12 @@
-# 6. Integration Patterns — Evolution API + Supabase
+# 6. Integration Patterns — Evo GO + Supabase
+
+⚠️ **IMPORTANT:** This document describes integration with **Evo GO** ONLY (https://docs.evolutionfoundation.com.br/evolution-go). Do NOT use Evolution API v2.
 
 ## 6.1 WhatsApp Message Receive Flow (Webhook → DB → Real-time)
 
 ```
 ┌─────────────────────────┐
-│   Evolution API         │
+│   Evo GO                │
 │   (WhatsApp gateway)    │
 └──────────┬──────────────┘
            │ POST webhook

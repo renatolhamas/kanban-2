@@ -2,7 +2,22 @@
 
 ## 15.1 References
 
-- **Evo GO Docs:** https://docs.evolutionfoundation.com.br/evolution-go
+### WhatsApp Integration — Evo GO ONLY
+
+⚠️ **CRITICAL:** This project uses **EVO GO EXCLUSIVELY**. Do NOT use Evolution API v2.
+
+- **Evo GO Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
+- **Evo GO Installation:** https://docs.evolutionfoundation.com.br/evolution-go/installation
+- **Evo GO GitHub (Open Source):** https://github.com/EvolutionAPI/evolution-go
+
+### DO NOT USE (Deprecated for this project)
+
+- ❌ Evolution API v2: https://doc.evolution-api.com/v2/api-reference
+- ❌ Evolution API Foundation: https://docs.evolutionfoundation.com.br/evolution-api
+- ❌ Evolution API GitHub: https://github.com/EvolutionAPI/evolution-api
+
+### Infrastructure & Framework
+
 - **Supabase Docs:** https://supabase.com/docs
 - **Next.js Docs:** https://nextjs.org/docs
 - **Tailwind CSS:** https://tailwindcss.com/docs

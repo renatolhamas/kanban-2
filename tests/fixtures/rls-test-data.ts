@@ -140,12 +140,14 @@ export function createTestConversation(tenant_id: string, index: number = 1, con
 
 /**
  * Create test message record
+ * sender_type: 'contact' (from contact), 'agent' (from user), 'system' (automated)
  */
 export function createTestMessage(conversation_id: string, index: number = 1) {
+  const senderTypes = ['contact', 'agent', 'system'];
   return {
     id: uuidv4(),
     conversation_id,
-    sender_type: index % 2 === 0 ? 'contact' : 'user',
+    sender_type: senderTypes[index % senderTypes.length],
     content: `Test message ${index}`,
     created_at: new Date().toISOString(),
   };
@@ -154,14 +156,14 @@ export function createTestMessage(conversation_id: string, index: number = 1) {
 /**
  * Create test automatic message (template) record
  */
-export function createTestAutomaticMessage(tenant_id: string, index: number = 1) {
+export function createTestAutomaticMessage(tenant_id: string, index: number = 1, scheduled_kanban_id?: string) {
   return {
     id: uuidv4(),
     tenant_id,
     name: `Template ${index}`,
     message: `Automatic message template ${index}`,
     scheduled_interval_minutes: 60,
-    scheduled_kanban_id: uuidv4(),
+    scheduled_kanban_id: scheduled_kanban_id || null, // Can be null - optional
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -217,7 +219,11 @@ export function generateComprehensiveTestDataset() {
   );
 
   const tenantAAutomaticMessages = Array.from({ length: 6 }, (_, i) =>
-    createTestAutomaticMessage(TEST_TENANTS.A.id, i + 1)
+    createTestAutomaticMessage(
+      TEST_TENANTS.A.id,
+      i + 1,
+      i < tenantAKanbans.length ? tenantAKanbans[i].id : undefined // Link to real kanban or null
+    )
   );
 
   // Tenant B data (identical structure to ensure isolation testing)
@@ -254,7 +260,11 @@ export function generateComprehensiveTestDataset() {
   );
 
   const tenantBAutomaticMessages = Array.from({ length: 6 }, (_, i) =>
-    createTestAutomaticMessage(TEST_TENANTS.B.id, i + 1)
+    createTestAutomaticMessage(
+      TEST_TENANTS.B.id,
+      i + 1,
+      i < tenantBKanbans.length ? tenantBKanbans[i].id : undefined // Link to real kanban or null
+    )
   );
 
   return {

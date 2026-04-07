@@ -275,7 +275,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 
 ### 15. Appendices
 
-- **API Documentation:** [Evolution API v2](https://doc.evolution-api.com/v2/api-reference)
+- **API Documentation:** [Evo GO](https://docs.evolutionfoundation.com.br/evolution-go) (NOT Evolution API v2)
 - **Supabase Documentation:** [https://supabase.com/docs](https://supabase.com/docs)
 - **Infrastructure:** Supabase Web (Cloud SaaS) - PostgreSQL, Auth & Storage
 - **Design System:** Tailwind CSS Modern Patterns

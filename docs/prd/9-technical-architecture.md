@@ -10,7 +10,7 @@
 | **Auth**             | Supabase Cloud Auth                           | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+)                |
 | **Real-time**        | Supabase Real-time Subscriptions              | WebSocket para sync instantâneo                          |
 | **File Storage**     | Supabase Cloud Storage                        | Mídias de conversa (fotos, vídeos, áudios)               |
-| **WhatsApp Gateway** | Evo GO                                        | Pairing via QR, webhooks bidirecional, suporte completo |
+| **WhatsApp Gateway** | **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go) | Pairing via QR, webhooks bidirecional, suporte completo |
 | **API Framework**    | Next.js API Routes (/app/api/)                | Auth middleware, CORS, RateLimit, Webhook validation     |
 | **Rate Limiting**    | Redis local (VPS)                             | 100 req/min per tenant, zero cost                        |
 | **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
@@ -110,21 +110,25 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 
 ## 9.3 Evo GO Integration
 
-**Fluxo de Pairing:**
+⚠️ **IMPORTANTE:** Usamos **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go), não Evolution API v2.
+
+**Servidor:** `https://evogo.renatop.com.br`
+
+**Fluxo de Pairing (Evo GO):**
 
 1. Owner clica "Connect WhatsApp" em Settings/Connection
-2. Backend gera novo QR via Evolution API `/qr-code` endpoint
+2. Backend gera novo QR via Evo GO `/qr-code` endpoint
 3. Frontend mostra QR code em modal (tempo limitado, ex 60s)
 4. Owner scaneia com WhatsApp pessoal
-5. Evolution API notifica backend via webhook `connection.update`
+5. Evo GO notifica backend via webhook `connection.update`
 6. Backend marca tenant como `connection_status = active`
-7. Webhooks começam a chegar em `/webhooks/messages`
+7. Webhooks começam a chegar em `/webhooks/evo-go/messages`
 
-**Fluxo de Mensagens Recebidas:**
+**Fluxo de Mensagens Recebidas (Evo GO):**
 
 ```
-Evolution API webhook → Backend /webhooks/messages
-  ├─ Validar assinatura (HMAC-SHA256)
+Evo GO webhook → Backend /api/webhooks/evo-go/messages
+  ├─ Validar assinatura HMAC-SHA256 (Evo GO)
   ├─ Extrair: wa_phone, message_text, media_url (se houver)
   ├─ Lookup contact ou auto-criar
   ├─ Lookup/crear conversation
@@ -133,12 +137,12 @@ Evolution API webhook → Backend /webhooks/messages
   └─ Frontend atualiza UI instantaneamente
 ```
 
-**Fluxo de Mensagens Enviadas:**
+**Fluxo de Mensagens Enviadas (via Evo GO):**
 
 ```
 Frontend (Chat modal) → POST /api/send-message
   ├─ Validar JWT + tenant_id
-  ├─ Chamar Evolution API `/send-message`
+  ├─ Chamar Evo GO `/send-message` endpoint
   ├─ Insert message em `messages` table
   ├─ Broadcast via Real-time
   └─ Retornar status (success/error)

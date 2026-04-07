@@ -391,24 +391,51 @@ export async function seedTestData(adminClient: any) {
     console.log('Cleaning up test data...');
 
     // Delete in correct FK order (children before parents)
+    // Fetch all related IDs first, then delete them
+    const { data: conversations } = await adminClient
+      .from('conversations')
+      .select('id')
+      .in('tenant_id', testTenantIds);
+
+    const { data: kanbans } = await adminClient
+      .from('kanbans')
+      .select('id')
+      .in('tenant_id', testTenantIds);
+
+    const conversationIds = conversations?.map((c: any) => c.id) || [];
+    const kanbanIds = kanbans?.map((k: any) => k.id) || [];
+
+    // Delete in correct FK order (children before parents)
     const deleteOps = [
-      { table: 'messages', filter: (q: any) => q.delete().in('id', []) }, // messages → conversations
-      { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // conversations → tenants, contacts
-      { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // contacts → tenants
-      { table: 'columns', filter: (q: any) => q.delete().in('id', []) }, // columns → kanbans
-      { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // kanbans → tenants
-      { table: 'automatic_messages', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // auto_messages → tenants
-      { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // users → tenants
-      { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) }, // tenants (no FK)
-    ];
+      // Messages: delete all messages from test conversations
+      conversationIds.length > 0
+        ? { table: 'messages', filter: (q: any) => q.delete().in('conversation_id', conversationIds) }
+        : null,
+      // Conversations: delete all conversations of test tenants
+      { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      // Contacts: delete all contacts of test tenants
+      { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      // Columns: delete all columns from test kanbans
+      kanbanIds.length > 0
+        ? { table: 'columns', filter: (q: any) => q.delete().in('kanban_id', kanbanIds) }
+        : null,
+      // Kanbans: delete all kanbans of test tenants
+      { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      // Automatic messages: delete all automatic messages of test tenants
+      { table: 'automatic_messages', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      // Users: delete all users of test tenants
+      { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      // Tenants: delete all test tenants
+      { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) },
+    ].filter((op) => op !== null);
 
     for (const op of deleteOps) {
-      const { error } = await op.filter(adminClient.from(op.table));
+      const { error } = await op!.filter(adminClient.from(op!.table));
       if (error) {
-        console.warn(`Warning deleting ${op.table}:`, error);
+        console.warn(`Warning deleting ${op!.table}:`, error);
         // Continue anyway - table might be empty
       } else {
-        console.log(`✓ Cleaned ${op.table}`);
+        console.log(`✓ Cleaned ${op!.table}`);
       }
     }
 

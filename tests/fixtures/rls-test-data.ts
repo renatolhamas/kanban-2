@@ -119,10 +119,11 @@ export function createTestContact(tenant_id: string, index: number = 1) {
 /**
  * Create test conversation record
  */
-export function createTestConversation(tenant_id: string, index: number = 1) {
+export function createTestConversation(tenant_id: string, index: number = 1, contactId?: string) {
   return {
     id: uuidv4(),
     tenant_id,
+    contact_id: contactId || uuidv4(),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

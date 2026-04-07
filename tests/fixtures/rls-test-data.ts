@@ -390,27 +390,31 @@ export async function seedTestData(adminClient: any) {
 
     console.log('Cleaning up test data...');
 
-    // Aggressive cleanup with retry - ensures all test data is removed
-    // Especially important when parallel workflows might interfere
-    const cleanupTables = async () => {
+    // Multi-pass aggressive cleanup to handle parallel workflows and race conditions
+    const cleanupTables = async (pass: number) => {
       const tables = ['messages', 'conversations', 'contacts', 'columns', 'kanbans', 'automatic_messages', 'users', 'tenants'];
       for (const table of tables) {
         try {
-          // Delete with a range that covers all UUIDs
-          await adminClient.from(table).delete().gte('id', '00000000-0000-0000-0000-000000000000');
-          console.log(`✓ Cleaned ${table}`);
+          // Delete everything from the table (covers all UUIDs)
+          const { error } = await adminClient.from(table).delete().gte('id', '00000000-0000-0000-0000-000000000000');
+          if (!error) {
+            console.log(`[Pass ${pass}] ✓ Cleaned ${table}`);
+          }
         } catch (e) {
-          console.warn(`Warning cleaning ${table}:`, (e as any)?.message);
+          // Silently ignore cleanup errors - they might be due to orphaned data or race conditions
         }
       }
     };
 
-    // Run cleanup, retry once if any data remains
-    await cleanupTables();
-    // Small delay to ensure deletion is committed
+    // Run cleanup multiple passes with delays to ensure atomicity
+    // Pass 1: Initial cleanup
+    await cleanupTables(1);
+    // Delay to ensure deletions are committed
+    await new Promise(r => setTimeout(r, 200));
+    // Pass 2: Second attempt (catches any race condition leftovers)
+    await cleanupTables(2);
+    // Final delay before seeding new data
     await new Promise(r => setTimeout(r, 100));
-    // Second pass to catch any race conditions
-    await cleanupTables();
 
     // Insert with admin client (bypasses RLS)
     const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);

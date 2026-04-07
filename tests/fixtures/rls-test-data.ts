@@ -58,6 +58,10 @@ export function createTestTenant(overrides?: Partial<typeof TEST_TENANTS.A>) {
   return {
     id: TEST_TENANTS.A.id,
     name: TEST_TENANTS.A.name,
+    subscription_status: 'active',
+    connection_status: 'connected',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     ...overrides,
   };
 }
@@ -70,7 +74,9 @@ export function createTestUser(overrides?: any) {
     id: TEST_USERS.A1.id,
     tenant_id: TEST_USERS.A1.tenant_id,
     email: TEST_USERS.A1.email,
+    role: 'owner',
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     ...overrides,
   };
 }
@@ -83,6 +89,8 @@ export function createTestKanban(tenant_id: string, index: number = 1) {
     id: uuidv4(),
     tenant_id,
     name: `Kanban ${tenant_id.substring(0, 1)} - ${index}`,
+    is_main: index === 1,
+    order_position: index,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -137,8 +145,8 @@ export function createTestMessage(conversation_id: string, index: number = 1) {
   return {
     id: uuidv4(),
     conversation_id,
+    sender_type: index % 2 === 0 ? 'contact' : 'user',
     content: `Test message ${index}`,
-    sender_id: TEST_USERS.A1.id,
     created_at: new Date().toISOString(),
   };
 }
@@ -150,8 +158,8 @@ export function createTestAutomaticMessage(tenant_id: string, index: number = 1)
   return {
     id: uuidv4(),
     tenant_id,
-    title: `Template ${index}`,
-    body: `Automatic message template ${index}`,
+    name: `Template ${index}`,
+    message: `Automatic message template ${index}`,
     scheduled_interval_minutes: 60,
     scheduled_kanban_id: uuidv4(),
     created_at: new Date().toISOString(),

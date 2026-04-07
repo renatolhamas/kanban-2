@@ -354,14 +354,17 @@ export async function seedTestData(adminClient: any) {
 
   try {
     // Clean up existing test data first (in reverse order due to FK constraints)
-    await adminClient.from('automatic_messages').delete().neq('id', 'null');
-    await adminClient.from('messages').delete().neq('id', 'null');
-    await adminClient.from('conversations').delete().neq('id', 'null');
-    await adminClient.from('contacts').delete().neq('id', 'null');
-    await adminClient.from('columns').delete().neq('id', 'null');
-    await adminClient.from('kanbans').delete().neq('id', 'null');
-    await adminClient.from('users').delete().neq('id', 'null');
-    await adminClient.from('tenants').delete().neq('id', 'null');
+    // Delete using a condition that matches test tenant IDs
+    const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
+
+    await adminClient.from('automatic_messages').delete().in('id', []);
+    await adminClient.from('messages').delete().in('conversation_id', []);
+    await adminClient.from('conversations').delete().in('tenant_id', testTenantIds);
+    await adminClient.from('contacts').delete().in('tenant_id', testTenantIds);
+    await adminClient.from('columns').delete().in('id', []);
+    await adminClient.from('kanbans').delete().in('tenant_id', testTenantIds);
+    await adminClient.from('users').delete().in('tenant_id', testTenantIds);
+    await adminClient.from('tenants').delete().in('id', testTenantIds);
 
     // Insert with admin client (bypasses RLS)
     const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);

@@ -57,12 +57,11 @@ jobs:
             coverage/
           retention-days: 30
 
-  # Optional: Performance baseline (disabled - has race condition with rls-tests)
-  # TODO: Fix by using per-run random test IDs or separate test databases
-  # Currently: performance-baseline passes 12/12 tests, but causes rls-tests to fail
+  # Optional: Performance baseline (separate test script to avoid data conflicts)
+  # Now uses test:performance script with its own performance dataset
   performance-baseline:
     runs-on: ubuntu-latest
-    if: false  # Disabled - both jobs use same fixed test IDs causing orphaned data
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
@@ -78,7 +77,7 @@ jobs:
         run: npm ci
 
       - name: Run performance baseline tests
-        run: npm run test:rls
+        run: npm run test:performance
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}

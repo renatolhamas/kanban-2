@@ -11,6 +11,7 @@
     "test:watch": "vitest --watch",
     "test:rls": "vitest tests/rls-validation.test.ts",
     "test:rls:watch": "vitest --watch tests/rls-validation.test.ts",
+    "test:performance": "vitest tests/rls-performance.test.ts",
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit"
   },

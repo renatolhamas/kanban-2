@@ -44,6 +44,34 @@ Nosso banco de dados PostgreSQL foi **propositalmente projetado** para a integra
 
 ---
 
+## 🏗️ Arquitetura Evo GO: PostgreSQL + GORM + Message Queues
+
+### Tecnologia Backend
+
+Evo GO é implementado em **Go** (não Node.js) e usa:
+
+| Componente | Tecnologia | Função |
+|-----------|-----------|--------|
+| **Banco de Dados** | PostgreSQL | Persistence layer |
+| **ORM** | GORM | Database abstraction |
+| **Message Queue** | RabbitMQ / NATS | Event distribution |
+| **File Storage** | MinIO / S3 | Media persistence |
+
+### Databases do Evo GO
+
+Evo GO cria múltiplos bancos PostgreSQL:
+
+```
+evogo_auth      → Autenticação e usuários
+evogo_users     → Dados de usuários
+evogo_instances → Instâncias de WhatsApp
+runtime_configs → Configurações e license
+```
+
+**Nossa estratégia:** Continuamos com banco único `kanban_db` no Supabase, que consolida tudo isso com RLS.
+
+---
+
 ## 🗄️ Mapeamento Estrutural: Tabelas Necessárias vs. Existentes
 
 ### GRUPO 1: TENANT & MULTI-TENANCY (Obrigatório)
@@ -53,6 +81,8 @@ Nosso banco de dados PostgreSQL foi **propositalmente projetado** para a integra
 - Rastreamento de status de conexão (conectado, desconectado, erro)
 - Armazenamento de token/credencial da instância
 - Suporte a múltiplas instâncias por deployment
+- PostgreSQL com GORM ORM (Evo GO usa Go + GORM)
+- Tabelas: `runtime_configs` para configurações de license/status
 
 #### **Nossas Tabelas:**
 
@@ -266,6 +296,30 @@ ANÁLISE: ✅ COMPLETO
 
 ## 🔗 Mapeamento: Evo GO API Endpoints ↔ Schema
 
+### Webhook Events Suportados (Evo GO)
+
+Evo GO emite os seguintes eventos via webhook:
+
+```
+QRCODE_UPDATED          → QR code gerado/atualizado
+MESSAGES_UPSERT         → Mensagem recebida (inserir/atualizar)
+MESSAGES_UPDATE         → Mensagem modificada (reaction, etc)
+MESSAGES_DELETE         → Mensagem deletada
+SEND_MESSAGE            → Confirmação de mensagem enviada
+CONNECTION_UPDATE       → Status da conexão (conectado/desconectado)
+TYPEBOT_START           → Bot iniciado
+TYPEBOT_CHANGE_STATUS   → Status do bot modificado
+```
+
+Evo GO permite **webhook_by_events** — URLs diferentes por evento:
+```
+https://seu-dominio.com/webhooks/evolution-go-qrcode-updated
+https://seu-dominio.com/webhooks/evolution-go-messages-upsert
+https://seu-dominio.com/webhooks/evolution-go-connection-update
+```
+
+---
+
 ### POST /instance/create (Criar Instância)
 
 **O que Evo GO faz:**
@@ -416,17 +470,17 @@ CREATE INDEX idx_messages_created_at ON messages(created_at DESC);
 
 ### URLs de Documentação — EVO GO APENAS
 
-⚠️ **ATENÇÃO:** Usamos **EXCLUSIVAMENTE Evo GO**, não Evolution API v2.
+✅ **ATENÇÃO:** Usamos **EXCLUSIVAMENTE Evo GO**, não Evolution API v2.
 
-**Documentação Oficial Evo GO:**
-- 📌 **Evo GO Foundation Docs:** https://docs.evolutionfoundation.com.br/evolution-go
-- 📌 **Evo GO Installation:** https://docs.evolutionfoundation.com.br/evolution-go/installation
-- 📌 **Evo GO GitHub (Open Source):** https://github.com/EvolutionAPI/evolution-go
+**Documentação Oficial Evo GO (ACESSÍVEL):**
+- 📌 **Evo GO Main Docs:** https://docs.evolutionfoundation.com.br/evolution-go
+- 📌 **Evo GO Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation
+- 📌 **Evo GO GitHub (Open Source, Go):** https://github.com/EvolutionAPI/evolution-go
 
-**NÃO USE:**
-- ❌ Evolution API v2 (doc.evolution-api.com/v2) — **DESCONTINUADO PARA ESTE PROJETO**
-- ❌ Evolution API GitHub — **PROJETO DIFERENTE**
-- ❌ DeepWiki Evolution API — **REFERE-SE AO PROJETO ANTIGO**/7-api-reference
+**NUNCA USE (Evolution API v2 — Projeto Diferente):**
+- ❌ Evolution API v2 Docs: doc.evolution-api.com/v2
+- ❌ Evolution API v2 GitHub: https://github.com/EvolutionAPI/evolution-api
+- ❌ Qualquer referência a "Evolution API" (sem "Go") — É o projeto antigo em Node.js/7-api-reference
 
 ---
 

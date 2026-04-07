@@ -24,10 +24,10 @@ These are **TWO COMPLETELY DIFFERENT PROJECTS** maintained by Evolution Foundati
 
 ## What We're Using: EVO GO
 
-- **Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
-- **Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation
-- **GitHub Repository:** https://github.com/EvolutionAPI/evolution-go
-- **Technology:** Go language (high-performance)
+- **Documentation:** https://docs.evolutionfoundation.com.br/evolution-go ✅ **ACESSÍVEL**
+- **Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation ✅ **ACESSÍVEL**
+- **GitHub Repository:** https://github.com/EvolutionAPI/evolution-go ✅ **OPEN SOURCE**
+- **Technology:** Go language (high-performance, otimizado)
 
 ---
 

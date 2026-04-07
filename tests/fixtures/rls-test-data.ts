@@ -110,6 +110,7 @@ export function createTestContact(tenant_id: string, index: number = 1) {
     id: uuidv4(),
     tenant_id,
     name: `Contact ${index}`,
+    phone: `+55-11-9999-${String(index).padStart(4, '0')}`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

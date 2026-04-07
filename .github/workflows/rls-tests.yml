@@ -20,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -49,7 +49,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: test-results-node-${{ matrix.node-version }}
           path: |
@@ -65,10 +65,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: 'npm'
@@ -84,11 +84,3 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           RLS_PERF_TEST: 'true'
-
-      - name: Upload performance results
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: performance-results
-          path: coverage/
-          retention-days: 30

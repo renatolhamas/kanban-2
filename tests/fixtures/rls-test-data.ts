@@ -119,11 +119,12 @@ export function createTestContact(tenant_id: string, index: number = 1) {
 /**
  * Create test conversation record
  */
-export function createTestConversation(tenant_id: string, index: number = 1, contactId?: string) {
+export function createTestConversation(tenant_id: string, index: number = 1, contactId?: string, waPhone?: string) {
   return {
     id: uuidv4(),
     tenant_id,
     contact_id: contactId || uuidv4(),
+    wa_phone: waPhone || `+55-11-9999-${String(index).padStart(4, '0')}`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -359,15 +360,16 @@ export async function seedTestData(adminClient: any) {
 
     console.log('Cleaning up test data...');
 
+    // Delete in correct FK order (children before parents)
     const deleteOps = [
-      { table: 'automatic_messages', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      { table: 'messages', filter: (q: any) => q.delete().in('id', []) }, // Will be deleted via conversations FK
-      { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      { table: 'columns', filter: (q: any) => q.delete().in('id', []) }, // Will be deleted via kanbans FK
-      { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) },
+      { table: 'messages', filter: (q: any) => q.delete().in('id', []) }, // messages → conversations
+      { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // conversations → tenants, contacts
+      { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // contacts → tenants
+      { table: 'columns', filter: (q: any) => q.delete().in('id', []) }, // columns → kanbans
+      { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // kanbans → tenants
+      { table: 'automatic_messages', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // auto_messages → tenants
+      { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) }, // users → tenants
+      { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) }, // tenants (no FK)
     ];
 
     for (const op of deleteOps) {

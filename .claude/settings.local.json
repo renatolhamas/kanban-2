@@ -38,7 +38,8 @@
       "Bash(grep \"C:\\\\\\\\\")",
       "Bash(gh run:*)",
       "WebFetch(domain:docs.evolutionfoundation.com.br)",
-      "WebFetch(domain:doc.evolution-api.com)"
+      "WebFetch(domain:doc.evolution-api.com)",
+      "Bash(npm audit:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

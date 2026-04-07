@@ -18,6 +18,7 @@ export function ResendConfirmationForm({ onSuccess, onError }: ResendConfirmatio
   const [emailSendFailedMessage, setEmailSendFailedMessage] = useState<
     string | null
   >(null);
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
 
   // Check for email_send_failed error from registration flow
   useEffect(() => {
@@ -34,11 +35,52 @@ export function ResendConfirmationForm({ onSuccess, onError }: ResendConfirmatio
     }
   }, [searchParams]);
 
+  // Countdown timer for cooldown
+  useEffect(() => {
+    if (cooldownSeconds <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldownSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldownSeconds]);
+
+  // Check rate limit status
+  const getRateLimitStatus = (emailToCheck: string): number | null => {
+    const key = `resend_cooldown_${emailToCheck}`;
+    const lastAttemptStr = localStorage.getItem(key);
+
+    if (!lastAttemptStr) return null;
+
+    const lastAttempt = parseInt(lastAttemptStr);
+    const elapsed = Math.floor((Date.now() - lastAttempt) / 1000);
+    const remaining = 31 - elapsed;
+
+    return remaining > 0 ? remaining : null;
+  };
+
   // Validate email format
   const isValidInput = email && isValidEmail(email);
 
   const handleResend = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check rate limit BEFORE attempting
+    const waitTime = getRateLimitStatus(email);
+    if (waitTime) {
+      const errorMsg = `Wait ${waitTime} second${waitTime > 1 ? "s" : ""} and try again`;
+      if (onError) onError(errorMsg);
+      setCooldownSeconds(waitTime);
+      return;
+    }
+
     if (onError) onError(null);
     setLoading(true);
 
@@ -57,7 +99,11 @@ export function ResendConfirmationForm({ onSuccess, onError }: ResendConfirmatio
         );
       }
 
-      // Success — show confirmation message
+      // Success — save timestamp for rate limit
+      const key = `resend_cooldown_${email}`;
+      localStorage.setItem(key, Date.now().toString());
+
+      // Show confirmation message
       setSuccess(true);
       setEmail(""); // Clear input
       onSuccess?.();
@@ -154,17 +200,24 @@ export function ResendConfirmationForm({ onSuccess, onError }: ResendConfirmatio
         {/* Submit button */}
         <button
           type="submit"
-          disabled={!isValidInput || loading}
+          disabled={!isValidInput || loading || cooldownSeconds > 0}
           className={`
             w-full py-3 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98]
             ${
-              isValidInput && !loading
-                ? "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 cursor-pointer"
-                : "bg-gray-300 cursor-not-allowed"
+              cooldownSeconds > 0
+                ? "bg-red-500 cursor-not-allowed shadow-lg shadow-red-500/25"
+                : isValidInput && !loading
+                  ? "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 cursor-pointer"
+                  : "bg-gray-300 cursor-not-allowed"
             }
           `}
         >
-          {loading ? (
+          {cooldownSeconds > 0 ? (
+            <div className="flex items-center justify-center space-x-2">
+              <span className="w-4 h-4">⏱️</span>
+              <span>Wait {cooldownSeconds}s</span>
+            </div>
+          ) : loading ? (
             <div className="flex items-center justify-center space-x-2">
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
               <span>Sending...</span>

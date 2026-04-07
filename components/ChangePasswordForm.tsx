@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export interface ChangePasswordFormProps {
   token: string | null;
   onSuccess?: () => void;
-  onError?: (error: string | null) => void;  
+  onError?: (_error: string | null) => void;
 }
 
 export function ChangePasswordForm({ token, onSuccess, onError }: ChangePasswordFormProps) {
@@ -42,7 +42,7 @@ export function ChangePasswordForm({ token, onSuccess, onError }: ChangePassword
           if (errorData.error) {
             errorMessage = errorData.error;
           }
-        } catch (_e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+        } catch (_e) {
           // Keep default
         }
         throw new Error(errorMessage);

@@ -30,8 +30,7 @@ const EMAIL_WINDOW_MS = 60 * 60 * 1000; // 60 minutes
  * Proxy/load balancer aware: checks X-Forwarded-For before connection remoteAddress
  */
 export function getClientIP(
-   
-  headers: { get: (name: string) => string | null },  
+  headers: { get: (_name: string) => string | null },
 ): string {
   const forwarded = headers.get("x-forwarded-for");
   if (forwarded) {

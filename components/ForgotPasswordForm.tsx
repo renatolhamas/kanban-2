@@ -6,7 +6,7 @@ import { isValidEmail } from "@/lib/auth";
 
 export interface ForgotPasswordFormProps {
   onSuccess?: () => void;
-  onError?: (error: string | null) => void;  
+  onError?: (_error: string | null) => void;
 }
 
 export function ForgotPasswordForm({ onSuccess, onError }: ForgotPasswordFormProps) {
@@ -36,7 +36,7 @@ export function ForgotPasswordForm({ onSuccess, onError }: ForgotPasswordFormPro
           if (errorData.error) {
             errorMessage = errorData.error;
           }
-        } catch (_e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+        } catch (_e) {
           // Keep default error message
         }
         throw new Error(errorMessage);

@@ -10,38 +10,48 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================================
-// Test Data Identifiers (Fixed for Deterministic Tests)
+// Test Data Identifiers
+// Note: Using random IDs to avoid collisions between test runs
 // ============================================================================
 
-export const TEST_TENANTS = {
-  A: {
-    id: '11111111-1111-1111-1111-111111111111',
-    name: 'Tenant A',
-  },
-  B: {
-    id: '22222222-2222-2222-2222-222222222222',
-    name: 'Tenant B',
-  },
+// Generate random but consistent IDs for this test run session
+const generateTestIds = () => {
+  // Use deterministic but session-unique IDs based on timestamp
+  const base = Date.now() % 1000000;
+  const tenantAId = `00000000-0000-0000-0000-${String(base).padStart(12, '0')}`;
+  const tenantBId = `00000001-0000-0000-0000-${String(base).padStart(12, '0')}`;
+
+  return {
+    TENANTS: {
+      A: { id: tenantAId, name: 'Tenant A' },
+      B: { id: tenantBId, name: 'Tenant B' },
+    },
+    USERS: {} as any
+  };
 };
+
+const testIds = generateTestIds();
+
+export const TEST_TENANTS = testIds.TENANTS;
 
 export const TEST_USERS = {
   A1: {
-    id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    id: uuidv4(),
     tenant_id: TEST_TENANTS.A.id,
     email: 'user-a1@tenant-a.test',
   },
   A2: {
-    id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+    id: uuidv4(),
     tenant_id: TEST_TENANTS.A.id,
     email: 'user-a2@tenant-a.test',
   },
   B1: {
-    id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
+    id: uuidv4(),
     tenant_id: TEST_TENANTS.B.id,
     email: 'user-b1@tenant-b.test',
   },
   B2: {
-    id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
+    id: uuidv4(),
     tenant_id: TEST_TENANTS.B.id,
     email: 'user-b2@tenant-b.test',
   },
@@ -390,52 +400,33 @@ export async function seedTestData(adminClient: any) {
 
     console.log('Cleaning up test data...');
 
-    // Delete in correct FK order (children before parents)
-    // Fetch all related IDs first, then delete them
-    const { data: conversations } = await adminClient
-      .from('conversations')
-      .select('id')
-      .in('tenant_id', testTenantIds);
+    // Use simple DELETE approach - delete test tenants (cascade handles the rest)
+    // First delete messages from conversations of test tenants
+    await adminClient.from('messages').delete().in('conversation_id',
+      (await adminClient.from('conversations').select('id').in('tenant_id', testTenantIds)).data?.map((c: any) => c.id) || []
+    );
 
-    const { data: kanbans } = await adminClient
-      .from('kanbans')
-      .select('id')
-      .in('tenant_id', testTenantIds);
+    // Then delete by tenant ID in cascade order
+    const tablesInOrder = [
+      'conversations',
+      'contacts',
+      'columns',
+      'kanbans',
+      'automatic_messages',
+      'users',
+      'tenants',
+    ];
 
-    const conversationIds = conversations?.map((c: any) => c.id) || [];
-    const kanbanIds = kanbans?.map((k: any) => k.id) || [];
+    for (const table of tablesInOrder) {
+      const { error } = await adminClient
+        .from(table)
+        .delete()
+        .in('tenant_id', testTenantIds);
 
-    // Delete in correct FK order (children before parents)
-    const deleteOps = [
-      // Messages: delete all messages from test conversations
-      conversationIds.length > 0
-        ? { table: 'messages', filter: (q: any) => q.delete().in('conversation_id', conversationIds) }
-        : null,
-      // Conversations: delete all conversations of test tenants
-      { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      // Contacts: delete all contacts of test tenants
-      { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      // Columns: delete all columns from test kanbans
-      kanbanIds.length > 0
-        ? { table: 'columns', filter: (q: any) => q.delete().in('kanban_id', kanbanIds) }
-        : null,
-      // Kanbans: delete all kanbans of test tenants
-      { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      // Automatic messages: delete all automatic messages of test tenants
-      { table: 'automatic_messages', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      // Users: delete all users of test tenants
-      { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      // Tenants: delete all test tenants
-      { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) },
-    ].filter((op) => op !== null);
-
-    for (const op of deleteOps) {
-      const { error } = await op!.filter(adminClient.from(op!.table));
       if (error) {
-        console.warn(`Warning deleting ${op!.table}:`, error);
-        // Continue anyway - table might be empty
+        console.warn(`Warning deleting ${table}:`, error);
       } else {
-        console.log(`✓ Cleaned ${op!.table}`);
+        console.log(`✓ Cleaned ${table}`);
       }
     }
 

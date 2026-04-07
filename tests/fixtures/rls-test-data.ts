@@ -192,8 +192,14 @@ export function generateComprehensiveTestDataset() {
     createTestContact(TEST_TENANTS.A.id, i + 1)
   );
 
+  // Conversations linked to REAL contacts (not random UUIDs!)
   const tenantAConversations = Array.from({ length: 4 }, (_, i) =>
-    createTestConversation(TEST_TENANTS.A.id, i + 1)
+    createTestConversation(
+      TEST_TENANTS.A.id,
+      i + 1,
+      tenantAContacts[i % tenantAContacts.length].id, // Use real contact ID
+      tenantAContacts[i % tenantAContacts.length].phone // Use real phone
+    )
   );
 
   const tenantAMessages = tenantAConversations.flatMap((conv, ci) =>
@@ -223,8 +229,14 @@ export function generateComprehensiveTestDataset() {
     createTestContact(TEST_TENANTS.B.id, i + 1)
   );
 
+  // Conversations linked to REAL contacts (not random UUIDs!)
   const tenantBConversations = Array.from({ length: 4 }, (_, i) =>
-    createTestConversation(TEST_TENANTS.B.id, i + 1)
+    createTestConversation(
+      TEST_TENANTS.B.id,
+      i + 1,
+      tenantBContacts[i % tenantBContacts.length].id, // Use real contact ID
+      tenantBContacts[i % tenantBContacts.length].phone // Use real phone
+    )
   );
 
   const tenantBMessages = tenantBConversations.flatMap((conv, ci) =>

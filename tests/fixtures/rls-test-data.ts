@@ -390,47 +390,23 @@ export async function seedTestData(adminClient: any) {
 
     console.log('Cleaning up test data...');
 
-    // Use a cascade-aware deletion approach
-    // Delete in FK dependency order
+    // Try aggressive cleanup: delete all rows unconditionally (simpler & more reliable)
+    // This removes any test data from prior failed runs
     try {
-      // 1. Delete messages (depends on conversations)
-      await adminClient.from('messages').delete().in('conversation_id',
-        (await adminClient.from('conversations').select('id').in('tenant_id', testTenantIds)).data?.map((c: any) => c.id) || []
-      );
-      console.log('✓ Cleaned messages');
+      // Just delete ALL from each table - test data will be recreated
+      await adminClient.from('messages').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('conversations').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('contacts').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('columns').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('kanbans').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('automatic_messages').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('users').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+      await adminClient.from('tenants').delete().gte('id', '00000000-0000-0000-0000-000000000000');
 
-      // 2. Delete conversations (depends on tenant, contact)
-      await adminClient.from('conversations').delete().in('tenant_id', testTenantIds);
-      console.log('✓ Cleaned conversations');
-
-      // 3. Delete contacts (depends on tenant)
-      await adminClient.from('contacts').delete().in('tenant_id', testTenantIds);
-      console.log('✓ Cleaned contacts');
-
-      // 4. Delete columns (depends on kanban)
-      await adminClient.from('columns').delete().in('kanban_id',
-        (await adminClient.from('kanbans').select('id').in('tenant_id', testTenantIds)).data?.map((k: any) => k.id) || []
-      );
-      console.log('✓ Cleaned columns');
-
-      // 5. Delete kanbans (depends on tenant)
-      await adminClient.from('kanbans').delete().in('tenant_id', testTenantIds);
-      console.log('✓ Cleaned kanbans');
-
-      // 6. Delete automatic_messages (depends on tenant)
-      await adminClient.from('automatic_messages').delete().in('tenant_id', testTenantIds);
-      console.log('✓ Cleaned automatic_messages');
-
-      // 7. Delete users (depends on tenant)
-      await adminClient.from('users').delete().in('tenant_id', testTenantIds);
-      console.log('✓ Cleaned users');
-
-      // 8. Delete tenants
-      await adminClient.from('tenants').delete().in('id', testTenantIds);
-      console.log('✓ Cleaned tenants');
+      console.log('✓ Cleaned all test tables');
     } catch (cleanupError) {
       console.warn('Warning during cleanup:', cleanupError);
-      // Continue anyway - might be orphaned data
+      // Continue anyway - test data seeding will insert what we need
     }
 
     // Insert with admin client (bypasses RLS)

@@ -83,7 +83,6 @@ export function createTestKanban(tenant_id: string, index: number = 1) {
     id: uuidv4(),
     tenant_id,
     name: `Kanban ${tenant_id.substring(0, 1)} - ${index}`,
-    description: `Test kanban for tenant ${tenant_id}`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -357,14 +356,28 @@ export async function seedTestData(adminClient: any) {
     // Delete using a condition that matches test tenant IDs
     const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
 
-    await adminClient.from('automatic_messages').delete().in('id', []);
-    await adminClient.from('messages').delete().in('conversation_id', []);
-    await adminClient.from('conversations').delete().in('tenant_id', testTenantIds);
-    await adminClient.from('contacts').delete().in('tenant_id', testTenantIds);
-    await adminClient.from('columns').delete().in('id', []);
-    await adminClient.from('kanbans').delete().in('tenant_id', testTenantIds);
-    await adminClient.from('users').delete().in('tenant_id', testTenantIds);
-    await adminClient.from('tenants').delete().in('id', testTenantIds);
+    console.log('Cleaning up test data...');
+
+    const deleteOps = [
+      { table: 'automatic_messages', filter: (q: any) => q.delete().is('id', null) },
+      { table: 'messages', filter: (q: any) => q.delete().is('conversation_id', null) },
+      { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      { table: 'columns', filter: (q: any) => q.delete().is('id', null) },
+      { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) },
+    ];
+
+    for (const op of deleteOps) {
+      const { error } = await op.filter(adminClient.from(op.table));
+      if (error) {
+        console.warn(`Warning deleting ${op.table}:`, error);
+        // Continue anyway - table might be empty
+      } else {
+        console.log(`✓ Cleaned ${op.table}`);
+      }
+    }
 
     // Insert with admin client (bypasses RLS)
     const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);

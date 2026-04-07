@@ -409,12 +409,12 @@ export async function seedTestData(adminClient: any) {
     // Run cleanup multiple passes with delays to ensure atomicity
     // Pass 1: Initial cleanup
     await cleanupTables(1);
-    // Delay to ensure deletions are committed
-    await new Promise(r => setTimeout(r, 200));
+    // Delay to ensure deletions are committed (increased for parallel CI environments)
+    await new Promise(r => setTimeout(r, 500));
     // Pass 2: Second attempt (catches any race condition leftovers)
     await cleanupTables(2);
-    // Final delay before seeding new data
-    await new Promise(r => setTimeout(r, 100));
+    // Final delay before seeding new data (increased for replication latency)
+    await new Promise(r => setTimeout(r, 300));
 
     // Insert with admin client (bypasses RLS)
     const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);

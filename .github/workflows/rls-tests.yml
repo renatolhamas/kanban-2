@@ -57,12 +57,11 @@ jobs:
             coverage/
           retention-days: 30
 
-  # Optional: Performance baseline (disabled to avoid race conditions with shared test IDs)
-  # TODO: Re-enable after implementing per-run random test IDs
+  # Optional: Performance baseline (runs only on main branch)
   # Uses same concurrency group as rls-tests to prevent parallel execution
   performance-baseline:
     runs-on: ubuntu-latest
-    if: false  # Disabled - causes race conditions with rls-tests due to fixed test IDs
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code

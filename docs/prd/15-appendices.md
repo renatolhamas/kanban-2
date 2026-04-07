@@ -36,9 +36,20 @@
 
 ## 15.3 Related Documents
 
+### Core Documentation
 - `docs/brief.md` — Project brief (estratégia de negócio)
 - `docs/architecture/` — Technical diagrams (ERD, API flows)
 - `docs/stories/` — User stories (criadas por @sm após approval do PRD)
-- `docs/prd.md` — Este documento
+- `docs/prd.md` — Este documento (master PRD)
+
+### Evo GO Integration Documentation
+- **`docs/db/EVO-GO-TECHNICAL-SPECS.md`** — ⭐ **MUST READ** — Evo GO technical specifications, webhook events, database architecture, message flows
+- **`docs/db/pesquisa.schema.evogo.md`** — Deep research on schema compatibility with Evo GO
+- **`docs/CRITICAL-EVO-GO-NOT-EVOLUTION-API.md`** — ⚠️ Critical distinction: Evo GO vs Evolution API v2
+
+### Evo GO Official Resources
+- Documentation: https://docs.evolutionfoundation.com.br/evolution-go
+- Installation: https://docs.evolutionfoundation.com.br/evolution-go/installation
+- GitHub: https://github.com/EvolutionAPI/evolution-go
 
 ---

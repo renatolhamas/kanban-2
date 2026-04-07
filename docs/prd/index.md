@@ -43,6 +43,7 @@
     - [9.1 Stack Tecnológico](./9-technical-architecture.md#91-stack-tecnolgico)
     - [9.2 Database Schema (Resumido)](./9-technical-architecture.md#92-database-schema-resumido)
     - [9.3 Evo GO Integration](./9-technical-architecture.md#93-evo-go-integration)
+      - 📌 **Reference:** [`docs/db/EVO-GO-TECHNICAL-SPECS.md`](../db/EVO-GO-TECHNICAL-SPECS.md) — Complete Evo GO specifications
     - [9.4 Validações & Constraints](./9-technical-architecture.md#94-validaes-constraints)
   - [10. Constraints & Assumptions](./10-constraints-assumptions.md)
     - [10.1 Restrições (Hard Constraints)](./10-constraints-assumptions.md#101-restries-hard-constraints)

@@ -6,7 +6,7 @@ import type { AuthResponse } from "@/lib/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3017";
+const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3017").replace(/\/$/, "");
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing required environment variables for Supabase");

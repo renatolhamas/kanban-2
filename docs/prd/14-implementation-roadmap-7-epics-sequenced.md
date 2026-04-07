@@ -15,12 +15,12 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 **Stories:**
 
-- Story 1.1: Create schema (tenants, users, contacts, conversations, messages, columns)
+- Story 1.1: Database Schema Creation (tenants, users, contacts, conversations, messages, columns)
 - Story 1.2: Supabase Auth (register, login, profile)
 - Story 1.3: Email Confirmation Flow (Resend integration, confirmation link generation, token validation)
-- Story 1.4: Onboarding (tenant auto-create, default kanban "Main" com colunas padrão)
-- Story 1.5: RLS policies validation
-- Story 1.6: Evolution API pairing (QR code generation)
+- Story 1.4: RLS Policies Validation (Testing & Verification)
+- Story 1.5: Onboarding (tenant auto-create, default kanban "Main" com colunas padrão)
+- Story 1.6: Evo GO API Pairing (QR Code)
 - Story 1.7: Webhook endpoint setup (/api/webhooks/messages)
 
 **Outputs:** Auth working with email confirmation, webhook validated, schema ready

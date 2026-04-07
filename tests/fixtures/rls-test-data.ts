@@ -137,7 +137,7 @@ export function createTestMessage(conversation_id: string, index: number = 1) {
   return {
     id: uuidv4(),
     conversation_id,
-    body: `Test message ${index}`,
+    content: `Test message ${index}`,
     sender_id: TEST_USERS.A1.id,
     created_at: new Date().toISOString(),
   };

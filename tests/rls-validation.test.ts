@@ -47,6 +47,7 @@ const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqY2p1Y2d5bHdranJkcHNxZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzE3MTIsImV4cCI6MjA5MDY0NzcxMn0.JNzwv5kdT8L0I9OA39obnLvuOB-hocPxMweonQJV7n8';
 
 let supabase: any;
+let adminClient: any;
 
 // ============================================================================
 // Test Setup & Teardown
@@ -64,7 +65,7 @@ describe('RLS Validation Test Suite', () => {
     if (!SUPABASE_SERVICE_ROLE_KEY) {
       throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is required for test data seeding');
     }
-    const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Seed test data (2 tenants, 2 users per tenant, 5-10 rows per table)
     try {
@@ -131,8 +132,8 @@ describe('RLS Validation Test Suite', () => {
      * Security: Prevents unauthorized data modification
      */
     it('TC-RLS-002: User A UPDATE Tenant B row → 0 rows affected', async () => {
-      // Get one Tenant B kanban that exists
-      const { data: tenantBKanbans } = await supabase
+      // Get one Tenant B kanban that exists (use admin client to bypass RLS)
+      const { data: tenantBKanbans } = await adminClient
         .from('kanbans')
         .select('id')
         .eq('tenant_id', TEST_TENANTS.B.id)
@@ -172,8 +173,8 @@ describe('RLS Validation Test Suite', () => {
      * Security: Prevents unauthorized data deletion
      */
     it('TC-RLS-003: User A DELETE Tenant B row → 0 rows affected', async () => {
-      // Get one Tenant B contact
-      const { data: tenantBContacts } = await supabase
+      // Get one Tenant B contact (use admin client to bypass RLS)
+      const { data: tenantBContacts } = await adminClient
         .from('contacts')
         .select('id')
         .eq('tenant_id', TEST_TENANTS.B.id)
@@ -413,8 +414,8 @@ describe('RLS Validation Test Suite', () => {
         .from('messages')
         .insert({
           conversation_id: convIdB,
-          body: 'Concurrent message from User B',
-          sender_id: TEST_USERS.B1.id,
+          content: 'Concurrent message from User B',
+          sender_type: 'agent',
         });
 
       expect(msgError).toBeNull();
@@ -445,8 +446,8 @@ describe('RLS Validation Test Suite', () => {
      * Security: Prevents nested relationship bypass attacks
      */
     it('TC-RLS-008: Nested SELECT (columns via kanban) → RLS enforced', async () => {
-      // Get a Tenant B kanban
-      const { data: tenantBKanbans } = await supabase
+      // Get a Tenant B kanban (use admin client to bypass RLS)
+      const { data: tenantBKanbans } = await adminClient
         .from('kanbans')
         .select('id')
         .eq('tenant_id', TEST_TENANTS.B.id)
@@ -521,8 +522,8 @@ describe('RLS Validation Test Suite', () => {
      * Security: Prevents cascade-based data leakage
      */
     it('TC-RLS-010: Cascade operations → RLS respected', async () => {
-      // Get a Tenant A kanban to delete
-      const { data: tenantAKanbans } = await supabase
+      // Get a Tenant A kanban to delete (use admin client to bypass RLS)
+      const { data: tenantAKanbans } = await adminClient
         .from('kanbans')
         .select('id')
         .eq('tenant_id', TEST_TENANTS.A.id)

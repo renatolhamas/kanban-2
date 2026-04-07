@@ -353,6 +353,16 @@ export async function seedTestData(adminClient: any) {
   const dataset = generateComprehensiveTestDataset();
 
   try {
+    // Clean up existing test data first (in reverse order due to FK constraints)
+    await adminClient.from('automatic_messages').delete().neq('id', 'null');
+    await adminClient.from('messages').delete().neq('id', 'null');
+    await adminClient.from('conversations').delete().neq('id', 'null');
+    await adminClient.from('contacts').delete().neq('id', 'null');
+    await adminClient.from('columns').delete().neq('id', 'null');
+    await adminClient.from('kanbans').delete().neq('id', 'null');
+    await adminClient.from('users').delete().neq('id', 'null');
+    await adminClient.from('tenants').delete().neq('id', 'null');
+
     // Insert with admin client (bypasses RLS)
     const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);
     if (tenantError) throw tenantError;

@@ -10,48 +10,38 @@
 import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================================
-// Test Data Identifiers
-// Note: Using random IDs to avoid collisions between test runs
+// Test Data Identifiers (Fixed for Deterministic Tests)
 // ============================================================================
 
-// Generate random but consistent IDs for this test run session
-const generateTestIds = () => {
-  // Use deterministic but session-unique IDs based on timestamp
-  const base = Date.now() % 1000000;
-  const tenantAId = `00000000-0000-0000-0000-${String(base).padStart(12, '0')}`;
-  const tenantBId = `00000001-0000-0000-0000-${String(base).padStart(12, '0')}`;
-
-  return {
-    TENANTS: {
-      A: { id: tenantAId, name: 'Tenant A' },
-      B: { id: tenantBId, name: 'Tenant B' },
-    },
-    USERS: {} as any
-  };
+export const TEST_TENANTS = {
+  A: {
+    id: '11111111-1111-1111-1111-111111111111',
+    name: 'Tenant A',
+  },
+  B: {
+    id: '22222222-2222-2222-2222-222222222222',
+    name: 'Tenant B',
+  },
 };
-
-const testIds = generateTestIds();
-
-export const TEST_TENANTS = testIds.TENANTS;
 
 export const TEST_USERS = {
   A1: {
-    id: uuidv4(),
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     tenant_id: TEST_TENANTS.A.id,
     email: 'user-a1@tenant-a.test',
   },
   A2: {
-    id: uuidv4(),
+    id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
     tenant_id: TEST_TENANTS.A.id,
     email: 'user-a2@tenant-a.test',
   },
   B1: {
-    id: uuidv4(),
+    id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
     tenant_id: TEST_TENANTS.B.id,
     email: 'user-b1@tenant-b.test',
   },
   B2: {
-    id: uuidv4(),
+    id: 'dddddddd-dddd-dddd-dddd-dddddddddddd',
     tenant_id: TEST_TENANTS.B.id,
     email: 'user-b2@tenant-b.test',
   },
@@ -400,34 +390,47 @@ export async function seedTestData(adminClient: any) {
 
     console.log('Cleaning up test data...');
 
-    // Use simple DELETE approach - delete test tenants (cascade handles the rest)
-    // First delete messages from conversations of test tenants
-    await adminClient.from('messages').delete().in('conversation_id',
-      (await adminClient.from('conversations').select('id').in('tenant_id', testTenantIds)).data?.map((c: any) => c.id) || []
-    );
+    // Use a cascade-aware deletion approach
+    // Delete in FK dependency order
+    try {
+      // 1. Delete messages (depends on conversations)
+      await adminClient.from('messages').delete().in('conversation_id',
+        (await adminClient.from('conversations').select('id').in('tenant_id', testTenantIds)).data?.map((c: any) => c.id) || []
+      );
+      console.log('✓ Cleaned messages');
 
-    // Then delete by tenant ID in cascade order
-    const tablesInOrder = [
-      'conversations',
-      'contacts',
-      'columns',
-      'kanbans',
-      'automatic_messages',
-      'users',
-      'tenants',
-    ];
+      // 2. Delete conversations (depends on tenant, contact)
+      await adminClient.from('conversations').delete().in('tenant_id', testTenantIds);
+      console.log('✓ Cleaned conversations');
 
-    for (const table of tablesInOrder) {
-      const { error } = await adminClient
-        .from(table)
-        .delete()
-        .in('tenant_id', testTenantIds);
+      // 3. Delete contacts (depends on tenant)
+      await adminClient.from('contacts').delete().in('tenant_id', testTenantIds);
+      console.log('✓ Cleaned contacts');
 
-      if (error) {
-        console.warn(`Warning deleting ${table}:`, error);
-      } else {
-        console.log(`✓ Cleaned ${table}`);
-      }
+      // 4. Delete columns (depends on kanban)
+      await adminClient.from('columns').delete().in('kanban_id',
+        (await adminClient.from('kanbans').select('id').in('tenant_id', testTenantIds)).data?.map((k: any) => k.id) || []
+      );
+      console.log('✓ Cleaned columns');
+
+      // 5. Delete kanbans (depends on tenant)
+      await adminClient.from('kanbans').delete().in('tenant_id', testTenantIds);
+      console.log('✓ Cleaned kanbans');
+
+      // 6. Delete automatic_messages (depends on tenant)
+      await adminClient.from('automatic_messages').delete().in('tenant_id', testTenantIds);
+      console.log('✓ Cleaned automatic_messages');
+
+      // 7. Delete users (depends on tenant)
+      await adminClient.from('users').delete().in('tenant_id', testTenantIds);
+      console.log('✓ Cleaned users');
+
+      // 8. Delete tenants
+      await adminClient.from('tenants').delete().in('id', testTenantIds);
+      console.log('✓ Cleaned tenants');
+    } catch (cleanupError) {
+      console.warn('Warning during cleanup:', cleanupError);
+      // Continue anyway - might be orphaned data
     }
 
     // Insert with admin client (bypasses RLS)

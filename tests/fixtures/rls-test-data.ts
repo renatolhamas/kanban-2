@@ -110,7 +110,6 @@ export function createTestContact(tenant_id: string, index: number = 1) {
     id: uuidv4(),
     tenant_id,
     name: `Contact ${index}`,
-    email: `contact-${index}@test.example.com`,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

@@ -343,33 +343,42 @@ export async function cleanupTestData(supabase: any) {
  * await seedTestData(supabase);
  * ```
  */
-export async function seedTestData(supabase: any) {
+/**
+ * Seed test data using admin client (with service role key)
+ * This bypasses RLS policies so we can seed data for all tenants
+ *
+ * @param adminClient Supabase admin client (created with SUPABASE_SERVICE_ROLE_KEY)
+ */
+export async function seedTestData(adminClient: any) {
   const dataset = generateComprehensiveTestDataset();
 
   try {
-    // Insert tenants first
-    await supabase.from('tenants').insert(dataset.tenants);
+    // Insert with admin client (bypasses RLS)
+    const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);
+    if (tenantError) throw tenantError;
 
-    // Insert users
-    await supabase.from('users').insert(dataset.users);
+    const { error: usersError } = await adminClient.from('users').insert(dataset.users);
+    if (usersError) throw usersError;
 
-    // Insert kanbans
-    await supabase.from('kanbans').insert(dataset.kanbans);
+    const { error: kanbansError } = await adminClient.from('kanbans').insert(dataset.kanbans);
+    if (kanbansError) throw kanbansError;
 
-    // Insert columns (depends on kanbans)
-    await supabase.from('columns').insert(dataset.columns);
+    const { error: columnsError } = await adminClient.from('columns').insert(dataset.columns);
+    if (columnsError) throw columnsError;
 
-    // Insert contacts
-    await supabase.from('contacts').insert(dataset.contacts);
+    const { error: contactsError } = await adminClient.from('contacts').insert(dataset.contacts);
+    if (contactsError) throw contactsError;
 
-    // Insert conversations
-    await supabase.from('conversations').insert(dataset.conversations);
+    const { error: conversationsError } = await adminClient.from('conversations').insert(dataset.conversations);
+    if (conversationsError) throw conversationsError;
 
-    // Insert messages (depends on conversations)
-    await supabase.from('messages').insert(dataset.messages);
+    const { error: messagesError } = await adminClient.from('messages').insert(dataset.messages);
+    if (messagesError) throw messagesError;
 
-    // Insert automatic_messages
-    await supabase.from('automatic_messages').insert(dataset.automatic_messages);
+    const { error: autoMessagesError } = await adminClient.from('automatic_messages').insert(dataset.automatic_messages);
+    if (autoMessagesError) throw autoMessagesError;
+
+    console.log('✅ All test data inserted successfully');
   } catch (error) {
     console.error('Error seeding test data:', error);
     throw error;

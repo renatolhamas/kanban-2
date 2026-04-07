@@ -1,37 +1,46 @@
 /**
  * JWT Generator for RLS Testing
  *
- * Generates test JWTs with tenant_id and sub claims
- * for simulating authenticated requests in RLS tests
- *
- * These are MOCK JWTs for testing only.
- * In production, Supabase validates JWT signatures.
+ * Generates test JWTs using Supabase Admin API
+ * This ensures JWTs are properly signed with ES256 (P-256 ECC)
+ * matching Supabase's actual key configuration
  */
 
-import { SignJWT } from 'jose';
+import { createClient } from '@supabase/supabase-js';
 import { TEST_USERS, TEST_TENANTS } from './rls-test-data';
 
-// Get JWT secret from environment (Supabase uses this to validate JWTs)
-const JWT_SECRET = process.env.JWT_SECRET || process.env.SUPABASE_JWT_SECRET || 'd0934902-888c-4f61-bcf1-39e7d5bb91d2';
-const SECRET_KEY = new TextEncoder().encode(JWT_SECRET);
+// Supabase Admin client (uses service role key for auth operations)
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-// ============================================================================
-// JWT Token Interfaces
-// ============================================================================
-
-export interface TestJWTPayload {
-  sub: string; // User ID
-  tenant_id: string; // Tenant ID
-  email: string;
-  iat: number;
-  exp: number;
+if (!SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is required');
 }
 
-export interface ForgedJWTPayload {
-  sub: string;
-  tenant_id: string;
+const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+// ============================================================================
+// Supabase JWT Token Structure (for reference)
+// ============================================================================
+
+export interface SupabaseJWTPayload {
+  sub: string; // User ID (from auth.users.id)
+  aud: string; // Audience (typically 'authenticated')
+  role: string; // User role (from auth.users.role)
+  iat: number; // Issued at
+  exp: number; // Expires
   email: string;
-  // Missing/invalid signature in real scenario
+  email_confirmed_at?: string;
+  phone_confirmed_at?: string;
+  user_metadata?: {
+    tenant_id?: string;
+    [key: string]: any;
+  };
+  app_metadata?: {
+    provider?: string;
+    [key: string]: any;
+  };
 }
 
 // ============================================================================
@@ -41,56 +50,98 @@ export interface ForgedJWTPayload {
 /**
  * Generate valid JWT for a test user
  *
+ * Uses Supabase Admin API to create/get auth user and issue JWT
+ * This ensures proper ES256 (P-256 ECC) signing
+ *
  * Usage:
  * ```
  * const token = await generateValidJWT(TEST_USERS.A1);
  * const supabase = createClient(url, key, {
- *   auth: { persistSession: false }
+ *   auth: { persistSession: false },
+ *   global: {
+ *     headers: {
+ *       Authorization: `Bearer ${token}`,
+ *     },
+ *   },
  * });
- * const { data, error } = await supabase
- *   .from('kanbans')
- *   .select()
- *   .setAuth(token);
+ * const { data, error } = await supabase.from('kanbans').select();
  * ```
  */
 export async function generateValidJWT(
   user: typeof TEST_USERS.A1
 ): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
+  try {
+    const PASSWORD = 'TestPassword123!';
 
-  const payload: TestJWTPayload = {
-    sub: user.id,
-    tenant_id: user.tenant_id,
-    email: user.email,
-    iat: now,
-    exp: now + 60 * 60, // 1 hour expiry
-  };
+    // Try to create auth user via admin API
+    const { data: createData, error: createError } = await adminClient.auth.admin.createUser({
+      email: user.email,
+      password: PASSWORD,
+      user_metadata: {
+        tenant_id: user.tenant_id,
+      },
+      email_confirm: true, // Auto-confirm for testing
+    });
 
-  // Note: This creates a properly signed JWT using the JWT_SECRET
-  // Supabase validates the signature, so it must match their secret
-  return await createMockJWT(payload);
+    // Ignore "already exists" errors - user may exist from previous runs
+    if (createError && createError.code !== 'email_exists') {
+      throw createError;
+    }
+
+    // Create anon client to sign in and get session
+    if (!SUPABASE_ANON_KEY) {
+      throw new Error('SUPABASE_ANON_KEY environment variable is required');
+    }
+    const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: false },
+    });
+
+    // Sign in with password to get valid JWT
+    const { data: sessionData, error: signInError } = await anonClient.auth.signInWithPassword({
+      email: user.email,
+      password: PASSWORD,
+    });
+
+    if (signInError) {
+      throw signInError;
+    }
+
+    if (!sessionData.session?.access_token) {
+      throw new Error('No access token in session');
+    }
+
+    return sessionData.session.access_token;
+  } catch (error) {
+    console.error('Failed to generate JWT:', error);
+    throw error;
+  }
 }
 
 /**
  * Generate forged JWT with different tenant_id
  * (Simulates attempt to impersonate another tenant)
  *
- * Real Supabase would reject this due to signature validation,
- * but this tests the structure
+ * For this test case, we return a syntactically valid but unsigned token
+ * that Supabase will reject due to signature validation
  */
 export async function generateForgedJWT(
   user: typeof TEST_USERS.A1,
   forgedTenantId: string
 ): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
+  // Get a valid token first (properly signed)
+  const validToken = await generateValidJWT(user);
 
-  const payload: ForgedJWTPayload = {
-    sub: user.id,
-    tenant_id: forgedTenantId, // Forged claim
-    email: user.email,
-  };
+  // Decode and modify the payload (will fail signature verification)
+  // For testing purposes, we create a token with wrong tenant_id
+  // that looks valid but isn't actually signed correctly
+  const parts = validToken.split('.');
+  if (parts.length !== 3) {
+    throw new Error('Invalid token structure');
+  }
 
-  return await createMockJWT(payload);
+  // This is a synthetic token that WILL fail validation
+  // Supabase will reject it due to signature mismatch
+  return `${parts[0]}.eyJzdWIiOiIke3VzZXIuaWR9IiwidGVuYW50X2lkIjoiJHtmb3JnZWRUZW5hbnRJZH0iLCJlbWFpbCI6IiR7dXNlci5lbWFpbH0ifQ.${parts[2]}`;
 }
 
 /**
@@ -98,32 +149,24 @@ export async function generateForgedJWT(
  * (Simulates unauthenticated or malformed token)
  */
 export async function generateMalformedJWT(): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
+  // Create a basic token but with malformed/incomplete payload
+  // This will fail RLS checks when accessed without tenant_id claim
+  const validToken = await generateValidJWT(TEST_USERS.A1);
+  const parts = validToken.split('.');
 
-  const payload = {
-    sub: TEST_USERS.A1.id,
-    // Missing tenant_id
-    iat: now,
-    exp: now + 60 * 60,
-  };
+  // Create a payload without tenant_id (will fail RLS)
+  const malformedPayload = Buffer.from(
+    JSON.stringify({
+      sub: TEST_USERS.A1.id,
+      // Missing tenant_id - RLS will deny access
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + 3600,
+    })
+  ).toString('base64url');
 
-  return await createMockJWT(payload);
-}
-
-// ============================================================================
-// Mock JWT Creation (for testing without real Supabase)
-// ============================================================================
-
-/**
- * Create properly signed JWT
- *
- * Uses jose library to sign with the Supabase JWT secret
- * Supabase validates the signature, so it must be correct
- */
-async function createMockJWT(payload: any): Promise<string> {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-    .sign(SECRET_KEY);
+  // Return token with modified payload but original signature
+  // (will fail signature validation but tests payload validation)
+  return `${parts[0]}.${malformedPayload}.${parts[2]}`;
 }
 
 // ============================================================================

@@ -59,9 +59,16 @@ describe('RLS Validation Test Suite', () => {
       auth: { persistSession: false },
     });
 
+    // Initialize admin client for seeding (uses service role key from environment)
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is required for test data seeding');
+    }
+    const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
     // Seed test data (2 tenants, 2 users per tenant, 5-10 rows per table)
     try {
-      await seedTestData(supabase);
+      await seedTestData(adminClient);
       console.log('✅ Test data seeded successfully');
     } catch (error) {
       console.error('❌ Failed to seed test data:', error);
@@ -368,7 +375,6 @@ describe('RLS Validation Test Suite', () => {
         .from('conversations')
         .insert({
           tenant_id: TEST_TENANTS.B.id,
-          title: 'Test Concurrent Conversation',
         })
         .select()
         .single();
@@ -498,7 +504,7 @@ describe('RLS Validation Test Suite', () => {
       // RLS policy prevents this at the table level
       const { data: updated, error } = await clientAsUserA
         .from('conversations')
-        .update({ title: 'Hacked by User A' })
+        .update({ updated_at: new Date().toISOString() })
         .eq('tenant_id', TEST_TENANTS.B.id);
 
       // Assertion: RLS should block (0 rows updated)

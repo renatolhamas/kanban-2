@@ -65,5 +65,26 @@ export default [
     rules: {
       '@typescript-eslint/no-require-imports': 'off'
     }
+  },
+  // --- Produção: Rigor máximo (type-safety obrigatória)
+  {
+    files: ['components/**/*.ts', 'components/**/*.tsx', 'lib/**/*.ts', 'app/**/*.ts', 'app/**/*.tsx', 'pages/**/*.ts', 'pages/**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+    }
+  },
+  // --- Fixtures: Pragmatismo controlado (dados dinâmicos ephemeral)
+  {
+    files: ['tests/fixtures/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+    }
+  },
+  // --- Testes de negócio: Rigor obrigatório (testes são código crítico)
+  {
+    files: ['tests/**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+    }
   }
 ];

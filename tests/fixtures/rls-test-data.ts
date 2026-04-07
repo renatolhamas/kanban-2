@@ -390,24 +390,27 @@ export async function seedTestData(adminClient: any) {
 
     console.log('Cleaning up test data...');
 
-    // Try aggressive cleanup: delete all rows unconditionally (simpler & more reliable)
-    // This removes any test data from prior failed runs
-    try {
-      // Just delete ALL from each table - test data will be recreated
-      await adminClient.from('messages').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('conversations').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('contacts').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('columns').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('kanbans').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('automatic_messages').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('users').delete().gte('id', '00000000-0000-0000-0000-000000000000');
-      await adminClient.from('tenants').delete().gte('id', '00000000-0000-0000-0000-000000000000');
+    // Aggressive cleanup with retry - ensures all test data is removed
+    // Especially important when parallel workflows might interfere
+    const cleanupTables = async () => {
+      const tables = ['messages', 'conversations', 'contacts', 'columns', 'kanbans', 'automatic_messages', 'users', 'tenants'];
+      for (const table of tables) {
+        try {
+          // Delete with a range that covers all UUIDs
+          await adminClient.from(table).delete().gte('id', '00000000-0000-0000-0000-000000000000');
+          console.log(`✓ Cleaned ${table}`);
+        } catch (e) {
+          console.warn(`Warning cleaning ${table}:`, (e as any)?.message);
+        }
+      }
+    };
 
-      console.log('✓ Cleaned all test tables');
-    } catch (cleanupError) {
-      console.warn('Warning during cleanup:', cleanupError);
-      // Continue anyway - test data seeding will insert what we need
-    }
+    // Run cleanup, retry once if any data remains
+    await cleanupTables();
+    // Small delay to ensure deletion is committed
+    await new Promise(r => setTimeout(r, 100));
+    // Second pass to catch any race conditions
+    await cleanupTables();
 
     // Insert with admin client (bypasses RLS)
     const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);

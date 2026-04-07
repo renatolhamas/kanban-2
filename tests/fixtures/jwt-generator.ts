@@ -9,16 +9,23 @@
 import { createClient } from '@supabase/supabase-js';
 import { TEST_USERS, TEST_TENANTS } from './rls-test-data';
 
-// Supabase Admin client (uses service role key for auth operations)
+// Supabase configuration
 const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-if (!SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is required');
-}
+// Lazy-initialized admin client (only created when needed)
+let adminClient: ReturnType<typeof createClient> | null = null;
 
-const adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+function getAdminClient() {
+  if (!adminClient) {
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is required');
+    }
+    adminClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+  }
+  return adminClient;
+}
 
 // ============================================================================
 // Supabase JWT Token Structure (for reference)
@@ -74,7 +81,7 @@ export async function generateValidJWT(
     const PASSWORD = 'TestPassword123!';
 
     // Try to create auth user via admin API
-    const { data: createData, error: createError } = await adminClient.auth.admin.createUser({
+    const { data: createData, error: createError } = await getAdminClient().auth.admin.createUser({
       email: user.email,
       password: PASSWORD,
       user_metadata: {

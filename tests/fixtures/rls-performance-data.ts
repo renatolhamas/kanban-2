@@ -98,6 +98,8 @@ export interface PerformanceBaseline {
   measurements: PerformanceMeasurement[];
   overhead: number; // Percentage overhead of RLS vs non-RLS
   meetsThreshold: boolean; // < 5% target
+  selectWithRls?: number; // Duration in ms for SELECT with RLS
+  selectWithoutRls?: number; // Duration in ms for SELECT without RLS
 }
 
 /**
@@ -139,15 +141,16 @@ export async function measureSelectPerformance(
  * Compares SELECT performance with vs without RLS to measure overhead
  */
 export async function runPerformanceBaseline(
-  supabase: any,
+  anonClient: any,
+  adminClient: any,
   rowCount: number = 10000
 ): Promise<PerformanceBaseline> {
   const measurements: PerformanceMeasurement[] = [];
 
   // Measurement 1: SELECT from Tenant A with RLS
-  // (User A authenticated, should see Tenant A rows)
+  // (User A authenticated via JWT, RLS enforced)
   const rls_tenant_a = await measureSelectPerformance(
-    supabase,
+    anonClient,
     'kanbans',
     { column: 'tenant_id', value: TEST_TENANTS.A.id }
   );
@@ -162,15 +165,34 @@ export async function runPerformanceBaseline(
     timestamp: new Date().toISOString(),
   });
 
-  // Calculate overhead
-  // Note: This is a simplified measurement.
-  // In production, would need EXPLAIN ANALYZE, warm cache, etc.
-  const overhead = 0; // RLS should have minimal overhead with proper indexes
+  // Measurement 2: SELECT without RLS (admin/service role)
+  // (Bypasses RLS entirely for comparison)
+  const no_rls = await measureSelectPerformance(
+    adminClient,
+    'kanbans'
+  );
+
+  measurements.push({
+    description: 'SELECT without RLS (admin)',
+    queryType: 'SELECT',
+    rowCount,
+    withRLS: false,
+    durationMs: no_rls.durationMs,
+    rowsReturned: no_rls.rowCount,
+    timestamp: new Date().toISOString(),
+  });
+
+  // Calculate overhead: (RLS_time - NoRLS_time) / NoRLS_time * 100
+  const overhead = no_rls.durationMs > 0
+    ? ((rls_tenant_a.durationMs - no_rls.durationMs) / no_rls.durationMs) * 100
+    : 0;
 
   return {
     measurements,
     overhead,
     meetsThreshold: overhead < 5,
+    selectWithRls: rls_tenant_a.durationMs,
+    selectWithoutRls: no_rls.durationMs,
   };
 }
 

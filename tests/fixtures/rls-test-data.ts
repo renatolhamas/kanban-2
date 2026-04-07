@@ -360,11 +360,11 @@ export async function seedTestData(adminClient: any) {
     console.log('Cleaning up test data...');
 
     const deleteOps = [
-      { table: 'automatic_messages', filter: (q: any) => q.delete().is('id', null) },
-      { table: 'messages', filter: (q: any) => q.delete().is('conversation_id', null) },
+      { table: 'automatic_messages', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
+      { table: 'messages', filter: (q: any) => q.delete().in('id', []) }, // Will be deleted via conversations FK
       { table: 'conversations', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
       { table: 'contacts', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
-      { table: 'columns', filter: (q: any) => q.delete().is('id', null) },
+      { table: 'columns', filter: (q: any) => q.delete().in('id', []) }, // Will be deleted via kanbans FK
       { table: 'kanbans', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
       { table: 'users', filter: (q: any) => q.delete().in('tenant_id', testTenantIds) },
       { table: 'tenants', filter: (q: any) => q.delete().in('id', testTenantIds) },

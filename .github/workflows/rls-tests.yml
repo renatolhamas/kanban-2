@@ -58,6 +58,7 @@ jobs:
           retention-days: 30
 
   # Optional: Performance baseline (runs only on main branch)
+  # Uses same concurrency group as rls-tests to prevent parallel execution
   performance-baseline:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'

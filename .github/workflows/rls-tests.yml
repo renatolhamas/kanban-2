@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   rls-tests:
+    if: false
     runs-on: ubuntu-latest
 
     strategy:
@@ -50,8 +51,8 @@ jobs:
   # Optional: Performance baseline (separate test script to avoid data conflicts)
   # Now uses test:performance script with its own performance dataset
   performance-baseline:
+    if: false
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code

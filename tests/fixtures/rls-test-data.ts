@@ -193,7 +193,7 @@ export function generateComprehensiveTestDataset() {
     createTestKanban(TEST_TENANTS.A.id, 3),
   ];
 
-  const tenantAColumns = tenantAKanbans.flatMap((kanban, ki) =>
+  const tenantAColumns = tenantAKanbans.flatMap((kanban, _ki) =>
     Array.from({ length: 3 }, (_, ci) =>
       createTestColumn(kanban.id, ci + 1)
     )
@@ -213,7 +213,7 @@ export function generateComprehensiveTestDataset() {
     )
   );
 
-  const tenantAMessages = tenantAConversations.flatMap((conv, ci) =>
+  const tenantAMessages = tenantAConversations.flatMap((conv, _ci) =>
     Array.from({ length: 5 }, (_, mi) =>
       createTestMessage(conv.id, mi + 1)
     )
@@ -234,7 +234,7 @@ export function generateComprehensiveTestDataset() {
     createTestKanban(TEST_TENANTS.B.id, 3),
   ];
 
-  const tenantBColumns = tenantBKanbans.flatMap((kanban, ki) =>
+  const tenantBColumns = tenantBKanbans.flatMap((kanban, _ki) =>
     Array.from({ length: 3 }, (_, ci) =>
       createTestColumn(kanban.id, ci + 1)
     )
@@ -254,7 +254,7 @@ export function generateComprehensiveTestDataset() {
     )
   );
 
-  const tenantBMessages = tenantBConversations.flatMap((conv, ci) =>
+  const tenantBMessages = tenantBConversations.flatMap((conv, _ci) =>
     Array.from({ length: 5 }, (_, mi) =>
       createTestMessage(conv.id, mi + 1)
     )
@@ -387,7 +387,7 @@ export async function seedTestData(adminClient: SupabaseClient) {
   try {
     // Clean up existing test data first (in reverse order due to FK constraints)
     // Delete using a condition that matches test tenant IDs
-    const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
+    const _testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
 
     console.log('Cleaning up test data...');
 
@@ -401,7 +401,7 @@ export async function seedTestData(adminClient: SupabaseClient) {
           if (!error) {
             console.log(`[Pass ${pass}] ✓ Cleaned ${table}`);
           }
-        } catch (e) {
+        } catch (_e) {
           // Silently ignore cleanup errors - they might be due to orphaned data or race conditions
         }
       }

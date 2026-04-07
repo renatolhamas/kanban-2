@@ -16,15 +16,12 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   TEST_TENANTS,
   TEST_USERS,
-  generateComprehensiveTestDataset,
   seedTestData,
   cleanupTestData,
 } from './fixtures/rls-test-data';
 import {
   generateValidJWT,
   generateForgedJWT,
-  generateMalformedJWT,
-  decodeJWTClaims,
 } from './fixtures/jwt-generator';
 import {
   generatePerformanceDataset,

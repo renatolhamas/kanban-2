@@ -7,7 +7,7 @@
 
 import { v4 as uuidv4 } from 'uuid';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { TEST_TENANTS, TEST_USERS } from './rls-test-data';
+import { TEST_TENANTS } from './rls-test-data';
 
 // ============================================================================
 // Performance Test Dataset Generator

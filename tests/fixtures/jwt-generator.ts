@@ -81,7 +81,7 @@ export async function generateValidJWT(
     const PASSWORD = 'TestPassword123!';
 
     // Try to create auth user via admin API
-    const { data: createData, error: createError } = await getAdminClient().auth.admin.createUser({
+    const { data: _createData, error: createError } = await getAdminClient().auth.admin.createUser({
       email: user.email,
       password: PASSWORD,
       user_metadata: {
@@ -133,7 +133,7 @@ export async function generateValidJWT(
  */
 export async function generateForgedJWT(
   user: typeof TEST_USERS.A1,
-  forgedTenantId: string
+  _forgedTenantId: string
 ): Promise<string> {
   // Get a valid token first (properly signed)
   const validToken = await generateValidJWT(user);
@@ -272,7 +272,7 @@ export const TestScenarios = {
 /**
  * Decode and display JWT claims (for debugging)
  */
-export function decodeJWTClaims(token: string): any {
+export function decodeJWTClaims(token: string): Record<string, unknown> {
   const parts = token.split('.');
   if (parts.length !== 3) {
     throw new Error('Invalid JWT format');

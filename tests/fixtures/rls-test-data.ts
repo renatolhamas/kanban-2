@@ -8,6 +8,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 // ============================================================================
 // Test Data Identifiers (Fixed for Deterministic Tests)
@@ -69,7 +70,7 @@ export function createTestTenant(overrides?: Partial<typeof TEST_TENANTS.A>) {
 /**
  * Create test user record
  */
-export function createTestUser(overrides?: any) {
+export function createTestUser(overrides?: Partial<Record<string, unknown>>) {
   return {
     id: TEST_USERS.A1.id,
     tenant_id: TEST_USERS.A1.tenant_id,
@@ -297,7 +298,7 @@ export function generateComprehensiveTestDataset() {
  * users → [cross-tenant data]
  * tenants → [last]
  */
-export async function cleanupTestData(supabase: any) {
+export async function cleanupTestData(supabase: SupabaseClient) {
   const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
   const testUserIds = [
     TEST_USERS.A1.id,
@@ -380,7 +381,7 @@ export async function cleanupTestData(supabase: any) {
  *
  * @param adminClient Supabase admin client (created with SUPABASE_SERVICE_ROLE_KEY)
  */
-export async function seedTestData(adminClient: any) {
+export async function seedTestData(adminClient: SupabaseClient) {
   const dataset = generateComprehensiveTestDataset();
 
   try {

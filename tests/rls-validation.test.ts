@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   TEST_TENANTS,
   TEST_USERS,
@@ -46,8 +46,8 @@ const SUPABASE_ANON_KEY =
   process.env.SUPABASE_ANON_KEY ||
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqY2p1Y2d5bHdranJkcHNxZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzE3MTIsImV4cCI6MjA5MDY0NzcxMn0.JNzwv5kdT8L0I9OA39obnLvuOB-hocPxMweonQJV7n8';
 
-let supabase: any;
-let adminClient: any;
+let supabase: SupabaseClient;
+let adminClient: SupabaseClient;
 
 // ============================================================================
 // Test Setup & Teardown
@@ -569,7 +569,7 @@ describe('RLS Validation Test Suite', () => {
       // Assertion: User A can delete own kanban
       expect(error).toBeNull();
       expect(Array.isArray(deleted)).toBe(true);
-      expect((deleted as any[]).length).toBeGreaterThan(0); // ✅ PASS: Can delete own data
+      expect((deleted as unknown[]).length).toBeGreaterThan(0); // ✅ PASS: Can delete own data
 
       // Verify columns were cascaded (cleanup check)
       const { data: orphanColumns } = await supabase
@@ -643,7 +643,7 @@ describe('RLS Validation Test Suite', () => {
         return;
       }
 
-      performanceBaseline = await runPerformanceBaseline(supabase, 10000);
+      performanceBaseline = await runPerformanceBaseline(supabase, adminClient, 10000);
 
       console.log(
         `\n⏱️  RLS Performance Metrics:`

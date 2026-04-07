@@ -6,6 +6,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
+import { SupabaseClient } from '@supabase/supabase-js';
 import { TEST_TENANTS, TEST_USERS } from './rls-test-data';
 
 // ============================================================================
@@ -55,7 +56,7 @@ export function generatePerformanceDataset(rowCount: number = 10000) {
  * }
  * ```
  */
-export async function seedPerformanceData(supabase: any, dataset: any) {
+export async function seedPerformanceData(supabase: SupabaseClient, dataset: ReturnType<typeof generatePerformanceDataset>) {
   try {
     // Insert in batches to avoid timeout
     const batchSize = 1000;
@@ -108,7 +109,7 @@ export interface PerformanceBaseline {
  * Returns execution time in milliseconds
  */
 export async function measureSelectPerformance(
-  supabase: any,
+  supabase: SupabaseClient,
   tableName: string,
   filterCondition?: { column: string; value: string }
 ): Promise<{ durationMs: number; rowCount: number }> {
@@ -141,8 +142,8 @@ export async function measureSelectPerformance(
  * Compares SELECT performance with vs without RLS to measure overhead
  */
 export async function runPerformanceBaseline(
-  anonClient: any,
-  adminClient: any,
+  anonClient: SupabaseClient,
+  adminClient: SupabaseClient,
   rowCount: number = 10000
 ): Promise<PerformanceBaseline> {
   const measurements: PerformanceMeasurement[] = [];
@@ -263,7 +264,7 @@ ${
 /**
  * Delete performance test data (cleanup)
  */
-export async function cleanupPerformanceData(supabase: any) {
+export async function cleanupPerformanceData(supabase: SupabaseClient) {
   try {
     // Delete all Tenant A kanbans created by performance tests
     // (they all have 'Performance Test Kanban' in the name)

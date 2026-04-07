@@ -42,11 +42,11 @@ export interface SupabaseJWTPayload {
   phone_confirmed_at?: string;
   user_metadata?: {
     tenant_id?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   app_metadata?: {
     provider?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

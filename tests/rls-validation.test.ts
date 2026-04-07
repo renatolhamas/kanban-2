@@ -163,7 +163,7 @@ describe('RLS Validation Test Suite', () => {
       // Assertion: RLS should block (0 rows updated)
       expect(error).toBeNull();
       expect(Array.isArray(updated)).toBe(true);
-      expect(updated.length).toBe(0); // ✅ PASS: 0 rows affected
+      expect((updated as any[]).length).toBe(0); // ✅ PASS: 0 rows affected
     });
 
     /**
@@ -204,7 +204,7 @@ describe('RLS Validation Test Suite', () => {
       // Assertion: RLS should block (0 rows deleted)
       expect(error).toBeNull();
       expect(Array.isArray(deleted)).toBe(true);
-      expect(deleted.length).toBe(0); // ✅ PASS: 0 rows affected
+      expect((deleted as any[]).length).toBe(0); // ✅ PASS: 0 rows affected
     });
 
     /**
@@ -510,7 +510,7 @@ describe('RLS Validation Test Suite', () => {
       // Assertion: RLS should block (0 rows updated)
       expect(error).toBeNull();
       expect(Array.isArray(updated)).toBe(true);
-      expect(updated!.length).toBe(0); // ✅ PASS: UPDATE blocked
+      expect((updated as any[]).length).toBe(0); // ✅ PASS: UPDATE blocked
     });
 
     /**
@@ -553,7 +553,7 @@ describe('RLS Validation Test Suite', () => {
       // Assertion: User A can delete own kanban
       expect(error).toBeNull();
       expect(Array.isArray(deleted)).toBe(true);
-      expect(deleted!.length).toBeGreaterThan(0); // ✅ PASS: Can delete own data
+      expect((deleted as any[]).length).toBeGreaterThan(0); // ✅ PASS: Can delete own data
 
       // Verify columns were cascaded (cleanup check)
       const { data: orphanColumns } = await supabase

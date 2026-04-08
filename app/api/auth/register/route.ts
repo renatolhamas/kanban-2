@@ -7,6 +7,7 @@ import { validateEnvironmentDomain } from "@/lib/env-validation";
 import { checkIPLimit, checkEmailLimit, getClientIP } from "@/lib/rate-limit";
 import { validateConfirmationLink } from "@/lib/link-validation";
 import { sendConfirmationEmail } from "@/lib/email";
+import { createDefaultKanban } from "@/lib/kanban";
 
 // Supabase client will be initialized on first request
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -210,6 +211,34 @@ export async function POST(
     }
 
     console.log("User record created successfully:", userData);
+
+    // STEP 5.5: Create default kanban "Main" with 4 columns
+    try {
+      await createDefaultKanban(supabase, tenantId);
+    } catch (kanbanError) {
+      console.error("Kanban creation error:", kanbanError);
+      // Log error but don't rollback — user can create kanban manually
+      // If we blocked here, the entire registration would fail
+      try {
+        await supabase.from("failed_registrations").insert([
+          {
+            email,
+            created_resources: {
+              auth_user: true,
+              tenant: true,
+              user_record: true,
+              kanban: false,
+            },
+            cleanup_attempted: false,
+            error_message: `Kanban creation failed: ${kanbanError instanceof Error ? kanbanError.message : "Unknown error"}`,
+            notes: "User and tenant created successfully, but kanban creation failed. User can create kanban manually via UI.",
+          },
+        ]);
+      } catch (auditError) {
+        console.error("Failed to log kanban creation error:", auditError);
+      }
+      // Continue with registration — kanban failure is non-blocking
+    }
 
     // STEP 6: Generate confirmation link via admin.generateLink()
     // Note: generateLink API varies by SDK version; using type assertion for flexibility

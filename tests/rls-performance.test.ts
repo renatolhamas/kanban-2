@@ -7,7 +7,7 @@
  * - Query performance scales predictably
  */
 
-import { describe, it, expect, beforeAll, afterAll, skipIf } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   generatePerformanceDataset,

@@ -11,7 +11,7 @@
  * Database: Supabase (real connection)
  */
 
-import { describe, it, expect, beforeAll, afterAll, skipIf } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   TEST_TENANTS,

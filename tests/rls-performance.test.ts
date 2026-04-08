@@ -7,7 +7,7 @@
  * - Query performance scales predictably
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, skipIf } from 'vitest';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   generatePerformanceDataset,
@@ -27,7 +27,11 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.e
 let adminClient: SupabaseClient;
 let anonClient: SupabaseClient;
 
-describe.skip('RLS Performance Baseline Tests', () => {
+// Skip performance tests unless explicitly enabled via TEST_DATABASE=true
+const isRLSEnabled = process.env.TEST_DATABASE === 'true';
+const describeRLS = isRLSEnabled ? describe : describe.skip;
+
+describeRLS('RLS Performance Baseline Tests', () => {
   beforeAll(async () => {
     // Verify environment
     if (!SUPABASE_SERVICE_ROLE_KEY) {

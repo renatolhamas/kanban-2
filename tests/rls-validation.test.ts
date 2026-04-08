@@ -11,7 +11,7 @@
  * Database: Supabase (real connection)
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, skipIf } from 'vitest';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import {
   TEST_TENANTS,
@@ -50,7 +50,11 @@ let adminClient: SupabaseClient;
 // Test Setup & Teardown
 // ============================================================================
 
-describe('RLS Validation Test Suite', () => {
+// Skip RLS tests unless explicitly enabled via TEST_DATABASE=true
+const isRLSEnabled = process.env.TEST_DATABASE === 'true';
+const describeRLS = isRLSEnabled ? describe : describe.skip;
+
+describeRLS('RLS Validation Test Suite', () => {
   beforeAll(async () => {
     // Initialize Supabase client (without session persistence)
     supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

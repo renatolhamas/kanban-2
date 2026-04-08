@@ -382,6 +382,14 @@ export async function cleanupTestData(supabase: SupabaseClient) {
  * @param adminClient Supabase admin client (created with SUPABASE_SERVICE_ROLE_KEY)
  */
 export async function seedTestData(adminClient: SupabaseClient) {
+  // GUARD: só executa se TEST_DATABASE=true no .env.local
+  if (process.env.TEST_DATABASE !== 'true') {
+    throw new Error(
+      '❌ seedTestData() recusou execução: TEST_DATABASE não está "true" no .env.local. ' +
+      'Altere para TEST_DATABASE=true para rodar os testes RLS.'
+    );
+  }
+
   const dataset = generateComprehensiveTestDataset();
 
   try {
@@ -391,19 +399,43 @@ export async function seedTestData(adminClient: SupabaseClient) {
 
     console.log('Cleaning up test data...');
 
-    // Multi-pass aggressive cleanup to handle parallel workflows and race conditions
+    // Multi-pass scoped cleanup - only deletes test data, not production data
     const cleanupTables = async (pass: number) => {
-      const tables = ['messages', 'conversations', 'contacts', 'columns', 'kanbans', 'automatic_messages', 'users', 'tenants'];
-      for (const table of tables) {
+      // IDs for test data only - never affects production records
+      const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
+      const testUserIds = [TEST_USERS.A1.id, TEST_USERS.A2.id, TEST_USERS.B1.id, TEST_USERS.B2.id];
+
+      // Tables with tenant_id FK - delete by tenant only
+      const tenantScopedTables = ['messages', 'conversations', 'contacts', 'columns', 'kanbans', 'automatic_messages'];
+      for (const table of tenantScopedTables) {
         try {
-          // Delete everything from the table (covers all UUIDs)
-          const { error } = await adminClient.from(table).delete().gte('id', '00000000-0000-0000-0000-000000000000');
+          const { error } = await adminClient.from(table).delete().in('tenant_id', testTenantIds);
           if (!error) {
-            console.log(`[Pass ${pass}] ✓ Cleaned ${table}`);
+            console.log(`[Pass ${pass}] ✓ Cleaned ${table} (tenant scoped)`);
           }
         } catch (_e) {
           // Silently ignore cleanup errors - they might be due to orphaned data or race conditions
         }
+      }
+
+      // Users table - delete by specific test user IDs only
+      try {
+        const { error } = await adminClient.from('users').delete().in('id', testUserIds);
+        if (!error) {
+          console.log(`[Pass ${pass}] ✓ Cleaned users (ID scoped)`);
+        }
+      } catch (_e) {
+        // Silently ignore cleanup errors
+      }
+
+      // Tenants table - delete by specific test tenant IDs only
+      try {
+        const { error } = await adminClient.from('tenants').delete().in('id', testTenantIds);
+        if (!error) {
+          console.log(`[Pass ${pass}] ✓ Cleaned tenants (ID scoped)`);
+        }
+      } catch (_e) {
+        // Silently ignore cleanup errors
       }
     };
 

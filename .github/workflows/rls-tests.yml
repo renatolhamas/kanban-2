@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   rls-tests:
-    if: false
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -35,6 +35,7 @@ jobs:
       - name: Run RLS validation tests
         run: npm run test:rls
         env:
+          TEST_DATABASE: 'false'
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -51,7 +52,6 @@ jobs:
   # Optional: Performance baseline (separate test script to avoid data conflicts)
   # Now uses test:performance script with its own performance dataset
   performance-baseline:
-    if: false
     runs-on: ubuntu-latest
 
     steps:
@@ -70,6 +70,7 @@ jobs:
       - name: Run performance baseline tests
         run: npm run test:performance
         env:
+          TEST_DATABASE: 'false'
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

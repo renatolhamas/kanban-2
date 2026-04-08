@@ -37,4 +37,20 @@ Environment configured via AIOX bootstrap.
 
 ---
 
+## Architecture & Development Patterns
+
+### Application-Layer Orchestration
+
+This project uses **application-layer orchestration** (Node.js/TypeScript) for all multi-step operations, database mutations, and automation flows — never PostgreSQL Triggers or Edge Functions.
+
+**Why?** Simplicity, testability, debuggability, and consistency.
+
+**For Developers:**
+- **Quick Start:** [PATTERNS.md](./PATTERNS.md) — 3-step onboarding (10 min read)
+- **Deep Dive:** [Application-Layer Orchestration Pattern](./docs/architecture/application-layer-orchestration-pattern.md) — Complete guide with examples, testing, pitfalls, FAQ
+
+**Key Reference:** `app/api/auth/register/route.ts` — Canonical implementation showing multi-step user registration with tenant auto-creation and error rollback.
+
+---
+
 _Project initialized with Synkra AIOX Framework_

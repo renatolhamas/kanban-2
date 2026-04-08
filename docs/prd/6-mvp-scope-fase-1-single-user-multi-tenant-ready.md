@@ -57,7 +57,7 @@
 | **Validação Telefone**   | Formato internacional com "+" (E.164: +5511987654321)               | Regex stricto, erro claro se inválido             |
 | **Modal Create Contact** | Form com Name, Number; validação inline                             | Salva em `contacts` table                         |
 | **Modal Edit Contact**   | Mesmos fields; validação idêntica                                   | Update sem criar duplicata                        |
-| **Auto-registro**        | Contato gravado automaticamente ao receber primeira msg de WhatsApp | Se não existe, criar; se existe, update timestamp |
+| **Auto-registro**        | Contato gravado automaticamente ao receber primeira msg de WhatsApp (via webhook callback processado em Node.js, não trigger de BD) | Se não existe, criar; se existe, update timestamp |
 
 ### 🔧 **Página de Configurações**
 

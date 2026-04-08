@@ -129,7 +129,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 **Fluxo de Mensagens Recebidas (Evo GO):**
 
 ```
-Evo GO webhook → Backend /api/webhooks/evo-go/messages
+Evo GO webhook → Backend /api/webhooks/evo-go/messages (Node.js application layer)
   ├─ Validar assinatura HMAC-SHA256 (Evo GO)
   ├─ Extrair: wa_phone, message_text, media_url (se houver)
   ├─ Lookup contact ou auto-criar
@@ -138,6 +138,8 @@ Evo GO webhook → Backend /api/webhooks/evo-go/messages
   ├─ Broadcast via Supabase Real-time Subscriptions (WebSocket)
   └─ Frontend atualiza UI instantaneamente
 ```
+
+**IMPORTANTE:** Todos os passos (validação, lookup, criação) executam em Node.js **application-layer**, NÃO em PostgreSQL Triggers ou Edge Functions. Padrão: `app/api/auth/register/route.ts` (STEP 4-5) serve como modelo de orquestração multi-step com rollback automático.
 
 **Fluxo de Mensagens Enviadas (via Evo GO):**
 

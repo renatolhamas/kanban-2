@@ -39,7 +39,8 @@
       "Bash(gh run:*)",
       "WebFetch(domain:docs.evolutionfoundation.com.br)",
       "WebFetch(domain:doc.evolution-api.com)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "mcp__supabase__list_tables"
     ]
   },
   "enableAllProjectMcpServers": true,

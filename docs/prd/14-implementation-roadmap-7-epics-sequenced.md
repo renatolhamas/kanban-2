@@ -19,9 +19,10 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 - Story 1.2: Supabase Auth (register, login, profile)
 - Story 1.3: Email Confirmation Flow (Resend integration, confirmation link generation, token validation)
 - Story 1.4: RLS Policies Validation (Testing & Verification)
-- Story 1.5: Onboarding (tenant auto-create, default kanban "Main" com colunas padrão)
-- Story 1.6: Evo GO API Pairing (QR Code)
-- Story 1.7: Webhook endpoint setup (/api/webhooks/messages)
+- Story 1.5: Onboarding (tenant auto-create via application-layer, default kanban "Main" com colunas padrão criadas em Node.js)
+- Story 1.6: Application Layout & Navigation (Header, Sidebar, User menu)
+- Story 1.7: Evo GO API Pairing (QR Code)
+- Story 1.8: Webhook endpoint setup (/api/webhooks/messages)
 
 **Outputs:** Auth working with email confirmation, webhook validated, schema ready
 
@@ -64,8 +65,8 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 **Stories:**
 
-- Story 4.1: Webhook → auto-register contacts
-- Story 4.2: Webhook → auto-create conversations
+- Story 4.1: Webhook handler → auto-register contacts (application-layer)
+- Story 4.2: Webhook handler → auto-create conversations (application-layer)
 - Story 4.3: Webhook → save messages to DB
 - Story 4.4: Send message UI → Evolution API
 - Story 4.5: Message delivery validation
@@ -135,6 +136,26 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 | **QA & Polish** | **1-2 semanas** | **Semanas 15-16** |
 
 **Total: 8-12 semanas** (MVP ready for beta)
+
+---
+
+---
+
+## 🚀 Phase 2 Roadmap (Post-MVP)
+
+### EPIC 8: ATTENDANTS (Phase 2 — Planned)
+
+**Objetivo:** Multi-user support with role-based access control and RLS granularity
+
+**Stories (TBD):**
+- Story 8.1: Multi-user (Attendants) — Invite attendants, RLS per role
+- Story 8.2: Permissions system — Owner grants read/write/admin access
+- Story 8.3: Attendance tracking — Dashboard showing who handled which conversation
+- Story 8.4: Performance metrics — Stats per attendant (messages handled, response time)
+
+**Timeline:** Post-MVP (Phase 2, ~4-6 weeks after MVP stable)
+
+**Status:** Planned, awaiting MVP completion and market feedback
 
 ---
 

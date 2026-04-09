@@ -20,9 +20,8 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 - Story 1.3: Email Confirmation Flow (Resend integration, confirmation link generation, token validation)
 - Story 1.4: RLS Policies Validation (Testing & Verification)
 - Story 1.5: Onboarding (tenant auto-create via application-layer, default kanban "Main" com colunas padrão criadas em Node.js)
-- Story 1.6: Application Layout & Navigation (Header, Sidebar, User menu)
 
-**Outputs:** Auth working with email confirmation, schema ready
+**Outputs:** Auth working with email confirmation, schema ready, users onboarded com kanban automático
 
 ---
 
@@ -34,16 +33,18 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 - Story 2.1: The Backbone (Setup & Tokens) — Instalar Shadcn/ui e configurar `tailwind.config.ts` com cores e fontes. É o "DNA" do projeto.
 - Story 2.2: The Lab (Storybook Setup) — Instalar Storybook e conectar ao Tailwind (setup técnico, sem documentação de tokens ainda).
-- Story 2.3: Atomic Forms & Feedback (O Coração) — Criar Button, Input, Toast com Storybook stories. São críticos para UX.
-- Story 2.4: Real World Test (Auth Refactor) — Aplicar componentes de Form no Auth atual. Valida se Shadcn+Tailwind funcionam antes de criar 10+ componentes.
-- Story 2.5: UI Expansion (Layout & Data) — Card, Modal, Tabs, Avatar, Spinner conforme necessidade do dashboard.
-- Story 2.6: Documentation & Polishing — Documentar Design Tokens no Storybook e ajustar espaçamentos. Agora você sabe o que documentar.
-- Story 2.7: Visual Validation — Checklist final: acessibilidade e Dark Mode.
+- Story 2.3: The Inspector (Vitest Integration) — Configurar o Vitest para testar componentes. Garantir que o ambiente suporte as classes do Tailwind e as interações do React.
+- Story 2.4: Atomic Forms & Feedback (O Coração) — Criar Button, Input, Toast com Storybook stories. São críticos para UX.
+- Story 2.5: Real World Test (Auth Refactor) — Aplicar componentes de Form no Auth atual. Valida se Shadcn+Tailwind funcionam antes de criar 10+ componentes.
+- Story 2.6: UI Expansion (Layout & Data) — Card, Modal, Tabs, Avatar, Spinner conforme necessidade do dashboard.
+- Story 2.7: Documentation & Polishing — Documentar Design Tokens no Storybook e ajustar espaçamentos. Agora você sabe o que documentar.
+- Story 2.8: Visual Validation — Checklist final: acessibilidade e Dark Mode.
+- Story 2.9: Application Layout & Navigation — Refatorar Header, Sidebar e User menu aplicando componentes validados do Design System. Menu funcional + refatorado.
 
-**Outputs:** Design tokens definidos, UI Library (15+ componentes) documentada e testada, fluxo de Auth totalmente refatorado como POC.
+**Outputs:** Design tokens definidos, UI Library (15+ componentes) documentada e testada, fluxo de Auth totalmente refatorado como POC, Application Layout & Navigation refatorado com componentes validados.
 
-**Critical Path (Semanas 4-6):** Stories 2.1-2.4 — Bloqueador para Epic 3+
-**Adaptive (Semanas 6+ paralelo com Epics 3-4):** Stories 2.5-2.7 — Conforme necessidade real
+**Critical Path (Semanas 4-6):** Stories 2.1-2.5 — Bloqueador para Epic 3+
+**Adaptive (Semanas 6+ paralelo com Epics 3-4):** Stories 2.6-2.9 — Conforme necessidade real
 
 ---
 
@@ -146,8 +147,8 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 | Epic            | Duration        | Period            | Notes |
 | --------------- | --------------- | ----------------- | ----- |
 | Epic 1          | 2-3 semanas     | Semanas 1-3       | Foundation & Auth |
-| **Epic 2 (Critical)** | **2 semanas**   | **Semanas 4-6**   | **Stories 2.1-2.4** — Valida Shadcn/Tailwind antes de proseguir |
-| **Epic 2 (Adaptive)** | **1-2 semanas**   | **Semanas 6+ paralelo** | **Stories 2.5-2.7** — Conforme necessidade real de Epics 3-4 |
+| **Epic 2 (Critical)** | **2 semanas**   | **Semanas 4-6**   | **Stories 2.1-2.5** — Valida Shadcn/Tailwind antes de proseguir |
+| **Epic 2 (Adaptive)** | **2-3 semanas**   | **Semanas 6+ paralelo** | **Stories 2.6-2.9** — Conforme necessidade real de Epics 3-4 |
 | Epic 3          | 1-2 semanas     | Semanas 7-8       | Evolution Setup |
 | Epic 4          | 2 semanas       | Semanas 9-10      | Kanban Board |
 | Epic 5          | 2 semanas       | Semanas 11-12     | Evolution Phase 2 |

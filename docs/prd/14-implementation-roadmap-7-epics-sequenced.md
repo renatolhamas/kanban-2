@@ -3,7 +3,7 @@
 ## Sequência de Implementação
 
 ```
-Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
+Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epic 8
 (Linear, sem dependencies cruzadas)
 ```
 
@@ -11,7 +11,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ## Epic 1: FOUNDATION & AUTH
 
-**Objetivo:** Schema, Auth, Email Confirmation, Onboarding, RLS, Evolution API pairing setup
+**Objetivo:** Schema, Auth, Email Confirmation, Onboarding, RLS
 
 **Stories:**
 
@@ -21,102 +21,121 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 - Story 1.4: RLS Policies Validation (Testing & Verification)
 - Story 1.5: Onboarding (tenant auto-create via application-layer, default kanban "Main" com colunas padrão criadas em Node.js)
 - Story 1.6: Application Layout & Navigation (Header, Sidebar, User menu)
-- Story 1.7: Evo GO API Pairing (QR Code)
-- Story 1.8: Webhook endpoint setup (/api/webhooks/messages)
 
-**Outputs:** Auth working with email confirmation, webhook validated, schema ready
+**Outputs:** Auth working with email confirmation, schema ready
 
 ---
 
-## Epic 2: EVOLUTION PHASE 1 (Setup & Pairing)
+## Epic 2: UI CORE & DESIGN SYSTEM
+
+**Objetivo:** Criar uma biblioteca viva onde o Auth é o primeiro a ser transformado, validando o sistema na prática.
+
+**Stories:**
+
+- Story 2.1: The Backbone (Setup & Tokens) — Instalar Shadcn/ui e configurar `tailwind.config.ts` com cores e fontes. É o "DNA" do projeto.
+- Story 2.2: The Lab (Storybook Setup) — Instalar Storybook e conectar ao Tailwind (setup técnico, sem documentação de tokens ainda).
+- Story 2.3: Atomic Forms & Feedback (O Coração) — Criar Button, Input, Toast com Storybook stories. São críticos para UX.
+- Story 2.4: Real World Test (Auth Refactor) — Aplicar componentes de Form no Auth atual. Valida se Shadcn+Tailwind funcionam antes de criar 10+ componentes.
+- Story 2.5: UI Expansion (Layout & Data) — Card, Modal, Tabs, Avatar, Spinner conforme necessidade do dashboard.
+- Story 2.6: Documentation & Polishing — Documentar Design Tokens no Storybook e ajustar espaçamentos. Agora você sabe o que documentar.
+- Story 2.7: Visual Validation — Checklist final: acessibilidade e Dark Mode.
+
+**Outputs:** Design tokens definidos, UI Library (15+ componentes) documentada e testada, fluxo de Auth totalmente refatorado como POC.
+
+**Critical Path (Semanas 4-6):** Stories 2.1-2.4 — Bloqueador para Epic 3+
+**Adaptive (Semanas 6+ paralelo com Epics 3-4):** Stories 2.5-2.7 — Conforme necessidade real
+
+---
+
+## Epic 3: EVOLUTION PHASE 1 (Setup & Pairing)
 
 **Objetivo:** Evolution API integration, webhook validation, manual testing
 
 **Stories:**
 
-- Story 2.1: Evolution API pairing (QR code)
-- Story 2.2: Webhook endpoint (/api/webhooks/messages)
-- Story 2.3: Webhook validation (HMAC-SHA256)
-- Story 2.4: Manual testing (curl, console logs)
+- Story 3.1: Evolution API pairing (QR code)
+- Story 3.2: Webhook endpoint (/api/webhooks/messages)
+- Story 3.3: Webhook validation (HMAC-SHA256)
+- Story 3.4: Manual testing (curl, console logs)
 
 **Outputs:** Evolution connected, webhooks validated, ready for DB
 
 ---
 
-## Epic 3: KANBAN BOARD & CONTACTS
+## Epic 4: KANBAN BOARD & CONTACTS
 
 **Objetivo:** Kanban visualization, drag-and-drop, contacts management
 
 **Stories:**
 
-- Story 3.1: Home page (Kanban board)
-- Story 3.2: Drag-and-drop (dnd-kit v8.0.0)
-- Story 3.3: Kanban CRUD em Settings
-- Story 3.4: Contacts page CRUD
-- Story 3.5: Contact validation (E.164 format)
+- Story 4.1: Home page (Kanban board)
+- Story 4.2: Drag-and-drop (dnd-kit v8.0.0)
+- Story 4.3: Kanban CRUD em Settings
+- Story 4.4: Contacts page CRUD
+- Story 4.5: Contact validation (E.164 format)
 
 **Outputs:** Kanban visível, contacts gerenciáveis
 
 ---
 
-## Epic 4: EVOLUTION PHASE 2 (DB Integration)
+## Epic 5: EVOLUTION PHASE 2 (DB Integration)
 
 **Objetivo:** End-to-end message flow, webhook → DB → UI
 
 **Stories:**
 
-- Story 4.1: Webhook handler → auto-register contacts (application-layer)
-- Story 4.2: Webhook handler → auto-create conversations (application-layer)
-- Story 4.3: Webhook → save messages to DB
-- Story 4.4: Send message UI → Evolution API
-- Story 4.5: Message delivery validation
+- Story 5.1: Webhook handler → auto-register contacts (application-layer)
+- Story 5.2: Webhook handler → auto-create conversations (application-layer)
+- Story 5.3: Webhook → save messages to DB
+- Story 5.4: Send message UI → Evolution API
+- Story 5.5: Message delivery validation
 
 **Outputs:** Messages flowing end-to-end
 
 ---
 
-## Epic 5: CHAT & REAL-TIME
+## Epic 6: CHAT & REAL-TIME
 
 **Objetivo:** Real-time messaging, WebSocket subscriptions, chat interface
 
 **Stories:**
 
-- Story 5.1: Chat modal UI
-- Story 5.2: Message history pagination
-- Story 5.3: Real-time subscriptions (WebSocket)
-- Story 5.4: Kanban/column selector in chat
-- Story 5.5: Archive conversation
-- Story 5.6: Loading + error states
+- Story 6.1: Chat modal UI
+- Story 6.2: Message history pagination
+- Story 6.3: Real-time subscriptions (WebSocket)
+- Story 6.4: Kanban/column selector in chat
+- Story 6.5: Archive conversation
+- Story 6.6: Loading + error states
 
 **Outputs:** Chat funcional, instantaneous updates
 
 ---
 
-## Epic 6: SETTINGS
+## Epic 7: SETTINGS
 
 **Objetivo:** User configuration, kanbans, automatic messages, Evolution status
 
 **Stories:**
 
-- Story 6.1: Profile subsection (name, password)
-- Story 6.2: Connection subsection (Evolution status)
-- Story 6.3: Kanbans subsection (CRUD, reorder com setas ↑↓)
-- Story 6.4: Automatic Messages subsection (CRUD)
+- Story 7.1: Profile subsection (name, password)
+- Story 7.2: Connection subsection (Evolution status)
+- Story 7.3: Kanbans subsection (CRUD, reorder com setas ↑↓)
+- Story 7.4: Automatic Messages subsection (CRUD)
 
 **Outputs:** Full settings interface
 
 ---
 
-## Epic 7: AUTOMAÇÃO
+## Epic 8: AUTOMAÇÃO
 
 **Objetivo:** Automatic Messages system, manual triggers, testing, polish
 
 **Stories:**
 
-- Story 7.1: Automatic Messages template system
-- Story 7.2: Manual trigger (botão em Chat)
-- Story 7.3: Message testing
-- Story 7.4: Polish + edge cases
+- Story 8.1: Automatic Messages template system
+- Story 8.2: Manual trigger (botão em Chat)
+- Story 8.3: Message testing
+- Story 8.4: Polish + edge cases
 
 **Outputs:** Manual follow-up ready, agendamento em pós-MVP
 
@@ -124,18 +143,20 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ## Timeline Estimativa
 
-| Epic            | Duration        | Period            |
-| --------------- | --------------- | ----------------- |
-| Epic 1          | 2-3 semanas     | Semanas 1-3       |
-| Epic 2          | 1-2 semanas     | Semanas 4-5       |
-| Epic 3          | 2 semanas       | Semanas 6-7       |
-| Epic 4          | 2 semanas       | Semanas 8-9       |
-| Epic 5          | 2 semanas       | Semanas 10-11     |
-| Epic 6          | 1-2 semanas     | Semanas 12-13     |
-| Epic 7          | 1 semana        | Semanas 14        |
-| **QA & Polish** | **1-2 semanas** | **Semanas 15-16** |
+| Epic            | Duration        | Period            | Notes |
+| --------------- | --------------- | ----------------- | ----- |
+| Epic 1          | 2-3 semanas     | Semanas 1-3       | Foundation & Auth |
+| **Epic 2 (Critical)** | **2 semanas**   | **Semanas 4-6**   | **Stories 2.1-2.4** — Valida Shadcn/Tailwind antes de proseguir |
+| **Epic 2 (Adaptive)** | **1-2 semanas**   | **Semanas 6+ paralelo** | **Stories 2.5-2.7** — Conforme necessidade real de Epics 3-4 |
+| Epic 3          | 1-2 semanas     | Semanas 7-8       | Evolution Setup |
+| Epic 4          | 2 semanas       | Semanas 9-10      | Kanban Board |
+| Epic 5          | 2 semanas       | Semanas 11-12     | Evolution Phase 2 |
+| Epic 6          | 2 semanas       | Semanas 13-14     | Chat & Real-time |
+| Epic 7          | 1-2 semanas     | Semanas 15-16     | Settings |
+| Epic 8          | 1 semana        | Semanas 17        | Automação |
+| **QA & Polish** | **1-2 semanas** | **Semanas 18-19** | Final validation |
 
-**Total: 8-12 semanas** (MVP ready for beta)
+**Total: 10-15 semanas** (MVP ready for beta)
 
 ---
 
@@ -143,15 +164,15 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7
 
 ## 🚀 Phase 2 Roadmap (Post-MVP)
 
-### EPIC 8: ATTENDANTS (Phase 2 — Planned)
+### EPIC 9: ATTENDANTS (Phase 2 — Planned)
 
 **Objetivo:** Multi-user support with role-based access control and RLS granularity
 
 **Stories (TBD):**
-- Story 8.1: Multi-user (Attendants) — Invite attendants, RLS per role
-- Story 8.2: Permissions system — Owner grants read/write/admin access
-- Story 8.3: Attendance tracking — Dashboard showing who handled which conversation
-- Story 8.4: Performance metrics — Stats per attendant (messages handled, response time)
+- Story 9.1: Multi-user (Attendants) — Invite attendants, RLS per role
+- Story 9.2: Permissions system — Owner grants read/write/admin access
+- Story 9.3: Attendance tracking — Dashboard showing who handled which conversation
+- Story 9.4: Performance metrics — Stats per attendant (messages handled, response time)
 
 **Timeline:** Post-MVP (Phase 2, ~4-6 weeks after MVP stable)
 

@@ -1,0 +1,7 @@
+# Force Unix line endings for files sensitive to npm/Node.js
+package-lock.json eol=lf
+package.json eol=lf
+.npmrc eol=lf
+
+# Auto convert for most files (Windows default)
+* text=auto

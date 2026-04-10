@@ -62,3 +62,6 @@ node_modules
 .aiox-core/local/
 .claude/settings.local.json
 .aiox/install-log.txt
+
+*storybook.log
+storybook-static

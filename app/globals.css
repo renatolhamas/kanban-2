@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Architectural Ledger - Design System Tokens */
+:root {
+  /* Primary Colors */
+  --primary: 161 100% 21%; /* #006c49 - Emerald Action */
+  --primary-foreground: 0 0% 100%; /* #ffffff - White */
+  --primary-container: 161 100% 33%; /* #10b981 - Emerald Container */
+
+  /* Secondary Colors */
+  --secondary: 216 16% 47%; /* #515f78 - Navy/Steel */
+  --secondary-foreground: 0 0% 100%; /* #ffffff - White */
+
+  /* Surface Hierarchy */
+  --surface: 210 20% 98%; /* #f7f9fb - Crisp, cool background */
+  --surface-low: 210 16% 96%; /* #f2f4f6 - Slightly darker surface */
+  --surface-lowest: 0 0% 100%; /* #ffffff - Pure white */
+  --surface-high: 210 9% 92%; /* #e6e8ea - Subtle elevation */
+  --on-surface: 0 0% 9%; /* #191c1e - High contrast text */
+
+  /* Base Radius */
+  --radius: 0.5rem; /* 8px - Geometric clarity */
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,6 +35,12 @@ html {
 }
 
 body {
-  background-color: #f9fafb;
-  color: #111827;
+  @apply bg-surface text-on-surface;
+}
+
+/* Glass Surface Utility - Glassmorphism Effect */
+@layer utilities {
+  .glass-surface {
+    @apply bg-white/80 backdrop-blur-[20px];
+  }
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { FormError } from "./FormError";
+import { Loader2 } from "lucide-react";
+import { Input } from "@/components/common/Input";
+import { Button } from "@/components/common/Button";
 
 interface LoginFormProps {
   onSubmit?: (_email: string, _password: string) => Promise<void>;
@@ -11,22 +13,46 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
 
-  // Consider form valid if both fields have content
-  const isFormValid = email.trim().length > 0 && password.length > 0;
+  // Consider form valid if both fields have content and no errors
+  const isFormValid =
+    email.trim().length > 0 &&
+    password.length > 0 &&
+    !emailError &&
+    !passwordError;
+
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    setEmailError(null);
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setPasswordError(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+
+    // Reset errors
+    setEmailError(null);
+    setPasswordError(null);
 
     if (!email) {
-      setError("Email is required");
+      setEmailError("Email is required");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
       return;
     }
 
     if (!password) {
-      setError("Password is required");
+      setPasswordError("Password is required");
       return;
     }
 
@@ -35,108 +61,69 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       if (onSubmit) {
         await onSubmit(email, password);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+    } catch {
+      // Error is handled by Toast in LoginPageContent
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {error && <FormError message={error} />}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <Input
+        id="email"
+        type="email"
+        label="Email Address"
+        value={email}
+        onChange={(e) => handleEmailChange(e.target.value)}
+        placeholder="name@company.com"
+        error={emailError || undefined}
+        disabled={loading}
+      />
 
-      <div className="space-y-1.5">
-        <label
-          htmlFor="email"
-          className="block text-sm font-semibold text-gray-700 ml-1"
-        >
-          Email Address
-        </label>
-        <div className="relative">
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="name@company.com"
-            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400"
-            disabled={loading}
-            required
-          />
-        </div>
-      </div>
+      <Input
+        id="password"
+        type="password"
+        label="Password"
+        value={password}
+        onChange={(e) => handlePasswordChange(e.target.value)}
+        placeholder="••••••••"
+        error={passwordError || undefined}
+        disabled={loading}
+      />
 
-      <div className="space-y-1.5">
-        <label
-          htmlFor="password"
-          className="block text-sm font-semibold text-gray-700 ml-1"
-        >
-          Password
-        </label>
-        <div className="relative">
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400"
-            disabled={loading}
-            required
-          />
-        </div>
-      </div>
-
-      <button
+      <Button
         type="submit"
-        disabled={!isFormValid || loading}
-        className={`
-          w-full py-3 rounded-xl font-bold text-white transition-all duration-300 transform active:scale-[0.98]
-          ${
-            isFormValid && !loading
-              ? "bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 cursor-pointer"
-              : "bg-gray-300 cursor-not-allowed"
-          }
-        `}
+        variant={loading || !isFormValid ? "disabled" : "primary"}
+        disabled={loading || !isFormValid}
+        className="w-full py-3 text-base font-semibold flex items-center justify-center gap-2"
       >
-        {loading ? (
-          <div className="flex items-center justify-center space-x-2">
-            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-            <span>Signing in...</span>
-          </div>
-        ) : (
-          "Login to Dashboard"
-        )}
-      </button>
+        {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+        {loading ? "Signing in..." : "Sign In"}
+      </Button>
 
-      <div className="pt-2 text-center text-sm text-gray-500">
-        Don&apos;t have an account?{" "}
-        <a
-          href="/register"
-          className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
-        >
-          Create an account
-        </a>
-      </div>
+      <div className="flex flex-col gap-3 text-sm text-on-surface/70 font-manrope">
+        <div className="text-center">
+          <span>Don&apos;t have an account?{" "}</span>
+          <Button
+            variant="ghost"
+            className="p-0 h-auto"
+            onClick={() => (window.location.href = "/register")}
+          >
+            Create one
+          </Button>
+        </div>
 
-      <div className="pt-2 text-center text-sm text-gray-500">
-        Password issues:{" "}
-        <a
-          href="/forgot-password"
-          className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
-        >
-          Forgot Password
-        </a>
-        {" "}or{" "}
-        <a
-          href="/resend-confirmation"
-          className="font-medium text-blue-600 hover:text-blue-700 transition-colors"
-        >
-          Resend Email Confirmation
-        </a>
+        <div className="text-center">
+          <span>Password issues?{" "}</span>
+          <Button
+            variant="ghost"
+            className="p-0 h-auto"
+            onClick={() => (window.location.href = "/forgot-password")}
+          >
+            Reset password
+          </Button>
+        </div>
       </div>
     </form>
   );

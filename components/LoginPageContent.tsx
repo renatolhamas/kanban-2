@@ -1,27 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoginForm } from "@/components/LoginForm";
-import { Toast } from "@/components/Toast";
+import { useToast } from "@/components/common/Toast";
 
 export default function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   useEffect(() => {
     // Check if user just registered
     if (searchParams.get("registered") === "true") {
-      setSuccessMessage("Account created successfully! Please log in.");
+      addToast("Account created successfully! Please log in.", "success", 5000);
     }
-  }, [searchParams]);
+  }, [searchParams, addToast]);
 
   const handleLogin = async (email: string, password: string) => {
     try {
-      setError(null);
-
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -34,25 +31,30 @@ export default function LoginPageContent() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+        const errorMessage = data.error || "Login failed";
+        addToast(errorMessage, "error");
+        throw new Error(errorMessage);
       }
 
-      // Redirect after successful login
+      // Show success message and redirect
+      addToast("Login successful!", "success", 1500);
       setTimeout(() => {
         router.push("/profile");
-      }, 500);
+      }, 1500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      const errorMessage = err instanceof Error ? err.message : "Login failed";
+      addToast(errorMessage, "error");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center mb-6">
-          <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/30">
+    <div className="min-h-screen bg-surface flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      {/* Hero Section */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-md mb-12">
+        <div className="flex justify-center mb-8">
+          <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center shadow-ambient">
             <svg
-              className="w-7 h-7 text-white"
+              className="w-9 h-9 text-primary-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -61,55 +63,25 @@ export default function LoginPageContent() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
               />
             </svg>
           </div>
         </div>
-        <h2 className="text-center text-3xl font-extrabold text-gray-900 tracking-tight">
+        <h1 className="text-center text-4xl font-semibold text-on-surface tracking-tight font-manrope">
           Welcome back
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        </h1>
+        <p className="mt-4 text-center text-base text-on-surface/70 font-manrope">
           Sign in to your account to continue
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-10 px-4 shadow-2xl shadow-gray-200/50 sm:rounded-3xl sm:px-12 border border-gray-100">
+      {/* Form Container - Sheet on a Desk Pattern */}
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-surface-lowest py-10 px-6 shadow-ambient rounded-lg">
           <LoginForm onSubmit={handleLogin} />
-
-          {error && (
-            <div className="mt-6 p-4 bg-red-50/50 border border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-red-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-red-800">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
-
-      {successMessage && (
-        <Toast
-          message={successMessage}
-          type="success"
-          onClose={() => setSuccessMessage(null)}
-        />
-      )}
     </div>
   );
 }

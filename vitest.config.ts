@@ -25,12 +25,30 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'tests/fixtures/**']
+      exclude: ['node_modules/', 'tests/fixtures/**', 'lib/**', '**/*.config.*', '**/*.stories.*']
     },
     projects: [{
+      name: 'unit',
       extends: true,
       test: {
-        // Environment for browser-like APIs
+        // Environment for DOM-based unit testing
+        environment: 'jsdom',
+        // Test globals (describe, it, expect without imports)
+        globals: true,
+        // Setup file for jest-dom matchers
+        setupFiles: ['./tests/setup.ts'],
+        // Timeout for tests
+        testTimeout: 10000,
+        // Match component test files
+        include: ['components/**/*.test.tsx', 'components/**/*.test.ts'],
+        // Mock reset between tests
+        mockReset: true,
+        restoreMocks: true
+      }
+    }, {
+      extends: true,
+      test: {
+        // Environment for Node-based tests (RLS validation)
         environment: 'node',
         // Test globals (describe, it, expect without imports)
         globals: true,

@@ -14,7 +14,7 @@
 **Fluxo Típico:**
 
 1. Cadastra-se no sistema (Email + Senha)
-2. Conecta Evolution API (QR Code)
+2. Conecta Evo GO (QR Code)
 3. Cria Kanbans (colunas do fluxo de vendas)
 4. Monitora conversas em tempo real via Kanban
 5. Visualiza performance de cada atendente (roadmap Fase 2)

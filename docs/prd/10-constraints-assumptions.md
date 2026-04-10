@@ -4,7 +4,7 @@
 
 | Restrição                     | Impacto                                                                           |
 | ----------------------------- | --------------------------------------------------------------------------------- |
-| **Evolution API v2 depency**  | Qualquer breaking change na API quebra o sistema; versão fixa obrigatória         |
+| **Evo GO depency**  | Qualquer breaking change na API quebra o sistema; versão fixa obrigatória         |
 | **Supabase Cloud (SaaS)**     | Sem self-hosted gratuito; cliente precisa pagar Supabase (dependência de crédito) |
 | **WhatsApp Business Account** | Cliente precisa ser aprovado pelo WhatsApp (não controlado por nós)               |
 | **Redis local (VPS)**         | Taxa de entrega depende de disponibilidade/uptime do Redis do desenvolvedor       |
@@ -15,7 +15,7 @@
 
 | Premissa                                          | Validação                      |
 | ------------------------------------------------- | ------------------------------ |
-| Cliente possui instância Evolution API v2 ativa   | Onboarding checklist           |
+| Cliente possui instância Evo GO ativa   | Onboarding checklist           |
 | Cliente tem acesso a projeto Supabase Cloud       | Documentação de setup          |
 | Banda larga estável (para webhooks)               | N/A para MVP                   |
 | Mínimo 2 atendentes por tenant (valor de produto) | Pesquisa de mercado pré-launch |

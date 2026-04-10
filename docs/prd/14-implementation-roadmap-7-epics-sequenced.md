@@ -50,11 +50,11 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 ## Epic 3: EVOLUTION PHASE 1 (Setup & Pairing)
 
-**Objetivo:** Evolution API integration, webhook validation, manual testing
+**Objetivo:** Evo GO integration, webhook validation, manual testing
 
 **Stories:**
 
-- Story 3.1: Evolution API pairing (QR code)
+- Story 3.1: Evo GO pairing (QR code)
 - Story 3.2: Webhook endpoint (/api/webhooks/messages)
 - Story 3.3: Webhook validation (HMAC-SHA256)
 - Story 3.4: Manual testing (curl, console logs)
@@ -88,7 +88,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 - Story 5.1: Webhook handler → auto-register contacts (application-layer)
 - Story 5.2: Webhook handler → auto-create conversations (application-layer)
 - Story 5.3: Webhook → save messages to DB
-- Story 5.4: Send message UI → Evolution API
+- Story 5.4: Send message UI → Evo GO
 - Story 5.5: Message delivery validation
 
 **Outputs:** Messages flowing end-to-end

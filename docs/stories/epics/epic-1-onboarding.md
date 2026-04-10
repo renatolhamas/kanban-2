@@ -13,7 +13,7 @@ source_prd: docs/prd/14-implementation-roadmap-7-epics-sequenced.md
 
 ## Epic Goal
 
-Establish the complete technical foundation: database schema, authentication, tenant onboarding, RLS security, Evolution API integration, and webhook infrastructure.
+Establish the complete technical foundation: database schema, authentication, tenant onboarding, RLS security, Evo GO integration, and webhook infrastructure.
 
 ## Epic Description
 
@@ -21,7 +21,7 @@ Establish the complete technical foundation: database schema, authentication, te
 
 - No infrastructure exists yet (greenfield)
 - Supabase Cloud account provisioned (ready for schema)
-- Evolution API v2 credentials obtained (ready for pairing)
+- Evo GO credentials obtained (ready for pairing)
 - Frontend is Next.js (ready for auth flows)
 
 **Enhancement Details:**
@@ -30,7 +30,7 @@ Establish the complete technical foundation: database schema, authentication, te
 - Supabase Auth (register, login, profile management)
 - Tenant auto-creation with default "Main" kanban + standard columns
 - RLS policies for multi-tenant data isolation
-- Evolution API QR pairing setup
+- Evo GO QR pairing setup
 - Webhook endpoint infrastructure for message ingestion
 
 **Success Criteria:**
@@ -38,7 +38,7 @@ Establish the complete technical foundation: database schema, authentication, te
 - Users can register/login and land in empty kanban dashboard
 - Each user is automatically assigned to a tenant with default kanban structure
 - RLS policies prevent cross-tenant data access
-- Evolution API can be paired via QR code
+- Evo GO can be paired via QR code
 - Webhook endpoint is ready to receive messages (manual testing phase)
 
 ---
@@ -72,7 +72,7 @@ Create complete PostgreSQL schema: tenants, users, contacts, conversations, mess
 
 - Supabase PostgreSQL
 - RLS policy layer (Story 1.4)
-- Evolution webhook data (Story 1.6)
+- Evolution webhook data (Story 3.2)
 
 **Dependencies:**
 
@@ -206,10 +206,10 @@ Define and test RLS policies to ensure each user can only access their tenant's 
 
 ---
 
-### Story 1.5: Evolution API Pairing (QR Code)
+### Story 3.1: Evo GO Pairing (QR Code)
 
 **Description:**
-Integrate Evolution API v2 pairing flow: generate QR code, validate pairing, store instance credentials securely.
+Integrate Evo GO pairing flow: generate QR code, validate pairing, store instance credentials securely.
 
 **Executor Assignment:**
 
@@ -219,19 +219,19 @@ Integrate Evolution API v2 pairing flow: generate QR code, validate pairing, sto
 
 **Acceptance Criteria:**
 
-- [ ] Pairing UI shows QR code generated from Evolution API
+- [ ] Pairing UI shows QR code generated from Evo GO
 - [ ] User can scan QR code with Evolution app on WhatsApp phone
 - [ ] After pairing, instance credentials stored securely (NOT in code, NOT in git)
 - [ ] Instance status verified (connected/disconnected)
 - [ ] Credentials refreshed on login (if needed)
 - [ ] Error handling for pairing failure (timeout, invalid QR, etc.)
-- [ ] Documentation: `/docs/architecture/evolution-api.md`
+- [ ] Documentation: `/docs/architecture/evo-go-api-mapping.md`
 
 **Integration Points:**
 
-- Evolution API v2 (pairing endpoint)
+- Evo GO (`POST /instance/create` endpoint)
 - Supabase Vault (secure secret storage) or environment variables
-- Next.js API route (`/api/evolution/pair`)
+- Next.js API route (`/api/settings/evo-go/create`)
 - Settings page UI
 
 **Dependencies:**
@@ -246,10 +246,10 @@ Integrate Evolution API v2 pairing flow: generate QR code, validate pairing, sto
 
 ---
 
-### Story 1.6: Webhook Endpoint Setup (/api/webhooks/messages)
+### Story 3.2: Webhook Endpoint Setup (/api/webhooks/messages)
 
 **Description:**
-Create webhook endpoint for Evolution API message ingestion, validate HMAC signature, prepare for DB storage (Story 4).
+Create webhook endpoint for Evo GO message ingestion, validate HMAC signature, prepare for DB storage (Story 4).
 
 **Executor Assignment:**
 
@@ -260,9 +260,9 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 **Acceptance Criteria:**
 
 - [ ] POST `/api/webhooks/messages` endpoint created in Next.js API route
-- [ ] Webhook validates HMAC-SHA256 signature (Evolution API requirement)
+- [ ] Webhook validates HMAC-SHA256 signature (Evo GO `X-Signature`)
 - [ ] Invalid signatures rejected (403 Forbidden)
-- [ ] Webhook accepts Evolution API message payload (raw format)
+- [ ] Webhook accepts Evo GO `MESSAGES_UPSERT` payload (raw format)
 - [ ] Request logged for debugging (no sensitive data)
 - [ ] Endpoint responds 200 OK immediately (async processing in Phase 2)
 - [ ] Manual testing with curl/Postman validated (documentation provided)
@@ -270,14 +270,14 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 
 **Integration Points:**
 
-- Evolution API webhook sender
+- Evo GO webhook sender
 - Next.js API routes
 - Request logging/monitoring
 - Phase 2: Story 4 (DB storage)
 
 **Dependencies:**
 
-- Story 1.5 (Evolution API credentials in place)
+- Story 3.1 (Evo GO credentials in place)
 
 **Risks:**
 
@@ -292,7 +292,7 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 - [ ] Schema supports Phase 2 multi-user expansion (user-level access control)
 - [ ] RLS policies are bulletproof for tenant isolation
 - [ ] Authentication follows Supabase Cloud best practices (JWT, httpOnly cookies)
-- [ ] Evolution API integration compatible with webhook ingestion pipeline
+- [ ] Evo GO integration compatible with webhook ingestion pipeline
 - [ ] All secrets stored outside code (environment variables or vault)
 
 ## Definition of Done
@@ -301,7 +301,7 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 - [ ] Database schema deployed and tested
 - [ ] Authentication flow tested end-to-end (signup → login → dashboard)
 - [ ] RLS policies audited and verified (no cross-tenant access)
-- [ ] Evolution API pairing functional and tested manually
+- [ ] Evo GO pairing functional and tested manually
 - [ ] Webhook endpoint accepts and validates signatures
 - [ ] All documentation in `/docs/architecture/`
 - [ ] No hardcoded credentials or secrets in codebase
@@ -345,7 +345,7 @@ Create webhook endpoint for Evolution API message ingestion, validate HMAC signa
 - RLS policies are non-negotiable for security — data isolation is the top priority
 - All credentials and secrets must be stored securely (never in code or git)
 - Authentication follows Supabase Cloud best practices
-- Evolution API integration must be rock-solid before Phase 2 DB integration
+- Evo GO integration must be rock-solid before Phase 2 DB integration
 - After completion, users can register, log in, see empty kanban, and Evolution is paired
 
 The epic should establish a secure, scalable, multi-tenant foundation while maintaining compatibility with future phases."

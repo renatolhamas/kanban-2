@@ -11,7 +11,7 @@ WhatsApp Kanban System — Uma plataforma SaaS multi-tenant para gestão colabor
 
 - Frontend: Next.js + Tailwind CSS
 - Backend: Supabase Cloud (PostgreSQL + Auth + RLS)
-- Integration: Evolution API v2
+- Integration: Evo GO
 - Infrastructure: Docker + GitHub Actions
 
 ## Getting Started

@@ -4,7 +4,7 @@
 
 ### WhatsApp Integration — Evo GO ONLY
 
-⚠️ **CRITICAL:** This project uses **EVO GO EXCLUSIVELY**. Do NOT use Evolution API v2.
+⚠️ **CRITICAL:** This project uses **EVO GO EXCLUSIVELY**. Do NOT use Evo GO.
 
 - **Evo GO Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
 - **Evo GO Installation:** https://docs.evolutionfoundation.com.br/evolution-go/installation
@@ -12,9 +12,9 @@
 
 ### DO NOT USE (Deprecated for this project)
 
-- ❌ Evolution API v2: https://doc.evolution-api.com/v2/api-reference
-- ❌ Evolution API Foundation: https://docs.evolutionfoundation.com.br/evolution-api
-- ❌ Evolution API GitHub: https://github.com/EvolutionAPI/evolution-api
+- ❌ Evo GO: https://doc.evolution-api.com/v2/api-reference
+- ❌ Evo GO Foundation: https://docs.evolutionfoundation.com.br/evolution-api
+- ❌ Evo GO GitHub: https://github.com/EvolutionAPI/evolution-api
 
 ### Infrastructure & Framework
 
@@ -45,7 +45,7 @@
 ### Evo GO Integration Documentation
 - **`docs/db/EVO-GO-TECHNICAL-SPECS.md`** — ⭐ **MUST READ** — Evo GO technical specifications, webhook events, database architecture, message flows
 - **`docs/db/pesquisa.schema.evogo.md`** — Deep research on schema compatibility with Evo GO
-- **`docs/CRITICAL-EVO-GO-NOT-EVOLUTION-API.md`** — ⚠️ Critical distinction: Evo GO vs Evolution API v2
+- **`docs/CRITICAL-EVO-GO-NOT-EVOLUTION-API.md`** — ⚠️ Critical distinction: Evo GO vs Evo GO
 
 ### Evo GO Official Resources
 - Documentation: https://docs.evolutionfoundation.com.br/evolution-go

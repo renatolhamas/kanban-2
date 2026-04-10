@@ -16,7 +16,7 @@
 
 ### 1. Executive Summary
 
-O projeto se inicia com uma **Plataforma SaaS Multi-tenant de Gestão de Conversas**, permitindo que empresas (Clientes/Tenants) gerenciem fluxos de atendimento no WhatsApp de forma colaborativa. Através de uma interface **Kanban**, múltiplos atendentes vinculados a um único "Dono" podem visualizar e interagir com conversas em tempo real, utilizando a **Evolution API v2** e garantindo isolamento total de dados via **Supabase Cloud RLS**.
+O projeto se inicia com uma **Plataforma SaaS Multi-tenant de Gestão de Conversas**, permitindo que empresas (Clientes/Tenants) gerenciem fluxos de atendimento no WhatsApp de forma colaborativa. Através de uma interface **Kanban**, múltiplos atendentes vinculados a um único "Dono" podem visualizar e interagir com conversas em tempo real, utilizando a **Evo GO** e garantindo isolamento total de dados via **Supabase Cloud RLS**.
 
 ---
 
@@ -35,7 +35,7 @@ A solução é um **Dashboard Colaborativo Multi-tenant** que separa a entidade 
 **Pilares Técnicos e Funcionais:**
 
 - **Kanban Compartilhado:** Visibilidade total para todos os atendentes do Tenant sobre as conversas ativas.
-- **Hierarquia de Acesso:** Definição básica de papéis (Owner vs. Attendant) para gestão de instâncias da Evolution API.
+- **Hierarquia de Acesso:** Definição básica de papéis (Owner vs. Attendant) para gestão de instâncias da Evo GO.
 - **Sincronização de Threads:** Uso de webhooks para garantir que qualquer ação tomada por um atendente reflita instantaneamente para os outros.
 - **Persistência Centralizada:** Banco de dados estruturado com `tenant_id`, permitindo que o histórico e as configurações de "Automatic Messages" sejam compartilhadas pela equipe.
 
@@ -45,7 +45,7 @@ A solução é um **Dashboard Colaborativo Multi-tenant** que separa a entidade 
 
 O sistema atende a estruturas organizacionais que buscam profissionalizar e escalar o atendimento via WhatsApp através de colaboração:
 
-- **Dono do Negócio (Tenant/Owner):** Responsável estratégico. Configura a **Evolution API**, define colunas do Kanban e mensagens de automação. Busca supervisão, controle de leads e redução do churn de vendas.
+- **Dono do Negócio (Tenant/Owner):** Responsável estratégico. Configura a **Evo GO**, define colunas do Kanban e mensagens de automação. Busca supervisão, controle de leads e redução do churn de vendas.
 - **Equipe de Atendimento (Attendants/Users):** Execução ágil. Operam o Kanban compartilhado para gerenciar diálogos, enviar mídias e registrar contatos, sabendo exatamente em que etapa o cliente está no funil.
 
 ---
@@ -96,7 +96,7 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 **💬 Modal de Conversa (Chat):**
 
 - **Envio de Mensagens:** Texto e mídia (fotos, vídeos, áudios)
-- **Recebimento em Tempo Real:** Via webhooks da Evolution API v2
+- **Recebimento em Tempo Real:** Via webhooks da Evo GO
 - **Seletor de Kanban/Coluna:** Dropdown para transferir conversa entre Kanbans e colunas
   - Formato: "Kanban - Coluna" em ordem alfabética (por Kanban, depois por Coluna dentro do Kanban)
 - **Automatic Messages:** Botão para selecionar e enviar mensagens pré-cadastradas
@@ -119,8 +119,8 @@ O MVP será desenvolvido para **um usuário por tenant** (Owner), mas a arquitet
 
 **🔌 Connection:**
 
-- Pairing com WhatsApp via QR Code (Evolution API v2)
-- Gerenciamento de instâncias da Evolution API
+- Pairing com WhatsApp via QR Code (Evo GO)
+- Gerenciamento de instâncias da Evo GO
 - Sincronização de mensagens via webhooks em tempo real
 
 **📧 Automatic Messages:**
@@ -159,7 +159,7 @@ O sistema utiliza uma hierarquia clara para garantir a autonomia do Cliente (Ten
 3.  **Setup Inicial (Automático):**
 
 - Kanban "Main" criado automaticamente
-- Usuário é redirecionado para "Configuration" → "Connection" para conectar Evolution API v2 via QR Code
+- Usuário é redirecionado para "Configuration" → "Connection" para conectar Evo GO via QR Code
 - Após conexão bem-sucedida, acesso à página "Home" (Kanban)
 
 **Fluxo Operacional (MVP):**
@@ -199,7 +199,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 - **Backend & DB:** **Supabase Cloud (SaaS)**. Uso extensivo de **Row Level Security (RLS)** baseado em `tenant_id` para isolamento total de dados.
 - **Autenticação:** Supabase Cloud Auth com JWT
 - **Histórico de Mensagens:** Persistência total no **Supabase Cloud** com estrutura denormalizada para performance
-- **Integração WhatsApp:** **Evolution API v2**
+- **Integração WhatsApp:** **Evo GO**
 
 * Pairing via QR Code (sessão única por tenant)
 * Recebimento de mensagens via webhooks em tempo real
@@ -213,7 +213,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 
 - **Validação de Telefone:** Formato internacional com "+" (E.164)
 - **RLS Policies:** Baseadas em `tenant_id` para garantir isolamento total entre tenants
-- **Webhooks Evolution API:** Validação de assinatura e processamento assíncrono
+- **Webhooks Evo GO:** Validação de assinatura e processamento assíncrono
 - **Estado de Conversa:** Sincronizado entre múltiplos usuários via Real-time Subscriptions (Supabase)
 
 ---
@@ -251,13 +251,13 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 
 **Restrições (Constraints):**
 
-- **Versionamento da API:** Dependência estrita da **Evolution API v2**.
+- **Versionamento da API:** Dependência estrita da **Evo GO**.
 - **Plataforma Supabase:** Uso do **Supabase Web (Cloud SaaS)** — versão paga hospedada em https://supabase.com/
 - **Interface Web-Only:** MVP focado em Dashboard para uso operacional de equipe.
 
 **Premissas (Assumptions):**
 
-- **Infraestrutura Disponível:** O Cliente possui uma instância da **Evolution API v2** funcional.
+- **Infraestrutura Disponível:** O Cliente possui uma instância da **Evo GO** funcional.
 - **Acesso MCP:** O orquestrador possui acesso MCP configurado para gerenciar Supabase Cloud.
 - **Credenciais Supabase:** Acesso administrativo ao projeto Supabase Cloud via https://supabase.com/
 
@@ -275,7 +275,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 
 ### 15. Appendices
 
-- **API Documentation:** [Evo GO](https://docs.evolutionfoundation.com.br/evolution-go) (NOT Evolution API v2)
+- **API Documentation:** [Evo GO](https://docs.evolutionfoundation.com.br/evolution-go) (NOT Evo GO)
 - **Supabase Documentation:** [https://supabase.com/docs](https://supabase.com/docs)
 - **Infrastructure:** Supabase Web (Cloud SaaS) - PostgreSQL, Auth & Storage
 - **Design System:** Tailwind CSS Modern Patterns
@@ -297,9 +297,9 @@ Para que o MVP seja funcional e completo, os seguintes componentes devem estar i
 **📱 Integração WhatsApp:**
 
 - [ ] Modal QR Code na página "Connection"
-- [ ] Recebimento de webhooks da Evolution API v2
+- [ ] Recebimento de webhooks da Evo GO
 - [ ] Sincronização de mensagens em tempo real
-- [ ] Envio de mensagens via Evolution API
+- [ ] Envio de mensagens via Evo GO
 
 **💬 Kanban & Conversas:**
 
@@ -346,10 +346,10 @@ O próximo passo é realizar o **Forge Phase** (Implementação):
 
 **Fase 2 - Autenticação & Onboarding:** 4. Páginas Register e Login com Supabase Auth 5. Lógica de criação automática de Tenant e Kanban "Main" 6. Página Profile para alterar dados do usuário
 
-**Fase 3 - Configuração & Integração:** 7. Página Connection com modal QR Code (Evolution API v2) 8. Páginas Kanbans, Contacts, Automatic Messages (CRUD completo)
+**Fase 3 - Configuração & Integração:** 7. Página Connection com modal QR Code (Evo GO) 8. Páginas Kanbans, Contacts, Automatic Messages (CRUD completo)
 
 **Fase 4 - Kanban & Chat:** 9. Página Home com layout Kanban, drag-and-drop 10. Modal de conversa com Chat 11. Seletor Kanban/Coluna no modal
 
-**Fase 5 - Integração & Testes:** 12. Webhooks da Evolution API v2 (recebimento de mensagens) 13. Sincronização em tempo real (Supabase Real-time Subscriptions) 14. Testes E2E: Register → Login → Configurar Kanban → Conectar WhatsApp → Usar Sistema
+**Fase 5 - Integração & Testes:** 12. Webhooks da Evo GO (recebimento de mensagens) 13. Sincronização em tempo real (Supabase Real-time Subscriptions) 14. Testes E2E: Register → Login → Configurar Kanban → Conectar WhatsApp → Usar Sistema
 
 ---

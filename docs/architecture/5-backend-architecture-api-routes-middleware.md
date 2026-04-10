@@ -48,7 +48,7 @@ export async function GET(req: Request) {
 
 ### **Messages** (`/api/messages/*`)
 
-- `POST /api/messages/send` — Send message via Evolution API + save to DB
+- `POST /api/messages/send` — Send message via Evo GO + save to DB
 - `GET /api/messages?conversation_id=...` — Get message history (paginated, newest first)
 - `POST /api/messages/send-automatic` — Send automatic message template
 
@@ -78,13 +78,18 @@ export async function GET(req: Request) {
 ### **Settings** (`/api/settings/*`)
 
 - `PATCH /api/settings/profile` — Update user name/password
-- `GET /api/settings/connection-status` — Evolution API connection status
-- `POST /api/settings/qr-code` — Generate new QR code from Evolution API
+- `GET /api/settings/connection-status` — Evo GO connection status
+- `POST /api/settings/qr-code` — Generate new QR code from Evo GO
 - `POST /api/settings/reconnect` — Force reconnect to WhatsApp
 
 ### **Webhooks** (`/api/webhooks/*`)
 
-- `POST /api/webhooks/messages` — Evolution API webhook for new messages
-- `POST /api/webhooks/connection` — Evolution API webhook for connection status changes
+- `POST /api/webhooks/messages` — Evo GO webhook for new messages
+- `POST /api/webhooks/connection` — Evo GO webhook for connection status changes
+
+---
+
+> [!CAUTION]
+> **Technical Specs:** Any implementation involving **Evo GO** must strictly follow [EVO-GO-TECHNICAL-SPECS.md](file:///c:/git/kanban.2/docs/db/EVO-GO-TECHNICAL-SPECS.md) for endpoint and webhook payloads. Do NOT use Evolution API v2 documentation.
 
 ---

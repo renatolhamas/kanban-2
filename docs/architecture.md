@@ -29,7 +29,7 @@
 | **Styling**       | Tailwind CSS + shadcn/ui                     | Component library with design tokens, zero-overhead CSS, WCAG AA compliant components                     | Material-UI (heavy), Chakra UI (slower builds), custom CSS (maintenance burden)                     |
 | **Backend**       | Supabase Cloud (PostgreSQL)                  | Native RLS for multi-tenancy, Auth built-in, Real-time Subscriptions, SaaS (zero ops), ~$35/month scaling | Firebase (vendor lock-in, expensive at scale), Self-hosted Postgres (ops burden), DynamoDB (no RLS) |
 | **Real-time**     | Supabase WebSocket                           | Native integration with database changes, < 100ms latency, scales to 10k+ concurrent                      | Socket.io (extra infra), Pusher (expensive $), custom polling (high load)                           |
-| **Webhooks**      | Evolution API v2                             | Stable, mature, pinned version prevents breaking changes, HMAC-SHA256 validation                          | WhatsApp Cloud API (stricter rate limits, approval process)                                         |
+| **Webhooks**      | Evo GO                             | Stable, mature, pinned version prevents breaking changes, HMAC-SHA256 validation                          | WhatsApp Cloud API (stricter rate limits, approval process)                                         |
 | **File Storage**  | Supabase Storage (S3 compatible)             | Integrated with auth, RLS-like folder policies, ~$5/GB/month, fast uploads                                | Cloudinary (vendor lock, cost), Firebase Storage (cold data expensive)                              |
 | **Rate Limiting** | Redis (local VPS)                            | ~$5/month on small VPS, zero additional cost, sub-millisecond latency                                     | Upstash (extra network RTT), Redis Cloud (unnecessary cost)                                         |
 | **Monitoring**    | Sentry + Supabase Logs                       | Error tracking + transaction tracing, ~$30/month free tier, native PostgreSQL logging                     | LogRocket (expensive), Datadog (enterprise pricing), CloudWatch (AWS-only)                          |
@@ -104,7 +104,7 @@ kanban.2/
 │   │   │   │   ├── route.ts
 │   │   │   │   └── [id]/route.ts
 │   │   │   ├── webhooks/           # External integrations
-│   │   │   │   ├── messages/route.ts  # Evolution API webhook
+│   │   │   │   ├── messages/route.ts  # Evo GO webhook
 │   │   │   │   └── connection/route.ts # Evolution connection status
 │   │   │   ├── settings/           # Settings endpoints
 │   │   │   │   ├── profile/route.ts
@@ -165,7 +165,7 @@ kanban.2/
 │   │   │   ├── queries.ts          # Common database queries
 │   │   │   └── rls.ts              # RLS helper functions
 │   │   ├── api/
-│   │   │   ├── evolution.ts        # Evolution API client
+│   │   │   ├── evolution.ts        # Evo GO client
 │   │   │   ├── webhook-validator.ts # HMAC-SHA256 validation
 │   │   │   └── rate-limiter.ts     # Redis rate limiter
 │   │   ├── validators/
@@ -179,7 +179,7 @@ kanban.2/
 │   │   ├── types/
 │   │   │   ├── database.ts         # TypeScript types from Supabase
 │   │   │   ├── api.ts              # API request/response types
-│   │   │   └── evolution.ts        # Evolution API types
+│   │   │   └── evolution.ts        # Evo GO types
 │   │   └── utils/
 │   │       ├── datetime.ts         # Date formatting
 │   │       ├── formatting.ts       # UI formatting (phone, etc)
@@ -248,7 +248,7 @@ CREATE TABLE tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   subscription_status TEXT CHECK (subscription_status IN ('active', 'paused', 'cancelled')) DEFAULT 'active',
-  evolution_instance_id TEXT,  -- Evolution API instance for this tenant
+  evolution_instance_id TEXT,  -- Evo GO instance for this tenant
   connection_status TEXT CHECK (connection_status IN ('disconnected', 'connecting', 'active', 'error')) DEFAULT 'disconnected',
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
@@ -584,7 +584,7 @@ export async function GET(req: Request) {
 
 #### **Messages** (`/api/messages/*`)
 
-- `POST /api/messages/send` — Send message via Evolution API + save to DB
+- `POST /api/messages/send` — Send message via Evo GO + save to DB
 - `GET /api/messages?conversation_id=...` — Get message history (paginated, newest first)
 - `POST /api/messages/send-automatic` — Send automatic message template
 
@@ -614,24 +614,24 @@ export async function GET(req: Request) {
 #### **Settings** (`/api/settings/*`)
 
 - `PATCH /api/settings/profile` — Update user name/password
-- `GET /api/settings/connection-status` — Evolution API connection status
-- `POST /api/settings/qr-code` — Generate new QR code from Evolution API
+- `GET /api/settings/connection-status` — Evo GO connection status
+- `POST /api/settings/qr-code` — Generate new QR code from Evo GO
 - `POST /api/settings/reconnect` — Force reconnect to WhatsApp
 
 #### **Webhooks** (`/api/webhooks/*`)
 
-- `POST /api/webhooks/messages` — Evolution API webhook for new messages
-- `POST /api/webhooks/connection` — Evolution API webhook for connection status changes
+- `POST /api/webhooks/messages` — Evo GO webhook for new messages
+- `POST /api/webhooks/connection` — Evo GO webhook for connection status changes
 
 ---
 
-## 6. Integration Patterns — Evolution API + Supabase
+## 6. Integration Patterns — Evo GO + Supabase
 
 ### 6.1 WhatsApp Message Receive Flow (Webhook → DB → Real-time)
 
 ```
 ┌─────────────────────────┐
-│   Evolution API         │
+│   Evo GO         │
 │   (WhatsApp gateway)    │
 └──────────┬──────────────┘
            │ POST webhook
@@ -737,7 +737,7 @@ export async function POST(req: Request) {
 }
 ```
 
-### 6.2 Send Message Flow (Frontend → Evolution API → DB)
+### 6.2 Send Message Flow (Frontend → Evo GO → DB)
 
 ```
 ┌──────────────────┐
@@ -749,7 +749,7 @@ export async function POST(req: Request) {
 ┌────────────────────────────────┐
 │   /api/messages/send           │
 │   ├─ Validate JWT              │
-│   ├─ Call Evolution API         │
+│   ├─ Call Evo GO         │
 │   │   POST /message             │
 │   │   { phone, message, media } │
 │   └─ Await 200 OK               │
@@ -815,7 +815,7 @@ JWT Payload:
 
 ### 7.2 Webhook Security (HMAC-SHA256)
 
-Evolution API signs all webhooks with `X-Signature` header using HMAC-SHA256:
+Evo GO signs all webhooks with `X-Signature` header using HMAC-SHA256:
 
 ```typescript
 import crypto from "crypto";
@@ -978,7 +978,7 @@ export function KanbanBoard({ kanbanId, onCardClick }: KanbanBoardProps) {
 | **Response compression** | Gzip (Next.js built-in)                       |
 | **Rate limiting**        | Redis 100 req/min per tenant                  |
 | **Webhook timeout**      | 5s (return 200 OK immediately, process async) |
-| **Connection pooling**   | Supabase + Evolution API token caching        |
+| **Connection pooling**   | Supabase + Evo GO token caching        |
 
 ---
 
@@ -1010,7 +1010,7 @@ export function KanbanBoard({ kanbanId, onCardClick }: KanbanBoardProps) {
            │ REST API + WebSocket
            ▼
 ┌─────────────────────────────────────────┐
-│   Evolution API v2 (WhatsApp Gateway)   │
+│   Evo GO (WhatsApp Gateway)   │
 │  ├─ QR code generation                  │
 │  ├─ Message send/receive webhooks       │
 │  └─ Connection management               │
@@ -1030,7 +1030,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=xxx
 SUPABASE_SERVICE_ROLE_KEY=xxx
 
-# Evolution API
+# Evo GO
 EVOLUTION_API_URL=https://api.evolution.example.com
 EVOLUTION_API_KEY=xxx
 EVOLUTION_WEBHOOK_SECRET=xxx
@@ -1141,7 +1141,7 @@ Before marking complete, verify:
 | **Next.js 14**        | Not Remix (less hiring pool), not SvelteKit (smaller ecosystem), not Astro (poor state management) |
 | **Supabase**          | Not Firebase (lock-in + cost), not self-hosted (ops burden), not DynamoDB (no RLS)                 |
 | **Tailwind + shadcn** | Not Material-UI (heavy), not Chakra (slower builds), not custom CSS (maintenance)                  |
-| **Evolution API v2**  | Not WhatsApp Cloud API (stricter approvals), not Twilio (expensive ~$1/msg)                        |
+| **Evo GO**  | Not WhatsApp Cloud API (stricter approvals), not Twilio (expensive ~$1/msg)                        |
 | **Vercel**            | Not Heroku (deprecating), not Railway (immature), not self-hosted (ops burden)                     |
 | **Redis local**       | Not Upstash (network latency), not Redis Cloud (cost)                                              |
 

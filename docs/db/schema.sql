@@ -212,7 +212,7 @@ COMMENT ON TABLE public.automatic_messages IS 'Scheduled/automatic messages sent
 COMMENT ON TABLE public.failed_registrations IS 'Tracking for registration failures and resource cleanup.';
 
 COMMENT ON COLUMN public.tenants.subscription_status IS 'Tenant subscription state: active, paused, or cancelled.';
-COMMENT ON COLUMN public.tenants.connection_status IS 'WhatsApp Evolution API connection state: connected, disconnected, or error.';
+COMMENT ON COLUMN public.tenants.connection_status IS 'WhatsApp Evo GO connection state: connected, disconnected, or error.';
 COMMENT ON COLUMN public.users.role IS 'User role: admin (full access), owner (org owner), user (limited access).';
 COMMENT ON COLUMN public.kanbans.is_main IS 'Whether this is the default/main kanban for the tenant.';
 COMMENT ON COLUMN public.conversations.wa_phone IS 'WhatsApp phone number associated with this conversation.';

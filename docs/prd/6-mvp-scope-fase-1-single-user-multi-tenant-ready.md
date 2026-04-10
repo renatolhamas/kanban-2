@@ -43,7 +43,7 @@
 | ------------------------- | --------------------------------------------------------- | ---------------------------------------------------------- |
 | **Chat Bidimensional**    | Histórico de mensagens (sent/received) com timestamp      | Scroll infinito ou paginação                               |
 | **Envio de Mensagens**    | Texto simples e mídia (fotos, vídeos, áudios)             | Validação de tipo de arquivo, upload para Supabase Storage |
-| **Recebimento Real-time** | Webhooks da Evolution API v2 + Real-time Subscriptions    | Mensagens aparecem em < 2s                                 |
+| **Recebimento Real-time** | Webhooks da Evo GO + Real-time Subscriptions    | Mensagens aparecem em < 2s                                 |
 | **Seletor Kanban/Coluna** | Dropdown para transferir conversa entre Kanbans e colunas | Formato: "Kanban - Coluna" alfabético                      |
 | **Automatic Messages**    | Botão para selecionar e enviar mensagens pré-cadastradas  | Mensagem enviada imediatamente                             |
 | **Arquivar Conversa**     | Botão para encerrar/retirar de visualização ativa         | Status "archived" no DB, removido de Home                  |
@@ -69,10 +69,10 @@
 
 **Connection Subsection:**
 
-- [ ] Modal QR Code para pairing com WhatsApp (Evolution API v2)
+- [ ] Modal QR Code para pairing com WhatsApp (Evo GO)
 - [ ] Status de conexão (Conectado / Desconectado)
 - [ ] Botão "Reconectar" para gerar novo QR
-- [ ] Validação de webhook da Evolution API (confirmação de entrega)
+- [ ] Validação de webhook da Evo GO (confirmação de entrega)
 
 **Automatic Messages Subsection:**
 
@@ -112,7 +112,7 @@
 - Notificações sonoras / push
 - Dashboards de performance por atendente
 - Magic Link / Login Social
-- Múltiplas instâncias da Evolution API por Tenant
+- Múltiplas instâncias da Evo GO por Tenant
 - Notas internas em cards
 - IA (resumo de conversas, sugestão de respostas)
 - Integrações externas (Zapier, Make)

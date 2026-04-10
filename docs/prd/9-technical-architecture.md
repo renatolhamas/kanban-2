@@ -110,7 +110,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
 
 ## 9.3 Evo GO Integration
 
-⚠️ **IMPORTANTE:** Usamos **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go), não Evolution API v2.
+⚠️ **IMPORTANTE:** Usamos **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go), não Evo GO.
 
 📌 **Referência Técnica:** Consulte `docs/db/EVO-GO-TECHNICAL-SPECS.md` para especificações completas do Evo GO, webhook events, e arquitetura de banco de dados.
 

@@ -11,7 +11,7 @@ export default function LoginPageContent() {
   const { addToast } = useToast();
 
   useEffect(() => {
-    // Check if user just registered
+    // Check if user just registered (client-side only to avoid hydration mismatch)
     if (searchParams.get("registered") === "true") {
       addToast("Account created successfully! Please log in.", "success", 5000);
     }

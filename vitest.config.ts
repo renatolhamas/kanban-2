@@ -28,7 +28,6 @@ export default defineConfig({
       exclude: ['node_modules/', 'tests/fixtures/**', 'lib/**', '**/*.config.*', '**/*.stories.*']
     },
     projects: [{
-      name: 'unit',
       extends: true,
       test: {
         // Environment for DOM-based unit testing

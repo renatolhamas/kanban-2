@@ -2,7 +2,7 @@ import React from "react";
 
 export const AtmosphereCheck = () => {
   return (
-    <div className="flex flex-col gap-8 p-10 bg-surface min-h-[300px]">
+    <div className="flex flex-col gap-8 p-12 bg-surface min-h-[300px]">
       <section className="flex flex-col gap-4">
         <h2 className="text-secondary font-sans font-semibold text-lg uppercase tracking-wider">
           Typography & Color Check

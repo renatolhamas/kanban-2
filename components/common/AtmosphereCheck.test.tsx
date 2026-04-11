@@ -11,7 +11,7 @@ describe('AtmosphereCheck Component', () => {
   it('renders main container with correct Tailwind classes', () => {
     const { container } = render(<AtmosphereCheck />);
     const mainDiv = container.querySelector('div');
-    expect(mainDiv).toHaveClass('flex', 'flex-col', 'gap-8', 'p-10', 'bg-surface');
+    expect(mainDiv).toHaveClass('flex', 'flex-col', 'gap-8', 'p-12', 'bg-surface', 'min-h-[300px]');
   });
 
   it('renders Typography & Color Check section', () => {

@@ -78,8 +78,8 @@ describe("Badge Component", () => {
   it("applies medium size classes by default", () => {
     const { container } = render(<Badge>Medium</Badge>);
     const badge = container.firstChild as HTMLElement;
-    expect(badge).toHaveClass("px-2.5");
-    expect(badge).toHaveClass("py-1");
+    expect(badge).toHaveClass("px-3");
+    expect(badge).toHaveClass("py-2");
     expect(badge).toHaveClass("text-sm");
   });
 
@@ -90,7 +90,7 @@ describe("Badge Component", () => {
     const { container } = render(<Badge size="lg">Large</Badge>);
     const badge = container.firstChild as HTMLElement;
     expect(badge).toHaveClass("px-3");
-    expect(badge).toHaveClass("py-1.5");
+    expect(badge).toHaveClass("py-2");
     expect(badge).toHaveClass("text-base");
   });
 

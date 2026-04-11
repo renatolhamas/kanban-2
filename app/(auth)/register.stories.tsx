@@ -1,11 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { ToastProvider } from "@/components/common/Toast";
 import RegisterPageContent from "@/app/(auth)/register/page";
+import { DarkModeDecorator } from "@/.storybook/decorators/DarkModeDecorator";
 
 const meta: Meta<typeof RegisterPageContent> = {
   title: "Pages/Auth/Register",
   component: RegisterPageContent,
   decorators: [
+    DarkModeDecorator,
     (Story) => (
       <ToastProvider>
         <Story />

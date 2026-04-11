@@ -242,5 +242,91 @@
       "$type": "duration",
       "$description": "Normal animation duration - standard interactions"
     }
+  },
+  "darkMode": {
+    "color": {
+      "primary": {
+        "$value": "#34d399",
+        "$type": "color",
+        "$description": "Primary action color — Dark Mode (Emerald 400) - optimized for dark backgrounds"
+      },
+      "secondary": {
+        "$value": "#60a5fa",
+        "$type": "color",
+        "$description": "Secondary action color — Dark Mode (Blue 400) - optimized for dark backgrounds"
+      },
+      "danger": {
+        "$value": "#f87171",
+        "$type": "color",
+        "$description": "Danger/error color — Dark Mode (Red 400) - brighter for contrast"
+      },
+      "success": {
+        "$value": "#4ade80",
+        "$type": "color",
+        "$description": "Success color — Dark Mode (Green 400) - brighter for contrast"
+      },
+      "warning": {
+        "$value": "#fbbf24",
+        "$type": "color",
+        "$description": "Warning color — Dark Mode (Amber 400) - brighter for contrast"
+      },
+      "surface": {
+        "$value": "#1f2937",
+        "$type": "color",
+        "$description": "Surface background — Dark Mode (Gray 800) - primary dark background"
+      },
+      "surface-low": {
+        "$value": "#111827",
+        "$type": "color",
+        "$description": "Surface low — Dark Mode (Gray 900) - deeper dark background"
+      },
+      "surface-lowest": {
+        "$value": "#0f172a",
+        "$type": "color",
+        "$description": "Surface lowest — Dark Mode (Near black) - maximum depth"
+      },
+      "surface-high": {
+        "$value": "#2d3748",
+        "$type": "color",
+        "$description": "Surface high — Dark Mode (Gray 700) - elevated surfaces in dark mode"
+      },
+      "on-surface": {
+        "$value": "#f3f4f6",
+        "$type": "color",
+        "$description": "On surface — Dark Mode (Gray 100) - primary text on dark surfaces"
+      },
+      "on-surface-secondary": {
+        "$value": "#e5e7eb",
+        "$type": "color",
+        "$description": "On surface secondary — Dark Mode (Gray 200) - secondary/muted text"
+      }
+    },
+    "shadow": {
+      "sm": {
+        "$value": "0px 2px 8px rgba(0, 0, 0, 0.3)",
+        "$type": "shadow",
+        "$description": "Small shadow — Dark Mode - subtle elevation on dark backgrounds"
+      },
+      "base": {
+        "$value": "0px 4px 16px rgba(0, 0, 0, 0.4)",
+        "$type": "shadow",
+        "$description": "Base shadow — Dark Mode - standard elevation for modals, cards"
+      },
+      "md": {
+        "$value": "0px 8px 24px rgba(0, 0, 0, 0.5)",
+        "$type": "shadow",
+        "$description": "Medium shadow — Dark Mode - raised elements"
+      },
+      "lg": {
+        "$value": "0px 12px 32px rgba(0, 0, 0, 0.6)",
+        "$type": "shadow",
+        "$description": "Large shadow — Dark Mode - floating dialogs"
+      },
+      "xl": {
+        "$value": "0px 20px 48px rgba(0, 0, 0, 0.7)",
+        "$type": "shadow",
+        "$description": "Extra large shadow — Dark Mode - maximum elevation"
+      }
+    }
   }
 }

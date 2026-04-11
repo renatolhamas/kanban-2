@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Input } from "./Input";
 import { useState } from "react";
+import { DarkModeDecorator } from "@/.storybook/decorators/DarkModeDecorator";
 
 const meta: Meta<typeof Input> = {
   title: "Components/Input",
   component: Input,
+  decorators: [DarkModeDecorator],
   parameters: {
     layout: "centered",
   },

@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Avatar } from "./Avatar";
+import { DarkModeDecorator } from "@/.storybook/decorators/DarkModeDecorator";
 
 const meta = {
   title: "Components/Avatar",
   component: Avatar,
+  decorators: [DarkModeDecorator],
   parameters: {
     layout: "centered",
   },

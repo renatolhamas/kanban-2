@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Button } from "./Button";
+import { DarkModeDecorator } from "@/.storybook/decorators/DarkModeDecorator";
 
 const meta: Meta<typeof Button> = {
   title: "Components/Button",
   component: Button,
+  decorators: [DarkModeDecorator],
   parameters: {
     layout: "centered",
   },

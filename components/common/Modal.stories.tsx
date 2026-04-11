@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
 import { Modal } from "./Modal";
+import { DarkModeDecorator } from "@/.storybook/decorators/DarkModeDecorator";
 
 const meta = {
   title: "Components/Modal",
   component: Modal,
+  decorators: [DarkModeDecorator],
   parameters: {
     layout: "centered",
   },

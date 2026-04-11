@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { ToastProvider } from "@/components/common/Toast";
+import { Header } from "@/components/layout/Header";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth" className={manrope.variable} suppressHydrationWarning>
       <body className="font-sans">
         <ToastProvider>
+          <Header />
           {children}
         </ToastProvider>
       </body>

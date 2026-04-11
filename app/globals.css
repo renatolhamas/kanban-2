@@ -110,6 +110,54 @@
 }
 
 /* ============================================
+   DARK MODE TOKENS (Story 2.10)
+   Activated via [data-theme="dark"] attribute
+   ============================================ */
+
+[data-theme="dark"] {
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     COLORS - Dark Mode Palette
+     Story 2.10 tokens optimized for dark backgrounds
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  /* Primary Colors (Dark Mode) */
+  --color-primary: #34d399; /* Emerald 400 - optimized for dark BG */
+  --color-secondary: #60a5fa; /* Blue 400 - optimized for dark BG */
+
+  /* Surface Hierarchy (Dark Mode) */
+  --surface: 217 33% 17%; /* #1f2937 - Gray 800 (base surface) */
+  --surface-low: 217 33% 13%; /* #111827 - Gray 900 (deeper) */
+  --surface-lowest: 217 33% 10%; /* #0f172a - Even darker depth */
+  --surface-high: 217 33% 25%; /* #2d3748 - Elevated surface */
+  --on-surface: 210 40% 96%; /* #f3f4f6 - Gray 100 (primary text) */
+
+  /* Text Colors (Dark Mode) */
+  --text-primary: #f3f4f6; /* Gray 100 - main text */
+  --text-secondary: #e5e7eb; /* Gray 200 - secondary/muted text */
+
+  /* Status Colors (Dark Mode) - adjusted for contrast */
+  --color-danger: #f87171; /* Red 400 - brighter for dark */
+  --color-success: #4ade80; /* Green 400 - brighter for dark */
+  --color-warning: #fbbf24; /* Amber 400 - brighter for dark */
+
+  /* Legacy HSL format (overridden for dark mode) */
+  --primary: 161 100% 40%; /* Emerald adjusted */
+  --primary-foreground: 0 0% 15%; /* Dark text on emerald */
+  --primary-container: 161 100% 35%; /* Container variant */
+
+  --secondary: 217 91% 60%; /* Blue adjusted */
+  --secondary-foreground: 0 0% 15%; /* Dark text on blue */
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SHADOWS - Dark Mode (lighter for depth on dark BG)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  --shadow-sm: 0px 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-base: 0px 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0px 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0px 12px 32px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0px 20px 48px rgba(0, 0, 0, 0.7);
+}
+
+/* ============================================
    ANIMATION KEYFRAMES
    ============================================ */
 

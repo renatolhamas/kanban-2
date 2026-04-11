@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { getContrast } from 'color-contrast';
 import chroma from 'chroma-js';
+import { DarkModeDecorator } from '@/.storybook/decorators/DarkModeDecorator';
 
 // Design Tokens (from docs/design-tokens.json)
 const TOKENS = {
@@ -18,6 +19,18 @@ const TOKENS = {
     'surface-lowest': '#ffffff',
     'surface-high': '#e6e8ea',
     'on-surface': '#191c1e',
+  },
+  dark: {
+    primary: '#34D399',
+    secondary: '#60A5FA',
+    danger: '#F87171',
+    success: '#4ADE80',
+    warning: '#FBBF24',
+    surface: '#111827',
+    'surface-low': '#1F2937',
+    'surface-lowest': '#0F172A',
+    'surface-high': '#2D3748',
+    'on-surface': '#F3F4F6',
   },
   fontSize: {
     xs: '0.75rem',
@@ -222,6 +235,163 @@ const ColorSwatches: React.FC = () => {
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+};
+
+// === DARK MODE COLOR COMPARISON ===
+const ColorSwatchesDarkMode: React.FC = () => {
+
+  const colorPairs = [
+    { name: 'primary', light: TOKENS.color.primary, dark: TOKENS.dark.primary, lightBg: '#F9FAFB', darkBg: '#111827' },
+    { name: 'secondary', light: TOKENS.color.secondary, dark: TOKENS.dark.secondary, lightBg: '#F9FAFB', darkBg: '#111827' },
+    { name: 'danger', light: TOKENS.color.danger, dark: TOKENS.dark.danger, lightBg: '#F9FAFB', darkBg: '#111827' },
+    { name: 'success', light: TOKENS.color.success, dark: TOKENS.dark.success, lightBg: '#F9FAFB', darkBg: '#111827' },
+    { name: 'warning', light: TOKENS.color.warning, dark: TOKENS.dark.warning, lightBg: '#F9FAFB', darkBg: '#111827' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-on-surface">🌓 Light vs Dark Mode Contrast</h2>
+      <p className="text-slate-600 max-w-2xl">
+        Compare color tokens across light and dark themes with real contrast ratio examples. All colors meet or exceed WCAG AA (4.5:1) minimum.
+      </p>
+
+      <div className="space-y-6">
+        {colorPairs.map(({ name, light, dark, lightBg, darkBg }) => {
+          const lightContrast = getContrastRatio(light, lightBg);
+          const darkContrast = getContrastRatio(dark, darkBg);
+
+          return (
+            <div
+              key={name}
+              className="border border-surface-high rounded-lg overflow-hidden"
+              role="region"
+              aria-label={`Color contrast for ${name} token in light and dark modes`}
+            >
+              {/* Header */}
+              <div className="bg-surface-low p-4 border-b border-surface-high">
+                <h3 className="font-semibold text-lg text-on-surface capitalize">
+                  {name} Token
+                </h3>
+              </div>
+
+              {/* Light vs Dark Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                {/* Light Mode */}
+                <div className="p-6 border-r border-surface-high" style={{ backgroundColor: lightBg }}>
+                  <h4 className="font-semibold text-on-surface mb-4">☀️ Light Mode</h4>
+
+                  {/* Color preview */}
+                  <div
+                    className="w-full h-16 rounded-lg mb-4 border border-surface-high"
+                    style={{ backgroundColor: light }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Values */}
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <p className="text-slate-600 text-xs uppercase font-semibold mb-1">Color Value</p>
+                      <p className="font-mono font-semibold text-on-surface">{light}</p>
+                    </div>
+                    <div>
+                      <p className="text-slate-600 text-xs uppercase font-semibold mb-1">Background</p>
+                      <p className="font-mono font-semibold text-on-surface">{lightBg}</p>
+                    </div>
+                    <div className="pt-2 border-t border-surface-high">
+                      <p className="text-slate-600 text-xs uppercase font-semibold mb-1">Contrast Ratio</p>
+                      <div className="flex items-center justify-between">
+                        <p className="font-mono font-semibold text-on-surface">
+                          {lightContrast.ratio}:1
+                        </p>
+                        <span
+                          className={`text-lg ${
+                            lightContrast.isAAACompliant
+                              ? 'text-success'
+                              : lightContrast.isAACompliant
+                              ? 'text-warning'
+                              : 'text-danger'
+                          }`}
+                          role="status"
+                          aria-label={`${lightContrast.ratio} contrast ratio ${lightContrast.isAAACompliant ? 'exceeds' : lightContrast.isAACompliant ? 'meets' : 'fails'} WCAG AA`}
+                        >
+                          {lightContrast.isAAACompliant ? '✅✅' : lightContrast.isAACompliant ? '✅' : '❌'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dark Mode */}
+                <div className="p-6" style={{ backgroundColor: darkBg }}>
+                  <h4 className="font-semibold mb-4" style={{ color: '#F3F4F6' }}>
+                    🌙 Dark Mode
+                  </h4>
+
+                  {/* Color preview */}
+                  <div
+                    className="w-full h-16 rounded-lg mb-4 border"
+                    style={{ backgroundColor: dark, borderColor: '#2D3748' }}
+                    aria-hidden="true"
+                  />
+
+                  {/* Values */}
+                  <div className="space-y-3 text-sm" style={{ color: '#F3F4F6' }}>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase font-semibold mb-1">Color Value</p>
+                      <p className="font-mono font-semibold">{dark}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase font-semibold mb-1">Background</p>
+                      <p className="font-mono font-semibold">{darkBg}</p>
+                    </div>
+                    <div className="pt-2 border-t" style={{ borderColor: '#2D3748' }}>
+                      <p className="text-gray-400 text-xs uppercase font-semibold mb-1">Contrast Ratio</p>
+                      <div className="flex items-center justify-between">
+                        <p className="font-mono font-semibold">{darkContrast.ratio}:1</p>
+                        <span
+                          className="text-lg"
+                          style={{
+                            color: darkContrast.isAAACompliant
+                              ? '#4ADE80'
+                              : darkContrast.isAACompliant
+                              ? '#FBBF24'
+                              : '#F87171',
+                          }}
+                          role="status"
+                          aria-label={`${darkContrast.ratio} contrast ratio ${darkContrast.isAAACompliant ? 'exceeds' : darkContrast.isAACompliant ? 'meets' : 'fails'} WCAG AA`}
+                        >
+                          {darkContrast.isAAACompliant ? '✅✅' : darkContrast.isAACompliant ? '✅' : '❌'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Legend */}
+      <div className="bg-surface-low p-4 rounded-lg space-y-2 text-sm">
+        <h4 className="font-semibold text-on-surface">📊 Compliance Legend</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-success text-lg">✅✅</span>
+            <span className="text-slate-600">WCAG AAA (7:1 or higher)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-warning text-lg">✅</span>
+            <span className="text-slate-600">WCAG AA (4.5:1 or higher)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-danger text-lg">❌</span>
+            <span className="text-slate-600">Below WCAG AA minimum</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -587,6 +757,7 @@ const DesignTokensShowcase: React.FC = () => {
 const meta = {
   title: 'Design System/Design Tokens',
   component: DesignTokensShowcase,
+  decorators: [DarkModeDecorator],
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -669,6 +840,23 @@ export const Animations: Story = {
       description: {
         story:
           'Animation duration tokens with interactive previews showing fade, slide, and scale animations.',
+      },
+    },
+  },
+};
+
+/**
+ * Dark Mode Theme Comparison
+ * Side-by-side light vs dark mode color contrast examples
+ * Shows real WCAG AA compliance validation for both themes
+ */
+export const DarkMode: Story = {
+  render: () => <ColorSwatchesDarkMode />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Light vs dark mode color token comparison with WCAG AA/AAA contrast ratio validation. Shows how colors adapt across themes while maintaining accessibility standards.',
       },
     },
   },

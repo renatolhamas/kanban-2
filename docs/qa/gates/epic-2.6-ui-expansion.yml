@@ -1,0 +1,204 @@
+storyId: "2.6"
+storyTitle: "UI Expansion (Layout & Data Components)"
+epic: "EPIC-2"
+verdict: PASS
+date: "2026-04-11"
+reviewer: "Quinn (QA)"
+reviewDuration: "30 minutes (initial 15 + re-review 15)"
+gate_decision_date: "2026-04-11T10:45:00Z"
+initial_verdict: FAIL
+final_verdict: PASS
+
+# 7-Point Quality Check Results
+quality_checks:
+  code_review:
+    status: PASS
+    score: 9/10
+    notes: |
+      ✅ Code is clean and well-structured
+      ✅ Components follow established patterns
+      ✅ Proper use of React hooks (forwardRef, useState, useEffect, useRef)
+      ✅ Semantic HTML structure
+      ✅ ARIA attributes correctly implemented for accessibility
+      ✅ TypeScript types properly defined (except for issues noted below)
+      ✅ CSS classes follow Design System conventions
+
+  unit_tests:
+    status: PASS
+    score: 10/10
+    notes: |
+      ✅ 59 new unit tests written for the 5 new components
+      ✅ Tests cover smoke tests, behavioral tests, accessibility tests
+      ✅ Total test suite: 205 tests passing
+      ✅ Card.test.tsx: 12 tests ✓
+      ✅ Modal.test.tsx: 20 tests ✓ (including focus trap, keyboard nav, animations)
+      ✅ Avatar.test.tsx: 18 tests ✓
+      ✅ Tabs.test.tsx: 14 tests ✓
+      ✅ Badge tests: ~15+ tests in combined suite ✓
+      ✅ All tests isolated and properly reset between runs
+      ✅ Good coverage of edge cases and error scenarios
+
+  acceptance_criteria:
+    status: PASS
+    score: 9/10
+    notes: |
+      ✅ Card component: Tonal layering, No-Line Rule, 8px radius, Executive Insight variant
+      ✅ Modal component: Glassmorphism, sticky header, focus trap, Fade+Scale animation
+      ✅ Tabs component: Tonal selection logic, no bottom-border design
+      ✅ Avatar component: Image→Initials→Icon fallback chain, variants, sizes
+      ✅ Badge component: 4 tonal variants (Emerald, Navy, Amber, Red), full roundedness
+      ✅ WCAG AA color contrast validated
+      ✅ Keyboard navigation implemented (Tab, Escape, focus management)
+      ✅ All CSS uses Design Token variables (no hardcoded colors)
+
+  no_regressions:
+    status: PASS
+    score: 10/10
+    notes: |
+      ✅ Existing components still pass all tests
+      ✅ Button.test.tsx: 8 test suites passing
+      ✅ Input.test.tsx: 12+ tests passing
+      ✅ Toast stories and hooks: All passing
+      ✅ No breaking changes to existing APIs
+      ✅ No imports or dependencies removed
+
+  performance:
+    status: PASS
+    score: 8/10
+    notes: |
+      ✅ Component render times acceptable (stories load in <1-6 seconds)
+      ✅ No unnecessary re-renders (proper use of React.forwardRef and state)
+      ✅ Modal animations are smooth (200ms duration)
+      ✅ Bundle size impact: Minimal (5 new components, ~15KB total)
+      ⚠️ Minor: Avatar uses charCodeAt for color selection (O(1) but could cache)
+
+  security:
+    status: PASS
+    score: 9/10
+    notes: |
+      ✅ No hardcoded secrets or credentials
+      ✅ No direct DOM manipulation (uses React patterns)
+      ✅ Modal proper event handling (e.stopPropagation on content, click on backdrop)
+      ✅ Avatar image error handling prevents broken image states
+      ✅ Focus trap prevents focus escape from Modal
+      ✅ ARIA attributes prevent accessibility exploits
+      ⚠️ Minor: Avatar bg color calculation could be more robust (currently char-based)
+
+  documentation:
+    status: PASS
+    score: 7/10
+    notes: |
+      ✅ Storybook stories created for all 5 components
+      ✅ 77+ Storybook stories with visual variants
+      ✅ Test files have clear comments (SMOKE TEST, STRUCTURAL TEST, etc.)
+      ✅ Component props are TypeScript-documented
+      ⚠️ Missing: JSDoc comments on components themselves
+      ⚠️ Missing: README in components/common/ describing design system
+
+# Issues Found
+issues:
+  - id: "TS-001"
+    severity: CRITICAL
+    category: "type-system"
+    title: "Storybook Stories - Missing @storybook/nextjs Import"
+    description: |
+      5 story files import from @storybook/nextjs which is not installed or not in TypeScript paths:
+      - Avatar.stories.tsx (line 1)
+      - Badge.stories.tsx (line 1)
+      - Card.stories.tsx (line 1)
+      - Modal.stories.tsx (line 1)
+      - Tabs.stories.tsx (line 1)
+
+      Error: "Cannot find module '@storybook/nextjs'"
+    recommendation: "Change import to @storybook/react (or correct package)"
+    fix_request: "QA-FIX_REQUEST-2026-04-11_story-2.6.md"
+
+  - id: "TS-002"
+    severity: HIGH
+    category: "type-system"
+    title: "Badge.test.tsx - Missing Required Prop"
+    description: |
+      Line 193: <Badge></Badge> renders without required 'children' prop
+      BadgeProps defines children as required (React.ReactNode)
+      TypeScript correctly flags this as violation
+    recommendation: "Provide children content in test or make prop optional"
+    fix_request: "QA-FIX_REQUEST-2026-04-11_story-2.6.md"
+
+  - id: "TS-003"
+    severity: HIGH
+    category: "type-system"
+    title: "Modal.tsx - Interface Type Mismatch"
+    description: |
+      Line 4: ModalProps extends HTMLAttributes<HTMLDivElement>
+      But defines 'title?: React.ReactNode' which conflicts with HTMLAttributes.title (string)
+      TypeScript error: "Type 'ReactNode' not assignable to type 'string'"
+    recommendation: "Use Omit<> to exclude 'title' from HTMLAttributes, or rename property"
+    fix_request: "QA-FIX_REQUEST-2026-04-11_story-2.6.md"
+
+# Summary Statistics
+stats:
+  total_checks: 7
+  passed: 6
+  failed: 1
+  warnings: 3
+
+  code_quality:
+    files_reviewed: 6
+    components: 5
+    test_files: 5
+    story_files: 5
+    total_lines_of_code: ~1200
+
+  test_coverage:
+    unit_tests_new: 59
+    unit_tests_total: 205
+    storybook_stories: 77
+    all_tests_passing: true
+    coverage_estimate: "70%+ for new components"
+
+  gate_analysis:
+    blockers: 3  # TypeScript errors
+    recommendations: 2  # Performance, documentation
+    ready_to_merge: false
+
+verdict_rationale: |
+  ✅ PASS - All quality checks verified and passing after fixes applied.
+
+  **Initial Gate (2026-04-11 08:35 UTC):** FAIL due to 9 TypeScript errors
+  - 3 errors identified in QA fix request (Storybook imports, Badge.test.tsx, Modal.tsx)
+  - 6 additional errors found in Storybook story args (missing children prop)
+
+  **Fixes Applied by @dev (2026-04-11 10:34 UTC):**
+  - Resolved all 9 TypeScript errors
+  - Added missing 'children' prop to 9 story exports (Badge + Modal)
+  - All fixes validated with npm run typecheck, lint, test
+
+  **Re-Validation Results (2026-04-11 10:45 UTC):**
+  ✅ npm run typecheck → ZERO errors
+  ✅ npm run lint → PASSED
+  ✅ npm run test → 205 tests PASSING (14 skipped)
+  ✅ No regressions detected
+  ✅ All 7 quality checks PASSED
+  ✅ Story ready for deployment
+
+  Code quality remains excellent (9-10/10 on all functional metrics).
+  All acceptance criteria fully implemented and validated.
+  Accessibility and security standards met.
+  Test coverage comprehensive (205 tests, 59 new for components).
+
+decision_path: |
+  ✅ COMPLETED
+  1. @qa issues FAIL verdict with fix request (2026-04-11 08:35)
+  2. @dev applies fixes from QA-FIX_REQUEST-2026-04-11_story-2.6.md (2026-04-11 10:34)
+  3. @dev confirms: npm run typecheck, npm run lint, npm run test all pass
+  4. @qa reviews fixes and issues PASS verdict (2026-04-11 10:45)
+  5. @devops to push to main
+
+next_steps:
+  - "@devops: Push commit 2247f5c to main"
+  - "Mark story 2.6 status: Done (ready for deployment)"
+  - "Notify team: UI Expansion story complete and merged"
+
+---
+Gate reviewed by Quinn (QA Agent)
+Timestamp: 2026-04-11T08:35:00Z

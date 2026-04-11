@@ -7,7 +7,7 @@ created_by: River (SM)
 priority: P0
 target_completion: 2-3 weeks (Weeks 4-6)
 source_prd: docs/prd/14-implementation-roadmap-7-epics-sequenced.md
-design_spec: docs/DESIGN.md
+design_spec: docs/DESIGN-PRINCIPLES.md
 ---
 
 # EPIC-2: UI CORE & DESIGN SYSTEM
@@ -38,7 +38,7 @@ Transform the application from a "standard template" look into a premium, editor
 
 ## Success Criteria
 
-- [ ] All design tokens from `docs/DESIGN.md` (Emerald, Navy, Surface Hierarchy) implemented in Tailwind.
+- [ ] All design tokens from `docs/DESIGN-TOKENS.md` (Emerald, Navy, Surface Hierarchy) implemented in Tailwind.
 - [ ] Shadcn/ui initialized and standard components following the 8px radius rule.
 - [ ] Storybook operational and documenting atomic components.
 - [ ] Auth pages (Register/Login) refactored with zero mandatory 1px borders.
@@ -49,23 +49,19 @@ Transform the application from a "standard template" look into a premium, editor
 
 ## Technical Constraints & Design Rules
 
+Consulte o **[DESIGN-TOKENS.md](file:///c:/git/kanban.2/docs/DESIGN-TOKENS.md)** para valores técnicos exatos.
+
 ### 1. The Palette (Executive Emerald)
-- Primary: `#006c49` (Action) / `#10b981` (Container)
-- Secondary: `#515f78` (Navy/Steel)
-- Base Surface: `#f7f9fb`
+- Baseada em Emerald, Navy e Surface Hierarchy.
 
 ### 2. The Surface Hierarchy (NO BORDERS)
-- `bg-surface` (#f7f9fb)
-- `bg-surface-low` (#f2f4f6)
-- `bg-surface-lowest` (#ffffff)
-- `bg-surface-high` (#e6e8ea)
+- 4 camadas tonais conforme definido nos Princípios de Design.
 
 ### 3. Typography (Manrope)
-- Geometric Sans-Serif
-- High-impact weights for Display (ExtraBold) and Headlines (SemiBold).
+- Sistema Manrope com pesos editoriais.
 
 ### 4. Spacing Scale
-- Editorial spacing: Use `2.5rem` (10) up to `4rem` (16) for section margins.
+- Editorial spacing conforme escala de 8px.
 
 ---
 

@@ -16,7 +16,7 @@
 | 1     | Project Setup & Initialization       | ✅ APPROVED    | Next.js padrão (/app na raiz)                                                                  |
 | 2     | Infrastructure & Deployment          | ✅ APPROVED    | Vercel auto-deploy, Upstash Redis                                                              |
 | 3     | External Dependencies & Integrations | ✅ APPROVED    | Resend (sem confirmação email), Sentry                                                         |
-| 4     | UI/UX Considerations                 | ✅ APPROVED    | Architectural Ledger (DESIGN.md), Manrope, Shadcn/ui                                           |
+| 4     | UI/UX Considerations                 | ✅ APPROVED    | Architectural Ledger (DESIGN-PRINCIPLES.md), Manrope, Shadcn/ui                                |
 | 5     | User/Agent Responsibility            | ✅ APPROVED    | Evolution self-hosted, Supabase Auth (sem Resend MVP)                                          |
 | 6     | Feature Sequencing & Dependencies    | ✅ APPROVED    | 7 Épicas (1-Foundation, 2-Evo Phase1, 3-Kanban, 4-Evo Phase2, 5-Chat, 6-Settings, 7-Automação) |
 | 7     | Risk Management                      | ✅ APPROVED    | Evolution v2.3.7 (GitHub watch), RLS all tables, Async webhooks                                |
@@ -136,8 +136,10 @@ Status: ✅ APPROVED
 ### Decisões Tomadas
 
 ```yaml
-Design System: "Architectural Ledger" (DESIGN.md)
-  ✅ Colors: Emerald (#006c49), Navy (#515f78), Surface (#f7f9fb)
+Design System: "Architectural Ledger" (DESIGN-PRINCIPLES.md)
+  ✅ Philosophy: Editorial, high-contrast, breathable
+  ✅ Documentation: DESIGN-TOKENS.md for tech specs
+  ✅ Colors: Emerald, Navy, Surface (ver DESIGN-TOKENS.md)
   ✅ Typography: Manrope (ExtraBold/SemiBold/Medium/Regular/Bold)
   ✅ Components: Shadcn/ui (instalados via CLI)
   ✅ Spacing: 2.5rem-4rem para sections
@@ -508,9 +510,9 @@ Status: ✅ APPROVED
 
 ### 📝 Checklist Final
 
-- [ ] PRD atualizado em `/docs/prd.md` ✅
-- [ ] Checklist PO salvo em `/docs/CHECKLIST-PO-VALIDATION.md` ✅
-- [ ] DESIGN.md com color palette pronto ✅
+- [x] PRD atualizado em `/docs/prd/index.md` ✅
+- [x] Checklist PO salvo em `/docs/CHECKLIST-PO-VALIDATION.md` ✅
+- [x] DESIGN-PRINCIPLES.md pronto ✅
 - [ ] Epic creation delegado para @pm
 - [ ] Story drafting delegado para @sm
 - [ ] Architecture review delegado para @architect

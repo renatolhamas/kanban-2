@@ -1,6 +1,6 @@
-# 7. User Lifecycle & Roles
+# 8. User Lifecycle & Roles
 
-## 7.1 Fluxo de Onboarding (MVP)
+## 8.1 Fluxo de Onboarding (MVP)
 
 ```
 ┌────────────────┐
@@ -41,7 +41,7 @@
 └──────────────────────────────┘
 ```
 
-## 7.2 Modelo de Permissões (MVP)
+## 8.2 Modelo de Permissões (MVP)
 
 | Entidade      | Permissões                        | Notas                               |
 | ------------- | --------------------------------- | ----------------------------------- |
@@ -49,7 +49,7 @@
 | **Attendant** | RLS read/write limitado (Fase 2+) | N/A para MVP                        |
 | **Public**    | Register + Login apenas           | Sem acesso a dados de nenhum tenant |
 
-## 7.3 RLS Policies (Enforcement)
+## 8.3 RLS Policies (Enforcement)
 
 ```sql
 -- Policy: Users podem ver seus próprios dados (by tenant_id)

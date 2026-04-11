@@ -4,6 +4,7 @@
 **Version:** 1.0.0  
 **Status:** ✅ Documented & Validated  
 **Audit Coverage:** Stories 2.1-2.6 components  
+**Vision & Philosophy:** [docs/DESIGN-PRINCIPLES.md](./DESIGN-PRINCIPLES.md) — O "Norte Criativo" por trás desses tokens.
 
 ---
 

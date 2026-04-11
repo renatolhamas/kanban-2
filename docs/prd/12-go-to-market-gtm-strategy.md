@@ -1,6 +1,6 @@
-# 11. Go-to-Market (GTM) Strategy
+# 12. Go-to-Market (GTM) Strategy
 
-## 11.1 Posicionamento
+## 12.1 Posicionamento
 
 **Slogan:** _"Kanban para WhatsApp. Síncrono, automatizado, colaborativo."_
 
@@ -11,14 +11,14 @@
 3. ✅ Automação de follow-up sem código (não precisa Zapier)
 4. ✅ Preço acessível (vs HubSpot/Pipedrive)
 
-## 11.2 Channels Iniciais
+## 12.2 Channels Iniciais
 
 - **Community & Outreach:** LinkedIn, WhatsApp Business groups, comunidades de marketers/e-commerce BR
 - **Content:** Case studies, how-to videos, blog (SEO)
 - **Partnerships:** Resellers/agências que trabalham com equipes de venda
 - **Product Hunt:** Fase de traction após 100 usuários
 
-## 11.3 Pricing (Post-MVP)
+## 12.3 Pricing (Post-MVP)
 
 **Modelo:** SaaS subscription mensal por tenant
 

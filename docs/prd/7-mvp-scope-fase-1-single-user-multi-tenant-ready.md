@@ -1,13 +1,13 @@
-# 6. MVP Scope (Fase 1: Single-User, Multi-tenant Ready)
+# 7. MVP Scope (Fase 1: Single-User, Multi-tenant Ready)
 
-## 6.1 Filosofia do MVP
+## 7.1 Filosofia do MVP
 
 - **Foco:** Um usuário por tenant (Owner) com arquitetura preparada para multi-user
 - **Abordagem:** Operacional E2E (Register → Config → Chat → Automação)
 - **Qualidade:** Production-ready, não MVP "hacky"
 - **Timeline:** 8-12 semanas (estimativa)
 
-## 6.2 Feature Set (Must-Haves)
+## 7.2 Feature Set (Must-Haves)
 
 ### 🔐 **Autenticação & Onboarding**
 
@@ -100,11 +100,11 @@
 | **User Icon Menu** | Dropdown com "Profile", "Logout"                                            |
 | **Logout Button**  | Botão vermelho com "X", destroi sessão JWT                                  |
 | **Sidebar/Nav**    | Links para Home, Contacts, Settings (subdivisions)                          |
-| **Design System**  | Tailwind CSS com cores corporativas (primária, secundária, success, danger) |
+| **Design System**  | "Architectural Ledger" | Ver [Seção 4: UI/UX Considerations](./4-ui-ux-considerations.md) |
 | **Responsividade** | Desktop-first MVP; mobile responsiveness **Fase 2+**                        |
 | **Acessibilidade** | Alt text em imagens, labels em inputs, contraste WCAG AA                    |
 
-## 6.3 Out of Scope (Será Roadmap)
+## 7.3 Out of Scope (Será Roadmap)
 
 ❌ **Fase 2+:**
 

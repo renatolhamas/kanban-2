@@ -1,11 +1,11 @@
-# 9. Technical Architecture
+# 10. Technical Architecture
 
-## 9.1 Stack Tecnológico
+## 10.1 Stack Tecnológico
 
 | Camada               | Tecnologia                                    | Justificativa                                            |
 | -------------------- | --------------------------------------------- | -------------------------------------------------------- |
 | **Frontend**         | Next.js 14+                                   | SSR, Vercel deployment, Tailwind CSS nativo              |
-| **Design System**    | "Architectural Ledger" (Tailwind + shadcn/ui) | Emerald/Navy/Surface colors, Manrope typography, WCAG AA |
+| **Design System**    | "Architectural Ledger" (Tailwind + shadcn/ui) | Ver [Seção 4: UI/UX Considerations](./4-ui-ux-considerations.md) |
 | **Backend & DB**     | Supabase Cloud (PostgreSQL)                   | RLS nativo, Auth integrada, Real-time, SaaS sem ops      |
 | **Auth**             | Supabase Cloud Auth                           | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+)                |
 | **Real-time**        | Supabase Real-time Subscriptions              | WebSocket para sync instantâneo                          |
@@ -16,7 +16,7 @@
 | **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
 | **Monitoring**       | Sentry + Supabase Logs                        | Error tracking, performance APM                          |
 
-## 9.2 Database Schema (Resumido)
+## 10.2 Database Schema (Resumido)
 
 ```sql
 -- Tenants (Multi-tenancy root)
@@ -108,7 +108,7 @@ CREATE POLICY "user_sees_tenant_conversations" ON conversations
   FOR SELECT USING (tenant_id = auth.jwt() -> 'tenant_id');
 ```
 
-## 9.3 Evo GO Integration
+## 10.3 Evo GO Integration
 
 ⚠️ **IMPORTANTE:** Usamos **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go), não Evo GO.
 
@@ -152,7 +152,7 @@ Frontend (Chat modal) → POST /api/send-message
   └─ Retornar status (success/error)
 ```
 
-## 9.4 Validações & Constraints
+## 10.4 Validações & Constraints
 
 | Validação          | Local                                            | Nível    |
 | ------------------ | ------------------------------------------------ | -------- |

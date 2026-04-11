@@ -1,4 +1,4 @@
-# 17. Next Steps
+# 18. Next Steps
 
 1. **✅ PO Review (@po):** CONCLUÍDO — Validação 10/10 seções em `docs/CHECKLIST-PO-VALIDATION.md`
 2. **Epic Creation (@pm):** Quebrar PRD em epics estruturados (Onboarding, Kanban, Chat, Settings)

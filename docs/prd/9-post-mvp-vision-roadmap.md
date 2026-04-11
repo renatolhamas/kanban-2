@@ -1,4 +1,4 @@
-# 8. Post-MVP Vision (Roadmap)
+# 9. Post-MVP Vision (Roadmap)
 
 ## Fase 2: Multi-User & Collaboration (3-6 meses)
 

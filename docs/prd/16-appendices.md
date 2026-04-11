@@ -1,6 +1,6 @@
-# 15. Appendices
+# 16. Appendices
 
-## 15.1 References
+## 16.1 References
 
 ### WhatsApp Integration — Evo GO ONLY
 
@@ -22,7 +22,7 @@
 - **Next.js Docs:** https://nextjs.org/docs
 - **Tailwind CSS:** https://tailwindcss.com/docs
 
-## 15.2 Glossary
+## 16.2 Glossary
 
 | Term                  | Definição                                                                 |
 | --------------------- | ------------------------------------------------------------------------- |
@@ -34,7 +34,7 @@
 | **Evo GO**            | Gateway WhatsApp third-party; pairing + webhooks                          |
 | **E2E**               | End-to-End (fluxo completo Register → Chat)                               |
 
-## 15.3 Related Documents
+## 16.3 Related Documents
 
 ### Core Documentation
 - `docs/brief.md` — Project brief (estratégia de negócio)

@@ -1,6 +1,6 @@
-# 10. Constraints & Assumptions
+# 11. Constraints & Assumptions
 
-## 10.1 Restrições (Hard Constraints)
+## 11.1 Restrições (Hard Constraints)
 
 | Restrição                     | Impacto                                                                           |
 | ----------------------------- | --------------------------------------------------------------------------------- |
@@ -11,7 +11,7 @@
 | **Desktop-first MVP**         | Mobile UI não será polida na Fase 1                                               |
 | **Sem SMS fallback**          | Apenas WhatsApp; sem suporte a SMS                                                |
 
-## 10.2 Premissas (Assumptions)
+## 11.2 Premissas (Assumptions)
 
 | Premissa                                          | Validação                      |
 | ------------------------------------------------- | ------------------------------ |

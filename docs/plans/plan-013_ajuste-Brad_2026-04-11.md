@@ -1208,9 +1208,9 @@ export const TypographyScale: Story = {
 - [ ] Add typography scale (font-size, weight, line-height)
 - [ ] Add shadow/elevation tokens (5 tokens)
 - [ ] Add animation timing tokens (3 tokens)
-- [ ] Validate all values match docs/DESIGN.md
+- [ ] Validate all values match docs/DESIGN-PRINCIPLES.md
 - [ ] Test: `npm run build` (0 errors)
-- Reference: `[Source: docs/DESIGN.md - Complete specification]`
+- Reference: `[Source: docs/DESIGN-PRINCIPLES.md - Complete specification]`
 
 **Task 1: Expand tailwind.config.ts**
 - [ ] Add colors.error, colors.warning, colors.success

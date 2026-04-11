@@ -1,6 +1,6 @@
-# 4. Target Users & Personas
+# 5. Target Users & Personas
 
-## 4.1 Persona Primária: Owner (Dono/Gerente)
+## 5.1 Persona Primária: Owner (Dono/Gerente)
 
 | Atributo          | Detalhe                                                              |
 | ----------------- | -------------------------------------------------------------------- |
@@ -19,7 +19,7 @@
 4. Monitora conversas em tempo real via Kanban
 5. Visualiza performance de cada atendente (roadmap Fase 2)
 
-## 4.2 Persona Secundária: Attendant (Atendente)
+## 5.2 Persona Secundária: Attendant (Atendente)
 
 | Atributo          | Detalhe                                                                       |
 | ----------------- | ----------------------------------------------------------------------------- |

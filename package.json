@@ -15,6 +15,7 @@
     "test:performance": "vitest tests/rls-performance.test.ts",
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit",
+    "tokens:export": "node scripts/export-tokens.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

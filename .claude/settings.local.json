@@ -41,7 +41,12 @@
       "WebFetch(domain:doc.evolution-api.com)",
       "Bash(npm audit:*)",
       "mcp__supabase__list_tables",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(ls -1 /c/git/kanban.2/components/common/*.tsx)",
+      "Bash(xargs -I {} basename {})",
+      "Bash(grep -rn \"bg-\\\\|text-\\\\|border-\" /c/git/kanban.2/components/common/*.tsx --include=\"*.tsx\" -h)",
+      "Bash(grep -rn \"--primary\\\\|--surface\\\\|--secondary\" /c/git/kanban.2/app /c/git/kanban.2/components --include=\"*.css\" --include=\"*.tsx\")",
+      "Bash(node scripts/export-tokens.js)"
     ]
   },
   "enableAllProjectMcpServers": true,

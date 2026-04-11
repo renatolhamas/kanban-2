@@ -1,0 +1,59 @@
+:root {
+  /* spacing */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+  --spacing-48: 12rem;
+  --spacing-64: 16rem;
+
+  /* fontSize */
+  --fontSize-xs: 0.75rem;
+  --fontSize-sm: 0.875rem;
+  --fontSize-base: 1rem;
+  --fontSize-lg: 1.125rem;
+  --fontSize-xl: 1.25rem;
+  --fontSize-2xl: 1.5rem;
+  --fontSize-3xl: 2rem;
+  --fontSize-4xl: 2.5rem;
+
+  /* lineHeight */
+  --lineHeight-tight: 1.2;
+  --lineHeight-normal: 1.5;
+  --lineHeight-relaxed: 1.75;
+
+  /* shadow */
+  --shadow-sm: 0px 2px 8px rgba(10, 25, 47, 0.04);
+  --shadow-base: 0px 4px 16px rgba(10, 25, 47, 0.06);
+  --shadow-md: 0px 8px 24px rgba(10, 25, 47, 0.08);
+  --shadow-lg: 0px 12px 32px rgba(10, 25, 47, 0.12);
+  --shadow-xl: 0px 20px 48px rgba(10, 25, 47, 0.16);
+
+  /* color */
+  --color-primary: #10b981;
+  --color-secondary: #1e40af;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-surface: #f7f9fb;
+  --color-surface-low: #f2f4f6;
+  --color-surface-lowest: #ffffff;
+  --color-surface-high: #e6e8ea;
+  --color-on-surface: #191c1e;
+
+  /* animation */
+  --animation-fade: 200ms;
+  --animation-scale: 200ms;
+  --animation-slide: 200ms;
+  --animation-duration-fast: 150ms;
+  --animation-duration-normal: 200ms;
+
+}

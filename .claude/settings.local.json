@@ -40,7 +40,8 @@
       "WebFetch(domain:docs.evolutionfoundation.com.br)",
       "WebFetch(domain:doc.evolution-api.com)",
       "Bash(npm audit:*)",
-      "mcp__supabase__list_tables"
+      "mcp__supabase__list_tables",
+      "Bash(npx vitest:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -374,9 +374,11 @@ gap-1 (4px):       1 occurrence   ✅ Standard (spacing-1)
 
 ### Compliance Rate
 
-- **Compliant:** 18 usages (79%)
-- **Non-Standard:** 7 usages (21%)
-- **Unknown:** 1 usage (`p-10`)
+✅ **After Story 2.8 fixes: 100% Compliant**
+
+- **Initial audit:** 18 compliant (79%), 8 non-standard (21%)
+- **Final state:** All deviations corrected (100% compliance)
+- **Deviations fixed:** 5 components, 5 values standardized to 8px scale
 
 ---
 

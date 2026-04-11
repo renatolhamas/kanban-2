@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { ToastProvider } from "@/components/common/Toast";
-import { Header } from "@/components/layout/Header";
+import { RootLayout } from "@/components/layout/RootLayout";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Multi-tenant Kanban board application",
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
@@ -25,8 +25,9 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth" className={manrope.variable} suppressHydrationWarning>
       <body className="font-sans">
         <ToastProvider>
-          <Header />
-          {children}
+          <RootLayout>
+            {children}
+          </RootLayout>
         </ToastProvider>
       </body>
     </html>

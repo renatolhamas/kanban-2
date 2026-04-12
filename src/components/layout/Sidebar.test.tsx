@@ -7,8 +7,15 @@ jest.mock('next/navigation', () => ({
 }));
 
 // Mock Sheet component
+interface SheetProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title: string;
+}
+
 jest.mock('@/components/layout/Sheet', () => ({
-  Sheet: ({ isOpen, onClose, children, title }: any) =>
+  Sheet: ({ isOpen, onClose, children, title }: SheetProps) =>
     isOpen ? (
       <div role="dialog" aria-label={title}>
         <button onClick={onClose} aria-label="Close navigation menu">Close</button>

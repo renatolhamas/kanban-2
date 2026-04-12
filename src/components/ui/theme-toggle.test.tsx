@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ThemeToggle } from './ThemeToggle';
+import { ThemeToggle } from './theme-toggle';
 
 /**
  * ThemeToggle Component Tests
@@ -145,7 +145,6 @@ describe('ThemeToggle', () => {
   // ========================================
 
   it('should toggle theme on Enter key', async () => {
-    const user = userEvent.setup();
     render(<ThemeToggle />);
 
     const button = await screen.findByRole('button', { name: /mudar para tema escuro/i });
@@ -217,7 +216,7 @@ describe('ThemeToggle', () => {
   // ========================================
 
   it('should not render until mounted (hydration safety)', () => {
-    const { container } = render(<ThemeToggle />);
+    render(<ThemeToggle />);
 
     // Component should render nothing initially (before useEffect)
     // After mount, button should appear

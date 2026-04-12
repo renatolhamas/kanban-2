@@ -68,6 +68,23 @@ const config: Config = {
         "surface-high": "hsl(var(--surface-high))",
         "on-surface": "hsl(var(--on-surface))",
 
+        /* shadcn/ui Design System colors (using CSS variables directly) */
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        card: "var(--card, var(--background))",
+        "card-foreground": "var(--card-foreground, var(--foreground))",
+        muted: "var(--muted, hsl(240 10% 3.9%))",
+        "muted-foreground": "var(--muted-foreground, hsl(240 5% 64.9%))",
+        accent: "var(--accent, hsl(0 0% 3.6%))",
+        "accent-foreground": "var(--accent-foreground, hsl(0 0% 98%))",
+        destructive: "var(--destructive, hsl(0 84.2% 60.2%))",
+        "destructive-foreground": "var(--destructive-foreground, hsl(0 0% 98%))",
+        border: "var(--border)",
+        input: "var(--input)",
+        ring: "var(--ring)",
+        popover: "var(--popover, var(--background))",
+        "popover-foreground": "var(--popover-foreground, var(--foreground))",
+
         /* Story 2.7 token colors (hex format) */
         "token-primary": "var(--color-primary)",
         "token-secondary": "var(--color-secondary)",

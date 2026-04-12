@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PasswordInput } from "@/components/PasswordInput";
-import { FormError } from "@/components/FormError";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 
 interface UserProfile {
   id: string;
@@ -99,9 +100,9 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background dark:bg-background flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Loading profile...</p>
+          <p className="text-muted-foreground">Loading profile...</p>
         </div>
       </div>
     );
@@ -109,148 +110,154 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background dark:bg-background flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Failed to load profile</p>
+          <p className="text-muted-foreground">Failed to load profile</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background dark:bg-background">
       <div className="max-w-2xl mx-auto p-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h1 className="text-3xl font-bold mb-8">Profile Settings</h1>
+        <Card>
+          <div className="p-6 space-y-8">
+            <h1 className="text-3xl font-bold text-foreground">Profile Settings</h1>
 
-          {/* User Info Section */}
-          <div className="mb-8 pb-8 border-b border-gray-200">
-            <h2 className="text-xl font-semibold mb-4">Account Information</h2>
+            {/* User Info Section */}
+            <div className="pb-8 border-b border-border">
+              <h2 className="text-xl font-semibold mb-4 text-foreground">Account Information</h2>
 
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
-                </label>
-                <p className="text-lg text-gray-900">{user.name}</p>
-              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">
+                    Name
+                  </label>
+                  <p className="text-lg text-foreground">{user.name}</p>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <p className="text-lg text-gray-900">{user.email}</p>
-              </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">
+                    Email
+                  </label>
+                  <p className="text-lg text-foreground">{user.email}</p>
+                </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Role
-                </label>
-                <p className="text-lg text-gray-900 capitalize">{user.role}</p>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1">
+                    Role
+                  </label>
+                  <p className="text-lg text-foreground capitalize">{user.role}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Password Change Section */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+            {/* Password Change Section */}
+            <div>
+              <h2 className="text-xl font-semibold mb-4 text-foreground">Change Password</h2>
 
-            {error && (
-              <div className="mb-6">
-                <FormError message={error} />
-              </div>
-            )}
-
-            {success && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-700 font-semibold">
-                  Password updated successfully!
-                </p>
-              </div>
-            )}
-
-            <form
-              onSubmit={handlePasswordChange}
-              className="space-y-4 max-w-md"
-            >
-              <PasswordInput
-                id="new-password"
-                name="new-password"
-                value={newPassword}
-                onChange={setNewPassword}
-                label="New Password"
-                showStrength={true}
-                showRequirements={true}
-              />
-
-              <div>
-                <label
-                  htmlFor="confirm-password"
-                  className="block text-sm font-semibold text-gray-700 ml-1 mb-2"
+              {success && (
+                <div
+                  className="mb-6 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg"
+                  role="alert"
                 >
-                  Confirm Password
-                </label>
-                <input
-                  id="confirm-password"
-                  name="confirm-password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
-                  className={`
-                    w-full px-4 py-2.5 bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 placeholder:text-gray-400 disabled:bg-gray-50 disabled:text-gray-500
-                    ${
-                      confirmPassword && newPassword !== confirmPassword
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }
-                  `}
-                  disabled={saving}
-                />
-                {confirmPassword && newPassword !== confirmPassword && (
-                  <p className="mt-2 text-sm text-red-600">
-                    Passwords do not match
+                  <p className="text-green-700 dark:text-green-300 font-semibold">
+                    Password updated successfully!
                   </p>
+                </div>
+              )}
+
+              <form
+                onSubmit={handlePasswordChange}
+                className="space-y-4 max-w-md"
+              >
+                <div>
+                  <label
+                    htmlFor="new-password"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
+                    New Password
+                  </label>
+                  <Input
+                    id="new-password"
+                    name="new-password"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    disabled={saving}
+                    aria-describedby={error ? "password-error" : undefined}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="confirm-password"
+                    className="block text-sm font-medium text-foreground mb-2"
+                  >
+                    Confirm Password
+                  </label>
+                  <Input
+                    id="confirm-password"
+                    name="confirm-password"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    disabled={saving}
+                    aria-describedby={
+                      confirmPassword && newPassword !== confirmPassword
+                        ? "confirm-error"
+                        : undefined
+                    }
+                  />
+                  {confirmPassword && newPassword !== confirmPassword && (
+                    <p
+                      id="confirm-error"
+                      role="alert"
+                      className="mt-2 text-sm text-destructive"
+                    >
+                      Passwords do not match
+                    </p>
+                  )}
+                </div>
+
+                {error && (
+                  <div
+                    id="password-error"
+                    role="alert"
+                    className="p-3 bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg text-destructive dark:text-destructive/80 text-sm"
+                  >
+                    {error}
+                  </div>
                 )}
-              </div>
 
-              <button
-                type="submit"
-                disabled={
-                  !newPassword ||
-                  !confirmPassword ||
-                  newPassword !== confirmPassword ||
-                  saving
-                }
-                className={`
-                  w-full py-2 rounded-lg font-semibold text-white transition
-                  ${
-                    newPassword &&
-                    confirmPassword &&
-                    newPassword === confirmPassword &&
-                    !saving
-                      ? "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                      : "bg-gray-400 cursor-not-allowed"
+                <Button
+                  type="submit"
+                  disabled={
+                    !newPassword ||
+                    !confirmPassword ||
+                    newPassword !== confirmPassword ||
+                    saving
                   }
-                `}
-              >
-                {saving ? "Updating..." : "Update Password"}
-              </button>
-            </form>
-          </div>
+                  className="w-full"
+                >
+                  {saving ? "Updating..." : "Update Password"}
+                </Button>
+              </form>
+            </div>
 
-          {/* Logout Section */}
-          <div className="mt-8 pt-8 border-t border-gray-200">
-            <form action="/api/auth/logout" method="POST">
-              <button
-                type="submit"
-                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold"
-              >
-                Logout
-              </button>
-            </form>
+            {/* Logout Section */}
+            <div className="pt-8 border-t border-border">
+              <form action="/api/auth/logout" method="POST">
+                <Button type="submit" variant="destructive" className="w-full sm:w-auto">
+                  Logout
+                </Button>
+              </form>
+            </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

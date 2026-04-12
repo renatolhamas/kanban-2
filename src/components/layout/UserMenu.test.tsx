@@ -1,5 +1,4 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { UserMenu } from './UserMenu';
 
 // Mock next/navigation
@@ -85,7 +84,7 @@ describe('UserMenu Component', () => {
   });
 
   it('applies dark mode styles', () => {
-    const { container } = render(<UserMenu />);
+    render(<UserMenu />);
     const trigger = screen.getByRole('button', { name: /user menu/i });
 
     expect(trigger).toHaveClass('dark:text-gray-200');

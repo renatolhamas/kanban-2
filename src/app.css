@@ -165,7 +165,6 @@
   }
 
   body {
-    @apply bg-white text-neutral-900;
     font-family: var(--font-family-base);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-normal);
@@ -175,7 +174,8 @@
   }
 
   [data-theme="dark"] body {
-    @apply bg-neutral-900 text-neutral-0;
+    color: var(--color-text-primary);
+    background-color: var(--color-background);
   }
 
   /* Typography */

@@ -108,7 +108,7 @@ export function Sidebar() {
       {/* Mobile Hamburger Button - Visible on mobile (<md), hidden on desktop */}
       <button
         onClick={() => setIsDrawerOpen(true)}
-        className="md:hidden fixed bottom-4 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
+        className="md:hidden fixed bottom-4 left-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
         aria-label="Open navigation menu"
         aria-expanded={isDrawerOpen}
         aria-controls="mobile-nav"

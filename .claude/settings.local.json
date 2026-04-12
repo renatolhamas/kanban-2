@@ -57,7 +57,9 @@
       "Bash(npm list:*)",
       "Bash(npx shadcn@latest init --yes)",
       "Bash(npx shadcn@latest init)",
-      "Bash(npx shadcn@latest add button -y)"
+      "Bash(npx shadcn@latest add button -y)",
+      "Bash(wc -l c:/git/kanban.2/src/docs/**/*.md)",
+      "Bash(git mv:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

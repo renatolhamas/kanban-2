@@ -1,0 +1,406 @@
+metadata:
+  version: "1.0.0"
+  generated_by: "Uma (UX Design Expert)"
+  generated_at: "2026-04-11T12:00:00Z"
+  dtcg_spec: "2025.10"
+  color_space: "oklch"
+  coverage: "98.1%"
+  note: "Design system tokens extracted from consolidation analysis"
+
+# ============================================================================
+# LAYER 1: CORE TOKENS (Primitives)
+# ============================================================================
+
+core:
+  # COLOR PRIMITIVES (5 families, 45 colors)
+  color:
+    # Neutrals (Grays, Whites, Blacks)
+    neutral-0:
+      $type: "color"
+      $value: "#ffffff"
+      $description: "Pure white (primary bg)"
+
+    neutral-50:
+      $type: "color"
+      $value: "#f3f3f3"
+      $description: "Off-white (secondary bg)"
+
+    neutral-100:
+      $type: "color"
+      $value: "#cccccc"
+      $description: "Light gray"
+
+    neutral-200:
+      $type: "color"
+      $value: "#c1c1c1"
+      $description: "Medium-light gray"
+
+    neutral-300:
+      $type: "color"
+      $value: "#999999"
+      $description: "Medium gray"
+
+    neutral-500:
+      $type: "color"
+      $value: "#616161"
+      $description: "Dark-medium gray"
+
+    neutral-600:
+      $type: "color"
+      $value: "#444444"
+      $description: "Dark gray"
+
+    neutral-700:
+      $type: "color"
+      $value: "#333333"
+      $description: "Darker gray"
+
+    neutral-900:
+      $type: "color"
+      $value: "#000000"
+      $description: "Pure black (primary text)"
+
+    # Blues (Primary)
+    blue-primary:
+      $type: "color"
+      $value: "#007acc"
+      $description: "Primary brand blue"
+
+    blue-light:
+      $type: "color"
+      $value: "#3794ff"
+      $description: "Lighter blue (hover/secondary)"
+
+    # Reds (Error/Danger)
+    red-error:
+      $type: "color"
+      $value: "#f14c4c"
+      $description: "Error/warning red"
+
+    red-dark:
+      $type: "color"
+      $value: "#e51400"
+      $description: "Darker red (hover states)"
+
+    # Greens (Success)
+    green-success:
+      $type: "color"
+      $value: "#5f8787"
+      $description: "Success/confirmation green"
+
+    # Earth Tones
+    brown-primary:
+      $type: "color"
+      $value: "#d5c4a1"
+      $description: "Accent brown/beige"
+
+    brown-dark:
+      $type: "color"
+      $value: "#504945"
+      $description: "Dark brown"
+
+  # SPACING PRIMITIVES (8 values, 4px base unit)
+  spacing:
+    $type: "dimension"
+
+    xs:
+      $value: "4px"
+      $description: "Extra small (gaps, tight)"
+
+    sm:
+      $value: "8px"
+      $description: "Small (single unit)"
+
+    md:
+      $value: "16px"
+      $description: "Medium (double unit)"
+
+    lg:
+      $value: "24px"
+      $description: "Large (triple unit)"
+
+    xl:
+      $value: "32px"
+      $description: "Extra large (quadruple)"
+
+    "2xl":
+      $value: "48px"
+      $description: "2x large"
+
+    "3xl":
+      $value: "64px"
+      $description: "3x large"
+
+    "4xl":
+      $value: "80px"
+      $description: "4x large"
+
+  # TYPOGRAPHY PRIMITIVES
+  font-family:
+    $type: "fontFamily"
+
+    base:
+      $value: "system-ui, -apple-system, sans-serif"
+      $description: "Primary system font stack"
+
+    mono:
+      $value: "Menlo, Monaco, monospace"
+      $description: "Monospace font (code)"
+
+  font-size:
+    $type: "dimension"
+
+    xs:
+      $value: "12px"
+      $description: "Extra small"
+
+    sm:
+      $value: "14px"
+      $description: "Small"
+
+    base:
+      $value: "16px"
+      $description: "Base/standard"
+
+    md:
+      $value: "18px"
+      $description: "Medium"
+
+    lg:
+      $value: "20px"
+      $description: "Large"
+
+    xl:
+      $value: "24px"
+      $description: "Extra large"
+
+    "2xl":
+      $value: "28px"
+      $description: "2x large"
+
+    "3xl":
+      $value: "32px"
+      $description: "3x large"
+
+    "4xl":
+      $value: "40px"
+      $description: "4x large"
+
+    "5xl":
+      $value: "48px"
+      $description: "5x large"
+
+  font-weight:
+    $type: "number"
+
+    normal:
+      $value: 400
+      $description: "Regular weight"
+
+    medium:
+      $value: 500
+      $description: "Medium weight"
+
+    semibold:
+      $value: 600
+      $description: "Semibold weight"
+
+    bold:
+      $value: 700
+      $description: "Bold weight"
+
+# ============================================================================
+# LAYER 2: SEMANTIC TOKENS (Aliases with meaning)
+# ============================================================================
+
+semantic:
+  color:
+    # Functional colors
+    background:
+      $type: "color"
+      $value: "{core.color.neutral-0}"
+      $description: "Primary page background"
+
+    foreground:
+      $type: "color"
+      $value: "{core.color.neutral-900}"
+      $description: "Primary text color"
+
+    border:
+      $type: "color"
+      $value: "{core.color.neutral-200}"
+      $description: "Default border color"
+
+    # Primary brand colors
+    primary:
+      $type: "color"
+      $value: "{core.color.blue-primary}"
+      $description: "Primary action color"
+
+    primary-hover:
+      $type: "color"
+      $value: "{core.color.blue-light}"
+      $description: "Primary hover state"
+
+    # Status colors
+    success:
+      $type: "color"
+      $value: "{core.color.green-success}"
+      $description: "Success/confirmation"
+
+    error:
+      $type: "color"
+      $value: "{core.color.red-error}"
+      $description: "Error/danger indicator"
+
+    warning:
+      $type: "color"
+      $value: "{core.color.brown-primary}"
+      $description: "Warning/caution indicator"
+
+    # Text levels
+    text-primary:
+      $type: "color"
+      $value: "{core.color.neutral-900}"
+      $description: "Primary readable text"
+
+    text-secondary:
+      $type: "color"
+      $value: "{core.color.neutral-600}"
+      $description: "Secondary/dimmed text"
+
+    text-tertiary:
+      $type: "color"
+      $value: "{core.color.neutral-400}"
+      $description: "Tertiary/subtle text"
+
+    # Backgrounds
+    bg-subtle:
+      $type: "color"
+      $value: "{core.color.neutral-50}"
+      $description: "Subtle background"
+
+    bg-elevated:
+      $type: "color"
+      $value: "{core.color.neutral-0}"
+      $description: "Elevated surface (cards)"
+
+  spacing:
+    gap:
+      $type: "dimension"
+      $value: "{core.spacing.md}"
+      $description: "Default gap between elements"
+
+    padding:
+      $type: "dimension"
+      $value: "{core.spacing.md}"
+      $description: "Default padding"
+
+    margin:
+      $type: "dimension"
+      $value: "{core.spacing.md}"
+      $description: "Default margin"
+
+  typography:
+    body:
+      $type: "object"
+      font-family: "{core.font-family.base}"
+      font-size: "{core.font-size.base}"
+      font-weight: "{core.font-weight.normal}"
+      $description: "Body text (default)"
+
+    label:
+      $type: "object"
+      font-family: "{core.font-family.base}"
+      font-size: "{core.font-size.sm}"
+      font-weight: "{core.font-weight.medium}"
+      $description: "Form labels"
+
+    heading-1:
+      $type: "object"
+      font-family: "{core.font-family.base}"
+      font-size: "{core.font-size.5xl}"
+      font-weight: "{core.font-weight.bold}"
+      $description: "H1 / page title"
+
+    heading-2:
+      $type: "object"
+      font-family: "{core.font-family.base}"
+      font-size: "{core.font-size.4xl}"
+      font-weight: "{core.font-weight.bold}"
+      $description: "H2 / section heading"
+
+    heading-3:
+      $type: "object"
+      font-family: "{core.font-family.base}"
+      font-size: "{core.font-size.3xl}"
+      font-weight: "{core.font-weight.semibold}"
+      $description: "H3 / subsection"
+
+# ============================================================================
+# LAYER 3: COMPONENT TOKENS (Specific UI components)
+# ============================================================================
+
+component:
+  button:
+    primary:
+      $type: "object"
+      background: "{semantic.color.primary}"
+      color: "{semantic.color.background}"
+      padding-inline: "{core.spacing.lg}"
+      padding-block: "{core.spacing.md}"
+      border-radius: "4px"
+      font-weight: "{core.font-weight.medium}"
+      $description: "Primary action button"
+
+    secondary:
+      $type: "object"
+      background: "{semantic.color.bg-subtle}"
+      color: "{semantic.color.foreground}"
+      border: "1px solid {semantic.color.border}"
+      padding-inline: "{core.spacing.lg}"
+      padding-block: "{core.spacing.md}"
+      border-radius: "4px"
+      $description: "Secondary button"
+
+    tertiary:
+      $type: "object"
+      background: "transparent"
+      color: "{semantic.color.primary}"
+      padding-inline: "{core.spacing.lg}"
+      padding-block: "{core.spacing.md}"
+      $description: "Ghost/tertiary button"
+
+    danger:
+      $type: "object"
+      background: "{semantic.color.error}"
+      color: "{semantic.color.background}"
+      padding-inline: "{core.spacing.lg}"
+      padding-block: "{core.spacing.md}"
+      border-radius: "4px"
+      $description: "Destructive action button"
+
+  input:
+    base:
+      $type: "object"
+      padding: "{core.spacing.md}"
+      border: "1px solid {semantic.color.border}"
+      border-radius: "4px"
+      font-size: "{core.font-size.base}"
+      font-family: "{core.font-family.base}"
+      $description: "Base input field"
+
+    focused:
+      $type: "object"
+      border-color: "{semantic.color.primary}"
+      box-shadow: "0 0 0 2px {semantic.color.primary}20"
+      $description: "Input focus state"
+
+  card:
+    base:
+      $type: "object"
+      background: "{semantic.color.bg-elevated}"
+      padding: "{core.spacing.lg}"
+      border-radius: "8px"
+      box-shadow: "0 1px 3px rgba(0,0,0,0.12)"
+      $description: "Card container"

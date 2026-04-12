@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Geist } from "next/font/google";
 import { ToastProvider } from "@/components/common/Toast";
 import { RootLayout } from "@/components/layout/RootLayout";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -22,7 +25,7 @@ export default function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={manrope.variable} suppressHydrationWarning>
+    <html lang="en" data-scroll-behavior="smooth" className={cn("font-sans", geist.variable)} suppressHydrationWarning>
       <body className="font-sans">
         <ToastProvider>
           <RootLayout>

@@ -42,8 +42,9 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 - Story 2.9: Storybook & Accessibility Polish — Criar DesignTokens.stories.tsx com color swatches, tipografia e spacing scales; validação WCAG AA; polish final de documentação. (12-16h)
 - Story 2.10: Visual Validation — Checklist final: acessibilidade e Dark Mode.
 - Story 2.11: Application Layout & Navigation — Refatorar Header, Sidebar e User menu aplicando componentes validados do Design System. Menu funcional + refatorado.
+- Story 2.12: Pages Refactor — Refatorar demais páginas (Home, Settings, Contacts, Chat) aplicando componentes validados e novo Application Layout.
 
-**Outputs:** Design tokens definidos, UI Library (15+ componentes) documentada e testada, fluxo de Auth totalmente refatorado como POC, Application Layout & Navigation refatorado com componentes validados.
+**Outputs:** Design tokens definidos, UI Library (15+ componentes) documentada e testada, fluxo de Auth totalmente refatorado como POC, Application Layout & Navigation refatorado com componentes validados, todas as páginas refatoradas com novo estilo.
 
 **Critical Path (Semanas 4-6):** Stories 2.1-2.5 — Bloqueador para Epic 3+
 **Adaptive (Semanas 6+ paralelo com Epics 3-4):** Stories 2.6-2.11 — Conforme necessidade real
@@ -150,7 +151,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 | --------------- | --------------- | ----------------- | ----- |
 | Epic 1          | 2-3 semanas     | Semanas 1-3       | Foundation & Auth |
 | **Epic 2 (Critical)** | **2 semanas**   | **Semanas 4-6**   | **Stories 2.1-2.5** — Valida Shadcn/Tailwind antes de proseguir |
-| **Epic 2 (Adaptive)** | **2-3 semanas**   | **Semanas 6+ paralelo** | **Stories 2.6-2.11** — Conforme necessidade real de Epics 3-4 |
+| **Epic 2 (Adaptive)** | **3-4 semanas**   | **Semanas 6+ paralelo** | **Stories 2.6-2.12** — Conforme necessidade real de Epics 3-4 |
 | Epic 3          | 1-2 semanas     | Semanas 7-8       | Evolution Setup |
 | Epic 4          | 2 semanas       | Semanas 9-10      | Kanban Board |
 | Epic 5          | 2 semanas       | Semanas 11-12     | Evolution Phase 2 |

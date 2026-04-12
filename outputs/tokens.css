@@ -1,0 +1,296 @@
+/* ============================================================================
+   DESIGN SYSTEM TOKENS — CSS CUSTOM PROPERTIES
+   Generated: 2026-04-11
+   Source: tokens.yaml
+   ============================================================================ */
+
+:root {
+  /* ========================================================================
+     COLORS — Core Palette
+     ======================================================================== */
+
+  /* Neutrals (Grays, Whites, Blacks) */
+  --color-neutral-0: #ffffff;
+  --color-neutral-50: #f3f3f3;
+  --color-neutral-100: #cccccc;
+  --color-neutral-200: #c1c1c1;
+  --color-neutral-300: #999999;
+  --color-neutral-500: #616161;
+  --color-neutral-600: #444444;
+  --color-neutral-700: #333333;
+  --color-neutral-900: #000000;
+
+  /* Blues (Primary) */
+  --color-blue-primary: #007acc;
+  --color-blue-light: #3794ff;
+
+  /* Reds (Error/Danger) */
+  --color-red-error: #f14c4c;
+  --color-red-dark: #e51400;
+
+  /* Greens (Success) */
+  --color-green-success: #5f8787;
+
+  /* Earth Tones */
+  --color-brown-primary: #d5c4a1;
+  --color-brown-dark: #504945;
+
+  /* ========================================================================
+     SEMANTIC COLORS — Functional Aliases
+     ======================================================================== */
+
+  --color-background: var(--color-neutral-0);
+  --color-foreground: var(--color-neutral-900);
+  --color-border: var(--color-neutral-200);
+
+  --color-primary: var(--color-blue-primary);
+  --color-primary-hover: var(--color-blue-light);
+
+  --color-success: var(--color-green-success);
+  --color-error: var(--color-red-error);
+  --color-warning: var(--color-brown-primary);
+
+  --color-text-primary: var(--color-neutral-900);
+  --color-text-secondary: var(--color-neutral-600);
+  --color-text-tertiary: var(--color-neutral-300);
+
+  --color-bg-subtle: var(--color-neutral-50);
+  --color-bg-elevated: var(--color-neutral-0);
+
+  /* ========================================================================
+     SPACING — 8px Base Unit
+     ======================================================================== */
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 80px;
+
+  --gap-default: var(--space-md);
+  --padding-default: var(--space-md);
+  --margin-default: var(--space-md);
+
+  /* ========================================================================
+     TYPOGRAPHY
+     ======================================================================== */
+
+  /* Font Families */
+  --font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: Menlo, Monaco, "Courier New", monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-md: 18px;
+  --font-size-lg: 20px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 28px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 40px;
+  --font-size-5xl: 48px;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* ========================================================================
+     COMPONENTS — Button Variants
+     ======================================================================== */
+
+  /* Button — Primary */
+  --button-primary-bg: var(--color-primary);
+  --button-primary-color: var(--color-neutral-0);
+  --button-primary-padding: var(--space-md) var(--space-lg);
+  --button-primary-border-radius: 4px;
+
+  /* Button — Secondary */
+  --button-secondary-bg: var(--color-bg-subtle);
+  --button-secondary-color: var(--color-foreground);
+  --button-secondary-border: 1px solid var(--color-border);
+  --button-secondary-padding: var(--space-md) var(--space-lg);
+  --button-secondary-border-radius: 4px;
+
+  /* Button — Tertiary (Ghost) */
+  --button-tertiary-bg: transparent;
+  --button-tertiary-color: var(--color-primary);
+  --button-tertiary-padding: var(--space-md) var(--space-lg);
+
+  /* Button — Danger */
+  --button-danger-bg: var(--color-error);
+  --button-danger-color: var(--color-neutral-0);
+  --button-danger-padding: var(--space-md) var(--space-lg);
+
+  /* ========================================================================
+     COMPONENTS — Form Inputs
+     ======================================================================== */
+
+  --input-padding: var(--space-md);
+  --input-border: 1px solid var(--color-border);
+  --input-border-radius: 4px;
+  --input-font-size: var(--font-size-base);
+  --input-font-family: var(--font-family-base);
+
+  --input-focus-border-color: var(--color-primary);
+  --input-focus-box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.12);
+
+  /* ========================================================================
+     COMPONENTS — Cards
+     ======================================================================== */
+
+  --card-bg: var(--color-bg-elevated);
+  --card-padding: var(--space-lg);
+  --card-border-radius: 8px;
+  --card-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+  /* ========================================================================
+     UTILITIES
+     ======================================================================== */
+
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 8px;
+  --border-radius-xl: 16px;
+  --border-radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================================
+   DARK MODE — Override tokens for dark theme
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-neutral-900);
+    --color-foreground: var(--color-neutral-0);
+    --color-border: var(--color-neutral-700);
+
+    --color-text-primary: var(--color-neutral-0);
+    --color-text-secondary: var(--color-neutral-300);
+    --color-text-tertiary: var(--color-neutral-500);
+
+    --color-bg-subtle: var(--color-neutral-800);
+    --color-bg-elevated: var(--color-neutral-900);
+
+    --button-secondary-bg: var(--color-neutral-800);
+    --button-secondary-color: var(--color-neutral-0);
+
+    --input-border: 1px solid var(--color-neutral-700);
+    --card-bg: var(--color-neutral-900);
+  }
+}
+
+/* ============================================================================
+   COMPONENT STYLES — Using Tokens
+   ============================================================================ */
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-color);
+  padding: var(--button-primary-padding);
+  border-radius: var(--button-primary-border-radius);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-color);
+  padding: var(--button-secondary-padding);
+  border: var(--button-secondary-border);
+  border-radius: var(--button-secondary-border-radius);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-neutral-100);
+}
+
+.btn-danger {
+  background-color: var(--button-danger-bg);
+  color: var(--button-danger-color);
+  padding: var(--button-danger-padding);
+  border-radius: var(--button-primary-border-radius);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background-color: var(--color-red-dark);
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  padding: var(--input-padding);
+  border: var(--input-border);
+  border-radius: var(--input-border-radius);
+  font-size: var(--input-font-size);
+  font-family: var(--input-font-family);
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--input-focus-border-color);
+  box-shadow: var(--input-focus-box-shadow);
+}
+
+/* Cards */
+.card {
+  background-color: var(--card-bg);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-box-shadow);
+}
+
+/* Typography */
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-background);
+}
+
+h1 {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+}
+
+h3 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}

@@ -54,7 +54,10 @@
       "Bash(cat)",
       "Bash(node validate-a11y.js)",
       "Bash(rm validate-a11y.js)",
-      "Bash(npm list:*)"
+      "Bash(npm list:*)",
+      "Bash(npx shadcn@latest init --yes)",
+      "Bash(npx shadcn@latest init)",
+      "Bash(npx shadcn@latest add button -y)"
     ]
   },
   "enableAllProjectMcpServers": true,

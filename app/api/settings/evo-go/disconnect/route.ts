@@ -102,6 +102,8 @@ export async function POST(
       .update({
         evolution_instance_id: null,
         connection_status: 'disconnected',
+        qr_code: null,
+        qr_code_expires_at: null,
       })
       .eq('id', tenantId);
 

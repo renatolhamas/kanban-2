@@ -112,7 +112,7 @@ export async function POST(
         break;
 
       case 'QRCODE_UPDATED':
-        handleQRCodeUpdated(tenantId, data);
+        await handleQRCodeUpdated(tenantId, data);
         break;
 
       case 'MESSAGES_UPSERT':
@@ -183,12 +183,48 @@ async function handleConnectionUpdate(
  * Handle QRCODE_UPDATED event
  * Currently logs only (handler will be implemented in Story 3.3)
  */
-function handleQRCodeUpdated(tenantId: string, data?: Record<string, unknown>): void {
-  console.log('[Webhook] QRCODE_UPDATED event logged', {
-    tenantId,
-    data: data || {},
-    timestamp: new Date().toISOString(),
-  });
+/**
+ * Handle QRCODE_UPDATED event
+ * Saves QR code to database for frontend polling
+ */
+async function handleQRCodeUpdated(
+  tenantId: string,
+  data?: Record<string, unknown>,
+): Promise<void> {
+  try {
+    const qrCode = data?.qrcode || data?.qr_code || '';
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+    const { error } = await supabase
+      .from('tenants')
+      .update({
+        qr_code: qrCode,
+        qr_code_expires_at: expiresAt,
+      })
+      .eq('id', tenantId);
+
+    if (error) {
+      console.error('[Webhook] QRCODE_UPDATED database error', {
+        tenantId,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    console.log('[Webhook] QRCODE_UPDATED processed successfully', {
+      tenantId,
+      qrCodeLength: typeof qrCode === 'string' ? qrCode.length : 0,
+      expiresAt,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('[Webhook] QRCODE_UPDATED error', {
+      tenantId,
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
+  }
 }
 
 /**

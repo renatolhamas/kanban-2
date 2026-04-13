@@ -26,8 +26,8 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 interface QRCodeResponse {
-  qr_code: string;
   instance_id: string;
+  status: string;
   expires_at: string;
 }
 
@@ -82,7 +82,7 @@ export async function POST(
     const { error: updateError } = await supabase
       .from("tenants")
       .update({
-        evolution_instance_id: qrData.instanceId,
+        evolution_instance_id: qrData.instance_id,
         connection_status: "connecting",
       })
       .eq("id", tenantId);
@@ -90,7 +90,7 @@ export async function POST(
     if (updateError) {
       console.error("[Evo GO] Database update error", {
         tenantId,
-        instance_id: qrData.instanceId,
+        instance_id: qrData.instance_id,
         error: updateError,
         timestamp: new Date().toISOString(),
       });
@@ -101,16 +101,17 @@ export async function POST(
     // 6. Log successful pairing
     console.log("[Evo GO] Pairing initiated successfully", {
       tenantId,
-      instance_id: qrData.instanceId,
+      instance_id: qrData.instance_id,
       timestamp: new Date().toISOString(),
     });
 
     // 7. Return success response
+    // Note: qr_code will come via polling once webhook QRCODE_UPDATED arrives
     return NextResponse.json(
       {
-        qr_code: qrData.qrCode,
-        instance_id: qrData.instanceId,
-        expires_at: qrData.expires_at || new Date(Date.now() + 5 * 60 * 1000).toISOString(),
+        instance_id: qrData.instance_id,
+        status: "connecting",
+        expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
       },
       { status: 200 },
     );

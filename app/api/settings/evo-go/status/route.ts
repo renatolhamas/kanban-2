@@ -25,6 +25,8 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 interface StatusResponse {
   connection_status: string;
   evolution_instance_id: string | null;
+  qr_code: string | null;
+  qr_code_expires_at: string | null;
 }
 
 /**
@@ -41,10 +43,10 @@ export async function GET(
     // 2. Extract and validate tenant context
     const { tenantId } = await tenantIsolation(request, payload);
 
-    // 3. Fetch tenant connection status
+    // 3. Fetch tenant connection status (including QR code)
     const { data: tenant, error: fetchError } = await supabase
       .from("tenants")
-      .select("connection_status, evolution_instance_id")
+      .select("connection_status, evolution_instance_id, qr_code, qr_code_expires_at")
       .eq("id", tenantId)
       .single();
 
@@ -72,6 +74,8 @@ export async function GET(
       {
         connection_status: tenant?.connection_status || "disconnected",
         evolution_instance_id: tenant?.evolution_instance_id || null,
+        qr_code: tenant?.qr_code || null,
+        qr_code_expires_at: tenant?.qr_code_expires_at || null,
       },
       { status: 200 },
     );

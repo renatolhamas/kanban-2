@@ -3,9 +3,11 @@
  * Handles communication with Evo GO API for WhatsApp instance management
  */
 
+import { randomUUID } from 'crypto';
+
 export interface EvoGoCreateInstanceRequest {
   name: string;
-  token: string; // API key/token for authentication
+  token: string; // Unique instance token (UUID), NOT the API key
   proxy?: {
     address: string;
     port: string;
@@ -15,9 +17,9 @@ export interface EvoGoCreateInstanceRequest {
 }
 
 export interface EvoGoCreateInstanceResponse {
-  instanceId: string;
+  instance_id: string;
   token: string;
-  qrCode: string;
+  qr_code: string;
   phone?: string;
   status?: "connecting" | "connected" | "failed";
   expires_at?: string; // ISO 8601
@@ -78,7 +80,7 @@ export async function callEvoGoCreateInstance(
 
   const request: EvoGoCreateInstanceRequest = {
     name: `kanban-instance-${tenantId.substring(0, 8)}`,
-    token: apiKey, // The GLOBAL_API_KEY from Evo GO dashboard
+    token: randomUUID(), // Generate unique token for this instance (NOT the API key)
   };
 
   let lastError: Error | null = null;
@@ -88,6 +90,7 @@ export async function callEvoGoCreateInstance(
       console.log(`[Evo GO] Attempt ${attempt + 1}/${retryConfig.maxRetries}`);
       console.log(`[Evo GO] Calling: ${EVOGO_API_BASE}/instance/create`);
       console.log(`[Evo GO] Using API Key: ${apiKey.substring(0, 10)}...`);
+      console.log(`[Evo GO] Request body:`, JSON.stringify(request, null, 2));
 
       const controller = new AbortController();
       const timeoutId = setTimeout(
@@ -135,8 +138,11 @@ export async function callEvoGoCreateInstance(
 
       if (response.status >= 500) {
         // Server error - try retry
+        const errorBody = await response.text();
+        console.log(`[Evo GO] Server error response body:`, errorBody);
+
         lastError = new EvoGoError(
-          "Evo GO server error",
+          `Evo GO server error: ${errorBody}`,
           "SERVER_ERROR",
           response.status,
         );
@@ -158,10 +164,14 @@ export async function callEvoGoCreateInstance(
 
       const data = await response.json();
 
-      // Validate response structure (Evo GO uses camelCase)
-      if (!data.instanceId || !data.qrCode || !data.token) {
+      // Parse response (Evo GO wraps data in 'data' object)
+      const responseData = data.data || data;
+
+      // Validate response structure
+      // Note: qrcode may come empty — it's generated asynchronously and sent via webhook
+      if (!responseData.id) {
         throw new EvoGoError(
-          "Invalid response from Evo GO",
+          "Invalid response from Evo GO — missing instance ID",
           "MALFORMED_RESPONSE",
           500,
         );
@@ -171,12 +181,18 @@ export async function callEvoGoCreateInstance(
       console.log(
         `[Evo GO] Instance created successfully for tenant ${tenantId}`,
         {
-          instanceId: data.instanceId,
+          instance_id: responseData.id,
           timestamp: new Date().toISOString(),
         },
       );
 
-      return data as EvoGoCreateInstanceResponse;
+      // Map response to our interface (convert camelCase to snake_case)
+      // Note: qrcode may be empty — it's generated asynchronously via webhook
+      return {
+        instance_id: responseData.id,
+        token: responseData.token,
+        qr_code: responseData.qrcode || '', // can be empty initially
+      } as EvoGoCreateInstanceResponse;
     } catch (error) {
       // Handle timeout
       if (error instanceof DOMException && error.name === "AbortError") {

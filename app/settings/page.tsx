@@ -49,9 +49,9 @@ export default function SettingsPage() {
     loadInitialStatus();
   }, []);
 
-  // Polling effect: Check status every 3s while in qr_displayed state
+  // Polling effect: Check status every 3s while in loading or qr_displayed state
   useEffect(() => {
-    if (state !== 'qr_displayed') {
+    if (state !== 'loading' && state !== 'qr_displayed') {
       if (pollIntervalRef.current) {
         clearInterval(pollIntervalRef.current);
         pollIntervalRef.current = null;
@@ -66,9 +66,17 @@ export default function SettingsPage() {
         });
         if (!response.ok) throw new Error(`Status: ${response.status}`);
 
-        const { connection_status } = await response.json();
+        const { connection_status, qr_code } = await response.json();
         setConnectionStatus(connection_status);
 
+        // If QR code arrived and we're still loading, display it
+        if (qr_code && state === 'loading') {
+          setQrCode(qr_code);
+          setState('qr_displayed');
+          setTimerSeconds(300);
+        }
+
+        // Check if WhatsApp connected
         if (connection_status === 'connected') {
           setState('connected');
           addToast('WhatsApp conectado com sucesso! ✅', 'success');
@@ -145,10 +153,9 @@ export default function SettingsPage() {
         throw new Error(errorData.error || 'Falha ao gerar QR code');
       }
 
-      const { qr_code } = await response.json();
-      setQrCode(qr_code);
-      setState('qr_displayed');
-      setTimerSeconds(300);
+      // QR code will come via polling once webhook QRCODE_UPDATED arrives
+      // Stay in 'loading' state and let polling detect qr_code
+      await response.json(); // Just confirm the request succeeded
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMessage);

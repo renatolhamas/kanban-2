@@ -5,8 +5,13 @@
 
 export interface EvoGoCreateInstanceRequest {
   name: string;
-  integration?: string; // "WHATSAPP-BUSINESS" or "WHATSAPP-PERSONAL"
-  number?: string; // E.164 format: +5511987654321
+  token: string; // API key/token for authentication
+  proxy?: {
+    address: string;
+    port: string;
+    username?: string;
+    password?: string;
+  };
 }
 
 export interface EvoGoCreateInstanceResponse {
@@ -73,8 +78,7 @@ export async function callEvoGoCreateInstance(
 
   const request: EvoGoCreateInstanceRequest = {
     name: `kanban-instance-${tenantId.substring(0, 8)}`,
-    integration: 'WHATSAPP-BUSINESS',
-    // number is optional on create - only needed on update
+    token: apiKey, // The GLOBAL_API_KEY from Evo GO dashboard
   };
 
   let lastError: Error | null = null;
@@ -97,7 +101,7 @@ export async function callEvoGoCreateInstance(
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-API-Token": apiKey,
+            "apikey": apiKey, // Correct header name per Evo GO docs
           },
           body: JSON.stringify(request),
           signal: controller.signal,

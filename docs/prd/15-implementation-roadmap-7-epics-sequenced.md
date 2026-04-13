@@ -58,9 +58,10 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 **Stories:**
 
 - Story 3.1: Evo GO pairing (QR code)
-- Story 3.2: Webhook endpoint (/api/webhooks/messages)
-- Story 3.3: Webhook validation (HMAC-SHA256)
-- Story 3.4: Manual testing (curl, console logs)
+- Story 3.2: Evo GO pairing (Page fully functional)
+- Story 3.3: Webhook endpoint (/api/webhooks/messages)
+- Story 3.4: Webhook validation (HMAC-SHA256)
+- Story 3.5: Manual testing (curl, console logs)
 
 **Outputs:** Evolution connected, webhooks validated, ready for DB
 

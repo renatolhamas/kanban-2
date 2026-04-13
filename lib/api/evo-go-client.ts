@@ -369,6 +369,253 @@ export async function getOrCreateInstance(
 }
 
 /**
+ * Connect/start a WhatsApp instance (initialize session)
+ * Must use the instance-specific token, not the global API key
+ */
+export async function callEvoGoConnect(
+  instanceToken: string,
+  webhookUrl?: string,
+): Promise<void> {
+  console.log('[Evo GO] callEvoGoConnect() called', {
+    instanceToken: instanceToken.substring(0, 10) + '...',
+    webhookUrl: webhookUrl ? '✓' : '✗',
+    timestamp: new Date().toISOString(),
+  });
+
+  if (!instanceToken) {
+    throw new EvoGoError(
+      "Instance token is required for connect",
+      "MISSING_INSTANCE_TOKEN",
+      400,
+    );
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const body: Record<string, unknown> = {
+      immediate: true,
+      subscribe: ['QRCODE', 'CONNECTION', 'MESSAGE'],
+    };
+
+    if (webhookUrl) {
+      body.webhookUrl = webhookUrl;
+    }
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/connect`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": instanceToken, // Use instance token, not global API key
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log(`[Evo GO] Connect response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.log('[Evo GO] Connect error:', errorBody);
+      throw new EvoGoError(
+        `Failed to connect instance: ${errorBody}`,
+        "CONNECT_ERROR",
+        response.status,
+      );
+    }
+
+    console.log('[Evo GO] Instance connected successfully');
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "Connect request timeout (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error connecting instance: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
+ * Get QR code from an instance
+ * Must use the instance-specific token
+ */
+export async function getEvoGoQRCode(
+  instanceToken: string,
+): Promise<{ qr_code: string; code: string }> {
+  console.log('[Evo GO] getEvoGoQRCode() called');
+
+  if (!instanceToken) {
+    throw new EvoGoError(
+      "Instance token is required for QR code",
+      "MISSING_INSTANCE_TOKEN",
+      400,
+    );
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/qr`, {
+      method: "GET",
+      headers: {
+        "apikey": instanceToken, // Use instance token, not global API key
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log(`[Evo GO] QR code response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new EvoGoError(
+        `Failed to get QR code: ${errorBody}`,
+        "QR_CODE_ERROR",
+        response.status,
+      );
+    }
+
+    const data = await response.json();
+    const qrData = data.data || {};
+
+    // Note: Evo GO returns "Qrcode" with uppercase Q
+    const qrCode = (qrData.Qrcode || qrData.qrcode) as string;
+    const code = (qrData.Code || qrData.code) as string;
+
+    if (!qrCode) {
+      console.log('[Evo GO] QR code is empty (not yet generated)');
+      return { qr_code: '', code: '' };
+    }
+
+    console.log('[Evo GO] QR code retrieved successfully', {
+      qrCodeLength: qrCode.length,
+      timestamp: new Date().toISOString(),
+    });
+
+    return {
+      qr_code: qrCode,
+      code: code || '',
+    };
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "QR code request timeout (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error getting QR code: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
+ * Get status of a WhatsApp instance
+ * Must use the instance-specific token
+ */
+export async function getEvoGoStatus(
+  instanceToken: string,
+): Promise<{ connected: boolean; logged_in: boolean; name?: string }> {
+  console.log('[Evo GO] getEvoGoStatus() called');
+
+  if (!instanceToken) {
+    throw new EvoGoError(
+      "Instance token is required for status",
+      "MISSING_INSTANCE_TOKEN",
+      400,
+    );
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/status`, {
+      method: "GET",
+      headers: {
+        "apikey": instanceToken, // Use instance token, not global API key
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log(`[Evo GO] Status response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new EvoGoError(
+        `Failed to get instance status: ${errorBody}`,
+        "STATUS_ERROR",
+        response.status,
+      );
+    }
+
+    const data = await response.json();
+    const statusData = data.data || {};
+
+    // Note: Evo GO returns "Connected" with uppercase C
+    const connected = (statusData.Connected || statusData.connected) as boolean;
+    const loggedIn = (statusData.LoggedIn || statusData.logged_in) as boolean;
+    const name = (statusData.Name || statusData.name) as string | undefined;
+
+    console.log('[Evo GO] Status retrieved', {
+      connected,
+      logged_in: loggedIn,
+      timestamp: new Date().toISOString(),
+    });
+
+    return {
+      connected: connected || false,
+      logged_in: loggedIn || false,
+      name,
+    };
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "Status request timeout (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error getting status: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
  * Custom error class for Evo GO API errors
  */
 export class EvoGoError extends Error {

@@ -43,10 +43,10 @@ export async function GET(
     // 2. Extract and validate tenant context
     const { tenantId } = await tenantIsolation(request, payload);
 
-    // 3. Fetch tenant connection status (including QR code)
+    // 3. Fetch tenant connection status (including QR code and token)
     const { data: tenant, error: fetchError } = await supabase
       .from("tenants")
-      .select("connection_status, evolution_instance_id, qr_code, qr_code_expires_at")
+      .select("connection_status, evolution_instance_id, evolution_instance_token, qr_code, qr_code_expires_at")
       .eq("id", tenantId)
       .single();
 

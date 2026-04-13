@@ -4,15 +4,18 @@
  */
 
 export interface EvoGoCreateInstanceRequest {
-  apiKey: string;
+  name: string;
+  integration?: string; // "WHATSAPP-BUSINESS" or "WHATSAPP-PERSONAL"
+  number?: string; // E.164 format: +5511987654321
 }
 
 export interface EvoGoCreateInstanceResponse {
-  instance_id: string;
-  qr_code: string;
-  phone: string;
-  status: "connecting" | "connected" | "failed";
-  expires_at: string; // ISO 8601
+  instanceId: string;
+  token: string;
+  qrCode: string;
+  phone?: string;
+  status?: "connecting" | "connected" | "failed";
+  expires_at?: string; // ISO 8601
 }
 
 interface RetryConfig {
@@ -69,7 +72,9 @@ export async function callEvoGoCreateInstance(
   */
 
   const request: EvoGoCreateInstanceRequest = {
-    apiKey,
+    name: `kanban-instance-${tenantId.substring(0, 8)}`,
+    integration: 'WHATSAPP-BUSINESS',
+    // number is optional on create - only needed on update
   };
 
   let lastError: Error | null = null;
@@ -149,8 +154,8 @@ export async function callEvoGoCreateInstance(
 
       const data = await response.json();
 
-      // Validate response structure
-      if (!data.instance_id || !data.qr_code || !data.expires_at) {
+      // Validate response structure (Evo GO uses camelCase)
+      if (!data.instanceId || !data.qrCode || !data.token) {
         throw new EvoGoError(
           "Invalid response from Evo GO",
           "MALFORMED_RESPONSE",
@@ -162,7 +167,7 @@ export async function callEvoGoCreateInstance(
       console.log(
         `[Evo GO] Instance created successfully for tenant ${tenantId}`,
         {
-          instance_id: data.instance_id,
+          instanceId: data.instanceId,
           timestamp: new Date().toISOString(),
         },
       );

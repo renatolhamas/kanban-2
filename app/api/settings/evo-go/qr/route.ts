@@ -82,7 +82,7 @@ export async function POST(
     const { error: updateError } = await supabase
       .from("tenants")
       .update({
-        evolution_instance_id: qrData.instance_id,
+        evolution_instance_id: qrData.instanceId,
         connection_status: "connecting",
       })
       .eq("id", tenantId);
@@ -90,7 +90,7 @@ export async function POST(
     if (updateError) {
       console.error("[Evo GO] Database update error", {
         tenantId,
-        instance_id: qrData.instance_id,
+        instance_id: qrData.instanceId,
         error: updateError,
         timestamp: new Date().toISOString(),
       });
@@ -101,16 +101,16 @@ export async function POST(
     // 6. Log successful pairing
     console.log("[Evo GO] Pairing initiated successfully", {
       tenantId,
-      instance_id: qrData.instance_id,
+      instance_id: qrData.instanceId,
       timestamp: new Date().toISOString(),
     });
 
     // 7. Return success response
     return NextResponse.json(
       {
-        qr_code: qrData.qr_code,
-        instance_id: qrData.instance_id,
-        expires_at: qrData.expires_at,
+        qr_code: qrData.qrCode,
+        instance_id: qrData.instanceId,
+        expires_at: qrData.expires_at || new Date(Date.now() + 5 * 60 * 1000).toISOString(),
       },
       { status: 200 },
     );

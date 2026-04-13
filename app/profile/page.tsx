@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/common/Button";
+import { Input } from "@/components/common/Input";
+import { Card } from "@/components/common/Card";
 
 interface UserProfile {
   id: string;
@@ -251,7 +251,7 @@ export default function ProfilePage() {
             {/* Logout Section */}
             <div className="pt-8 border-t border-border">
               <form action="/api/auth/logout" method="POST">
-                <Button type="submit" variant="destructive" className="w-full sm:w-auto">
+                <Button type="submit" variant="secondary" className="w-full sm:w-auto">
                   Logout
                 </Button>
               </form>

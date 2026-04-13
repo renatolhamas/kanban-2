@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/common/Button";
+import { Card } from "@/components/common/Card";
 
 export default function Home() {
   return (
@@ -20,12 +20,12 @@ export default function Home() {
 
           <div className="flex gap-4 w-full flex-col sm:flex-row">
             <Link href="/register" className="flex-1">
-              <Button variant="default" className="w-full">
+              <Button variant="primary" className="w-full">
                 Register
               </Button>
             </Link>
             <Link href="/login" className="flex-1">
-              <Button variant="outline" className="w-full">
+              <Button variant="secondary" className="w-full">
                 Login
               </Button>
             </Link>

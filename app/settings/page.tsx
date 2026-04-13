@@ -27,7 +27,9 @@ export default function SettingsPage() {
   useEffect(() => {
     const loadInitialStatus = async () => {
       try {
-        const response = await fetch('/api/settings/evo-go/status');
+        const response = await fetch('/api/settings/evo-go/status', {
+          credentials: 'include', // Send JWT token in cookies
+        });
         if (!response.ok) throw new Error(`Status: ${response.status}`);
 
         const { connection_status } = await response.json();
@@ -59,7 +61,9 @@ export default function SettingsPage() {
 
     const poll = async () => {
       try {
-        const response = await fetch('/api/settings/evo-go/status');
+        const response = await fetch('/api/settings/evo-go/status', {
+          credentials: 'include', // Send JWT token in cookies
+        });
         if (!response.ok) throw new Error(`Status: ${response.status}`);
 
         const { connection_status } = await response.json();
@@ -132,7 +136,10 @@ export default function SettingsPage() {
     setError(null);
 
     try {
-      const response = await fetch('/api/settings/evo-go/qr', { method: 'POST' });
+      const response = await fetch('/api/settings/evo-go/qr', {
+        method: 'POST',
+        credentials: 'include', // Send JWT token in cookies
+      });
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Falha ao gerar QR code');
@@ -160,6 +167,7 @@ export default function SettingsPage() {
     try {
       const response = await fetch('/api/settings/evo-go/disconnect', {
         method: 'POST',
+        credentials: 'include', // Send JWT token in cookies
       });
 
       if (!response.ok) {

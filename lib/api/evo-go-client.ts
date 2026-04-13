@@ -43,6 +43,22 @@ export async function callEvoGoCreateInstance(
     throw new Error("EVO_GO_API_KEY environment variable is not set");
   }
 
+  // Development mock - remove before production!
+  if (process.env.NODE_ENV === 'development' && apiKey.startsWith('test_dev_')) {
+    console.log('[Evo GO] Using mock response for development');
+    return {
+      instance_id: 'mock_' + Math.random().toString(36).substr(2, 9),
+      qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACheD8fAAAAIGNIUk0AAHomAAA' +
+               'CgABEqwAcEAAACgABEqwAcEAAAAAJcEhZcwAAAHAAAABwAHpRyqkAAAKeSURBVHic7doxDoMwEERBT' +
+               'JNuIBj4tP0BbmAbMIzgwEzSi/IhPfgQi9XJd4ql4xgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHiJ' +
+               'qJhvVXU5Ho7H0+l0Go7H43VdX5fL5XI+n5fz+VxVVVVV1eVyuV6vV1VVlWVZWZaVZVkzM3NmZkY' +
+               'AAAAAAAAAAAAAAOB/SiKqT09PAAAA',
+      phone: '+5511999999999',
+      status: 'connecting',
+      expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
+    };
+  }
+
   const request: EvoGoCreateInstanceRequest = {
     apiKey,
   };

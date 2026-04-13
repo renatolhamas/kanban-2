@@ -39,13 +39,21 @@ export async function callEvoGoCreateInstance(
 ): Promise<EvoGoCreateInstanceResponse> {
   const apiKey = process.env.EVO_GO_API_KEY;
 
+  console.log('[Evo GO] callEvoGoCreateInstance() called');
+  console.log('[Evo GO] NODE_ENV:', process.env.NODE_ENV);
+  console.log('[Evo GO] API Key first 20 chars:', apiKey?.substring(0, 20));
+  console.log('[Evo GO] Is test key?', apiKey?.startsWith('test_dev_'));
+
   if (!apiKey) {
     throw new Error("EVO_GO_API_KEY environment variable is not set");
   }
 
-  // Development mock - remove before production!
+  // Development mock - DISABLED for real API testing
+  // Uncomment below to re-enable mock mode
+  /*
   if (process.env.NODE_ENV === 'development' && apiKey.startsWith('test_dev_')) {
-    console.log('[Evo GO] Using mock response for development');
+    console.log('[Evo GO] ⚠️ MOCK MODE - Not calling real Evo GO API');
+    console.log('[Evo GO] API Key starts with "test_dev_" - returning mock QR code');
     return {
       instance_id: 'mock_' + Math.random().toString(36).substr(2, 9),
       qr_code: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAYAAACheD8fAAAAIGNIUk0AAHomAAA' +
@@ -58,6 +66,7 @@ export async function callEvoGoCreateInstance(
       expires_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
     };
   }
+  */
 
   const request: EvoGoCreateInstanceRequest = {
     apiKey,
@@ -67,6 +76,10 @@ export async function callEvoGoCreateInstance(
 
   for (let attempt = 0; attempt < retryConfig.maxRetries; attempt++) {
     try {
+      console.log(`[Evo GO] Attempt ${attempt + 1}/${retryConfig.maxRetries}`);
+      console.log(`[Evo GO] Calling: ${EVOGO_API_BASE}/instance/create`);
+      console.log(`[Evo GO] Using API Key: ${apiKey.substring(0, 10)}...`);
+
       const controller = new AbortController();
       const timeoutId = setTimeout(
         () => controller.abort(),
@@ -85,6 +98,9 @@ export async function callEvoGoCreateInstance(
           signal: controller.signal,
         },
       );
+
+      console.log(`[Evo GO] Response status: ${response.status}`);
+      console.log(`[Evo GO] Response statusText: ${response.statusText}`);
 
       clearTimeout(timeoutId);
 

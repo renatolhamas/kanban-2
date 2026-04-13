@@ -25,6 +25,20 @@ export interface EvoGoCreateInstanceResponse {
   expires_at?: string; // ISO 8601
 }
 
+export interface EvoGoInstance {
+  id: string;
+  name: string;
+  token: string;
+  qrcode: string;
+  connected: boolean;
+  createdAt: string;
+}
+
+export interface EvoGoListInstancesResponse {
+  data: EvoGoInstance[];
+  message: string;
+}
+
 interface RetryConfig {
   maxRetries: number;
   delays: number[]; // delays in milliseconds
@@ -235,6 +249,123 @@ export async function callEvoGoCreateInstance(
   }
 
   throw lastError || new EvoGoError("Failed to create instance", "UNKNOWN_ERROR", 500);
+}
+
+/**
+ * List all WhatsApp instances from Evo GO
+ */
+export async function listEvoGoInstances(): Promise<EvoGoInstance[]> {
+  const apiKey = process.env.EVO_GO_API_KEY;
+
+  console.log('[Evo GO] listEvoGoInstances() called');
+
+  if (!apiKey) {
+    throw new Error("EVO_GO_API_KEY environment variable is not set");
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/all`, {
+      method: "GET",
+      headers: {
+        "apikey": apiKey,
+        "Content-Type": "application/json",
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log(`[Evo GO] List instances response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.log('[Evo GO] List instances error:', errorBody);
+      throw new EvoGoError(
+        `Failed to list instances: ${errorBody}`,
+        "LIST_INSTANCES_ERROR",
+        response.status,
+      );
+    }
+
+    const data = await response.json() as EvoGoListInstancesResponse;
+    console.log(`[Evo GO] Found ${data.data?.length || 0} instances`);
+
+    return data.data || [];
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "Request timeout listing instances (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error listing instances: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
+ * Get or create a WhatsApp instance for a tenant
+ * Checks if instance already exists by name, reuses it if found
+ */
+export async function getOrCreateInstance(
+  tenantId: string,
+): Promise<EvoGoCreateInstanceResponse> {
+  const instanceName = `kanban-instance-${tenantId.substring(0, 8)}`;
+
+  console.log('[Evo GO] getOrCreateInstance() called', {
+    tenantId,
+    instanceName,
+    timestamp: new Date().toISOString(),
+  });
+
+  try {
+    // 1. List existing instances
+    const existingInstances = await listEvoGoInstances();
+    console.log('[Evo GO] Checking for existing instance with name:', instanceName);
+
+    // 2. Look for instance with matching name
+    const existingInstance = existingInstances.find(
+      (instance) => instance.name === instanceName,
+    );
+
+    if (existingInstance) {
+      console.log('[Evo GO] Found existing instance, reusing it', {
+        instance_id: existingInstance.id,
+        token: existingInstance.token,
+        timestamp: new Date().toISOString(),
+      });
+
+      return {
+        instance_id: existingInstance.id,
+        token: existingInstance.token,
+        qr_code: existingInstance.qrcode || '',
+      };
+    }
+
+    // 3. If not found, create new instance
+    console.log('[Evo GO] No existing instance found, creating new one');
+    return await callEvoGoCreateInstance(tenantId);
+  } catch (error) {
+    console.error('[Evo GO] getOrCreateInstance error:', {
+      tenantId,
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
+
+    throw error;
+  }
 }
 
 /**

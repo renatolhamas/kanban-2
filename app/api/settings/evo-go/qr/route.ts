@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@/lib/middleware/auth";
 import { tenantIsolation } from "@/lib/middleware/tenant-isolation";
-import { callEvoGoCreateInstance } from "@/lib/api/evo-go-client";
+import { getOrCreateInstance } from "@/lib/api/evo-go-client";
 import { handleEvoGoError } from "@/lib/api/evo-go-error-handler";
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -75,8 +75,8 @@ export async function POST(
       );
     }
 
-    // 4. Call Evo GO API to create instance
-    const qrData = await callEvoGoCreateInstance(tenantId);
+    // 4. Get or create instance (checks if already exists by name)
+    const qrData = await getOrCreateInstance(tenantId);
 
     // 5. Update tenant with new instance info
     const { error: updateError } = await supabase

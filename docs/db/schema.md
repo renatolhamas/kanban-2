@@ -30,7 +30,7 @@ Isolamento multi-tenant. Cada tenant é uma organização isolada.
 | `name` | text | ❌ | — | — |
 | `subscription_status` | text | ❌ | `'active'` | CHECK: `active`, `paused`, `cancelled` |
 | `evolution_instance_id` | text | ✅ | — | UNIQUE |
-| `connection_status` | text | ❌ | `'disconnected'` | CHECK: `connected`, `disconnected`, `error` |
+| `connection_status` | text | ❌ | `'disconnected'` | CHECK: `connected`, `connecting`, `disconnected`, `error` |
 | `created_at` | timestamptz | ❌ | `now()` | — |
 | `updated_at` | timestamptz | ❌ | `now()` | — |
 

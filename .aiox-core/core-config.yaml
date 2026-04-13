@@ -130,6 +130,10 @@ metrics:
   dashboards: false
   team_analytics: false
   cost_tracking: false
+coderabbit_integration:
+  enabled: false
+  reason: "Hardware constraints — CLI execution disabled"
+
 integrations:
   gitlab:
     enabled: false

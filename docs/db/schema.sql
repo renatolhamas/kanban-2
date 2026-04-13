@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.tenants (
   name text NOT NULL,
   subscription_status text NOT NULL DEFAULT 'active'::text CHECK (subscription_status = ANY (ARRAY['active'::text, 'paused'::text, 'cancelled'::text])),
   evolution_instance_id text UNIQUE,
-  connection_status text NOT NULL DEFAULT 'disconnected'::text CHECK (connection_status = ANY (ARRAY['connected'::text, 'disconnected'::text, 'error'::text])),
+  connection_status text NOT NULL DEFAULT 'disconnected'::text CHECK (connection_status = ANY (ARRAY['connected'::text, 'connecting'::text, 'disconnected'::text, 'error'::text])),
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
   PRIMARY KEY (id)

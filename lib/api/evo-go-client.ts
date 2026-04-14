@@ -579,9 +579,10 @@ export async function getEvoGoStatus(
     const statusData = data.data || {};
 
     // Note: Evo GO returns "Connected" with uppercase C
-    const connected = (statusData.Connected || statusData.connected) as boolean;
-    const loggedIn = (statusData.LoggedIn || statusData.logged_in) as boolean;
-    const name = (statusData.Name || statusData.name) as string | undefined;
+    // Use ?? (nullish coalescing) to preserve false values — || would convert false to undefined
+    const connected = (statusData.Connected ?? statusData.connected ?? false) as boolean;
+    const loggedIn = (statusData.LoggedIn ?? statusData.logged_in ?? false) as boolean;
+    const name = (statusData.Name ?? statusData.name) as string | undefined;
 
     console.log('[Evo GO] Status retrieved', {
       connected,
@@ -609,6 +610,74 @@ export async function getEvoGoStatus(
 
     throw new EvoGoError(
       `Unexpected error getting status: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
+ * Logout from a WhatsApp instance
+ * Must use the instance-specific token
+ */
+export async function callEvoGoLogout(
+  instanceToken: string,
+): Promise<void> {
+  console.log('[Evo GO] callEvoGoLogout() called', {
+    instanceToken: instanceToken.substring(0, 10) + '...',
+    timestamp: new Date().toISOString(),
+  });
+
+  if (!instanceToken) {
+    throw new EvoGoError(
+      "Instance token is required for logout",
+      "MISSING_INSTANCE_TOKEN",
+      400,
+    );
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/logout`, {
+      method: "DELETE",
+      headers: {
+        "apikey": instanceToken, // Use instance token, not global API key
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log(`[Evo GO] Logout response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.log('[Evo GO] Logout error:', errorBody);
+      throw new EvoGoError(
+        `Failed to logout instance: ${errorBody}`,
+        "LOGOUT_ERROR",
+        response.status,
+      );
+    }
+
+    console.log('[Evo GO] Instance logged out successfully');
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "Logout request timeout (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error logging out instance: ${error instanceof Error ? error.message : String(error)}`,
       "UNKNOWN_ERROR",
       500,
     );

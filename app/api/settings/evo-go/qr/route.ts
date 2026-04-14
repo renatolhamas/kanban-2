@@ -21,6 +21,7 @@ import {
   getOrCreateInstance,
   callEvoGoConnect,
   getEvoGoQRCode,
+  getEvoGoStatus,
 } from "@/lib/api/evo-go-client";
 import { handleEvoGoError } from "@/lib/api/evo-go-error-handler";
 
@@ -61,7 +62,62 @@ export async function POST(
     // 3. Get or create instance (handles Scenarios A, B, C)
     const instanceData = await getOrCreateInstance(tenantId);
 
-    // 4. Save instance info to database
+    // 4. Check current status in Evo GO (best-effort — errors mean disconnected)
+    console.log('[QR] Checking real status in Evo GO', {
+      tenantId,
+      instance_id: instanceData.instance_id,
+      timestamp: new Date().toISOString(),
+    });
+
+    let realStatus = { connected: false, logged_in: false };
+    try {
+      realStatus = await getEvoGoStatus(instanceData.token);
+
+      console.log('[QR] Real status from Evo GO', {
+        tenantId,
+        connected: realStatus.connected,
+        logged_in: realStatus.logged_in,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (statusError) {
+      console.log('[QR] Status check failed (treating as disconnected)', {
+        tenantId,
+        instance_id: instanceData.instance_id,
+        error: statusError instanceof Error ? statusError.message : String(statusError),
+        timestamp: new Date().toISOString(),
+      });
+      // "client disconnected" or other errors mean not connected — continue to generate QR
+    }
+
+    // 5. If already logged in, sync database and return 409 (Conflict)
+    if (realStatus.logged_in === true) {
+      console.log('[QR] Already logged in, syncing database and returning 409', {
+        tenantId,
+        instance_id: instanceData.instance_id,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Sync database with real status
+      await supabase
+        .from("tenants")
+        .update({
+          evolution_instance_id: instanceData.instance_id,
+          evolution_instance_token: instanceData.token,
+          connection_status: "connected",
+        })
+        .eq("id", tenantId);
+
+      return NextResponse.json(
+        {
+          error: "WhatsApp já está conectado. Desconecte primeiro se deseja trocar de conta.",
+          code: "ALREADY_CONNECTED",
+          statusCode: 409,
+        },
+        { status: 409 },
+      );
+    }
+
+    // 6. Save instance info to database
     const { error: updateError } = await supabase
       .from("tenants")
       .update({
@@ -88,9 +144,17 @@ export async function POST(
       timestamp: new Date().toISOString(),
     });
 
-    // 5. Connect the instance (initialize WhatsApp session)
+    // 7. Connect the instance (initialize WhatsApp session)
     try {
-      await callEvoGoConnect(instanceData.token);
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+      if (!appUrl) {
+        throw new Error('NEXT_PUBLIC_APP_URL is not configured');
+      }
+
+      const webhookUrl = `${appUrl}/api/webhooks/evo-go?tenantId=${tenantId}`;
+      console.log('[QR] Webhook URL configured', { webhookUrl });
+
+      await callEvoGoConnect(instanceData.token, webhookUrl);
     } catch (connectError) {
       console.error('[QR] Connect failed', {
         tenantId,
@@ -101,7 +165,7 @@ export async function POST(
       throw connectError;
     }
 
-    // 6. Fetch QR code with retry (QR generation is async)
+    // 8. Fetch QR code with retry (QR generation is async)
     let qrCode = '';
     let lastError: Error | null = null;
     const maxRetries = 5;
@@ -139,7 +203,7 @@ export async function POST(
       throw lastError;
     }
 
-    // 7. Return success response with QR code
+    // 9. Return success response with QR code
     console.log("[QR] QR code generation successful", {
       tenantId,
       instance_id: instanceData.instance_id,

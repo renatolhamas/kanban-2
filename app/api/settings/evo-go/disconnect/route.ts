@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { auth } from '@/lib/middleware/auth';
 import { tenantIsolation } from '@/lib/middleware/tenant-isolation';
+import { callEvoGoLogout } from '@/lib/api/evo-go-client';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -41,10 +42,10 @@ export async function POST(
     // 2. Extract and validate tenant context
     const { tenantId } = await tenantIsolation(request, payload);
 
-    // 3. Fetch current tenant to get instance_id
+    // 3. Fetch current tenant to get instance_id and token
     const { data: tenant, error: fetchError } = await supabase
       .from('tenants')
-      .select('evolution_instance_id, connection_status')
+      .select('evolution_instance_id, evolution_instance_token, connection_status')
       .eq('id', tenantId)
       .single();
 
@@ -75,32 +76,30 @@ export async function POST(
       );
     }
 
-    // 5. Call Evolution API to logout/delete instance
-    // Note: This would require Evolution API client implementation
-    // For now, we'll proceed with database update
-    // TODO: Implement callEvoGoLogoutInstance if needed in future story
-    try {
-      // await callEvoGoLogoutInstance(tenant.evolution_instance_id);
-      console.log('[Disconnect] Evolution API logout call (placeholder)', {
-        tenantId,
-        instance_id: tenant.evolution_instance_id,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (evoError) {
-      console.warn('[Disconnect] Evolution API error (non-blocking)', {
-        tenantId,
-        instance_id: tenant.evolution_instance_id,
-        error: evoError instanceof Error ? evoError.message : 'Unknown error',
-        timestamp: new Date().toISOString(),
-      });
-      // Continue with database cleanup even if Evolution API fails
+    // 5. Call Evo GO logout to destroy the WhatsApp session
+    if (tenant.evolution_instance_token) {
+      try {
+        await callEvoGoLogout(tenant.evolution_instance_token);
+        console.log('[Disconnect] Evo GO logout successful', {
+          tenantId,
+          instance_id: tenant.evolution_instance_id,
+          timestamp: new Date().toISOString(),
+        });
+      } catch (evoError) {
+        console.warn('[Disconnect] Evo GO logout failed (non-blocking)', {
+          tenantId,
+          instance_id: tenant.evolution_instance_id,
+          error: evoError instanceof Error ? evoError.message : 'Unknown error',
+          timestamp: new Date().toISOString(),
+        });
+        // Continue with database cleanup even if Evo GO logout fails
+      }
     }
 
-    // 6. Update tenant to clear instance data
+    // 6. Update tenant to mark disconnected (keep instance data for Opção 2: Logout)
     const { error: updateError } = await supabase
       .from('tenants')
       .update({
-        evolution_instance_id: null,
         connection_status: 'disconnected',
         qr_code: null,
         qr_code_expires_at: null,

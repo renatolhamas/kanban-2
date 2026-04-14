@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@/lib/middleware/auth";
 import { tenantIsolation } from "@/lib/middleware/tenant-isolation";
+import { getEvoGoStatus } from "@/lib/api/evo-go-client";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -62,17 +63,84 @@ export async function GET(
       );
     }
 
-    // 4. Log status retrieval
+    // 4. Check REAL status in Evo GO — only when waiting for QR scan ("connecting")
+    // Avoids false positives: a live instance can return Connected=true even when
+    // the user intentionally disconnected.
+    let syncedStatus = tenant?.connection_status || "disconnected";
+
+    const dbStatus = tenant?.connection_status || "disconnected";
+    const shouldCheck = tenant?.evolution_instance_token &&
+      (dbStatus === "connecting" || dbStatus === "connected");
+
+    if (shouldCheck) {
+      try {
+        console.log("[Status] Checking real status in Evo GO", {
+          tenantId,
+          dbStatus,
+          timestamp: new Date().toISOString(),
+        });
+
+        const realStatus = await getEvoGoStatus(tenant!.evolution_instance_token!);
+
+        if (dbStatus === "connecting" && realStatus.logged_in === true) {
+          // User scanned QR → Evo GO has active WhatsApp session → mark as connected
+          console.log("[Status] Syncing: QR scanned, session active, marking connected", { tenantId });
+          await supabase
+            .from("tenants")
+            .update({ connection_status: "connected" })
+            .eq("id", tenantId);
+          syncedStatus = "connected";
+
+        } else if (dbStatus === "connected" && realStatus.logged_in === false) {
+          // WhatsApp session dropped → mark as disconnected
+          console.log("[Status] Syncing: session lost, marking disconnected", { tenantId });
+          await supabase
+            .from("tenants")
+            .update({ connection_status: "disconnected" })
+            .eq("id", tenantId);
+          syncedStatus = "disconnected";
+        }
+      } catch (eevoError) {
+        const errMsg = eevoError instanceof Error ? eevoError.message : String(eevoError);
+        const isUnauthorized = errMsg.includes("not authorized") || errMsg.includes("401") || errMsg.includes("403");
+
+        if (isUnauthorized && dbStatus === "connected") {
+          // Token invalid (instance deleted in Evo GO) → clear DB
+          console.log("[Status] Token unauthorized, clearing instance from DB", {
+            tenantId,
+            timestamp: new Date().toISOString(),
+          });
+          await supabase
+            .from("tenants")
+            .update({
+              connection_status: "disconnected",
+              evolution_instance_id: null,
+              evolution_instance_token: null,
+            })
+            .eq("id", tenantId);
+          syncedStatus = "disconnected";
+        } else {
+          // Temporary error — keep DB status
+          console.error("[Status] Error checking Evo GO status", {
+            tenantId,
+            error: errMsg,
+            timestamp: new Date().toISOString(),
+          });
+        }
+      }
+    }
+
+    // 5. Log status retrieval
     console.log("[Status] Connection status retrieved", {
       tenantId,
-      connection_status: tenant?.connection_status,
+      connection_status: syncedStatus,
       timestamp: new Date().toISOString(),
     });
 
-    // 5. Return status
+    // 6. Return status
     return NextResponse.json(
       {
-        connection_status: tenant?.connection_status || "disconnected",
+        connection_status: syncedStatus,
         evolution_instance_id: tenant?.evolution_instance_id || null,
         qr_code: tenant?.qr_code || null,
         qr_code_expires_at: tenant?.qr_code_expires_at || null,

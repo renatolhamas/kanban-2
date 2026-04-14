@@ -1,0 +1,83 @@
+storyId: 3.5
+title: "Manual QA Validation — Evo GO Integration"
+verdict: PASS
+reviewDate: 2026-04-14
+reviewedBy: Quinn (QA)
+
+gateChecklist:
+  - requirement_clarity: PASS
+    details: "14 ACs clearly defined and actionable; all testable manually"
+  - ac_completeness: PASS
+    details: "Full coverage: QR generation (AC 1-3), status polling (AC 4-7), disconnect/reconnect (AC 6-7), webhook (AC 8-9), frontend (AC 10-12), database (AC 13-14)"
+  - test_design: PASS
+    details: "7 manual scenarios with curl commands, expected responses, DB checks"
+  - effort_estimation: PASS
+    details: "2-2.5 hours estimated (setup 15-20m, execution 60-90m, docs 15-20m) — realistic for lightweight QA"
+  - resources_prerequisites: PASS
+    details: "All prerequisites documented: env vars, JWT, Evo GO API, DB access"
+  - automation_readiness: CONCERNS
+    details: "Manual-only (intentional). Post-MVP: Create Postman collection for repeatability"
+
+riskAssessment:
+  - risk: "Evo GO API unreachable"
+    probability: "Low"
+    impact: "High"
+    mitigation: "Test only if Evo GO available; skip if unavailable"
+  - risk: "Environment variable misconfiguration"
+    probability: "Medium"
+    impact: "High"
+    mitigation: "Setup section documents all required variables"
+  - risk: "Real webhook not received"
+    probability: "Medium"
+    impact: "Medium"
+    mitigation: "Document if webhook not received; not story blocker"
+  - risk: "QR expiration during test"
+    probability: "Low"
+    impact: "Medium"
+    mitigation: "5-min expiry adequate for manual test duration"
+  - risk: "Cross-tenant data leak"
+    probability: "Low"
+    impact: "High"
+    mitigation: "AC 13 spot-check validates tenant isolation"
+
+overallRisk: "LOW"
+
+issues: []
+
+recommendations:
+  - priority: "Medium"
+    type: "Enhancement (Post-MVP)"
+    title: "Create Postman Collection for Manual Tests"
+    description: "Post-MVP: Convert 7 curl scenarios to Postman collection for easier manual testing and baseline for future automation"
+  - priority: "Low"
+    type: "Documentation"
+    title: "Webhook Real-Event Monitoring Guide"
+    description: "Document how to verify webhook reception (logs, DB, monitoring tools) if Evo GO delivers events during test"
+
+decisionRationale: |
+  Story 3.5 is well-scoped, properly documented, and ready for execution.
+
+  All 14 ACs are clear and testable. Prerequisites are explicit. Scenarios
+  include complete curl commands with expected responses. Frontend and database
+  validation ensure end-to-end coverage.
+
+  Risk profile is LOW. Manual testing approach is intentional (validates that
+  automated tests from 3.1-3.2 translate to real-world behavior).
+
+  Story is APPROVED FOR EXECUTION.
+
+approval:
+  agent: Quinn (QA)
+  date: 2026-04-14
+  nextStep: "@qa executes story 3.5 manual scenarios; updates story status to InProgress"
+
+relatedStories:
+  - "3.1: Evo GO Pairing (QR Code) — Foundation (Done)"
+  - "3.2: Evo GO WhatsApp Integration (Pairing Flow) — Implementation (Done)"
+  - "3.3: Webhook Endpoint (Covered by 3.2, Done)"
+  - "3.4: Webhook Validation (Covered by 3.1-3.2, Done)"
+
+fileList:
+  sourceStory: "docs/stories/3.5.story.md"
+  gateFile: "docs/qa/gates/3.5-manual-qa-validation-evo-go.yml"
+  resultFile: "docs/qa/manual-testing/3.5-evo-go-validation.md (to be created after execution)"

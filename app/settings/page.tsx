@@ -142,6 +142,16 @@ export default function SettingsPage() {
         method: 'POST',
         credentials: 'include', // Send JWT token in cookies
       });
+
+      // Handle 409 Conflict (already connected)
+      if (response.status === 409) {
+        const errorData = await response.json();
+        setConnectionStatus('connected');
+        setState('connected');
+        addToast(errorData.error || 'WhatsApp já está conectado', 'info');
+        return;
+      }
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Falha ao gerar QR code');

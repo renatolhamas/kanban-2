@@ -85,8 +85,9 @@ const config: Config = {
         popover: "var(--popover, var(--background))",
         "popover-foreground": "var(--popover-foreground, var(--foreground))",
 
-        /* Story 2.7 token colors (hex format) */
+        /* Story 2.7 token colors (hex format) + Stitch alignment */
         "token-primary": "var(--color-primary)",
+        "token-primary-dark": "var(--color-primary-dark)",
         "token-secondary": "var(--color-secondary)",
         "token-danger": "var(--color-danger)",
         "token-success": "var(--color-success)",
@@ -114,9 +115,11 @@ const config: Config = {
         slide: "slide var(--animation-duration-normal) ease-out",
       },
 
-      /* Font Family */
+      /* Font Family (Stitch-aligned) */
       fontFamily: {
-        sans: ["var(--font-manrope)", ...defaultTheme.fontFamily.sans],
+        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
+        manrope: ["var(--font-manrope)", ...defaultTheme.fontFamily.sans],
+        inter: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },
 
       /* Border Radius */

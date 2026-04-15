@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design System Preview - Kanban</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f7fafc;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e9eb;
+        }
+
+        h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+
+        h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        /* PALETA DE CORES */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .color-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .color-swatch {
+            height: 120px;
+            width: 100%;
+        }
+
+        .color-info {
+            padding: 1rem;
+            background: white;
+        }
+
+        .color-name {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-value {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* HIERARQUIA DE SUPERFÍCIES */
+        .surface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .surface-demo {
+            padding: 2rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .surface {
+            background: #f7fafc;
+            border: 1px solid #e5e9eb;
+        }
+
+        .surface-low {
+            background: #f1f4f6;
+            border: 1px solid #e5e9eb;
+        }
+
+        .surface-lowest {
+            background: #ffffff;
+            border: 1px solid #e5e9eb;
+        }
+
+        .surface-high {
+            background: #e5e9eb;
+            border: 1px solid #d1d5db;
+        }
+
+        .surface-label {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .surface-value {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* BOTÕES */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .button-showcase {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .showcase-label {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0.75rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #515f78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #3f4a5c;
+            transform: translateY(-2px);
+        }
+
+        .btn-tertiary {
+            background: #f1f4f6;
+            color: #374151;
+            border: none;
+        }
+
+        .btn-tertiary:hover {
+            background: #e5e9eb;
+        }
+
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .card-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+
+        .card-metric {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 0.25rem;
+        }
+
+        /* EXECUTIVE INSIGHT CARD */
+        .executive-insight {
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            border-left: 4px solid #10b981;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .executive-insight-content {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .executive-insight-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .executive-insight-text {
+            font-size: 0.9rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* INPUT FIELDS */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e9eb;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        /* TIPOGRAFIA */
+        .typography-showcase {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .typo-example {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .typo-label {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .display-lg {
+            font-family: 'Manrope', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .headline-lg {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .headline-md {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .body-lg {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .body-md {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .body-sm {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* LAYOUT EXEMPLO */
+        .layout-demo {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 1rem;
+            min-height: 300px;
+        }
+
+        .layout-sidebar {
+            background: #f1f4f6;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .layout-main {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: #e5e9eb;
+            margin: 2rem 0;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header>
+            <h1>🎨 Design System Preview</h1>
+            <p class="subtitle">Kanban - The Architectural Ledger</p>
+        </header>
+
+        <!-- SEÇÃO 1: PALETA DE CORES -->
+        <section class="section">
+            <h2>1. Paleta de Cores</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">A base da identidade visual: alto contraste entre tons profundos e neutros, com Verde Esmeralda para ação.</p>
+
+            <div class="color-palette">
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #10b981;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Primary</div>
+                        <div class="color-value">#10b981</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">Ações primárias, CTAs, estados ativos</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #006c49;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Primary Dark</div>
+                        <div class="color-value">#006c49</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">Gradientes, ênfase, estados mais escuros</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #515f78;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Secondary</div>
+                        <div class="color-value">#515f78</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">Botões secundários, ações muted</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #f7fafc;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Surface (Base)</div>
+                        <div class="color-value">#f7fafc</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">Fundo principal da página</div>
+                    </div>
+                </div>
+
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #1f2937;"></div>
+                    <div class="color-info">
+                        <div class="color-name">On Surface</div>
+                        <div class="color-value">#1f2937</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;">Texto principal (não preto puro)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: HIERARQUIA DE SUPERFÍCIES -->
+        <section class="section">
+            <h2>2. Hierarquia de Superfícies (No-Line Pattern)</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">Sem bordas sólidas de 1px. A separação visual é feita através de mudanças de cor de fundo.</p>
+
+            <div class="surface-grid">
+                <div class="surface surface">
+                    <div class="surface-label">Surface</div>
+                    <div class="surface-value">#f7fafc</div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Fundo principal da página</p>
+                </div>
+
+                <div class="surface surface-low">
+                    <div class="surface-label">Surface Low</div>
+                    <div class="surface-value">#f1f4f6</div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Áreas de conteúdo secundário, hover states</p>
+                </div>
+
+                <div class="surface surface-lowest">
+                    <div class="surface-label">Surface Lowest</div>
+                    <div class="surface-value">#ffffff</div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Cards, elementos interativos, modais</p>
+                </div>
+
+                <div class="surface surface-high">
+                    <div class="surface-label">Surface High</div>
+                    <div class="surface-value">#e5e9eb</div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Superfícies elevadas ou foco</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: TIPOGRAFIA -->
+        <section class="section">
+            <h2>3. Tipografia: Dual-Font System</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">Manrope para Headlines (autoridade geométrica). Inter para Body (legibilidade em alta densidade).</p>
+
+            <div class="typography-showcase">
+                <div class="typo-example">
+                    <div class="typo-label">Display Large</div>
+                    <div class="display-lg">Construindo a Interface</div>
+                </div>
+
+                <div class="typo-example">
+                    <div class="typo-label">Headline Large</div>
+                    <div class="headline-lg">Dados de Alto Impacto</div>
+                </div>
+
+                <div class="typo-example">
+                    <div class="typo-label">Headline Medium</div>
+                    <div class="headline-md">Títulos de Seção</div>
+                </div>
+
+                <div class="typo-example">
+                    <div class="typo-label">Body Large</div>
+                    <div class="body-lg">Este é um parágrafo em Body Large. Ideal para texto principal em alta legibilidade. A fonte Inter foi otimizada para densidades altas de informação, especialmente em telas menores.</div>
+                </div>
+
+                <div class="typo-example">
+                    <div class="typo-label">Body Medium</div>
+                    <div class="body-md">Este é um parágrafo em Body Medium. Ideal para corpo de texto padrão. Mantém excelente legibilidade e é a escolha padrão para a maioria do conteúdo.</div>
+                </div>
+
+                <div class="typo-example">
+                    <div class="typo-label">Body Small + Label</div>
+                    <div class="body-sm">Texto pequeno para detalhes secundários</div>
+                    <div class="label" style="margin-top: 1rem;">Rótulo de Metadados</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 4: COMPONENTES - BOTÕES -->
+        <section class="section">
+            <h2>4. Componentes: Botões</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">O verde esmeralda é usado como um "laser" para guiar o olho para a ação mais importante.</p>
+
+            <div class="button-grid">
+                <div class="button-showcase">
+                    <div class="showcase-label">Primary Button</div>
+                    <button class="button btn-primary">Ação Principal</button>
+                    <div style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.75rem;">Verde Esmeralda para CTAs principais</div>
+                </div>
+
+                <div class="button-showcase">
+                    <div class="showcase-label">Secondary Button</div>
+                    <button class="button btn-secondary">Ação Secundária</button>
+                    <div style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.75rem;">Steel/Gray-Blue para ações muted</div>
+                </div>
+
+                <div class="button-showcase">
+                    <div class="showcase-label">Tertiary Button</div>
+                    <button class="button btn-tertiary">Ação Terciária</button>
+                    <div style="font-size: 0.8rem; color: #9ca3af; margin-top: 0.75rem;">Fundo claro para ações opcionais</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 5: CARDS -->
+        <section class="section">
+            <h2>5. Cards: Padrão Executivo</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">Sem linhas divisórias. Separação via espaçamento ou mudança tonal.</p>
+
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-title">Métrica Principal</div>
+                    <div class="card-subtitle">Q1 2026</div>
+                    <div class="card-metric">1,294</div>
+                    <div class="card-content">Aumento de 32% no período anterior</div>
+                    <button class="button btn-tertiary" style="margin-top: 1rem;">Ver Detalhes</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Status da Tarefa</div>
+                    <div class="card-subtitle">Em Progresso</div>
+                    <div class="card-content">Você tem 5 tarefas aguardando aprovação. Nenhuma está atrasada no momento. Continue acompanhando!</div>
+                    <button class="button btn-tertiary" style="margin-top: 1rem;">Revisar Tarefas</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Notificação Premium</div>
+                    <div class="card-subtitle">Sistemas melhorados</div>
+                    <div class="card-content">Sua conta foi atualizada para o plano Premium. Acesso a todos os recursos avançados disponível agora.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 6: EXECUTIVE INSIGHT CARD -->
+        <section class="section">
+            <h2>6. Executive Insight Card (Assinatura)</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">Barra de acento lateral esquerda de 4px em Verde Esmeralda. Ideal para métricas B2B e notificações de alta prioridade.</p>
+
+            <div class="executive-insight">
+                <div class="executive-insight-content">
+                    <div class="executive-insight-title">🚀 Novo Marco Atingido</div>
+                    <div class="executive-insight-text">Sua equipe completou 150 tarefas este mês, superando a meta em 20%. Excelente desempenho! Próximo nível: 180 tarefas em junho.</div>
+                </div>
+            </div>
+
+            <div class="section-divider" style="margin-top: 2rem; margin-bottom: 2rem;"></div>
+
+            <div class="executive-insight">
+                <div class="executive-insight-content">
+                    <div class="executive-insight-title">📊 Relatório Executivo - Trimestre</div>
+                    <div class="executive-insight-text">ROI de 340% com redução de 45% em ciclo de desenvolvimento. Dashboard executivo disponível para stakeholders.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 7: FORMULÁRIOS -->
+        <section class="section">
+            <h2>7. Formulários: Foco na Clareza</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">Sem poluição. Bordas de foco limpas com suporte visual (sombra de foco).</p>
+
+            <div class="card" style="max-width: 500px;">
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">Nome do Projeto</label>
+                        <input type="text" class="form-input" placeholder="Ex: Kanban 2.0" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Descrição</label>
+                        <textarea class="form-input" placeholder="Descreva o projeto..." style="resize: vertical; min-height: 100px;"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Categoria</label>
+                        <select class="form-input">
+                            <option>Selecione uma categoria...</option>
+                            <option>Desenvolvimento</option>
+                            <option>Design</option>
+                            <option>Produto</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="button btn-primary">Criar Projeto</button>
+                    <button type="button" class="button btn-tertiary" style="margin-top: 0.5rem;">Cancelar</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 8: LAYOUT EXEMPLO -->
+        <section class="section">
+            <h2>8. Layout Exemplo: Sem Linhas Divisórias</h2>
+            <p style="margin-bottom: 1.5rem; color: #6b7280;">Separação via mudança de cor de fundo. Note: nenhuma borda sólida entre sidebar e conteúdo.</p>
+
+            <div class="layout-demo">
+                <div class="layout-grid">
+                    <div class="layout-sidebar">
+                        <div style="font-weight: 600; margin-bottom: 1rem;">📋 Menu</div>
+                        <div style="margin-bottom: 0.75rem;">→ Dashboard</div>
+                        <div style="margin-bottom: 0.75rem;">→ Tarefas</div>
+                        <div style="margin-bottom: 0.75rem;">→ Relatórios</div>
+                        <div style="margin-bottom: 0.75rem;">→ Configurações</div>
+                    </div>
+                    <div class="layout-main">
+                        <div style="font-family: 'Manrope', sans-serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: #1f2937;">Dashboard Executivo</div>
+                        <p style="color: #6b7280; margin-bottom: 1rem;">Bem-vindo ao seu painel. Aqui você vê uma visão geral de todas as métricas importantes.</p>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div style="background: #f1f4f6; padding: 1rem; border-radius: 6px;">
+                                <div style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 1.5rem; color: #10b981;">247</div>
+                                <div style="font-size: 0.85rem; color: #6b7280;">Tarefas Completas</div>
+                            </div>
+                            <div style="background: #f1f4f6; padding: 1rem; border-radius: 6px;">
+                                <div style="font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 1.5rem; color: #515f78;">18</div>
+                                <div style="font-size: 0.85rem; color: #6b7280;">Em Andamento</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 9: REGRAS DO DESIGN -->
+        <section class="section">
+            <h2>9. Regras Executivas (Do's and Don'ts)</h2>
+
+            <div class="grid-2">
+                <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 1.5rem; border-radius: 8px;">
+                    <h3 style="color: #10b981; margin-bottom: 1rem;">✅ Fazer (Do)</h3>
+                    <ul style="list-style: none; color: #374151; font-size: 0.95rem;">
+                        <li style="margin-bottom: 0.75rem;">• Use margens espaçosas para sensação "Premium"</li>
+                        <li style="margin-bottom: 0.75rem;">• Use Verde Esmeralda com parcimônia</li>
+                        <li style="margin-bottom: 0.75rem;">• Use pesos negritos para dados numéricos</li>
+                        <li style="margin-bottom: 0.75rem;">• Em dúvida: aumente o espaçamento</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fef2f2; border-left: 4px solid #dc2626; padding: 1.5rem; border-radius: 8px;">
+                    <h3 style="color: #dc2626; margin-bottom: 1rem;">❌ Não Fazer (Don't)</h3>
+                    <ul style="list-style: none; color: #374151; font-size: 0.95rem;">
+                        <li style="margin-bottom: 0.75rem;">• NÃO use preto puro. Use cinza escuro.</li>
+                        <li style="margin-bottom: 0.75rem;">• NÃO use bordas sólidas de 1px</li>
+                        <li style="margin-bottom: 0.75rem;">• NÃO use cinzas "sujos"</li>
+                        <li style="margin-bottom: 0.75rem;">• NÃO comprima a interface</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e5e9eb; text-align: center; color: #6b7280;">
+            <p style="font-size: 0.9rem;">Design System Preview — The Architectural Ledger</p>
+            <p style="font-size: 0.85rem; color: #9ca3af; margin-top: 0.5rem;">Última atualização: 2026-04-14</p>
+        </div>
+    </div>
+</body>
+</html>

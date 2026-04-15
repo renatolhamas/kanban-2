@@ -60,7 +60,11 @@
       "Bash(npx shadcn@latest add button -y)",
       "Bash(wc -l c:/git/kanban.2/src/docs/**/*.md)",
       "Bash(git mv:*)",
-      "Bash(npx ts-node:*)"
+      "Bash(npx ts-node:*)",
+      "Bash(start c:\\\\\\\\git\\\\\\\\kanban.2\\\\\\\\design-preview.html)",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__list_edge_functions",
+      "mcp__supabase__get_advisors"
     ]
   },
   "enableAllProjectMcpServers": true,

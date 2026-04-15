@@ -1,8 +1,8 @@
-# Database Schema — Kanban 2
+# Schema — Documentação do Banco de Dados
 
-**Última atualização:** 2026-04-07  
-**Ambiente:** Supabase PostgreSQL  
-**RLS:** Habilitado em todas as tabelas
+> 📅 **Extraído em:** 2026-04-14  
+> **Fonte:** Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real  
+> **Status:** ✅ Atualizado
 
 ---
 
@@ -10,234 +10,228 @@
 
 Sistema multi-tenant para gerenciamento de kanbans e conversas via WhatsApp.
 
-**Relacionamentos principais:**
-- `tenants` → raiz de isolamento (multi-tenant)
-- `users` e `contacts` → atores no sistema
-- `kanbans` e `columns` → estrutura visual
-- `conversations` e `messages` → histórico de chat
+| # | Tabela | PK | RLS | Descrição |
+|---|--------|----|-----|-----------|
+| 1 | `tenants` | uuid | ✅ | Raiz multi-tenant (organizações) |
+| 2 | `users` | uuid | ✅ | Usuários da plataforma |
+| 3 | `kanbans` | uuid | ✅ | Quadros kanban (max 1 `is_main=true` por tenant) |
+| 4 | `columns` | uuid | ✅ | Colunas dentro de um kanban |
+| 5 | `contacts` | uuid | ✅ | Contatos/clientes do tenant |
+| 6 | `conversations` | uuid | ✅ | Conversas via WhatsApp |
+| 7 | `messages` | uuid | ✅ | Mensagens das conversas |
+| 8 | `automatic_messages` | uuid | ✅ | Mensagens automáticas/agendadas |
+| 9 | `failed_registrations` | bigint | ✅ (sem policy) | Rastreamento de registros falhados |
+
+**View:** `test_user_access` — SECURITY DEFINER (ver advisors de segurança)
 
 ---
 
 ## Tabelas
 
-### 1. `tenants`
+### `tenants`
 
-Isolamento multi-tenant. Cada tenant é uma organização isolada.
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `name` | text | NO | — | — |
+| `subscription_status` | text | NO | `'active'` | — |
+| `evolution_instance_id` | text | YES | — | UNIQUE (quando não nulo) |
+| `connection_status` | text | NO | `'disconnected'` | — |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
+| `qr_code` | text | YES | — | QR code WhatsApp, recebido do webhook QRCODE_UPDATED (Evo GO) |
+| `qr_code_expires_at` | timestamptz | YES | — | Expiração do QR code (tipicamente 5 min após geração) |
+| `evolution_instance_token` | text | YES | — | Token da instância para chamadas à API Evo GO |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `name` | text | ❌ | — | — |
-| `subscription_status` | text | ❌ | `'active'` | CHECK: `active`, `paused`, `cancelled` |
-| `evolution_instance_id` | text | ✅ | — | UNIQUE |
-| `connection_status` | text | ❌ | `'disconnected'` | CHECK: `connected`, `connecting`, `disconnected`, `error` |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**Referenciado por:** `users`, `contacts`, `kanbans`, `conversations`, `automatic_messages`  
-**RLS:** ✅ Habilitado  
-**Dados:** 3 registros
-
----
-
-### 2. `users`
-
-Usuários da plataforma (administradores, agentes).
-
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `tenant_id` | uuid | ❌ | — | FK → `tenants.id` |
-| `email` | text | ❌ | — | — |
-| `role` | text | ❌ | `'user'` | CHECK: `admin`, `user`, `owner` |
-| `name` | text | ✅ | — | — |
-| `password_hash` | text | ✅ | — | — |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**RLS:** ✅ Habilitado  
-**Dados:** 3 registros
+**Constraints:** PK `id` | UNIQUE `evolution_instance_id` | UNIQUE PARTIAL quando não nulo
 
 ---
 
-### 3. `kanbans`
+### `users`
 
-Quadros kanban (um por tenant, ou múltiplos). Cada tenant pode ter **no máximo UM kanban com `is_main=TRUE`**.
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
+| `email` | text | NO | — | — |
+| `role` | text | NO | `'user'` | — |
+| `name` | text | YES | — | — |
+| `password_hash` | text | YES | — | — |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `tenant_id` | uuid | ❌ | — | FK → `tenants.id` |
-| `name` | text | ❌ | — | — |
-| `is_main` | boolean | ❌ | `false` | **UNIQUE per tenant** (constraint: `(tenant_id, is_main) WHERE is_main=TRUE`) |
-| `order_position` | integer | ❌ | `0` | — |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**Referenciado por:** `columns`, `conversations`, `automatic_messages`  
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros  
-**Constraint Importante:** `kanbans_unique_is_main_per_tenant` — Garante que cada tenant tenha no máximo 1 kanban com `is_main=TRUE`. Implementada via partial unique index (migration: `20260407155800_add_kanbans_is_main_unique_constraint.sql`)
+**Constraints:** PK `id` | FK `tenant_id → tenants.id CASCADE` | UNIQUE `(email, tenant_id)`
 
 ---
 
-### 4. `columns`
+### `kanbans`
 
-Colunas dentro de um kanban (To Do, In Progress, Done, etc.).
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
+| `name` | text | NO | — | — |
+| `is_main` | boolean | NO | `false` | Max 1 true por tenant (partial unique index) |
+| `order_position` | integer | NO | `0` | — |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `kanban_id` | uuid | ❌ | — | FK → `kanbans.id` |
-| `name` | text | ❌ | — | — |
-| `order_position` | integer | ❌ | `0` | — |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**Referenciado por:** `conversations`  
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros
+**Constraints:** PK `id` | FK `tenant_id → tenants.id CASCADE` | UNIQUE PARTIAL `(tenant_id, is_main) WHERE is_main=true`
 
 ---
 
-### 5. `contacts`
+### `columns`
 
-Contatos (clientes, leads) de um tenant.
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `kanban_id` | uuid | NO | — | FK → kanbans.id CASCADE |
+| `name` | text | NO | — | — |
+| `order_position` | integer | NO | `0` | — |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `tenant_id` | uuid | ❌ | — | FK → `tenants.id` |
-| `name` | text | ❌ | — | — |
-| `phone` | text | ❌ | — | — |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**Referenciado por:** `conversations`  
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros
+**Constraints:** PK `id` | FK `kanban_id → kanbans.id CASCADE`
 
 ---
 
-### 6. `conversations`
+### `contacts`
 
-Conversas entre contatos e agentes (via WhatsApp).
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
+| `name` | text | NO | — | — |
+| `phone` | text | NO | — | — |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `tenant_id` | uuid | ❌ | — | FK → `tenants.id` |
-| `contact_id` | uuid | ❌ | — | FK → `contacts.id` |
-| `kanban_id` | uuid | ✅ | — | FK → `kanbans.id` |
-| `column_id` | uuid | ✅ | — | FK → `columns.id` |
-| `wa_phone` | text | ❌ | — | — |
-| `status` | text | ❌ | `'active'` | CHECK: `active`, `closed`, `archived` |
-| `last_message_at` | timestamptz | ✅ | — | — |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**Referenciado por:** `messages`  
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros
+**Constraints:** PK `id` | FK `tenant_id → tenants.id CASCADE` | UNIQUE `(phone, tenant_id)`
 
 ---
 
-### 7. `messages`
+### `conversations`
 
-Mensagens dentro de uma conversa.
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
+| `contact_id` | uuid | NO | — | FK → contacts.id CASCADE |
+| `kanban_id` | uuid | YES | — | FK → kanbans.id SET NULL |
+| `column_id` | uuid | YES | — | FK → columns.id SET NULL |
+| `wa_phone` | text | NO | — | Número WhatsApp |
+| `status` | text | NO | `'active'` | — |
+| `last_message_at` | timestamptz | YES | — | — |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `conversation_id` | uuid | ❌ | — | FK → `conversations.id` |
-| `sender_type` | text | ❌ | — | CHECK: `contact`, `agent`, `system` |
-| `content` | text | ❌ | — | — |
-| `media_url` | text | ✅ | — | — |
-| `media_type` | text | ✅ | — | — |
-| `created_at` | timestamptz | ❌ | `now()` | — |
+**Constraints:** PK `id` | FK `tenant_id CASCADE` | FK `contact_id CASCADE` | FK `kanban_id SET NULL` | FK `column_id SET NULL`
 
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros
-
----
-
-### 8. `automatic_messages`
-
-Mensagens agendadas/automáticas por tenant.
-
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | uuid | ❌ | `uuid_generate_v4()` | PK |
-| `tenant_id` | uuid | ❌ | — | FK → `tenants.id` |
-| `name` | text | ❌ | — | — |
-| `message` | text | ❌ | — | — |
-| `scheduled_interval_minutes` | integer | ✅ | — | — |
-| `scheduled_kanban_id` | uuid | ✅ | — | FK → `kanbans.id` |
-| `created_at` | timestamptz | ❌ | `now()` | — |
-| `updated_at` | timestamptz | ❌ | `now()` | — |
-
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros
+> ⚠️ **Advisor:** `contact_id` e `column_id` não possuem índice cobrindo a FK.
 
 ---
 
-### 9. `failed_registrations`
+### `messages`
 
-Rastreamento de registros falhados (para limpeza).
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `conversation_id` | uuid | NO | — | FK → conversations.id CASCADE |
+| `sender_type` | text | NO | — | — |
+| `content` | text | NO | — | — |
+| `media_url` | text | YES | — | — |
+| `media_type` | text | YES | — | — |
+| `created_at` | timestamptz | NO | now() | — |
 
-| Campo | Tipo | Nullable | Default | Constraints |
-|-------|------|----------|---------|-------------|
-| `id` | bigint | ❌ | `nextval('failed_registrations_id_seq')` | PK |
-| `email` | text | ❌ | — | — |
-| `created_at` | timestamptz | ✅ | `now()` | — |
-| `created_resources` | jsonb | ❌ | — | — |
-| `cleanup_attempted` | boolean | ✅ | `false` | — |
-| `cleanup_status` | jsonb | ✅ | — | — |
-| `error_message` | text | ✅ | — | — |
-| `notes` | text | ✅ | — | — |
-| `resolved_at` | timestamptz | ✅ | — | — |
-
-**RLS:** ✅ Habilitado  
-**Dados:** 0 registros  
-**Nota:** Usado para rastreamento de falhas durante o registro e limpeza de recursos parciais.
+**Constraints:** PK `id` | FK `conversation_id → conversations.id CASCADE`
 
 ---
 
-## Resumo de Relações
+### `automatic_messages`
+
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | uuid | NO | uuid_generate_v4() | PK |
+| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
+| `name` | text | NO | — | — |
+| `message` | text | NO | — | — |
+| `scheduled_interval_minutes` | integer | YES | — | — |
+| `scheduled_kanban_id` | uuid | YES | — | FK → kanbans.id SET NULL |
+| `created_at` | timestamptz | NO | now() | — |
+| `updated_at` | timestamptz | NO | now() | — |
+
+**Constraints:** PK `id` | FK `tenant_id CASCADE` | FK `scheduled_kanban_id SET NULL`
+
+> ⚠️ **Advisor:** `scheduled_kanban_id` não possui índice cobrindo a FK.
+
+---
+
+### `failed_registrations`
+
+| Coluna | Tipo | Nullable | Default | Comentário |
+|--------|------|----------|---------|------------|
+| `id` | bigint | NO | nextval(seq) | PK — sequência, não UUID |
+| `email` | text | NO | — | — |
+| `created_at` | timestamptz | YES | now() | — |
+| `created_resources` | jsonb | NO | — | Recursos criados antes da falha |
+| `cleanup_attempted` | boolean | YES | `false` | — |
+| `cleanup_status` | jsonb | YES | — | — |
+| `error_message` | text | YES | — | — |
+| `notes` | text | YES | — | — |
+| `resolved_at` | timestamptz | YES | — | — |
+
+**Constraints:** PK `id` (bigint/sequence)
+
+> ⚠️ **Advisor (Segurança CRÍTICO):** RLS habilitado mas **sem nenhuma policy** — tabela inacessível para usuários autenticados.
+
+---
+
+## Índices
+
+| Tabela | Índice | Tipo | Notas |
+|--------|--------|------|-------|
+| `automatic_messages` | `idx_automatic_messages_tenant` | btree(tenant_id) | — |
+| `columns` | `idx_columns_kanban_order` | btree(kanban_id, order_position) | — |
+| `contacts` | `contacts_phone_tenant_id_key` | UNIQUE btree(phone, tenant_id) | — |
+| `contacts` | `idx_contacts_phone_tenant` | btree(phone, tenant_id) | Redundante com UNIQUE |
+| `contacts` | `idx_contacts_tenant` | btree(tenant_id) | — |
+| `conversations` | `idx_conversations_kanban_column` | btree(kanban_id, column_id) | — |
+| `conversations` | `idx_conversations_last_message` | btree(last_message_at DESC) | ⚠️ Não usado |
+| `conversations` | `idx_conversations_tenant_status` | btree(tenant_id, status) | — |
+| `failed_registrations` | `failed_registrations_created_at_idx` | btree(created_at DESC) | ⚠️ Não usado |
+| `failed_registrations` | `failed_registrations_email_idx` | btree(email) | ⚠️ Não usado |
+| `failed_registrations` | `failed_registrations_resolved_at_idx` | btree PARTIAL WHERE IS NULL | ⚠️ Não usado |
+| `kanbans` | `idx_kanbans_main_tenant` | btree PARTIAL WHERE is_main=true | ⚠️ Não usado |
+| `kanbans` | `idx_kanbans_tenant_order` | btree(tenant_id, order_position) | — |
+| `kanbans` | `idx_kanbans_unique_is_main_per_tenant` | UNIQUE PARTIAL btree(tenant_id, is_main) | Constraint de negócio |
+| `messages` | `idx_messages_conversation_created` | btree(conversation_id, created_at DESC) | — |
+| `tenants` | `idx_tenants_evolution_instance_id_unique` | UNIQUE PARTIAL WHERE IS NOT NULL | — |
+| `tenants` | `idx_tenants_subscription` | btree(subscription_status) | ⚠️ Não usado |
+| `users` | `idx_users_email_tenant` | btree(email, tenant_id) | — |
+| `users` | `idx_users_tenant` | btree(tenant_id) | — |
+
+---
+
+## Diagrama de Relacionamentos
 
 ```
-tenants (raiz)
-├── users (many-to-one)
-├── contacts (many-to-one)
-├── kanbans (many-to-one)
-│   ├── columns (many-to-one)
-│   │   └── conversations (many-to-one)
-│   └── conversations (many-to-one)
-│       └── messages (many-to-one)
-└── automatic_messages (many-to-one)
+tenants
+  ├── users          (tenant_id → CASCADE)
+  ├── kanbans        (tenant_id → CASCADE)
+  │     └── columns  (kanban_id → CASCADE)
+  ├── contacts       (tenant_id → CASCADE)
+  │     └── conversations (contact_id → CASCADE)
+  │           ├── → kanbans  (kanban_id → SET NULL)
+  │           ├── → columns  (column_id → SET NULL)
+  │           └── messages   (conversation_id → CASCADE)
+  └── automatic_messages (tenant_id → CASCADE)
+        └── → kanbans   (scheduled_kanban_id → SET NULL)
 ```
 
 ---
 
-## Padrões de Segurança
+## Sequences
 
-- ✅ **RLS Habilitado:** Todas as tabelas possuem RLS ativado
-- ✅ **Multi-tenant:** Isolamento via `tenant_id` em cada tabela
-- ✅ **Constraints:** CHECK constraints para enums (status, roles, etc.)
-- ✅ **Integridade:** Foreign keys garantem integridade referencial
-- ✅ **Auditoria:** `created_at` e `updated_at` em tabelas principais
-
----
-
-## Índices e Performance
-
-> Gerado automaticamente pelo Supabase para PKs e FKs.
-> Execute `*analyze-performance hotpaths` para otimizações.
-
----
-
-## Próximas Ações
-
-- [ ] Validar policies de RLS (`*security-audit rls`)
-- [ ] Analisar hotpaths de query (`*analyze-performance hotpaths`)
-- [ ] Adicionar índices conforme necessário (`*design-indexes`)
+| Sequence | Tabela | Início | Incremento |
+|----------|--------|--------|------------|
+| `failed_registrations_id_seq` | failed_registrations.id | 1 | 1 |

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Digital Atelier - Design System v2.0</title>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0d631b",
+                        "primary-container": "#2e7d32",
+                        secondary: "#4c616c",
+                        tertiary: "#006156",
+                        background: "#f7f9fc",
+                        surface: "#f7f9fc",
+                        "surface-bright": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f2f4f7",
+                        "surface-container": "#ecf0f3",
+                        "surface-container-high": "#e6e8eb",
+                        "surface-container-highest": "#e0e3e6",
+                        "on-surface": "#191c1e",
+                        "on-surface-variant": "#40493d",
+                        "outline-variant": "rgba(112, 122, 108, 0.15)",
+                        "inverse-surface": "#2d3133",
+                        error: "#ba1a1a",
+                        "error-container": "#ffdad6",
+                    },
+                    borderRadius: {
+                        'sm': '0.125rem',
+                        'lg': '0.5rem',
+                        'xl': '0.75rem',
+                        '2xl': '1rem',
+                        'full': '9999px',
+                    },
+                    boxShadow: {
+                        'ambient': '0px 12px 32px rgba(25, 28, 30, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(150deg, #0d631b 0%, #2e7d32 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn.active { 
+            color: #0d631b; 
+            border-bottom: 2px solid #0d631b; 
+            font-weight: 700;
+        }
+        .headline-lg { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.03em; }
+        .headline-md { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+        .label-sm { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+        
+        /* Card Accent Bar */
+        .card-accent-bar {
+            position: absolute;
+            left: 0;
+            top: 12px;
+            bottom: 12px;
+            width: 4px;
+            border-radius: 0 4px 4px 0;
+            background-color: #2e7d32;
+        }
+
+        html { scroll-behavior: smooth; }
+        body { background-color: #f7f9fc; }
+    </style>
+</head>
+<body class="text-on-surface font-sans selection:bg-primary/20">
+
+    <!-- NAVIGATION -->
+    <nav class="sticky top-0 z-50 glass-panel border-b border-outline-variant/10">
+        <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">view_kanban</span>
+                <span class="font-bold text-lg tracking-tight">The Digital Atelier</span>
+                <span class="label-sm text-secondary/50 ml-2">v2.0</span>
+            </div>
+            <div class="hidden md:flex items-center gap-1">
+                <button onclick="switchTab('ds')" class="tab-btn active px-4 py-2 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors" data-tab="ds">Documentation</button>
+                <button onclick="switchTab('kanban')" class="tab-btn px-4 py-2 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors" data-tab="kanban">Board View</button>
+                <button onclick="switchTab('login')" class="tab-btn px-4 py-2 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors" data-tab="login">Auth flow</button>
+                <button onclick="switchTab('settings')" class="tab-btn px-4 py-2 text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors" data-tab="settings">Config</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENT: DESIGN SYSTEM DOCS -->
+    <div id="tab-ds" class="tab-content active p-8 md:p-16 max-w-7xl mx-auto space-y-24">
+        
+        <!-- HERO -->
+        <header class="space-y-4">
+            <span class="label-sm text-primary">Creative North Star</span>
+            <h1 class="headline-lg text-6xl">The Digital Atelier</h1>
+            <p class="text-secondary text-lg max-w-2xl leading-relaxed">
+                A design system built to transform functional complexity into a serene, high-end editorial experience. 
+                Rooted in Atomic Design and Tonal Layering.
+            </p>
+        </header>
+
+        <!-- SECTION: COLORS -->
+        <section class="space-y-10">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary text-3xl">palette</span>
+                <h2 class="headline-md">Tonal Foundation</h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                <!-- Primary -->
+                <div class="space-y-3">
+                    <div class="h-24 rounded-2xl bg-primary flex items-end p-4"><span class="text-white label-sm">Primary</span></div>
+                    <div class="text-[10px] font-mono text-secondary">#0d631b</div>
+                </div>
+                <div class="space-y-3">
+                    <div class="h-24 rounded-2xl bg-primary-container flex items-end p-4"><span class="text-white label-sm">Container</span></div>
+                    <div class="text-[10px] font-mono text-secondary">#2e7d32</div>
+                </div>
+                <!-- Surface -->
+                <div class="space-y-3">
+                    <div class="h-24 rounded-2xl bg-surface border border-outline-variant flex items-end p-4"><span class="text-secondary label-sm">Surface</span></div>
+                    <div class="text-[10px] font-mono text-secondary">#f7f9fc</div>
+                </div>
+                <div class="space-y-3">
+                    <div class="h-24 rounded-2xl bg-surface-container-low border border-outline-variant flex items-end p-4"><span class="text-secondary label-sm">Low</span></div>
+                    <div class="text-[10px] font-mono text-secondary">#f2f4f7</div>
+                </div>
+                <div class="space-y-3">
+                    <div class="h-24 rounded-2xl bg-surface-container-high border border-outline-variant flex items-end p-4"><span class="text-secondary label-sm">High</span></div>
+                    <div class="text-[10px] font-mono text-secondary">#e6e8eb</div>
+                </div>
+                <div class="space-y-3">
+                    <div class="h-24 rounded-2xl bg-inverse-surface flex items-end p-4"><span class="text-white label-sm">Inverse</span></div>
+                    <div class="text-[10px] font-mono text-secondary">#2d3133</div>
+                </div>
+            </div>
+            
+            <div class="p-6 bg-surface-container-low rounded-2xl border-l-4 border-primary">
+                <p class="body-md text-secondary"><strong>The No-Line Rule:</strong> 1px solid borders are prohibited for sectioning. Boundaries are defined solely through background color shifts.</p>
+            </div>
+        </section>
+
+        <!-- SECTION: TYPOGRAPHY -->
+        <section class="space-y-10">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary text-3xl">text_fields</span>
+                <h2 class="headline-md">Typography System</h2>
+            </div>
+
+            <div class="space-y-8 bg-surface-container-lowest rounded-2xl p-10 shadow-ambient">
+                <div class="flex items-baseline gap-8">
+                    <span class="label-sm text-primary w-24">Headline-LG</span>
+                    <h1 class="headline-lg">Production Pipeline</h1>
+                </div>
+                <div class="flex items-baseline gap-8">
+                    <span class="label-sm text-primary w-24">Headline-MD</span>
+                    <h2 class="headline-md">Kanban Board Strategy</h2>
+                </div>
+                <div class="flex items-baseline gap-8">
+                    <span class="label-sm text-primary w-24">Label-SM</span>
+                    <span class="label-sm">System Core Active</span>
+                </div>
+                <div class="h-px bg-outline-variant/20"></div>
+                <div class="flex items-baseline gap-8">
+                    <span class="label-sm text-secondary w-24">Body-MD</span>
+                    <p class="body-md text-on-surface-variant max-w-xl">
+                        "Olá! Gostaria de saber mais sobre o plano premium que vi no site de vocês. 
+                        Poderiam me enviar os valores e as formas de pagamento disponíveis?"
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: ATOMIC COMPONENTS -->
+        <section class="space-y-10">
+            <div class="flex items-center gap-4">
+                <span class="material-symbols-outlined text-primary text-3xl">widgets</span>
+                <h2 class="headline-md">Atomic Components</h2>
+            </div>
+
+            <!-- Buttons -->
+            <div class="space-y-6">
+                <h3 class="label-sm text-secondary">Buttons & Actions</h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="btn-primary-gradient text-white px-8 py-3 rounded-full font-bold shadow-ambient hover:scale-[1.02] transition-all">Primary Action</button>
+                    <button class="bg-surface-container-high text-on-surface px-8 py-3 rounded-full font-bold hover:bg-surface-container-highest transition-all">Secondary</button>
+                    <button class="text-on-surface-variant hover:text-primary px-8 py-3 rounded-full font-bold transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined">refresh</span> Ghost Action
+                    </button>
+                    <button class="btn-primary-gradient w-12 h-12 flex items-center justify-center text-white rounded-full shadow-ambient">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Inputs -->
+            <div class="space-y-6">
+                <h3 class="label-sm text-secondary">Fied Styles (Editorial Look)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="label-sm ml-1">Instance Token</label>
+                        <input type="text" placeholder="EVO_GO_v4..." class="w-full bg-surface-container-high border-b-2 border-transparent focus:border-primary p-4 rounded-sm outline-none transition-all">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="space-y-6">
+                <h3 class="label-sm text-secondary">Cards & Elevation</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Standard Card -->
+                    <div class="bg-surface-container-lowest p-6 rounded-lg shadow-ambient relative">
+                        <div class="card-accent-bar"></div>
+                        <span class="label-sm text-secondary mb-2 block">Kanban Card</span>
+                        <h4 class="font-bold mb-1">Mariana Souza</h4>
+                        <p class="text-sm text-on-surface-variant">+55 11 98211-4422</p>
+                    </div>
+                    <!-- Hover State -->
+                    <div class="bg-surface-container-lowest p-6 rounded-lg shadow-ambient scale-[1.02] ring-2 ring-primary/20">
+                        <span class="label-sm text-primary mb-2 block">Active State</span>
+                        <h4 class="font-bold mb-1">Ricardo Ferreira</h4>
+                        <p class="text-sm text-on-surface-variant italic">Typing...</p>
+                    </div>
+                    <!-- Molecule: Column Header -->
+                    <div class="p-4 bg-surface-container-low rounded-xl">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="headline-sm">New Inbound</span>
+                            <span class="bg-surface-container-high px-2 py-0.5 rounded text-xs">04</span>
+                        </div>
+                        <div class="h-1 bg-surface-container-high rounded-full overflow-hidden">
+                            <div class="h-full bg-primary w-2/3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- CONTENT: KANBAN VIEW -->
+    <div id="tab-kanban" class="tab-content h-[calc(100vh-64px)] overflow-hidden">
+        <div class="flex h-full">
+            <!-- Global Sidebar (Inverse) -->
+            <aside class="w-20 bg-inverse-surface flex flex-col items-center py-8 space-y-12">
+                <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center"><span class="material-symbols-outlined text-white">view_kanban</span></div>
+                <div class="flex flex-col space-y-8 flex-1">
+                    <div class="p-3 bg-white/10 text-white rounded-xl"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat</span></div>
+                    <div class="p-3 text-white/50"><span class="material-symbols-outlined">analytics</span></div>
+                </div>
+                <div class="p-3 text-white/50 mb-4"><span class="material-symbols-outlined">settings</span></div>
+            </aside>
+            <!-- Canvas -->
+            <div class="flex-1 flex flex-col">
+                <header class="h-20 bg-surface-bright/80 backdrop-blur-md px-8 flex items-center justify-between border-b border-outline-variant/10">
+                    <div>
+                        <span class="label-sm text-secondary">Atelier Workspace</span>
+                        <h2 class="headline-md leading-tight">Production Pipeline</h2>
+                    </div>
+                    <button class="btn-primary-gradient px-6 py-2.5 rounded-full text-white font-bold">+ New Contact</button>
+                </header>
+                <div class="flex-1 p-8 flex space-x-6 overflow-x-auto">
+                    <!-- Column -->
+                    <div class="w-80 flex flex-col space-y-4">
+                        <div class="flex items-center justify-between px-2">
+                            <span class="headline-sm">New Inbound</span>
+                            <span class="material-symbols-outlined text-secondary/40">more_vert</span>
+                        </div>
+                        <div class="bg-surface-container-lowest p-5 rounded-lg shadow-ambient relative">
+                            <div class="card-accent-bar"></div>
+                            <div class="flex items-center space-x-3">
+                                <img src="avatars.png" class="w-10 h-10 rounded-full object-contain" style="object-position: 0% 50%;" alt="">
+                                <div><h4 class="font-bold">Mariana Souza</h4><p class="text-xs text-secondary">+55 11 98211-4422</p></div>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Column -->
+                     <div class="w-80 flex flex-col space-y-4">
+                        <div class="flex items-center justify-between px-2"><span class="headline-sm">In Progress</span></div>
+                        <div class="bg-surface-container-lowest p-5 rounded-lg shadow-ambient">
+                            <div class="flex items-center space-x-3">
+                                <img src="avatars.png" class="w-10 h-10 rounded-full object-contain" style="object-position: 100% 50%;" alt="">
+                                <div><h4 class="font-bold">Ricardo Ferreira</h4><p class="text-xs text-secondary">+55 21 97722-1100</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT: LOGIN FLOW -->
+    <div id="tab-login" class="tab-content relative min-h-[calc(100vh-64px)] flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-surface -z-10"></div>
+        <div class="w-full max-w-lg glass-panel p-12 rounded-2xl shadow-ambient space-y-10 border border-white/50">
+            <header class="text-center space-y-2">
+                <span class="label-sm text-primary">Secure Access</span>
+                <h1 class="headline-lg">Welcome Back</h1>
+                <p class="text-secondary">Enter your atelier credentials to manage your kanban.</p>
+            </header>
+            <form class="space-y-6" onsubmit="return false;">
+                <div class="space-y-4">
+                    <input type="email" placeholder="Email address" class="w-full bg-surface-container-high p-4 rounded-xl outline-none focus:ring-2 ring-primary/20">
+                    <input type="password" placeholder="Password" class="w-full bg-surface-container-high p-4 rounded-xl outline-none focus:ring-2 ring-primary/20">
+                </div>
+                <button class="w-full btn-primary-gradient py-4 rounded-xl text-white font-bold shadow-ambient uppercase tracking-widest text-sm hover:scale-[1.01] transition-all">Identify Workspace</button>
+            </form>
+            <footer class="text-center text-xs text-secondary pt-4 border-t border-outline-variant/15">
+                Powered by Evolution Phase 1 &middot; v2.0.4 - Release
+            </footer>
+        </div>
+    </div>
+
+    <!-- CONTENT: CONFIG -->
+    <div id="tab-settings" class="tab-content p-8 md:p-16 max-w-5xl mx-auto space-y-12">
+        <header>
+            <h2 class="headline-lg">Settings & Integrations</h2>
+            <p class="text-secondary text-lg">Manage your atelier workspace and connectivity.</p>
+        </header>
+        
+        <div class="grid lg:grid-cols-4 gap-8">
+            <nav class="flex flex-col gap-2">
+                <button class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary-container text-white font-bold">Account</button>
+                <button class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all">Integrations</button>
+                <button class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-high transition-all">Workspace</button>
+            </nav>
+            <div class="lg:col-span-3 bg-white p-8 rounded-2xl shadow-ambient space-y-10">
+                <div>
+                    <h3 class="headline-sm mb-6">WhatsApp API (EVO GO)</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-tertiary/10 text-tertiary rounded-lg flex items-center justify-center"><span class="material-symbols-outlined">hub</span></div>
+                                <div><p class="font-bold">Instance: Vendas_Matriz</p><p class="label-sm text-secondary/60">Connected</p></div>
+                            </div>
+                            <span class="w-3 h-3 bg-primary-container rounded-full animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    </script>
+</body>
+</html>

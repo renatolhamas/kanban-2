@@ -72,21 +72,25 @@
   --primary-foreground: 0 0% 100%; /* #ffffff - White */
   --primary-container: 161 100% 33%; /* #10b981 - Emerald Container (Ledger) */
 
-  --secondary: 216 16% 47%; /* #515f78 - Navy/Steel */
+  --secondary: 216 16% 47%; /* #515f78 - Steel/Gray-Blue (Stitch alignment) */
   --secondary-foreground: 0 0% 100%; /* #ffffff - White */
+
+  /* Primary Dark variant (for gradients and emphasis) */
+  --primary-dark: 163 100% 21%; /* #006c49 - Emerald Dark (Stitch alignment) */
 
   /* New hex format for Story 2.7 tokens */
   --color-primary: #10b981; /* Emerald 500 - Primary action */
-  --color-secondary: #1e40af; /* Blue 800 - Secondary actions, links */
+  --color-primary-dark: #006c49; /* Emerald 700 - Primary Dark (Stitch alignment) */
+  --color-secondary: #515f78; /* Steel/Gray-Blue - Secondary actions (Stitch alignment) */
   --color-danger: #ef4444; /* Red 500 - Delete, error states */
   --color-success: #22c55e; /* Green 500 - Confirmation, valid states */
   --color-warning: #f59e0b; /* Amber 500 - Warnings, caution states */
 
-  /* Surface Hierarchy */
-  --surface: 210 20% 98%; /* #f7f9fb - Crisp, cool background */
-  --surface-low: 210 16% 96%; /* #f2f4f6 - Slightly darker surface */
-  --surface-lowest: 0 0% 100%; /* #ffffff - Pure white */
-  --surface-high: 210 9% 92%; /* #e6e8ea - Subtle elevation */
+  /* Surface Hierarchy (Stitch-aligned) */
+  --surface: 210 20% 98.4%; /* #f7fafc - Crisp, cool background (Stitch) */
+  --surface-low: 210 16% 96.5%; /* #f1f4f6 - Slightly darker surface (Stitch) */
+  --surface-lowest: 0 0% 100%; /* #ffffff - Pure white (Stitch) */
+  --surface-high: 210 9% 92.5%; /* #e5e9eb - Subtle elevation (Stitch) */
   --on-surface: 0 0% 9%; /* #191c1e - High contrast text */
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -105,8 +109,9 @@
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   --radius: 0.5rem; /* 8px - Geometric clarity */
 
-  /* Font Family (Manrope via Next.js font loader) */
+  /* Font Families (via Next.js font loader) */
   --font-manrope: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 /* ============================================

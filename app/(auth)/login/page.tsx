@@ -179,7 +179,7 @@ function LoginPageContent() {
               <p className="text-sm text-muted-foreground">
                 Password Issues:{" "}
                 <a
-                  href="/change-password"
+                  href="/forgot-password"
                   className="text-primary hover:underline font-medium"
                 >
                   Change Password

@@ -212,6 +212,39 @@ export async function POST(
 
     console.log("User record created successfully:", userData);
 
+    // STEP 5.1: Inject app_metadata (tenant_id, role) into auth user
+    // Purpose: Prepare JWT for Custom Access Token Hook to inject into future JWTs
+    // This ensures app_metadata.tenant_id is available when user logs in
+    // Fallback: If this fails, the Hook will inject on next login (non-blocking)
+    try {
+      const { error: metadataError } = await supabase.auth.admin.updateUserById(
+        userId,
+        {
+          app_metadata: {
+            tenant_id: tenantId,
+            role: "owner",
+          },
+        }
+      );
+
+      if (metadataError) {
+        console.warn(
+          `[STEP 5.1] app_metadata injection warning (non-blocking): ${metadataError.message}`
+        );
+        // Non-blocking: Hook will inject on next login
+        // Don't throw or return error — registration continues
+      } else {
+        console.log(`[STEP 5.1] app_metadata injected for user ${userId}`);
+      }
+    } catch (metadataError) {
+      console.warn(
+        `[STEP 5.1] app_metadata injection error (non-blocking):`,
+        metadataError
+      );
+      // Non-blocking: continue with registration
+      // Custom Access Token Hook will inject app_metadata on next login
+    }
+
     // STEP 5.5: Create default kanban "Main" with 4 columns
     try {
       await createDefaultKanban(supabase, tenantId);

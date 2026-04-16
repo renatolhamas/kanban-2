@@ -64,7 +64,9 @@
       "Bash(start c:\\\\\\\\git\\\\\\\\kanban.2\\\\\\\\design-preview.html)",
       "mcp__supabase__list_migrations",
       "mcp__supabase__list_edge_functions",
-      "mcp__supabase__get_advisors"
+      "mcp__supabase__get_advisors",
+      "mcp__supabase__apply_migration",
+      "Bash(grep -E \"\\\\.\\(ts|js\\)$\")"
     ]
   },
   "enableAllProjectMcpServers": true,

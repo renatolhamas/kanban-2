@@ -166,7 +166,7 @@ function LoginPageContent() {
               {loading ? "Signing in..." : "Sign in"}
             </Button>
 
-            <div className="text-center">
+            <div className="text-center space-y-3">
               <p className="text-sm text-muted-foreground">
                 Don't have an account?{" "}
                 <a
@@ -174,6 +174,22 @@ function LoginPageContent() {
                   className="text-primary hover:underline font-medium"
                 >
                   Register
+                </a>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Password Issues:{" "}
+                <a
+                  href="/change-password"
+                  className="text-primary hover:underline font-medium"
+                >
+                  Change Password
+                </a>
+                {" "}or{" "}
+                <a
+                  href="/resend-confirmation"
+                  className="text-primary hover:underline font-medium"
+                >
+                  Resend Confirmation Link
                 </a>
               </p>
             </div>

@@ -100,6 +100,27 @@ export async function POST(
     const userId = authData.user.id;
     const accessToken = authData.session?.access_token;
 
+    // DEBUG: Decode and log Supabase JWT to verify Hook injected app_metadata
+    if (accessToken) {
+      try {
+        const parts = accessToken.split('.');
+        if (parts.length === 3) {
+          const payload = parts[1];
+          // Add padding if needed
+          const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+          const decoded = JSON.parse(Buffer.from(padded, 'base64').toString());
+          console.log("[LOGIN DEBUG] Supabase JWT Payload (Hook Check):", {
+            has_app_metadata: !!decoded.app_metadata,
+            app_metadata_tenant_id: decoded.app_metadata?.tenant_id,
+            app_metadata_role: decoded.app_metadata?.role,
+            claims: decoded,
+          });
+        }
+      } catch (e) {
+        console.log("[LOGIN DEBUG] Could not decode JWT:", e);
+      }
+    }
+
     console.log("[LOGIN DEBUG] Auth successful", {
       userId,
       hasAccessToken: !!accessToken,

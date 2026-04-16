@@ -1,10 +1,16 @@
-# Row Level Security (RLS) — Políticas de Segurança
+# Row Level Security (RLS) — Políticas de Acesso
 
-> 📅 **Extraído em:** 2026-04-14  
-> **Fonte:** Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real  
-> **Status:** ✅ Atualizado
+> 📅 Extraído em: 2026-04-16 10:45 UTC
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
+> Status: ✅ Atualizado
 
----
+## 🔐 Visão Geral
+
+**Total de Políticas:** 32
+**Modelo:** Multi-tenant com JWT + tenant_id em app_metadata
+**Authentication:** JWT (via custom_access_token_hook)
+**Policy Pattern:** KISS (Keep It Simple Security) — acesso via tenant_id ou user_id  
+**Auth Model:** JWT com tenant_id em app_metadata + auth.uid()
 
 ## Resumo de Cobertura
 
@@ -144,9 +150,21 @@ Usado em: `columns`, `messages`
 
 ---
 
-### `failed_registrations` — 0 policies ⚠️
+### `failed_registrations` — RLS DISABLED (Intencional)
 
-RLS habilitado mas **sem nenhuma policy**. A tabela está inacessível para qualquer usuário autenticado via RLS. Operações devem ser feitas exclusivamente via service role.
+**Status Atual:** RLS **DISABLED** | **0 policies** | **Controlado**
+
+**Razão:** Tabela armazena registros de tentativas FALHADAS de registro (usuários não-autenticados, registro incompleto). RLS não é aplicável porque:
+- Registros são criados ANTES do usuário estar autenticado
+- Não há tenant_id no momento da criação (falha ocorre antes de associar tenant)
+- Acesso é controlado no backend (Service Role key apenas)
+
+**Segurança:** ✅ Controlada
+- PostgREST NÃO expõe esta tabela
+- Acesso APENAS via backend (Edge Functions, API interna)
+- Service Role key com auditoria de logs
+
+**Decisão arquitetural:** Confirmada em 2026-04-16 (Migration 20260416100100_disable_rls_failed_registrations)
 
 ---
 

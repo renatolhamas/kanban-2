@@ -1,0 +1,84 @@
+schema: 1
+story: '4.1'
+title: 'Multi-tenant RLS Isolation via app_metadata'
+gate: PASS
+status_reason: 'All 6 acceptance criteria met. Security audit passed with zero RLS errors. Hook strict behavior confirmed. Isolamento multi-tenant validado.'
+reviewer: 'Quinn'
+updated: '2026-04-16T14:30:00Z'
+top_issues: []
+
+acceptance_criteria_verification:
+  - id: 'AC-1'
+    title: 'Custom Access Token Hook implementado e ativo'
+    status: MET
+    evidence: 'Migration 20260414_create_custom_access_token_hook.sql aplicada. Hook habilitado no Dashboard Authentication > Hooks. JWT contém app_metadata.tenant_id injetado do banco.'
+
+  - id: 'AC-2'
+    title: 'app_metadata preenchido em todos os usuários'
+    status: MET
+    evidence: 'Backfill script executado com sucesso. 8/8 usuários atualizados. Novos usuários recebem app_metadata via register/route.ts STEP 5.1.'
+
+  - id: 'AC-3'
+    title: '28 RLS policies migradas para app_metadata'
+    status: MET
+    evidence: 'Migration 20260414_fix_rls_use_app_metadata.sql aplicada. Todas as 28 policies nas tabelas tenants, kanbans, contacts, conversations, automatic_messages, columns, messages atualizadas. Padrão user_metadata substituído por app_metadata.'
+
+  - id: 'AC-4'
+    title: 'Isolamento testado e validado'
+    status: MET
+    evidence: 'JWT correto retorna dados esperados. JWT incorreto retorna 0 linhas. user_metadata retorna 0. Múltiplos tenants isolados. Nenhuma regressão nas APIs existentes.'
+
+  - id: 'AC-5'
+    title: 'Security audit passa sem ERRORs'
+    status: MET
+    evidence: '*security-audit full executado com sucesso. Nenhum data leak detectado. 28/28 policies RLS validadas. Zero ERRORs.'
+
+  - id: 'AC-6'
+    title: 'Hook falha de forma segura (Strict)'
+    status: MET
+    evidence: 'Hook implementa RAISE EXCEPTION em qualquer erro de query. Login falha com erro tratável. Nenhum JWT vazio ou parcial emitido sem tenant_id.'
+
+quality_checks:
+  - category: 'Code Review'
+    status: PASS
+    notes: 'SQL patterns follow Supabase best practices. Deep merge JSONB corrigido. Hook usa subqueries para performance. Nenhum anti-pattern detectado.'
+
+  - category: 'Test Coverage'
+    status: PASS
+    notes: 'tests/rls.test.ts cobre 9 cenários: correto tenant_id, incorreto, user_metadata, múltiplos tenants, novo user, backfill, JWT decode, hook failure, role overwrite. Todos passando.'
+
+  - category: 'Security'
+    status: PASS
+    notes: 'Security audit validado. RLS policies bloqueiam acesso não-autorizado. app_metadata imutável no Supabase Auth. Hook comportamento strict previne JWT parcial.'
+
+  - category: 'Documentation'
+    status: PASS
+    notes: 'Dev Notes detalhado com diagnóstico, solução em 3 componentes, decisões de design documentadas, sequência crítica clara. Pronto para pós-execução updates em docs/db/.'
+
+  - category: 'Regression Testing'
+    status: PASS
+    notes: 'Todas as APIs existentes testadas. Nenhuma regressão identificada. Tests incluem múltiplos tenants para garantir isolamento.'
+
+blast_radius_assessment:
+  files_modified: 4
+  migrations_created: 2
+  tables_affected: 7
+  policies_affected: 28
+  risk_level: LOW
+  notes: 'RLS policy updates sono surgical — mudança de campo na cláusula WHERE não afeta estrutura ou permissões de tabelas. Migrations são idempotentes e revertíveis.'
+
+waiver: { active: false }
+
+tags:
+  - security
+  - multi-tenant
+  - rls
+  - compliance
+  - critical-priority
+
+approval_notes: |
+  Story 4.1 is production-ready. All quality gates passed.
+
+  **Pré-requisito para Story 4.2 (Supabase Realtime):** Realtime subscriptions dependem de RLS para filtrar eventos por tenant. Sem esta correção, dados vazariam entre tenants. Story 4.1 resolve completamente.
+
+  **Próximo:** @devops *push para merge para main.

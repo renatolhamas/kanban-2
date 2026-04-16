@@ -373,6 +373,42 @@ npm run trace -- workflow-name
 - Keep README synchronized with actual behavior
 - Document breaking changes prominently
 
+## Restricted Files & Security
+
+### ⛔ ENVIRONMENT FILES — NEVER ALTER
+
+**I am NOT authorized to modify these files:**
+- `.env` — Framework configuration (contains sensitive credentials)
+- `.env.local` — Local environment variables (contains API keys, secrets)
+- `.env.production.local` — Production secrets
+- `.env.*.local` — Any local environment overrides
+
+**Why:**
+- These files contain sensitive credentials and API keys
+- Modifying them can compromise security
+- User must manage credentials directly
+
+**What to do instead:**
+- If environment variables are missing, create a **template** with empty variable names
+- Ask user to fill in values themselves
+- Guide user on where to obtain each credential
+- NEVER guess, create, or overwrite credential values
+
+**Example — Creating Template (ALLOWED):**
+```bash
+# OK: Create template with variable names only
+cat > .env.local << 'EOF'
+SUPABASE_URL=
+EVO_GO_API_KEY=
+EOF
+```
+
+**Example — Modifying Values (BLOCKED):**
+```bash
+# NOT OK: Overwriting .env.local with actual credentials
+# NOT OK: Creating/modifying without user permission
+```
+
 ## Response Format
 
 ### Non-Agent Actions

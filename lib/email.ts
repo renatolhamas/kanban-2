@@ -14,15 +14,19 @@
 
 import { Resend } from "resend";
 
-const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail = process.env.RESEND_FROM_EMAIL;
-const nodeEnv = process.env.NODE_ENV || "development";
+// Resend instance will be initialized lazily
+let resendInstance: Resend | null = null;
 
-if (!resendApiKey || !resendFromEmail) {
-  throw new Error("Missing Resend configuration (API key or from email)");
+function getResend() {
+  if (!resendInstance) {
+    const resendApiKey = process.env.RESEND_API_KEY;
+    if (!resendApiKey) {
+      throw new Error("Missing RESEND_API_KEY configuration");
+    }
+    resendInstance = new Resend(resendApiKey);
+  }
+  return resendInstance;
 }
-
-const resend = new Resend(resendApiKey);
 
 export interface EmailSendResult {
   success: boolean;
@@ -46,6 +50,7 @@ export async function sendConfirmationEmail(
   confirmationLink: string,
 ): Promise<EmailSendResult> {
   const timestamp = new Date().toISOString();
+  const nodeEnv = process.env.NODE_ENV || "development";
   const isSandbox = nodeEnv === "development";
 
   // Always send to the actual user email
@@ -68,6 +73,12 @@ export async function sendConfirmationEmail(
       <p>If you didn't sign up for this account, you can safely ignore this email.</p>
     `;
 
+    const resendFromEmail = process.env.RESEND_FROM_EMAIL;
+    if (!resendFromEmail) {
+      throw new Error("Missing RESEND_FROM_EMAIL configuration");
+    }
+
+    const resend = getResend();
     const response = await resend.emails.send({
       from: resendFromEmail,
       to: recipientEmail,

@@ -28,12 +28,6 @@ import { handleEvoGoError } from "@/lib/api/evo-go-error-handler";
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  throw new Error("Missing Supabase credentials");
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-
 interface QRCodeResponse {
   qr_code: string;
   instance_id: string;
@@ -48,6 +42,15 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<QRCodeResponse | { error: string; code: string; statusCode: number }>> {
   try {
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error("[CONFIG ERROR] Missing required environment variables for Supabase");
+      return NextResponse.json(
+        { error: "Internal Server Error", code: "INTERNAL_ERROR", statusCode: 500 },
+        { status: 500 },
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
     // 1. Verify JWT and extract user info
     const payload = await auth(request);
 

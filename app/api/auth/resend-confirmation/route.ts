@@ -8,15 +8,6 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-if (!supabaseUrl || !supabaseAnonKey || !appUrl) {
-  throw new Error(
-    "Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_APP_URL",
-  );
-}
-
-// Initialize Supabase client (anon key for Client API)
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 /**
  * POST /api/auth/resend-confirmation
  * Resend confirmation email via Supabase Auth native method
@@ -28,6 +19,16 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<AuthResponse>> {
   try {
+    if (!supabaseUrl || !supabaseAnonKey || !appUrl) {
+      console.error("[CONFIG ERROR] Missing required environment variables: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_APP_URL");
+      return NextResponse.json(
+        { success: false, error: "Authentication configuration error" },
+        { status: 500 },
+      );
+    }
+
+    // Initialize Supabase client (anon key for Client API)
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const body = await request.json();
     const { email } = body;
 

@@ -4,15 +4,8 @@ import { generateJWT } from "@/lib/jwt";
 import { setJWTCookie } from "@/lib/auth";
 import type { LoginRequest, AuthResponse } from "@/lib/types";
 
-const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing Supabase credentials");
-}
-
-// Initialize Supabase client
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 /**
  * POST /api/auth/login
@@ -25,6 +18,16 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<AuthResponse>> {
   try {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error("[CONFIG ERROR] Missing Supabase credentials in environment");
+      return NextResponse.json(
+        { success: false, error: "Authentication configuration error" },
+        { status: 500 },
+      );
+    }
+
+    // Initialize Supabase client
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const body: LoginRequest = await request.json();
     const { email, password } = body;
 

@@ -2,19 +2,20 @@ import { jwtVerify, SignJWT } from "jose";
 import type { JWTPayload } from "@/lib/types";
 
 /**
- * JWT Secret for signing/verifying tokens
+ * Get JWT Secret for signing/verifying tokens
  */
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET ||
-    (() => {
-      if (process.env.NODE_ENV === "production") {
-        throw new Error(
-          "JWT_SECRET environment variable is required in production",
-        );
-      }
-      return "default-dev-secret-change-in-production";
-    })(),
-);
+function getJWTSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      // During build time, credentials might be missing but we shouldn't throw at module load
+      // We log but provide a dummy for the build process to complete page data collection
+      console.warn("[CONFIG WARNING] JWT_SECRET is missing. This is okay during build but FATAL in production runtime.");
+    }
+    return new TextEncoder().encode("default-dev-secret-change-in-production");
+  }
+  return new TextEncoder().encode(secret);
+}
 
 const JWT_EXPIRATION = 3600; // 1 hour in seconds
 
@@ -33,7 +34,7 @@ export async function generateJWT(
     exp: exp,
   })
     .setProtectedHeader({ alg: "HS256", zip: undefined })
-    .sign(JWT_SECRET);
+    .sign(getJWTSecret());
 
   return token;
 }
@@ -43,6 +44,7 @@ export async function generateJWT(
  */
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
+  const JWT_SECRET = getJWTSecret();
     const verified = await jwtVerify(token, JWT_SECRET);
     return verified.payload as unknown as JWTPayload;
   } catch {

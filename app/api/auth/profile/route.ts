@@ -7,14 +7,8 @@ import { verifyJWT } from "@/lib/jwt";
 import { getJWTFromCookie } from "@/lib/auth";
 import type { AuthResponse } from "@/lib/types";
 
-const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  throw new Error("Missing Supabase credentials");
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 /**
  * GET /api/auth/profile
@@ -24,6 +18,15 @@ export async function GET(
   request: NextRequest,
 ): Promise<NextResponse<AuthResponse>> {
   try {
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error("[CONFIG ERROR] Missing Supabase credentials in environment");
+      return NextResponse.json(
+        { success: false, error: "Authentication configuration error" },
+        { status: 500 },
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
     const token = getJWTFromCookie(request.headers.get("cookie"));
 
     if (!token) {
@@ -78,6 +81,15 @@ export async function PUT(
   request: NextRequest,
 ): Promise<NextResponse<AuthResponse>> {
   try {
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error("[CONFIG ERROR] Missing Supabase credentials in environment");
+      return NextResponse.json(
+        { success: false, error: "Authentication configuration error" },
+        { status: 500 },
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
     const token = getJWTFromCookie(request.headers.get("cookie"));
 
     if (!token) {

@@ -8,14 +8,17 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3017").replace(/\/$/, "");
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Missing required environment variables for Supabase");
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
 export async function POST(request: NextRequest): Promise<NextResponse<AuthResponse>> {
   try {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error("[CONFIG ERROR] Missing required environment variables for Supabase");
+      return NextResponse.json(
+        { success: false, error: "Authentication configuration error" },
+        { status: 500 },
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const body = await request.json();
     const { email } = body;
 

@@ -18,16 +18,6 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const evoGoWebhookSecret = process.env.EVO_GO_WEBHOOK_SECRET;
 
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  throw new Error('Missing Supabase credentials');
-}
-
-if (!evoGoWebhookSecret) {
-  throw new Error('Missing EVO_GO_WEBHOOK_SECRET');
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-
 interface EvoGoWebhookPayload {
   event: string;
   data?: Record<string, unknown>;
@@ -41,6 +31,13 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<{ statusCode: number } | { error: string; statusCode: number }>> {
   try {
+    if (!supabaseUrl || !supabaseServiceRoleKey || !evoGoWebhookSecret) {
+      console.error('[CONFIG ERROR] Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, EVO_GO_WEBHOOK_SECRET');
+      // Always return 200 for webhooks to avoid retries, but log the error
+      return NextResponse.json({ statusCode: 200 }, { status: 200 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
     // 1. Extract tenantId from query parameter
     const url = new URL(request.url);
     const tenantId = url.searchParams.get('tenantId');
@@ -108,11 +105,11 @@ export async function POST(
     // 6. Process event based on type
     switch (event) {
       case 'CONNECTION_UPDATE':
-        await handleConnectionUpdate(tenantId, data);
+        await handleConnectionUpdate(supabase, tenantId, data);
         break;
 
       case 'QRCODE_UPDATED':
-        await handleQRCodeUpdated(tenantId, data);
+        await handleQRCodeUpdated(supabase, tenantId, data);
         break;
 
       case 'MESSAGES_UPSERT':
@@ -141,6 +138,7 @@ export async function POST(
  * Updates tenant connection_status in database
  */
 async function handleConnectionUpdate(
+  supabase: any,
   tenantId: string,
   data?: Record<string, unknown>,
 ): Promise<void> {
@@ -181,13 +179,10 @@ async function handleConnectionUpdate(
 
 /**
  * Handle QRCODE_UPDATED event
- * Currently logs only (handler will be implemented in Story 3.3)
- */
-/**
- * Handle QRCODE_UPDATED event
  * Saves QR code to database for frontend polling
  */
 async function handleQRCodeUpdated(
+  supabase: any,
   tenantId: string,
   data?: Record<string, unknown>,
 ): Promise<void> {

@@ -17,12 +17,6 @@ import { callEvoGoLogout } from '@/lib/api/evo-go-client';
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceRoleKey) {
-  throw new Error('Missing Supabase credentials');
-}
-
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-
 interface DisconnectResponse {
   success: boolean;
   message?: string;
@@ -36,6 +30,15 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<DisconnectResponse | { error: string; statusCode: number }>> {
   try {
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error("[CONFIG ERROR] Missing required environment variables for Supabase");
+      return NextResponse.json(
+        { error: "Internal Server Error", statusCode: 500 },
+        { status: 500 },
+      );
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
     // 1. Verify JWT and extract user info
     const payload = await auth(request);
 

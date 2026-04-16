@@ -138,6 +138,7 @@ export async function POST(
  * Updates tenant connection_status in database
  */
 async function handleConnectionUpdate(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   tenantId: string,
   data?: Record<string, unknown>,
@@ -182,6 +183,7 @@ async function handleConnectionUpdate(
  * Saves QR code to database for frontend polling
  */
 async function handleQRCodeUpdated(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   supabase: any,
   tenantId: string,
   data?: Record<string, unknown>,

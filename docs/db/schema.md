@@ -1,12 +1,16 @@
-# Schema — Documentação do Banco de Dados
+# Database Schema — Documentação Legível
 
-> 📅 **Extraído em:** 2026-04-14  
-> **Fonte:** Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real  
-> **Status:** ✅ Atualizado
+> 📅 Extraído em: 2026-04-16 17:50 UTC
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
+> Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
 
----
+## 📊 Visão Geral
 
-## Visão Geral
+**Tabelas:** 9 | **Índices:** 30 | **Políticas RLS:** 32 | **Funções:** 2 | **Triggers:** 0 | **Sequences:** 1
+
+**Modelo:** Multi-tenant com WhatsApp integration (Evolution GO)  
+**RLS Status:** Ativado em todas as tabelas  
+**Schema:** public
 
 Sistema multi-tenant para gerenciamento de kanbans e conversas via WhatsApp.
 

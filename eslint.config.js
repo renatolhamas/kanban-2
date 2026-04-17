@@ -83,4 +83,12 @@ export default [{
   rules: {
     '@typescript-eslint/no-explicit-any': 'error',
   }
+}, // --- Phase 4: Design System Enforcement
+// Reminders to use design tokens (warnings, not errors - for guidance)
+{
+  files: ['src/components/ui/**/*.tsx'],
+  rules: {
+    // Design token guidance - will be enforced via PR review + CI/CD checks
+    '@typescript-eslint/no-explicit-any': 'error'
+  }
 }, ...storybook.configs["flat/recommended"]];

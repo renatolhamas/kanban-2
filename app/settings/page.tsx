@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Card } from '@/components/common/Card';
-import { Button } from '@/components/common/Button';
-import { Badge } from '@/components/common/Badge';
-import { Modal } from '@/components/common/Modal';
-import { useToast } from '@/components/common/Toast';
+import { Card } from '@/components/ui/molecules/card';
+import { Button } from '@/components/ui/atoms/button';
+import { Badge } from '@/components/ui/molecules/badge';
+import { Modal } from '@/components/ui/molecules/modal';
+import { useToast } from '@/components/ui/molecules/toast';
 
 type ConnectionState = 'idle' | 'loading' | 'qr_displayed' | 'expired' | 'connected' | 'error';
 

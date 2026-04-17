@@ -83,7 +83,7 @@ export function Sheet({
       {/* Sheet */}
       <div
         ref={sheetRef}
-        className={`fixed top-0 z-50 h-screen w-64 bg-white dark:bg-gray-900 shadow-lg transition-transform duration-300 ${
+        className={`fixed top-0 z-50 h-screen w-64 bg-surface-bright dark:bg-surface-container-highest shadow-ambient transition-transform duration-300 ${
           side === 'left'
             ? `left-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`
             : `right-0 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`
@@ -93,15 +93,15 @@ export function Sheet({
         aria-label={title}
       >
         {/* Header with close button */}
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 p-4">
+        <div className="flex items-center justify-between border-b border-surface-container-low p-4">
           {title && (
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-semibold text-text-primary">
               {title}
             </h2>
           )}
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors"
+            className="rounded-lg p-2 text-text-secondary hover:bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface transition-colors"
             aria-label="Close navigation menu"
           >
             <X size={24} />

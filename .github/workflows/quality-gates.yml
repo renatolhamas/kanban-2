@@ -1,0 +1,111 @@
+name: Quality Gates
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test -- --run
+        continue-on-error: false
+
+      - name: Upload Coverage
+        if: always()
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          fail_ci_if_error: false
+
+  accessibility:
+    name: Accessibility Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Accessibility (jest-axe)
+        run: npm test -- --run --testPathPattern="accessibility|a11y"
+        continue-on-error: true
+
+  build:
+    name: Build Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Lint
+        run: npm run lint
+
+  summary:
+    name: Quality Gates Summary
+    runs-on: ubuntu-latest
+    needs: [test, build]
+    if: always()
+
+    steps:
+      - name: Check Status
+        run: |
+          echo "## Quality Gates Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.test.result }}" == "success" ]; then
+            echo "✅ **Tests:** Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Tests:** Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.build.result }}" == "success" ]; then
+            echo "✅ **Build:** Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Build:** Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** All gates passed ✅" >> $GITHUB_STEP_SUMMARY

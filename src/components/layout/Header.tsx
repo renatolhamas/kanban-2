@@ -35,41 +35,44 @@ const PAGE_TITLES: PageTitleMap = {
   '/register': 'Sign Up',
 };
 
+const AUTH_PAGES = ['/login', '/register', '/forgot-password', '/reset-password', '/resend-confirmation', '/change-password'];
+
 export function Header() {
   const pathname = usePathname();
+  const isAuthPage = AUTH_PAGES.some((page) => pathname.startsWith(page));
   const pageTitle = PAGE_TITLES[pathname] || 'Kanban App';
 
   return (
     <header
-      className="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm"
+      className="sticky top-0 z-40 w-full border-b border-surface-container-low bg-surface-bright dark:bg-surface-container-highest shadow-ambient"
       role="banner"
       aria-label="Application header"
     >
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left: Logo */}
         <div className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500 text-white font-bold text-lg">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-text-inverse font-bold text-lg">
             K
           </div>
-          <h1 className="hidden sm:block text-lg font-semibold text-gray-900 dark:text-white">
+          <h1 className="hidden sm:block text-lg font-semibold text-text-primary">
             Kanban
           </h1>
         </div>
 
         {/* Center: Page Title */}
         <div className="flex-1 text-center">
-          <h2 className="text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">
+          <h2 className="text-sm sm:text-base font-medium text-text-primary">
             {pageTitle}
           </h2>
         </div>
 
         {/* Right: Actions (Theme Toggle + User Menu) */}
         <div className="flex items-center gap-3">
-          {/* Theme Toggle (Story 2.10) */}
+          {/* Theme Toggle */}
           <ThemeToggle />
 
-          {/* User Menu (Story 2.11) */}
-          <UserMenu />
+          {/* User Menu - Hidden on auth pages */}
+          {!isAuthPage && <UserMenu />}
         </div>
       </div>
     </header>

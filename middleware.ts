@@ -28,13 +28,18 @@ export async function middleware(request: NextRequest) {
     "/api/auth/change-password",
   ];
 
+  // Get JWT from cookie
+  const token = request.cookies.get("auth_token")?.value;
+
+  // Se autenticado tentando acessar rota pública → redireciona para home
+  if (publicRoutes.includes(pathname) && token) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   // Check if route is public
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
-
-  // Get JWT from cookie
-  const token = request.cookies.get("auth_token")?.value;
 
   if (!token) {
     // Redirect to login if no token
@@ -58,7 +63,11 @@ export const config = {
     "/settings/:path*",
     "/api/auth/profile",
 
-    // Exclude these routes
-    "/((?!_next|.*\\..*|login|register).*)",
+    // Public routes (needed to redirect authenticated users away)
+    "/login",
+    "/register",
+
+    // Exclude static files and internals
+    "/((?!_next|.*\\..*).*)",
   ],
 };

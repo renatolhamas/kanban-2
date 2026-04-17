@@ -66,7 +66,15 @@
       "mcp__supabase__list_edge_functions",
       "mcp__supabase__get_advisors",
       "mcp__supabase__apply_migration",
-      "Bash(grep -E \"\\\\.\\(ts|js\\)$\")"
+      "Bash(grep -E \"\\\\.\\(ts|js\\)$\")",
+      "Bash(ls -lh c:/git/kanban.2/docs/db/*.md c:/git/kanban.2/docs/db/*.sql)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(cp /mnt/c/git/kanban.2/docs/design-system/tokens/tokens.yaml /mnt/c/git/kanban.2/src/tokens/)",
+      "Bash(cp /mnt/c/git/kanban.2/docs/design-system/tokens/tokens.json /mnt/c/git/kanban.2/src/tokens/)",
+      "Bash(cp /mnt/c/git/kanban.2/docs/design-system/tokens/tokens.css /mnt/c/git/kanban.2/src/tokens/)",
+      "Bash(ls -la tailwind.config.*)",
+      "Bash(ls -la *.tsx)",
+      "Bash(rm -f badge.tsx card.tsx input.tsx skeleton.tsx spinner.tsx textarea.tsx theme-toggle.tsx theme-toggle.test.tsx)"
     ]
   },
   "enableAllProjectMcpServers": true,

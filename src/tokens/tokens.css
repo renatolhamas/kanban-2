@@ -1,0 +1,320 @@
+/* The Digital Atelier — Design System v2.0
+ * CSS Custom Properties
+ * Generated: 2026-04-16
+ */
+
+:root {
+  /* ========================================================================
+   * COLORS — Core Palette
+   * ======================================================================== */
+
+  /* Primary Brand */
+  --color-primary: #0d631b;
+  --color-primary-container: #2e7d32;
+  --color-primary-hover: #2e7d32;
+
+  /* Secondary & Tertiary */
+  --color-secondary: #4c616c;
+  --color-tertiary: #006156;
+
+  /* Error States */
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+
+  /* Neutral Surfaces (Tonal Layering) */
+  --color-surface: #f7f9fc;
+  --color-surface-bright: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f4f7;
+  --color-surface-container: #ecf0f3;
+  --color-surface-container-high: #e6e8eb;
+  --color-surface-container-highest: #e0e3e6;
+
+  /* Text Colors */
+  --color-on-surface: #191c1e;
+  --color-on-surface-variant: #40493d;
+  --color-text-primary: #191c1e;
+  --color-text-secondary: #40493d;
+  --color-text-inverse: #ffffff;
+
+  /* Borders */
+  --color-outline-variant: rgba(112, 122, 108, 0.15);
+  --color-border: rgba(112, 122, 108, 0.15);
+  --color-border-dark: #40493d;
+
+  /* Dark Mode Indicator */
+  --color-inverse-surface: #2d3133;
+
+  /* ========================================================================
+   * SPACING — Layout Rhythm
+   * ======================================================================== */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Padding Aliases */
+  --padding-xs: var(--space-xs);
+  --padding-sm: var(--space-sm);
+  --padding-md: var(--space-md);
+  --padding-lg: var(--space-lg);
+  --padding-xl: var(--space-xl);
+
+  /* Margin Aliases */
+  --margin-xs: var(--space-xs);
+  --margin-sm: var(--space-sm);
+  --margin-md: var(--space-md);
+  --margin-lg: var(--space-lg);
+  --margin-xl: var(--space-xl);
+
+  /* Gap (Flexbox/Grid) */
+  --gap-xs: var(--space-xs);
+  --gap-sm: var(--space-sm);
+  --gap-md: var(--space-md);
+  --gap-lg: var(--space-lg);
+
+  /* ========================================================================
+   * BORDER RADIUS — Roundness Scale
+   * ======================================================================== */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-base: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
+
+  /* ========================================================================
+   * TYPOGRAPHY
+   * ======================================================================== */
+
+  /* Font Families */
+  --font-primary: Inter, system-ui, -apple-system, sans-serif;
+  --font-base: var(--font-primary);
+
+  /* Font Sizes */
+  --font-size-headline-lg: 2.25rem;
+  --font-size-headline-md: 1.5rem;
+  --font-size-headline-sm: 1.125rem;
+  --font-size-body-md: 1rem;
+  --font-size-label-sm: 0.75rem;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.03em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.08em;
+
+  /* ========================================================================
+   * SHADOWS & ELEVATION
+   * ======================================================================== */
+  --shadow-ambient: 0px 12px 32px rgba(25, 28, 30, 0.06);
+  --shadow-none: none;
+
+  /* ========================================================================
+   * SEMANTIC TOKENS — Intent-Based Aliases
+   * ======================================================================== */
+
+  /* Status Colors */
+  --color-success: var(--color-primary);
+  --color-success-background: var(--color-surface-container-low);
+  --color-warning: var(--color-primary-container);
+  --color-warning-background: var(--color-surface-container-low);
+
+  /* Interactive Surfaces */
+  --color-interactive-background: var(--color-surface-container-high);
+  --color-interactive-background-hover: var(--color-surface-container-highest);
+
+  /* ========================================================================
+   * COMPONENT TOKENS
+   * ======================================================================== */
+
+  /* Button Sizes */
+  --button-padding-lg: var(--space-lg) var(--space-lg);
+  --button-padding-md: var(--space-md) var(--space-lg);
+  --button-padding-sm: var(--space-sm) var(--space-md);
+
+  /* Card Styling */
+  --card-padding: var(--space-lg);
+  --card-border-radius: var(--radius-md);
+  --card-shadow: var(--shadow-ambient);
+
+  /* Input Styling */
+  --input-padding: var(--space-md);
+  --input-border-radius: var(--radius-xs);
+  --input-background: var(--color-surface-container-high);
+  --input-focus-border: var(--color-primary);
+}
+
+/* ============================================================================
+ * DARK MODE VARIANT (Optional Future Support)
+ * ============================================================================ */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="dark"] {
+    /* In dark mode, swap surfaces and text colors */
+    --color-surface: #1a1c1e;
+    --color-surface-bright: #2d2f31;
+    --color-surface-container-lowest: #0f1113;
+    --color-surface-container-low: #1a1c1e;
+    --color-surface-container-high: #2d2f31;
+
+    --color-on-surface: #e6e1e5;
+    --color-text-primary: #e6e1e5;
+    --color-text-secondary: #c9c7ce;
+    --color-text-inverse: #191c1e;
+
+    --color-background: var(--color-surface);
+  }
+}
+
+/* ============================================================================
+ * TYPOGRAPHY STYLES (Reusable Classes)
+ * ============================================================================ */
+
+.headline-lg {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-headline-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.headline-md {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-headline-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.headline-sm {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-headline-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.4;
+}
+
+.body-md {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body-md);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+.label-sm {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-label-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* ============================================================================
+ * COMPONENT STYLES (Quick Start)
+ * ============================================================================ */
+
+/* Primary Button */
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  padding: var(--button-padding-md);
+  border-radius: var(--radius-full);
+  border: none;
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-ambient);
+  cursor: pointer;
+  transition: all 200ms ease-in-out;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  transform: scale(1.02);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: var(--color-surface-container-high);
+  color: var(--color-text-primary);
+  padding: var(--button-padding-md);
+  border-radius: var(--radius-full);
+  border: none;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: background 200ms ease-in-out;
+}
+
+.btn-secondary:hover {
+  background: var(--color-surface-container-highest);
+}
+
+/* Card */
+.card {
+  background: var(--color-surface-container-lowest);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  position: relative;
+}
+
+/* Input */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  background: var(--input-background);
+  color: var(--color-text-primary);
+  padding: var(--input-padding);
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: var(--input-border-radius);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body-md);
+  transition: border-color 200ms ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+  outline: none;
+  border-bottom-color: var(--input-focus-border);
+}
+
+/* Base Typography Reset */
+body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-body-md);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+  background: var(--color-background);
+}
+
+h1 {
+  font-size: var(--font-size-headline-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+h2 {
+  font-size: var(--font-size-headline-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+h3 {
+  font-size: var(--font-size-headline-sm);
+  font-weight: var(--font-weight-semibold);
+}

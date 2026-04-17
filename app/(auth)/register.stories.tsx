@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { ToastProvider } from "@/components/common/Toast";
+import { ToastProvider } from "@/components/ui/molecules/toast";
 import RegisterPageContent from "@/app/(auth)/register/page";
 import { DarkModeDecorator } from "@/.storybook/decorators/DarkModeDecorator";
 

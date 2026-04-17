@@ -1,8 +1,8 @@
 # Row Level Security (RLS) — Políticas de Acesso
 
-> 📅 Extraído em: 2026-04-16 10:45 UTC
+> 📅 Extraído em: 2026-04-16 17:50 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado
+> Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
 
 ## 🔐 Visão Geral
 

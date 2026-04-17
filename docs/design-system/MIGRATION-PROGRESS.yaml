@@ -1,0 +1,351 @@
+# Design System Migration Progress Tracker
+# Last Updated: 2026-04-16
+
+project:
+  name: "The Digital Atelier v2.0 — Layout Migration"
+  strategy: "Conservative (1 component/sprint)"
+  total_duration: "7-8 sprints"
+  start_date: "2026-04-XX"
+  target_completion: "2026-06-XX"
+
+overall_progress:
+  phase_1_foundation: 0%
+  phase_2_high_impact: 0%
+  phase_3_long_tail: 0%
+  phase_4_enforcement: 0%
+  total_completion: 0%
+
+phases:
+  phase_1:
+    name: "Foundation — Deploy Tokens"
+    duration_sprints: 1
+    duration_days: "3-5"
+    effort_hours: 2-4
+    target_start: "2026-04-XX"
+    target_end: "2026-04-XX"
+    status: "not_started"
+    progress: 0%
+
+    tasks:
+      - name: "Verify token files exist"
+        status: pending
+        assignee: ~
+        hours: 0.5
+      - name: "Verify Tailwind configuration"
+        status: pending
+        assignee: ~
+        hours: 0.5
+      - name: "Verify CSS custom properties"
+        status: pending
+        assignee: ~
+        hours: 0.5
+      - name: "Build and test"
+        status: pending
+        assignee: ~
+        hours: 0.5
+      - name: "Visual regression test"
+        status: pending
+        assignee: ~
+        hours: 1
+
+    acceptance_criteria:
+      - "Token files verified"
+      - "Tailwind configuration correct"
+      - "CSS custom properties accessible"
+      - "Build succeeds without errors"
+      - "No visual regressions"
+
+    success_metrics:
+      tokens_deployed: false
+      build_passes: false
+      no_regressions: false
+
+  phase_2:
+    name: "High-Impact Patterns"
+    duration_sprints: 4
+    duration_days: "20-28"
+    effort_hours: 14-18
+    target_start: "2026-04-XX"
+    target_end: "2026-05-XX"
+    status: "not_started"
+    progress: 0%
+
+    sprints:
+      sprint_1_header:
+        name: "Header Migration"
+        duration_days: 5-7
+        effort_hours: 3-4
+        target_start: "2026-04-XX"
+        target_end: "2026-04-XX"
+        status: pending
+        progress: 0%
+
+        component: "Header.tsx"
+        colors_count: 8
+        colors_to_migrate:
+          - "bg-emerald-500 → bg-primary"
+          - "text-white → text-text-inverse"
+          - "text-gray-700 → text-text-primary"
+          - "text-gray-300 → text-text-secondary"
+          - "bg-white → bg-surface-bright"
+          - "bg-gray-900 → bg-surface-container-highest"
+          - "border-gray-200 → border-surface-container-low"
+          - "shadow-sm → shadow-ambient"
+
+        tasks:
+          - name: "Replace logo colors"
+            status: pending
+            hours: 0.5
+          - name: "Replace page title typography"
+            status: pending
+            hours: 0.5
+          - name: "Replace border colors"
+            status: pending
+            hours: 0.5
+          - name: "Replace focus ring"
+            status: pending
+            hours: 0.5
+          - name: "Refactor classnames"
+            status: pending
+            hours: 1
+          - name: "Test visually"
+            status: pending
+            hours: 1
+
+        success_criteria:
+          - "All hardcoded colors replaced with tokens"
+          - "Visual appearance pixel-perfect"
+          - "Dark mode works correctly"
+          - "Tests pass"
+
+        rollback_plan:
+          estimated_time_minutes: 15
+          approach: "git checkout -- src/components/layout/Header.tsx"
+
+      sprint_2_sidebar:
+        name: "Sidebar Migration"
+        duration_days: 5-7
+        effort_hours: 4-5
+        target_start: "2026-04-XX"
+        target_end: "2026-04-XX"
+        status: pending
+        progress: 0%
+
+        component: "Sidebar.tsx"
+        colors_count: 10
+        colors_to_migrate:
+          - "bg-emerald-50 → bg-surface-container-low"
+          - "bg-emerald-500 → bg-primary"
+          - "text-emerald-700 → text-primary"
+          - "text-gray-700 → text-text-primary"
+          - "hover:bg-gray-100 → hover:bg-surface-container-low"
+
+        success_criteria:
+          - "Navigation items styled with tokens"
+          - "Active/hover states consistent"
+          - "Mobile drawer functional"
+          - "Tests pass"
+
+        notes: "Mobile drawer Sheet component also refactored"
+
+      sprint_3_user_menu:
+        name: "UserMenu Migration"
+        duration_days: 5-7
+        effort_hours: 4-5
+        target_start: "2026-04-XX"
+        target_end: "2026-04-XX"
+        status: pending
+        progress: 0%
+
+        component: "UserMenu.tsx"
+        colors_count: 8
+        colors_to_migrate:
+          - "bg-emerald-500 → bg-primary"
+          - "text-white → text-text-inverse"
+          - "text-gray-700 → text-text-primary"
+          - "hover:bg-gray-100 → hover:bg-surface-container-low"
+          - "text-red-600 → text-error"
+          - "hover:bg-red-50 → hover:bg-error-background"
+
+        success_criteria:
+          - "Menu uses Card styling"
+          - "Menu items styled with Button variants"
+          - "Logout button uses error color"
+          - "Tests pass"
+
+        notes: "Consider using Card component for dropdown styling"
+
+      sprint_4_theme_toggle:
+        name: "ThemeToggle Creation"
+        duration_days: 3-5
+        effort_hours: 3-4
+        target_start: "2026-04-XX"
+        target_end: "2026-04-XX"
+        status: pending
+        progress: 0%
+
+        component: "theme-toggle.tsx (NEW)"
+        component_type: "New Atom"
+        dependencies:
+          - "Button (atom)"
+          - "lucide-react icons"
+
+        implementation_tasks:
+          - name: "Create component file"
+            status: pending
+            hours: 1.5
+          - name: "Write tests (jest + jest-axe)"
+            status: pending
+            hours: 1
+          - name: "Create Storybook story"
+            status: pending
+            hours: 0.5
+          - name: "Export from ui/index.ts"
+            status: pending
+            hours: 0.5
+
+        success_criteria:
+          - "Component renders correctly"
+          - "Dark mode toggle works"
+          - "Tests pass"
+          - "Storybook story created"
+          - "Type-safe implementation"
+
+        features:
+          - "Dark mode toggle"
+          - "localStorage persistence"
+          - "Keyboard navigation"
+          - "ARIA labels"
+          - "Sun/Moon icons"
+
+  phase_3:
+    name: "Long-Tail Cleanup"
+    duration_sprints: 1-2
+    duration_days: "7-14"
+    effort_hours: 6-8
+    target_start: "2026-05-XX"
+    target_end: "2026-06-XX"
+    status: "not_started"
+    progress: 0%
+
+    tasks:
+      - name: "Refactor Sheet component"
+        status: pending
+        hours: 1
+      - name: "Standardize focus states"
+        status: pending
+        hours: 2
+      - name: "Standardize hover states"
+        status: pending
+        hours: 1.5
+      - name: "Verify dark mode"
+        status: pending
+        hours: 2
+      - name: "Audit remaining hardcoded colors"
+        status: pending
+        hours: 1.5
+      - name: "Consistency check"
+        status: pending
+        hours: 0.5
+
+    acceptance_criteria:
+      - "Sheet uses Card styling"
+      - "All focus states standardized"
+      - "All hover states consistent"
+      - "Dark mode fully functional"
+      - "No hardcoded colors in layout"
+
+    success_metrics:
+      remaining_hardcoded_colors: 0
+      dark_mode_compliant: false
+      focus_states_standardized: false
+
+  phase_4:
+    name: "Enforcement"
+    duration_sprints: 1
+    duration_days: "5-7"
+    effort_hours: 4-6
+    target_start: "2026-06-XX"
+    target_end: "2026-06-XX"
+    status: "not_started"
+    progress: 0%
+
+    tasks:
+      - name: "Configure ESLint rule"
+        status: pending
+        hours: 1.5
+      - name: "Configure Tailwind safelist"
+        status: pending
+        hours: 1
+      - name: "Add CI/CD check"
+        status: pending
+        hours: 1.5
+      - name: "Document deprecation"
+        status: pending
+        hours: 0.5
+      - name: "Update documentation"
+        status: pending
+        hours: 1
+      - name: "Monitor adoption"
+        status: pending
+        hours: 1
+
+    acceptance_criteria:
+      - "ESLint rule working"
+      - "CI/CD blocking hardcoded colors"
+      - "Deprecation notice published"
+      - "Team trained"
+      - "Adoption metrics established"
+
+roi_projection:
+  investment:
+    development_hours: 40
+    cost_per_hour: 50
+    setup_hours: 4
+    total_investment: 2200
+
+  monthly_benefits:
+    reduced_maintenance_hours: 4
+    faster_development_hours: 6
+    fewer_design_reviews: 2
+    monthly_savings: 600
+
+  breakeven_timeline:
+    month: 4
+    phase: "Phase 2 Sprint 4"
+
+  annual_savings:
+    year_1: 12000
+    year_2: 18000
+    year_3: 24000
+
+dependencies:
+  critical:
+    - "Phase 1 must complete before Phase 2"
+    - "Button, Card, Input components ready"
+    - "Design tokens accessible"
+
+  nice_to_have:
+    - "Storybook configured"
+    - "Jest testing framework"
+    - "WCAG accessibility tooling"
+
+team_assignments:
+  developer: ~
+  reviewer: ~
+  qa: ~
+
+issues_and_blockers: []
+
+notes: |
+  - Conservative velocity: 1 component per sprint
+  - Each sprint is independent and can be rolled back
+  - Phase 1 is critical foundation before starting Phase 2
+  - Team training occurs during Phase 4
+  - Post-migration: Plan Phase 5 for additional components
+
+version_history:
+  - timestamp: "2026-04-16"
+    version: "1.0.0"
+    action: "Initial migration strategy created"
+    author: "Uma (UX-Design Expert)"

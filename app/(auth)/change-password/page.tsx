@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/common/Button";
-import { Input } from "@/components/common/Input";
-import { Card } from "@/components/common/Card";
+import { Button } from "@/components/ui/atoms/button";
+import { Input } from "@/components/ui/atoms/input";
+import { Card } from "@/components/ui/molecules/card";
 
 export default function ChangePasswordPage() {
   const [currentPassword, setCurrentPassword] = useState("");

@@ -1,16 +1,18 @@
--- ============================================================
--- Kanban 2 — Database Schema DDL (introspectado do Supabase)
--- Extraído em: 2026-04-14
+-- Database Schema — DDL Completo
+-- 📅 Extraído em: 2026-04-16 17:50 UTC
 -- Fonte: Supabase (ujcjucgylwkjrdpsqffs)
--- ============================================================
+-- Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
 
--- EXTENSÕES
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";          -- v1.1 — gerar UUIDs
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";           -- v1.3 — funções criptográficas
-CREATE EXTENSION IF NOT EXISTS "pg_graphql";         -- v1.5.11 — suporte GraphQL
-CREATE EXTENSION IF NOT EXISTS "pg_stat_statements"; -- v1.11 — estatísticas SQL
-CREATE EXTENSION IF NOT EXISTS "supabase_vault";     -- v0.3.1 — Supabase Vault
--- plpgsql v1.0 — já instalado por padrão
+-- ============================================================================
+-- EXTENSIONS
+-- ============================================================================
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "plpgsql" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA extensions;
+CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA extensions;
 
 -- ============================================================
 -- TABELAS
@@ -276,3 +278,10 @@ $$;
 -- 20260413014555 — update_tenants_connection_status_and_add_unique_constraint
 -- 20260413144601 — add_qr_code_to_tenants
 -- 20260413171746 — add_evolution_instance_token
+-- 20260416085155 — create_custom_access_token_hook
+-- 20260416092722 — fix_custom_access_token_hook
+-- 20260416093514 — fix_rls_use_app_metadata
+-- 20260416192121 — drop_test_user_access_view
+-- 20260416192125 — disable_rls_failed_registrations
+-- 20260416192127 — fix_users_rls_auth_uid_initplan_drop
+-- 20260416192130 — fix_users_rls_auth_uid_initplan_create

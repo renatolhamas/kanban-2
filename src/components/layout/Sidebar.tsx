@@ -69,10 +69,10 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 ${
+            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface ${
               active
-                ? 'bg-emerald-50 dark:bg-gray-800 text-emerald-700 dark:text-emerald-400'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                ? 'bg-surface-container-low text-primary'
+                : 'text-text-primary hover:bg-surface-container-low'
             }`}
             aria-current={active ? 'page' : undefined}
           >
@@ -98,7 +98,7 @@ export function Sidebar() {
     <>
       {/* Desktop Sidebar - Hidden on mobile (<md), visible on desktop (md+) */}
       <nav
-        className="hidden md:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-[calc(100vh-4rem)] overflow-y-auto"
+        className="hidden md:flex flex-col w-64 border-r border-surface-container-low bg-surface-bright dark:bg-surface-container-highest h-[calc(100vh-4rem)] overflow-y-auto"
         role="navigation"
         aria-label="Main navigation"
       >
@@ -108,7 +108,7 @@ export function Sidebar() {
       {/* Mobile Hamburger Button - Visible on mobile (<md), hidden on desktop */}
       <button
         onClick={() => setIsDrawerOpen(true)}
-        className="md:hidden fixed bottom-4 left-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
+        className="md:hidden fixed bottom-4 left-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-text-inverse shadow-ambient hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface transition-colors"
         aria-label="Open navigation menu"
         aria-expanded={isDrawerOpen}
         aria-controls="mobile-nav"

@@ -71,13 +71,13 @@ export function UserMenu() {
       <button
         ref={triggerRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
+        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-text-primary hover:bg-surface-container-low focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface transition-colors"
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-label="User menu"
       >
         {/* Avatar Circle */}
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white font-semibold">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-text-inverse font-semibold">
           U
         </div>
         {/* Chevron */}
@@ -92,7 +92,7 @@ export function UserMenu() {
         <div
           ref={menuRef}
           role="menu"
-          className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg py-1 z-50"
+          className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-surface-container-low bg-surface-bright dark:bg-surface-container-high shadow-ambient py-1 z-50"
         >
           {/* Profile Item */}
           <button
@@ -100,7 +100,7 @@ export function UserMenu() {
               router.push('/profile');
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-text-primary hover:bg-surface-container-low transition-colors focus:outline-none focus:bg-surface-container-low"
             role="menuitem"
           >
             <User size={16} />
@@ -108,7 +108,7 @@ export function UserMenu() {
           </button>
 
           {/* Divider */}
-          <div className="my-1 border-t border-gray-200 dark:border-gray-700" />
+          <div className="my-1 border-t border-surface-container-low" />
 
           {/* Logout Item */}
           <button
@@ -116,7 +116,7 @@ export function UserMenu() {
               handleLogout();
               setIsOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:bg-red-50 dark:focus:bg-gray-700"
+            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-error hover:bg-surface-container-low transition-colors focus:outline-none focus:bg-surface-container-low"
             role="menuitem"
           >
             <LogOut size={16} />

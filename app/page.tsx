@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/common/Button";
-import { Card } from "@/components/common/Card";
+import { Button } from "@/components/ui/atoms/button";
+import { Card } from "@/components/ui/molecules/card";
 
 export default function Home() {
   return (

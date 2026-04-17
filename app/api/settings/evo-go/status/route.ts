@@ -10,11 +10,11 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { auth } from "@/lib/middleware/auth";
-import { tenantIsolation } from "@/lib/middleware/tenant-isolation";
+import { auth, AuthError } from "@/lib/middleware/auth";
+import { tenantIsolation, TenantIsolationError } from "@/lib/middleware/tenant-isolation";
 import { getEvoGoStatus } from "@/lib/api/evo-go-client";
 
-const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 interface StatusResponse {
@@ -154,7 +154,7 @@ export async function GET(
     console.error("[Status] Error:", error);
 
     // Handle auth errors (AuthError from @/lib/middleware/auth)
-    if (error instanceof Error && error.message === "Unauthorized") {
+    if (error instanceof AuthError) {
       return NextResponse.json(
         { error: "Unauthorized", statusCode: 401 },
         { status: 401 },
@@ -162,7 +162,7 @@ export async function GET(
     }
 
     // Handle tenant isolation errors (TenantIsolationError)
-    if (error instanceof Error && error.message === "Tenant context not found") {
+    if (error instanceof TenantIsolationError) {
       return NextResponse.json(
         { error: "Forbidden", statusCode: 403 },
         { status: 403 },

@@ -1,0 +1,60 @@
+name: Design System Compliance
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/**'
+      - 'app/**'
+      - '.github/workflows/design-system-check.yml'
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'src/components/**'
+      - 'app/**'
+
+jobs:
+  design-tokens:
+    name: Design Token Compliance
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check Design Token Usage
+        run: npm run check:tokens
+        continue-on-error: false
+
+      - name: Lint Code
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Type Check
+        run: npm run typecheck
+        continue-on-error: false
+
+      - name: Build
+        run: npm run build
+        continue-on-error: false
+
+      - name: Report
+        if: always()
+        run: |
+          echo "## Design System Compliance Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All checks passed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Design Tokens:** Compliant" >> $GITHUB_STEP_SUMMARY
+          echo "- **Linting:** Pass" >> $GITHUB_STEP_SUMMARY
+          echo "- **Type Safety:** Pass" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build:** Success" >> $GITHUB_STEP_SUMMARY

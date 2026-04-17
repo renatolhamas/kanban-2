@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter } from "next/font/google";
-import { ToastProvider } from "@/components/common/Toast";
+import { ToastProvider } from "@/components/ui/molecules/toast";
 import { RootLayout } from "@/components/layout/RootLayout";
 import "./globals.css";
 import { cn } from "@/lib/utils";

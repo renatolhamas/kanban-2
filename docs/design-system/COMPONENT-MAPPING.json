@@ -1,0 +1,442 @@
+{
+  "metadata": {
+    "name": "Component Migration Mapping",
+    "version": "1.0.0",
+    "generated_at": "2026-04-16",
+    "strategy": "Conservative (1 component/sprint)",
+    "timeline": "7-8 sprints"
+  },
+  "migration_phases": {
+    "phase_1": {
+      "name": "Foundation",
+      "duration": "1 sprint",
+      "objective": "Deploy tokens, zero visual changes",
+      "components_affected": []
+    },
+    "phase_2": {
+      "name": "High-Impact Patterns",
+      "duration": "4 sprints",
+      "objective": "Migrate Header, Sidebar, UserMenu, ThemeToggle",
+      "components": {
+        "header": {
+          "file": "src/components/layout/Header.tsx",
+          "sprint": 2,
+          "status": "pending",
+          "pattern_types": ["colors", "typography", "focus_rings"],
+          "colors_to_migrate": {
+            "bg-emerald-500": {
+              "old_class": "bg-emerald-500",
+              "new_token": "--color-primary",
+              "new_class": "bg-primary",
+              "locations": ["logo background"]
+            },
+            "text-white": {
+              "old_class": "text-white",
+              "new_token": "--color-text-inverse",
+              "new_class": "text-text-inverse",
+              "locations": ["logo text"]
+            },
+            "text-gray-700": {
+              "old_class": "text-gray-700",
+              "new_token": "--color-text-primary",
+              "new_class": "text-text-primary",
+              "locations": ["page title"]
+            },
+            "text-gray-300": {
+              "old_class": "text-gray-300",
+              "new_token": "--color-text-secondary",
+              "new_class": "text-text-secondary",
+              "locations": ["dark mode page title"]
+            },
+            "border-gray-200": {
+              "old_class": "border-gray-200",
+              "new_token": "--color-surface-container-low",
+              "new_class": "border-surface-container-low",
+              "locations": ["header bottom border"]
+            },
+            "focus-ring": {
+              "old_class": "focus:ring-emerald-500",
+              "new_token": "--color-primary",
+              "new_class": "focus:ring-primary",
+              "locations": ["ThemeToggle, UserMenu"]
+            }
+          },
+          "estimated_effort_hours": 3.5,
+          "dependencies": ["Button (atom)", "Typography tokens"],
+          "rollback_time_minutes": 15
+        },
+        "sidebar": {
+          "file": "src/components/layout/Sidebar.tsx",
+          "sprint": 3,
+          "status": "pending",
+          "pattern_types": ["colors", "active_states", "hover_states"],
+          "colors_to_migrate": {
+            "bg-emerald-50": {
+              "old_class": "bg-emerald-50",
+              "new_token": "--color-surface-container-low",
+              "new_class": "bg-surface-container-low",
+              "locations": ["active nav item background"]
+            },
+            "bg-emerald-500": {
+              "old_class": "bg-emerald-500",
+              "new_token": "--color-primary",
+              "new_class": "bg-primary",
+              "locations": ["mobile hamburger button"]
+            },
+            "text-emerald-700": {
+              "old_class": "text-emerald-700",
+              "new_token": "--color-primary",
+              "new_class": "text-primary",
+              "locations": ["active nav item text"]
+            },
+            "text-gray-700": {
+              "old_class": "text-gray-700",
+              "new_token": "--color-text-primary",
+              "new_class": "text-text-primary",
+              "locations": ["nav item text"]
+            },
+            "hover-state": {
+              "old_class": "hover:bg-gray-100",
+              "new_token": "--color-surface-container-low",
+              "new_class": "hover:bg-surface-container-low",
+              "locations": ["nav item hover"]
+            }
+          },
+          "estimated_effort_hours": 4.5,
+          "dependencies": ["Button (atom)", "Color tokens"],
+          "rollback_time_minutes": 15,
+          "notes": "Mobile drawer Sheet component styling also refactored"
+        },
+        "user_menu": {
+          "file": "src/components/layout/UserMenu.tsx",
+          "sprint": 4,
+          "status": "pending",
+          "pattern_types": ["colors", "dropdown_styling", "destructive_action"],
+          "colors_to_migrate": {
+            "trigger_button": {
+              "old_class": "text-gray-700 hover:bg-gray-100",
+              "new_token": "--color-text-primary, --color-surface-container-low",
+              "new_class": "text-text-primary hover:bg-surface-container-low",
+              "locations": ["trigger button"]
+            },
+            "avatar": {
+              "old_class": "bg-emerald-500 text-white",
+              "new_token": "--color-primary, --color-text-inverse",
+              "new_class": "bg-primary text-text-inverse",
+              "locations": ["avatar circle"]
+            },
+            "dropdown_container": {
+              "old_class": "bg-white border border-gray-200 shadow-lg",
+              "new_token": "--color-surface-bright, --color-surface-container-low, --shadow-ambient",
+              "new_class": "bg-surface-bright border-surface-container-low shadow-ambient",
+              "locations": ["dropdown menu"],
+              "note": "Consider using Card component for styling"
+            },
+            "menu_items": {
+              "old_class": "text-gray-700 hover:bg-gray-100",
+              "new_token": "--color-text-primary, --color-surface-container-low",
+              "new_class": "text-text-primary hover:bg-surface-container-low",
+              "locations": ["menu items"]
+            },
+            "logout_item": {
+              "old_class": "text-red-600 hover:bg-red-50",
+              "new_token": "--color-error, --color-error-background",
+              "new_class": "text-error hover:bg-error-background",
+              "locations": ["logout menu item"],
+              "note": "Destructive action uses error color"
+            }
+          },
+          "estimated_effort_hours": 4.5,
+          "dependencies": ["Button (atom)", "Card (molecule)", "Color tokens"],
+          "rollback_time_minutes": 15
+        },
+        "theme_toggle": {
+          "file": "src/components/ui/atoms/theme-toggle.tsx",
+          "sprint": 5,
+          "status": "pending",
+          "pattern_types": ["new_component", "icon_sizing", "dark_mode"],
+          "implementation": {
+            "type": "New Atom Component",
+            "dependencies": ["Button (atom)", "lucide-react icons"],
+            "tokens_used": [
+              "--color-text-primary (icon color)",
+              "--space-* (icon sizing)",
+              "--radius-* (button border-radius)"
+            ],
+            "features": [
+              "Dark mode toggle",
+              "localStorage persistence",
+              "Keyboard navigation (Escape, Tab)",
+              "ARIA labels for a11y",
+              "Sun/Moon icons"
+            ]
+          },
+          "estimated_effort_hours": 3.5,
+          "dependencies": ["Button (atom)"],
+          "rollback_time_minutes": 10,
+          "acceptance_criteria": [
+            "Component renders correctly",
+            "Dark mode toggle works",
+            "Tests pass (jest + jest-axe)",
+            "Storybook story created",
+            "Type-safe implementation"
+          ]
+        }
+      }
+    },
+    "phase_3": {
+      "name": "Long-Tail Cleanup",
+      "duration": "1-2 sprints",
+      "objective": "Edge cases and consistency",
+      "components": {
+        "sheet": {
+          "file": "src/components/layout/Sheet.tsx",
+          "task": "Refactor to use Card styling",
+          "colors_to_migrate": {
+            "backdrop": {
+              "old_class": "bg-black/50",
+              "new_token": "--shadow-ambient (depth effect)",
+              "new_class": "bg-black/40"
+            },
+            "panel": {
+              "old_class": "bg-white border-gray-200",
+              "new_token": "--color-surface-bright, tonal layering",
+              "new_class": "bg-surface-bright"
+            }
+          }
+        },
+        "focus_states": {
+          "task": "Standardize all focus rings",
+          "standard_pattern": "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-surface",
+          "components_affected": ["Header", "Sidebar", "UserMenu", "ThemeToggle", "Custom inputs"]
+        },
+        "hover_states": {
+          "task": "Standardize all hover backgrounds",
+          "standard_pattern": "hover:bg-surface-container-low",
+          "components_affected": ["Navigation items", "Menu items", "Button groups"]
+        },
+        "dark_mode": {
+          "task": "Verify dark mode in all components",
+          "checklist": [
+            "Text readable in dark mode",
+            "No contrast issues",
+            "Colors transition smoothly",
+            "No flashing or color shifts",
+            "Icons visible in both modes"
+          ]
+        }
+      }
+    },
+    "phase_4": {
+      "name": "Enforcement",
+      "duration": "1 sprint",
+      "objective": "Lock design system, prevent regression",
+      "tasks": {
+        "eslint_rule": {
+          "description": "Block hardcoded colors",
+          "rule_type": "no-restricted-syntax",
+          "pattern": "/^(bg|text|border|ring)-(gray|emerald|red|blue)-\\d+/",
+          "severity": "warn"
+        },
+        "tailwind_safelist": {
+          "description": "Ensure token classes in production build",
+          "pattern": "/^(bg|text|border|ring|shadow)-(primary|secondary|error|surface|text)/",
+          "importance": "critical"
+        },
+        "ci_cd_check": {
+          "description": "Block PRs with hardcoded colors",
+          "type": "GitHub Actions",
+          "check": "grep for hardcoded colors in src/components/layout/"
+        },
+        "deprecation_notice": {
+          "description": "Communicate old patterns are deprecated",
+          "file": "docs/design-system/DEPRECATION-NOTICE.md"
+        },
+        "team_training": {
+          "description": "Train team on design system usage",
+          "file": "docs/design-system/TEAM-TRAINING.md"
+        }
+      }
+    }
+  },
+  "color_reference": {
+    "primary": {
+      "token": "--color-primary",
+      "value": "#0d631b",
+      "usage": "Brand color, primary buttons, active states, focus rings"
+    },
+    "text_primary": {
+      "token": "--color-text-primary",
+      "value": "#191c1e",
+      "usage": "Main text, body copy, navigation items"
+    },
+    "text_secondary": {
+      "token": "--color-text-secondary",
+      "value": "#40493d",
+      "usage": "Secondary text, captions, helper text"
+    },
+    "text_inverse": {
+      "token": "--color-text-inverse",
+      "value": "#ffffff",
+      "usage": "Text on dark/brand backgrounds"
+    },
+    "surface_bright": {
+      "token": "--color-surface-bright",
+      "value": "#ffffff",
+      "usage": "White backgrounds, cards, dropdowns"
+    },
+    "surface_container_low": {
+      "token": "--color-surface-container-low",
+      "value": "#f2f4f7",
+      "usage": "Hover states, active states, subtle backgrounds"
+    },
+    "surface_container_high": {
+      "token": "--color-surface-container-high",
+      "value": "#e6e8eb",
+      "usage": "Borders (via tonal layering), medium contrast"
+    },
+    "surface_container_highest": {
+      "token": "--color-surface-container-highest",
+      "value": "#e0e3e6",
+      "usage": "Dark mode backgrounds, strong contrast"
+    },
+    "error": {
+      "token": "--color-error",
+      "value": "#ba1a1a",
+      "usage": "Destructive actions, error messages, danger states"
+    },
+    "error_background": {
+      "token": "--color-error-background",
+      "value": "#ffdad6",
+      "usage": "Error hover states, error backgrounds"
+    }
+  },
+  "migration_checklist": {
+    "phase_2_sprint_1_header": [
+      {
+        "task": "Replace hardcoded colors",
+        "status": "pending"
+      },
+      {
+        "task": "Verify visual appearance unchanged",
+        "status": "pending"
+      },
+      {
+        "task": "Run tests (npm test)",
+        "status": "pending"
+      },
+      {
+        "task": "Type check (npm run typecheck)",
+        "status": "pending"
+      }
+    ],
+    "phase_2_sprint_2_sidebar": [
+      {
+        "task": "Refactor navigation items",
+        "status": "pending"
+      },
+      {
+        "task": "Test mobile drawer",
+        "status": "pending"
+      },
+      {
+        "task": "Test desktop sidebar",
+        "status": "pending"
+      },
+      {
+        "task": "Verify active/hover states",
+        "status": "pending"
+      }
+    ],
+    "phase_2_sprint_3_user_menu": [
+      {
+        "task": "Migrate dropdown styling",
+        "status": "pending"
+      },
+      {
+        "task": "Verify menu interaction",
+        "status": "pending"
+      },
+      {
+        "task": "Test keyboard navigation",
+        "status": "pending"
+      },
+      {
+        "task": "Verify logout destructive state",
+        "status": "pending"
+      }
+    ],
+    "phase_2_sprint_4_theme_toggle": [
+      {
+        "task": "Create component file",
+        "status": "pending"
+      },
+      {
+        "task": "Write tests",
+        "status": "pending"
+      },
+      {
+        "task": "Create Storybook story",
+        "status": "pending"
+      },
+      {
+        "task": "Export from ui/index.ts",
+        "status": "pending"
+      }
+    ]
+  },
+  "rollback_procedures": {
+    "header": {
+      "time_minutes": 15,
+      "steps": [
+        "Revert git: git checkout -- src/components/layout/Header.tsx",
+        "Verify visual: npm run dev && navigate to all routes",
+        "Run tests: npm test",
+        "Commit rollback if needed"
+      ]
+    },
+    "sidebar": {
+      "time_minutes": 15,
+      "steps": [
+        "Revert git: git checkout -- src/components/layout/Sidebar.tsx",
+        "Verify mobile & desktop: npm run dev",
+        "Run tests: npm test",
+        "Commit rollback if needed"
+      ]
+    },
+    "user_menu": {
+      "time_minutes": 15,
+      "steps": [
+        "Revert git: git checkout -- src/components/layout/UserMenu.tsx",
+        "Test dropdown interaction: npm run dev",
+        "Run tests: npm test",
+        "Commit rollback if needed"
+      ]
+    },
+    "theme_toggle": {
+      "time_minutes": 10,
+      "steps": [
+        "Delete file: rm src/components/ui/atoms/theme-toggle.tsx",
+        "Remove export: edit src/components/ui/index.ts",
+        "Verify build: npm run build",
+        "Commit removal if needed"
+      ]
+    }
+  },
+  "success_metrics": {
+    "phase_2_complete": {
+      "header_migrated": false,
+      "sidebar_migrated": false,
+      "user_menu_migrated": false,
+      "theme_toggle_created": false,
+      "all_tests_passing": false,
+      "no_visual_regressions": false,
+      "dark_mode_functional": false
+    },
+    "overall_adoption": {
+      "components_using_tokens": "0/4",
+      "color_consistency": "0%",
+      "code_duplication_reduction": "0%"
+    }
+  }
+}

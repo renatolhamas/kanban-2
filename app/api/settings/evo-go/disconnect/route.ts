@@ -10,8 +10,8 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { auth } from '@/lib/middleware/auth';
-import { tenantIsolation } from '@/lib/middleware/tenant-isolation';
+import { auth, AuthError } from '@/lib/middleware/auth';
+import { tenantIsolation, TenantIsolationError } from '@/lib/middleware/tenant-isolation';
 import { callEvoGoLogout } from '@/lib/api/evo-go-client';
 
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -139,7 +139,7 @@ export async function POST(
     console.error('[Disconnect] Error:', error);
 
     // Handle auth errors
-    if (error instanceof Error && error.message === 'Unauthorized') {
+    if (error instanceof AuthError) {
       return NextResponse.json(
         { error: 'Unauthorized', statusCode: 401 },
         { status: 401 },
@@ -147,7 +147,7 @@ export async function POST(
     }
 
     // Handle tenant isolation errors
-    if (error instanceof Error && error.message === 'Tenant context not found') {
+    if (error instanceof TenantIsolationError) {
       return NextResponse.json(
         { error: 'Forbidden', statusCode: 403 },
         { status: 403 },

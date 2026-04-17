@@ -1,0 +1,455 @@
+# The Digital Atelier — Design System v2.0
+# Design Tokens (W3C DTCG Compliant)
+# Source: design-system-v2.html
+
+metadata:
+  name: "The Digital Atelier"
+  version: "2.0.0"
+  generated_by: "Uma (UX-Design Expert)"
+  generated_at: "2026-04-16T00:00:00Z"
+  dtcg_spec: "2025.10"
+  color_space: "oklch"
+  description: |
+    A design system built to transform functional complexity into a serene,
+    high-end editorial experience. Rooted in Atomic Design and Tonal Layering.
+  philosophy: |
+    - No-Line Rule: 1px borders prohibited for sectioning
+    - Tonal Layering: Depth through background color shifts
+    - Atomic Design: Atoms → Molecules → Organisms → Templates
+    - Editorial Focus: High-end, serene user experience
+
+# ================================================================================
+# CORE LAYER: Primitive Design Tokens
+# ================================================================================
+layers:
+  core:
+    color:
+      $type: "color"
+      description: "Primitive color values - foundation of the system"
+
+      # Primary Tonal Range
+      primary:
+        $value: "#0d631b"
+        $description: "Primary brand color - Deep Forest Green"
+      primary-container:
+        $value: "#2e7d32"
+        $description: "Primary container - Lighter green for backgrounds"
+
+      # Secondary & Tertiary
+      secondary:
+        $value: "#4c616c"
+        $description: "Secondary accent color - Slate Blue"
+      tertiary:
+        $value: "#006156"
+        $description: "Tertiary accent - Teal"
+
+      # Error States
+      error:
+        $value: "#ba1a1a"
+        $description: "Error/destructive actions"
+      error-container:
+        $value: "#ffdad6"
+        $description: "Error background container"
+
+      # Neutral Surfaces (Tonal Layering)
+      surface:
+        $value: "#f7f9fc"
+        $description: "Base surface color - Very light blue-grey"
+      surface-bright:
+        $value: "#ffffff"
+        $description: "Brightest surface - Pure white"
+      surface-container-lowest:
+        $value: "#ffffff"
+        $description: "Lowest elevation surface"
+      surface-container-low:
+        $value: "#f2f4f7"
+        $description: "Low elevation surface - Subtle tint"
+      surface-container:
+        $value: "#ecf0f3"
+        $description: "Standard elevation surface"
+      surface-container-high:
+        $value: "#e6e8eb"
+        $description: "High elevation surface"
+      surface-container-highest:
+        $value: "#e0e3e6"
+        $description: "Highest elevation surface - Dark tint"
+
+      # Text & Semantic Colors
+      on-surface:
+        $value: "#191c1e"
+        $description: "Primary text color on surfaces - Near black"
+      on-surface-variant:
+        $value: "#40493d"
+        $description: "Secondary text color - Grey-green"
+
+      # Outline & Borders
+      outline-variant:
+        $value: "rgba(112, 122, 108, 0.15)"
+        $description: "Subtle border color - 15% opacity"
+
+      # Inverse (Dark mode indicator)
+      inverse-surface:
+        $value: "#2d3133"
+        $description: "Inverse background - Dark grey (dark mode)"
+
+    # ============================================================================
+    # Spacing System
+    # ============================================================================
+    spacing:
+      $type: "dimension"
+      description: "Spacing scale based on 4px base unit"
+
+      xs:
+        $value: "4px"
+        $description: "Extra small - 1 unit"
+      sm:
+        $value: "8px"
+        $description: "Small - 2 units"
+      md:
+        $value: "16px"
+        $description: "Medium - 4 units (base)"
+      lg:
+        $value: "24px"
+        $description: "Large - 6 units"
+      xl:
+        $value: "32px"
+        $description: "Extra large - 8 units"
+      2xl:
+        $value: "48px"
+        $description: "2X large - 12 units"
+      3xl:
+        $value: "64px"
+        $description: "3X large - 16 units"
+
+    # ============================================================================
+    # Border Radius (Roundness)
+    # ============================================================================
+    border-radius:
+      $type: "dimension"
+      description: "Curvature scale for UI elements"
+
+      xs:
+        $value: "0.125rem"
+        $description: "Extra small - Subtle curve (2px)"
+      sm:
+        $value: "0.25rem"
+        $description: "Small - Light curve (4px)"
+      base:
+        $value: "0.5rem"
+        $description: "Base - Standard curve (8px)"
+      md:
+        $value: "0.75rem"
+        $description: "Medium - Rounded (12px)"
+      lg:
+        $value: "1rem"
+        $description: "Large - Fully rounded (16px)"
+      full:
+        $value: "9999px"
+        $description: "Full - Pill shape"
+
+    # ============================================================================
+    # Typography
+    # ============================================================================
+    typography:
+      $type: "typography"
+      description: "Font family and scale definitions"
+
+      font-family:
+        primary:
+          $value: "Inter, system-ui, -apple-system, sans-serif"
+          $description: "Primary font - Modern sans-serif"
+
+      font-size:
+        headline-lg:
+          $value: "2.25rem"
+          $description: "Large headline - 36px"
+        headline-md:
+          $value: "1.5rem"
+          $description: "Medium headline - 24px"
+        headline-sm:
+          $value: "1.125rem"
+          $description: "Small headline - 18px"
+        body-md:
+          $value: "1rem"
+          $description: "Body text - 16px"
+        label-sm:
+          $value: "0.75rem"
+          $description: "Small label - 12px"
+
+      font-weight:
+        light:
+          $value: 300
+          $description: "Light weight"
+        normal:
+          $value: 400
+          $description: "Regular weight"
+        medium:
+          $value: 500
+          $description: "Medium weight"
+        semibold:
+          $value: 600
+          $description: "Semi-bold weight"
+        bold:
+          $value: 700
+          $description: "Bold weight"
+        extrabold:
+          $value: 800
+          $description: "Extra bold weight"
+
+      line-height:
+        tight:
+          $value: 1.2
+          $description: "Tight line height"
+        normal:
+          $value: 1.5
+          $description: "Normal line height"
+        relaxed:
+          $value: 1.75
+          $description: "Relaxed line height"
+
+    # ============================================================================
+    # Shadows & Elevation
+    # ============================================================================
+    shadow:
+      $type: "shadow"
+      description: "Elevation and depth effects"
+
+      ambient:
+        $value: "0px 12px 32px rgba(25, 28, 30, 0.06)"
+        $description: "Ambient shadow - Subtle elevation"
+      none:
+        $value: "none"
+        $description: "No shadow"
+
+# ================================================================================
+# SEMANTIC LAYER: Alias Tokens (Meaning-Based)
+# ================================================================================
+  semantic:
+    color:
+      $type: "color"
+      description: "Semantic color aliases for UI intent"
+
+      # Brand & Hierarchy
+      primary:
+        $value: "{layers.core.color.primary}"
+        $description: "Primary brand color - CTA, primary actions"
+      primary-hover:
+        $value: "{layers.core.color.primary-container}"
+        $description: "Primary hover state - Lighter on interaction"
+
+      secondary:
+        $value: "{layers.core.color.secondary}"
+        $description: "Secondary actions and accents"
+
+      tertiary:
+        $value: "{layers.core.color.tertiary}"
+        $description: "Tertiary accent - Special emphasis"
+
+      # Backgrounds & Surfaces
+      background:
+        $value: "{layers.core.color.surface}"
+        $description: "Page background"
+      surface:
+        $value: "{layers.core.color.surface-bright}"
+        $description: "Card and elevated surfaces"
+      surface-low:
+        $value: "{layers.core.color.surface-container-low}"
+        $description: "Subtle surface - Group containers"
+      surface-high:
+        $value: "{layers.core.color.surface-container-high}"
+        $description: "Higher contrast surface - Secondary areas"
+
+      # Text
+      text-primary:
+        $value: "{layers.core.color.on-surface}"
+        $description: "Primary text - Body copy, headings"
+      text-secondary:
+        $value: "{layers.core.color.on-surface-variant}"
+        $description: "Secondary text - Captions, hints"
+      text-inverse:
+        $value: "{layers.core.color.surface-bright}"
+        $description: "Text on dark backgrounds"
+
+      # Status
+      error:
+        $value: "{layers.core.color.error}"
+        $description: "Error state and destructive actions"
+      error-background:
+        $value: "{layers.core.color.error-container}"
+        $description: "Error background - Error messages"
+      success:
+        $value: "{layers.core.color.primary}"
+        $description: "Success state - Positive feedback"
+
+      # Borders & Dividers
+      border:
+        $value: "{layers.core.color.outline-variant}"
+        $description: "Subtle border color (15% opacity)"
+      border-dark:
+        $value: "{layers.core.color.on-surface-variant}"
+        $description: "Strong border - Emphasis dividers"
+
+    # ============================================================================
+    # Spacing (Semantic)
+    # ============================================================================
+    spacing:
+      $type: "dimension"
+      description: "Semantic spacing for layout rhythm"
+
+      padding-xs:
+        $value: "{layers.core.spacing.xs}"
+      padding-sm:
+        $value: "{layers.core.spacing.sm}"
+      padding-md:
+        $value: "{layers.core.spacing.md}"
+      padding-lg:
+        $value: "{layers.core.spacing.lg}"
+      padding-xl:
+        $value: "{layers.core.spacing.xl}"
+
+      margin-xs:
+        $value: "{layers.core.spacing.xs}"
+      margin-sm:
+        $value: "{layers.core.spacing.sm}"
+      margin-md:
+        $value: "{layers.core.spacing.md}"
+      margin-lg:
+        $value: "{layers.core.spacing.lg}"
+      margin-xl:
+        $value: "{layers.core.spacing.xl}"
+
+      gap-xs:
+        $value: "{layers.core.spacing.xs}"
+      gap-sm:
+        $value: "{layers.core.spacing.sm}"
+      gap-md:
+        $value: "{layers.core.spacing.md}"
+      gap-lg:
+        $value: "{layers.core.spacing.lg}"
+
+# ================================================================================
+# COMPONENT LAYER: Composite Tokens
+# ================================================================================
+  component:
+    button:
+      $type: "composite"
+      description: "Button component tokens"
+
+      primary:
+        background:
+          $value: "{layers.semantic.color.primary}"
+        background-hover:
+          $value: "{layers.semantic.color.primary-hover}"
+        foreground:
+          $value: "{layers.semantic.color.text-inverse}"
+        padding-inline:
+          $value: "{layers.core.spacing.lg}"
+        padding-block:
+          $value: "{layers.core.spacing.md}"
+        border-radius:
+          $value: "{layers.core.border-radius.full}"
+        shadow:
+          $value: "{layers.core.shadow.ambient}"
+
+      secondary:
+        background:
+          $value: "{layers.core.color.surface-container-high}"
+        background-hover:
+          $value: "{layers.core.color.surface-container-highest}"
+        foreground:
+          $value: "{layers.semantic.color.text-primary}"
+        padding-inline:
+          $value: "{layers.core.spacing.lg}"
+        padding-block:
+          $value: "{layers.core.spacing.md}"
+        border-radius:
+          $value: "{layers.core.border-radius.full}"
+
+      ghost:
+        background: "transparent"
+        foreground:
+          $value: "{layers.semantic.color.text-secondary}"
+        foreground-hover:
+          $value: "{layers.semantic.color.primary}"
+        padding-inline:
+          $value: "{layers.core.spacing.md}"
+        padding-block:
+          $value: "{layers.core.spacing.sm}"
+
+    card:
+      $type: "composite"
+      description: "Card component tokens"
+
+      background:
+        $value: "{layers.core.color.surface-container-lowest}"
+      padding:
+        $value: "{layers.core.spacing.lg}"
+      border-radius:
+        $value: "{layers.core.border-radius.md}"
+      shadow:
+        $value: "{layers.core.shadow.ambient}"
+      accent-bar:
+        width: "4px"
+        background:
+          $value: "{layers.semantic.color.primary-hover}"
+        border-radius: "0 4px 4px 0"
+
+    input:
+      $type: "composite"
+      description: "Input field component tokens"
+
+      background:
+        $value: "{layers.core.color.surface-container-high}"
+      foreground:
+        $value: "{layers.semantic.color.text-primary}"
+      border-bottom-focus:
+        $value: "{layers.semantic.color.primary}"
+      padding:
+        $value: "{layers.core.spacing.md}"
+      border-radius:
+        $value: "{layers.core.border-radius.xs}"
+
+    typography:
+      $type: "composite"
+      description: "Typography component tokens"
+
+      headline-lg:
+        font-family:
+          $value: "{layers.core.typography.font-family.primary}"
+        font-size:
+          $value: "{layers.core.typography.font-size.headline-lg}"
+        font-weight:
+          $value: "{layers.core.typography.font-weight.bold}"
+        line-height: 1.2
+        letter-spacing: "-0.03em"
+
+      headline-md:
+        font-family:
+          $value: "{layers.core.typography.font-family.primary}"
+        font-size:
+          $value: "{layers.core.typography.font-size.headline-md}"
+        font-weight:
+          $value: "{layers.core.typography.font-weight.semibold}"
+        line-height: 1.3
+        letter-spacing: "-0.02em"
+
+      body-md:
+        font-family:
+          $value: "{layers.core.typography.font-family.primary}"
+        font-size:
+          $value: "{layers.core.typography.font-size.body-md}"
+        font-weight:
+          $value: "{layers.core.typography.font-weight.normal}"
+        line-height:
+          $value: "{layers.core.typography.line-height.normal}"
+
+      label-sm:
+        font-family:
+          $value: "{layers.core.typography.font-family.primary}"
+        font-size:
+          $value: "{layers.core.typography.font-size.label-sm}"
+        font-weight:
+          $value: "{layers.core.typography.font-weight.semibold}"
+        line-height: 1
+        letter-spacing: "0.08em"
+        text-transform: uppercase

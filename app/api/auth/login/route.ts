@@ -19,7 +19,7 @@ export async function POST(
 ): Promise<NextResponse<AuthResponse>> {
   try {
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.error("[CONFIG ERROR] Missing Supabase credentials in environment");
+      console.error("[CONFIG ERROR] Missing Supabase credentials (NEXT_PUBLIC_SUPABASE_URL/ANON_KEY)");
       return NextResponse.json(
         { success: false, error: "Authentication configuration error" },
         { status: 500 },

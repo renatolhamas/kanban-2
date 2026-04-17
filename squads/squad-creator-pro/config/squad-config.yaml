@@ -24,7 +24,7 @@ squad_config:
           type: database
           description: "Fetch transcripts from Supabase"
           connection:
-            url_env: SUPABASE_URL
+            url_env: NEXT_PUBLIC_SUPABASE_URL
             key_env: SUPABASE_SERVICE_KEY
           query:
             table: transcripts
@@ -144,7 +144,7 @@ squad_config:
       enabled: true
       status: optional
       connection:
-        url_env: SUPABASE_URL
+        url_env: NEXT_PUBLIC_SUPABASE_URL
         key_env: SUPABASE_SERVICE_KEY
 
     document:

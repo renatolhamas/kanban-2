@@ -13,10 +13,6 @@ dotenv.config({
   path: path.resolve(process.cwd(), '.env.local')
 });
 
-// Ensure tests can find SUPABASE_URL even if named NEXT_PUBLIC_SUPABASE_URL in .env.local
-if (!process.env.SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_URL) {
-  process.env.SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-}
 export default defineConfig({
   resolve: {
     alias: {

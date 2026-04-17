@@ -113,7 +113,7 @@ export default function ChangePasswordPage() {
           <form onSubmit={handleSubmit} className="space-y-6 p-6">
             {error && (
               <div
-                className="p-3 bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg text-destructive dark:text-destructive/80 text-sm"
+                className="p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm font-medium"
                 role="alert"
               >
                 {error}
@@ -122,7 +122,7 @@ export default function ChangePasswordPage() {
 
             {success && (
               <div
-                className="p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-300 text-sm"
+                className="p-3 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm font-medium"
                 role="alert"
               >
                 Password changed successfully!
@@ -132,7 +132,7 @@ export default function ChangePasswordPage() {
             <div>
               <label
                 htmlFor="currentPassword"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-sm font-medium text-on-surface mb-2"
               >
                 Current Password
               </label>
@@ -143,25 +143,15 @@ export default function ChangePasswordPage() {
                 onChange={(e) => handleFieldChange("currentPassword", e.target.value)}
                 placeholder="Enter current password"
                 disabled={loading}
-                aria-describedby={
-                  fieldErrors.currentPassword ? "currentPassword-error" : undefined
-                }
+                error={!!fieldErrors.currentPassword}
+                helperText={fieldErrors.currentPassword || undefined}
               />
-              {fieldErrors.currentPassword && (
-                <p
-                  id="currentPassword-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.currentPassword}
-                </p>
-              )}
             </div>
 
             <div>
               <label
                 htmlFor="newPassword"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-sm font-medium text-on-surface mb-2"
               >
                 New Password
               </label>
@@ -172,23 +162,15 @@ export default function ChangePasswordPage() {
                 onChange={(e) => handleFieldChange("newPassword", e.target.value)}
                 placeholder="Enter new password (min 8 characters)"
                 disabled={loading}
-                aria-describedby={fieldErrors.newPassword ? "newPassword-error" : undefined}
+                error={!!fieldErrors.newPassword}
+                helperText={fieldErrors.newPassword || undefined}
               />
-              {fieldErrors.newPassword && (
-                <p
-                  id="newPassword-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.newPassword}
-                </p>
-              )}
             </div>
 
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-sm font-medium text-on-surface mb-2"
               >
                 Confirm Password
               </label>
@@ -199,27 +181,18 @@ export default function ChangePasswordPage() {
                 onChange={(e) => handleFieldChange("confirmPassword", e.target.value)}
                 placeholder="Confirm new password"
                 disabled={loading}
-                aria-describedby={
-                  fieldErrors.confirmPassword ? "confirmPassword-error" : undefined
-                }
+                error={!!fieldErrors.confirmPassword}
+                helperText={fieldErrors.confirmPassword || undefined}
               />
-              {fieldErrors.confirmPassword && (
-                <p
-                  id="confirmPassword-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.confirmPassword}
-                </p>
-              )}
             </div>
 
             <Button
               type="submit"
               disabled={!isFormValid || loading}
+              loading={loading}
               className="w-full"
             >
-              {loading ? "Updating..." : "Update Password"}
+              Update Password
             </Button>
           </form>
       </Card>

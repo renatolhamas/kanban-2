@@ -76,7 +76,7 @@ export default function ResendConfirmationPage() {
           <form onSubmit={handleSubmit} className="space-y-6 p-6">
             {error && (
               <div
-                className="p-3 bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg text-destructive dark:text-destructive/80 text-sm"
+                className="p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm font-medium"
                 role="alert"
               >
                 {error}
@@ -85,7 +85,7 @@ export default function ResendConfirmationPage() {
 
             {success && (
               <div
-                className="p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-300 text-sm"
+                className="p-3 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm font-medium"
                 role="alert"
               >
                 Confirmation email sent! Check your inbox
@@ -93,7 +93,7 @@ export default function ResendConfirmationPage() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
                 Email Address
               </label>
               <Input
@@ -103,31 +103,24 @@ export default function ResendConfirmationPage() {
                 onChange={(e) => handleEmailChange(e.target.value)}
                 placeholder="name@company.com"
                 disabled={loading || success}
-                aria-describedby={emailError ? "email-error" : undefined}
+                error={!!emailError}
+                helperText={emailError || undefined}
               />
-              {emailError && (
-                <p
-                  id="email-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {emailError}
-                </p>
-              )}
             </div>
 
             {!success && (
               <Button
                 type="submit"
                 disabled={!isFormValid || loading}
+                loading={loading}
                 className="w-full"
               >
-                {loading ? "Sending..." : "Send confirmation email"}
+                Send confirmation email
               </Button>
             )}
 
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-text-secondary">
                 Already confirmed?{" "}
                 <a
                   href="/login"

@@ -24,6 +24,9 @@ Combinations of atoms:
 | Component | Purpose | Status |
 |-----------|---------|--------|
 | **[Card](./Card.md)** | Content container | ✅ Ready |
+| **[Badge](./Badge.md)** | Status and metadata tag | ✅ Ready |
+| **[Modal](./Modal.md)** | Dialog overlay container | ✅ Ready |
+| **[Toast](./Toast.md)** | Feedback notification | ✅ Ready |
 | FormField | Label + Input | 🔄 Planned |
 | ButtonGroup | Multiple buttons | 🔄 Planned |
 

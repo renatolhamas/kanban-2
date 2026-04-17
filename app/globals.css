@@ -17,152 +17,45 @@
 
 :root {
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     SPACING SCALE (8px Grid)
-     14 tokens: 0 → 16rem (256px)
+     ALIAS MAPPING (Legacy to Official)
+     Ensures existing @apply bg-primary etc. works
+     while using official v2.0 color values.
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --spacing-0: 0;
-  --spacing-1: 0.25rem; /* 4px */
-  --spacing-2: 0.5rem; /* 8px */
-  --spacing-3: 0.75rem; /* 12px */
-  --spacing-4: 1rem; /* 16px */
-  --spacing-5: 1.25rem; /* 20px */
-  --spacing-6: 1.5rem; /* 24px */
-  --spacing-8: 2rem; /* 32px */
-  --spacing-12: 3rem; /* 48px */
-  --spacing-16: 4rem; /* 64px */
-  --spacing-24: 6rem; /* 96px */
-  --spacing-32: 8rem; /* 128px */
-  --spacing-48: 12rem; /* 192px */
-  --spacing-64: 16rem; /* 256px */
+  --primary: var(--color-primary);
+  --primary-foreground: var(--color-text-inverse);
+  --primary-container: var(--color-primary-container);
+
+  --secondary: var(--color-secondary);
+  --secondary-foreground: var(--color-text-inverse);
+
+  --surface: var(--color-surface);
+  --surface-low: var(--color-surface-container-low);
+  --surface-lowest: var(--color-surface-container-lowest);
+  --surface-high: var(--color-surface-container-high);
+  --on-surface: var(--color-on-surface);
+
+  --color-danger: var(--color-error);
+  --color-success: var(--color-primary);
+  --color-warning: var(--color-primary-container);
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     TYPOGRAPHY: Font Sizes (Manrope)
-     8 tokens: xs (12px) → 4xl (32px)
+     LAYOUT & TYPOGRAPHY
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --font-size-xs: 0.75rem; /* 12px - Caption, helper text */
-  --font-size-sm: 0.875rem; /* 14px - Small text, labels */
-  --font-size-base: 1rem; /* 16px - Body text, default */
-  --font-size-lg: 1.125rem; /* 18px - Large body, emphasized */
-  --font-size-xl: 1.25rem; /* 20px - Section heading */
-  --font-size-2xl: 1.5rem; /* 24px - Page heading */
-  --font-size-3xl: 2rem; /* 32px - Major heading */
-  --font-size-4xl: 2.5rem; /* 40px - Hero heading (reserved) */
+  --radius: var(--radius-base);
+  --font-inter: var(--font-primary);
+  --font-manrope: var(--font-primary);
 
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     TYPOGRAPHY: Line Heights
-     3 tokens: tight (1.2) → relaxed (1.75)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --line-height-tight: 1.2; /* Headings, dense info */
-  --line-height-normal: 1.5; /* Body text, standard */
-  --line-height-relaxed: 1.75; /* Accessible, readable */
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     SHADOWS (ref: Story 2.6 Modal pattern)
-     5 tokens: sm → xl elevation levels
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --shadow-sm: 0px 2px 8px rgba(10, 25, 47, 0.04);
-  --shadow-base: 0px 4px 16px rgba(10, 25, 47, 0.06);
-  --shadow-md: 0px 8px 24px rgba(10, 25, 47, 0.08);
-  --shadow-lg: 0px 12px 32px rgba(10, 25, 47, 0.12);
-  --shadow-xl: 0px 20px 48px rgba(10, 25, 47, 0.16);
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     COLORS (Architectural Ledger)
-     10 tokens: Primary, Secondary, Status
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  /* Legacy HSL format (existing) */
-  --primary: 161 100% 21%; /* #006c49 - Emerald Action (darker) */
-  --primary-foreground: 0 0% 100%; /* #ffffff - White */
-  --primary-container: 161 100% 33%; /* #10b981 - Emerald Container (Ledger) */
-
-  --secondary: 216 16% 47%; /* #515f78 - Steel/Gray-Blue (Stitch alignment) */
-  --secondary-foreground: 0 0% 100%; /* #ffffff - White */
-
-  /* Primary Dark variant (for gradients and emphasis) */
-  --primary-dark: 163 100% 21%; /* #006c49 - Emerald Dark (Stitch alignment) */
-
-  /* New hex format for Story 2.7 tokens */
-  --color-primary: #10b981; /* Emerald 500 - Primary action */
-  --color-primary-dark: #006c49; /* Emerald 700 - Primary Dark (Stitch alignment) */
-  --color-secondary: #515f78; /* Steel/Gray-Blue - Secondary actions (Stitch alignment) */
-  --color-danger: #ef4444; /* Red 500 - Delete, error states */
-  --color-success: #22c55e; /* Green 500 - Confirmation, valid states */
-  --color-warning: #f59e0b; /* Amber 500 - Warnings, caution states */
-
-  /* Surface Hierarchy (Stitch-aligned) */
-  --surface: 210 20% 98.4%; /* #f7fafc - Crisp, cool background (Stitch) */
-  --surface-low: 210 16% 96.5%; /* #f1f4f6 - Slightly darker surface (Stitch) */
-  --surface-lowest: 0 0% 100%; /* #ffffff - Pure white (Stitch) */
-  --surface-high: 210 9% 92.5%; /* #e5e9eb - Subtle elevation (Stitch) */
-  --on-surface: 0 0% 9%; /* #191c1e - High contrast text */
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     ANIMATION TOKENS
-     5 tokens: Presets + Durations
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --animation-fade: fade 200ms ease-in-out;
-  --animation-scale: scale 200ms cubic-bezier(0.16, 1, 0.3, 1);
-  --animation-slide: slide 200ms ease-out;
-  --animation-duration-fast: 150ms;
-  --animation-duration-normal: 200ms;
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     BASE RADIUS
-     Geometric clarity: 8px standard
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --radius: 0.5rem; /* 8px - Geometric clarity */
-
-  /* Font Families (via Next.js font loader) */
-  --font-manrope: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Spacing Scale (Mapping to официальный scale) */
+  --spacing-1: var(--space-xs);
+  --spacing-2: var(--space-sm);
+  --spacing-4: var(--space-md);
+  --spacing-8: var(--space-xl);
 }
 
-/* ============================================
-   DARK MODE TOKENS (Story 2.10)
-   Activated via [data-theme="dark"] attribute
-   ============================================ */
-
 [data-theme="dark"] {
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     COLORS - Dark Mode Palette
-     Story 2.10 tokens optimized for dark backgrounds
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  /* Primary Colors (Dark Mode) */
-  --color-primary: #34d399; /* Emerald 400 - optimized for dark BG */
-  --color-secondary: #60a5fa; /* Blue 400 - optimized for dark BG */
-
-  /* Surface Hierarchy (Dark Mode) */
-  --surface: 217 33% 17%; /* #1f2937 - Gray 800 (base surface) */
-  --surface-low: 217 33% 13%; /* #111827 - Gray 900 (deeper) */
-  --surface-lowest: 217 33% 10%; /* #0f172a - Even darker depth */
-  --surface-high: 217 33% 25%; /* #2d3748 - Elevated surface */
-  --on-surface: 210 40% 96%; /* #f3f4f6 - Gray 100 (primary text) */
-
-  /* Text Colors (Dark Mode) */
-  --text-primary: #f3f4f6; /* Gray 100 - main text */
-  --text-secondary: #e5e7eb; /* Gray 200 - secondary/muted text */
-
-  /* Status Colors (Dark Mode) - adjusted for contrast */
-  --color-danger: #f87171; /* Red 400 - brighter for dark */
-  --color-success: #4ade80; /* Green 400 - brighter for dark */
-  --color-warning: #fbbf24; /* Amber 400 - brighter for dark */
-
-  /* Legacy HSL format (overridden for dark mode) */
-  --primary: 161 100% 40%; /* Emerald adjusted */
-  --primary-foreground: 0 0% 15%; /* Dark text on emerald */
-  --primary-container: 161 100% 35%; /* Container variant */
-
-  --secondary: 217 91% 60%; /* Blue adjusted */
-  --secondary-foreground: 0 0% 15%; /* Dark text on blue */
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     SHADOWS - Dark Mode (lighter for depth on dark BG)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  --shadow-sm: 0px 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-base: 0px 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0px 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0px 12px 32px rgba(0, 0, 0, 0.6);
-  --shadow-xl: 0px 20px 48px rgba(0, 0, 0, 0.7);
+  /* Official tokens already handle dark mode via [data-theme="dark"] 
+     in src/tokens/tokens.css if configured.
+     If not, we would alias them here. */
 }
 
 /* ============================================

@@ -100,7 +100,7 @@ function LoginPageContent() {
           >
             {error && (
               <div
-                className="p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-300 text-sm"
+                className="p-3 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm font-medium"
                 role="alert"
               >
                 {error}
@@ -108,7 +108,7 @@ function LoginPageContent() {
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
                 Email Address
               </label>
               <Input
@@ -118,23 +118,15 @@ function LoginPageContent() {
                 onChange={(e) => handleEmailChange(e.target.value)}
                 placeholder="name@company.com"
                 disabled={loading}
-                aria-describedby={emailError ? "email-error" : undefined}
+                error={!!emailError}
+                helperText={emailError || undefined}
               />
-              {emailError && (
-                <p
-                  id="email-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {emailError}
-                </p>
-              )}
             </div>
 
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-sm font-medium text-on-surface mb-2"
               >
                 Password
               </label>
@@ -145,29 +137,22 @@ function LoginPageContent() {
                 onChange={(e) => handlePasswordChange(e.target.value)}
                 placeholder="Enter your password"
                 disabled={loading}
-                aria-describedby={passwordError ? "password-error" : undefined}
+                error={!!passwordError}
+                helperText={passwordError || undefined}
               />
-              {passwordError && (
-                <p
-                  id="password-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {passwordError}
-                </p>
-              )}
             </div>
 
             <Button
               type="submit"
               disabled={!isFormValid || loading}
+              loading={loading}
               className="w-full"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              Sign in
             </Button>
 
             <div className="text-center space-y-3">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-text-secondary">
                 Don't have an account?{" "}
                 <a
                   href="/register"
@@ -176,7 +161,7 @@ function LoginPageContent() {
                   Register
                 </a>
               </p>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-text-secondary">
                 Password Issues:{" "}
                 <a
                   href="/forgot-password"
@@ -203,8 +188,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <p className="text-muted-foreground">Loading...</p>
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <p className="text-text-secondary">Loading...</p>
         </div>
       }
     >

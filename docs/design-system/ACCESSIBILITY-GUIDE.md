@@ -73,6 +73,34 @@ All components are tested with:
 **ARIA:**
 - No explicit ARIA needed (semantic HTML sufficient)
 
+### Badge
+
+**Visual Context:**
+- High contrast colors for all status variants.
+- Semantic color mapping (green=success, red=error).
+
+**ARIA:**
+- Standard generic containers; text content read naturally.
+- For purely decorative badges, use `aria-hidden="true"`.
+
+### Modal
+
+**Keyboard Support:**
+- **Tab / Shift+Tab** — Focus trap within modal
+- **Escape** — Close modal
+- **Backdrop Click** — Close modal (managed via native `<dialog>`)
+
+**ARIA:**
+- Uses native `<dialog>` element for robust role and focus management.
+- `aria-label="Close dialog"` on integrated close button.
+- Title context provided via semantic `<h2>` within header.
+
+### Toast
+
+**Lifecycle:**
+- Currently implemented as context-only (console logs).
+- Future UI implementation will use `aria-live="polite"` for non-disruptive announcements.
+
 ## Design Principles
 
 ### 1. Color Alone is Not Sufficient

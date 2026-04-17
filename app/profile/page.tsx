@@ -100,9 +100,9 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background dark:bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground">Loading profile...</p>
+          <p className="text-text-secondary">Loading profile...</p>
         </div>
       </div>
     );
@@ -110,59 +110,59 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background dark:bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <p className="text-muted-foreground">Failed to load profile</p>
+          <p className="text-text-secondary">Failed to load profile</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background dark:bg-background">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-2xl mx-auto p-6">
         <Card>
           <div className="p-6 space-y-8">
-            <h1 className="text-3xl font-bold text-foreground">Profile Settings</h1>
+            <h1 className="text-headline-md font-bold text-on-surface">Profile Settings</h1>
 
             {/* User Info Section */}
             <div className="pb-8 border-b border-border">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">Account Information</h2>
+              <h2 className="text-headline-sm font-semibold mb-4 text-on-surface">Account Information</h2>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">
+                  <label className="block text-sm font-medium text-on-surface mb-1">
                     Name
                   </label>
-                  <p className="text-lg text-foreground">{user.name}</p>
+                  <p className="text-lg text-on-surface">{user.name}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">
+                  <label className="block text-sm font-medium text-on-surface mb-1">
                     Email
                   </label>
-                  <p className="text-lg text-foreground">{user.email}</p>
+                  <p className="text-lg text-on-surface">{user.email}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1">
+                  <label className="block text-sm font-medium text-on-surface mb-1" id="role-label">
                     Role
                   </label>
-                  <p className="text-lg text-foreground capitalize">{user.role}</p>
+                  <p className="text-lg text-on-surface capitalize" aria-labelledby="role-label">{user.role}</p>
                 </div>
               </div>
             </div>
 
             {/* Password Change Section */}
             <div>
-              <h2 className="text-xl font-semibold mb-4 text-foreground">Change Password</h2>
+              <h2 className="text-headline-sm font-semibold mb-4 text-on-surface">Change Password</h2>
 
               {success && (
                 <div
-                  className="mb-6 p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg"
+                  className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg"
                   role="alert"
                 >
-                  <p className="text-green-700 dark:text-green-300 font-semibold">
+                  <p className="text-primary font-semibold">
                     Password updated successfully!
                   </p>
                 </div>
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                 <div>
                   <label
                     htmlFor="new-password"
-                    className="block text-sm font-medium text-foreground mb-2"
+                    className="block text-sm font-medium text-on-surface mb-2"
                   >
                     New Password
                   </label>
@@ -187,14 +187,14 @@ export default function ProfilePage() {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
                     disabled={saving}
-                    aria-describedby={error ? "password-error" : undefined}
+                    error={!!error}
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="confirm-password"
-                    className="block text-sm font-medium text-foreground mb-2"
+                    className="block text-sm font-medium text-on-surface mb-2"
                   >
                     Confirm Password
                   </label>
@@ -206,28 +206,16 @@ export default function ProfilePage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm new password"
                     disabled={saving}
-                    aria-describedby={
-                      confirmPassword && newPassword !== confirmPassword
-                        ? "confirm-error"
-                        : undefined
-                    }
+                    error={confirmPassword !== "" && newPassword !== confirmPassword}
+                    helperText={confirmPassword !== "" && newPassword !== confirmPassword ? "Passwords do not match" : undefined}
                   />
-                  {confirmPassword && newPassword !== confirmPassword && (
-                    <p
-                      id="confirm-error"
-                      role="alert"
-                      className="mt-2 text-sm text-destructive"
-                    >
-                      Passwords do not match
-                    </p>
-                  )}
                 </div>
 
                 {error && (
                   <div
                     id="password-error"
                     role="alert"
-                    className="p-3 bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg text-destructive dark:text-destructive/80 text-sm"
+                    className="p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm font-medium"
                   >
                     {error}
                   </div>
@@ -241,15 +229,16 @@ export default function ProfilePage() {
                     newPassword !== confirmPassword ||
                     saving
                   }
+                  loading={saving}
                   className="w-full"
                 >
-                  {saving ? "Updating..." : "Update Password"}
+                  Update Password
                 </Button>
               </form>
             </div>
 
             {/* Logout Section */}
-            <div className="pt-8 border-t border-border">
+            <div className="pt-8 border-t border-color-on-surface-variant/10">
               <form action="/api/auth/logout" method="POST">
                 <Button type="submit" variant="secondary" className="w-full sm:w-auto">
                   Logout

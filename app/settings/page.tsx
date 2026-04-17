@@ -268,22 +268,23 @@ export default function SettingsPage() {
         )}
 
         {state === 'loading' && (
-          <div className="space-y-4">
+          <div className="space-y-4 py-8">
             <div
               role="status"
               aria-live="polite"
               aria-label="Carregando código QR"
-              className="flex items-center gap-2"
+              className="flex flex-col items-center justify-center gap-4"
             >
-              <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
-              <span>Gerando código QR...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
+              <span className="text-sm font-medium text-text-secondary">Gerando código QR...</span>
             </div>
           </div>
         )}
 
         {state === 'qr_displayed' && qrCode && (
-          <div className="space-y-4">
-            <div
+          <div className="space-y-6">
+            <div 
+              className="relative p-4 bg-white border border-color-outline-variant rounded-lg shadow-ambient mx-auto w-fit"
               role="status"
               aria-live="polite"
               aria-label={`Código QR expirado em ${formatTimer(timerSeconds)}`}
@@ -291,31 +292,27 @@ export default function SettingsPage() {
               <img
                 src={qrCode}
                 alt="QR Code para pareamento WhatsApp"
-                className="w-64 h-64 border-2 border-gray-200 rounded mx-auto"
+                className="w-64 h-64 mx-auto"
               />
+              <div className="absolute inset-x-0 -bottom-3 flex justify-center">
+                 <Badge variant="neutral" className="bg-surface-container-highest shadow-sm">
+                   Aguardando...
+                 </Badge>
+              </div>
             </div>
 
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
+            <div className="text-center pt-4">
+              <p className="text-sm text-text-secondary">
                 Expira em:{' '}
                 <span
                   className={`font-bold ${
-                    timerSeconds <= 60 ? 'text-red-600' : 'text-blue-600'
+                    timerSeconds <= 60 ? 'text-error' : 'text-primary'
                   }`}
                   aria-label={`Tempo restante: ${formatTimer(timerSeconds)}`}
                 >
                   {formatTimer(timerSeconds)}
                 </span>
               </p>
-            </div>
-
-            <div
-              role="status"
-              aria-live="polite"
-              aria-label="Aguardando confirmação de pareamento"
-              className="text-center text-sm text-gray-500"
-            >
-              Aguardando confirmação...
             </div>
           </div>
         )}
@@ -350,12 +347,11 @@ export default function SettingsPage() {
             </div>
             <Button
               onClick={handleDisconnectClick}
-              disabled={isDisconnecting}
+              loading={isDisconnecting}
               variant="secondary"
               aria-label="Desconectar WhatsApp"
-              aria-busy={isDisconnecting}
             >
-              {isDisconnecting ? 'Desconectando...' : 'Desconectar'}
+              Desconectar
             </Button>
           </div>
         )}
@@ -383,10 +379,10 @@ export default function SettingsPage() {
             <Button
               onClick={handleConfirmDisconnect}
               variant="secondary"
-              disabled={isDisconnecting}
+              loading={isDisconnecting}
               aria-label="Confirmar desconexão"
             >
-              {isDisconnecting ? 'Desconectando...' : 'Desconectar'}
+              Desconectar
             </Button>
           </div>
         </div>

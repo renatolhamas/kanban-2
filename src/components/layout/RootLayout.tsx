@@ -46,7 +46,7 @@ export function RootLayout({ children }: RootLayoutProps) {
   const isAuthPage = AUTH_PAGES.some((page) => pathname.startsWith(page));
 
   return (
-    <div className="flex h-screen flex-col bg-white dark:bg-gray-900">
+    <div className="flex h-screen flex-col bg-surface text-on-surface">
       {/* Header - Always visible */}
       <Header />
 

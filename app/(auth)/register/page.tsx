@@ -116,7 +116,7 @@ export default function RegisterPage() {
           >
             {error && (
               <div
-                className="p-3 bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg text-destructive dark:text-destructive/80 text-sm"
+                className="p-3 bg-error/10 border border-error/20 rounded-lg text-error text-sm font-medium"
                 role="alert"
               >
                 {error}
@@ -124,7 +124,7 @@ export default function RegisterPage() {
             )}
 
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-on-surface mb-2">
                 Full Name
               </label>
               <Input
@@ -134,21 +134,13 @@ export default function RegisterPage() {
                 onChange={(e) => handleFieldChange("name", e.target.value)}
                 placeholder="John Doe"
                 disabled={loading}
-                aria-describedby={fieldErrors.name ? "name-error" : undefined}
+                error={!!fieldErrors.name}
+                helperText={fieldErrors.name || undefined}
               />
-              {fieldErrors.name && (
-                <p
-                  id="name-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.name}
-                </p>
-              )}
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-on-surface mb-2">
                 Email Address
               </label>
               <Input
@@ -158,23 +150,15 @@ export default function RegisterPage() {
                 onChange={(e) => handleFieldChange("email", e.target.value)}
                 placeholder="name@company.com"
                 disabled={loading}
-                aria-describedby={fieldErrors.email ? "email-error" : undefined}
+                error={!!fieldErrors.email}
+                helperText={fieldErrors.email || undefined}
               />
-              {fieldErrors.email && (
-                <p
-                  id="email-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.email}
-                </p>
-              )}
             </div>
 
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-sm font-medium text-on-surface mb-2"
               >
                 Password
               </label>
@@ -185,23 +169,15 @@ export default function RegisterPage() {
                 onChange={(e) => handleFieldChange("password", e.target.value)}
                 placeholder="At least 8 characters"
                 disabled={loading}
-                aria-describedby={fieldErrors.password ? "password-error" : undefined}
+                error={!!fieldErrors.password}
+                helperText={fieldErrors.password || undefined}
               />
-              {fieldErrors.password && (
-                <p
-                  id="password-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.password}
-                </p>
-              )}
             </div>
 
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="block text-sm font-medium text-on-surface mb-2"
               >
                 Confirm Password
               </label>
@@ -214,31 +190,22 @@ export default function RegisterPage() {
                 }
                 placeholder="Confirm password"
                 disabled={loading}
-                aria-describedby={
-                  fieldErrors.confirmPassword ? "confirmPassword-error" : undefined
-                }
+                error={!!fieldErrors.confirmPassword}
+                helperText={fieldErrors.confirmPassword || undefined}
               />
-              {fieldErrors.confirmPassword && (
-                <p
-                  id="confirmPassword-error"
-                  role="alert"
-                  className="mt-2 text-sm text-destructive"
-                >
-                  {fieldErrors.confirmPassword}
-                </p>
-              )}
             </div>
 
             <Button
               type="submit"
               disabled={!isFormValid || loading}
+              loading={loading}
               className="w-full"
             >
-              {loading ? "Creating account..." : "Create account"}
+              Create account
             </Button>
 
             <div className="text-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-text-secondary">
                 Already have an account?{" "}
                 <a
                   href="/login"

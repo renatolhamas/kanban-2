@@ -58,10 +58,22 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const Comp = asChild ? Slot : "button"
+    // asChild path: render children directly via Slot (no extra wrappers)
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, loading: false }), className)}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </Slot>
+      )
+    }
 
+    // Default path: full-featured button with loading/icon support
     return (
-      <Comp
+      <button
         className={cn(buttonVariants({ variant, size, loading }), className)}
         disabled={disabled || loading}
         aria-disabled={disabled || loading}
@@ -79,7 +91,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {icon && <span className="flex-shrink-0">{icon}</span>}
         {children && <span>{children}</span>}
-      </Comp>
+      </button>
     )
   }
 )

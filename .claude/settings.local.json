@@ -76,7 +76,8 @@
       "Bash(ls -la *.tsx)",
       "Bash(rm -f badge.tsx card.tsx input.tsx skeleton.tsx spinner.tsx textarea.tsx theme-toggle.tsx theme-toggle.test.tsx)",
       "Bash(netstat -ano)",
-      "Bash(powershell -File .\\\\run.ps1)"
+      "Bash(powershell -File .\\\\run.ps1)",
+      "Bash(npx playwright:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

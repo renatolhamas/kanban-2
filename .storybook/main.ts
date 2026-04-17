@@ -1,4 +1,5 @@
-import type { StorybookConfig } from '@storybook/react-webpack5';
+import type { StorybookConfig } from '@storybook/nextjs-vite';
+import path from 'path';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(ts|tsx)'],
@@ -10,23 +11,20 @@ const config: StorybookConfig = {
     '@storybook/addon-a11y',
   ],
   framework: {
-    name: '@storybook/react-webpack5',
+    name: '@storybook/nextjs-vite',
     options: {},
   },
   docs: {
     autodocs: 'tag',
   },
   webpackFinal: async (config) => {
-    return {
-      ...config,
-      resolve: {
-        ...config.resolve,
-        alias: {
-          ...config.resolve?.alias,
-          '@': require('path').resolve(__dirname, '../src'),
-        },
-      },
-    };
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, '../src'),
+      };
+    }
+    return config;
   },
 };
 

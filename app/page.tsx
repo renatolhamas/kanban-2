@@ -19,16 +19,12 @@ export default function Home() {
           </div>
 
           <div className="flex gap-4 w-full flex-col sm:flex-row">
-            <Link href="/register" className="flex-1" passHref>
-              <Button variant="primary" className="w-full" asChild>
-                <span>Register</span>
-              </Button>
-            </Link>
-            <Link href="/login" className="flex-1" passHref>
-              <Button variant="secondary" className="w-full" asChild>
-                <span>Login</span>
-              </Button>
-            </Link>
+            <Button variant="primary" className="w-full flex-1" asChild>
+              <Link href="/register">Register</Link>
+            </Button>
+            <Button variant="secondary" className="w-full flex-1" asChild>
+              <Link href="/login">Login</Link>
+            </Button>
           </div>
         </div>
       </Card>

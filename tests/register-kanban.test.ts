@@ -18,7 +18,7 @@ let testTenantId: string;
 describe("Register Integration - Kanban Auto-Creation", () => {
   beforeEach(async () => {
     // Initialize Supabase client
-    const url = process.env.SUPABASE_URL || "";
+    const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || "";
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
     if (!url || !key) {

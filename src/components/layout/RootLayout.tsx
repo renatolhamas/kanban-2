@@ -3,6 +3,7 @@
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 /**
  * RootLayout Component
@@ -41,6 +42,7 @@ const AUTH_PAGES = ['/login', '/register', '/forgot-password', '/reset-password'
 
 export function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname();
+  const { isAuthenticated, isLoading } = useAuth();
   const isAuthPage = AUTH_PAGES.some((page) => pathname.startsWith(page));
 
   return (
@@ -50,8 +52,8 @@ export function RootLayout({ children }: RootLayoutProps) {
 
       {/* Main Content Area */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar - Hidden on auth pages, visible on protected pages */}
-        {!isAuthPage && <Sidebar />}
+        {/* Sidebar - Visible only if: authenticated + not auth page + loaded */}
+        {!isAuthPage && !isLoading && isAuthenticated && <Sidebar />}
 
         {/* Main Content */}
         <main

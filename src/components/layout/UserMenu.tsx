@@ -57,8 +57,8 @@ export function UserMenu() {
 
   const handleLogout = async () => {
     try {
-      // Clear auth state (simplified - depends on your auth implementation)
-      localStorage.removeItem('auth_token');
+      // Call logout API to clear httpOnly cookie
+      await fetch('/api/auth/logout', { method: 'POST' });
       router.push('/login');
     } catch (error) {
       console.error('Logout failed:', error);

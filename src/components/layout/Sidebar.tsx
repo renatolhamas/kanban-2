@@ -35,7 +35,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   {
     label: 'Home',
-    href: '/',
+    href: '/home',
     icon: <Home size={20} />,
   },
   {
@@ -53,12 +53,7 @@ const NAV_ITEMS: NavItem[] = [
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
-  const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/';
-    }
-    return pathname.startsWith(href);
-  };
+  const isActive = (href: string) => pathname.startsWith(href);
 
   return (
     <div className="flex flex-col gap-1 p-4">

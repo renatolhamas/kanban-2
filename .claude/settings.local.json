@@ -74,7 +74,9 @@
       "Bash(cp /mnt/c/git/kanban.2/docs/design-system/tokens/tokens.css /mnt/c/git/kanban.2/src/tokens/)",
       "Bash(ls -la tailwind.config.*)",
       "Bash(ls -la *.tsx)",
-      "Bash(rm -f badge.tsx card.tsx input.tsx skeleton.tsx spinner.tsx textarea.tsx theme-toggle.tsx theme-toggle.test.tsx)"
+      "Bash(rm -f badge.tsx card.tsx input.tsx skeleton.tsx spinner.tsx textarea.tsx theme-toggle.tsx theme-toggle.test.tsx)",
+      "Bash(netstat -ano)",
+      "Bash(powershell -File .\\\\run.ps1)"
     ]
   },
   "enableAllProjectMcpServers": true,

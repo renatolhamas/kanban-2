@@ -13,31 +13,40 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Public routes that don't require authentication
-  const publicRoutes = [
-    "/login",
-    "/register",
-    "/resend-confirmation",
-    "/forgot-password",
-    "/change-password",
-    "/",
+  // Rotas de API públicas — nunca redirecionar, apenas liberar
+  const publicApiRoutes = [
     "/api/auth/login",
     "/api/auth/register",
     "/api/auth/resend-confirmation",
     "/api/auth/forgot-password",
     "/api/auth/change-password",
+    "/api/auth/me",  // Usado pelo AuthContext client-side para verificar sessão
+  ];
+
+  // Rotas de página públicas — redirecionar usuário autenticado para home
+  const publicPageRoutes = [
+    "/login",
+    "/register",
+    "/resend-confirmation",
+    "/forgot-password",
+    "/change-password",
   ];
 
   // Get JWT from cookie
   const token = request.cookies.get("auth_token")?.value;
 
-  // Se autenticado tentando acessar rota pública → redireciona para home
-  if (publicRoutes.includes(pathname) && token) {
+  // Rotas de API públicas: sempre liberar, nunca redirecionar
+  if (publicApiRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  // Se autenticado tentando acessar página pública → redireciona para home
+  if (publicPageRoutes.includes(pathname) && token) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Check if route is public
-  if (publicRoutes.includes(pathname)) {
+  // Páginas públicas sem autenticação: liberar
+  if (publicPageRoutes.includes(pathname)) {
     return NextResponse.next();
   }
 

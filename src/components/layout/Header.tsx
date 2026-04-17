@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { UserMenu } from '@/components/layout/UserMenu';
 
@@ -39,6 +40,7 @@ const AUTH_PAGES = ['/login', '/register', '/forgot-password', '/reset-password'
 
 export function Header() {
   const pathname = usePathname();
+  const { isAuthenticated, isLoading } = useAuth();
   const isAuthPage = AUTH_PAGES.some((page) => pathname.startsWith(page));
   const pageTitle = PAGE_TITLES[pathname] || 'Kanban App';
 
@@ -71,8 +73,8 @@ export function Header() {
           {/* Theme Toggle */}
           <ThemeToggle />
 
-          {/* User Menu - Hidden on auth pages */}
-          {!isAuthPage && <UserMenu />}
+          {/* User Menu - Visible only if authenticated + not loading + not auth page */}
+          {!isAuthPage && !isLoading && isAuthenticated && <UserMenu />}
         </div>
       </div>
     </header>

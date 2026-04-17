@@ -1,0 +1,19 @@
+﻿{
+  "colors": {
+    "mappings": [
+      { "old": "#10b981", "new": "--color-primary", "note": "Unifying Emerald to Deep Forest Green" },
+      { "old": "#006c49", "new": "--color-primary-hover", "note": "Emerald Dark to Primary Hover" },
+      { "old": "#515f78", "new": "--color-secondary", "note": "Steel Blue to Official Secondary" },
+      { "old": "#f7fafc", "new": "--color-surface", "note": "Normalization of light surface" },
+      { "old": "#ef4444", "new": "--color-error", "note": "Standardizing danger red" }
+    ],
+    "reduction": "82%"
+  },
+  "components": {
+    "mappings": [
+      { "old": "btn-horror", "new": "Button variant='primary'", "note": "Consolidating custom button classes" },
+      { "old": "button-primary", "new": "Button variant='primary'", "note": "Legacy naming" }
+    ],
+    "reduction": "91%"
+  }
+}

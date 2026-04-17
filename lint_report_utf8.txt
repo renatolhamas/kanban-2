@@ -1,0 +1,53 @@
+﻿
+C:\git\kanban.2\.storybook\main.ts
+   7:5   error    The @storybook/addon-links is not installed in kanban.2\. Did you forget to install it or is your package.json in a different location?         storybook/no-uninstalled-addons
+   8:5   error    The @storybook/addon-essentials is not installed in kanban.2\. Did you forget to install it or is your package.json in a different location?    storybook/no-uninstalled-addons
+   9:5   error    The @storybook/addon-interactions is not installed in kanban.2\. Did you forget to install it or is your package.json in a different location?  storybook/no-uninstalled-addons
+  26:16  warning  A `require()` style import is forbidden                                                                                                         @typescript-eslint/no-require-imports
+
+C:\git\kanban.2\scripts\test-evo-go-endpoints.ts
+  70:12  warning  'error' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+  81:25  warning  Unexpected any. Specify a different type                                          @typescript-eslint/no-explicit-any
+
+C:\git\kanban.2\scripts\test-rls-isolation.ts
+  33:7   warning  'supabase' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  39:10  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+  78:36  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+
+C:\git\kanban.2\src\components\ui\__stories__\theme-toggle.stories.tsx
+  1:1  error  Do not import renderer package "@storybook/react" directly. Use a framework package instead (e.g. @storybook/nextjs, @storybook/react-vite, @storybook/nextjs-vite, @storybook/react-webpack5, @storybook/react-native-web-vite)  storybook/no-renderer-packages
+
+C:\git\kanban.2\src\components\ui\__tests__\theme-toggle.test.tsx
+  78:13  warning  'rerender' is assigned a value but never used. Allowed unused vars must match /^_/u  no-unused-vars
+
+C:\git\kanban.2\src\components\ui\atoms\button.stories.tsx
+  1:1  error  Do not import renderer package "@storybook/react" directly. Use a framework package instead (e.g. @storybook/nextjs, @storybook/react-vite, @storybook/nextjs-vite, @storybook/react-webpack5, @storybook/react-native-web-vite)  storybook/no-renderer-packages
+
+C:\git\kanban.2\src\components\ui\atoms\input.stories.tsx
+  1:1  error  Do not import renderer package "@storybook/react" directly. Use a framework package instead (e.g. @storybook/nextjs, @storybook/react-vite, @storybook/nextjs-vite, @storybook/react-webpack5, @storybook/react-native-web-vite)  storybook/no-renderer-packages
+
+C:\git\kanban.2\src\components\ui\molecules\card.stories.tsx
+  1:1  error  Do not import renderer package "@storybook/react" directly. Use a framework package instead (e.g. @storybook/nextjs, @storybook/react-vite, @storybook/nextjs-vite, @storybook/react-webpack5, @storybook/react-native-web-vite)  storybook/no-renderer-packages
+
+C:\git\kanban.2\src\components\ui\molecules\modal.tsx
+  10:19  warning  'open' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\git\kanban.2\src\components\ui\molecules\toast.tsx
+   4:10  warning  'X' is defined but never used. Allowed unused vars must match /^_/u        no-unused-vars
+  14:14  warning  'message' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  14:31  warning  'type' is defined but never used. Allowed unused args must match /^_/u     no-unused-vars
+  15:17  warning  'id' is defined but never used. Allowed unused args must match /^_/u       no-unused-vars
+  27:24  warning  'id' is defined but never used. Allowed unused args must match /^_/u       no-unused-vars
+
+C:\git\kanban.2\src\lib\utils.ts
+  17:18  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  33:18  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  42:18  warning  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+C:\git\kanban.2\tests\setup.ts
+  3:15  warning  'toHaveNoViolations' is defined but never used. Allowed unused vars must match /^_/u  no-unused-vars
+  7:13  warning  'jest' is defined but never used. Allowed unused vars must match /^_/u                no-unused-vars
+  8:15  warning  'Matchers' is defined but never used. Allowed unused vars must match /^_/u            no-unused-vars
+
+Ô£û 26 problems (7 errors, 19 warnings)
+

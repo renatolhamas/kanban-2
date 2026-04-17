@@ -14,12 +14,16 @@ dotenv.config({
 });
 
 export default defineConfig({
+  envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.')
     }
   },
   test: {
+    env: {
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+    },
     // Reporters
     reporters: ['verbose'],
     // Coverage configuration

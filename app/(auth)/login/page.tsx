@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/atoms/button";
 import { Input } from "@/components/ui/atoms/input";
 import { Card } from "@/components/ui/molecules/card";
@@ -9,6 +10,7 @@ import { Card } from "@/components/ui/molecules/card";
 function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,6 +74,11 @@ function LoginPageContent() {
 
       if (!response.ok) {
         throw new Error(data.error || "Login failed");
+      }
+
+      // Update auth context immediately before navigation
+      if (data.sub) {
+        login({ sub: data.sub, email });
       }
 
       // Redirect on success

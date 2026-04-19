@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import { AUTH_PAGES } from '@/lib/auth-pages';
 
 /**
  * RootLayout Component
@@ -36,9 +37,6 @@ import { useAuth } from '@/hooks/useAuth';
 interface RootLayoutProps {
   children: React.ReactNode;
 }
-
-// Pages that should NOT show the sidebar
-const AUTH_PAGES = ['/login', '/register', '/forgot-password', '/reset-password'];
 
 export function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname();

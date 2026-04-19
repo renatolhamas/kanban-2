@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { UserMenu } from '@/components/layout/UserMenu';
+import { AUTH_PAGES } from '@/lib/auth-pages';
 
 /**
  * Header Component (Refactored for Story 2.11)
@@ -35,8 +36,6 @@ const PAGE_TITLES: PageTitleMap = {
   '/login': 'Sign In',
   '/register': 'Sign Up',
 };
-
-const AUTH_PAGES = ['/login', '/register', '/forgot-password', '/reset-password', '/resend-confirmation', '/change-password'];
 
 export function Header() {
   const pathname = usePathname();

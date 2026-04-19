@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 
 /**
  * AuthContextValue — contrato público de autenticação
@@ -9,6 +9,8 @@ export interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
   user: { sub: string } | null;
+  login: (user: { sub: string; email?: string }) => void;
+  logout: () => void;
 }
 
 /**
@@ -24,6 +26,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<{ sub: string } | null>(null);
+
+  const login = useCallback((userData: { sub: string; email?: string }) => {
+    setIsAuthenticated(true);
+    setUser({ sub: userData.sub });
+  }, []);
+
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
+    setUser(null);
+  }, []);
 
   useEffect(() => {
     /**
@@ -57,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

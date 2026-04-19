@@ -86,7 +86,7 @@ Components organized by complexity:
 No 1px borders. Depth through background colors.
 
 ### Token-Based
-All styling from design tokens. Zero hardcoded values.
+All styling from design tokens. Zero hardcoded values. The "technical heart" (colors, spacing, shadows) resides in the [Design Tokens](../design-system/tokens/) system.
 
 ### Accessible
 WCAG 2.2 AA compliant. Keyboard + screen reader ready.

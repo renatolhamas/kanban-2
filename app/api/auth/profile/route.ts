@@ -3,8 +3,7 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { validatePassword } from "@/lib/password";
-import { verifyJWT } from "@/lib/jwt";
-import { getJWTFromCookie } from "@/lib/auth";
+import { auth, AuthError } from "@/lib/middleware/auth";
 import type { AuthResponse } from "@/lib/types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -26,23 +25,8 @@ export async function GET(
       );
     }
 
+    const payload = await auth(request);
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-    const token = getJWTFromCookie(request.headers.get("cookie"));
-
-    if (!token) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
-    }
-
-    const payload = await verifyJWT(token);
-    if (!payload) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
-    }
 
     // Fetch user profile
     const { data: user, error } = await supabase
@@ -63,6 +47,12 @@ export async function GET(
       { status: 200 },
     );
   } catch (error) {
+    if (error instanceof AuthError) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 401 },
+      );
+    }
     console.error("Profile fetch error:", error);
     return NextResponse.json(
       { success: false, error: "An error occurred. Please try again later." },
@@ -89,23 +79,8 @@ export async function PUT(
       );
     }
 
+    const payload = await auth(request);
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-    const token = getJWTFromCookie(request.headers.get("cookie"));
-
-    if (!token) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
-    }
-
-    const payload = await verifyJWT(token);
-    if (!payload) {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 },
-      );
-    }
 
     const body = await request.json();
     const { newPassword } = body;
@@ -149,6 +124,12 @@ export async function PUT(
       { status: 200 },
     );
   } catch (error) {
+    if (error instanceof AuthError) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 401 },
+      );
+    }
     console.error("Profile update error:", error);
     return NextResponse.json(
       { success: false, error: "An error occurred. Please try again later." },

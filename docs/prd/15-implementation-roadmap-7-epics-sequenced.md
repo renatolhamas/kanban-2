@@ -88,17 +88,18 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 ## Epic 5: EVOLUTION PHASE 2 (DB Integration)
 
-**Objetivo:** End-to-end message flow, webhook → DB → UI
+**Objetivo:** End-to-end message flow, webhook → DB → UI with optimized queries
 
 **Stories:**
 
 - Story 5.1: Webhook handler → auto-register contacts (application-layer)
 - Story 5.2: Webhook handler → auto-create conversations (application-layer)
 - Story 5.3: Webhook → save messages to DB
-- Story 5.4: Send message UI → Evo GO
-- Story 5.5: Message delivery validation
+- Story 5.4: Last message preview (SQL subquery optimization + UI display) — *resgate da Story 4.2 exclusion*
+- Story 5.5: Send message UI → Evo GO
+- Story 5.6: Message delivery validation
 
-**Outputs:** Messages flowing end-to-end
+**Outputs:** Messages flowing end-to-end with optimized preview queries
 
 ---
 
@@ -158,13 +159,13 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 | **Epic 2 (Adaptive)** | **3-4 semanas**   | **Semanas 6+ paralelo** | **Stories 2.6-2.12** — Conforme necessidade real de Epics 3-4 |
 | Epic 3          | 1-2 semanas     | Semanas 7-8       | Evolution Setup |
 | Epic 4          | 2 semanas       | Semanas 9-10      | Kanban Board |
-| Epic 5          | 2 semanas       | Semanas 11-12     | Evolution Phase 2 |
-| Epic 6          | 2 semanas       | Semanas 13-14     | Chat & Real-time |
-| Epic 7          | 1-2 semanas     | Semanas 15-16     | Settings |
-| Epic 8          | 1 semana        | Semanas 17        | Automação |
-| **QA & Polish** | **1-2 semanas** | **Semanas 18-19** | Final validation |
+| Epic 5          | 2-3 semanas     | Semanas 11-13     | Evolution Phase 2 + Message optimization |
+| Epic 6          | 2 semanas       | Semanas 14-15     | Chat & Real-time |
+| Epic 7          | 1-2 semanas     | Semanas 16-17     | Settings |
+| Epic 8          | 1 semana        | Semanas 18        | Automação |
+| **QA & Polish** | **1-2 semanas** | **Semanas 19-20** | Final validation |
 
-**Total: 10-15 semanas** (MVP ready for beta)
+**Total: 11-16 semanas** (MVP ready for beta)
 
 ---
 

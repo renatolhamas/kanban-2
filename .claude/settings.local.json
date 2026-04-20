@@ -81,7 +81,12 @@
       "Bash(npm run *)",
       "Read(//tmp/**)",
       "Bash(pkill -f \"next dev\")",
-      "Bash(curl -s http://localhost:3017/login)"
+      "Bash(curl -s http://localhost:3017/login)",
+      "Bash(node -e ' *)",
+      "Bash(git reset *)",
+      "Bash(git clean *)",
+      "Bash(npm ci *)",
+      "Bash(python -c \" import sys,json d=json.load\\(sys.stdin\\) deps = {**d.get\\('dependencies',{}\\), **d.get\\('devDependencies',{}\\)} keys = ['next','vitest','vite','@vitest/coverage-v8','@vitest/ui','@vitest/browser-playwright','@types/jest','eslint','glob','inquirer','dotenv','resend','jose','@base-ui/react'] for k in keys: if k in deps: print\\(f'{k}: {deps[k]}'\\) else: print\\(f'{k}: NOT PRESENT'\\) \")"
     ]
   },
   "enableAllProjectMcpServers": true,

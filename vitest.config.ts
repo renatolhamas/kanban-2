@@ -3,9 +3,6 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 // Load .env.local for tests
-import { fileURLToPath } from 'node:url';
-import { playwright } from '@vitest/browser-playwright';
-const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 dotenv.config({
@@ -15,9 +12,10 @@ dotenv.config({
 export default defineConfig({
   envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, '.')
-    }
+    alias: [
+      { find: /^@\/src\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
+      { find: /^@\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
+    ]
   },
   test: {
     env: {
@@ -42,8 +40,8 @@ export default defineConfig({
         setupFiles: ['./tests/setup.ts'],
         // Timeout for tests
         testTimeout: 10000,
-        // Match component test files
-        include: ['components/**/*.test.tsx', 'components/**/*.test.ts'],
+        // Match component test files (both root components/ and src/components/)
+        include: ['components/**/*.test.tsx', 'components/**/*.test.ts', 'src/components/**/*.test.tsx', 'src/components/**/*.test.ts'],
         // Mock reset between tests
         mockReset: true,
         restoreMocks: true

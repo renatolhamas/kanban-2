@@ -258,7 +258,7 @@ export default function SettingsPage() {
 
             {error && (
               <div
-                className="text-sm text-red-600 bg-red-50 p-3 rounded"
+                className="text-sm text-error bg-surface-container-low p-3 rounded"
                 role="alert"
               >
                 {error}
@@ -283,8 +283,8 @@ export default function SettingsPage() {
 
         {state === 'qr_displayed' && qrCode && (
           <div className="space-y-6">
-            <div 
-              className="relative p-4 bg-white border border-color-outline-variant rounded-lg shadow-ambient mx-auto w-fit"
+             <div 
+              className="relative p-4 bg-surface-bright border border-color-outline-variant rounded-lg shadow-ambient mx-auto w-fit"
               role="status"
               aria-live="polite"
               aria-label={`Código QR expirado em ${formatTimer(timerSeconds)}`}
@@ -295,7 +295,7 @@ export default function SettingsPage() {
                 className="w-64 h-64 mx-auto"
               />
               <div className="absolute inset-x-0 -bottom-3 flex justify-center">
-                 <Badge variant="neutral" className="bg-surface-container-highest shadow-sm">
+                 <Badge variant="neutral" className="bg-surface-container-highest shadow-ambient">
                    Aguardando...
                  </Badge>
               </div>
@@ -320,7 +320,7 @@ export default function SettingsPage() {
         {state === 'expired' && (
           <div className="space-y-4">
             <div
-              className="text-sm text-red-600 bg-red-50 p-3 rounded"
+              className="text-sm text-error bg-surface-container-low p-3 rounded"
               role="alert"
             >
               QR Code expirado. Gere um novo.
@@ -364,7 +364,7 @@ export default function SettingsPage() {
         title="Confirmar Desconexão"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-text-secondary">
             Tem certeza que deseja desconectar sua conta WhatsApp? Você não
             receberá mais mensagens até reconectar.
           </p>

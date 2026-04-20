@@ -33,13 +33,15 @@ const EXCEPTIONS = [
 ];
 
 function isException(filePath) {
-  const norm = filePath.replace(/\\/g, '/');
-  return norm.includes('.test.') || 
-         norm.includes('.stories.') || 
-         norm.includes('/__tests__/') || 
-         norm.includes('/__stories__/') ||
-         norm.endsWith('.test.tsx') ||
-         norm.endsWith('.test.ts');
+  const p = filePath.toLowerCase().replace(/\\/g, '/');
+  // console.log(`Checking: ${p}`);
+  if (p.indexOf('.test.') !== -1 || 
+      p.indexOf('.stories.') !== -1 || 
+      p.indexOf('/__tests__/') !== -1 || 
+      p.indexOf('/__stories__/') !== -1) {
+    return true;
+  }
+  return false;
 }
 
 function getFiles(dir, ext = ['.tsx', '.ts']) {

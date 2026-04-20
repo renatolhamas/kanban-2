@@ -4,7 +4,7 @@ import { Sidebar } from './Sidebar';
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/',
+  usePathname: () => '/home',
 }));
 
 // Mock Sheet component
@@ -63,15 +63,15 @@ describe('Sidebar Component', () => {
   it('applies active styles to current route', () => {
     render(<Sidebar />);
     const homeLink = screen.getByRole('link', { name: 'Home' });
-    expect(homeLink).toHaveClass('bg-emerald-50');
-    expect(homeLink).toHaveClass('text-emerald-700');
+    expect(homeLink).toHaveClass('bg-surface-container-low');
+    expect(homeLink).toHaveClass('text-primary');
   });
 
   it('applies dark mode classes', () => {
     const { container } = render(<Sidebar />);
     const nav = container.querySelector('nav');
-    expect(nav).toHaveClass('dark:bg-gray-900');
-    expect(nav).toHaveClass('dark:border-gray-800');
+    expect(nav).toHaveClass('dark:bg-surface-container-highest');
+    expect(nav).toHaveClass('border-surface-container-low');
   });
 
   it('renders nav links as internal links', () => {

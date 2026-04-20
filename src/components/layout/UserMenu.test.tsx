@@ -88,7 +88,7 @@ describe('UserMenu Component', () => {
     render(<UserMenu />);
     const trigger = screen.getByRole('button', { name: /user menu/i });
 
-    expect(trigger).toHaveClass('dark:text-gray-200');
-    expect(trigger).toHaveClass('dark:hover:bg-gray-800');
+    expect(trigger).toHaveClass('text-text-primary');
+    expect(trigger).toHaveClass('hover:bg-surface-container-low');
   });
 });

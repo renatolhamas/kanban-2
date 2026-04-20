@@ -7,6 +7,16 @@ vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }));
 
+// Mock useAuth
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    isAuthenticated: true,
+    isLoading: false,
+    user: { id: '1', email: 'test@example.com' },
+    signOut: vi.fn(),
+  }),
+}));
+
 // Mock components
 vi.mock('@/components/layout/Header', () => ({
   Header: () => <div data-testid="header">Header</div>,
@@ -73,6 +83,6 @@ describe('RootLayout Component', () => {
       </RootLayout>
     );
     const wrapper = container.firstChild;
-    expect(wrapper).toHaveClass('dark:bg-gray-900');
+    expect(wrapper).toHaveClass('bg-surface');
   });
 });

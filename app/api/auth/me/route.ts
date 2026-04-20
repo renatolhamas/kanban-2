@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GET /api/auth/me
  * Returns authenticated user info if JWT cookie is valid.
  * Used by client components to check auth state without reading httpOnly cookies.
@@ -15,7 +15,14 @@ import { auth, AuthError } from '@/lib/middleware/auth';
 export async function GET(request: NextRequest) {
   try {
     const payload = await auth(request);
-    return NextResponse.json({ authenticated: true, sub: payload.sub }, { status: 200 });
+    const token = request.cookies.get('auth_token')?.value;
+
+    return NextResponse.json({
+      authenticated: true,
+      sub: payload.sub,
+      tenant_id: payload.tenant_id,
+      token: token // Return token for frontend re-auth
+    }, { status: 200 });
   } catch (error) {
     if (error instanceof AuthError) {
       return NextResponse.json({ authenticated: false }, { status: 401 });

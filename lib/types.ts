@@ -21,11 +21,15 @@ export interface AuthResponse {
 
 export interface JWTPayload {
   sub: string; // User UUID from Supabase
-  tenant_id: string; // Tenant UUID
-  email: string;
-  role: "owner" | "admin" | "member";
-  iat: number; // Issued at (Unix timestamp)
-  exp: number; // Expiration (Unix timestamp)
+  email?: string;
+  app_metadata?: {
+    tenant_id?: string;
+    role?: string;
+  };
+  tenant_id?: string; // Fallback for transition
+  role?: string; // Fallback for transition
+  iat?: number; // Issued at (Unix timestamp)
+  exp?: number; // Expiration (Unix timestamp)
 }
 
 export interface AuthContextUser {

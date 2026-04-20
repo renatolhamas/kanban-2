@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { generateJWT } from "@/lib/jwt";
 import { setJWTCookie } from "@/lib/auth";
 import type { LoginRequest, AuthResponse } from "@/lib/types";
 
@@ -103,98 +102,56 @@ export async function POST(
     const userId = authData.user.id;
     const accessToken = authData.session?.access_token;
 
-    // DEBUG: Decode and log Supabase JWT to verify Hook injected app_metadata
-    if (accessToken) {
-      try {
-        const parts = accessToken.split('.');
-        if (parts.length === 3) {
-          const payload = parts[1];
-          // Add padding if needed
-          const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
-          const decoded = JSON.parse(Buffer.from(padded, 'base64').toString());
-          console.log("[LOGIN DEBUG] Supabase JWT Payload (Hook Check):", {
-            has_app_metadata: !!decoded.app_metadata,
-            app_metadata_tenant_id: decoded.app_metadata?.tenant_id,
-            app_metadata_role: decoded.app_metadata?.role,
-            claims: decoded,
-          });
-        }
-      } catch (e) {
-        console.log("[LOGIN DEBUG] Could not decode JWT:", e);
-      }
-    }
-
-    console.log("[LOGIN DEBUG] Auth successful", {
-      userId,
-      hasAccessToken: !!accessToken,
-      accessTokenLength: accessToken?.length,
-      authDataSessionExists: !!authData.session,
-    });
-
     if (!accessToken) {
       console.error("[LOGIN ERROR] No access token in session");
       return NextResponse.json(
-        { success: false, error: "Session token missing" },
-        { status: 401 },
+        { success: false, error: "Authentication failed to generate session" },
+        { status: 500 },
       );
     }
 
-    // Create Supabase client with user's JWT in Authorization header
-    // This allows RLS policies to evaluate auth.jwt() correctly
-    const userSupabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    });
+    // DEBUG: Decode and log Supabase JWT to verify Hook injected app_metadata
+    try {
+      const parts = accessToken.split('.');
+      if (parts.length === 3) {
+        const payload = parts[1];
+        const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+        const decoded = JSON.parse(Buffer.from(padded, 'base64').toString());
+        console.log("[LOGIN DEBUG] Supabase JWT Payload (Hook Check):", {
+          has_app_metadata: !!decoded.app_metadata,
+          app_metadata_tenant_id: decoded.app_metadata?.tenant_id,
+          app_metadata_role: decoded.app_metadata?.role,
+        });
+      }
+    } catch (e) {
+      console.log("[LOGIN DEBUG] Could not decode JWT:", e);
+    }
 
-    // Fetch user record to get tenant_id and role using user's JWT
-    // RLS policy now evaluates: auth.jwt()['tenant_id'] == user.tenant_id ✅
-    const { data: userData, error: userError } = await userSupabase
+    // Get tenant_id and role from the same source we used in register
+    // These should already be in app_metadata if registration was successful
+    const { data: userData } = await supabase
       .from("users")
       .select("tenant_id, role")
       .eq("id", userId)
       .single();
 
-    if (userError || !userData) {
-      console.error("[LOGIN ERROR] User fetch failed", {
-        userError: userError?.message,
-        userErrorCode: userError?.code,
-        userErrorDetails: userError?.details,
-        userDataExists: !!userData,
-      });
-      return NextResponse.json(
-        { success: false, error: "Invalid email or password" },
-        { status: 401 },
-      );
-    }
+    const tenant_id = userData?.tenant_id || "";
 
-    console.log("[LOGIN DEBUG] User fetched successfully", {
-      userId,
-      tenantId: userData.tenant_id,
-      role: userData.role,
-    });
-
-    const { tenant_id, role } = userData;
-
-    // Generate JWT
-    const token = await generateJWT({
-      sub: userId,
-      tenant_id: tenant_id,
-      email,
-      role: role as "owner" | "admin" | "member",
-    });
-
-    // Create response
+    // Create response using the OFFICIAL Supabase access token
     const response = NextResponse.json(
-      { success: true, message: "Login successful", sub: userId },
+      {
+        success: true,
+        message: "Login successful",
+        sub: userId,
+        tenant_id: tenant_id,
+        token: accessToken // Return official token to frontend
+      },
       { status: 200 },
     );
 
-    // Set httpOnly cookie
+    // Set official token in httpOnly cookie
     const isProduction = process.env.NODE_ENV === "production";
-    response.headers.set("Set-Cookie", setJWTCookie(token, isProduction));
+    response.headers.set("Set-Cookie", setJWTCookie(accessToken, isProduction));
 
     return response;
   } catch (error) {

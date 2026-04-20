@@ -1,4 +1,4 @@
-import { jwtVerify, SignJWT } from "jose";
+﻿import { jwtVerify, SignJWT } from "jose";
 import type { JWTPayload } from "@/lib/types";
 
 /**
@@ -6,37 +6,36 @@ import type { JWTPayload } from "@/lib/types";
  */
 function getJWTSecret() {
   const secret = process.env.JWT_SECRET;
+
   if (!secret) {
-    if (process.env.NODE_ENV === "production") {
-      // During build time, credentials might be missing but we shouldn't throw at module load
-      // We log but provide a dummy for the build process to complete page data collection
-      console.warn("[CONFIG WARNING] JWT_SECRET is missing. This is okay during build but FATAL in production runtime.");
+    const isProduction = process.env.NODE_ENV === "production";
+    const msg = "[JWT ERROR] JWT_SECRET is missing from .env! Internal authentication and Supabase RLS will FAIL.";
+
+    if (isProduction) {
+      throw new Error(msg);
+    } else {
+      console.warn(msg);
+      return new TextEncoder().encode("default-dev-secret-change-in-production");
     }
-    return new TextEncoder().encode("default-dev-secret-change-in-production");
   }
+
   return new TextEncoder().encode(secret);
 }
 
 const JWT_EXPIRATION = 3600; // 1 hour in seconds
 
 /**
- * Generate JWT token with payload
+ * Generate JWT token for testing and internal service authentication
  */
-export async function generateJWT(
-  payload: Omit<JWTPayload, "iat" | "exp">,
-): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
-  const exp = now + JWT_EXPIRATION;
+export async function generateJWT(payload: Omit<JWTPayload, "iat" | "exp">): Promise<string> {
+  const secret = getJWTSecret();
 
-  const token = await new SignJWT({
-    ...payload,
-    iat: now,
-    exp: exp,
-  })
-    .setProtectedHeader({ alg: "HS256", zip: undefined })
-    .sign(getJWTSecret());
-
-  return token;
+  return new SignJWT({ ...payload })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setAudience("authenticated")
+    .setExpirationTime(`${JWT_EXPIRATION}s`)
+    .sign(secret);
 }
 
 /**
@@ -44,10 +43,20 @@ export async function generateJWT(
  */
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
-  const JWT_SECRET = getJWTSecret();
-    const verified = await jwtVerify(token, JWT_SECRET);
-    return verified.payload as unknown as JWTPayload;
-  } catch {
+    const verified = await jwtVerify(token, getJWTSecret(), {
+      algorithms: ["HS256"],
+      audience: "authenticated",
+    });
+
+    const payload = verified.payload as unknown as JWTPayload;
+
+    // Map Supabase app_metadata to our flat payload structure
+    return {
+      ...payload,
+      tenant_id: payload.app_metadata?.tenant_id || payload.tenant_id,
+      role: payload.app_metadata?.role || payload.role,
+    } as JWTPayload;
+  } catch (error) {
     return null;
   }
 }

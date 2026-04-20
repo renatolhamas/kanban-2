@@ -27,6 +27,7 @@ Combinations of atoms:
 | **[Badge](./Badge.md)** | Status and metadata tag | ✅ Ready |
 | **[Modal](./Modal.md)** | Dialog overlay container | ✅ Ready |
 | **[Toast](./Toast.md)** | Feedback notification | ✅ Ready |
+| **[ConversationCard](./ConversationCard.md)** | WhatsApp conversation preview card | ✅ Ready |
 | FormField | Label + Input | 🔄 Planned |
 | ButtonGroup | Multiple buttons | 🔄 Planned |
 
@@ -35,9 +36,10 @@ Complex UI sections:
 
 | Component | Purpose | Status |
 |-----------|---------|--------|
+| **[KanbanColumn](./KanbanColumn.md)** | Kanban board column container | ✅ Ready |
+| **[KanbanBoard](./KanbanBoard.md)** | Main kanban canvas | ✅ Ready |
 | Header | Navigation bar | 🔄 Planned |
 | Sidebar | Side navigation | 🔄 Planned |
-| KanbanColumn | Kanban board column | 🔄 Planned |
 
 ---
 

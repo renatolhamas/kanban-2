@@ -77,7 +77,11 @@
       "Bash(rm -f badge.tsx card.tsx input.tsx skeleton.tsx spinner.tsx textarea.tsx theme-toggle.tsx theme-toggle.test.tsx)",
       "Bash(netstat -ano)",
       "Bash(powershell -File .\\\\run.ps1)",
-      "Bash(npx playwright:*)"
+      "Bash(npx playwright:*)",
+      "Bash(npm run *)",
+      "Read(//tmp/**)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s http://localhost:3017/login)"
     ]
   },
   "enableAllProjectMcpServers": true,

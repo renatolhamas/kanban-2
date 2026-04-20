@@ -21,7 +21,7 @@ function LoginPageContent() {
   useEffect(() => {
     // Check if user just registered (client-side only)
     if (searchParams.get("registered") === "true") {
-      setError("Account created successfully! Please log in.");
+      setError("A confirmation email has been sent to your address. Please check your inbox and click the link to verify your account before logging in.");
     }
   }, [searchParams]);
 
@@ -77,8 +77,8 @@ function LoginPageContent() {
       }
 
       // Update auth context immediately before navigation
-      if (data.sub) {
-        login({ sub: data.sub, email });
+      if (data.sub && data.tenant_id && data.token) {
+        login({ sub: data.sub, tenant_id: data.tenant_id, email, token: data.token });
       }
 
       // Redirect on success

@@ -8,8 +8,9 @@ import { createContext, useContext, useEffect, useState, ReactNode, useCallback 
 export interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: { sub: string } | null;
-  login: (user: { sub: string; email?: string }) => void;
+  user: { sub: string; tenant_id: string } | null;
+  token: string | null;
+  login: (userData: { sub: string; tenant_id: string; email?: string; token: string }) => void;
   logout: () => void;
 }
 
@@ -25,23 +26,26 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<{ sub: string } | null>(null);
+  const [user, setUser] = useState<{ sub: string; tenant_id: string } | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  const login = useCallback((userData: { sub: string; email?: string }) => {
+  const login = useCallback((userData: { sub: string; tenant_id: string; email?: string; token: string }) => {
     setIsAuthenticated(true);
-    setUser({ sub: userData.sub });
+    setUser({ sub: userData.sub, tenant_id: userData.tenant_id });
+    setToken(userData.token);
   }, []);
 
   const logout = useCallback(() => {
     setIsAuthenticated(false);
     setUser(null);
+    setToken(null);
   }, []);
 
   useEffect(() => {
     /**
      * Verificar autenticação ao montar
      * GET /api/auth/me retorna:
-     *   { authenticated: true, sub: string } ou
+     *   { authenticated: true, sub: string, token: string } ou
      *   { authenticated: false }
      */
     async function checkAuth() {
@@ -51,15 +55,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (data.authenticated) {
           setIsAuthenticated(true);
-          setUser({ sub: data.sub });
+          setUser({ sub: data.sub, tenant_id: data.tenant_id });
+          setToken(data.token);
         } else {
           setIsAuthenticated(false);
           setUser(null);
+          setToken(null);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
         setIsAuthenticated(false);
         setUser(null);
+        setToken(null);
       } finally {
         setIsLoading(false);
       }
@@ -69,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

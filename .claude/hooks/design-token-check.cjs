@@ -33,21 +33,8 @@ const EXCEPTIONS = [
 ];
 
 function isException(filePath) {
-  // Use relative path from root for exception matching
-  const relPath = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
-  
-  return EXCEPTIONS.some(pattern => {
-    // Basic glob to regex conversion
-    const regex = new RegExp('^' + pattern
-      .replace(/\./g, '\\.')
-      .replace(/\//g, '\\/')
-      .replace(/\*\*/g, '___DOUBLE_STAR___')
-      .replace(/\*/g, '[^/]*')
-      .replace(/___DOUBLE_STAR___/g, '.*')
-      + '$');
-    
-    return regex.test(relPath);
-  });
+  const norm = filePath.replace(/\\/g, '/');
+  return !!(norm.match(/\.(test|stories)\.tsx?$/) || norm.includes('/__tests__/') || norm.includes('/__stories__/'));
 }
 
 function getFiles(dir, ext = ['.tsx', '.ts']) {

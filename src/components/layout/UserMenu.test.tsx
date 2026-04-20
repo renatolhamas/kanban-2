@@ -1,13 +1,17 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
-import { UserMenu } from './UserMenu';
+import { vi, describe, it, expect } from 'vitest';
 
-// Mock next/navigation
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-  }),
-}));
+vi.mock('next/navigation', async () => {
+  const actual = await vi.importActual('next/navigation');
+  return {
+    ...actual,
+    useRouter: () => ({
+      push: vi.fn(),
+    }),
+  };
+});
+
+import { UserMenu } from './UserMenu';
 
 describe('UserMenu Component', () => {
   it('renders trigger button with avatar', () => {

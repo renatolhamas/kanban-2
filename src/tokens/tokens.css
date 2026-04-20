@@ -20,6 +20,20 @@
   /* Error States */
   --color-error: #ba1a1a;
   --color-error-container: #ffdad6;
+  --color-on-error-container: #410002;
+
+  /* Status Semantic — Feedback Colors */
+  --color-success: #1a7a2e;
+  --color-success-container: #dcf0e0;
+  --color-on-success-container: #0d3d15;
+
+  --color-warning: #7a5c00;
+  --color-warning-container: #ffeead;
+  --color-on-warning-container: #3d2d00;
+
+  --color-info: #0057a8;
+  --color-info-container: #daeaff;
+  --color-on-info-container: #002b54;
 
   /* Neutral Surfaces (Tonal Layering) */
   --color-surface: #f7f9fc;

@@ -92,6 +92,16 @@ const config: Config = {
         "token-danger": "var(--color-danger)",
         "token-success": "var(--color-success)",
         "token-warning": "var(--color-warning)",
+
+        /* Status Semantic tokens (Material Design 3 container pattern) */
+        "error-container": "var(--color-error-container)",
+        "on-error-container": "var(--color-on-error-container)",
+        "success-container": "var(--color-success-container)",
+        "on-success-container": "var(--color-on-success-container)",
+        "warning-container": "var(--color-warning-container)",
+        "on-warning-container": "var(--color-on-warning-container)",
+        "info-container": "var(--color-info-container)",
+        "on-info-container": "var(--color-on-info-container)",
       },
 
       /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -51,3 +51,4 @@ describe('Header Component', () => {
     expect(header).toHaveClass('dark:border-gray-800');
   });
 });
+

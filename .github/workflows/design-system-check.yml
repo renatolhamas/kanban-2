@@ -13,6 +13,8 @@ on:
     paths:
       - 'src/components/**'
       - 'app/**'
+      - '.claude/hooks/**'
+      - '.github/workflows/design-system-check.yml'
 
 jobs:
   design-tokens:

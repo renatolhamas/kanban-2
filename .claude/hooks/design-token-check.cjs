@@ -34,7 +34,12 @@ const EXCEPTIONS = [
 
 function isException(filePath) {
   const norm = filePath.replace(/\\/g, '/');
-  return !!(norm.match(/\.(test|stories)\.tsx?$/) || norm.includes('/__tests__/') || norm.includes('/__stories__/'));
+  return norm.includes('.test.') || 
+         norm.includes('.stories.') || 
+         norm.includes('/__tests__/') || 
+         norm.includes('/__stories__/') ||
+         norm.endsWith('.test.tsx') ||
+         norm.endsWith('.test.ts');
 }
 
 function getFiles(dir, ext = ['.tsx', '.ts']) {

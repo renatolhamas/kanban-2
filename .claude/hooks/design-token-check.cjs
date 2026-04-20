@@ -33,15 +33,10 @@ const EXCEPTIONS = [
 ];
 
 function isException(filePath) {
-  const p = filePath.toLowerCase().replace(/\\/g, '/');
-  // console.log(`Checking: ${p}`);
-  if (p.indexOf('.test.') !== -1 || 
-      p.indexOf('.stories.') !== -1 || 
-      p.indexOf('/__tests__/') !== -1 || 
-      p.indexOf('/__stories__/') !== -1) {
-    return true;
-  }
-  return false;
+  return filePath.includes('.test.') || 
+         filePath.includes('.stories.') || 
+         filePath.includes('__tests__') || 
+         filePath.includes('__stories__');
 }
 
 function getFiles(dir, ext = ['.tsx', '.ts']) {
@@ -50,6 +45,10 @@ function getFiles(dir, ext = ['.tsx', '.ts']) {
 
   items.forEach(item => {
     const fullPath = path.join(dir, item);
+    
+    // EXCEPTION BLINDING: Skip tests/stories at discovery level
+    if (isException(fullPath)) return;
+
     const stat = fs.statSync(fullPath);
 
     if (stat.isDirectory() && item !== 'node_modules' && item !== '.next' && item !== 'dist') {

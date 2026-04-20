@@ -67,6 +67,7 @@ export function ThemeToggle() {
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       aria-pressed={isDark}
       title={isDark ? 'Light mode' : 'Dark mode'}
+      data-testid="theme-toggle"
     >
       {isDark ? (
         <Sun size={20} className="transition-transform duration-200" />

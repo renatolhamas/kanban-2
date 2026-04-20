@@ -30,7 +30,11 @@ export const KanbanColumn = React.forwardRef<HTMLElement, KanbanColumnProps>(
           )}
         </header>
 
-        <div className="flex flex-col p-4 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-surface-container scrollbar-track-transparent">
+        <div
+          aria-live="polite"
+          aria-atomic="false"
+          className="flex flex-col p-4 space-y-3 overflow-y-auto scrollbar-thin scrollbar-thumb-surface-container scrollbar-track-transparent"
+        >
           {children}
         </div>
       </section>

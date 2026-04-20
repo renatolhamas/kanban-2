@@ -12,6 +12,7 @@ export interface KanbanOption {
 export interface KanbanSelectorProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: KanbanOption[]
   onValueChange?: (value: string) => void
+  id?: string
 }
 
 export const KanbanSelector = React.forwardRef<HTMLSelectElement, KanbanSelectorProps>(
@@ -35,7 +36,7 @@ export const KanbanSelector = React.forwardRef<HTMLSelectElement, KanbanSelector
           ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-text-secondary">
-          <ChevronDown size={18} />
+          <ChevronDown size={18} aria-hidden="true" />
         </div>
       </div>
     )

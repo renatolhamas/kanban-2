@@ -86,10 +86,11 @@ export default function HomePage() {
         
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full md:w-auto">
           <div className="flex flex-col w-full sm:w-auto">
-            <span className="text-label-sm text-text-secondary uppercase tracking-wider mb-1 ml-1">Selecione o Quadro</span>
-            <KanbanSelector 
-              options={kanbans} 
-              value={selectedKanbanId || ""} 
+            <label htmlFor="kanban-selector" className="text-label-sm text-text-secondary uppercase tracking-wider mb-1 ml-1">Selecione o Quadro</label>
+            <KanbanSelector
+              id="kanban-selector"
+              options={kanbans}
+              value={selectedKanbanId || ""}
               onValueChange={setSelectedKanbanId}
             />
           </div>
@@ -104,6 +105,7 @@ export default function HomePage() {
       </header>
 
       <div className="flex-1 overflow-hidden relative">
+        <h2 className="sr-only">Colunas do Quadro Kanban</h2>
         <KanbanBoard>
           {columns.length === 0 && !conversationsLoading && (
             <div className="flex flex-1 items-center justify-center h-full">

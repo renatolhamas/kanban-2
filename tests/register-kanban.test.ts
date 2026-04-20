@@ -12,10 +12,14 @@ import { createClient } from "@supabase/supabase-js";
 import { createDefaultKanban } from "@/lib/kanban";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+const hasSupabase =
+  !!process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
 let supabase: SupabaseClient;
 let testTenantId: string;
 
-describe("Register Integration - Kanban Auto-Creation", () => {
+describe.skipIf(!hasSupabase)("Register Integration - Kanban Auto-Creation", () => {
   beforeEach(async () => {
     // Initialize Supabase client
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";

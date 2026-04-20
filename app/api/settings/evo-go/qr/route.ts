@@ -25,7 +25,7 @@ import {
 } from "@/lib/api/evo-go-client";
 import { handleEvoGoError } from "@/lib/api/evo-go-error-handler";
 
-const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 interface QRCodeResponse {

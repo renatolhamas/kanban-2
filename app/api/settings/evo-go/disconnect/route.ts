@@ -14,7 +14,7 @@ import { auth, AuthError } from '@/lib/middleware/auth';
 import { tenantIsolation, TenantIsolationError } from '@/lib/middleware/tenant-isolation';
 import { callEvoGoLogout } from '@/lib/api/evo-go-client';
 
-const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 interface DisconnectResponse {

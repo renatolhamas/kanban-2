@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { generateJWT } from "@/lib/jwt";
-import { setJWTCookie } from "@/lib/auth";
-import type { JWTPayload } from "@/lib/types";
+import { generateJWT } from "../../../lib/jwt";
+import { setJWTCookie } from "../../../lib/auth";
+import type { JWTPayload } from "../../../lib/types";
 
 // Note: These are integration tests that would be run against a real/mock API
 // They test the full flow from request to database update

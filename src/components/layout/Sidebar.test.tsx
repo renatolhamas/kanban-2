@@ -1,8 +1,9 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import { Sidebar } from './Sidebar';
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
+vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }));
 
@@ -14,7 +15,7 @@ interface SheetProps {
   title: string;
 }
 
-jest.mock('@/components/layout/Sheet', () => ({
+vi.mock('@/components/layout/Sheet', () => ({
   Sheet: ({ isOpen, onClose, children, title }: SheetProps) =>
     isOpen ? (
       <div role="dialog" aria-label={title}>

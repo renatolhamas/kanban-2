@@ -9,7 +9,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { createClient } from "@supabase/supabase-js";
-import { createDefaultKanban } from "@/lib/kanban";
+import { createDefaultKanban } from "../../lib/kanban";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 let supabase: SupabaseClient;

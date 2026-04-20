@@ -1,18 +1,19 @@
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { Header } from './Header';
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
+vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }));
 
 // Mock ThemeToggle
-jest.mock('@/components/ui/ThemeToggle', () => ({
+vi.mock('@/components/ui/ThemeToggle', () => ({
   ThemeToggle: () => <div data-testid="theme-toggle">Theme Toggle</div>,
 }));
 
 // Mock UserMenu
-jest.mock('@/components/layout/UserMenu', () => ({
+vi.mock('@/components/layout/UserMenu', () => ({
   UserMenu: () => <div data-testid="user-menu">User Menu</div>,
 }));
 

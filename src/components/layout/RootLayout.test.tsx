@@ -1,17 +1,18 @@
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { RootLayout } from './RootLayout';
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
+vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }));
 
 // Mock components
-jest.mock('@/components/layout/Header', () => ({
+vi.mock('@/components/layout/Header', () => ({
   Header: () => <div data-testid="header">Header</div>,
 }));
 
-jest.mock('@/components/layout/Sidebar', () => ({
+vi.mock('@/components/layout/Sidebar', () => ({
   Sidebar: () => <div data-testid="sidebar">Sidebar</div>,
 }));
 

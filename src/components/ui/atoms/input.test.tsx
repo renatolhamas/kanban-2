@@ -13,7 +13,7 @@ describe('Input', () => {
   })
 
   it('handles text input', async () => {
-    render(<Input value="" onChange={() => {}} />)
+    render(<Input />)
     const input = screen.getByRole('textbox') as HTMLInputElement
     
     await userEvent.type(input, 'Hello')

@@ -11,6 +11,21 @@ declare global {
   }
 }
 
+// Mock window.matchMedia (not implemented in JSDOM)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
+});
+
 // Global test setup
 beforeEach(() => {
   // Reset DOM between tests

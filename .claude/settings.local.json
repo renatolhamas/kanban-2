@@ -87,7 +87,9 @@
       "Bash(git clean *)",
       "Bash(npm ci *)",
       "Bash(python -c \" import sys,json d=json.load\\(sys.stdin\\) deps = {**d.get\\('dependencies',{}\\), **d.get\\('devDependencies',{}\\)} keys = ['next','vitest','vite','@vitest/coverage-v8','@vitest/ui','@vitest/browser-playwright','@types/jest','eslint','glob','inquirer','dotenv','resend','jose','@base-ui/react'] for k in keys: if k in deps: print\\(f'{k}: {deps[k]}'\\) else: print\\(f'{k}: NOT PRESENT'\\) \")",
-      "Bash(powershell.exe -Command \"./run.ps1\")"
+      "Bash(powershell.exe -Command \"./run.ps1\")",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --limit 3)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run view 24681607563 --log-failed)"
     ]
   },
   "enableAllProjectMcpServers": true,

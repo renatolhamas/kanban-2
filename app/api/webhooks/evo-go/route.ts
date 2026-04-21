@@ -19,8 +19,9 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const evoGoWebhookSecret = process.env.EVO_GO_WEBHOOK_SECRET;
 
 interface EvoGoWebhookPayload {
-  event: string;
-  data?: Record<string, unknown>;
+  event:     string;
+  instance?: string;
+  data?:     Record<string, unknown>;
 }
 
 /**
@@ -38,19 +39,9 @@ export async function POST(
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-    // 1. Extract tenantId from query parameter
+    // 1. Extract tenantId from query parameter (fallback; primary lookup is via payload.instance)
     const url = new URL(request.url);
     const tenantId = url.searchParams.get('tenantId');
-
-    if (!tenantId) {
-      console.warn('[Webhook] Missing tenantId in query parameter', {
-        timestamp: new Date().toISOString(),
-      });
-      return NextResponse.json(
-        { error: 'Missing tenantId', statusCode: 400 },
-        { status: 400 },
-      );
-    }
 
     // 2. Read raw body as text (CRITICAL for HMAC validation)
     const body = await request.text();
@@ -100,20 +91,53 @@ export async function POST(
       return NextResponse.json({ statusCode: 200 }, { status: 200 });
     }
 
-    const { event, data } = payload;
+    const { event, instance, data } = payload;
 
-    // 6. Process event based on type
+    // 6. Resolve tenantId: prefer payload.instance lookup, fallback to URL param
+    let resolvedTenantId = tenantId;
+    if (instance) {
+      const { data: tenantRow, error: tenantError } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('evolution_instance_id', instance)
+        .maybeSingle();
+
+      if (tenantError) {
+        console.warn('[Webhook] Tenant lookup error, falling back to URL param', {
+          instance,
+          error: tenantError.message,
+          timestamp: new Date().toISOString(),
+        });
+      } else if (tenantRow) {
+        resolvedTenantId = tenantRow.id;
+      } else {
+        console.warn('[Webhook] Instance not found in tenants, falling back to URL param', {
+          instance,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    }
+
+    if (!resolvedTenantId) {
+      console.error('[Webhook] Could not resolve tenantId from instance or URL param', {
+        instance,
+        timestamp: new Date().toISOString(),
+      });
+      return NextResponse.json({ statusCode: 200 }, { status: 200 });
+    }
+
+    // 7. Process event based on type
     switch (event) {
       case 'CONNECTION_UPDATE':
-        await handleConnectionUpdate(supabase, tenantId, data);
+        await handleConnectionUpdate(supabase, resolvedTenantId, data);
         break;
 
       case 'QRCODE_UPDATED':
-        await handleQRCodeUpdated(supabase, tenantId, data);
+        await handleQRCodeUpdated(supabase, resolvedTenantId, data);
         break;
 
       case 'MESSAGES_UPSERT':
-        handleMessagesUpsert(tenantId, data);
+        await handleMessagesUpsert(supabase, resolvedTenantId, data);
         break;
 
       default:
@@ -226,12 +250,164 @@ async function handleQRCodeUpdated(
 
 /**
  * Handle MESSAGES_UPSERT event
- * Currently logs only (handler will be implemented in Story 3.5)
+ * Story 5.1: Auto-register contacts
+ * Story 5.2: Auto-create conversations
  */
-function handleMessagesUpsert(tenantId: string, data?: Record<string, unknown>): void {
-  console.log('[Webhook] MESSAGES_UPSERT event logged', {
-    tenantId,
-    dataKeys: data ? Object.keys(data) : [],
-    timestamp: new Date().toISOString(),
-  });
+import { extractContactInfo } from '@/lib/api/webhook-utils';
+
+async function handleMessagesUpsert(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  tenantId: string,
+  data?: Record<string, unknown>,
+): Promise<void> {
+  try {
+    if (!data) return;
+
+    // 1. Extract contact information
+    const contactInfo = extractContactInfo(data);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const messageId = (data as any)?.key?.id;
+
+    if (!contactInfo) {
+      console.warn('[Webhook] MESSAGES_UPSERT: Could not extract contact info from payload', {
+        tenantId,
+        data: JSON.stringify(data).substring(0, 500),
+      });
+      return;
+    }
+
+    // 2. Upsert Contact via RPC (preserves name on conflict, updates wa_name + is_group)
+    const { data: contactId, error: upsertError } = await supabase.rpc('upsert_contact', {
+      p_tenant_id: tenantId,
+      p_phone:     contactInfo.waPhone,
+      p_name:      contactInfo.name,
+      p_wa_name:   contactInfo.waName,
+      p_is_group:  contactInfo.isGroup,
+    });
+
+    if (upsertError) {
+      console.error('[Webhook] MESSAGES_UPSERT contact upsert failed', {
+        tenantId,
+        waPhone: contactInfo.waPhone,
+        error: upsertError.message,
+        timestamp: new Date().toISOString(),
+      });
+      return;
+    }
+
+    // Fetch contact record for conversation linkage
+    const { data: contact, error: contactError } = await supabase
+      .from('contacts')
+      .select('id')
+      .eq('id', contactId)
+      .single();
+
+    if (contactError || !contact) {
+      console.error('[Webhook] Contact fetch after upsert failed', {
+        tenantId,
+        contactId,
+        error: contactError?.message,
+      });
+      return;
+    }
+
+    // 3. Find Main Kanban and its first column (for Story 5.2)
+    const { data: kanban, error: kanbanError } = await supabase
+      .from('kanbans')
+      .select('id')
+      .eq('tenant_id', tenantId)
+      .eq('is_main', true)
+      .single();
+
+    if (kanbanError || !kanban) {
+      console.warn('[Webhook] No main kanban found for tenant', { tenantId });
+      return;
+    }
+
+    const { data: column, error: columnError } = await supabase
+      .from('columns')
+      .select('id')
+      .eq('kanban_id', kanban.id)
+      .order('order_position', { ascending: true })
+      .limit(1)
+      .single();
+
+    if (columnError || !column) {
+      console.warn('[Webhook] No columns found for main kanban', { tenantId, kanbanId: kanban.id });
+      return;
+    }
+
+    // 4. Ensure Conversation exists (Story 5.2)
+    const { data: existingConv, error: fetchConvError } = await supabase
+      .from('conversations')
+      .select('id')
+      .eq('tenant_id', tenantId)
+      .eq('contact_id', contact.id)
+      .eq('kanban_id', kanban.id)
+      .maybeSingle();
+
+    if (fetchConvError) {
+      console.error('[Webhook] Conversation fetch error', {
+        tenantId,
+        contactId: contact.id,
+        error: fetchConvError.message,
+      });
+      return;
+    }
+
+    if (existingConv) {
+      // Update existing conversation
+      const { error: convError } = await supabase
+        .from('conversations')
+        .update({
+          last_message_at: new Date().toISOString(),
+          evolution_message_id: messageId,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingConv.id);
+
+      if (convError) {
+        console.error('[Webhook] Conversation update error', {
+          tenantId,
+          conversationId: existingConv.id,
+          error: convError.message,
+        });
+      }
+    } else {
+      // Create new conversation
+      const { error: convError } = await supabase
+        .from('conversations')
+        .insert({
+          tenant_id: tenantId,
+          contact_id: contact.id,
+          kanban_id: kanban.id,
+          column_id: column.id,
+          wa_phone: contactInfo.waPhone,
+          last_message_at: new Date().toISOString(),
+          evolution_message_id: messageId,
+        });
+
+      if (convError) {
+        console.error('[Webhook] Conversation insert error', {
+          tenantId,
+          contactId: contact.id,
+          error: convError.message,
+        });
+      }
+    }
+
+    console.log('[Webhook] MESSAGES_UPSERT processed successfully (Contact + Conversation)', {
+      tenantId,
+      contactId: contact.id,
+      waPhone: contactInfo.waPhone,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('[Webhook] MESSAGES_UPSERT fatal error', {
+      tenantId,
+      error: error instanceof Error ? error.message : String(error),
+      timestamp: new Date().toISOString(),
+    });
+  }
 }

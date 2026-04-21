@@ -10,10 +10,11 @@ export interface ConversationCardProps extends React.HTMLAttributes<HTMLDivEleme
   timestamp: string
   unreadCount?: number
   isSelected?: boolean
+  isGroup?: boolean
 }
 
 export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCardProps>(
-  ({ name, phone, lastMessage, timestamp, unreadCount, isSelected, className, onClick, ...props }, ref) => {
+  ({ name, phone, lastMessage, timestamp, unreadCount, isSelected, isGroup, className, onClick, ...props }, ref) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
@@ -41,8 +42,13 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
       >
         <div className="flex flex-col space-y-1">
           <div className="flex justify-between items-start">
-            <span className="text-body-lg font-bold text-text-primary truncate max-w-[150px]">
-              {name}
+            <span className="flex items-center gap-1 truncate max-w-[150px]">
+              <span className="text-body-lg font-bold text-text-primary truncate">
+                {name}
+              </span>
+              {isGroup && (
+                <Badge variant="group" className="ml-2 shrink-0">👥 Grupo</Badge>
+              )}
             </span>
             <span className="text-label-sm text-text-secondary whitespace-nowrap">
               {timestamp}

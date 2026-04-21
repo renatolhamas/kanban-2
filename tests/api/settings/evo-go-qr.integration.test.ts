@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { generateJWT } from "../../../lib/jwt";
-import { setJWTCookie } from "../../../lib/auth";
+// import { setJWTCookie } from "../../../lib/auth";
 import type { JWTPayload } from "../../../lib/types";
 
 // Note: These are integration tests that would be run against a real/mock API
@@ -35,7 +35,7 @@ describe("POST /api/settings/evo-go/qr - Integration Tests", () => {
     it("should generate QR code and update tenant with instance_id", async () => {
       // This is a test blueprint - actual implementation would mock Supabase and Evo GO
       const jwt = await generateValidJWT();
-      const cookie = setJWTCookie(jwt);
+      const cookie = `auth_token=${jwt}`;
 
       // Expected request payload
       const expectedPayload = {

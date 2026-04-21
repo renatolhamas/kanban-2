@@ -32,9 +32,15 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<{ statusCode: number } | { error: string; statusCode: number }>> {
   try {
-    if (!supabaseUrl || !supabaseServiceRoleKey || !evoGoWebhookSecret) {
-      console.error('[CONFIG ERROR] Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, EVO_GO_WEBHOOK_SECRET');
-      // Always return 200 for webhooks to avoid retries, but log the error
+    // TESTE: Webhook secret validation comentado para testar se é obrigatório
+    // if (!supabaseUrl || !supabaseServiceRoleKey || !evoGoWebhookSecret) {
+    //   console.error('[CONFIG ERROR] Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, EVO_GO_WEBHOOK_SECRET');
+    //   // Always return 200 for webhooks to avoid retries, but log the error
+    //   return NextResponse.json({ statusCode: 200 }, { status: 200 });
+    // }
+
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      console.error('[CONFIG ERROR] Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
       return NextResponse.json({ statusCode: 200 }, { status: 200 });
     }
 
@@ -54,29 +60,35 @@ export async function POST(
       return NextResponse.json({ statusCode: 200 }, { status: 200 });
     }
 
+    // TESTE: HMAC validation comentado para testar se é obrigatório
     // 3. Extract and validate X-Signature header
-    const signatureHeader = request.headers.get('x-signature');
-    const signature = parseSignatureHeader(signatureHeader);
+    // const signatureHeader = request.headers.get('x-signature');
+    // const signature = parseSignatureHeader(signatureHeader);
 
-    if (!signature) {
-      console.warn('[Webhook] Invalid or missing X-Signature header', {
-        tenantId,
-        provided: signatureHeader ? 'present' : 'missing',
-        timestamp: new Date().toISOString(),
-      });
-      return NextResponse.json({ statusCode: 401 }, { status: 401 });
-    }
+    // if (!signature) {
+    //   console.warn('[Webhook] Invalid or missing X-Signature header', {
+    //     tenantId,
+    //     provided: signatureHeader ? 'present' : 'missing',
+    //     timestamp: new Date().toISOString(),
+    //   });
+    //   return NextResponse.json({ statusCode: 401 }, { status: 401 });
+    // }
 
     // 4. Validate HMAC-SHA256 signature
-    const isValid = validateEvoGoSignature(body, signature, evoGoWebhookSecret);
+    // const isValid = validateEvoGoSignature(body, signature, evoGoWebhookSecret);
 
-    if (!isValid) {
-      console.warn('[Webhook] Invalid signature', {
-        tenantId,
-        timestamp: new Date().toISOString(),
-      });
-      return NextResponse.json({ statusCode: 401 }, { status: 401 });
-    }
+    // if (!isValid) {
+    //   console.warn('[Webhook] Invalid signature', {
+    //     tenantId,
+    //     timestamp: new Date().toISOString(),
+    //   });
+    //   return NextResponse.json({ statusCode: 401 }, { status: 401 });
+    // }
+
+    console.log('[Webhook] TESTE: HMAC validation bypassed - proceeding without signature check', {
+      tenantId,
+      timestamp: new Date().toISOString(),
+    });
 
     // 5. Parse JSON body (safe after validation)
     let payload: EvoGoWebhookPayload;

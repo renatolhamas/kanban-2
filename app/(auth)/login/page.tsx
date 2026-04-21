@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/atoms/button";
 import { Input } from "@/components/ui/atoms/input";
 import { Card } from "@/components/ui/molecules/card";
@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/molecules/card";
 function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuth();
+  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,28 +61,17 @@ function LoginPageContent() {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+      if (authError) {
+        throw authError;
       }
 
-      // Update auth context immediately before navigation
-      if (data.sub && data.tenant_id && data.token) {
-        login({ sub: data.sub, tenant_id: data.tenant_id, email, token: data.token });
-      }
-
-      // Redirect on success
-      router.push("/profile");
+      // Redirect on success - AuthContext will detect the session change via onAuthStateChange
+      router.push("/home");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Login failed";

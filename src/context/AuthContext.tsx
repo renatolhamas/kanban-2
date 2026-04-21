@@ -1,6 +1,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
 
 /**
  * AuthContextValue — contrato público de autenticação
@@ -8,86 +10,63 @@ import { createContext, useContext, useEffect, useState, ReactNode, useCallback 
 export interface AuthContextValue {
   isAuthenticated: boolean;
   isLoading: boolean;
-  user: { sub: string; tenant_id: string } | null;
-  token: string | null;
-  login: (userData: { sub: string; tenant_id: string; email?: string; token: string }) => void;
-  logout: () => void;
+  user: User | null;
+  session: Session | null;
+  logout: () => Promise<void>;
 }
 
-/**
- * AuthContext — gerencia estado de autenticação via /api/auth/me
- *
- * - Carrega ao montar: chama GET /api/auth/me
- * - Enquanto carrega: isLoading = true
- * - Detecta sessão: isAuthenticated = true se cookie auth_token é válido
- */
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<{ sub: string; tenant_id: string } | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-
-  const login = useCallback((userData: { sub: string; tenant_id: string; email?: string; token: string }) => {
-    setIsAuthenticated(true);
-    setUser({ sub: userData.sub, tenant_id: userData.tenant_id });
-    setToken(userData.token);
-  }, []);
-
-  const logout = useCallback(() => {
-    setIsAuthenticated(false);
-    setUser(null);
-    setToken(null);
-  }, []);
+  const supabase = createClient();
 
   useEffect(() => {
-    /**
-     * Verificar autenticação ao montar
-     * GET /api/auth/me retorna:
-     *   { authenticated: true, sub: string, token: string } ou
-     *   { authenticated: false }
-     */
-    async function checkAuth() {
-      try {
-        const response = await fetch('/api/auth/me');
-        const data = await response.json();
-
-        if (data.authenticated) {
-          setIsAuthenticated(true);
-          setUser({ sub: data.sub, tenant_id: data.tenant_id });
-          setToken(data.token);
-        } else {
-          setIsAuthenticated(false);
-          setUser(null);
-          setToken(null);
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        setIsAuthenticated(false);
-        setUser(null);
-        setToken(null);
-      } finally {
-        setIsLoading(false);
-      }
+    // 1. Verificar sessão inicial
+    async function getInitialSession() {
+      const { data: { session: initialSession } } = await supabase.auth.getSession();
+      setSession(initialSession);
+      setUser(initialSession?.user ?? null);
+      setIsLoading(false);
     }
 
-    checkAuth();
+    getInitialSession();
+
+    // 2. Escutar mudanças de estado (login, logout, token refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      setIsLoading(true); // Pequeno trigger de loading opcional durante transição
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut();
+    // onAuthStateChange cuidará de limpar o estado
+  }, [supabase]);
+
+  const value: AuthContextValue = {
+    isAuthenticated: !!user,
+    isLoading,
+    user,
+    session,
+    logout,
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, user, token, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-/**
- * useAuth — hook para consumir contexto de autenticação
- *
- * @throws Error se usado fora de AuthProvider
- * @returns { isAuthenticated, isLoading, user }
- */
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
   if (context === undefined) {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from './useAuth'
-import { getSupabaseClient } from '@/lib/supabase-client'
+import { createClient } from '@/lib/supabase/client'
 
 export interface KanbanData {
   id: string
@@ -8,19 +8,21 @@ export interface KanbanData {
   is_main: boolean
 }
 
-export function useKanbans(tenantId: string) {
-  const { token } = useAuth()
+export function useKanbans() {
+  const { user, isAuthenticated } = useAuth()
   const [kanbans, setKanbans] = useState<KanbanData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
+  const supabase = createClient()
+  const tenantId = user?.app_metadata?.tenant_id
+
   const fetchKanbans = async () => {
-    if (!tenantId) return
+    if (!tenantId || !isAuthenticated) return
 
     try {
       setIsLoading(true)
-      const client = getSupabaseClient(token)
-      const { data, error: fetchError } = await client
+      const { data, error: fetchError } = await supabase
         .from('kanbans')
         .select('id, name, is_main')
         .eq('tenant_id', tenantId)
@@ -37,12 +39,12 @@ export function useKanbans(tenantId: string) {
   }
 
   useEffect(() => {
-    if (!tenantId || !token) {
-      setIsLoading(false);
-      return;
+    if (!tenantId || !isAuthenticated) {
+      setIsLoading(false)
+      return
     }
-    fetchKanbans();
-  }, [tenantId, token])
+    fetchKanbans()
+  }, [tenantId, isAuthenticated])
 
   return { kanbans, isLoading, error, refetch: fetchKanbans }
 }

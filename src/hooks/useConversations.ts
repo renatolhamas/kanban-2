@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from './useAuth'
-import { getSupabaseClient } from '@/lib/supabase-client'
+import { createClient } from '@/lib/supabase/client'
 
 export interface Conversation {
   id: string
@@ -20,24 +20,24 @@ export interface KanbanColumnData {
   order_position: number
 }
 
-export function useConversations(kanbanId: string, tenantId: string) {
-  const { token } = useAuth()
+export function useConversations(kanbanId: string) {
+  const { user, isAuthenticated } = useAuth()
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [columns, setColumns] = useState<KanbanColumnData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
 
-  // Memoize the client to avoid unnecessary re-creations, though getSupabaseClient handles it
-  const client = useMemo(() => getSupabaseClient(token), [token])
+  const supabase = createClient()
+  const tenantId = user?.app_metadata?.tenant_id
 
   const fetchData = async () => {
-    if (!kanbanId || !tenantId || !token) return
+    if (!kanbanId || !tenantId || !isAuthenticated) return
 
     try {
       setIsLoading(true)
 
       // 1. Fetch Columns
-      const { data: colsData, error: colsError } = await client
+      const { data: colsData, error: colsError } = await supabase
         .from('columns')
         .select('id, name, order_position')
         .eq('kanban_id', kanbanId)
@@ -46,13 +46,13 @@ export function useConversations(kanbanId: string, tenantId: string) {
       if (colsError) throw colsError
       setColumns(colsData || [])
 
-      // 2. Fetch Conversations with subqueries for last message
-      const { data: convData, error: convError } = await client
+      // 2. Fetch Conversations
+      const { data: convData, error: convError } = await supabase
         .from('conversations')
         .select(`
-          id, 
-          wa_phone, 
-          status, 
+          id,
+          wa_phone,
+          status,
           last_message_at,
           column_id,
           contacts (name)
@@ -64,7 +64,7 @@ export function useConversations(kanbanId: string, tenantId: string) {
 
       if (convError) throw convError
 
-      // Transform data to match our interface
+      // Transform data
       const transformed: Conversation[] = (convData || []).map((c: any) => ({
         id: c.id,
         wa_phone: c.wa_phone,
@@ -87,21 +87,16 @@ export function useConversations(kanbanId: string, tenantId: string) {
   }
 
   useEffect(() => {
-    if (!kanbanId || !tenantId || !token) {
-      setIsLoading(true) // Stay in loading status until we have everything
-      
-      // If we are sure we won't have it (e.g. not authenticated), we should set to false
-      // But HomePage handles redirection, so setIsLoading(false) is safer here to avoid blocking UI if logic fails
-      if (tenantId === "" && token === null) {
-        setIsLoading(false)
-      }
-      return;
+    if (!kanbanId || !tenantId || !isAuthenticated) {
+      setIsLoading(true)
+      if (!isAuthenticated) setIsLoading(false)
+      return
     }
 
     fetchData()
 
-    // 3. Realtime Subscriptions using the authenticated client
-    const channel = client
+    // 3. Realtime Subscriptions
+    const channel = supabase
       .channel(`kanban-realtime-${kanbanId}`)
       .on(
         'postgres_changes',
@@ -111,9 +106,7 @@ export function useConversations(kanbanId: string, tenantId: string) {
           table: 'conversations',
           filter: `kanban_id=eq.${kanbanId}`
         },
-        () => {
-          fetchData()
-        }
+        () => fetchData()
       )
       .on(
         'postgres_changes',
@@ -122,16 +115,14 @@ export function useConversations(kanbanId: string, tenantId: string) {
           schema: 'public',
           table: 'messages'
         },
-        () => {
-          fetchData()
-        }
+        () => fetchData()
       )
       .subscribe()
 
     return () => {
-      client.removeChannel(channel)
+      supabase.removeChannel(channel)
     }
-  }, [kanbanId, tenantId, client, token])
+  }, [kanbanId, tenantId, isAuthenticated])
 
   return { conversations, columns, isLoading, error, refetch: fetchData }
 }

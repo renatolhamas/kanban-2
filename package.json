@@ -25,6 +25,7 @@
     "@emnapi/runtime": "^1.9.2",
     "@radix-ui/react-primitive": "^2.1.4",
     "@radix-ui/react-slot": "^1.2.4",
+    "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.39.0",
     "chroma-js": "^3.2.0",
     "class-variance-authority": "^0.7.1",

@@ -15,6 +15,9 @@ export default function HomePage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const [selectedKanbanId, setSelectedKanbanId] = useState<string | null>(null)
   
+  // tenantId extraído do metadata do usuário
+  const tenantId = user?.app_metadata?.tenant_id
+
   // Redirecionar se não estiver autenticado após terminar de carregar
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -22,8 +25,8 @@ export default function HomePage() {
     }
   }, [authLoading, isAuthenticated, router])
 
-  // Hook para buscar todos os quadros do tenant
-  const { kanbans, isLoading: kanbansLoading } = useKanbans(user?.tenant_id || "")
+  // Hook para buscar todos os quadros do tenant (obté m o tenantId internamente, mas aqui usamos para controle de exibição)
+  const { kanbans, isLoading: kanbansLoading } = useKanbans()
 
   // Efeito para definir o quadro inicial (Main ou o primeiro da lista)
   useEffect(() => {
@@ -33,10 +36,9 @@ export default function HomePage() {
     }
   }, [kanbans, selectedKanbanId])
 
-  // Hook para buscar as conversas do quadro selecionado
+  // Hook para buscar as conversas do quadro selecionado (kanbanId é o único parâmetro necessário agora)
   const { conversations, columns, isLoading: conversationsLoading, error } = useConversations(
-    selectedKanbanId || "", 
-    user?.tenant_id || ""
+    selectedKanbanId || ""
   )
 
   const isGlobalLoading = authLoading || kanbansLoading || (selectedKanbanId && conversationsLoading)
@@ -69,7 +71,7 @@ export default function HomePage() {
           <div className="text-center max-w-md p-8 bg-surface-container-low rounded-xl shadow-ambient">
             <h2 className="text-headline-sm font-bold text-text-primary mb-2">Nenhum quadro encontrado</h2>
             <p className="text-body-md text-text-secondary">
-              Não encontramos nenhum quadro Kanban configurado para o seu tenant ({user.tenant_id}).
+              Não encontramos nenhum quadro Kanban configurado para o seu tenant ({tenantId || "N/A"}).
             </p>
           </div>
         </div>
@@ -98,7 +100,7 @@ export default function HomePage() {
           <div className="hidden sm:flex flex-col text-right">
             <span className="text-label-sm text-text-secondary uppercase tracking-wider mb-1">Tenant Context</span>
             <p className="text-body-sm font-mono text-text-primary bg-surface-container-high px-3 py-2 rounded-lg border border-outline-variant">
-              {user?.tenant_id?.slice(0, 8)}...
+              {tenantId ? `${tenantId.slice(0, 8)}...` : "Desconectado"}
             </p>
           </div>
         </div>

@@ -87,6 +87,8 @@ table contacts {
   tenant_id UUID (fk -> tenants)
   name TEXT
   phone TEXT (E.164 format: +5511987654321)
+  wa_name TEXT (último pushName recebido do WhatsApp — atualizado a cada webhook)
+  is_group BOOLEAN DEFAULT false (true se remoteJid termina em @g.us)
   created_at TIMESTAMP
   updated_at TIMESTAMP
 }

@@ -30,6 +30,32 @@ Remover o fetch adicional e usar `contactId` diretamente para as operações seg
 
 ---
 
+### TD-004 — Automação de Design Token Compliance & CI/CD (Script Interno)
+
+| Campo | Valor |
+|-------|-------|
+| **ID** | TD-004 |
+| **Tipo** | tech-debt |
+| **Prioridade** | MEDIUM |
+| **Story Origem** | 5.2 |
+| **Arquivo** | `src/components/`, `docs/design-system/ENFORCEMENT-GUIDE.md` |
+| **Identificado por** | User (via link de auditoria) — 2026-04-21 |
+| **Status** | Open |
+
+**Problema:**
+Necessidade de automatizar a verificação de conformidade de design tokens (`npm run check:tokens`) via GitHub Actions para evitar regressões e garantir que cores hardcoded não voltem a ser inseridas. O foco deve ser o uso do script de compliance interno do projeto.
+
+**Fix sugerido:**
+1. Criar novo workflow GitHub Action que execute `npm run check:tokens` em cada Pull Request.
+2. Auditar componentes gerados na Story 5.2 para garantir uso estrito de tokens via script local.
+3. Garantir que o script gere alertas claros no pipeline de CI.
+
+**Impacto:**
+- Garantia de integridade do Design System em longo prazo sem dependência de ferramentas externas de terceiros para esta verificação específica.
+- Bloqueio preventivo de PRs com cores hardcoded.
+
+---
+
 ## LOW Priority
 
 ### TD-002 — Import fora do topo do arquivo em route.ts
@@ -87,3 +113,4 @@ Tipar `data` com a interface existente ou criar `EvoGoMessageData` interface par
 | 2026-04-21 | TD-001 | Pax (PO) | 5.1 |
 | 2026-04-21 | TD-002 | Pax (PO) | 5.1 |
 | 2026-04-21 | TD-003 | Pax (PO) | 5.1 |
+| 2026-04-21 | TD-004 | Pax (PO) | 5.2 |

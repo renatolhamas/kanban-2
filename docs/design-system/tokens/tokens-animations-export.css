@@ -1,0 +1,72 @@
+/* =============================================================================
+   Design System: Animation Tokens Export (Story 5.2)
+   ============================================================================= */
+
+/* Motion Durations */
+--motion-duration-fast: 100ms;
+--motion-duration-standard: 200ms;
+--motion-duration-slow: 2000ms;
+
+/* Easing Functions */
+--motion-easing-ease-out: ease-out;
+--motion-easing-ease-in-out: ease-in-out;
+--motion-easing-linear: linear;
+
+/* ConversationCard: Reopen Animation */
+--animation-reopen-entrance-duration: var(--motion-duration-fast);
+--animation-reopen-entrance-easing: var(--motion-easing-ease-out);
+--animation-reopen-entrance-distance: 20px;
+--animation-reopen-pulse-duration: var(--motion-duration-slow);
+--animation-reopen-pulse-easing: var(--motion-easing-ease-in-out);
+--animation-reopen-pulse-delay: 100ms;
+--animation-reopen-color-from: var(--color-surface-container-low);
+--animation-reopen-color-to: var(--color-primary-container);
+
+/* ConversationCard: Badge Tokens */
+--badge-group-background: var(--color-surface-container);
+--badge-group-foreground: var(--color-text-primary);
+--badge-group-border: var(--color-outline-variant);
+
+--badge-status-active-background: var(--color-surface-container-low);
+--badge-status-active-foreground: var(--color-text-primary);
+
+--badge-status-archived-background: var(--color-surface-container-high);
+--badge-status-archived-foreground: var(--color-text-secondary);
+
+--badge-status-closed-background: var(--color-error-container);
+--badge-status-closed-foreground: var(--color-text-primary);
+
+/* Keyframe Definitions for Reopen Animation */
+@keyframes animation-reopen-entrance {
+  from {
+    opacity: 0;
+    transform: translateX(var(--animation-reopen-entrance-distance));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes animation-reopen-pulse {
+  0%, 100% {
+    background-color: var(--animation-reopen-color-from);
+  }
+  50% {
+    background-color: var(--animation-reopen-color-to);
+  }
+}
+
+/* Combined Animation Class */
+.conversation-card--reopen {
+  animation:
+    animation-reopen-entrance var(--animation-reopen-entrance-duration) var(--animation-reopen-entrance-easing),
+    animation-reopen-pulse var(--animation-reopen-pulse-duration) var(--animation-reopen-pulse-easing) var(--animation-reopen-pulse-delay);
+}
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .conversation-card--reopen {
+    animation: none;
+  }
+}

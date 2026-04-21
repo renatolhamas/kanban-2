@@ -221,6 +221,37 @@ layers:
         $value: "none"
         $description: "No shadow"
 
+    # ============================================================================
+    # Motion & Animation (Story 5.2 - Reopen Effect)
+    # ============================================================================
+    motion:
+      $type: "duration"
+      description: "Animation timing values"
+
+      fast:
+        $value: "100ms"
+        $description: "Fast animation - Quick entrance effects"
+      standard:
+        $value: "200ms"
+        $description: "Standard animation - UI state transitions"
+      slow:
+        $value: "2000ms"
+        $description: "Slow animation - Subtle background pulses"
+
+    easing:
+      $type: "easing"
+      description: "Animation easing functions"
+
+      ease-out:
+        $value: "ease-out"
+        $description: "Ease out - For entrance animations"
+      ease-in-out:
+        $value: "ease-in-out"
+        $description: "Ease in-out - For symmetric animations"
+      ease-linear:
+        $value: "linear"
+        $description: "Linear - For consistent pacing"
+
 # ================================================================================
 # SEMANTIC LAYER: Alias Tokens (Meaning-Based)
 # ================================================================================
@@ -453,3 +484,64 @@ layers:
         line-height: 1
         letter-spacing: "0.08em"
         text-transform: uppercase
+
+    conversation-card:
+      $type: "composite"
+      description: "Conversation Card component tokens (Story 5.1 & 5.2)"
+
+      reopen-animation:
+        entrance-duration:
+          $value: "{layers.core.motion.fast}"
+          $description: "Fade in + slide duration"
+        entrance-easing:
+          $value: "{layers.core.easing.ease-out}"
+          $description: "Smooth entrance easing"
+        entrance-distance: "20px"
+        pulse-duration:
+          $value: "{layers.core.motion.slow}"
+          $description: "Background color pulse duration"
+        pulse-easing:
+          $value: "{layers.core.easing.ease-in-out}"
+          $description: "Symmetric pulse easing"
+        pulse-delay: "100ms"
+        color-from:
+          $value: "{layers.semantic.color.surface-low}"
+          $description: "Pulse start color"
+        color-to:
+          $value: "{layers.core.color.primary-container}"
+          $description: "Pulse highlight color"
+
+      badge-group:
+        background:
+          $value: "{layers.core.color.surface-container}"
+          $description: "Group indicator background"
+        foreground:
+          $value: "{layers.semantic.color.text-primary}"
+          $description: "Group indicator text"
+        border:
+          $value: "{layers.semantic.color.border}"
+          $description: "Group indicator border"
+
+      badge-status-active:
+        background:
+          $value: "{layers.semantic.color.surface-low}"
+          $description: "Active status (no badge shown)"
+        foreground:
+          $value: "{layers.semantic.color.text-primary}"
+          $description: "Active status text"
+
+      badge-status-archived:
+        background:
+          $value: "{layers.core.color.surface-container-high}"
+          $description: "Archived status background"
+        foreground:
+          $value: "{layers.semantic.color.text-secondary}"
+          $description: "Archived status text (subtle)"
+
+      badge-status-closed:
+        background:
+          $value: "{layers.core.color.error-container}"
+          $description: "Closed status background (warning)"
+        foreground:
+          $value: "{layers.semantic.color.text-primary}"
+          $description: "Closed status text"

@@ -1,8 +1,8 @@
 # Database Extensions — Extensões e Advisors
 
-> 📅 Extraído em: 2026-04-16 17:50 UTC
+> 📅 Extraído em: 2026-04-21 12:30 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
+> Status: ✅ Atualizado (via MCP Supabase - live extraction)
 
 ## 📋 Extensões Habilitadas
 
@@ -180,6 +180,7 @@ WHERE name = 'evo_go_api_key';
 | `20260416192125` | `disable_rls_failed_registrations` — RLS disabled |
 | `20260416192127` | `fix_users_rls_auth_uid_initplan_drop` — RLS fix |
 | `20260416192130` | `fix_users_rls_auth_uid_initplan_create` — RLS fix |
+| `20260417020912` | `expand_schema_for_evolution` — Add evolution_message_id, sender_jid |
 
 ---
 

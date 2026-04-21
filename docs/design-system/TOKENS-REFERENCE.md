@@ -159,17 +159,86 @@ const primaryColor = tokens.colors.primary
 const spacing = tokens.spacing.md
 ```
 
+## Motion & Animation Tokens (Story 5.2)
+
+### Duration Tokens
+```
+--motion-duration-fast: 100ms      (entrance animations)
+--motion-duration-standard: 200ms  (UI state transitions)
+--motion-duration-slow: 2000ms     (subtle background pulses)
+```
+
+### Easing Functions
+```
+--motion-easing-ease-out: ease-out       (for entrance effects)
+--motion-easing-ease-in-out: ease-in-out (for symmetric animations)
+--motion-easing-linear: linear           (for consistent pacing)
+```
+
+### ConversationCard Reopen Animation
+```
+--animation-reopen-entrance-duration: 100ms
+--animation-reopen-entrance-easing: ease-out
+--animation-reopen-entrance-distance: 20px
+--animation-reopen-pulse-duration: 2000ms
+--animation-reopen-pulse-easing: ease-in-out
+--animation-reopen-pulse-delay: 100ms
+--animation-reopen-color-from: surface-container-low
+--animation-reopen-color-to: primary-container
+```
+
+### ConversationCard Badge Tokens
+
+**Group Indicator:**
+```
+--badge-group-background: surface-container
+--badge-group-foreground: text-primary
+--badge-group-border: outline-variant
+```
+
+**Status Badges:**
+```
+Active (no badge):
+  --badge-status-active-background: surface-container-low
+  --badge-status-active-foreground: text-primary
+
+Archived:
+  --badge-status-archived-background: surface-container-high
+  --badge-status-archived-foreground: text-secondary
+
+Closed:
+  --badge-status-closed-background: error-container
+  --badge-status-closed-foreground: text-primary
+```
+
+### Usage Example
+```css
+/* Import animation tokens */
+@import 'tokens-animations-export.css';
+
+/* Apply to component */
+.conversation-card.--reopen {
+  animation:
+    animation-reopen-entrance var(--animation-reopen-entrance-duration) var(--animation-reopen-entrance-easing),
+    animation-reopen-pulse var(--animation-reopen-pulse-duration) var(--animation-reopen-pulse-easing) var(--animation-reopen-pulse-delay);
+}
+```
+
+---
+
 ## Best Practices
 
 ✅ **DO:**
-- Always use tokens for colors, spacing, and sizing
+- Always use tokens for colors, spacing, sizing, and animations
 - Reference tokens by semantic name (`primary` not `blue-500`)
 - Compose tokens for complex patterns
+- Use motion tokens for consistent animation timing
 
 ❌ **DON'T:**
 - Hardcode color values (`#0d631b` → use `primary` instead)
 - Use arbitrary Tailwind values (`px-20` → use `px-lg` instead)
 - Mix styling approaches (Tailwind + inline CSS)
+- Hardcode animation durations (use `--motion-duration-*` instead)
 
 ## Token Files
 

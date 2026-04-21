@@ -1,0 +1,73 @@
+/**
+ * Story 5.2: Conversation Auto-Creation Animations
+ *
+ * Reopen animation: When a conversation is reopened from archived/closed status
+ * and moved to the first column of the Main Kanban.
+ *
+ * Animation Sequence:
+ * 1. 0-100ms: Entrance (fade in + slide from right)
+ * 2. 100-2100ms: Pulse highlight (subtle flash)
+ * 3. 2100ms+: Return to normal styling
+ */
+
+/* Entrance animation: fade in + slide from right */
+@keyframes reopen-entrance {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pulse highlight: subtle background color transition */
+@keyframes reopen-pulse {
+  0%, 100% {
+    background-color: var(--color-surface-container-low);
+  }
+  50% {
+    background-color: var(--color-primary-container);
+  }
+}
+
+/**
+ * Applied to ConversationCard when just reopened
+ *
+ * Usage:
+ * <Card className={cn(
+ *   "conversation-card",
+ *   isReopened && "conversation-card--reopen"
+ * )}>
+ */
+.conversation-card--reopen {
+  /* Combined animations */
+  animation:
+    reopen-entrance 100ms ease-out,
+    reopen-pulse 2s ease-in-out 100ms;
+}
+
+/**
+ * Optional: Alternative to animation class - use Framer Motion
+ * If using Framer Motion instead of CSS, apply:
+ *
+ * <motion.div
+ *   initial={{ opacity: 0, x: 20 }}
+ *   animate={{ opacity: 1, x: 0 }}
+ *   transition={{ duration: 0.1 }}
+ * >
+ *   <ConversationCard {...props} />
+ *   <motion.div
+ *     animate={{ backgroundColor: [surface-low, primary-container, surface-low] }}
+ *     transition={{ duration: 2, delay: 0.1 }}
+ *   />
+ * </motion.div>
+ */
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .conversation-card--reopen {
+    animation: none;
+  }
+}

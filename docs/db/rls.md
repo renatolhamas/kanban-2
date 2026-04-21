@@ -1,43 +1,43 @@
 # Row Level Security (RLS) — Políticas de Acesso
 
-> 📅 Extraído em: 2026-04-16 17:50 UTC
+> 📅 Extraído em: 2026-04-21 12:30 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
+> Status: ✅ Atualizado (via MCP Supabase - live extraction)
 
 ## 🔐 Visão Geral
 
-**Total de Políticas:** 32
+**Total de Políticas:** 31
 **Modelo:** Multi-tenant com JWT + tenant_id em app_metadata
 **Authentication:** JWT (via custom_access_token_hook)
 **Policy Pattern:** KISS (Keep It Simple Security) — acesso via tenant_id ou user_id  
-**Auth Model:** JWT com tenant_id em app_metadata + auth.uid()
+**Auth Model:** JWT com tenant_id em app_metadata (imutável) + auth.uid()
 
 ## Resumo de Cobertura
 
 | Tabela | Policies | Coverage | Padrão |
 |--------|----------|----------|--------|
-| `automatic_messages` | 4 (CRUD) | ✅ 100% | JWT user_metadata |
+| `automatic_messages` | 4 (CRUD) | ✅ 100% | JWT app_metadata (seguro) |
 | `columns` | 4 (CRUD) | ✅ 100% | Subquery via kanbans |
-| `contacts` | 4 (CRUD) | ✅ 100% | JWT user_metadata |
-| `conversations` | 4 (CRUD) | ✅ 100% | JWT user_metadata |
-| `kanbans` | 4 (CRUD) | ✅ 100% | JWT user_metadata |
+| `contacts` | 4 (CRUD) | ✅ 100% | JWT app_metadata (seguro) |
+| `conversations` | 4 (CRUD) | ✅ 100% | JWT app_metadata (seguro) |
+| `kanbans` | 4 (CRUD) | ✅ 100% | JWT app_metadata (seguro) |
 | `messages` | 4 (CRUD) | ✅ 100% | Subquery via conversations |
-| `tenants` | 3 (SUD) | ✅ 100% | JWT user_metadata |
+| `tenants` | 3 (SUD) | ✅ 100% | JWT app_metadata (seguro) |
 | `users` | 4 (CRUD) | ✅ 100% | auth.uid() |
-| `failed_registrations` | 0 | ⚠️ SEM POLICY | RLS habilitado sem acesso |
+| `failed_registrations` | 0 | ❌ RLS DISABLED | Acesso via service role only |
 | **TOTAL** | **31 policies** | — | — |
 
 ---
 
 ## Padrões de RLS Utilizados
 
-### Padrão 1 — Multi-tenant via JWT user_metadata
+### Padrão 1 — Multi-tenant via JWT app_metadata (SEGURO)
 ```sql
-tenant_id = (auth.jwt() -> 'user_metadata' ->> 'tenant_id')::uuid
+tenant_id = (auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid
 ```
 Usado em: `automatic_messages`, `contacts`, `conversations`, `kanbans`, `tenants`
 
-> ⚠️ **Advisor (Segurança — ERROR):** `user_metadata` é editável pelo usuário final. Nunca deve ser usado em contexto de segurança. Usar `app_metadata` ou custom claims imutáveis.
+> ✅ **Seguro:** `app_metadata` é imutável (apenas servidor pode modificar). Injetado por `custom_access_token_hook` no login.
 
 ### Padrão 2 — Per-user via auth.uid()
 ```sql

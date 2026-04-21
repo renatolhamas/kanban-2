@@ -1,12 +1,12 @@
 # Database Schema — Documentação Legível
 
-> 📅 Extraído em: 2026-04-16 17:50 UTC
+> 📅 Extraído em: 2026-04-21 12:30 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
+> Status: ✅ Atualizado (via MCP Supabase - live extraction)
 
 ## 📊 Visão Geral
 
-**Tabelas:** 9 | **Índices:** 30 | **Políticas RLS:** 32 | **Funções:** 2 | **Triggers:** 0 | **Sequences:** 1
+**Tabelas:** 9 | **Índices:** 34 | **Políticas RLS:** 31 | **Funções:** 2 | **Triggers:** 0 | **Sequences:** 1
 
 **Modelo:** Multi-tenant com WhatsApp integration (Evolution GO)  
 **RLS Status:** Ativado em todas as tabelas  
@@ -126,10 +126,11 @@ Sistema multi-tenant para gerenciamento de kanbans e conversas via WhatsApp.
 | `wa_phone` | text | NO | — | Número WhatsApp |
 | `status` | text | NO | `'active'` | — |
 | `last_message_at` | timestamptz | YES | — | — |
+| `evolution_message_id` | text | YES | — | ID da última msg Evolution GO (UNIQUE, para idempotência) |
 | `created_at` | timestamptz | NO | now() | — |
 | `updated_at` | timestamptz | NO | now() | — |
 
-**Constraints:** PK `id` | FK `tenant_id CASCADE` | FK `contact_id CASCADE` | FK `kanban_id SET NULL` | FK `column_id SET NULL`
+**Constraints:** PK `id` | FK `tenant_id CASCADE` | FK `contact_id CASCADE` | FK `kanban_id SET NULL` | FK `column_id SET NULL` | UNIQUE `evolution_message_id`
 
 > ⚠️ **Advisor:** `contact_id` e `column_id` não possuem índice cobrindo a FK.
 
@@ -141,13 +142,15 @@ Sistema multi-tenant para gerenciamento de kanbans e conversas via WhatsApp.
 |--------|------|----------|---------|------------|
 | `id` | uuid | NO | uuid_generate_v4() | PK |
 | `conversation_id` | uuid | NO | — | FK → conversations.id CASCADE |
-| `sender_type` | text | NO | — | — |
+| `sender_type` | text | NO | — | 'contact' ou 'agent' |
 | `content` | text | NO | — | — |
-| `media_url` | text | YES | — | — |
-| `media_type` | text | YES | — | — |
+| `media_url` | text | YES | — | URL da mídia |
+| `media_type` | text | YES | — | image, video, audio, file |
+| `evolution_message_id` | text | YES | — | ID da msg Evolution GO (UNIQUE, para idempotência) |
+| `sender_jid` | text | YES | — | JID do remetente (ex: 5511999@s.whatsapp.net) |
 | `created_at` | timestamptz | NO | now() | — |
 
-**Constraints:** PK `id` | FK `conversation_id → conversations.id CASCADE`
+**Constraints:** PK `id` | FK `conversation_id → conversations.id CASCADE` | UNIQUE `evolution_message_id`
 
 ---
 

@@ -1,8 +1,8 @@
 # Database Triggers — Eventos e Automação
 
-> 📅 Extraído em: 2026-04-16 17:50 UTC
+> 📅 Extraído em: 2026-04-21 12:30 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
+> Status: ✅ Atualizado (via MCP Supabase - live extraction)
 
 ## 📋 Visão Geral
 

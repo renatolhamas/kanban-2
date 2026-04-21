@@ -1,7 +1,7 @@
 -- Database Schema — DDL Completo
--- 📅 Extraído em: 2026-04-16 17:50 UTC
+-- 📅 Extraído em: 2026-04-21 12:30 UTC
 -- Fonte: Supabase (ujcjucgylwkjrdpsqffs)
--- Status: ✅ Atualizado (COMPLETO — via waterfall extraction)
+-- Status: ✅ Atualizado (via MCP Supabase - live extraction)
 
 -- ============================================================================
 -- EXTENSIONS

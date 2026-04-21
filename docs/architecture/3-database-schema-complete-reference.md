@@ -72,6 +72,8 @@ CREATE TABLE contacts (
   tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   phone TEXT NOT NULL,  -- E.164 format: +5511987654321
+  wa_name TEXT,         -- Last pushName received from WhatsApp
+  is_group BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -90,6 +92,7 @@ CREATE TABLE conversations (
   column_id UUID NOT NULL REFERENCES columns(id) ON DELETE SET NULL,
   wa_phone TEXT NOT NULL,  -- WhatsApp phone (may differ from contact.phone)
   status TEXT CHECK (status IN ('active', 'archived')) DEFAULT 'active',
+  unread_count INT DEFAULT 0,
   last_message_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()

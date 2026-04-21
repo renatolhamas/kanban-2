@@ -423,6 +423,53 @@
       ]
     }
   },
+  "story_5_ui_elements": {
+    "name": "Enhanced Webhooks UI (Stories 5.1 & 5.2)",
+    "created_at": "2026-04-21",
+    "status": "ready",
+    "description": "New UI elements for webhook contact auto-registration and conversation routing",
+    "elements": {
+      "badge_group_variant": {
+        "file": "src/components/ui/molecules/badge.tsx",
+        "type": "Badge variant",
+        "variant_name": "group",
+        "story": "5.1",
+        "status": "ready",
+        "description": "Indicator badge for group contacts (@g.us)",
+        "tokens": ["--color-surface-container", "--color-text-primary", "--color-outline-variant"],
+        "implementation": "Add variant='group' to Badge component. Already implemented."
+      },
+      "badge_status_variants": {
+        "file": "src/components/ui/molecules/badge.tsx",
+        "type": "Badge variants (3)",
+        "variant_names": ["status-active", "status-archived", "status-closed"],
+        "story": "5.2",
+        "status": "ready",
+        "description": "Conversation status indicators (active, archived, closed)",
+        "tokens": ["--color-surface-container-low", "--color-surface-container-high", "--color-warning-container"],
+        "implementation": "Add 3 status variants to Badge component. Already implemented."
+      },
+      "conversation_card_props": {
+        "file": "src/components/ui/molecules/ConversationCard.tsx",
+        "type": "Component prop additions",
+        "stories": ["5.1", "5.2"],
+        "status": "pending",
+        "description": "New props: isGroup (boolean), status (active|archived|closed), justReopened (boolean)",
+        "specs": "docs/design-system/specs/STORY-5.1-5.2-UI-SPECS.md"
+      },
+      "reopen_animation": {
+        "file": "src/styles/animations-story-5.css",
+        "type": "CSS Keyframe animations",
+        "animations": ["reopen-entrance", "reopen-pulse"],
+        "story": "5.2",
+        "status": "ready",
+        "description": "Entrance animation + highlight pulse when conversation reopens and moves to first column",
+        "duration": "2.1s total (100ms entrance + 2s pulse)",
+        "tokens": ["--color-surface-container-low", "--color-primary-container"],
+        "implementation": "CSS file created. Apply class 'conversation-card--reopen' to Card element."
+      }
+    }
+  },
   "success_metrics": {
     "phase_2_complete": {
       "header_migrated": false,

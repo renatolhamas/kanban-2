@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   description: "Multi-tenant Kanban board application",
 };
 
+export const dynamic = 'force-dynamic';
+
 export default function Layout({
   children,
 }: {

@@ -58,32 +58,42 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   const { pathname } = request.nextUrl
-
-  // Relação de rotas do middleware antigo preservada
-  const publicApiRoutes = [
-    "/api/auth/login",
-    "/api/auth/register",
-    "/api/auth/resend-confirmation",
-    "/api/auth/me",
-  ];
-
-  const publicPageRoutes = [
+  
+  // Define public paths that don't require authentication
+  const isPublicPage = [
     "/login",
     "/register",
     "/resend-confirmation",
     "/forgot-password",
     "/change-password",
-  ];
+    "/",
+  ].includes(pathname)
 
-  // Se autenticado tentando acessar página pública (login/register) → vai para /home
-  if (publicPageRoutes.includes(pathname) && user) {
+  const isPublicApi = [
+    "/api/auth/login",
+    "/api/auth/register",
+    "/api/auth/resend-confirmation",
+    "/api/auth/forgot-password",
+    "/api/auth/change-password",
+    "/api/auth/logout",
+    "/api/webhooks/evo-go",
+  ].includes(pathname)
+
+  const isNextInternal = pathname.startsWith('/_next') || pathname === '/favicon.ico'
+
+  const isPublicPath = isPublicPage || isPublicApi || isNextInternal
+
+  // Se autenticado tentando acessar página pública de auth (login/register) → vai para /home
+  if (isPublicPage && user && pathname !== "/") {
     return NextResponse.redirect(new URL("/home", request.url))
   }
 
-  // Se NÃO autenticado tentando acessar página privada → vai para /login
-  const isPublicPage = publicPageRoutes.includes(pathname) || pathname === "/" || pathname.startsWith('/_next') || pathname === '/favicon.ico'
-
-  if (!isPublicPage && !user) {
+  // Se NÃO autenticado tentando acessar caminho privado → vai para /login
+  if (!isPublicPath && !user) {
+    // Para chamadas de API, retornar 401 em vez de redirecionar para HTML
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     const loginUrl = new URL("/login", request.url)
     return NextResponse.redirect(loginUrl)
   }

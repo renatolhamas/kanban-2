@@ -95,3 +95,42 @@ describe('extractContactInfo', () => {
     expect(extractContactInfo({ key: {} })).toBeNull();
   });
 });
+
+describe('extractContactInfo — Evolution GO format', () => {
+  it('extracts all fields from Evo GO payload', () => {
+    const data = {
+      Info: {
+        Chat: '559891302872@s.whatsapp.net',
+        PushName: 'Renato Lhamas',
+        IsFromMe: false,
+        IsGroup: false,
+        ID: '3EB01DED7202FB093A8713',
+      },
+      Message: { conversation: 'teste' },
+    };
+    expect(extractContactInfo(data)).toEqual({
+      waPhone:   '+559891302872',
+      name:      'Renato Lhamas',
+      waName:    'Renato Lhamas',
+      isGroup:   false,
+      remoteJid: '559891302872@s.whatsapp.net',
+    });
+  });
+
+  it('falls back to waPhone when PushName absent', () => {
+    const data = {
+      Info: { Chat: '559891302872@s.whatsapp.net', IsGroup: false },
+    };
+    const result = extractContactInfo(data);
+    expect(result?.waPhone).toBe('+559891302872');
+    expect(result?.name).toBe('+559891302872');
+    expect(result?.waName).toBe('');
+  });
+
+  it('detects group via IsGroup: true', () => {
+    const data = {
+      Info: { Chat: '120363XXX@g.us', PushName: 'Grupo', IsGroup: true },
+    };
+    expect(extractContactInfo(data)?.isGroup).toBe(true);
+  });
+});

@@ -38,13 +38,38 @@ export function normalizePhone(phone: string | null | undefined): string | null 
 }
 
 /**
- * Extracts typed contact information from an Evo GO MESSAGES_UPSERT data payload.
- * Returns null if remoteJid is missing or unparseable.
+ * Extracts typed contact information from webhook payload.
+ * Supports both Evolution GO format (data.Info.Chat) and Evolution API v2 format (data.key.remoteJid).
+ * Returns null if no recognizable format or remoteJid is missing/unparseable.
  */
 export function extractContactInfo(data: unknown): ContactInfo | null {
   const d = data as Record<string, unknown> | null;
   if (!d) return null;
 
+  // Evolution GO format: data.Info.Chat
+  const info = d.Info as Record<string, unknown> | undefined;
+  if (info?.Chat != null) {
+    const remoteJid = info.Chat as string;
+    const parsed = parseJid(remoteJid);
+    if (!parsed) return null;
+
+    const waPhone = normalizePhone(parsed.phone);
+    if (!waPhone) return null;
+
+    const pushName = (info.PushName as string | undefined) || '';
+    const waName = pushName;
+    const name = pushName || waPhone;
+
+    return {
+      waPhone,
+      name,
+      waName,
+      isGroup: info.IsGroup === true,
+      remoteJid,
+    };
+  }
+
+  // Evolution API v2 format: data.key.remoteJid (legacy)
   const key = d.key as Record<string, unknown> | undefined;
   const remoteJid = key?.remoteJid as string | undefined;
 
@@ -55,14 +80,14 @@ export function extractContactInfo(data: unknown): ContactInfo | null {
   if (!waPhone) return null;
 
   const pushName = (d.pushName as string | undefined) || '';
-  const waName   = pushName;
-  const name     = pushName || waPhone;
+  const waName = pushName;
+  const name = pushName || waPhone;
 
   return {
     waPhone,
     name,
     waName,
-    isGroup:   parsed.isGroup,
+    isGroup: parsed.isGroup,
     remoteJid: remoteJid!,
   };
 }

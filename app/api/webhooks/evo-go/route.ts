@@ -99,6 +99,13 @@ export async function POST(
     }
 
     // 7. Process event based on type
+    console.log('[Webhook] Event received', {
+      tenantId,
+      event,
+      dataKeys: data ? Object.keys(data).join(',') : 'null',
+      timestamp: new Date().toISOString(),
+    });
+
     switch (event) {
       case 'connection.update':
       case 'Connected':
@@ -239,17 +246,28 @@ async function handleMessagesUpsert(
   data?: Record<string, unknown>,
 ): Promise<void> {
   try {
-    if (!data) return;
+    if (!data) {
+      console.warn('[Webhook] MESSAGES_UPSERT: Empty data payload', { tenantId });
+      return;
+    }
 
     // 1. Extract contact information
     const contactInfo = extractContactInfo(data);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const messageId = (data as any)?.key?.id;
 
+    console.log('[Webhook] MESSAGES_UPSERT payload structure', {
+      tenantId,
+      dataKeys: Object.keys(data),
+      keyField: data.key ? Object.keys(data.key as Record<string, unknown>) : 'missing',
+      pushName: (data as any)?.pushName,
+      contactExtracted: !!contactInfo,
+    });
+
     if (!contactInfo) {
       console.warn('[Webhook] MESSAGES_UPSERT: Could not extract contact info from payload', {
         tenantId,
-        data: JSON.stringify(data).substring(0, 500),
+        payload: JSON.stringify(data).substring(0, 1000),
       });
       return;
     }

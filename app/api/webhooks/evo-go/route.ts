@@ -1,10 +1,9 @@
 /**
  * POST /api/webhooks/evo-go
- * Webhook handler for Evo GO events (CONNECTION_UPDATE, QRCODE_UPDATED, MESSAGES_UPSERT)
+ * Webhook handler for Evo GO events (connection.update, qrcode, messages.upsert)
  *
- * Security:
- * - Validates HMAC-SHA256 signature via X-Signature header
- * - Extracts tenantId from URL query parameter
+ * Note: Evolution GO does not support HMAC-SHA256 webhook signatures.
+ * - Extracts tenantId from URL query parameter or payload.instance lookup
  * - Returns 200 OK immediately (async processing allowed)
  */
 
@@ -12,11 +11,9 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { validateEvoGoSignature, parseSignatureHeader } from '@/lib/api/evo-go-signature';
 
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const evoGoWebhookSecret = process.env.EVO_GO_WEBHOOK_SECRET;
 
 interface EvoGoWebhookPayload {
   event:     string;
@@ -32,13 +29,6 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<{ statusCode: number } | { error: string; statusCode: number }>> {
   try {
-    // TESTE: Webhook secret validation comentado para testar se é obrigatório
-    // if (!supabaseUrl || !supabaseServiceRoleKey || !evoGoWebhookSecret) {
-    //   console.error('[CONFIG ERROR] Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, EVO_GO_WEBHOOK_SECRET');
-    //   // Always return 200 for webhooks to avoid retries, but log the error
-    //   return NextResponse.json({ statusCode: 200 }, { status: 200 });
-    // }
-
     if (!supabaseUrl || !supabaseServiceRoleKey) {
       console.error('[CONFIG ERROR] Missing required environment variables: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY');
       return NextResponse.json({ statusCode: 200 }, { status: 200 });
@@ -49,7 +39,7 @@ export async function POST(
     const url = new URL(request.url);
     const tenantId = url.searchParams.get('tenantId');
 
-    // 2. Read raw body as text (CRITICAL for HMAC validation)
+    // 2. Read raw body as text
     const body = await request.text();
 
     if (!body) {
@@ -60,37 +50,7 @@ export async function POST(
       return NextResponse.json({ statusCode: 200 }, { status: 200 });
     }
 
-    // TESTE: HMAC validation comentado para testar se é obrigatório
-    // 3. Extract and validate X-Signature header
-    // const signatureHeader = request.headers.get('x-signature');
-    // const signature = parseSignatureHeader(signatureHeader);
-
-    // if (!signature) {
-    //   console.warn('[Webhook] Invalid or missing X-Signature header', {
-    //     tenantId,
-    //     provided: signatureHeader ? 'present' : 'missing',
-    //     timestamp: new Date().toISOString(),
-    //   });
-    //   return NextResponse.json({ statusCode: 401 }, { status: 401 });
-    // }
-
-    // 4. Validate HMAC-SHA256 signature
-    // const isValid = validateEvoGoSignature(body, signature, evoGoWebhookSecret);
-
-    // if (!isValid) {
-    //   console.warn('[Webhook] Invalid signature', {
-    //     tenantId,
-    //     timestamp: new Date().toISOString(),
-    //   });
-    //   return NextResponse.json({ statusCode: 401 }, { status: 401 });
-    // }
-
-    console.log('[Webhook] TESTE: HMAC validation bypassed - proceeding without signature check', {
-      tenantId,
-      timestamp: new Date().toISOString(),
-    });
-
-    // 5. Parse JSON body (safe after validation)
+    // 3. Parse JSON body
     let payload: EvoGoWebhookPayload;
     try {
       payload = JSON.parse(body);
@@ -140,15 +100,19 @@ export async function POST(
 
     // 7. Process event based on type
     switch (event) {
-      case 'CONNECTION_UPDATE':
+      case 'connection.update':
+      case 'Connected':
+      case 'Disconnected':
         await handleConnectionUpdate(supabase, resolvedTenantId, data);
         break;
 
-      case 'QRCODE_UPDATED':
+      case 'qrcode':
+      case 'PairSuccess':
         await handleQRCodeUpdated(supabase, resolvedTenantId, data);
         break;
 
-      case 'MESSAGES_UPSERT':
+      case 'messages.upsert':
+      case 'Message':
         await handleMessagesUpsert(supabase, resolvedTenantId, data);
         break;
 
@@ -156,6 +120,7 @@ export async function POST(
         console.log('[Webhook] Unknown event type', {
           tenantId,
           event,
+          payload: JSON.stringify(data).substring(0, 500),
           timestamp: new Date().toISOString(),
         });
     }

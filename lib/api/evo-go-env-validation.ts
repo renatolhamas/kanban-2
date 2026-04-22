@@ -6,7 +6,6 @@
 export interface EvoGoEnvConfig {
   apiKey: string;
   apiUrl: string;
-  webhookSecret?: string;
 }
 
 /**
@@ -17,7 +16,6 @@ export interface EvoGoEnvConfig {
 export function validateEvoGoEnv(): EvoGoEnvConfig {
   const apiKey = process.env.EVO_GO_API_KEY;
   const apiUrl = process.env.EVOGO_API_URL || "https://evogo.renatop.com.br";
-  const webhookSecret = process.env.EVO_GO_WEBHOOK_SECRET;
 
   if (!apiKey) {
     throw new Error(
@@ -31,17 +29,9 @@ export function validateEvoGoEnv(): EvoGoEnvConfig {
     );
   }
 
-  // Webhook secret is optional at this stage but should be validated before use
-  if (process.env.NODE_ENV === "production" && !webhookSecret) {
-    console.warn(
-      "Warning: EVO_GO_WEBHOOK_SECRET not set. Webhook validation will not work properly.",
-    );
-  }
-
   return {
     apiKey,
     apiUrl,
-    webhookSecret,
   };
 }
 

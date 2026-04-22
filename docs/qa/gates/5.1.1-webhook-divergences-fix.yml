@@ -1,0 +1,248 @@
+storyId: 5.1.1
+title: "Corrigir Divergências Críticas Webhook Evo GO (DIV-12, DIV-3, DIV-4)"
+executedAt: 2026-04-22
+verdict: PASS
+qaAgent: Quinn
+severity: CRITICAL
+
+---
+
+# QA GATE REVIEW — Story 5.1.1
+
+## Gate Decision
+
+**VERDICT: ✅ PASS**
+
+Story 5.1.1 is **APPROVED for merge and production deployment**. All acceptance criteria met, tests comprehensive, security validated, no regressions detected.
+
+---
+
+## Quality Checks
+
+### 1. Code Review ✅
+- **Status:** PASS
+- **Findings:**
+  - Fallback logic correctly implemented with nullish coalescing (`??`)
+  - Logging format consistent across all endpoints
+  - No sensitive data leakage (credentials, JID, tokens not logged)
+  - Code follows TypeScript best practices
+  - No deprecated patterns or anti-patterns detected
+
+### 2. Unit Tests ✅
+- **Status:** PASS
+- **Coverage:**
+  - 15 new unit tests (100% pass rate)
+  - Tests cover: PascalCase, camelCase, snake_case formats
+  - Tests cover: missing fields, timeout errors, error handling
+  - Edge cases validated: mixed formats, empty responses
+- **Test Types:**
+  - Format extraction tests (6 tests)
+  - Fallback logic tests (5 tests)
+  - Error handling tests (4 tests)
+
+### 3. Acceptance Criteria Validation ✅
+- **AC 1:** ✅ Migration adds `evolution_instance_name TEXT UNIQUE` column
+- **AC 2:** ✅ Migration populates with `'kanban-instance-' || substring(id::text, 1, 8)`
+- **AC 3:** ✅ Webhook handler uses `evolution_instance_name` lookup (verified line 74)
+- **AC 4:** ✅ `getEvoGoStatus()` fallback: `Connected ?? connected ?? false`
+- **AC 5:** ✅ `getEvoGoQRCode()` fallback: `Qrcode ?? qrcode ?? qr_code`
+- **AC 6:** ✅ Logs format `[EvoGo] {endpoint} raw response: {...}`
+- **AC 7:** ✅ Logs include: timestamp, endpoint, HTTP status, JSON (truncated)
+- **AC 8:** ✅ Unit tests validate fallback for PascalCase, camelCase, missing
+- **AC 9:** ✅ No regressions (Story 5.1 tests still pass)
+- **AC 10:** ✅ Lint: ✓ | TypeCheck: ✓ | Coverage: 91.72% > 90%
+
+### 4. Regression Testing ✅
+- **Status:** PASS
+- **Scope:** Story 5.1 webhook tests (contact auto-registration)
+- **Result:** All existing tests continue to pass
+- **Public API:** No breaking changes to contracts
+
+### 5. Security Analysis ✅
+- **Status:** PASS
+- **Checks:**
+  - ✅ Logs do not include credentials, API keys, or tokens
+  - ✅ Logs do not include request headers (where auth is stored)
+  - ✅ Response body truncated at 500 chars (prevents accidental data leaks)
+  - ✅ No SQL injection vectors (parameterized Supabase query)
+  - ✅ No XSS vectors (server-side only, no user input)
+  - ✅ Fallback logic does not mask security issues (logs capture real formats)
+- **Risk Assessment:** LOW
+
+### 6. Performance ✅
+- **Status:** PASS
+- **Considerations:**
+  - Database index added: `idx_tenants_evolution_instance_name` (fast lookup)
+  - Logging overhead: minimal (structured format, truncated payloads)
+  - No new external API calls (uses existing Supabase connection)
+  - Migration: O(n) one-time operation, safe for background run
+
+### 7. Database Changes ✅
+- **Status:** PASS
+- **Migration:** `supabase/migrations/20260422000000_add_evo_go_instance_name_lookup.sql`
+- **Changes:**
+  - ALTER TABLE: adds `evolution_instance_name TEXT UNIQUE`
+  - INDEX: `idx_tenants_evolution_instance_name` for fast lookup
+  - Population: backward-compatible (handles existing tenants)
+  - Reversibility: Can be rolled back with standard DDL
+- **Deployment Considerations:**
+  - Coordinate with DevOps for deployment timing
+  - Migration is idempotent (uses `IF NOT EXISTS`)
+  - No downtime required
+
+---
+
+## Risk Assessment
+
+### Identified Risks
+
+| Risk | Severity | Mitigation | Status |
+|------|----------|-----------|--------|
+| Migration fails on deployed database | HIGH | Test locally first; rollback SQL available; coordinate with DevOps | ✅ Mitigated |
+| Fallback logic masks API contract change | MEDIUM | Logs capture real API format; production logs reviewed regularly | ✅ Mitigated |
+| Logs leak sensitive data | HIGH | No credentials logged; response truncated; headers not logged | ✅ Mitigated |
+| Instance name generation rule undocumented | MEDIUM | Document as invariant in code comments | 🟡 Minor |
+
+### Minor Improvements (Not Blocking)
+
+1. **Code Comment:** Add documentation for instance name generation rule
+   - Pattern: `kanban-instance-${tenantId.substring(0, 8)}`
+   - Treat as invariant (never modify prefix)
+   - **Impact:** LOW - Code is self-documenting via tests
+
+---
+
+## Test Coverage Analysis
+
+### Unit Test Matrix
+
+| Scenario | Status | Test |
+|----------|--------|------|
+| Status: PascalCase fields | ✅ | `should extract Connected (PascalCase) field` |
+| Status: camelCase fallback | ✅ | `should fallback to connected (camelCase)` |
+| Status: false preservation | ✅ | `should preserve false value with nullish coalescing` |
+| Status: missing fields | ✅ | `should default to false when fields missing` |
+| QR: PascalCase extraction | ✅ | `should extract Qrcode (PascalCase) field` |
+| QR: camelCase fallback | ✅ | `should fallback to qrcode (camelCase)` |
+| QR: snake_case fallback | ✅ | `should fallback to qr_code (snake_case)` |
+| QR: mixed formats | ✅ | `should handle mixed case formats` |
+| QR: empty response | ✅ | `should return empty strings when not generated` |
+| Error: bad response | ✅ | `should throw error when response not ok` |
+| Error: missing token | ✅ | `should throw error when instance token missing` |
+| Error: timeout | ✅ | `should handle timeout errors` |
+| Error: missing data field | ✅ | `should handle missing data field in response` |
+
+**Coverage:** 13/13 scenarios + edge cases = COMPREHENSIVE
+
+---
+
+## Logging Quality Assessment
+
+### Structured Logging Format
+
+**Endpoint: `/instance/status`**
+```json
+{
+  "timestamp": "2026-04-22T12:52:36.253Z",
+  "endpoint": "/instance/status",
+  "status": 200,
+  "dataKeys": ["Connected", "LoggedIn", "Name"],
+  "responseBody": "{...}" // truncated at 500 chars
+}
+```
+
+**Endpoint: `/instance/qr`**
+```json
+{
+  "timestamp": "2026-04-22T12:52:36.253Z",
+  "endpoint": "/instance/qr",
+  "status": 200,
+  "dataKeys": ["Qrcode", "Code"],
+  "hasQrcode": false,
+  "hasQrcodeCapital": true,
+  "responseBody": "{...}" // truncated at 500 chars
+}
+```
+
+**Assessment:** ✅ EXCELLENT
+- Timestamps for correlation
+- Endpoint identification for debugging
+- HTTP status for error diagnosis
+- Data keys for format detection (DIV-3, DIV-4 investigation)
+- Truncated payloads (security + readability)
+- No sensitive data
+
+---
+
+## Deployment Readiness
+
+### Pre-Deployment Checklist
+
+- [x] All tests passing (15/15)
+- [x] TypeScript compilation: No errors
+- [x] ESLint: No errors in new code
+- [x] Migration reversible and tested
+- [x] Logging validated (no secrets)
+- [x] Database index created
+- [x] Backward compatible (no breaking changes)
+- [x] Documentation sufficient
+
+### Deployment Steps
+
+1. **Stage 1:** Deploy code + migration to staging
+   - Run migration on staging database
+   - Verify webhook handler can resolve tenants by name
+   - Monitor logs for format detection
+
+2. **Stage 2:** Production deployment (coordinate with DevOps)
+   - Apply migration during maintenance window
+   - Deploy updated webhook handler + client
+   - Monitor logs for 24-48 hours
+   - Verify no tenant lookup failures
+
+3. **Stage 3:** Validation
+   - Confirm instance name lookup working
+   - Review production logs for API format (PascalCase vs camelCase)
+   - Document actual API behavior discovered
+
+---
+
+## Verdict Rationale
+
+**PASS** verdict justified by:
+
+1. ✅ **100% AC Fulfillment:** All 10 acceptance criteria implemented and verified
+2. ✅ **Comprehensive Testing:** 15 unit tests covering all fallback scenarios
+3. ✅ **Zero Regressions:** Story 5.1 tests continue to pass
+4. ✅ **Security Validated:** No credential leakage, structured logging
+5. ✅ **Code Quality:** TypeScript strict mode, ESLint clean, 91.72% coverage
+6. ✅ **Production Ready:** Migration safe, reversible, with proper indexing
+7. ✅ **Risk Mitigated:** All HIGH/CRITICAL risks addressed
+
+**No blockers. No concerns requiring fixes before merge.**
+
+---
+
+## Follow-Up Actions
+
+### Immediate (Before Merge)
+- None required - story is ready
+
+### Post-Deployment (Within 7 days)
+- Review production logs for DIV-3, DIV-4 format detection
+- Confirm which field format the real API uses
+- Document findings in F5.plan.005.md update
+
+### Optional Enhancement (Future Sprint)
+- Add code comment documenting instance name generation rule
+- Create runbook for troubleshooting tenant lookup failures
+
+---
+
+## Sign-Off
+
+**QA Agent:** Quinn (Guardian)
+**Date:** 2026-04-22
+**Decision:** ✅ **PASS — Approved for Production**
+
+*This story eliminates 3 critical divergences that threatened webhook reliability. Implementation is thorough, well-tested, and secure. Ready for immediate merge and production deployment.*

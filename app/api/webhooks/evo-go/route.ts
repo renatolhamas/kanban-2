@@ -143,7 +143,14 @@ export async function POST(
 
 /**
  * Handle CONNECTION_UPDATE event
- * Updates tenant connection_status in database
+ * Normalizes status from Evolution GO to match database constraints
+ * 
+ * Evolution GO Status -> DB connection_status:
+ * - 'open'          -> 'connected'
+ * - 'connecting'    -> 'connecting'
+ * - 'close'/'closed'-> 'disconnected'
+ * - 'created'       -> 'pending'
+ * - (unknown)       -> 'error'
  */
 async function handleConnectionUpdate(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -152,20 +159,39 @@ async function handleConnectionUpdate(
   data?: Record<string, unknown>,
 ): Promise<void> {
   try {
-    const status = data?.status || 'disconnected';
+    const rawStatus = String(data?.status || '').toLowerCase();
+    
+    // Status Mapping (Evolution GO -> Internal DB)
+    const statusMap: Record<string, string> = {
+      'open': 'connected',
+      'connecting': 'connecting',
+      'close': 'disconnected',
+      'closed': 'disconnected',
+      'created': 'pending',
+    };
+
+    const mappedStatus = statusMap[rawStatus] || 'error';
+
+    console.log('[Webhook] CONNECTION_UPDATE mapping', {
+      tenantId,
+      rawStatus,
+      mappedStatus,
+      timestamp: new Date().toISOString(),
+    });
 
     const { error } = await supabase
       .from('tenants')
       .update({
-        connection_status: status,
-        ...(status === 'connected' && { updated_at: new Date().toISOString() }),
+        connection_status: mappedStatus,
+        ...(mappedStatus === 'connected' && { updated_at: new Date().toISOString() }),
       })
       .eq('id', tenantId);
 
     if (error) {
       console.error('[Webhook] CONNECTION_UPDATE database error', {
         tenantId,
-        status,
+        rawStatus,
+        mappedStatus,
         error: error.message,
         timestamp: new Date().toISOString(),
       });
@@ -174,11 +200,11 @@ async function handleConnectionUpdate(
 
     console.log('[Webhook] CONNECTION_UPDATE processed successfully', {
       tenantId,
-      status,
+      mappedStatus,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('[Webhook] CONNECTION_UPDATE error', {
+    console.error('[Webhook] CONNECTION_UPDATE fatal error', {
       tenantId,
       error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString(),

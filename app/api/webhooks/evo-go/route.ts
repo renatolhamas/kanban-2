@@ -390,7 +390,10 @@ async function handleMessagesUpsert(
       return;
     }
 
+    let conversationId: string | null = null;
+
     if (existingConv) {
+      conversationId = existingConv.id;
       // Update existing conversation
       const { error: convError } = await supabase
         .from('conversations')
@@ -410,7 +413,7 @@ async function handleMessagesUpsert(
       }
     } else {
       // Create new conversation
-      const { error: convError } = await supabase
+      const { data: newConv, error: convError } = await supabase
         .from('conversations')
         .insert({
           tenant_id: tenantId,
@@ -420,21 +423,65 @@ async function handleMessagesUpsert(
           wa_phone: contactInfo.waPhone,
           last_message_at: new Date().toISOString(),
           evolution_message_id: messageId,
-        });
+        })
+        .select('id')
+        .single();
 
-      if (convError) {
+      if (convError || !newConv) {
         console.error('[Webhook] Conversation insert error', {
           tenantId,
           contactId: contact.id,
-          error: convError.message,
+          error: convError?.message,
+        });
+      } else {
+        conversationId = newConv.id;
+      }
+    }
+
+    // 5. Persist Message (Story 5.3)
+    const message = data.message as Record<string, unknown> | undefined;
+    const content = message?.conversation ?? '';
+    const fromMe = contactInfo.isFromMe ?? false;
+
+    console.log('[DEBUG] Message insertion check', {
+      tenantId,
+      fromMe,
+      conversationId,
+      shouldInsert: !fromMe && conversationId,
+      contentLength: String(content).length,
+      messageId: contactInfo.messageId,
+    });
+
+    if (!fromMe && conversationId) {
+      const { error: msgError } = await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversationId,
+          sender_type: 'contact',
+          content: content,
+          evolution_message_id: contactInfo.messageId ?? null,
+          sender_jid: contactInfo.remoteJid ?? null,
+        });
+
+      // 23505 = unique_violation (idempotency)
+      if (msgError && msgError.code !== '23505') {
+        console.error('[Webhook] Message insert error', {
+          tenantId,
+          conversationId,
+          error: msgError.message,
+          code: msgError.code,
         });
       }
     }
 
-    console.log('[Webhook] MESSAGES_UPSERT processed successfully (Contact + Conversation)', {
+    const messageInserted = !fromMe && conversationId;
+    console.log(`[Webhook] MESSAGES_UPSERT processed successfully (Contact + Conversation${messageInserted ? ' + Message' : ''})`, {
       tenantId,
       contactId: contact.id,
+      conversationId,
       waPhone: contactInfo.waPhone,
+      fromMe,
+      messageInserted,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

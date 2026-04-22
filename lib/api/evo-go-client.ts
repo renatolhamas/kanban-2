@@ -494,8 +494,18 @@ export async function getEvoGoQRCode(
     const data = await response.json();
     const qrData = data.data || {};
 
-    // Note: Evo GO returns "Qrcode" with uppercase Q
-    const qrCode = (qrData.Qrcode || qrData.qrcode) as string;
+    console.log('[EvoGo] /instance/qr raw response', {
+      timestamp: new Date().toISOString(),
+      endpoint: '/instance/qr',
+      status: response.status,
+      dataKeys: Object.keys(qrData),
+      hasQrcode: 'qrcode' in qrData,
+      hasQrcodeCapital: 'Qrcode' in qrData,
+      responseBody: JSON.stringify(qrData).substring(0, 500),
+    });
+
+    // Note: Evo GO returns "Qrcode" with uppercase Q (PascalCase), but may also use camelCase
+    const qrCode = (qrData.Qrcode || qrData.qrcode || qrData.qr_code) as string;
     const code = (qrData.Code || qrData.code) as string;
 
     if (!qrCode) {
@@ -577,6 +587,14 @@ export async function getEvoGoStatus(
 
     const data = await response.json();
     const statusData = data.data || {};
+
+    console.log('[EvoGo] /instance/status raw response', {
+      timestamp: new Date().toISOString(),
+      endpoint: '/instance/status',
+      status: response.status,
+      dataKeys: Object.keys(statusData),
+      responseBody: JSON.stringify(statusData).substring(0, 500),
+    });
 
     // Note: Evo GO returns "Connected" with uppercase C
     // Use ?? (nullish coalescing) to preserve false values — || would convert false to undefined

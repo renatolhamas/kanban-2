@@ -71,7 +71,7 @@ export async function POST(
       const { data: tenantRow, error: tenantError } = await supabase
         .from('tenants')
         .select('id')
-        .eq('evolution_instance_id', instance)
+        .eq('evolution_instance_name', instance)
         .maybeSingle();
 
       if (tenantError) {
@@ -99,11 +99,11 @@ export async function POST(
     }
 
     // 7. Process event based on type
-    console.log('[Webhook] Event received', {
-      tenantId,
+    console.log('[WebhookEvoGo] Processing event', {
       event,
-      dataKeys: data ? Object.keys(data).join(',') : 'null',
+      instance,
       timestamp: new Date().toISOString(),
+      hasData: !!data,
     });
 
     switch (event) {

@@ -260,7 +260,7 @@ async function handleMessagesUpsert(
       tenantId,
       dataKeys: Object.keys(data),
       keyField: data.key ? Object.keys(data.key as Record<string, unknown>) : 'missing',
-      pushName: (data as any)?.pushName,
+      pushName: (data as { pushName?: string })?.pushName,
       contactExtracted: !!contactInfo,
     });
 

@@ -65,26 +65,31 @@ describe('extractContactInfo', () => {
       waName:    'João Silva',
       isGroup:   false,
       remoteJid: '5511999999999@s.whatsapp.net',
+      messageId: 'ABC123',
+      isFromMe:  false,
     });
   });
 
   it('falls back name to waPhone when pushName absent', () => {
-    const data = { key: { remoteJid: '5511999999999@s.whatsapp.net' } };
+    const data = { key: { remoteJid: '5511999999999@s.whatsapp.net', id: 'ABC123' } };
     const result = extractContactInfo(data);
     expect(result?.name).toBe('+5511999999999');
     expect(result?.waName).toBe('');
+    expect(result?.messageId).toBe('ABC123');
   });
 
   it('detects group contact', () => {
-    const data = { key: { remoteJid: '120363XXXXXXXXXX@g.us' }, pushName: 'Grupo Teste' };
+    const data = { key: { remoteJid: '120363XXXXXXXXXX@g.us', id: 'G123' }, pushName: 'Grupo Teste' };
     const result = extractContactInfo(data);
     expect(result?.isGroup).toBe(true);
     expect(result?.waPhone).toBe('+120363XXXXXXXXXX');
+    expect(result?.messageId).toBe('G123');
   });
 
   it('handles multi-device suffix in JID', () => {
-    const data = { key: { remoteJid: '5511999999999:1@s.whatsapp.net' }, pushName: 'Test' };
+    const data = { key: { remoteJid: '5511999999999:1@s.whatsapp.net', id: 'M123' }, pushName: 'Test' };
     expect(extractContactInfo(data)?.waPhone).toBe('+5511999999999');
+    expect(extractContactInfo(data)?.messageId).toBe('M123');
   });
 
   it('returns null for null data', () => {
@@ -114,23 +119,28 @@ describe('extractContactInfo — Evolution GO format', () => {
       waName:    'Renato Lhamas',
       isGroup:   false,
       remoteJid: '559891302872@s.whatsapp.net',
+      messageId: '3EB01DED7202FB093A8713',
+      isFromMe:  false,
     });
   });
 
   it('falls back to waPhone when PushName absent', () => {
     const data = {
-      Info: { Chat: '559891302872@s.whatsapp.net', IsGroup: false },
+      Info: { Chat: '559891302872@s.whatsapp.net', IsGroup: false, ID: '3EB01' },
     };
     const result = extractContactInfo(data);
     expect(result?.waPhone).toBe('+559891302872');
     expect(result?.name).toBe('+559891302872');
     expect(result?.waName).toBe('');
+    expect(result?.messageId).toBe('3EB01');
   });
 
   it('detects group via IsGroup: true', () => {
     const data = {
-      Info: { Chat: '120363XXX@g.us', PushName: 'Grupo', IsGroup: true },
+      Info: { Chat: '120363XXX@g.us', PushName: 'Grupo', IsGroup: true, ID: 'G001' },
     };
-    expect(extractContactInfo(data)?.isGroup).toBe(true);
+    const result = extractContactInfo(data);
+    expect(result?.isGroup).toBe(true);
+    expect(result?.messageId).toBe('G001');
   });
 });

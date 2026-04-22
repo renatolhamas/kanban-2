@@ -4,6 +4,8 @@ export interface ContactInfo {
   waName:    string;
   isGroup:   boolean;
   remoteJid: string;
+  messageId?: string;
+  isFromMe?:  boolean;
 }
 
 /**
@@ -66,6 +68,8 @@ export function extractContactInfo(data: unknown): ContactInfo | null {
       waName,
       isGroup: info.IsGroup === true,
       remoteJid,
+      messageId: info.ID as string | undefined,
+      isFromMe:  info.IsFromMe === true,
     };
   }
 
@@ -89,5 +93,7 @@ export function extractContactInfo(data: unknown): ContactInfo | null {
     waName,
     isGroup: parsed.isGroup,
     remoteJid: remoteJid!,
+    messageId: key?.id as string | undefined,
+    isFromMe:  key?.fromMe === true,
   };
 }

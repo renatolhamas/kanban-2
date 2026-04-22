@@ -63,7 +63,9 @@ export async function POST(
       return NextResponse.json({ statusCode: 200 }, { status: 200 });
     }
 
-    const { event, instance, data } = payload;
+    const { event: rawEvent, instance, data: rawData } = payload;
+    const event = (rawEvent || '').toUpperCase();
+    const data = rawData || payload;
 
     // 6. Resolve tenantId: prefer payload.instance lookup, fallback to URL param
     let resolvedTenantId = tenantId;
@@ -107,25 +109,26 @@ export async function POST(
     });
 
     switch (event) {
-      case 'connection.update':
-      case 'Connected':
-      case 'Disconnected':
-        await handleConnectionUpdate(supabase, resolvedTenantId, data);
+      case 'CONNECTION.UPDATE':
+      case 'CONNECTED':
+      case 'DISCONNECTED':
+        await handleConnectionUpdate(supabase, resolvedTenantId, data as Record<string, unknown>);
         break;
 
-      case 'qrcode':
-      case 'PairSuccess':
-        await handleQRCodeUpdated(supabase, resolvedTenantId, data);
+      case 'QRCODE':
+      case 'PAIRSUCCESS':
+      case 'QRCODE_UPDATED':
+        await handleQRCodeUpdated(supabase, resolvedTenantId, data as Record<string, unknown>);
         break;
 
-      case 'messages.upsert':
-      case 'Message':
-        await handleMessagesUpsert(supabase, resolvedTenantId, data);
+      case 'MESSAGES.UPSERT':
+      case 'MESSAGE':
+        await handleMessagesUpsert(supabase, resolvedTenantId, data as Record<string, unknown>);
         break;
 
       default:
         console.log('[Webhook] Unknown event type', {
-          tenantId,
+          tenantId: resolvedTenantId,
           event,
           payload: JSON.stringify(data).substring(0, 500),
           timestamp: new Date().toISOString(),
@@ -290,15 +293,14 @@ async function handleMessagesUpsert(
 
     // 1. Extract contact information
     const contactInfo = extractContactInfo(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const messageId = (data as any)?.key?.id;
+    const messageId = contactInfo?.messageId;
 
     console.log('[Webhook] MESSAGES_UPSERT payload structure', {
       tenantId,
       dataKeys: Object.keys(data),
-      keyField: data.key ? Object.keys(data.key as Record<string, unknown>) : 'missing',
-      pushName: (data as { pushName?: string })?.pushName,
+      pushName: contactInfo?.waName,
       contactExtracted: !!contactInfo,
+      messageIdExtracted: !!messageId,
     });
 
     if (!contactInfo) {

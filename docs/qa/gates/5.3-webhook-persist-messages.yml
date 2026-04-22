@@ -1,0 +1,79 @@
+schema: 1
+story: '5.3'
+gate: PASS
+status_reason: 'All acceptance criteria met. Message persistence implemented correctly with proper idempotency handling. Unit tests (3/3) passing, linting clean, TypeScript compilation successful.'
+reviewer: Quinn
+updated: '2026-04-22T22:15:00Z'
+top_issues: []
+waiver:
+  active: false
+
+# Detailed Review Notes
+review:
+  # Acceptance Criteria Verification
+  acceptance_criteria:
+    ac1_insert_incoming_messages:
+      status: PASS
+      evidence: "Lines 446-455 in route.ts implement INSERT into messages with conversation_id, sender_type='contact', content, evolution_message_id, sender_jid. Test 'should persist an incoming message' validates."
+    ac2_idempotency:
+      status: PASS
+      evidence: "Error code 23505 (unique_violation) handled silently in lines 458-465. Test 'should handle idempotency' validates with duplicate messageId scenario."
+    ac3_null_content_handling:
+      status: PASS
+      evidence: "Line 443: content = message?.conversation ?? '' defaults to empty string when null/undefined."
+    ac4_error_logging:
+      status: PASS
+      evidence: "Lines 458-465 log insert errors with full context but don't return error to webhook. Webhook always returns 200 (test line 80)."
+    ac5_ignore_fromme_true:
+      status: PASS
+      evidence: "Line 446 checks !fromMe before inserting. Test 'should not persist an outgoing message' validates that fromMe=true messages are skipped."
+
+  # Quality Gate Checks
+  code_review:
+    status: PASS
+    notes: "Implementation follows existing patterns in route.ts. Clean error handling. Proper use of Supabase JS client with .select() for conflict detection. TypeScript types properly specified."
+
+  unit_tests:
+    status: PASS
+    test_count: 3
+    passing: 3
+    coverage_status: "Covers main execution paths: success case, idempotency, fromMe filtering"
+    tests:
+      - name: "should persist an incoming message"
+        status: PASS
+      - name: "should not persist an outgoing message (fromMe=true)"
+        status: PASS
+      - name: "should handle idempotency (duplicate messageId)"
+        status: PASS
+
+  linting:
+    status: PASS
+    errors: 0
+    warnings: 0
+    note: "0 errors, 25 warnings in other files (not from story 5.3 code)"
+
+  typescript:
+    status: PASS
+    note: "tsc --noEmit compiled successfully"
+
+  no_regressions:
+    status: PASS
+    note: "Message INSERT integrates cleanly into existing flow. No modifications to Stories 5.0-5.2 contact/conversation logic."
+
+  performance:
+    status: PASS
+    note: "Single INSERT per message, no N+1 queries. On CONFLICT DO NOTHING is O(1) operation."
+
+  security:
+    status: PASS
+    note: "Uses Supabase parameterized queries via JS client. No raw SQL. Error code handling is safe (23505 is standard PG unique violation)."
+
+  documentation:
+    status: PASS
+    note: "Story well-documented with implementation context, data extraction details, and point of insertion. Code has clear comments."
+
+# Handoff
+next_steps:
+  - status: Ready for @devops push
+    when: "All gate checks PASS"
+    command: "*push --branch=master"

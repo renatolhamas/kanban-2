@@ -1,244 +1,218 @@
-# Database Schema — Documentação Legível
-
-> 📅 Extraído em: 2026-04-21 12:30 UTC
+> 📅 Extraído em: 2026-04-22
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado (via MCP Supabase - live extraction)
+> Status: ✅ Atualizado
 
-## 📊 Visão Geral
+# Documentação do Schema — Banco de Dados Kanban
 
-**Tabelas:** 9 | **Índices:** 34 | **Políticas RLS:** 31 | **Funções:** 2 | **Triggers:** 0 | **Sequences:** 1
+**9 tabelas | 36 índices | 32 políticas RLS | 3 funções customizadas | 6 extensões**
 
-**Modelo:** Multi-tenant com WhatsApp integration (Evolution GO)  
-**RLS Status:** Ativado em todas as tabelas  
-**Schema:** public
+## Estrutura Geral
 
-Sistema multi-tenant para gerenciamento de kanbans e conversas via WhatsApp.
+O schema é baseado em **multi-tenant** com isolamento por `tenant_id`. Dados de usuários, contatos, conversas e kanbans são organizados hierarquicamente:
 
-| # | Tabela | PK | RLS | Descrição |
-|---|--------|----|-----|-----------|
-| 1 | `tenants` | uuid | ✅ | Raiz multi-tenant (organizações) |
-| 2 | `users` | uuid | ✅ | Usuários da plataforma |
-| 3 | `kanbans` | uuid | ✅ | Quadros kanban (max 1 `is_main=true` por tenant) |
-| 4 | `columns` | uuid | ✅ | Colunas dentro de um kanban |
-| 5 | `contacts` | uuid | ✅ | Contatos/clientes do tenant |
-| 6 | `conversations` | uuid | ✅ | Conversas via WhatsApp |
-| 7 | `messages` | uuid | ✅ | Mensagens das conversas |
-| 8 | `automatic_messages` | uuid | ✅ | Mensagens automáticas/agendadas |
-| 9 | `failed_registrations` | bigint | ✅ (sem policy) | Rastreamento de registros falhados |
-
-**View:** `test_user_access` — SECURITY DEFINER (ver advisors de segurança)
+```
+tenants (raiz)
+├── users (usuários do tenant)
+├── kanbans (boards kanban)
+│   ├── columns (colunas do kanban)
+│   └── conversations (conversas associadas)
+├── contacts (contatos do WhatsApp)
+├── conversations (conversas com contatos)
+└── messages (mensagens nas conversas)
+```
 
 ---
 
 ## Tabelas
 
-### `tenants`
+### 1. **tenants** — Raiz do Multi-Tenant
 
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `name` | text | NO | — | — |
-| `subscription_status` | text | NO | `'active'` | — |
-| `evolution_instance_id` | text | YES | — | UNIQUE (quando não nulo) |
-| `connection_status` | text | NO | `'disconnected'` | — |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
-| `qr_code` | text | YES | — | QR code WhatsApp, recebido do webhook QRCODE_UPDATED (Evo GO) |
-| `qr_code_expires_at` | timestamptz | YES | — | Expiração do QR code (tipicamente 5 min após geração) |
-| `evolution_instance_token` | text | YES | — | Token da instância para chamadas à API Evo GO |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `name` | text | NO | — | — | Nome do tenant |
+| `subscription_status` | text | NO | 'active' | — | Status: active, suspended, cancelled |
+| `evolution_instance_id` | text | YES | — | — | ID único da instância Evolution GO (UNIQUE quando NOT NULL) |
+| `connection_status` | text | NO | 'disconnected' | — | Conexão WhatsApp: disconnected, connected, reconnecting |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
+| `qr_code` | text | YES | — | — | QR code para pareamento WhatsApp |
+| `qr_code_expires_at` | timestamptz | YES | — | — | Timestamp de expiração do QR code |
+| `evolution_instance_token` | text | YES | — | — | Token específico da instância para chamadas de API Evo GO |
 
-**Constraints:** PK `id` | UNIQUE `evolution_instance_id` | UNIQUE PARTIAL quando não nulo
-
----
-
-### `users`
-
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
-| `email` | text | NO | — | — |
-| `role` | text | NO | `'user'` | — |
-| `name` | text | YES | — | — |
-| `password_hash` | text | YES | — | — |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
-
-**Constraints:** PK `id` | FK `tenant_id → tenants.id CASCADE` | UNIQUE `(email, tenant_id)`
+**Índices:** 4 (pkey, 2x UNIQUE, 1x subscription)  
+**RLS Policies:** 3 (select_own, update_own, delete_own)
 
 ---
 
-### `kanbans`
+### 2. **users** — Usuários do Tenant
 
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
-| `name` | text | NO | — | — |
-| `is_main` | boolean | NO | `false` | Max 1 true por tenant (partial unique index) |
-| `order_position` | integer | NO | `0` | — |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `tenant_id` | uuid | NO | — | tenants(id) CASCADE | FK para tenant |
+| `email` | text | NO | — | — | Email único por tenant |
+| `role` | text | NO | 'user' | — | Role: admin, user |
+| `name` | text | YES | — | — | Nome do usuário |
+| `password_hash` | text | YES | — | — | Hash da senha |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
 
-**Constraints:** PK `id` | FK `tenant_id → tenants.id CASCADE` | UNIQUE PARTIAL `(tenant_id, is_main) WHERE is_main=true`
-
----
-
-### `columns`
-
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `kanban_id` | uuid | NO | — | FK → kanbans.id CASCADE |
-| `name` | text | NO | — | — |
-| `order_position` | integer | NO | `0` | — |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
-
-**Constraints:** PK `id` | FK `kanban_id → kanbans.id CASCADE`
+**Constraints:** UNIQUE (email, tenant_id)  
+**Índices:** 4 (pkey, 2x UNIQUE, tenant lookup)  
+**RLS Policies:** 4 (via auth.uid() — exceção ao padrão)
 
 ---
 
-### `contacts`
+### 3. **kanbans** — Boards Kanban
 
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
-| `name` | text | NO | — | — |
-| `phone` | text | NO | — | — |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `tenant_id` | uuid | NO | — | tenants(id) CASCADE | FK para tenant |
+| `name` | text | NO | — | — | Nome do kanban board |
+| `is_main` | boolean | NO | false | — | Se é o board principal |
+| `order_position` | integer | NO | 0 | — | Posição na lista |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
 
-**Constraints:** PK `id` | FK `tenant_id → tenants.id CASCADE` | UNIQUE `(phone, tenant_id)`
-
----
-
-### `conversations`
-
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
-| `contact_id` | uuid | NO | — | FK → contacts.id CASCADE |
-| `kanban_id` | uuid | YES | — | FK → kanbans.id SET NULL |
-| `column_id` | uuid | YES | — | FK → columns.id SET NULL |
-| `wa_phone` | text | NO | — | Número WhatsApp |
-| `status` | text | NO | `'active'` | — |
-| `last_message_at` | timestamptz | YES | — | — |
-| `evolution_message_id` | text | YES | — | ID da última msg Evolution GO (UNIQUE, para idempotência) |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
-
-**Constraints:** PK `id` | FK `tenant_id CASCADE` | FK `contact_id CASCADE` | FK `kanban_id SET NULL` | FK `column_id SET NULL` | UNIQUE `evolution_message_id`
-
-> ⚠️ **Advisor:** `contact_id` e `column_id` não possuem índice cobrindo a FK.
+**Constraints:** UNIQUE (tenant_id, is_main WHERE is_main)  
+**Índices:** 4  
+**RLS Policies:** 4
 
 ---
 
-### `messages`
+### 4. **columns** — Colunas do Kanban
 
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `conversation_id` | uuid | NO | — | FK → conversations.id CASCADE |
-| `sender_type` | text | NO | — | 'contact' ou 'agent' |
-| `content` | text | NO | — | — |
-| `media_url` | text | YES | — | URL da mídia |
-| `media_type` | text | YES | — | image, video, audio, file |
-| `evolution_message_id` | text | YES | — | ID da msg Evolution GO (UNIQUE, para idempotência) |
-| `sender_jid` | text | YES | — | JID do remetente (ex: 5511999@s.whatsapp.net) |
-| `created_at` | timestamptz | NO | now() | — |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `kanban_id` | uuid | NO | — | kanbans(id) CASCADE | FK para kanban |
+| `name` | text | NO | — | — | Nome da coluna |
+| `order_position` | integer | NO | 0 | — | Posição da coluna |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
 
-**Constraints:** PK `id` | FK `conversation_id → conversations.id CASCADE` | UNIQUE `evolution_message_id`
+**Índices:** 2 (pkey, kanban_order composite)  
+**RLS Policies:** 4 (via kanban.tenant_id)
 
 ---
 
-### `automatic_messages`
+### 5. **contacts** — Contatos do WhatsApp
 
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | uuid | NO | uuid_generate_v4() | PK |
-| `tenant_id` | uuid | NO | — | FK → tenants.id CASCADE |
-| `name` | text | NO | — | — |
-| `message` | text | NO | — | — |
-| `scheduled_interval_minutes` | integer | YES | — | — |
-| `scheduled_kanban_id` | uuid | YES | — | FK → kanbans.id SET NULL |
-| `created_at` | timestamptz | NO | now() | — |
-| `updated_at` | timestamptz | NO | now() | — |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `tenant_id` | uuid | NO | — | tenants(id) CASCADE | FK para tenant |
+| `name` | text | NO | — | — | Nome do contato (editável) |
+| `phone` | text | NO | — | — | Número do WhatsApp |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
+| `wa_name` | text | YES | — | — | Nome do WhatsApp (Evo GO) |
+| `is_group` | boolean | YES | false | — | Se é um grupo |
 
-**Constraints:** PK `id` | FK `tenant_id CASCADE` | FK `scheduled_kanban_id SET NULL`
-
-> ⚠️ **Advisor:** `scheduled_kanban_id` não possui índice cobrindo a FK.
-
----
-
-### `failed_registrations`
-
-| Coluna | Tipo | Nullable | Default | Comentário |
-|--------|------|----------|---------|------------|
-| `id` | bigint | NO | nextval(seq) | PK — sequência, não UUID |
-| `email` | text | NO | — | — |
-| `created_at` | timestamptz | YES | now() | — |
-| `created_resources` | jsonb | NO | — | Recursos criados antes da falha |
-| `cleanup_attempted` | boolean | YES | `false` | — |
-| `cleanup_status` | jsonb | YES | — | — |
-| `error_message` | text | YES | — | — |
-| `notes` | text | YES | — | — |
-| `resolved_at` | timestamptz | YES | — | — |
-
-**Constraints:** PK `id` (bigint/sequence)
-
-> ⚠️ **Advisor (Segurança CRÍTICO):** RLS habilitado mas **sem nenhuma policy** — tabela inacessível para usuários autenticados.
+**Constraints:** UNIQUE (phone, tenant_id)  
+**Índices:** 4  
+**RLS Policies:** 4
 
 ---
 
-## Índices
+### 6. **conversations** — Conversas com Contatos
 
-| Tabela | Índice | Tipo | Notas |
-|--------|--------|------|-------|
-| `automatic_messages` | `idx_automatic_messages_tenant` | btree(tenant_id) | — |
-| `columns` | `idx_columns_kanban_order` | btree(kanban_id, order_position) | — |
-| `contacts` | `contacts_phone_tenant_id_key` | UNIQUE btree(phone, tenant_id) | — |
-| `contacts` | `idx_contacts_phone_tenant` | btree(phone, tenant_id) | Redundante com UNIQUE |
-| `contacts` | `idx_contacts_tenant` | btree(tenant_id) | — |
-| `conversations` | `idx_conversations_kanban_column` | btree(kanban_id, column_id) | — |
-| `conversations` | `idx_conversations_last_message` | btree(last_message_at DESC) | ⚠️ Não usado |
-| `conversations` | `idx_conversations_tenant_status` | btree(tenant_id, status) | — |
-| `failed_registrations` | `failed_registrations_created_at_idx` | btree(created_at DESC) | ⚠️ Não usado |
-| `failed_registrations` | `failed_registrations_email_idx` | btree(email) | ⚠️ Não usado |
-| `failed_registrations` | `failed_registrations_resolved_at_idx` | btree PARTIAL WHERE IS NULL | ⚠️ Não usado |
-| `kanbans` | `idx_kanbans_main_tenant` | btree PARTIAL WHERE is_main=true | ⚠️ Não usado |
-| `kanbans` | `idx_kanbans_tenant_order` | btree(tenant_id, order_position) | — |
-| `kanbans` | `idx_kanbans_unique_is_main_per_tenant` | UNIQUE PARTIAL btree(tenant_id, is_main) | Constraint de negócio |
-| `messages` | `idx_messages_conversation_created` | btree(conversation_id, created_at DESC) | — |
-| `tenants` | `idx_tenants_evolution_instance_id_unique` | UNIQUE PARTIAL WHERE IS NOT NULL | — |
-| `tenants` | `idx_tenants_subscription` | btree(subscription_status) | ⚠️ Não usado |
-| `users` | `idx_users_email_tenant` | btree(email, tenant_id) | — |
-| `users` | `idx_users_tenant` | btree(tenant_id) | — |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `tenant_id` | uuid | NO | — | tenants(id) CASCADE | FK para tenant |
+| `contact_id` | uuid | NO | — | contacts(id) CASCADE | FK para contato ⚠️ |
+| `kanban_id` | uuid | YES | — | kanbans(id) SET NULL | FK para kanban |
+| `column_id` | uuid | YES | — | columns(id) SET NULL | FK para coluna ⚠️ |
+| `wa_phone` | text | NO | — | — | Número do WhatsApp (cópia) |
+| `status` | text | NO | 'active' | — | Status: active, archived, closed |
+| `last_message_at` | timestamptz | YES | — | — | Timestamp da última mensagem |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
+| `evolution_message_id` | text | YES | — | — | ID da última mensagem (Evo GO) |
+| `unread_count` | integer | YES | 0 | — | Contador de não lidas |
+
+**Constraints:** UNIQUE (evolution_message_id)  
+**Índices:** 7 (alguns nunca usados)  
+**RLS Policies:** 4  
+**⚠️ Nota:** contact_id e column_id sem índices cobrindo FK
 
 ---
 
-## Diagrama de Relacionamentos
+### 7. **messages** — Mensagens nas Conversas
 
-```
-tenants
-  ├── users          (tenant_id → CASCADE)
-  ├── kanbans        (tenant_id → CASCADE)
-  │     └── columns  (kanban_id → CASCADE)
-  ├── contacts       (tenant_id → CASCADE)
-  │     └── conversations (contact_id → CASCADE)
-  │           ├── → kanbans  (kanban_id → SET NULL)
-  │           ├── → columns  (column_id → SET NULL)
-  │           └── messages   (conversation_id → CASCADE)
-  └── automatic_messages (tenant_id → CASCADE)
-        └── → kanbans   (scheduled_kanban_id → SET NULL)
-```
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `conversation_id` | uuid | NO | — | conversations(id) CASCADE | FK para conversa |
+| `sender_type` | text | NO | — | — | customer, agent, system |
+| `content` | text | NO | — | — | Conteúdo da mensagem |
+| `media_url` | text | YES | — | — | URL de mídia |
+| `media_type` | text | YES | — | — | image, video, audio, document |
+| `created_at` | timestamptz | NO | now() | — | |
+| `evolution_message_id` | text | YES | — | — | ID único (Evo GO) |
+| `sender_jid` | text | YES | — | — | JID do remetente |
+
+**Constraints:** UNIQUE (evolution_message_id)  
+**Índices:** 4  
+**RLS Policies:** 4
 
 ---
 
-## Sequences
+### 8. **automatic_messages** — Mensagens Automáticas
 
-| Sequence | Tabela | Início | Incremento |
-|----------|--------|--------|------------|
-| `failed_registrations_id_seq` | failed_registrations.id | 1 | 1 |
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | uuid | NO | uuid_generate_v4() | — | PK |
+| `tenant_id` | uuid | NO | — | tenants(id) CASCADE | FK para tenant |
+| `name` | text | NO | — | — | Nome da mensagem |
+| `message` | text | NO | — | — | Conteúdo |
+| `scheduled_interval_minutes` | integer | YES | — | — | Intervalo de disparo |
+| `scheduled_kanban_id` | uuid | YES | — | kanbans(id) SET NULL | FK para kanban ⚠️ |
+| `created_at` | timestamptz | NO | now() | — | |
+| `updated_at` | timestamptz | NO | now() | — | |
+
+**Índices:** 2  
+**RLS Policies:** 4  
+**⚠️ Nota:** scheduled_kanban_id sem índice cobrindo FK
+
+---
+
+### 9. **failed_registrations** — Registro de Falhas
+
+| Campo | Tipo | Nullable | Default | FK | Descrição |
+|-------|------|----------|---------|----|----|
+| `id` | bigint | NO | nextval(...) | — | PK (autoincrement) |
+| `email` | text | NO | — | — | Email que falhou |
+| `created_at` | timestamptz | YES | now() | — | |
+| `created_resources` | jsonb | NO | — | — | Recursos criados |
+| `cleanup_attempted` | boolean | YES | false | — | Se foi tentado cleanup |
+| `cleanup_status` | jsonb | YES | — | — | Status do cleanup |
+| `error_message` | text | YES | — | — | Mensagem de erro |
+| `notes` | text | YES | — | — | Notas |
+| `resolved_at` | timestamptz | YES | — | — | Timestamp de resolução |
+
+**⚠️ Nota:** RLS está DESABILITADO (necessário para pré-auth logging)  
+**Índices:** 4 (alguns nunca usados)
+
+---
+
+## Resumo de Constraints
+
+| Tipo | Count |
+|------|-------|
+| PRIMARY KEY | 9 |
+| FOREIGN KEY | 10 |
+| UNIQUE | 7 |
+| CHECK | 0 |
+
+---
+
+## 🔴 Issues Encontrados
+
+1. **3 FKs sem índices cobrindo:** automatic_messages.scheduled_kanban_id, conversations.contact_id, conversations.column_id
+2. **13 índices nunca usados:** Candidatos para remoção após monitoramento
+3. **RLS desabilitado em failed_registrations:** Por design (pré-auth)
+

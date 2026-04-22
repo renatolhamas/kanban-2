@@ -181,11 +181,38 @@ export async function callEvoGoCreateInstance(
       // Parse response (Evo GO wraps data in 'data' object)
       const responseData = data.data || data;
 
+      // DIV-5: Log which fields are in response for diagnostics
+      console.log('[EvoGo] /instance/create raw response', {
+        timestamp: new Date().toISOString(),
+        endpoint: '/instance/create',
+        status: response.status,
+        hasId: 'id' in responseData,
+        hasName: 'name' in responseData,
+        fields: Object.keys(responseData),
+        responseBody: JSON.stringify(responseData).substring(0, 500),
+      });
+
+      let instanceId = responseData.id;
+
+      // DIV-5 Fallback: If no id in response, lookup by name
+      if (!instanceId && responseData.name) {
+        console.log('[EvoGo] DIV-5 fallback: No id in create response, looking up by name...', {
+          name: responseData.name,
+        });
+        const instances = await listEvoGoInstances();
+        const created = instances.find((i) => i.name === responseData.name);
+        instanceId = created?.id;
+        // Prefer lookup token over create response token
+        if (created?.token) {
+          responseData.token = created.token;
+        }
+      }
+
       // Validate response structure
       // Note: qrcode may come empty — it's generated asynchronously and sent via webhook
-      if (!responseData.id) {
+      if (!instanceId) {
         throw new EvoGoError(
-          "Invalid response from Evo GO — missing instance ID",
+          "Could not determine instance ID from create response or lookup",
           "MALFORMED_RESPONSE",
           500,
         );
@@ -195,7 +222,7 @@ export async function callEvoGoCreateInstance(
       console.log(
         `[Evo GO] Instance created successfully for tenant ${tenantId}`,
         {
-          instance_id: responseData.id,
+          instance_id: instanceId,
           timestamp: new Date().toISOString(),
         },
       );
@@ -203,7 +230,7 @@ export async function callEvoGoCreateInstance(
       // Map response to our interface (convert camelCase to snake_case)
       // Note: qrcode may be empty — it's generated asynchronously via webhook
       return {
-        instance_id: responseData.id,
+        instance_id: instanceId,
         token: responseData.token,
         qr_code: responseData.qrcode || '', // can be empty initially
       } as EvoGoCreateInstanceResponse;
@@ -335,21 +362,41 @@ export async function getOrCreateInstance(
     const existingInstances = await listEvoGoInstances();
     console.log('[Evo GO] Checking for existing instance with name:', instanceName);
 
+    // DIV-11: Log if response has token
+    console.log('[EvoGo] /instance/all response received', {
+      instanceCount: existingInstances.length,
+      firstInstanceHasToken: existingInstances.length > 0 ? 'token' in existingInstances[0] : 'N/A',
+    });
+
     // 2. Look for instance with matching name
     const existingInstance = existingInstances.find(
       (instance) => instance.name === instanceName,
     );
 
     if (existingInstance) {
+      // DIV-11 Fallback: If token missing in list, lookup via /instance/info
+      let instanceToken = existingInstance.token;
+      if (!instanceToken) {
+        console.log('[EvoGo] DIV-11 fallback: Token missing in list, looking up instance info...', {
+          instanceId: existingInstance.id,
+        });
+        const info = await getEvoGoInstanceInfo(existingInstance.id);
+        instanceToken = info.token;
+        console.log('[EvoGo] Instance token populated from /instance/info', {
+          instanceId: existingInstance.id,
+          hasToken: !!instanceToken,
+        });
+      }
+
       console.log('[Evo GO] Found existing instance, reusing it', {
         instance_id: existingInstance.id,
-        token: existingInstance.token,
+        token: instanceToken,
         timestamp: new Date().toISOString(),
       });
 
       return {
         instance_id: existingInstance.id,
-        token: existingInstance.token,
+        token: instanceToken,
         qr_code: existingInstance.qrcode || '',
       };
     }
@@ -394,14 +441,23 @@ export async function callEvoGoConnect(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
 
+    // DIV-7: Subscribe format (UPPERCASE) empirically verified to work with API
+    // DIV-6: Removed `immediate: true` — not in API documentation
     const body: Record<string, unknown> = {
-      immediate: true,
       subscribe: ['QRCODE', 'CONNECTION', 'MESSAGE'],
     };
 
     if (webhookUrl) {
       body.webhookUrl = webhookUrl;
     }
+
+    console.log('[EvoGo] /instance/connect request', {
+      timestamp: new Date().toISOString(),
+      endpoint: '/instance/connect',
+      bodyKeys: Object.keys(body),
+      subscribeFormat: 'UPPERCASE',
+      subscribeCount: Array.isArray(body.subscribe) ? body.subscribe.length : 0,
+    });
 
     const response = await fetch(`${EVOGO_API_BASE}/instance/connect`, {
       method: "POST",
@@ -635,8 +691,152 @@ export async function getEvoGoStatus(
 }
 
 /**
- * Logout from a WhatsApp instance
- * Must use the instance-specific token
+ * Get instance info from Evo GO
+ * Helper for DIV-11: If token missing in list response, lookup via /instance/info
+ */
+export async function getEvoGoInstanceInfo(
+  instanceId: string,
+): Promise<{ token: string; id: string; name: string; connected?: boolean }> {
+  const apiKey = process.env.EVO_GO_API_KEY;
+
+  console.log('[EvoGo] getEvoGoInstanceInfo() called', {
+    instanceId,
+  });
+
+  if (!apiKey) {
+    throw new Error("EVO_GO_API_KEY environment variable is not set");
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/info/${instanceId}`, {
+      method: "GET",
+      headers: {
+        "apikey": apiKey,
+        "Content-Type": "application/json",
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new EvoGoError(
+        `Failed to fetch instance info: ${errorBody}`,
+        "INSTANCE_INFO_ERROR",
+        response.status,
+      );
+    }
+
+    const json = await response.json();
+    const instanceInfo = json.data || json;
+
+    console.log('[EvoGo] /instance/info response', {
+      timestamp: new Date().toISOString(),
+      instanceId,
+      hasToken: 'token' in instanceInfo,
+      fields: Object.keys(instanceInfo),
+    });
+
+    return instanceInfo;
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "Instance info request timeout (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error getting instance info: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
+ * Soft disconnect from a WhatsApp instance (pauses connection, keeps session)
+ * DIV-8: Offers soft disconnect — user can reconnect without rescanning QR
+ * Use when user temporarily pauses the connection
+ */
+export async function callEvoGoDisconnect(
+  instanceToken: string,
+): Promise<void> {
+  console.log('[Evo GO] callEvoGoDisconnect() called (soft disconnect)', {
+    instanceToken: instanceToken.substring(0, 10) + '...',
+    timestamp: new Date().toISOString(),
+  });
+
+  if (!instanceToken) {
+    throw new EvoGoError(
+      "Instance token is required for disconnect",
+      "MISSING_INSTANCE_TOKEN",
+      400,
+    );
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(`${EVOGO_API_BASE}/instance/disconnect`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": instanceToken, // Use instance token, not global API key
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log(`[Evo GO] Disconnect response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      console.log('[Evo GO] Disconnect error:', errorBody);
+      throw new EvoGoError(
+        `Failed to disconnect instance: ${errorBody}`,
+        "DISCONNECT_ERROR",
+        response.status,
+      );
+    }
+
+    console.log('[Evo GO] Instance soft disconnected successfully (session preserved)');
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new EvoGoError(
+        "Disconnect request timeout (>5s)",
+        "TIMEOUT",
+        504,
+      );
+    }
+
+    if (error instanceof EvoGoError) {
+      throw error;
+    }
+
+    throw new EvoGoError(
+      `Unexpected error disconnecting instance: ${error instanceof Error ? error.message : String(error)}`,
+      "UNKNOWN_ERROR",
+      500,
+    );
+  }
+}
+
+/**
+ * Logout from a WhatsApp instance (destructive - removes session)
+ * DIV-8: Destructive logout — removes session, user must rescan QR
+ * Use when user explicitly logs out or for account cleanup
  */
 export async function callEvoGoLogout(
   instanceToken: string,
@@ -680,7 +880,7 @@ export async function callEvoGoLogout(
       );
     }
 
-    console.log('[Evo GO] Instance logged out successfully');
+    console.log('[Evo GO] Instance logged out successfully (session removed, QR rescan required)');
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") {
       throw new EvoGoError(

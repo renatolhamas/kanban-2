@@ -197,7 +197,18 @@ async function handleQRCodeUpdated(
   data?: Record<string, unknown>,
 ): Promise<void> {
   try {
+    // DIV-2: Document which field is expected (qrcode per Evo GO docs)
+    // Log which field was found for diagnostics
     const qrCode = data?.qrcode || data?.qr_code || '';
+
+    console.log('[EvoGo] webhook QRCODE field found', {
+      timestamp: new Date().toISOString(),
+      hasQrcode: 'qrcode' in (data || {}),
+      hasQr_code: 'qr_code' in (data || {}),
+      fieldUsed: 'qrcode' in (data || {}) ? 'qrcode' : 'qr_code',
+      dataKeys: Object.keys(data || {}),
+    });
+
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
     const { error } = await supabase

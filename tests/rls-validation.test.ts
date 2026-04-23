@@ -37,11 +37,15 @@ import {
 // ============================================================================
 
 // Supabase connection (uses env vars from .env.local)
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321';
-const SUPABASE_ANON_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+let SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'http://localhost:54321').trim();
+let SUPABASE_ANON_KEY =
+  (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   process.env.SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqY2p1Y2d5bHdranJkcHNxZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzE3MTIsImV4cCI6MjA5MDY0NzcxMn0.JNzwv5kdT8L0I9OA39obnLvuOB-hocPxMweonQJV7n8';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqY2p1Y2d5bHdranJkcHNxZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzE3MTIsImV4cCI6MjA5MDY0NzcxMn0.JNzwv5kdT8L0I9OA39obnLvuOB-hocPxMweonQJV7n8').trim();
+
+// Clean potential quotes from secrets (common in CI/env files)
+SUPABASE_URL = SUPABASE_URL.replace(/^['"]|['"]$/g, "");
+SUPABASE_ANON_KEY = SUPABASE_ANON_KEY.replace(/^['"]|['"]$/g, "");
 
 let supabase: SupabaseClient;
 let adminClient: SupabaseClient;
@@ -62,7 +66,9 @@ describeRLS('RLS Validation Test Suite', () => {
     });
 
     // Initialize admin client for seeding (uses service role key from environment)
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    let SUPABASE_SERVICE_ROLE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+    SUPABASE_SERVICE_ROLE_KEY = SUPABASE_SERVICE_ROLE_KEY.replace(/^['"]|['"]$/g, "");
+
     if (!SUPABASE_SERVICE_ROLE_KEY) {
       throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is required for test data seeding');
     }

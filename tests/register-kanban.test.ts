@@ -22,11 +22,19 @@ let testTenantId: string;
 describe.skipIf(!hasSupabase)("Register Integration - Kanban Auto-Creation", () => {
   beforeEach(async () => {
     // Initialize Supabase client
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+    let url = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").trim();
+    let key = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+
+    // Clean potential quotes from secrets (common in CI/env files)
+    url = url.replace(/^['"]|['"]$/g, "");
+    key = key.replace(/^['"]|['"]$/g, "");
 
     if (!url || !key) {
       throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+    }
+
+    if (!url.startsWith("http")) {
+      throw new Error(`Invalid SUPABASE_URL format. Length: ${url.length}`);
     }
 
     supabase = createClient(url, key);

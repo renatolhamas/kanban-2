@@ -443,6 +443,12 @@ async function handleMessagesUpsert(
     const content = message?.conversation ?? '';
     const fromMe = contactInfo.isFromMe ?? false;
 
+    console.log('[DEBUG] Full message payload', {
+      tenantId,
+      messageKeys: Object.keys(message || {}),
+      messageContent: JSON.stringify(message).substring(0, 500),
+    });
+
     console.log('[DEBUG] Message insertion check', {
       tenantId,
       fromMe,
@@ -450,6 +456,7 @@ async function handleMessagesUpsert(
       shouldInsert: !fromMe && conversationId,
       contentLength: String(content).length,
       messageId: contactInfo.messageId,
+      extractedContent: content,
     });
 
     if (!fromMe && conversationId) {

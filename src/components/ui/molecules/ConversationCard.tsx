@@ -2,7 +2,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Card } from "@/components/ui/molecules/card"
 import { Badge } from "@/components/ui/molecules/badge"
-import { formatRelativeTime, getMediaLabel } from "@/lib/format-utils"
+import { formatRelativeTime, getMediaLabel, truncate } from "@/lib/format-utils"
 
 export interface ConversationCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string
@@ -40,7 +40,7 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
 
     // Logic for content preview
     const hasMessage = lastMessage || mediaUrl;
-    const contentPreview = lastMessage || getMediaLabel(mediaUrl) || "Sem mensagens";
+    const contentPreview = truncate(lastMessage, 100) || getMediaLabel(mediaUrl) || "Sem mensagens";
     const prefix = senderType === 'user' ? "Você: " : ""; // Incoming doesn't need prefix if name is above
 
     return (
@@ -79,9 +79,9 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
           </div>
           
           {/* Subheader: Phone (Optional/Secondary) */}
-          {/* <div className="text-label-sm text-text-secondary truncate opacity-70">
+          <div className="text-label-sm text-text-secondary truncate opacity-70">
             {phone}
-          </div> */}
+          </div>
           
           {/* Body: Last Message Preview */}
           <div className="flex justify-between items-start gap-3">

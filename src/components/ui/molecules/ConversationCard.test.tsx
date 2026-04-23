@@ -8,7 +8,9 @@ const defaultProps = {
   name: 'João Silva',
   phone: '5511999999999',
   lastMessage: 'Olá, tudo bem?',
-  timestamp: '14:30',
+  senderType: null as string | null,
+  mediaUrl: null as string | null,
+  timestamp: '2026-04-23T14:30:00Z',
 }
 
 describe('ConversationCard', () => {
@@ -24,8 +26,11 @@ describe('ConversationCard', () => {
     })
 
     it('should render timestamp', () => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date('2026-04-23T14:35:00Z'))
       render(<ConversationCard {...defaultProps} />)
-      expect(screen.getByText('14:30')).toBeInTheDocument()
+      expect(screen.getByText('5m ago')).toBeInTheDocument()
+      vi.useRealTimers()
     })
 
     it('should render lastMessage when under 80 chars', () => {
@@ -33,10 +38,10 @@ describe('ConversationCard', () => {
       expect(screen.getByText('Mensagem curta')).toBeInTheDocument()
     })
 
-    it('should truncate lastMessage over 80 chars with ellipsis', () => {
-      const long = 'A'.repeat(90)
+    it('should truncate lastMessage over 100 chars with ellipsis', () => {
+      const long = 'A'.repeat(110)
       render(<ConversationCard {...defaultProps} lastMessage={long} />)
-      expect(screen.getByText(`${'A'.repeat(80)}...`)).toBeInTheDocument()
+      expect(screen.getByText(`${'A'.repeat(100)}...`)).toBeInTheDocument()
     })
 
     it('should show unread badge when unreadCount > 0', () => {

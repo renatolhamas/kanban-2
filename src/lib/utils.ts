@@ -42,3 +42,16 @@ export function getColor(colorName: string): string {
   const tokens = require('@/tokens');
   return tokens.colors[colorName] || '#191c1e';
 }
+/**
+ * Simple debounce function
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}

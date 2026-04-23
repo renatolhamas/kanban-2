@@ -2,19 +2,35 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Card } from "@/components/ui/molecules/card"
 import { Badge } from "@/components/ui/molecules/badge"
+import { formatRelativeTime, getMediaLabel } from "@/lib/format-utils"
 
 export interface ConversationCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string
   phone: string
-  lastMessage: string
-  timestamp: string
+  lastMessage: string | null
+  senderType: string | null
+  mediaUrl: string | null
+  timestamp: string | null
   unreadCount?: number
   isSelected?: boolean
   isGroup?: boolean
 }
 
 export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCardProps>(
-  ({ name, phone, lastMessage, timestamp, unreadCount, isSelected, isGroup, className, onClick, ...props }, ref) => {
+  ({ 
+    name, 
+    phone, 
+    lastMessage, 
+    senderType, 
+    mediaUrl, 
+    timestamp, 
+    unreadCount, 
+    isSelected, 
+    isGroup, 
+    className, 
+    onClick, 
+    ...props 
+  }, ref) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
@@ -22,17 +38,23 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
       }
     }
 
+    // Logic for content preview
+    const hasMessage = lastMessage || mediaUrl;
+    const contentPreview = lastMessage || getMediaLabel(mediaUrl) || "Sem mensagens";
+    const prefix = senderType === 'user' ? "Você: " : ""; // Incoming doesn't need prefix if name is above
+
     return (
       <Card
         ref={ref}
         role="button"
         tabIndex={0}
-        aria-label={`Conversa com ${name}. Telefone: ${phone}. Última mensagem: ${lastMessage}. ${timestamp}`}
+        aria-label={`Conversa com ${name}. Telefone: ${phone}. Última mensagem: ${contentPreview}. ${timestamp}`}
         aria-pressed={isSelected}
         onClick={onClick}
         onKeyDown={handleKeyDown}
         className={cn(
           "cursor-pointer transition-all duration-200 border-l-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+          "p-4 flex flex-col space-y-2", // Standardized padding
           isSelected
             ? "bg-surface-container-low border-primary-container shadow-active scale-[1.02]"
             : "hover:bg-surface-container-lowest border-transparent hover:border-outline-variant",
@@ -40,31 +62,39 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
         )}
         {...props}
       >
-        <div className="flex flex-col space-y-1">
-          <div className="flex justify-between items-start">
-            <span className="flex items-center gap-1 truncate max-w-[150px]">
+        <div className="flex flex-col space-y-1.5">
+          {/* Header: Name and Time */}
+          <div className="flex justify-between items-center gap-2">
+            <span className="flex items-center gap-1.5 truncate flex-1">
               <span className="text-body-lg font-bold text-text-primary truncate">
                 {name}
               </span>
               {isGroup && (
-                <Badge variant="group" className="ml-2 shrink-0">👥 Grupo</Badge>
+                <Badge variant="group" className="shrink-0 text-[10px] py-0 h-4">👥 Grupo</Badge>
               )}
             </span>
-            <span className="text-label-sm text-text-secondary whitespace-nowrap">
-              {timestamp}
+            <span className="text-label-sm text-text-secondary whitespace-nowrap font-medium">
+              {formatRelativeTime(timestamp)}
             </span>
           </div>
           
-          <div className="text-body-sm text-text-secondary truncate">
+          {/* Subheader: Phone (Optional/Secondary) */}
+          {/* <div className="text-label-sm text-text-secondary truncate opacity-70">
             {phone}
-          </div>
+          </div> */}
           
-          <div className="flex justify-between items-end pt-1">
-            <p className="text-body-md text-text-primary truncate flex-1 pr-4">
-              {lastMessage.length > 80 ? `${lastMessage.substring(0, 80)}...` : lastMessage}
+          {/* Body: Last Message Preview */}
+          <div className="flex justify-between items-start gap-3">
+            <p className={cn(
+              "text-body-sm leading-relaxed line-clamp-2 flex-1",
+              hasMessage ? "text-text-primary" : "text-text-secondary italic opacity-60"
+            )}>
+              <span className="font-semibold text-primary/80">{prefix}</span>
+              {contentPreview}
             </p>
+            
             {unreadCount !== undefined && unreadCount > 0 && (
-              <Badge variant="info" className="h-5 min-w-[20px] justify-center ml-auto">
+              <Badge variant="info" className="h-5 min-w-[20px] px-1.5 justify-center shrink-0 mt-0.5">
                 {unreadCount}
               </Badge>
             )}

@@ -95,7 +95,6 @@ core_principles:
   - CRITICAL: Story has ALL info you will need aside from what you loaded during the startup commands. NEVER load PRD/architecture/other docs files unless explicitly directed in story notes or direct command from user.
   - CRITICAL: ONLY update story file Dev Agent Record sections (checkboxes/Debug Log/Completion Notes/Change Log)
   - CRITICAL: FOLLOW THE develop-story command when the user tells you to implement the story
-  - CodeRabbit Pre-Commit Review - Run code quality check before marking story complete to catch issues early
   - Numbered Options - Always use numbered lists when presenting choices to the user
 
 # All commands require * prefix when used (e.g., *help)
@@ -288,7 +287,6 @@ dependencies:
     # Worktree Isolation (Epic 8 - Story 8.2)
     - worktree-manager.js # Isolated worktree management
   tools:
-    - coderabbit # Pre-commit code quality review, catches issues before commit
     - git # Local operations: add, commit, status, diff, log (NO PUSH)
     - context7 # Look up library documentation during development
     - supabase # Database operations, migrations, and queries
@@ -297,21 +295,7 @@ dependencies:
     - ffmpeg # Process media files during development
 
   coderabbit_integration:
-    enabled: true
-    installation_mode: wsl
-    wsl_config:
-      distribution: Ubuntu
-      installation_path: ~/.local/bin/coderabbit
-      working_directory: ${PROJECT_ROOT}
-    usage:
-      - Pre-commit quality check - run before marking story complete
-      - Catch issues early - find bugs, security issues, code smells during development
-      - Enforce standards - validate adherence to coding standards automatically
-      - Reduce rework - fix issues before QA review
-
-    # Self-Healing Configuration (Story 6.3.3)
-    self_healing:
-      enabled: true
+    enabled: false
       type: light
       max_iterations: 2
       timeout_minutes: 15
@@ -547,7 +531,6 @@ Type `*help` to see all commands, or `*explain` to learn more.
 - ❌ Not updating File List in story
 - ❌ Pushing directly (should use @github-devops)
 - ❌ Modifying non-authorized story sections
-- ❌ Forgetting to run CodeRabbit pre-commit review
 
 ### Related Agents
 

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAuth } from './useAuth'
 import { createClient } from '@/lib/supabase/client'
+import { debounce } from '@/lib/utils'
 
 export interface Conversation {
   id: string
@@ -11,6 +12,8 @@ export interface Conversation {
   order_position: number
   column_id: string
   last_message_content: string | null
+  last_sender_type: string | null
+  last_media_url: string | null
   unread_count: number
 }
 
@@ -30,13 +33,13 @@ export function useConversations(kanbanId: string) {
   const supabase = createClient()
   const tenantId = user?.app_metadata?.tenant_id
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!kanbanId || !tenantId || !isAuthenticated) return
 
     try {
       setIsLoading(true)
 
-      // 1. Fetch Columns
+      // 1. Fetch Columns via Supabase SDK
       const { data: colsData, error: colsError } = await supabase
         .from('columns')
         .select('id, name, order_position')
@@ -46,35 +49,27 @@ export function useConversations(kanbanId: string) {
       if (colsError) throw colsError
       setColumns(colsData || [])
 
-      // 2. Fetch Conversations
-      const { data: convData, error: convError } = await supabase
-        .from('conversations')
-        .select(`
-          id,
-          wa_phone,
-          status,
-          last_message_at,
-          column_id,
-          contacts (name)
-        `)
-        .eq('kanban_id', kanbanId)
-        .eq('tenant_id', tenantId)
-        .eq('status', 'active')
-        .order('last_message_at', { ascending: false })
+      // 2. Fetch Conversations via internal API (Optimized SQL Subquery)
+      const response = await fetch(`/api/conversations?kanbanId=${kanbanId}`)
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to fetch conversations')
+      }
+      const convData = await response.json()
 
-      if (convError) throw convError
-
-      // Transform data
+      // Transform data (already optimized by the API)
       const transformed: Conversation[] = (convData || []).map((c: any) => ({
         id: c.id,
         wa_phone: c.wa_phone,
         status: c.status,
         last_message_at: c.last_message_at,
         column_id: c.column_id,
-        contact_name: c.contacts?.name || null,
+        contact_name: c.contact_name || null,
         order_position: 0,
-        last_message_content: "Preview indisponível",
-        unread_count: 0
+        last_message_content: c.last_message_content || null,
+        last_sender_type: c.last_sender_type || null,
+        last_media_url: c.last_media_url || null,
+        unread_count: c.unread_count || 0
       }))
 
       setConversations(transformed)
@@ -84,7 +79,13 @@ export function useConversations(kanbanId: string) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [kanbanId, tenantId, isAuthenticated, supabase])
+
+  // Debounced fetch to avoid multiple rapid reloads during busy periods
+  const debouncedFetch = useMemo(
+    () => debounce(fetchData, 300),
+    [fetchData]
+  )
 
   useEffect(() => {
     if (!kanbanId || !tenantId || !isAuthenticated) {
@@ -96,6 +97,8 @@ export function useConversations(kanbanId: string) {
     fetchData()
 
     // 3. Realtime Subscriptions
+    // We only need to listen to 'conversations' because the webhook 
+    // updates 'last_message_at' on every new message.
     const channel = supabase
       .channel(`kanban-realtime-${kanbanId}`)
       .on(
@@ -106,23 +109,14 @@ export function useConversations(kanbanId: string) {
           table: 'conversations',
           filter: `kanban_id=eq.${kanbanId}`
         },
-        () => fetchData()
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages'
-        },
-        () => fetchData()
+        () => debouncedFetch()
       )
       .subscribe()
 
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [kanbanId, tenantId, isAuthenticated])
+  }, [kanbanId, tenantId, isAuthenticated, fetchData, debouncedFetch, supabase])
 
   return { conversations, columns, isLoading, error, refetch: fetchData }
 }

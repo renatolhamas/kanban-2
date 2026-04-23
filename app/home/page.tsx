@@ -130,8 +130,10 @@ export default function HomePage() {
                     key={conv.id}
                     name={conv.contact_name || conv.wa_phone}
                     phone={conv.wa_phone}
-                    lastMessage={conv.last_message_content || "Sem mensagens"}
-                    timestamp={conv.last_message_at ? new Date(conv.last_message_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "-"}
+                    lastMessage={conv.last_message_content}
+                    senderType={conv.last_sender_type}
+                    mediaUrl={conv.last_media_url}
+                    timestamp={conv.last_message_at}
                     unreadCount={conv.unread_count}
                   />
                 ))}

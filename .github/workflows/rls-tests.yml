@@ -43,12 +43,6 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Run TypeScript type check
-        run: npm run typecheck
-
-      - name: Run linting
-        run: npm run lint
-
   # Optional: Performance baseline (separate test script to avoid data conflicts)
   # Now uses test:performance script with its own performance dataset
   performance-baseline:

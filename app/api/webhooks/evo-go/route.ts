@@ -277,7 +277,7 @@ async function handleQRCodeUpdated(
  * Story 5.1: Auto-register contacts
  * Story 5.2: Auto-create conversations
  */
-import { extractContactInfo, extractMessageContent, normalizePhone } from '@/lib/api/webhook-utils';
+import { extractContactInfo, extractMessageContent } from '@/lib/api/webhook-utils';
 
 async function handleMessagesUpsert(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

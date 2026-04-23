@@ -1,5 +1,9 @@
 # Development Patterns — Quick Reference
 
+> [!NOTE]
+> Para referências de banco de dados, consulte sempre a [Database Governance Rule](file:///c:/git/kanban.2/.antigravity/rules.md) e a pasta [docs/db/](file:///c:/git/kanban.2/docs/db/).
+
+
 **For new developers working on Synkra AIOX**
 
 ---

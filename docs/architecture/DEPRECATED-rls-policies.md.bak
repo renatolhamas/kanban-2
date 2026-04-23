@@ -1,4 +1,17 @@
-# RLS Policies — Architecture & Maintenance Guide
+# 🛑 DEPRECATED / OUTDATED
+
+> [!CAUTION]
+> **ESTE ARQUIVO ESTÁ DESATUALIZADO E NÃO DEVE SER USADO COMO REFERÊNCIA.**
+> As políticas de RLS foram atualizadas para suportar novas funcionalidades de integração.
+> 
+> **FONTE DE VERDADE ATUALIZADA:** 
+> Consulte sempre a pasta [docs/db/](file:///c:/git/kanban.2/docs/db/)
+> Principalmente: [rls.md](file:///c:/git/kanban.2/docs/db/rls.md)
+
+---
+
+# RLS Policies — Architecture & Maintenance Guide (ORIGINAL DESIGN)
+
 
 **Version:** 1.0  
 **Last Updated:** 2026-04-06  

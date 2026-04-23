@@ -72,13 +72,21 @@ async function testEndpoint(endpoint: string, method: string, description: strin
   }
 }
 
+interface EndpointResult {
+  method: string;
+  endpoint: string;
+  description: string;
+  status: number;
+  statusText: string;
+}
+
 async function exploreAPI() {
   console.log('🔍 Evo GO API Endpoint Discovery');
   console.log('━'.repeat(60));
   console.log(`📍 Base URL: ${baseUrl}`);
   console.log();
 
-  const validEndpoints: any[] = [];
+  const validEndpoints: EndpointResult[] = [];
 
   // Test all endpoints in parallel
   const results = await Promise.all(

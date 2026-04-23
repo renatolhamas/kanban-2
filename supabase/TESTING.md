@@ -1,5 +1,12 @@
 # Story 1.1: Database Schema Testing Guide
 
+> [!WARNING]
+> **DATABASE SCHEMA WARNING:** 
+> Este documento reflete a estratégia de testes inicial da Story 1.1. O banco de dados evoluiu para suportar a integração com Evo GO (Story 5.4+).
+> Os nomes de tabelas, índices e scripts de testes podem não cobrir 100% da estrutura atual.
+> **REFERÊNCIA OFICIAL:** [docs/db/schema.md](../docs/db/schema.md)
+
+
 ## Quick Start
 
 ```bash

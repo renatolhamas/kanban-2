@@ -10,6 +10,7 @@ const defaultProps = {
   lastMessage: 'Olá, tudo bem?',
   senderType: null as string | null,
   mediaUrl: null as string | null,
+  mediaType: null as string | null,
   timestamp: '2026-04-23T14:30:00Z',
 }
 

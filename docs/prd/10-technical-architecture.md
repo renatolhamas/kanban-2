@@ -16,99 +16,16 @@
 | **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
 | **Monitoring**       | Sentry + Supabase Logs                        | Error tracking, performance APM                          |
 
-## 10.2 Database Schema (Resumido)
+## 10.2 Database Schema (Source of Truth)
 
-```sql
--- Tenants (Multi-tenancy root)
-table tenants {
-  id UUID primary key
-  name TEXT
-  subscription_status ENUM (active, paused, cancelled)
-  created_at TIMESTAMP
-}
+> [!IMPORTANT]
+> A estrutura detalhada do banco de dados (tabelas, colunas, índices e políticas RLS) é mantida dinamicamente na pasta especializada de banco de dados.
+> **REFERÊNCIA OFICIAL:** [docs/db/schema.md](../db/schema.md)
 
--- Users (Owners + Attendants)
-table users {
-  id UUID primary key
-  tenant_id UUID (fk -> tenants)
-  email TEXT unique
-  role ENUM (owner, attendant)
-  name TEXT
-  password_hash TEXT
-  created_at TIMESTAMP
-}
-
--- Kanbans (Pipelines)
-table kanbans {
-  id UUID primary key
-  tenant_id UUID (fk -> tenants)
-  name TEXT
-  is_main BOOLEAN (apenas 1 por tenant)
-  order INT
-  created_at TIMESTAMP
-}
-
--- Columns (Etapas do Kanban)
-table columns {
-  id UUID primary key
-  kanban_id UUID (fk -> kanbans)
-  name TEXT
-  order INT
-  created_at TIMESTAMP
-}
-
--- Conversations (Chats com WhatsApp)
-table conversations {
-  id UUID primary key
-  tenant_id UUID (fk -> tenants)
-  contact_id UUID (fk -> contacts)
-  kanban_id UUID (fk -> kanbans)
-  column_id UUID (fk -> columns)
-  wa_phone TEXT (WhatsApp number)
-  status ENUM (active, archived)
-  last_message_at TIMESTAMP
-  created_at TIMESTAMP
-}
-
--- Messages (Histórico)
-table messages {
-  id UUID primary key
-  conversation_id UUID (fk -> conversations)
-  sender_type ENUM (user, contact)
-  content TEXT
-  media_url TEXT (NULL se sem mídia)
-  media_type ENUM (image, video, audio, NULL)
-  created_at TIMESTAMP
-}
-
--- Contacts (Catálogo de pessoas)
-table contacts {
-  id UUID primary key
-  tenant_id UUID (fk -> tenants)
-  name TEXT
-  phone TEXT (E.164 format: +5511987654321)
-  wa_name TEXT (último pushName recebido do WhatsApp — atualizado a cada webhook)
-  is_group BOOLEAN DEFAULT false (true se remoteJid termina em @g.us)
-  created_at TIMESTAMP
-  updated_at TIMESTAMP
-}
-
--- Automatic Messages (Templates)
-table automatic_messages {
-  id UUID primary key
-  tenant_id UUID (fk -> tenants)
-  name TEXT
-  message TEXT
-  scheduled_interval INT (minutos, NULL = manual only)
-  scheduled_kanban_id UUID (opcional)
-  created_at TIMESTAMP
-}
-
--- RLS Policies (sketch)
-ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "user_sees_tenant_conversations" ON conversations
-  FOR SELECT USING (tenant_id = auth.jwt() -> 'tenant_id');
-```
+Para consulta técnica imediata, utilize:
+- [DDL Completo (SQL)](../db/schema.sql)
+- [Políticas RLS](../db/rls.md)
+- [Funções & Triggers](../db/functions.md)
 
 ## 10.3 Evo GO Integration
 

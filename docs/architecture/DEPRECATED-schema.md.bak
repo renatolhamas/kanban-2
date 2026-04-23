@@ -1,4 +1,17 @@
-# Database Schema Documentation
+# 🛑 DEPRECATED / OUTDATED
+
+> [!CAUTION]
+> **ESTE ARQUIVO ESTÁ DESATUALIZADO E NÃO DEVE SER USADO COMO REFERÊNCIA.**
+> O schema do banco de dados evoluiu significativamente.
+> 
+> **FONTE DE VERDADE ATUALIZADA:** 
+> Consulte sempre a pasta [docs/db/](file:///c:/git/kanban.2/docs/db/)
+> Principalmente: [schema.md](file:///c:/git/kanban.2/docs/db/schema.md) e [schema.sql](file:///c:/git/kanban.2/docs/db/schema.sql)
+
+---
+
+# Database Schema Documentation (ORIGINAL DESIGN)
+
 
 **Story:** 1.1 — Database Schema Creation  
 **Date:** 2026-04-01  

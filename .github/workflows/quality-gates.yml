@@ -74,12 +74,15 @@ jobs:
 
       - name: Type Check
         run: npm run typecheck
+        continue-on-error: false
 
       - name: Build
         run: npm run build
+        continue-on-error: false
 
       - name: Lint
         run: npm run lint
+        continue-on-error: false
 
   summary:
     name: Quality Gates Summary

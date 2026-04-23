@@ -14,6 +14,7 @@ export interface Conversation {
   last_message_content: string | null
   last_sender_type: string | null
   last_media_url: string | null
+  last_media_type: string | null
   unread_count: number
 }
 
@@ -69,6 +70,7 @@ export function useConversations(kanbanId: string) {
         last_message_content: c.last_message_content || null,
         last_sender_type: c.last_sender_type || null,
         last_media_url: c.last_media_url || null,
+        last_media_type: c.last_media_type || null,
         unread_count: c.unread_count || 0
       }))
 

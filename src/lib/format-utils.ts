@@ -35,19 +35,23 @@ export function truncate(text: string | null, length: number = 100): string {
 /**
  * Get display label for media messages
  */
-export function getMediaLabel(mediaUrl: string | null): string {
-  if (!mediaUrl) return '';
+export function getMediaLabel(mediaUrl: string | null, mediaType?: string | null): string {
+  const type = mediaType || (mediaUrl ? mediaUrl.split('.').pop()?.toLowerCase() : null);
   
-  const ext = mediaUrl.split('.').pop()?.toLowerCase();
-  switch (ext) {
+  if (!type && !mediaUrl) return '';
+
+  switch (type) {
+    case 'image':
     case 'jpg':
     case 'jpeg':
     case 'png':
     case 'webp':
       return '📷 Foto';
+    case 'video':
     case 'mp4':
     case 'mov':
       return '🎥 Vídeo';
+    case 'audio':
     case 'mp3':
     case 'ogg':
     case 'wav':
@@ -57,6 +61,6 @@ export function getMediaLabel(mediaUrl: string | null): string {
     case 'docx':
       return '📄 Arquivo';
     default:
-      return '📎 Mídia';
+      return mediaUrl ? '📎 Mídia' : '';
   }
 }

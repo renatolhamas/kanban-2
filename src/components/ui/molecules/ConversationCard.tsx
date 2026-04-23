@@ -10,6 +10,7 @@ export interface ConversationCardProps extends React.HTMLAttributes<HTMLDivEleme
   lastMessage: string | null
   senderType: string | null
   mediaUrl: string | null
+  mediaType: string | null
   timestamp: string | null
   unreadCount?: number
   isSelected?: boolean
@@ -23,6 +24,7 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
     lastMessage, 
     senderType, 
     mediaUrl, 
+    mediaType,
     timestamp, 
     unreadCount, 
     isSelected, 
@@ -39,8 +41,8 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
     }
 
     // Logic for content preview
-    const hasMessage = lastMessage || mediaUrl;
-    const contentPreview = truncate(lastMessage, 100) || getMediaLabel(mediaUrl) || "Sem mensagens";
+    const hasMessage = lastMessage || mediaUrl || mediaType;
+    const contentPreview = truncate(lastMessage, 100) || getMediaLabel(mediaUrl, mediaType) || "Sem mensagens";
     const prefix = senderType === 'user' ? "Você: " : ""; // Incoming doesn't need prefix if name is above
 
     return (

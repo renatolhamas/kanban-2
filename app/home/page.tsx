@@ -133,6 +133,7 @@ export default function HomePage() {
                     lastMessage={conv.last_message_content}
                     senderType={conv.last_sender_type}
                     mediaUrl={conv.last_media_url}
+                    mediaType={conv.last_media_type}
                     timestamp={conv.last_message_at}
                     unreadCount={conv.unread_count}
                   />

@@ -80,8 +80,9 @@ export async function generateValidJWT(
   try {
     const PASSWORD = 'TestPassword123!';
 
-    // Try to create auth user via admin API
+    // Try to create auth user via admin API with the specific ID from TEST_USERS
     const { data: _createData, error: createError } = await getAdminClient().auth.admin.createUser({
+      id: user.id, // Match the ID seeded in public.users
       email: user.email,
       password: PASSWORD,
       user_metadata: {

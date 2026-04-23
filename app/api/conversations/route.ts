@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // 4. Return results
+    // 3. Return results
     return NextResponse.json(data || [])
   } catch (error) {
     console.error('[API] Unexpected error in conversations route:', error)

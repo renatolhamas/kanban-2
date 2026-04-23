@@ -85,7 +85,7 @@ export function useConversations(kanbanId: string) {
 
   // Debounced fetch to avoid multiple rapid reloads during busy periods
   const debouncedFetch = useMemo(
-    () => debounce(fetchData, 300),
+    () => debounce(fetchData, 500),
     [fetchData]
   )
 
@@ -99,17 +99,15 @@ export function useConversations(kanbanId: string) {
     fetchData()
 
     // 3. Realtime Subscriptions
-    // We only need to listen to 'conversations' because the webhook 
-    // updates 'last_message_at' on every new message.
+    // We listen to the 'messages' table as per Story 5.4.1 requirements
     const channel = supabase
-      .channel(`kanban-realtime-${kanbanId}`)
+      .channel(`kanban-messages-realtime-${kanbanId}`)
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'INSERT',
           schema: 'public',
-          table: 'conversations',
-          filter: `kanban_id=eq.${kanbanId}`
+          table: 'messages'
         },
         () => debouncedFetch()
       )

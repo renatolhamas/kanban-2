@@ -134,6 +134,7 @@ export function createTestConversation(tenant_id: string, index: number = 1, con
     tenant_id,
     contact_id: contactId || uuidv4(),
     wa_phone: waPhone || `+55-11-9999-${String(index).padStart(4, '0')}`,
+    status: 'active',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -203,15 +204,17 @@ export function generateComprehensiveTestDataset() {
     createTestContact(TEST_TENANTS.A.id, i + 1)
   );
 
-  // Conversations linked to REAL contacts (not random UUIDs!)
-  const tenantAConversations = Array.from({ length: 4 }, (_, i) =>
-    createTestConversation(
+  // Conversations linked to REAL contacts and a REAL kanban!
+  const tenantAConversations = Array.from({ length: 4 }, (_, i) => ({
+    ...createTestConversation(
       TEST_TENANTS.A.id,
       i + 1,
-      tenantAContacts[i % tenantAContacts.length].id, // Use real contact ID
-      tenantAContacts[i % tenantAContacts.length].phone // Use real phone
-    )
-  );
+      tenantAContacts[i % tenantAContacts.length].id, 
+      tenantAContacts[i % tenantAContacts.length].phone 
+    ),
+    kanban_id: tenantAKanbans[0].id, // Link to first kanban
+    column_id: tenantAColumns[0].id  // Link to first column
+  }));
 
   const tenantAMessages = tenantAConversations.flatMap((conv, _ci) =>
     Array.from({ length: 5 }, (_, mi) =>
@@ -244,15 +247,17 @@ export function generateComprehensiveTestDataset() {
     createTestContact(TEST_TENANTS.B.id, i + 1)
   );
 
-  // Conversations linked to REAL contacts (not random UUIDs!)
-  const tenantBConversations = Array.from({ length: 4 }, (_, i) =>
-    createTestConversation(
+  // Conversations linked to REAL contacts and a REAL kanban!
+  const tenantBConversations = Array.from({ length: 4 }, (_, i) => ({
+    ...createTestConversation(
       TEST_TENANTS.B.id,
       i + 1,
-      tenantBContacts[i % tenantBContacts.length].id, // Use real contact ID
-      tenantBContacts[i % tenantBContacts.length].phone // Use real phone
-    )
-  );
+      tenantBContacts[i % tenantBContacts.length].id, 
+      tenantBContacts[i % tenantBContacts.length].phone 
+    ),
+    kanban_id: tenantBKanbans[0].id, // Link to first kanban
+    column_id: tenantBColumns[0].id  // Link to first column
+  }));
 
   const tenantBMessages = tenantBConversations.flatMap((conv, _ci) =>
     Array.from({ length: 5 }, (_, mi) =>

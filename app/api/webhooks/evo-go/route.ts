@@ -439,7 +439,8 @@ async function handleMessagesUpsert(
     }
 
     // 5. Persist Message (Story 5.3)
-    const message = data.message as Record<string, unknown> | undefined;
+    // NOTE: Evolution GO uses capital 'M' for Message field: data.Message, not data.message
+    const message = (data.Message || data.message) as Record<string, unknown> | undefined;
     const content = message?.conversation ?? '';
     const fromMe = contactInfo.isFromMe ?? false;
 
@@ -449,6 +450,7 @@ async function handleMessagesUpsert(
       messageContent: message ? JSON.stringify(message).substring(0, 500) : 'undefined',
       messageExists: !!message,
       dataKeys: Object.keys(data as Record<string, unknown>),
+      dataMessage: data.Message ? JSON.stringify(data.Message).substring(0, 1000) : 'undefined',
     });
 
     console.log('[DEBUG] Message insertion check', {

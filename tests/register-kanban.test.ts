@@ -33,9 +33,12 @@ describe.skipIf(!hasSupabase)("Register Integration - Kanban Auto-Creation", () 
       throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
     }
 
-    if (!url.startsWith("http")) {
-      throw new Error(`Invalid SUPABASE_URL format. Length: ${url.length}`);
+    // Extract URL using regex to be extremely resilient to hidden characters (BOM, quotes, etc.)
+    const urlMatch = url.match(/https?:\/\/[^\s"']+/);
+    if (!urlMatch) {
+      throw new Error(`Invalid SUPABASE_URL format (no http found). Length: ${url.length}`);
     }
+    url = urlMatch[0];
 
     supabase = createClient(url, key);
 

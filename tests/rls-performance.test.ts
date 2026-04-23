@@ -20,7 +20,9 @@ import {
 // Setup & Configuration
 // ============================================================================
 
-const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'http://localhost:54321').trim().replace(/^['"]|['"]$/g, "");
+const rawUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'http://localhost:54321').trim();
+const urlMatch = rawUrl.match(/https?:\/\/[^\s"']+/);
+const SUPABASE_URL = urlMatch ? urlMatch[0] : rawUrl;
 const SUPABASE_SERVICE_ROLE_KEY = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim().replace(/^['"]|['"]$/g, "");
 const SUPABASE_ANON_KEY = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "").trim().replace(/^['"]|['"]$/g, "");
 

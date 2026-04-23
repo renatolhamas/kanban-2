@@ -37,15 +37,13 @@ import {
 // ============================================================================
 
 // Supabase connection (uses env vars from .env.local)
-let SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'http://localhost:54321').trim();
-let SUPABASE_ANON_KEY =
-  (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVqY2p1Y2d5bHdranJkcHNxZmZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzE3MTIsImV4cCI6MjA5MDY0NzcxMn0.JNzwv5kdT8L0I9OA39obnLvuOB-hocPxMweonQJV7n8').trim();
+const rawUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || 'http://localhost:54321').trim();
+const rawAnonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim();
 
-// Clean potential quotes from secrets (common in CI/env files)
-SUPABASE_URL = SUPABASE_URL.replace(/^['"]|['"]$/g, "");
-SUPABASE_ANON_KEY = SUPABASE_ANON_KEY.replace(/^['"]|['"]$/g, "");
+// Extract URL using regex to be extremely resilient to hidden characters (BOM, quotes, etc.)
+const urlMatch = rawUrl.match(/https?:\/\/[^\s"']+/);
+const SUPABASE_URL = urlMatch ? urlMatch[0] : rawUrl;
+const SUPABASE_ANON_KEY = rawAnonKey.replace(/^['"]|['"]$/g, "");
 
 let supabase: SupabaseClient;
 let adminClient: SupabaseClient;

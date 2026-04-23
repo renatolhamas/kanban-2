@@ -277,7 +277,7 @@ async function handleQRCodeUpdated(
  * Story 5.1: Auto-register contacts
  * Story 5.2: Auto-create conversations
  */
-import { extractContactInfo } from '@/lib/api/webhook-utils';
+import { extractContactInfo, extractMessageContent, normalizePhone } from '@/lib/api/webhook-utils';
 
 async function handleMessagesUpsert(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -438,10 +438,13 @@ async function handleMessagesUpsert(
       }
     }
 
-    // 5. Persist Message (Story 5.3)
-    // NOTE: Evolution GO uses capital 'M' for Message field: data.Message, not data.message
-    const message = (data.Message || data.message) as Record<string, unknown> | undefined;
-    const content = message?.conversation ?? '';
+    // 5. Persist Message (Story 5.3 & 5.4 Media Support)
+    const messageData = extractMessageContent(data);
+    console.log('[Webhook] Extracted message data:', { 
+      hasText: !!messageData.text, 
+      hasMedia: !!messageData.mediaUrl, 
+      mediaType: messageData.mediaType 
+    });
     const fromMe = contactInfo.isFromMe ?? false;
 
     if (!fromMe && conversationId) {
@@ -450,7 +453,9 @@ async function handleMessagesUpsert(
         .insert({
           conversation_id: conversationId,
           sender_type: 'contact',
-          content: content,
+          content: messageData.text,
+          media_url: messageData.mediaUrl ?? null,
+          media_type: messageData.mediaType ?? null,
           evolution_message_id: contactInfo.messageId ?? null,
           sender_jid: contactInfo.remoteJid ?? null,
         });

@@ -8,6 +8,12 @@ export interface ContactInfo {
   isFromMe?:  boolean;
 }
 
+export interface MessageContent {
+  text: string;
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video' | 'audio';
+}
+
 /**
  * Parses a WhatsApp JID into phone + isGroup.
  * Strips multi-device suffixes (":1", ":2") and domain ("@s.whatsapp.net", "@g.us").
@@ -96,4 +102,54 @@ export function extractContactInfo(data: unknown): ContactInfo | null {
     messageId: key?.id as string | undefined,
     isFromMe:  key?.fromMe === true,
   };
+}
+
+/**
+ * Extracts content, media URL, and media type from Evolution GO message payload.
+ */
+export function extractMessageContent(data: unknown): MessageContent {
+  const d = data as Record<string, unknown> | null;
+  const message = (d?.Message || d?.message) as Record<string, any> | undefined;
+  
+  if (!message) return { text: '' };
+
+  // 1. Text Message
+  if (message.conversation) {
+    return { text: message.conversation };
+  }
+
+  // 2. Extended Text Message (replies, links, etc)
+  if (message.extendedTextMessage?.text) {
+    return { text: message.extendedTextMessage.text };
+  }
+
+  // 3. Image Message
+  if (message.imageMessage) {
+    return { 
+      text: message.imageMessage.caption || '', 
+      mediaUrl: message.imageMessage.url || message.imageMessage.urlDirect,
+      mediaType: 'image'
+    };
+  }
+
+  // 4. Video Message
+  if (message.videoMessage) {
+    return { 
+      text: message.videoMessage.caption || '', 
+      mediaUrl: message.videoMessage.url || message.videoMessage.urlDirect,
+      mediaType: 'video'
+    };
+  }
+
+  // 5. Audio Message
+  if (message.audioMessage) {
+    return { 
+      text: '', 
+      mediaUrl: message.audioMessage.url || message.audioMessage.urlDirect,
+      mediaType: 'audio'
+    };
+  }
+
+  // Fallback
+  return { text: '' };
 }

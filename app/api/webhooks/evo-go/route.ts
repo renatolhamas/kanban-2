@@ -444,25 +444,6 @@ async function handleMessagesUpsert(
     const content = message?.conversation ?? '';
     const fromMe = contactInfo.isFromMe ?? false;
 
-    console.log('[DEBUG] Full message payload', {
-      tenantId,
-      messageKeys: message ? Object.keys(message) : [],
-      messageContent: message ? JSON.stringify(message).substring(0, 500) : 'undefined',
-      messageExists: !!message,
-      dataKeys: Object.keys(data as Record<string, unknown>),
-      dataMessage: data.Message ? JSON.stringify(data.Message).substring(0, 1000) : 'undefined',
-    });
-
-    console.log('[DEBUG] Message insertion check', {
-      tenantId,
-      fromMe,
-      conversationId,
-      shouldInsert: !fromMe && conversationId,
-      contentLength: String(content).length,
-      messageId: contactInfo.messageId,
-      extractedContent: content,
-    });
-
     if (!fromMe && conversationId) {
       const { error: msgError } = await supabase
         .from('messages')

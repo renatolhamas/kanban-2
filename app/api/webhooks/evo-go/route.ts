@@ -445,8 +445,10 @@ async function handleMessagesUpsert(
 
     console.log('[DEBUG] Full message payload', {
       tenantId,
-      messageKeys: Object.keys(message || {}),
-      messageContent: JSON.stringify(message).substring(0, 500),
+      messageKeys: message ? Object.keys(message) : [],
+      messageContent: message ? JSON.stringify(message).substring(0, 500) : 'undefined',
+      messageExists: !!message,
+      dataKeys: Object.keys(data as Record<string, unknown>),
     });
 
     console.log('[DEBUG] Message insertion check', {

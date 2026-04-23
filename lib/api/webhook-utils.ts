@@ -144,9 +144,10 @@ export function extractMessageContent(data: unknown): MessageContent {
 
   // 5. Audio Message
   if (message.audioMessage) {
+    console.log('[Webhook] Raw audioMessage structure:', JSON.stringify(message.audioMessage, null, 2));
     return { 
       text: '', 
-      mediaUrl: message.audioMessage.url || message.audioMessage.urlDirect,
+      mediaUrl: message.audioMessage.url || message.audioMessage.urlDirect || message.audioMessage.fileUrl,
       mediaType: 'audio'
     };
   }

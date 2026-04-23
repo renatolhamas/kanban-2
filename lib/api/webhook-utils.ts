@@ -109,6 +109,7 @@ export function extractContactInfo(data: unknown): ContactInfo | null {
  */
 export function extractMessageContent(data: unknown): MessageContent {
   const d = data as Record<string, unknown> | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const message = (d?.Message || d?.message) as Record<string, any> | undefined;
   
   if (!message) return { text: '' };

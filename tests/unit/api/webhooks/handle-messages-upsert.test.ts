@@ -85,6 +85,8 @@ describe('handleMessagesUpsert logic in POST', () => {
       content: 'Hello Dex',
       evolution_message_id: 'msg-abc',
       sender_jid: '5511999999999@s.whatsapp.net',
+      media_url: null,
+      media_type: null,
     });
   });
 

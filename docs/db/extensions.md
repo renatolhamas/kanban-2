@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-22
+> 📅 Extraído em: 2026-04-23
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — extensões e advisors
-> Status: ✅ Atualizado
+> Status: ✅ Atualizado — +1 migration Story 5.4
 
 # Extensões & Infraestrutura
 
-**Total: 6 extensões habilitadas | 20 migrações | 0 edge functions | 3 advisories**
+**Total: 6 extensões habilitadas | 21 migrações (↑1 novo) | 0 edge functions | 3 advisories**
 
 ---
 
@@ -21,8 +21,14 @@
 
 ---
 
-## Migrações Aplicadas (20 total)
+## Migrações Aplicadas (21 total)
 
+### Story 5.4: Last Message Preview Optimization ✨ NEW
+| # | Version | Name | Status | Details |
+|---|---------|------|--------|---------|
+| **0** | **20260423120000** | **add_messages_conversation_created_index** | **✅** | **Composite index (conversation_id, created_at DESC) for last-message queries. Performance: 1.049ms for 150+ conversations** |
+
+### Core Migrations
 | # | Version | Name | Status |
 |---|---------|------|--------|
 | 1 | 20260402025734 | create_core_schema_v3 | ✅ |
@@ -44,6 +50,7 @@
 | 17 | 20260417020912 | expand_schema_for_evolution | ✅ |
 | 18 | 20260421215046 | enhance_webhooks_schema | ✅ |
 | 19 | 20260421215102 | add_unread_count_conversations | ✅ |
+| 20 | 20260423120000 | add_messages_conversation_created_index | ✅ |
 
 ---
 

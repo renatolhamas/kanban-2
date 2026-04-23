@@ -1,4 +1,17 @@
-# 3. Database Schema — Complete Reference
+# 🛑 DEPRECATED / OUTDATED
+
+> [!CAUTION]
+> **ESTE ARQUIVO ESTÁ DESATUALIZADO E NÃO DEVE SER USADO COMO REFERÊNCIA.**
+> O schema do banco de dados evoluiu significativamente durante a implementação.
+> 
+> **FONTE DE VERDADE ATUALIZADA:** 
+> Consulte sempre a pasta [docs/db/](file:///c:/git/kanban.2/docs/db/)
+> Principalmente: [schema.md](file:///c:/git/kanban.2/docs/db/schema.md) e [schema.sql](file:///c:/git/kanban.2/docs/db/schema.sql)
+
+---
+
+# 3. Database Schema — Complete Reference (ORIGINAL DESIGN)
+
 
 ## 3.1 Core Tables
 

@@ -13,7 +13,7 @@ export const KanbanColumn = React.forwardRef<HTMLElement, KanbanColumnProps>(
       <section
         ref={ref}
         className={cn(
-          "flex flex-col flex-1 min-w-[320px] max-w-[400px] h-full bg-surface-container-lowest/50 rounded-lg border border-outline-variant",
+          "flex flex-col w-[350px] flex-shrink-0 h-full bg-surface-container-lowest/50 rounded-lg border border-outline-variant",
           className
         )}
         aria-label={`Coluna: ${title}`}

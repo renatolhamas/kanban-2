@@ -55,6 +55,15 @@ docs/
 4. **Update story** - Mark completed items
 5. **Document changes** - Update File List
 
+## Database Governance (Single Source of Truth)
+
+1.  **Mandatory Reference:** The folder `docs/db/` is the ONLY technical reference for database schema.
+2.  **Required Files:**
+    - `docs/db/schema.md`: Technical description and field mapping.
+    - `docs/db/schema.sql`: Official DDL (Data Definition Language).
+3.  **Prohibition:** DO NOT use any database documentation located in `docs/architecture/` (e.g., outdated reference files).
+4.  **Audit:** Coordinate with @data-engineer for any complex schema changes or query optimizations.
+
 ## Best Practices
 
 ### When implementing:

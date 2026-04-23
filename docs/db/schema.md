@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-23 (Atualizado para Story 5.4)
+> 📅 Extraído em: 2026-04-23 15:45
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
-> Status: ✅ Atualizado — Índice `idx_messages_conversation_created` adicionado (Story 5.4)
+> Status: ✅ COMPLETO — Todas as estruturas documentadas
 
 # Documentação do Schema — Banco de Dados Kanban
 
-**9 tabelas | 37 índices (↑1 novo) | 32 políticas RLS | 3 funções customizadas | 6 extensões**
+**9 tabelas | 37 índices | 32 políticas RLS | 4 funções customizadas | 22 migrações | 0 triggers**
 
 ## Estrutura Geral
 

@@ -83,6 +83,64 @@ Inserir ou atualizar contato com base no par `(phone, tenant_id)`, preservando e
 
 ---
 
+## 4. **get_conversations_with_last_message()**
+
+**Tipo:** FUNCTION (RPC)  
+**Linguagem:** PL/pgSQL  
+**Retorno:** TABLE (id, wa_phone, status, last_message_at, column_id, contact_name, last_message_content, last_sender_type, last_media_url, last_media_type, unread_count)  
+**Escopo:** Dashboard — carrega conversas com preview da última mensagem
+
+### Objetivo
+
+Retornar todas as conversas ATIVAS de um kanban, enriquecidas com última mensagem e metadados de contato, com isolamento JWT de tenant.
+
+### Parâmetros
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `p_kanban_id` | uuid | ID do kanban |
+
+### Retorno
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | uuid | ID da conversa |
+| `wa_phone` | text | Número WhatsApp do contato |
+| `status` | text | Status (`'active'` ou `'archived'`) |
+| `last_message_at` | timestamptz | Timestamp da última mensagem |
+| `column_id` | uuid | ID da coluna do kanban |
+| `contact_name` | text | Nome do contato |
+| `last_message_content` | text | Conteúdo da última mensagem |
+| `last_sender_type` | text | Tipo do remetente (`'contact'` ou `'user'`) |
+| `last_media_url` | text | URL da mídia (se houver) |
+| `last_media_type` | text | Tipo de mídia (`'image'`, `'video'`, etc.) |
+| `unread_count` | int | Contagem de mensagens não lidas |
+
+### Isolamento de Tenant
+
+- Extrai `tenant_id` do JWT via: `((SELECT auth.jwt()) -> 'app_metadata' ->> 'tenant_id')::uuid`
+- **NÃO** passa `p_tenant_id` como parâmetro
+- Filtra: `WHERE c.tenant_id = v_tenant_id`
+- ✅ Seguro contra cross-tenant data access
+
+### Fluxo
+
+1. Extrai `tenant_id` do JWT
+2. Busca conversas ativas do kanban para esse tenant
+3. Para cada conversa:
+   - JOIN com `contacts` para nome
+   - Subqueries para última mensagem (conteúdo, remetente, mídia)
+4. Ordena por `last_message_at DESC` (mais recentes primeiro)
+5. Retorna resultado para frontend renderizar board
+
+### Performance
+
+- ⚠️ **Aviso:** Subqueries N+1 para `messages` (última msg por conversa)
+- Para boards com 100+ conversas, considerar materializar em `last_message_*` columns
+- Atualmente aceitável para típico (10-30 conversas por kanban)
+
+---
+
 ## Resumo
 
 | Função | Tipo | Retorno | Propósito |
@@ -90,4 +148,5 @@ Inserir ou atualizar contato com base no par `(phone, tenant_id)`, preservando e
 | `custom_access_token_hook()` | Auth Hook | jsonb | Enriquecer JWT |
 | `rls_auto_enable()` | Event Trigger | trigger | Auto-habilitar RLS |
 | `upsert_contact()` | RPC | uuid | Upsert idempotente |
+| `get_conversations_with_last_message()` | RPC | TABLE | Dashboard — conversas com última msg |
 

@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-23
-> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — extensões e advisors
-> Status: ✅ Atualizado — +1 migration Story 5.4
+> 📅 Extraído em: 2026-04-24T17:30:00Z
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
+> Status: ✅ Atualizado
 
 # Extensões & Infraestrutura
 
-**Total: 6 extensões habilitadas | 21 migrações (↑1 novo) | 0 edge functions | 3 advisories**
+**Total: 6 extensões habilitadas | 24 migrações | 0 edge functions | 14 advisories**
 
 ---
 

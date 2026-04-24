@@ -1,11 +1,7 @@
-> 📅 Extraído em: 2026-04-22
-> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — DDL completo
-> Status: ✅ Atualizado
-
--- ============================================================================
--- DDL COMPLETO — SCHEMA PUBLIC
--- ============================================================================
--- 9 tabelas | 36 índices | 1 sequence | 3 funções customizadas
+-- Database Schema — DDL Complete
+-- Generated: 2026-04-24T17:30:00Z
+-- Source: Supabase (ujcjucgylwkjrdpsqffs)
+-- 10 tabelas | 37 índices | 1 sequence | 4 funções customizadas | 24 migrações
 -- ============================================================================
 
 -- ============================================================================

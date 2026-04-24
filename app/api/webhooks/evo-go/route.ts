@@ -73,7 +73,7 @@ export async function POST(
       const { data: tenantRow, error: tenantError } = await supabase
         .from('tenants')
         .select('id')
-        .eq('evolution_instance_name', instance)
+        .eq('evolution_instance_id', instance)
         .maybeSingle();
 
       if (tenantError) {

@@ -1,5 +1,5 @@
-> 📅 Extraído em: 2026-04-22
-> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — triggers do banco
+> 📅 Extraído em: 2026-04-24T17:30:00Z
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
 # Triggers — Automatização de Banco de Dados

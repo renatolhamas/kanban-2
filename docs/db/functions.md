@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-22
-> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — funções customizadas
+> 📅 Extraído em: 2026-04-24T17:30:00Z
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
 # Funções Customizadas — Database Logic
 
-**Total: 3 funções PL/pgSQL**
+**Total: 4 funções PL/pgSQL**
 
 ---
 

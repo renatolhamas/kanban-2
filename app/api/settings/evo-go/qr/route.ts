@@ -149,9 +149,12 @@ export async function POST(
 
     // 7. Connect the instance (initialize WhatsApp session)
     try {
-      const appUrl = (process.env.NEXT_PUBLIC_APP_URL || '').trim().replace(/\/$/, '');
-      if (!appUrl) {
-        throw new Error('NEXT_PUBLIC_APP_URL is not configured');
+      let appUrl = (process.env.NEXT_PUBLIC_APP_URL || '').trim().replace(/\/$/, '');
+      
+      // FORCED RULE: Webhooks must never use localhost for Evolution GO integration
+      if (!appUrl || appUrl.includes('localhost')) {
+        console.warn(`[QR] Localhost or empty URL detected (${appUrl}). Forcing production domain for Evolution GO webhook.`);
+        appUrl = 'https://kanban.renatolhamas.com.br';
       }
 
       const webhookUrl = `${appUrl}/api/webhooks/evo-go?tenantId=${tenantId}`;

@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-22
-> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — todas as políticas RLS
+> 📅 Extraído em: 2026-04-24T17:30:00Z
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
 # Row Level Security (RLS) — Políticas de Isolamento
 
-**Total: 32 políticas RLS | Padrão: Multi-tenant via JWT app_metadata.tenant_id**
+**Total: 30 políticas RLS | Padrão: Multi-tenant via JWT app_metadata.tenant_id**
 
 ---
 

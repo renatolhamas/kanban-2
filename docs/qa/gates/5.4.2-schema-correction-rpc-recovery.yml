@@ -1,0 +1,8 @@
+schema: 1
+story: '5.4.2'
+gate: PASS
+status_reason: 'Implementation verified. Webhook resolved correctly, RPC restored with JWT isolation, and documentation updated in functions.md.'
+reviewer: 'Quinn'
+updated: '2026-04-24T14:39:25Z'
+top_issues: []
+waiver: { active: false }

@@ -149,7 +149,7 @@ export async function POST(
 
     // 7. Connect the instance (initialize WhatsApp session)
     try {
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+      const appUrl = (process.env.NEXT_PUBLIC_APP_URL || '').trim().replace(/\/$/, '');
       if (!appUrl) {
         throw new Error('NEXT_PUBLIC_APP_URL is not configured');
       }

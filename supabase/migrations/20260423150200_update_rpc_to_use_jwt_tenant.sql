@@ -2,7 +2,7 @@
 -- Purpose: Support p_tenant_id for compatibility while enforcing JWT-based isolation
 -- Story: 5.4.1 — Frontend & API Integration
 
-CREATE OR REPLACE FUNCTION public.get_conversations_with_last_message(p_kanban_id uuid, p_tenant_id uuid)
+CREATE OR REPLACE FUNCTION public.get_conversations_with_last_message(p_kanban_id uuid, p_tenant_id uuid DEFAULT NULL)
 RETURNS TABLE (
   id uuid,
   wa_phone text,
@@ -22,15 +22,16 @@ BEGIN
   -- Extract tenant_id from JWT app_metadata (populated by custom_access_token_hook)
   v_jwt_tenant_id := ((auth.jwt() -> 'app_metadata' ->> 'tenant_id')::uuid);
 
-  -- VALIDATION: The p_tenant_id passed MUST match the JWT tenant_id
+  -- VALIDATION: If p_tenant_id is provided, it MUST match the JWT tenant_id
   IF v_jwt_tenant_id IS NULL THEN
     RAISE EXCEPTION 'Unauthorized: tenant_id not found in JWT';
   END IF;
 
-  IF p_tenant_id != v_jwt_tenant_id THEN
+  IF p_tenant_id IS NOT NULL AND p_tenant_id != v_jwt_tenant_id THEN
     RAISE EXCEPTION 'Forbidden: JWT tenant_id (%) does not match requested tenant_id (%)', v_jwt_tenant_id, p_tenant_id;
   END IF;
 
+  -- Use the validated JWT tenant_id for the query
   RETURN QUERY
   SELECT 
     c.id,
@@ -55,7 +56,7 @@ BEGIN
   FROM public.conversations c
   LEFT JOIN public.contacts con ON c.contact_id = con.id
   WHERE c.kanban_id = p_kanban_id 
-    AND c.tenant_id = p_tenant_id
+    AND c.tenant_id = v_jwt_tenant_id
     AND c.status = 'active'
   ORDER BY c.last_message_at DESC NULLS LAST;
 END;

@@ -1,0 +1,8 @@
+schema: 1
+story: '5.4.3'
+gate: PASS
+status_reason: 'Message binding logic correctly pivots to active conversations. Database constraint and regression tests verified.'
+reviewer: 'Quinn'
+updated: '2026-04-24T15:58:30Z'
+top_issues: []
+waiver: { active: false }

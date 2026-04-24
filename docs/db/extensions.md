@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-24T17:30:00Z
+> 📅 Extraído em: 2026-04-24T17:45:00Z
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
 # Extensões & Infraestrutura
 
-**Total: 6 extensões habilitadas | 24 migrações | 0 edge functions | 14 advisories**
+**Total: 6 extensões habilitadas | 25 migrações | 0 edge functions | 14 advisories**
 
 ---
 
@@ -21,14 +21,8 @@
 
 ---
 
-## Migrações Aplicadas (21 total)
+## Migrações Aplicadas (25 total)
 
-### Story 5.4: Last Message Preview Optimization ✨ NEW
-| # | Version | Name | Status | Details |
-|---|---------|------|--------|---------|
-| **0** | **20260423120000** | **add_messages_conversation_created_index** | **✅** | **Composite index (conversation_id, created_at DESC) for last-message queries. Performance: 1.049ms for 150+ conversations** |
-
-### Core Migrations
 | # | Version | Name | Status |
 |---|---------|------|--------|
 | 1 | 20260402025734 | create_core_schema_v3 | ✅ |
@@ -37,7 +31,7 @@
 | 4 | 20260404191826 | create_failed_registrations | ✅ |
 | 5 | 20260407022056 | fix_rls_tenant_id_claim_with_cast | ✅ |
 | 6 | 20260408021733 | add_kanbans_is_main_unique_constraint | ✅ |
-| 7 | 20260413014555 | update_tenants_connection_status | ✅ |
+| 7 | 20260413014555 | update_tenants_connection_status_and_add_unique_constraint | ✅ |
 | 8 | 20260413144601 | add_qr_code_to_tenants | ✅ |
 | 9 | 20260413171746 | add_evolution_instance_token | ✅ |
 | 10 | 20260416085155 | create_custom_access_token_hook | ✅ |
@@ -50,7 +44,12 @@
 | 17 | 20260417020912 | expand_schema_for_evolution | ✅ |
 | 18 | 20260421215046 | enhance_webhooks_schema | ✅ |
 | 19 | 20260421215102 | add_unread_count_conversations | ✅ |
-| 20 | 20260423120000 | add_messages_conversation_created_index | ✅ |
+| 20 | 20260423134520 | add_messages_conversation_created_index | ✅ |
+| 21 | 20260423143217 | add_get_conversations_with_last_message_rpc | ✅ |
+| 22 | 20260423183458 | update_get_conversations_rpc_media_type | ✅ |
+| 23 | 20260423230815 | update_rpc_to_use_jwt_tenant | ✅ |
+| 24 | 20260424001443 | debug_jwt_hook | ✅ |
+| **25** | **20260424143354** | **restore_get_conversations_with_last_message_rpc** | **✅ ✨ NEW** |
 
 ---
 
@@ -68,10 +67,11 @@
 
 **RLS Disabled on `failed_registrations`** — Intencional (pré-auth logging)
 
-### 🟡 WARNINGS (2)
+### 🟡 WARNINGS (3)
 
-1. **Function Search Path Mutable** (upsert_contact) — Adicionar SET search_path
-2. **Leaked Password Protection Disabled** — Habilitar em Auth settings
+1. **Function Search Path Mutable** (`upsert_contact`) — Adicionar SET search_path — ver [F5.plan.012](../plans/fase.5/F5.plan.012.md)
+2. **Function Search Path Mutable** (`get_conversations_with_last_message`) — Idem
+3. **Leaked Password Protection Disabled** — Habilitar em Auth settings
 
 ### 🔵 INFO (13)
 

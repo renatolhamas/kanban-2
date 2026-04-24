@@ -378,7 +378,7 @@ async function handleMessagesUpsert(
       .select('id')
       .eq('tenant_id', tenantId)
       .eq('contact_id', contact.id)
-      .eq('kanban_id', kanban.id)
+      .eq('status', 'active')
       .maybeSingle();
 
     if (fetchConvError) {

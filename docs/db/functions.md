@@ -1,4 +1,4 @@
-> 📅 Extraído em: 2026-04-24T17:30:00Z
+> 📅 Extraído em: 2026-04-24T17:45:00Z
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 

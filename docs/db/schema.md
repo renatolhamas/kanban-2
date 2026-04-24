@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-24T17:30:00Z
+> 📅 Extraído em: 2026-04-24T17:45:00Z
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
 # Documentação do Schema — Banco de Dados Kanban
 
-**10 tabelas | 37 índices | 30 políticas RLS | 4 funções customizadas | 24 migrações | 0 triggers**
+**10 tabelas | 37 índices | 30 políticas RLS | 4 funções customizadas | 25 migrações | 0 triggers**
 
 ## Estrutura Geral
 

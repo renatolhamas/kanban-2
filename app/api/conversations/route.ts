@@ -23,16 +23,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // 2. Resolve tenantId from user metadata
+    // 2. Resolve tenantId from JWT for authorization check
     const tenantId = user.app_metadata?.tenant_id
     if (!tenantId) {
       return NextResponse.json({ error: 'Tenant context missing' }, { status: 403 })
     }
 
-    // 3. Execute optimized RPC
+    // 3. Execute optimized RPC (tenant_id is resolved server-side via JWT hook)
     const { data, error } = await supabase.rpc('get_conversations_with_last_message', {
-      p_kanban_id: kanbanId,
-      p_tenant_id: tenantId
+      p_kanban_id: kanbanId
     })
 
     if (error) {

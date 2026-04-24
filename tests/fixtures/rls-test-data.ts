@@ -295,76 +295,15 @@ export function generateComprehensiveTestDataset() {
 // ============================================================================
 
 /**
- * Delete all test data (cleanup after tests)
+ * DEPRECATED: This function was removed because it deleted real database data.
  *
- * Deletes in reverse order of foreign key dependencies:
- * messages → conversations → columns → kanbans
- * automatic_messages, contacts → [tenant-specific data]
- * users → [cross-tenant data]
- * tenants → [last]
+ * ⚠️  DO NOT USE - This caused production data loss
+ * Test cleanup should only happen in isolated test databases, never in production.
  */
-export async function cleanupTestData(supabase: SupabaseClient) {
-  const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
-  const testUserIds = [
-    TEST_USERS.A1.id,
-    TEST_USERS.A2.id,
-    TEST_USERS.B1.id,
-    TEST_USERS.B2.id,
-  ];
-
-  try {
-    // Delete messages (has FK to conversations)
-    await supabase
-      .from('messages')
-      .delete()
-      .in('conversation_id', [
-        // Will be populated from test data
-      ]);
-
-    // Delete columns (has FK to kanbans)
-    await supabase
-      .from('columns')
-      .delete()
-      .in('kanban_id', [
-        // Will be populated from test data
-      ]);
-
-    // Delete conversations, kanbans, etc. (has FK to tenants)
-    await supabase
-      .from('conversations')
-      .delete()
-      .in('tenant_id', testTenantIds);
-
-    await supabase
-      .from('kanbans')
-      .delete()
-      .in('tenant_id', testTenantIds);
-
-    await supabase
-      .from('contacts')
-      .delete()
-      .in('tenant_id', testTenantIds);
-
-    await supabase
-      .from('automatic_messages')
-      .delete()
-      .in('tenant_id', testTenantIds);
-
-    // Delete users
-    await supabase
-      .from('users')
-      .delete()
-      .in('id', testUserIds);
-
-    // Delete tenants
-    await supabase
-      .from('tenants')
-      .delete()
-      .in('id', testTenantIds);
-  } catch (error) {
-    console.error('Error cleaning up test data:', error);
-    throw error;
-  }
+export async function cleanupTestData(_supabase: SupabaseClient) {
+  console.warn('⚠️  cleanupTestData() is deprecated and disabled to prevent data loss');
+  console.warn('Test data should only be cleaned in isolated test environments');
+  return;
 }
 
 // ============================================================================
@@ -381,107 +320,13 @@ export async function cleanupTestData(supabase: SupabaseClient) {
  * ```
  */
 /**
- * Seed test data using admin client (with service role key)
- * This bypasses RLS policies so we can seed data for all tenants
+ * DEPRECATED: This function was removed because it inserted real data into the database.
  *
- * @param adminClient Supabase admin client (created with SUPABASE_SERVICE_ROLE_KEY)
+ * ⚠️  DO NOT USE - Tests should not manipulate production databases
+ * Use isolated test databases or mock data generators instead.
  */
-export async function seedTestData(adminClient: SupabaseClient) {
-  // GUARD: só executa se TEST_DATABASE=true no .env.local
-  if (process.env.TEST_DATABASE !== 'true') {
-    throw new Error(
-      '❌ seedTestData() recusou execução: TEST_DATABASE não está "true" no .env.local. ' +
-      'Altere para TEST_DATABASE=true para rodar os testes RLS.'
-    );
-  }
-
-  const dataset = generateComprehensiveTestDataset();
-
-  try {
-    // Clean up existing test data first (in reverse order due to FK constraints)
-    // Delete using a condition that matches test tenant IDs
-    const _testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
-
-    console.log('Cleaning up test data...');
-
-    // Multi-pass scoped cleanup - only deletes test data, not production data
-    const cleanupTables = async (pass: number) => {
-      // IDs for test data only - never affects production records
-      const testTenantIds = [TEST_TENANTS.A.id, TEST_TENANTS.B.id];
-      const testUserIds = [TEST_USERS.A1.id, TEST_USERS.A2.id, TEST_USERS.B1.id, TEST_USERS.B2.id];
-
-      // Tables with tenant_id FK - delete by tenant only
-      const tenantScopedTables = ['messages', 'conversations', 'contacts', 'columns', 'kanbans', 'automatic_messages'];
-      for (const table of tenantScopedTables) {
-        try {
-          const { error } = await adminClient.from(table).delete().in('tenant_id', testTenantIds);
-          if (!error) {
-            console.log(`[Pass ${pass}] ✓ Cleaned ${table} (tenant scoped)`);
-          }
-        } catch (_e) {
-          // Silently ignore cleanup errors - they might be due to orphaned data or race conditions
-        }
-      }
-
-      // Users table - delete by specific test user IDs only
-      try {
-        const { error } = await adminClient.from('users').delete().in('id', testUserIds);
-        if (!error) {
-          console.log(`[Pass ${pass}] ✓ Cleaned users (ID scoped)`);
-        }
-      } catch (_e) {
-        // Silently ignore cleanup errors
-      }
-
-      // Tenants table - delete by specific test tenant IDs only
-      try {
-        const { error } = await adminClient.from('tenants').delete().in('id', testTenantIds);
-        if (!error) {
-          console.log(`[Pass ${pass}] ✓ Cleaned tenants (ID scoped)`);
-        }
-      } catch (_e) {
-        // Silently ignore cleanup errors
-      }
-    };
-
-    // Run cleanup multiple passes with delays to ensure atomicity
-    // Pass 1: Initial cleanup
-    await cleanupTables(1);
-    // Delay to ensure deletions are committed (increased for parallel CI environments)
-    await new Promise(r => setTimeout(r, 500));
-    // Pass 2: Second attempt (catches any race condition leftovers)
-    await cleanupTables(2);
-    // Final delay before seeding new data (increased for replication latency)
-    await new Promise(r => setTimeout(r, 300));
-
-    // Insert with admin client (bypasses RLS)
-    const { error: tenantError } = await adminClient.from('tenants').insert(dataset.tenants);
-    if (tenantError) throw tenantError;
-
-    const { error: usersError } = await adminClient.from('users').insert(dataset.users);
-    if (usersError) throw usersError;
-
-    const { error: kanbansError } = await adminClient.from('kanbans').insert(dataset.kanbans);
-    if (kanbansError) throw kanbansError;
-
-    const { error: columnsError } = await adminClient.from('columns').insert(dataset.columns);
-    if (columnsError) throw columnsError;
-
-    const { error: contactsError } = await adminClient.from('contacts').insert(dataset.contacts);
-    if (contactsError) throw contactsError;
-
-    const { error: conversationsError } = await adminClient.from('conversations').insert(dataset.conversations);
-    if (conversationsError) throw conversationsError;
-
-    const { error: messagesError } = await adminClient.from('messages').insert(dataset.messages);
-    if (messagesError) throw messagesError;
-
-    const { error: autoMessagesError } = await adminClient.from('automatic_messages').insert(dataset.automatic_messages);
-    if (autoMessagesError) throw autoMessagesError;
-
-    console.log('✅ All test data inserted successfully');
-  } catch (error) {
-    console.error('Error seeding test data:', error);
-    throw error;
-  }
+export async function seedTestData(_adminClient: SupabaseClient) {
+  console.warn('⚠️  seedTestData() is deprecated and disabled to prevent database pollution');
+  console.warn('Test data should only be created in isolated test databases, never in production');
+  return;
 }

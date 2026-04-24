@@ -17,11 +17,11 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- Story 1.1: Database Schema Creation (tenants, users, contacts, conversations, messages, columns)
-- Story 1.2: Supabase Auth (register, login, profile)
-- Story 1.3: Email Confirmation Flow (Resend integration, confirmation link generation, token validation)
-- Story 1.4: RLS Policies Validation (Testing & Verification)
-- Story 1.5: Onboarding (tenant auto-create via application-layer, default kanban "Main" com colunas padrão criadas em Node.js)
+- ✅ Story 1.1: Database Schema Creation (tenants, users, contacts, conversations, messages, columns)
+- ✅ Story 1.2: Supabase Auth (register, login, profile)
+- ✅ Story 1.3: Email Confirmation Flow (Resend integration, confirmation link generation, token validation)
+- ✅ Story 1.4: RLS Policies Validation (Testing & Verification)
+- ✅ Story 1.5: Onboarding (tenant auto-create via application-layer, default kanban "Main" com colunas padrão criadas em Node.js)
 
 **Outputs:** Auth working with email confirmation, schema ready, users onboarded com kanban automático
 
@@ -33,18 +33,18 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- Story 2.1: The Backbone (Setup & Tokens) — Instalar Shadcn/ui e configurar `tailwind.config.ts` com cores e fontes. É o "DNA" do projeto.
-- Story 2.2: The Lab (Storybook Setup) — Instalar Storybook e conectar ao Tailwind (setup técnico, sem documentação de tokens ainda).
-- Story 2.3: The Inspector (Vitest Integration) — Configurar o Vitest para testar componentes. Garantir que o ambiente suporte as classes do Tailwind e as interações do React.
-- Story 2.4: Atomic Forms & Feedback (O Coração) — Criar Button, Input, Toast com Storybook stories. São críticos para UX.
-- Story 2.5: Real World Test (Auth Refactor) — Aplicar componentes de Form no Auth atual. Valida se Shadcn+Tailwind funcionam antes de criar 10+ componentes.
-- Story 2.6: UI Expansion (Layout & Data) — Card, Modal, Tabs, Avatar, Spinner conforme necessidade do dashboard.
-- Story 2.7: Token System Foundation — Expandir `app/globals.css` e `tailwind.config.ts` com 30+ tokens (spacing, typography, shadows, colors, animation); criar W3C DTCG export e scripts de exportação. (8-12h)
-- Story 2.8: Token Audit & Documentation — Auditar componentes Stories 2.1-2.6 para consistência; criar DESIGN-TOKENS.md com documentação completa e referência visual de espaçamento. (16-24h)
-- Story 2.9: Storybook & Accessibility Polish — Criar DesignTokens.stories.tsx com color swatches, tipografia e spacing scales; validação WCAG AA; polish final de documentação. (12-16h)
-- Story 2.10: Visual Validation — Checklist final: acessibilidade e Dark Mode.
-- Story 2.11: Application Layout & Navigation — Refatorar Header, Sidebar e User menu aplicando componentes validados do Design System. Menu funcional + refatorado.
-- Story 2.12: Pages Refactor — Refatorar demais páginas (Home, Settings, Contacts, Chat) aplicando componentes validados e novo Application Layout.
+- ✅ Story 2.1: The Backbone (Setup & Tokens) — Instalar Shadcn/ui e configurar `tailwind.config.ts` com cores e fontes. É o "DNA" do projeto.
+- ✅ Story 2.2: The Lab (Storybook Setup) — Instalar Storybook e conectar ao Tailwind (setup técnico, sem documentação de tokens ainda).
+- ✅ Story 2.3: The Inspector (Vitest Integration) — Configurar o Vitest para testar componentes. Garantir que o ambiente suporte as classes do Tailwind e as interações do React.
+- ✅ Story 2.4: Atomic Forms & Feedback (O Coração) — Criar Button, Input, Toast com Storybook stories. São críticos para UX.
+- ✅ Story 2.5: Real World Test (Auth Refactor) — Aplicar componentes de Form no Auth atual. Valida se Shadcn+Tailwind funcionam antes de criar 10+ componentes.
+- ✅ Story 2.6: UI Expansion (Layout & Data) — Card, Modal, Tabs, Avatar, Spinner conforme necessidade do dashboard.
+- ✅ Story 2.7: Token System Foundation — Expandir `app/globals.css` e `tailwind.config.ts` com 30+ tokens (spacing, typography, shadows, colors, animation); criar W3C DTCG export e scripts de exportação. (8-12h)
+- ✅ Story 2.8: Token Audit & Documentation — Auditar componentes Stories 2.1-2.6 para consistência; criar DESIGN-TOKENS.md com documentação completa e referência visual de espaçamento. (16-24h)
+- ✅ Story 2.9: Storybook & Accessibility Polish — Criar DesignTokens.stories.tsx com color swatches, tipografia e spacing scales; validação WCAG AA; polish final de documentação. (12-16h)
+- ✅ Story 2.10: Visual Validation — Checklist final: acessibilidade e Dark Mode.
+- ✅ Story 2.11: Application Layout & Navigation — Refatorar Header, Sidebar e User menu aplicando componentes validados do Design System. Menu funcional + refatorado.
+- ✅ Story 2.12: Pages Refactor — Refatorar demais páginas (Home, Settings, Contacts, Chat) aplicando componentes validados e novo Application Layout.
 
 **Outputs:** Design tokens definidos, UI Library (15+ componentes) documentada e testada, fluxo de Auth totalmente refatorado como POC, Application Layout & Navigation refatorado com componentes validados, todas as páginas refatoradas com novo estilo.
 
@@ -59,11 +59,11 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- Story 3.1: Evo GO pairing (QR code)
-- Story 3.2: Evo GO pairing (Page fully functional)
-- Story 3.3: Webhook endpoint (/api/webhooks/messages)
-- Story 3.4: Webhook validation (HMAC-SHA256)
-- Story 3.5: Manual testing (curl, console logs)
+- ✅ Story 3.1: Evo GO pairing (QR code)
+- ✅ Story 3.2: Evo GO pairing (Page fully functional)
+- ✅ Story 3.3: Webhook endpoint (/api/webhooks/messages)
+- ✅ Story 3.4: Webhook validation (HMAC-SHA256)
+- ✅ Story 3.5: Manual testing (curl, console logs)
 
 **Outputs:** Evolution connected, webhooks validated, ready for DB
 
@@ -75,48 +75,48 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- Story 4.1: Real Tenant Isolation
-- Story 4.2: Home page (Kanban board)
-- Story 4.3: Drag-and-drop (dnd-kit v8.0.0)
-- Story 4.4: Kanban CRUD em Settings
-- Story 4.5: Contacts page CRUD
-- Story 4.6: Contact validation (E.164 format)
+- ✅ Story 4.1: Real Tenant Isolation
+- ✅ Story 4.2: Home page (Kanban board)
+- ⬜ Story 4.3: Drag-and-drop (dnd-kit v8.0.0)
+- ⬜ Story 4.4: Kanban CRUD em Settings
+- ⬜ Story 4.5: Contacts page CRUD
+- ⬜ Story 4.6: Contact validation (E.164 format)
 
 **Outputs:** Kanban visível, contacts gerenciáveis
 
 ---
 
-## Epic 5: EVOLUTION PHASE 2 (DB Integration)
+## Epic 5: EVOLUTION PHASE 2 (DB Integration — Incoming)
 
-**Objetivo:** End-to-end message flow, webhook → DB → UI with optimized queries
+**Objetivo:** Fluxo de recebimento de mensagens, webhook → DB → UI com queries otimizadas
 
 **Stories:**
 
-- Story 5.1: Webhook handler → auto-register contacts (application-layer)
-- Story 5.2: Webhook handler → auto-create conversations (application-layer)
-- Story 5.3: Webhook → save messages to DB
-- Story 5.4: Last message preview (SQL subquery optimization + UI display) — *resgate da Story 4.2 exclusion*
-- Story 5.5: Send message UI → Evo GO
-- Story 5.6: Message delivery validation
+- ✅ Story 5.1: Webhook handler → auto-register contacts (application-layer)
+- ✅ Story 5.2: Webhook handler → auto-create conversations (application-layer)
+- ✅ Story 5.3: Webhook → save messages to DB
+- ✅ Story 5.4: Last Message Preview (SQL subquery optimization + UI display + Message binding logic)
 
-**Outputs:** Messages flowing end-to-end with optimized preview queries
+**Outputs:** Mensagens de entrada fluindo com persistência e pré-visualização otimizada no card.
 
 ---
 
-## Epic 6: CHAT & REAL-TIME
+## Epic 6: CHAT & INTERACTION (The Feedback Loop)
 
-**Objetivo:** Real-time messaging, WebSocket subscriptions, chat interface
+**Objetivo:** Interface de chat, envio de mensagens e atualizações em tempo real
 
 **Stories:**
 
-- Story 6.1: Chat modal UI
-- Story 6.2: Message history pagination
-- Story 6.3: Real-time subscriptions (WebSocket)
-- Story 6.4: Kanban/column selector in chat
-- Story 6.5: Archive conversation
-- Story 6.6: Loading + error states
+- ⬜ Story 6.1: Chat Modal UI (View History) — Visualização estilo WhatsApp (bolhas esquerda/direita), botões estáticos de anexo e envio.
+- ⬜ Story 6.2: Send Message logic (UI → Evo GO) — Transformar o botão de envio em funcional (integração com API).
+- ⬜ Story 6.3: Message delivery validation — Status da mensagem (Enviado/Entregue/Lido).
+- ⬜ Story 6.4: Message history pagination — Carregamento sob demanda de mensagens antigas.
+- ⬜ Story 6.5: Real-time subscriptions (WebSocket) — Atualização instantânea sem refresh.
+- ⬜ Story 6.6: Kanban/column selector in chat — Mudar status do contato dentro do chat.
+- ⬜ Story 6.7: Archive conversation — Remover da visualização ativa.
+- ⬜ Story 6.8: Loading + error states — Refinamento de UX e estados de falha.
 
-**Outputs:** Chat funcional, instantaneous updates
+**Outputs:** Experiência completa de chat bidirecional e em tempo real.
 
 ---
 
@@ -126,10 +126,10 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- Story 7.1: Profile subsection (name, password)
-- Story 7.2: Connection subsection (Evolution status)
-- Story 7.3: Kanbans subsection (CRUD, reorder com setas ↑↓)
-- Story 7.4: Automatic Messages subsection (CRUD)
+- ⬜ Story 7.1: Profile subsection (name, password)
+- ⬜ Story 7.2: Connection subsection (Evolution status)
+- ⬜ Story 7.3: Kanbans subsection (CRUD, reorder com setas ↑↓)
+- ⬜ Story 7.4: Automatic Messages subsection (CRUD)
 
 **Outputs:** Full settings interface
 
@@ -141,10 +141,10 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- Story 8.1: Automatic Messages template system
-- Story 8.2: Manual trigger (botão em Chat)
-- Story 8.3: Message testing
-- Story 8.4: Polish + edge cases
+- ⬜ Story 8.1: Automatic Messages template system
+- ⬜ Story 8.2: Manual trigger (botão em Chat)
+- ⬜ Story 8.3: Message testing
+- ⬜ Story 8.4: Polish + edge cases
 
 **Outputs:** Manual follow-up ready, agendamento em pós-MVP
 

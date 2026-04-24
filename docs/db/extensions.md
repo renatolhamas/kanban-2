@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-24T17:45:00Z
+> 📅 Extraído em: 2026-04-24 às 00:00 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Extensões & Infraestrutura
+# Extensions & Advisors
 
-**Total: 6 extensões habilitadas | 25 migrações | 0 edge functions | 14 advisories**
+**Total: 6 extensões | 27 migrações | 0 edge functions | 5 security + 13 performance findings**
 
 ---
 
@@ -21,7 +21,7 @@
 
 ---
 
-## Migrações Aplicadas (25 total)
+## Migrações Aplicadas (27 total)
 
 | # | Version | Name | Status |
 |---|---------|------|--------|
@@ -31,7 +31,7 @@
 | 4 | 20260404191826 | create_failed_registrations | ✅ |
 | 5 | 20260407022056 | fix_rls_tenant_id_claim_with_cast | ✅ |
 | 6 | 20260408021733 | add_kanbans_is_main_unique_constraint | ✅ |
-| 7 | 20260413014555 | update_tenants_connection_status_and_add_unique_constraint | ✅ |
+| 7 | 20260413014555 | update_tenants_connection_status | ✅ |
 | 8 | 20260413144601 | add_qr_code_to_tenants | ✅ |
 | 9 | 20260413171746 | add_evolution_instance_token | ✅ |
 | 10 | 20260416085155 | create_custom_access_token_hook | ✅ |
@@ -49,7 +49,9 @@
 | 22 | 20260423183458 | update_get_conversations_rpc_media_type | ✅ |
 | 23 | 20260423230815 | update_rpc_to_use_jwt_tenant | ✅ |
 | 24 | 20260424001443 | debug_jwt_hook | ✅ |
-| **25** | **20260424143354** | **restore_get_conversations_with_last_message_rpc** | **✅ ✨ NEW** |
+| 25 | 20260424143354 | restore_get_conversations_with_last_message_rpc | ✅ |
+| **26** | **20260424155409** | **add_unique_active_conversation_index** | **✅** |
+| **27** | *pendente* | *próxima migração* | — |
 
 ---
 
@@ -67,16 +69,20 @@
 
 **RLS Disabled on `failed_registrations`** — Intencional (pré-auth logging)
 
-### 🟡 WARNINGS (3)
+### 🟡 WARNINGS (2)
 
-1. **Function Search Path Mutable** (`upsert_contact`) — Adicionar SET search_path — ver [F5.plan.012](../plans/fase.5/F5.plan.012.md)
-2. **Function Search Path Mutable** (`get_conversations_with_last_message`) — Idem
-3. **Leaked Password Protection Disabled** — Habilitar em Auth settings
+1. **Function Search Path Mutable** (`upsert_contact`, `get_conversations_with_last_message`) — Adicionar `SET search_path = public;`
+2. **Leaked Password Protection Disabled** — Habilitar em Auth settings
 
-### 🔵 INFO (13)
+### 🔵 INFO (2)
 
-- **Unindexed ForeignKeys:** 3 (automatic_messages, conversations x2)
-- **Unused Indexes:** 10 (monitorar por 2-3 semanas)
+1. **RLS Enabled No Policy** — `debug_auth_logs` tem RLS mas sem policies
+2. **Unindexed ForeignKeys:** 3 (automatic_messages, conversations x2)
+3. **Unused Indexes:** 14 (monitorar por 2-3 semanas)
+   - failed_registrations: 3 índices
+   - tenants, kanbans, contacts: 1 each
+   - conversations: 6 índices
+   - messages: 1 índice
 
 ---
 

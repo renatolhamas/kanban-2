@@ -1,0 +1,36 @@
+schema: 1
+story: '6.1'
+story_title: 'Chat Modal UI (View History)'
+gate: PASS
+status_reason: 'A implementação está robusta, passa em todos os quality gates e inclui os polyfills de teste necessários e refinamentos de UI (noPadding).'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-04-24T18:34:00Z'
+
+top_issues: []
+
+evidence:
+  tests_reviewed: 1
+  risks_identified: 1
+  trace:
+    ac_covered: [1, 2, 3, 4, 5, 6, 7, 8]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'Componente puramente de UI, sem exposição de dados sensíveis.'
+  performance:
+    status: PASS
+    notes: 'Utiliza componentes shadcn/ui leves e ScrollArea para fluidez.'
+  reliability:
+    status: PASS
+    notes: 'Testes unitários cobrem o fluxo principal de abertura/fechamento.'
+  maintainability:
+    status: PASS
+    notes: 'Módulo Modal refatorado e setup de testes padronizado.'
+
+recommendations:
+  immediate: []
+  future:
+    - action: 'Considerar migrar testes unitários para o diretório dos componentes para alinhar com os padrões do vitest.'
+    - action: 'Implementar scroll automático para o final da lista ao abrir o chat.'

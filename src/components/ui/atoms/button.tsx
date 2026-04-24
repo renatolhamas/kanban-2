@@ -21,6 +21,7 @@ const buttonVariants = cva(
         sm: "px-md py-sm text-sm h-9",
         md: "px-lg py-md text-base h-10",
         lg: "px-xl py-lg text-lg h-12",
+        icon: "h-10 w-10 p-0 flex items-center justify-center",
       },
       loading: {
         true: "relative text-transparent pointer-events-none",

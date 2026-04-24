@@ -9,11 +9,22 @@ import { KanbanBoard } from "@/components/ui/organisms/KanbanBoard"
 import { KanbanColumn } from "@/components/ui/organisms/KanbanColumn"
 import { ConversationCard } from "@/components/ui/molecules/ConversationCard"
 import { KanbanSelector } from "@/components/ui/molecules/KanbanSelector"
+import { ChatProvider, useChat } from "@/context/ChatContext"
+import { ChatModal } from "@/components/ui/organisms/chat/ChatModal"
 
 export default function HomePage() {
+  return (
+    <ChatProvider>
+      <HomeContent />
+    </ChatProvider>
+  )
+}
+
+function HomeContent() {
   const router = useRouter()
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const [selectedKanbanId, setSelectedKanbanId] = useState<string | null>(null)
+  const { openChat } = useChat()
   
   // tenantId extraído do metadata do usuário
   const tenantId = user?.app_metadata?.tenant_id
@@ -136,12 +147,15 @@ export default function HomePage() {
                     mediaType={conv.last_media_type}
                     timestamp={conv.last_message_at}
                     unreadCount={conv.unread_count}
+                    onClick={() => openChat(conv.id)}
                   />
                 ))}
             </KanbanColumn>
           ))}
         </KanbanBoard>
       </div>
+
+      <ChatModal />
     </div>
   )
 }

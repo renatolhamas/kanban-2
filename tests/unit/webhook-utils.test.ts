@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseJid, normalizePhone, extractContactInfo } from '../../lib/api/webhook-utils';
+import { parseJid, normalizePhone, extractContactInfo } from '@/lib/api/webhook-utils';
 
 describe('parseJid', () => {
   it('parses regular JID', () => {

@@ -13,10 +13,11 @@ export default defineConfig({
   envPrefix: ['VITE_', 'NEXT_PUBLIC_'],
   resolve: {
     alias: [
-      { find: /^@\/src\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
-      { find: /^@\/app\/(.*)/, replacement: path.resolve(__dirname, 'app/$1') },
-      { find: /^@\/lib\/(auth-pages|kanban|utils|format-utils)(.*)/, replacement: path.resolve(__dirname, 'src/lib/$1$2') },
+      { find: '@/lib/api', replacement: path.resolve(__dirname, 'src/lib/api') },
+      { find: /^@\/lib\/(auth-pages|kanban|utils|format-utils|api)(.*)/, replacement: path.resolve(__dirname, 'src/lib/$1$2') },
       { find: /^@\/lib\/(.*)/, replacement: path.resolve(__dirname, 'lib/$1') },
+      { find: /^@\/app\/(.*)/, replacement: path.resolve(__dirname, 'app/$1') },
+      { find: /^@\/src\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
       { find: /^@\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
     ]
   },
@@ -44,7 +45,7 @@ export default defineConfig({
         // Timeout for tests
         testTimeout: 10000,
         // Match component test files (both root components/ and src/components/)
-        include: ['components/**/*.test.tsx', 'components/**/*.test.ts', 'src/components/**/*.test.tsx', 'src/components/**/*.test.ts'],
+        include: ['components/**/*.test.tsx', 'components/**/*.test.ts', 'src/components/**/*.test.tsx', 'src/components/**/*.test.ts', 'tests/unit/**/*.test.tsx'],
         // Mock reset between tests
         mockReset: true,
         restoreMocks: true

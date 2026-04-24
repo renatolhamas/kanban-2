@@ -1,7 +1,10 @@
--- Database Schema — DDL Complete
--- Generated: 2026-04-24T17:30:00Z
--- Source: Supabase (ujcjucgylwkjrdpsqffs)
--- 10 tabelas | 37 índices | 1 sequence | 4 funções customizadas | 24 migrações
+> 📅 Extraído em: 2026-04-24 às 00:00 UTC
+> Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
+> Status: ✅ Atualizado
+
+-- DDL Completo do Schema Public
+-- 10 tabelas | 38 índices | 1 sequence | 4 funções | 27 migrações
+-- Multi-tenant isolado por tenant_id via RLS
 -- ============================================================================
 
 -- ============================================================================
@@ -111,6 +114,16 @@ CREATE TABLE IF NOT EXISTS automatic_messages (
     updated_at timestamp with time zone NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS debug_auth_logs (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    created_at timestamp with time zone DEFAULT now(),
+    event_type text,
+    payload jsonb,
+    extracted_id uuid,
+    message text,
+    error_detail text
+);
+
 CREATE TABLE IF NOT EXISTS failed_registrations (
     id bigint PRIMARY KEY DEFAULT nextval('failed_registrations_id_seq'::regclass),
     email text NOT NULL,
@@ -164,12 +177,25 @@ ALTER TABLE automatic_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE columns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE debug_auth_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE kanbans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
--- ⚠️ failed_registrations NÃO tem RLS (pré-autenticação)
+-- ⚠️ Note: failed_registrations NÃO tem RLS (tabela de pré-autenticação)
+-- ⚠️ Note: debug_auth_logs TEM RLS mas SEM policies (vide security advisors)
+
+-- ============================================================================
+-- INDEXES (ADICIONAIS)
+-- ============================================================================
+
+-- debug_auth_logs index
+CREATE INDEX IF NOT EXISTS debug_auth_logs_pkey ON debug_auth_logs USING btree (id);
+
+-- Índice parcial para unread resolutions
+CREATE INDEX IF NOT EXISTS idx_conversations_unique_active_per_tenant_phone ON conversations USING btree (tenant_id, wa_phone) WHERE (status = 'active'::text);
+CREATE INDEX IF NOT EXISTS idx_conversations_active_by_tenant ON conversations USING btree (tenant_id, status, last_message_at DESC NULLS LAST) WHERE (status = 'active'::text);
 
 -- ============================================================================
 -- COLUMN COMMENTS

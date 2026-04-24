@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-24T17:45:00Z
+> 📅 Extraído em: 2026-04-24 às 00:00 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Documentação do Schema — Banco de Dados Kanban
+# Schema Documentation — Sistema Kanban + WhatsApp
 
-**10 tabelas | 37 índices | 30 políticas RLS | 4 funções customizadas | 25 migrações | 0 triggers**
+**10 tabelas | 38 índices | 31 políticas RLS | 4 funções | 27 migrações | 0 triggers customizados | 1 event trigger**
 
 ## Estrutura Geral
 

@@ -1,14 +1,13 @@
+import { vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 import 'jest-axe/extend-expect';
-import type { toHaveNoViolations } from 'jest-axe';
 import '../app/globals.css';
 
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toHaveNoViolations(): R;
-    }
-  }
+// Mock HTMLDialogElement methods (not implemented in JSDOM)
+if (typeof HTMLDialogElement !== 'undefined') {
+  HTMLDialogElement.prototype.showModal = vi.fn();
+  HTMLDialogElement.prototype.show = vi.fn();
+  HTMLDialogElement.prototype.close = vi.fn();
 }
 
 // Mock window.matchMedia (not implemented in JSDOM)

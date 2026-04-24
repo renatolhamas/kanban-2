@@ -1,10 +1,30 @@
-> 📅 Extraído em: 2026-04-24T17:45:00Z
+> 📅 Extraído em: 2026-04-24 às 00:00 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Funções Customizadas — Database Logic
+# Custom Functions
 
 **Total: 4 funções PL/pgSQL**
+
+---
+
+## Tabelas de Suporte
+
+### **debug_auth_logs** — Logs de Autenticação (Debug)
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `id` | uuid | PK |
+| `created_at` | timestamptz | Timestamp |
+| `event_type` | text | Tipo de evento (hook_start, error_*, hook_success, fatal_error) |
+| `payload` | jsonb | Full JWT event payload |
+| `extracted_id` | uuid | User ID extraído |
+| `message` | text | Mensagem legível |
+| `error_detail` | text | Detalhes de erro |
+
+**Uso:** Rastreamento de problemas de autenticação JWT em `custom_access_token_hook()`
+
+---
 
 ---
 

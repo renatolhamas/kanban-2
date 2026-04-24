@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ModalProps {
   isOpen?: boolean;
@@ -11,13 +12,17 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  fullScreenMobile?: boolean;
+  noPadding?: boolean;
 }
 
 const sizeClasses = {
   sm: 'max-w-sm',
   md: 'max-w-md',
   lg: 'max-w-lg',
+  xl: 'max-w-2xl',
+  full: 'max-w-full',
 };
 
 export function Modal({
@@ -29,6 +34,8 @@ export function Modal({
   children,
   footer,
   size = 'md',
+  fullScreenMobile = false,
+  noPadding = false,
 }: ModalProps) {
   const isModalOpen = open !== undefined ? open : (isOpen ?? false);
   const handleClose = () => {
@@ -56,9 +63,12 @@ export function Modal({
       ref={dialogRef}
       onClose={onClose}
       onClick={handleBackdropClick}
-      className="backdrop:bg-black/50 rounded-lg bg-surface-bright dark:bg-surface-container-highest border border-surface-container-low shadow-ambient w-full"
+      className={cn(
+        "backdrop:bg-black/50 rounded-lg bg-surface-bright dark:bg-surface-container-highest border border-surface-container-low shadow-ambient w-full",
+        fullScreenMobile && "max-sm:fixed max-sm:inset-0 max-sm:rounded-none max-sm:h-screen max-sm:w-screen max-sm:max-w-none"
+      )}
     >
-      <div className={`${sizeClasses[size]}`}>
+      <div className={cn(sizeClasses[size], "mx-auto h-full flex flex-col")}>
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-surface-container-low">
             <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
@@ -72,7 +82,7 @@ export function Modal({
           </div>
         )}
 
-        <div className="p-6">{children}</div>
+        <div className={cn(noPadding ? "p-0" : "p-6", "flex-1")}>{children}</div>
 
         {footer && <div className="border-t border-surface-container-low p-6">{footer}</div>}
       </div>

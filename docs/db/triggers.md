@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-24T17:30:00Z
+> 📅 Extraído em: 2026-04-24 às 00:00 UTC
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Triggers — Automatização de Banco de Dados
+# Triggers
 
-**Total: 0 triggers customizados**
+**Total: 0 triggers operacionais | 1 event trigger (rls_auto_enable)**
 
 ---
 

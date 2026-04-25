@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { ChatModal } from '@/components/ui/organisms/chat/ChatModal';
 import { ChatProvider, useChat } from '@/context/ChatContext';
+import { ToastProvider } from '@/components/ui/molecules/toast';
 
 // Mock matchMedia for components that might use it (like Radix UI)
 Object.defineProperty(window, 'matchMedia', {
@@ -18,19 +19,24 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+// Mock scrollTo as JSDOM doesn't implement it
+window.HTMLElement.prototype.scrollTo = vi.fn();
+
 describe('ChatModal', () => {
   it('renders correctly when open', () => {
     render(
-      <ChatProvider>
-         <ChatModal />
-         <TestTrigger />
-      </ChatProvider>
+      <ToastProvider>
+        <ChatProvider>
+           <ChatModal />
+           <TestTrigger />
+        </ChatProvider>
+      </ToastProvider>
     );
 
     const openButton = screen.getByText('Open Chat');
     fireEvent.click(openButton);
 
-    expect(screen.getByText('Contato Selecionado')).toBeDefined();
+    expect(screen.getByText('Conversa WhatsApp')).toBeDefined();
     expect(screen.getByPlaceholderText('Escreva uma mensagem...')).toBeDefined();
   });
 });

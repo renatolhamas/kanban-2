@@ -1,6 +1,6 @@
 # Evo GO API Mapping — Endpoint Reference
 
-Este documento define o mapeamento técnico entre a API da **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go) e as rotas/lógica interna da nossa plataforma Kanban.
+Este documento define o mapeamento técnico entre a API da **Evo GO** (https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)) e as rotas/lógica interna da nossa plataforma Kanban.
 
 **Data:** 2026-04-10  
 **Versão:** 1.0  
@@ -15,9 +15,9 @@ Mapeamento de endpoints para criação e status da conexão WhatsApp.
 | Ação | Endpoint Evo GO | Nossa Rota API | Campo DB (tenants) |
 | :--- | :--- | :--- | :--- |
 | **Criar Instância** | `POST /instance/create` | `POST /api/settings/evo-go/create` | `evolution_instance_id` |
-| **Obter QR Code** | (Incluso no `/create`) | `GET /api/settings/evo-go/qr` | - |
-| **Status Conexão** | `GET /instance/{id}` | `GET /api/settings/connection-status` | `connection_status` |
-| **Logout/Disconnect**| `DELETE /instance/logout/{id}` | `POST /api/settings/disconnect` | `connection_status = 'inactive'` |
+| **Obter QR Code** | `GET /instance/qr` | `GET /api/settings/evo-go/qr` | - |
+| **Status Conexão** | `GET /instance/status` | `GET /api/settings/connection-status` | `connection_status` |
+| **Logout/Disconnect**| `DELETE /instance/logout` | `POST /api/settings/disconnect` | `connection_status = 'inactive'` |
 
 ---
 
@@ -27,8 +27,8 @@ Mapeamento para envio e recebimento de mensagens.
 
 | Ação | Endpoint Evo GO | Nossa Rota API | Origen/Destino |
 | :--- | :--- | :--- | :--- |
-| **Enviar Texto** | `POST /message/sendText` | `POST /api/messages/send` | Chat Modal → WhatsApp |
-| **Enviar Mídia** | `POST /message/sendMedia` | `POST /api/messages/send` | Chat Modal → WhatsApp |
+| **Enviar Texto** | `POST /send/text` | `POST /api/messages/send` | Chat Modal → WhatsApp |
+| **Enviar Mídia** | `POST /send/media` | `POST /api/messages/send` | Chat Modal → WhatsApp |
 | **Receber Msg** | (Webhook) | `POST /api/webhooks/messages` | WhatsApp → DB |
 
 ---
@@ -59,10 +59,11 @@ Todas as requisições de Webhook **DEVEM** ser validadas:
 ## ⚠️ Diferenças Cruciais (vs v2)
 
 - **Case Sensitive:** Os eventos da Evo GO são em CAIXA ALTA (`MESSAGES_UPSERT` vs `messages.upsert`).
-- **Authorization:** Uso de `X-API-Token` no header para chamadas REST.
+- **Authorization:** Uso de `apikey` no header para chamadas REST.
 - **Library:** Baseado em `whatsmeow` (Golang).
 
 ---
 **Links Oficiais:**
-- Documentação: `https://docs.evolutionfoundation.com.br/evolution-go`
+- Documentação: `https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)`
 - Servidor: `https://evogo.renatop.com.br`
+

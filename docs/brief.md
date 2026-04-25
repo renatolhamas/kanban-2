@@ -275,7 +275,7 @@ A arquitetura será centrada na separação rígida de dados (**Multi-tenancy**)
 
 ### 15. Appendices
 
-- **API Documentation:** [Evo GO](https://docs.evolutionfoundation.com.br/evolution-go) (NOT Evo GO)
+- **API Documentation:** [Evo GO](https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)) (NOT Evo GO)
 - **Supabase Documentation:** [https://supabase.com/docs](https://supabase.com/docs)
 - **Infrastructure:** Supabase Web (Cloud SaaS) - PostgreSQL, Auth & Storage
 - **Design System:** Tailwind CSS Modern Patterns
@@ -353,3 +353,4 @@ O próximo passo é realizar o **Forge Phase** (Implementação):
 **Fase 5 - Integração & Testes:** 12. Webhooks da Evo GO (recebimento de mensagens) 13. Sincronização em tempo real (Supabase Real-time Subscriptions) 14. Testes E2E: Register → Login → Configurar Kanban → Conectar WhatsApp → Usar Sistema
 
 ---
+

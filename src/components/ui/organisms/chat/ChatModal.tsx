@@ -7,15 +7,14 @@ import { Button } from '@/components/ui/atoms/button';
 import { MessageList } from '@/components/ui/molecules/chat/MessageList';
 import { MessageInput } from '@/components/ui/molecules/chat/MessageInput';
 import { useChat } from '@/context/ChatContext';
-import { mockMessages } from '@/lib/mocks/chat-mocks';
 
 export function ChatModal() {
-  const { isModalOpen, closeChat, activeConversationId } = useChat();
+  const { isModalOpen, closeChat, messages } = useChat();
 
-  // In a real scenario, we would fetch the contact name based on activeConversationId
-  // For Story 6.1, we use a placeholder or assume the context provides it
-  const contactName = "Contato Selecionado"; 
-  const contactPhone = "+55 11 99999-9999";
+  // Placeholder contact info - Story 6.2 focuses on Send Message Logic
+  // Contact details will be integrated in Story 6.3/6.4
+  const contactName = "Conversa WhatsApp"; 
+  const contactPhone = "Sincronizado";
 
   return (
     <Modal
@@ -25,9 +24,9 @@ export function ChatModal() {
       fullScreenMobile
       noPadding
     >
-      <div className="flex flex-col h-[600px] max-sm:h-full">
+      <div className="flex flex-col h-[600px] max-sm:h-full overflow-hidden">
         {/* Header */}
-        <div className="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+        <div className="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-bright shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
               {contactName.charAt(0)}
@@ -47,8 +46,8 @@ export function ChatModal() {
               variant="ghost" 
               size="icon" 
               className="text-text-secondary disabled:opacity-50"
-              disabled // Static stub (AC 7)
-              title="Transferir Conversa"
+              disabled
+              title="Transferir Conversa (em breve)"
             >
               <ArrowRightLeft size={20} />
             </Button>
@@ -56,8 +55,8 @@ export function ChatModal() {
               variant="ghost" 
               size="icon" 
               className="text-text-secondary disabled:opacity-50"
-              disabled // Static stub (AC 7)
-              title="Arquivar Conversa"
+              disabled
+              title="Arquivar Conversa (em breve)"
             >
               <Archive size={20} />
             </Button>
@@ -65,6 +64,7 @@ export function ChatModal() {
               variant="ghost" 
               size="icon" 
               className="text-text-secondary"
+              disabled
             >
               <MoreVertical size={20} />
             </Button>
@@ -83,7 +83,7 @@ export function ChatModal() {
 
         {/* Messages Section */}
         <div className="flex-1 overflow-hidden bg-surface-container-lowest">
-          <MessageList messages={mockMessages} />
+          <MessageList messages={messages} />
         </div>
 
         {/* Input Section */}

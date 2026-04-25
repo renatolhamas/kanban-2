@@ -1,6 +1,6 @@
 # 6. Integration Patterns — Evo GO + Supabase
 
-⚠️ **IMPORTANT:** This document describes integration with **Evo GO** ONLY (https://docs.evolutionfoundation.com.br/evolution-go). Do NOT use Evolution API v2.
+⚠️ **IMPORTANT:** This document describes integration with **Evo GO** ONLY (https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)). Do NOT use Evolution API v2.
 
 ## 6.1 WhatsApp Message Receive Flow (Webhook → DB → Real-time)
 
@@ -147,3 +147,4 @@ export async function POST(req: Request) {
 ```
 
 ---
+

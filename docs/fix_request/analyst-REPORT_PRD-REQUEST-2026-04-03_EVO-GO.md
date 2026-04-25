@@ -63,7 +63,7 @@
 - ❌ **NOT FOUND** — Any hardcoded Evolution API endpoint URL
 
 **Current documentation URLs:**
-- ✅ Found: `https://docs.evolutionfoundation.com.br/evolution-api` (implied in PRD section 9.3 as standard reference)
+- ✅ Found: `https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)` (implied in PRD section 9.3 as standard reference)
 
 ---
 
@@ -126,7 +126,7 @@ f78ed46 docs: add RLS fix resolution section to Story 1.2 [Story 1.2]
 
 2. **`docs/prd/15-appendices.md`**
    - Section 15.1 References (Line 5):
-   - Change: `https://docs.evolutionfoundation.com.br/evolution-api` → `https://docs.evolutionfoundation.com.br/evolution-go`
+   - Change: `https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)` → `https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)`
    - Update glossary entry if needed
 
 3. **`docs/prd/3-proposed-solution.md`**
@@ -360,3 +360,5 @@ This is a **specification-only update**. The change can be applied to the PRD im
 **Investigation Methodology:** Full codebase scan + pattern matching + dependency analysis  
 **Confidence:** 100%  
 **Status:** ✅ INVESTIGATION COMPLETE — READY FOR IMPLEMENTATION
+
+

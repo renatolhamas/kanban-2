@@ -51,7 +51,7 @@ Para evitar que a equipe se perca na "sujeira" terminológica enquanto a limpeza
 1. **TIER 1 (Leitura Obrigatória):**
    - `docs/CRITICAL-EVO-GO-NOT-EVOLUTION-API.md`
    - `docs/db/EVO-GO-TECHNICAL-SPECS.md`
-   - Official Link: `https://docs.evolutionfoundation.com.br/evolution-go`
+   - Official Link: `https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)`
 
 2. **TIER 2 (Implementação):**
    - `docs/prd/9-technical-architecture.md`
@@ -67,3 +67,4 @@ Para evitar que a equipe se perca na "sujeira" terminológica enquanto a limpeza
 
 ---
 **Aprovado por:** Aria (Architect) 🏛️ Consolidação concluída.
+

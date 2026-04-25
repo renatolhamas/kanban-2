@@ -12,14 +12,14 @@
   - Use this when implementing Send Message, QR Code, webhooks
 
 #### 📚 Official Documentation (for context & standards)
-- **Evo GO Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
-- **Evo GO Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation
+- **Evo GO Documentation:** https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)
+- **Evo GO Installation Guide:** https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)/installation
 - **Evo GO GitHub (Open Source):** https://github.com/EvolutionAPI/evolution-go
 
 ### DO NOT USE (Deprecated for this project)
 
 - ❌ Evo GO: https://doc.evolution-api.com/v2/api-reference
-- ❌ Evo GO Foundation: https://docs.evolutionfoundation.com.br/evolution-api
+- ❌ Evo GO Foundation: https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)
 - ❌ Evo GO GitHub: https://github.com/EvolutionAPI/evolution-api
 
 ### Infrastructure & Framework
@@ -61,8 +61,10 @@
   - Real endpoint signatures, payload schemas, rate limits
 
 #### Official Evo GO Resources (Use for context & standards)
-- **Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
-- **Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation
+- **Documentation:** https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)
+- **Installation Guide:** https://evogo.renatop.com.br/swagger/index.html (Ref: docs/evogo/docs.evogo.doc.json)/installation
 - **GitHub Repository:** https://github.com/EvolutionAPI/evolution-go
 
 ---
+
+

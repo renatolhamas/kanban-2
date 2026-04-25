@@ -12,7 +12,7 @@ export function MessageInput() {
 
   const handleSend = async () => {
     const messageText = text.trim();
-    if (!messageText || isSending) return;
+    if (!messageText) return; // Removed isSending check to allow rapid sending
     
     // Clear immediately for smoother UX
     setText('');
@@ -25,7 +25,6 @@ export function MessageInput() {
       // No need to clear here as it's already done
     } catch (err) {
       // Restore text on error so user doesn't lose it
-      // We use a functional update to prepend the failed text if the user started typing something new
       setText(prev => prev ? `${messageText}\n${prev}` : messageText);
       console.error('Failed to send message in UI:', err);
     }
@@ -89,11 +88,10 @@ export function MessageInput() {
         size="icon" 
         className="rounded-full w-11 h-11 shrink-0"
         onClick={handleSend}
-        loading={isSending}
-        disabled={!text.trim() || isSending}
+        disabled={!text.trim()}
         title="Enviar mensagem"
       >
-        {!isSending && <Send size={20} />}
+        <Send size={20} />
       </Button>
     </div>
   );

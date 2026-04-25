@@ -33,7 +33,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isSending, setIsSending] = useState(false);
+  const [sendingCount, setSendingCount] = useState(0);
+  const isSending = sendingCount > 0;
   const { error: showToastError, success: showToastSuccess } = useToast();
 
   const loadMessages = useCallback(async (conversationId: string) => {
@@ -108,7 +109,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     };
 
     setMessages(prev => [...prev, optimisticMessage]);
-    setIsSending(true);
+    setSendingCount(prev => prev + 1);
 
     try {
       const response = await apiSendMessage({
@@ -137,7 +138,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       showToastError(errorMessage);
       throw err; // Allow component to handle error
     } finally {
-      setIsSending(false);
+      setSendingCount(prev => Math.max(0, prev - 1));
     }
   };
 

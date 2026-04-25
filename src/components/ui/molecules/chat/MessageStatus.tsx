@@ -46,7 +46,7 @@ export const MessageStatus: React.FC<MessageStatusProps> = ({ status, className 
 
     case 'read':
       return (
-        <div className={cn('flex items-center justify-center text-emerald-500', className)} title="Lido">
+        <div className={cn('flex items-center justify-center text-token-success', className)} title="Lido">
           <CheckCheck className="h-3.5 w-3.5" />
         </div>
       );

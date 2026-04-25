@@ -77,5 +77,35 @@ export const evolutionService = {
       console.error('[EvolutionService] sendText exception:', error);
       throw error;
     }
+  },
+
+  /**
+   * Get message status from Evolution GO
+   * POST /message/status
+   */
+  async getMessageStatus(
+    instanceToken: string,
+    messageId: string
+  ): Promise<{ status: number }> {
+    try {
+      const response = await fetch(`${EVOGO_API_BASE}/message/status`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': instanceToken,
+        },
+        body: JSON.stringify({ id: messageId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch message status (Status: ${response.status})`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('[EvolutionService] getMessageStatus exception:', error);
+      throw error;
+    }
   }
 };
+

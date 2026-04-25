@@ -155,3 +155,35 @@ export function extractMessageContent(data: unknown): MessageContent {
   // Fallback
   return { text: '' };
 }
+
+/**
+ * Extracts message status update information.
+ * Maps whatsmeow/Evo GO status codes to internal status strings.
+ * 
+ * whatsmeow Status codes:
+ * - 0 or 1: PENDING/SERVER_ACK -> 'sent'
+ * - 2: DELIVERY_ACK -> 'delivered'
+ * - 3: READ_ACK -> 'read'
+ * - 4: PLAYED_ACK -> 'read'
+ * - 5: ERROR -> 'error'
+ */
+export function extractMessageStatus(data: unknown): { messageId: string; status: string } | null {
+  const d = data as Record<string, unknown> | null;
+  if (!d) return null;
+
+  // Evolution GO format: data.key.id and data.update.status
+  const key = d.key as Record<string, unknown> | undefined;
+  const update = d.update as Record<string, unknown> | undefined;
+
+  const messageId = key?.id as string | undefined;
+  const rawStatus = update?.status as number | undefined;
+
+  if (!messageId || rawStatus === undefined) return null;
+
+  let status = 'sent';
+  if (rawStatus === 2) status = 'delivered';
+  else if (rawStatus === 3 || rawStatus === 4) status = 'read';
+  else if (rawStatus === 5) status = 'error';
+
+  return { messageId, status };
+}

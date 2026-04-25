@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { extractContactInfo, extractMessageContent } from '@/lib/api/webhook-utils';
+import { extractContactInfo, extractMessageContent, extractMessageStatus } from '@/src/lib/api/webhook-utils';
 
 const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -125,6 +125,10 @@ export async function POST(
       case 'MESSAGES.UPSERT':
       case 'MESSAGE':
         await handleMessagesUpsert(supabase, resolvedTenantId, data as Record<string, unknown>);
+        break;
+
+      case 'MESSAGES.UPDATE':
+        await handleMessageUpdate(supabase, resolvedTenantId, data as Record<string, unknown>);
         break;
 
       default:
@@ -489,3 +493,62 @@ async function handleMessagesUpsert(
     });
   }
 }
+
+/**
+ * Handle MESSAGES.UPDATE event (ACK)
+ * Story 6.3: Update message delivery status
+ */
+async function handleMessageUpdate(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  tenantId: string,
+  data?: Record<string, unknown>,
+): Promise<void> {
+  try {
+    if (!data) return;
+
+    const statusInfo = extractMessageStatus(data);
+    if (!statusInfo) {
+      console.log('[Webhook] MESSAGES.UPDATE: Could not extract status info', { 
+        tenantId, 
+        dataKeys: Object.keys(data) 
+      });
+      return;
+    }
+
+    const { messageId, status } = statusInfo;
+
+    console.log('[Webhook] MESSAGES.UPDATE processing', {
+      tenantId,
+      messageId,
+      status,
+      timestamp: new Date().toISOString(),
+    });
+
+    const { error } = await supabase
+      .from('messages')
+      .update({ status })
+      .eq('evolution_message_id', messageId);
+
+    if (error) {
+      console.error('[Webhook] MESSAGES.UPDATE database error', {
+        tenantId,
+        messageId,
+        error: error.message,
+      });
+      return;
+    }
+
+    console.log('[Webhook] MESSAGES.UPDATE processed successfully', {
+      tenantId,
+      messageId,
+      status,
+    });
+  } catch (error) {
+    console.error('[Webhook] MESSAGES.UPDATE fatal error', {
+      tenantId,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+

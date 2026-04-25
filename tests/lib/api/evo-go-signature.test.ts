@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { validateEvoGoSignature, parseSignatureHeader } from "../../../lib/api/evo-go-signature";
+import { validateEvoGoSignature, parseSignatureHeader } from "../../../src/lib/api/evo-go-signature";
 import { createHmac } from "crypto";
 
 describe("validateEvoGoSignature", () => {

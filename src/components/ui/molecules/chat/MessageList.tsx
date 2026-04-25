@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { Message } from '@/context/ChatContext';
-import { CheckCheck, Clock, AlertCircle } from 'lucide-react';
+import { Message } from '@/src/context/ChatContext';
+import { MessageStatus } from './MessageStatus';
 
 interface MessageListProps {
   messages: Message[];
@@ -80,12 +80,11 @@ export function MessageList({ messages }: MessageListProps) {
                     {formatTime(msg.created_at)}
                   </span>
                   
-                  {isAgent && (
-                    <span className="text-white/80">
-                      {isSending && <Clock size={10} className="animate-pulse" />}
-                      {msg.status === 'sent' && <CheckCheck size={10} />}
-                      {isError && <AlertCircle size={10} className="text-white" />}
-                    </span>
+                  {isAgent && msg.status && (
+                    <MessageStatus 
+                      status={msg.status} 
+                      className={cn(isAgent ? "text-white/80" : "")} 
+                    />
                   )}
                 </div>
               </div>
@@ -93,6 +92,7 @@ export function MessageList({ messages }: MessageListProps) {
           );
         })
       )}
+
       <div className="h-2 w-full shrink-0" />
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
 import { apiSendMessage } from '@/lib/api/messages';
 import { useToast } from '@/components/ui/molecules/toast';
 
@@ -10,8 +11,9 @@ export interface Message {
   content: string;
   sender_type: 'customer' | 'agent' | 'system';
   created_at: string;
-  status?: 'sending' | 'sent' | 'error';
+  status?: 'sending' | 'sent' | 'delivered' | 'read' | 'error';
   evolution_message_id?: string | null;
+  status_updated_at?: string;
 }
 
 interface ChatContextValue {
@@ -45,6 +47,41 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // Story 6.3: Real-time status updates subscription
+  useEffect(() => {
+    if (!activeConversationId) return;
+
+    const supabase = createClient();
+    
+    const channel = supabase
+      .channel(`chat_status_${activeConversationId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${activeConversationId}`
+        },
+        (payload) => {
+          const updatedMsg = payload.new as Message;
+          console.log('[ChatContext] Real-time status update received:', updatedMsg.id, updatedMsg.status);
+          
+          setMessages(prev => prev.map(msg => 
+            msg.id === updatedMsg.id 
+              ? { ...msg, status: updatedMsg.status, status_updated_at: updatedMsg.status_updated_at } 
+              : msg
+          ));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [activeConversationId]);
+
+
   const openChat = useCallback((conversationId: string) => {
     setActiveConversationId(conversationId);
     setIsModalOpen(true);
@@ -58,7 +95,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const sendMessage = async (text: string) => {
-    if (!activeConversationId || !text.trim() || isSending) return;
+    if (!activeConversationId || !text.trim()) return;
 
     const optimisticId = `opt-${Math.random().toString(36).substring(7)}`;
     const optimisticMessage: Message = {

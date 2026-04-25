@@ -8,7 +8,7 @@ import {
   getOrCreateInstance,
   getEvoGoInstanceInfo,
   EvoGoError,
-} from '../../lib/api/evo-go-client';
+} from '../../src/lib/api/evo-go-client';
 
 // Mock fetch using vitest's stubGlobal
 vi.stubGlobal('fetch', vi.fn());

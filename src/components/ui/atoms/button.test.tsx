@@ -71,6 +71,7 @@ describe('Button', () => {
   it('has no accessibility violations', async () => {
     const { container } = render(<Button>Accessible Button</Button>)
     const results = await axe(container)
+    // @ts-expect-error jest-axe matcher not recognized by Vitest types
     expect(results).toHaveNoViolations()
   })
 

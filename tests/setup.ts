@@ -1,7 +1,9 @@
-import { vi, beforeEach } from 'vitest';
-import '@testing-library/jest-dom';
-import 'jest-axe/extend-expect';
+import { vi, beforeEach, expect } from 'vitest';
+import '@testing-library/jest-dom/vitest';
+import { toHaveNoViolations } from 'jest-axe';
 import '../app/globals.css';
+
+expect.extend(toHaveNoViolations);
 
 // Mock HTMLDialogElement methods (not implemented in JSDOM)
 if (typeof HTMLDialogElement !== 'undefined') {

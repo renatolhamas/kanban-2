@@ -31,6 +31,7 @@ describe('KanbanBoard', () => {
           <div>Column content</div>
         </KanbanBoard>
       )
+      // @ts-expect-error jest-axe matcher not recognized by Vitest types
       expect(await axe(container)).toHaveNoViolations()
     })
   })

@@ -57,6 +57,7 @@ describe('Card', () => {
       </Card>
     )
     const results = await axe(container)
+    // @ts-expect-error jest-axe matcher not recognized by Vitest types
     expect(results).toHaveNoViolations()
   })
 })

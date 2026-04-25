@@ -61,6 +61,7 @@ describe('KanbanSelector', () => {
           <KanbanSelector options={options} value="kb-1" id="ks" />
         </div>
       )
+      // @ts-expect-error jest-axe matcher not recognized by Vitest types
       expect(await axe(container)).toHaveNoViolations()
     })
   })

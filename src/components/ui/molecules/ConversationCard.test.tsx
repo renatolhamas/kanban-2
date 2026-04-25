@@ -126,11 +126,13 @@ describe('ConversationCard', () => {
   describe('accessibility', () => {
     it('should have no a11y violations', async () => {
       const { container } = render(<ConversationCard {...defaultProps} />)
+      // @ts-expect-error jest-axe matcher not recognized by Vitest types
       expect(await axe(container)).toHaveNoViolations()
     })
 
     it('should have no a11y violations when selected', async () => {
       const { container } = render(<ConversationCard {...defaultProps} isSelected unreadCount={2} />)
+      // @ts-expect-error jest-axe matcher not recognized by Vitest types
       expect(await axe(container)).toHaveNoViolations()
     })
   })

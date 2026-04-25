@@ -6,8 +6,14 @@
 
 ⚠️ **CRITICAL:** This project uses **EVO GO EXCLUSIVELY**. Do NOT use Evo GO.
 
+#### 🔧 Technical Reference (for implementation)
+- **Swagger Interactive (Renatop Instance):** https://evogo.renatop.com.br/swagger/index.html
+  - Source of truth for API endpoints, payloads, and schemas
+  - Use this when implementing Send Message, QR Code, webhooks
+
+#### 📚 Official Documentation (for context & standards)
 - **Evo GO Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
-- **Evo GO Installation:** https://docs.evolutionfoundation.com.br/evolution-go/installation
+- **Evo GO Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation
 - **Evo GO GitHub (Open Source):** https://github.com/EvolutionAPI/evolution-go
 
 ### DO NOT USE (Deprecated for this project)
@@ -47,9 +53,16 @@
 - **`docs/db/pesquisa.schema.evogo.md`** — Deep research on schema compatibility with Evo GO
 - **`docs/CRITICAL-EVO-GO-NOT-EVOLUTION-API.md`** — ⚠️ Critical distinction: Evo GO vs Evo GO
 
-### Evo GO Official Resources
-- Documentation: https://docs.evolutionfoundation.com.br/evolution-go
-- Installation: https://docs.evolutionfoundation.com.br/evolution-go/installation
-- GitHub: https://github.com/EvolutionAPI/evolution-go
+### Evo GO Instance & Official Resources
+
+#### Instance-Specific (Use for implementation)
+- **Swagger Interactive:** https://evogo.renatop.com.br/swagger/index.html
+  - Live API reference for our Evo GO instance
+  - Real endpoint signatures, payload schemas, rate limits
+
+#### Official Evo GO Resources (Use for context & standards)
+- **Documentation:** https://docs.evolutionfoundation.com.br/evolution-go
+- **Installation Guide:** https://docs.evolutionfoundation.com.br/evolution-go/installation
+- **GitHub Repository:** https://github.com/EvolutionAPI/evolution-go
 
 ---

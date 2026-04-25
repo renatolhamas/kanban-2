@@ -10,7 +10,7 @@
 | **Auth**             | Supabase Cloud Auth                           | JWT, OAuth-ready (Fase 2+), MFA (Fase 2+)                |
 | **Real-time**        | Supabase Real-time Subscriptions              | WebSocket para sync instantâneo                          |
 | **File Storage**     | Supabase Cloud Storage                        | Mídias de conversa (fotos, vídeos, áudios)               |
-| **WhatsApp Gateway** | **Evo GO** (https://docs.evolutionfoundation.com.br/evolution-go) | Pairing via QR, webhooks bidirecional, suporte completo |
+| **WhatsApp Gateway** | **Evo GO** — [Instância: evogo.renatop.com.br](https://evogo.renatop.com.br/swagger/index.html) / [Docs](https://docs.evolutionfoundation.com.br/evolution-go) | Pairing via QR, webhooks bidirecional, suporte completo |
 | **API Framework**    | Next.js API Routes (/app/api/)                | Auth middleware, CORS, RateLimit, Webhook validation     |
 | **Rate Limiting**    | Redis local (VPS)                             | 100 req/min per tenant, zero cost                        |
 | **Deployment**       | Vercel (Frontend) + Supabase Cloud            | Global CDN, auto-scaling, managed DB                     |
@@ -34,6 +34,20 @@ Para consulta técnica imediata, utilize:
 📌 **Referência Técnica:** Consulte `docs/db/EVO-GO-TECHNICAL-SPECS.md` para especificações completas do Evo GO, webhook events, e arquitetura de banco de dados.
 
 **Servidor:** `https://evogo.renatop.com.br`
+
+### 📚 Documentação Técnica & Endpoints
+
+**FONTE PRIMÁRIA (use para implementação):**
+- **Swagger Interativo (Instância Renatop):** https://evogo.renatop.com.br/swagger/index.html
+  - ⭐ Reflete exatamente os endpoints e schemas disponíveis na nossa instância
+  - Fonte de verdade para AC de Story 6.2+ (Send Message e similares)
+  - Inclui payloads atualizados, rate limits, auth method
+
+**REFERÊNCIA SECUNDÁRIA (contexto & padrões):**
+- Documentação Oficial: https://docs.evolutionfoundation.com.br/evolution-go
+  - Padrões de nomenclatura e conventions
+  - Guias de instalação/deployment (não aplicável à instância alugada)
+  - Contexto histórico de features
 
 **Fluxo de Pairing (Evo GO):**
 

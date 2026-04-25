@@ -14,8 +14,8 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '@/lib/api', replacement: path.resolve(__dirname, 'src/lib/api') },
-      { find: /^@\/lib\/(auth-pages|kanban|utils|format-utils|api)(.*)/, replacement: path.resolve(__dirname, 'src/lib/$1$2') },
-      { find: /^@\/lib\/(.*)/, replacement: path.resolve(__dirname, 'lib/$1') },
+      { find: /^@\/lib\/(auth-pages|kanban|utils|format-utils|api|mocks|email|link-validation|rate-limit)(.*)/, replacement: path.resolve(__dirname, 'src/lib/$1$2') },
+      { find: /^@\/lib\/(.*)/, replacement: path.resolve(__dirname, 'src/lib/$1') },
       { find: /^@\/app\/(.*)/, replacement: path.resolve(__dirname, 'app/$1') },
       { find: /^@\/src\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },
       { find: /^@\/(.*)/, replacement: path.resolve(__dirname, 'src/$1') },

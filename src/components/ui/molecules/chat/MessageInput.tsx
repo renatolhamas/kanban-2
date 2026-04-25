@@ -14,16 +14,19 @@ export function MessageInput() {
     const messageText = text.trim();
     if (!messageText || isSending) return;
     
+    // Clear immediately for smoother UX
+    setText('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+    
     try {
       await sendMessage(messageText);
-      setText(''); // Clear on success
-      
-      // Reset height
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
+      // No need to clear here as it's already done
     } catch (err) {
-      // Keep text on error per Pre-Flight decision to allow retries
+      // Restore text on error so user doesn't lose it
+      // We use a functional update to prepend the failed text if the user started typing something new
+      setText(prev => prev ? `${messageText}\n${prev}` : messageText);
       console.error('Failed to send message in UI:', err);
     }
   };
@@ -43,6 +46,12 @@ export function MessageInput() {
       textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
     }
   }, [text]);
+
+  // Focus management: Ensure focus is maintained
+  useEffect(() => {
+    // Always keep focus when the modal/component is active
+    textareaRef.current?.focus();
+  }, []);
 
   return (
     <div className="p-4 border-t border-outline-variant bg-surface-bright flex items-end gap-3">
@@ -65,7 +74,7 @@ export function MessageInput() {
           placeholder="Escreva uma mensagem..."
           className="w-full bg-surface-container-low border border-outline-variant rounded-2xl py-2.5 px-4 pr-10 text-body-md focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none min-h-[44px] max-h-[120px] transition-all scrollbar-none"
           rows={1}
-          disabled={isSending}
+          // Removed disabled={isSending} to keep the input "liberated"
         />
         <button 
           className="absolute right-3 bottom-3 text-text-secondary hover:text-primary transition-colors disabled:opacity-50"

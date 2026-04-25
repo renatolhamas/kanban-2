@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { MessageMock } from '@/lib/mocks/chat-mocks';
 
@@ -9,8 +9,19 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages }: MessageListProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="flex flex-col space-y-4 p-4 overflow-y-auto max-h-[500px] bg-surface-container-lowest">
+    <div 
+      ref={scrollRef}
+      className="flex flex-col space-y-4 p-4 overflow-y-auto scrollbar-thin h-full bg-surface-container-lowest"
+    >
       {messages.map((msg) => (
         <div
           key={msg.id}
@@ -41,6 +52,7 @@ export function MessageList({ messages }: MessageListProps) {
           </div>
         </div>
       ))}
+      <div className="h-2 w-full shrink-0" /> {/* Minimal spacer for visual balance */}
     </div>
   );
 }

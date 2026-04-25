@@ -57,7 +57,7 @@ export function MessageList({ messages }: MessageListProps) {
             >
               <div
                 className={cn(
-                  "max-w-[80%] p-3 rounded-2xl shadow-sm relative font-manrope transition-opacity duration-300",
+                  "max-w-[80%] p-3 rounded-2xl shadow-ambient relative font-manrope transition-opacity duration-300",
                   isAgent 
                     ? "bg-primary text-white rounded-tr-none" 
                     : "bg-surface-bright text-text-primary rounded-tl-none border border-outline-variant",

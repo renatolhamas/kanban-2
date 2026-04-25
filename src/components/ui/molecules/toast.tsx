@@ -71,14 +71,14 @@ function ToastList() {
 
 function ToastItem({ message, type, onRemove }: Toast & { onRemove: () => void }) {
   const bgColors = {
-    success: 'bg-emerald-500',
-    error: 'bg-red-500',
-    info: 'bg-blue-500',
-    warning: 'bg-amber-500',
+    success: 'bg-token-success',
+    error: 'bg-token-danger',
+    info: 'bg-token-primary',
+    warning: 'bg-token-warning',
   };
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg text-white min-w-[280px] animate-in fade-in slide-in-from-right-5 ${bgColors[type]}`}>
+    <div className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-ambient text-white min-w-[280px] animate-in fade-in slide-in-from-right-5 ${bgColors[type]}`}>
       <span className="flex-1 font-medium">{message}</span>
       <button onClick={onRemove} className="hover:opacity-70 transition-opacity">
         <X size={18} />

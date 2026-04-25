@@ -30,7 +30,7 @@ describe('MessageStatus Component', () => {
   it('renders double check with emerald color for read status', () => {
     const { container } = render(<MessageStatus status="read" />);
     expect(screen.getByTestId('icon-checkcheck')).toBeDefined();
-    expect(container.firstChild).toHaveClass('text-emerald-500');
+    expect(container.firstChild).toHaveClass('text-token-success');
   });
 
   it('renders alert icon for error status', () => {

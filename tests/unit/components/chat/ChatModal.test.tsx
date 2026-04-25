@@ -4,6 +4,17 @@ import { ChatModal } from '@/components/ui/organisms/chat/ChatModal';
 import { ChatProvider, useChat } from '@/context/ChatContext';
 import { ToastProvider } from '@/components/ui/molecules/toast';
 
+// Mock Supabase client to avoid env var issues in CI
+vi.mock('@/lib/supabase/client', () => ({
+  createClient: vi.fn(() => ({
+    channel: vi.fn(() => ({
+      on: vi.fn().mockReturnThis(),
+      subscribe: vi.fn().mockReturnThis(),
+    })),
+    removeChannel: vi.fn(),
+  })),
+}));
+
 // Mock matchMedia for components that might use it (like Radix UI)
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

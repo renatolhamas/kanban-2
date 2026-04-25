@@ -107,8 +107,8 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 **Stories:**
 
-- ⬜ Story 6.1: Chat Modal UI (View History) — Visualização estilo WhatsApp (bolhas esquerda/direita), botões estáticos de anexo e envio.
-- ⬜ Story 6.2: Send Message logic (UI → Evo GO) — Transformar o botão de envio em funcional (integração com API).
+- ✅ Story 6.1: Chat Modal UI (View History) — Visualização estilo WhatsApp (bolhas esquerda/direita), botões estáticos de anexo e envio.
+- ✅ Story 6.2: Send Message logic (UI → Evo GO) — Transformar o botão de envio em funcional (integração com API).
 - ⬜ Story 6.3: Message delivery validation — Status da mensagem (Enviado/Entregue/Lido).
 - ⬜ Story 6.4: Message history pagination — Carregamento sob demanda de mensagens antigas.
 - ⬜ Story 6.5: Real-time subscriptions (WebSocket) — Atualização instantânea sem refresh.

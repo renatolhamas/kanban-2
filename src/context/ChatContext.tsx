@@ -37,42 +37,118 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const isSending = sendingCount > 0;
   const { error: showToastError, success: showToastSuccess } = useToast();
 
+  const [sendQueue, setSendQueue] = useState<{ id: string; text: string; conversationId: string }[]>([]);
+  const [isProcessingQueue, setIsProcessingQueue] = useState(false);
+
   const loadMessages = useCallback(async (conversationId: string) => {
     try {
       const response = await fetch(`/api/messages?conversationId=${conversationId}`);
       if (!response.ok) throw new Error('Failed to fetch messages');
       const data = await response.json();
-      setMessages(data);
+      
+      // Story 6.3: Ensure initial load is chronologically sorted
+      const sortedData = [...data].sort((a, b) => 
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+      
+      setMessages(sortedData);
     } catch (err) {
       console.error('Error loading messages:', err);
     }
   }, []);
 
-  // Story 6.3: Real-time status updates subscription
+  // Story 6.3: Sequential Message Processor (FIFO Queue)
+  useEffect(() => {
+    const processNext = async () => {
+      if (isProcessingQueue || sendQueue.length === 0) return;
+
+      setIsProcessingQueue(true);
+      const nextItem = sendQueue[0];
+
+      try {
+        const response = await apiSendMessage({
+          conversationId: nextItem.conversationId,
+          text: nextItem.text
+        });
+        
+        // Update the optimistic message with real data from backend
+        setMessages(prev => prev.map(msg => 
+          msg.id === nextItem.id 
+            ? { ...msg, id: response.messageId, status: 'sent', evolution_message_id: response.evolutionMessageId } 
+            : msg
+        ));
+        
+        showToastSuccess('Mensagem enviada!');
+      } catch (err: unknown) {
+        console.error('Error sending message from queue:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Erro ao enviar mensagem.';
+        
+        // Update the optimistic message to 'error'
+        setMessages(prev => prev.map(msg => 
+          msg.id === nextItem.id ? { ...msg, status: 'error' } : msg
+        ));
+        
+        showToastError(errorMessage);
+      } finally {
+        // Remove processed item and allow next one
+        setSendQueue(prev => prev.slice(1));
+        setSendingCount(prev => Math.max(0, prev - 1));
+        setIsProcessingQueue(false);
+      }
+    };
+
+    processNext();
+  }, [sendQueue, isProcessingQueue, showToastError, showToastSuccess]);
+
+  // Story 6.3: Real-time updates subscription (INSERT & UPDATE)
   useEffect(() => {
     if (!activeConversationId) return;
 
     const supabase = createClient();
     
     const channel = supabase
-      .channel(`chat_status_${activeConversationId}`)
+      .channel(`chat_realtime_${activeConversationId}`)
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: '*', // Listen to INSERT, UPDATE, etc.
           schema: 'public',
           table: 'messages',
           filter: `conversation_id=eq.${activeConversationId}`
         },
         (payload) => {
-          const updatedMsg = payload.new as Message;
-          console.log('[ChatContext] Real-time status update received:', updatedMsg.id, updatedMsg.status);
-          
-          setMessages(prev => prev.map(msg => 
-            msg.id === updatedMsg.id 
-              ? { ...msg, status: updatedMsg.status, status_updated_at: updatedMsg.status_updated_at } 
-              : msg
-          ));
+          if (payload.eventType === 'INSERT') {
+            const newMsg = payload.new as Message;
+            console.log('[ChatContext] Real-time message received:', newMsg.id);
+            
+            setMessages(prev => {
+              // Avoid duplicates (e.g. if we just sent it optimistically)
+              const exists = prev.some(m => m.id === newMsg.id || (m.evolution_message_id && m.evolution_message_id === newMsg.evolution_message_id));
+              if (exists) return prev;
+
+              const updatedList = [...prev, newMsg];
+              // Sort to ensure correct order regardless of network latency
+              return updatedList.sort((a, b) => 
+                new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+              );
+            });
+          } 
+          else if (payload.eventType === 'UPDATE') {
+            const updatedMsg = payload.new as Message;
+            console.log('[ChatContext] Real-time status update received:', updatedMsg.id, updatedMsg.status);
+            
+            setMessages(prev => {
+              const updatedList = prev.map(msg => 
+                msg.id === updatedMsg.id 
+                  ? { ...msg, status: updatedMsg.status, status_updated_at: updatedMsg.status_updated_at } 
+                  : msg
+              );
+              // Re-sort just in case (though update usually doesn't change order)
+              return updatedList.sort((a, b) => 
+                new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+              );
+            });
+          }
         }
       )
       .subscribe();
@@ -93,6 +169,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setIsModalOpen(false);
     setActiveConversationId(null);
     setMessages([]);
+    setSendQueue([]); // Clear queue on close
   }, []);
 
   const sendMessage = async (text: string) => {
@@ -108,38 +185,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       status: 'sending'
     };
 
+    // 1. Update UI optimistically
     setMessages(prev => [...prev, optimisticMessage]);
     setSendingCount(prev => prev + 1);
 
-    try {
-      const response = await apiSendMessage({
-        conversationId: activeConversationId,
-        text
-      });
-      
-      // Update the optimistic message with real data from backend
-      setMessages(prev => prev.map(msg => 
-        msg.id === optimisticId 
-          ? { ...msg, id: response.messageId, status: 'sent', evolution_message_id: response.evolutionMessageId } 
-          : msg
-      ));
-      
-      showToastSuccess('Mensagem enviada!');
-    } catch (err: unknown) {
-      console.error('Error sending message:', err);
-      
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao enviar mensagem. Tente novamente.';
-      
-      // Update the optimistic message to 'error'
-      setMessages(prev => prev.map(msg => 
-        msg.id === optimisticId ? { ...msg, status: 'error' } : msg
-      ));
-      
-      showToastError(errorMessage);
-      throw err; // Allow component to handle error
-    } finally {
-      setSendingCount(prev => Math.max(0, prev - 1));
-    }
+    // 2. Add to sequential queue instead of direct API call
+    setSendQueue(prev => [...prev, { 
+      id: optimisticId, 
+      text: text, 
+      conversationId: activeConversationId 
+    }]);
   };
 
   const value: ChatContextValue = {

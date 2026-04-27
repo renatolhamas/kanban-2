@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode, useCallback, use
 import { createClient } from '@/lib/supabase/client';
 import { apiSendMessage } from '@/lib/api/messages';
 import { useToast } from '@/components/ui/molecules/toast';
+import { useMessagePagination } from '@/hooks/useMessagePagination';
 
 export interface Message {
   id: string;
@@ -25,6 +26,9 @@ interface ChatContextValue {
   closeChat: () => void;
   sendMessage: (text: string) => Promise<void>;
   loadMessages: (conversationId: string) => Promise<void>;
+  isLoadingMore: boolean;
+  hasMore: boolean;
+  loadMoreMessages: (conversationId: string) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextValue | undefined>(undefined);
@@ -32,30 +36,23 @@ const ChatContext = createContext<ChatContextValue | undefined>(undefined);
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  
+  const {
+    messages,
+    setMessages,
+    isLoadingMore,
+    hasMore,
+    loadInitialMessages,
+    loadMoreMessages,
+    resetPagination
+  } = useMessagePagination();
+
   const [sendingCount, setSendingCount] = useState(0);
   const isSending = sendingCount > 0;
   const { error: showToastError, success: showToastSuccess } = useToast();
 
   const [sendQueue, setSendQueue] = useState<{ id: string; text: string; conversationId: string }[]>([]);
   const [isProcessingQueue, setIsProcessingQueue] = useState(false);
-
-  const loadMessages = useCallback(async (conversationId: string) => {
-    try {
-      const response = await fetch(`/api/messages?conversationId=${conversationId}`);
-      if (!response.ok) throw new Error('Failed to fetch messages');
-      const data = await response.json();
-      
-      // Story 6.3: Ensure initial load is chronologically sorted
-      const sortedData = [...data].sort((a, b) => 
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-      );
-      
-      setMessages(sortedData);
-    } catch (err) {
-      console.error('Error loading messages:', err);
-    }
-  }, []);
 
   // Story 6.3: Sequential Message Processor (FIFO Queue)
   useEffect(() => {
@@ -162,15 +159,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const openChat = useCallback((conversationId: string) => {
     setActiveConversationId(conversationId);
     setIsModalOpen(true);
-    loadMessages(conversationId);
-  }, [loadMessages]);
+    loadInitialMessages(conversationId);
+  }, [loadInitialMessages]);
 
   const closeChat = useCallback(() => {
     setIsModalOpen(false);
     setActiveConversationId(null);
-    setMessages([]);
+    resetPagination();
     setSendQueue([]); // Clear queue on close
-  }, []);
+  }, [resetPagination]);
 
   const sendMessage = async (text: string) => {
     if (!activeConversationId || !text.trim()) return;
@@ -205,7 +202,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     openChat,
     closeChat,
     sendMessage,
-    loadMessages
+    loadMessages: loadInitialMessages,
+    isLoadingMore,
+    hasMore,
+    loadMoreMessages
   };
 
   return (

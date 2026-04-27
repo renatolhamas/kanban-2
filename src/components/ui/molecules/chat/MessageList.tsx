@@ -1,24 +1,67 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Message } from '@/src/context/ChatContext';
 import { MessageStatus } from './MessageStatus';
 
 interface MessageListProps {
   messages: Message[];
+  onLoadMore?: () => void;
+  isLoadingMore?: boolean;
+  hasMore?: boolean;
 }
 
-export function MessageList({ messages }: MessageListProps) {
+export function MessageList({ messages, onLoadMore, isLoadingMore = false, hasMore = false }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const observerTarget = useRef<HTMLDivElement>(null);
+  const lastScrollHeight = useRef<number>(0);
+  const isFirstLoad = useRef<boolean>(true);
 
+  // Infinite Scroll Trigger
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({
-        top: scrollRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoadingMore && onLoadMore) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px 0px 0px 0px' } // dispara um pouco antes de chegar no topo
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
     }
+
+    return () => observer.disconnect();
+  }, [hasMore, isLoadingMore, onLoadMore]);
+
+  // Scroll position preservation & auto-scroll to bottom
+  useLayoutEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const currentScrollHeight = container.scrollHeight;
+
+    if (isFirstLoad.current && messages.length > 0) {
+      // First load: scroll to bottom immediately
+      container.scrollTop = currentScrollHeight;
+      isFirstLoad.current = false;
+    } else if (currentScrollHeight > lastScrollHeight.current) {
+      // Height increased
+      const heightDiff = currentScrollHeight - lastScrollHeight.current;
+      
+      // Se estávamos no topo (carregando antigos)
+      if (container.scrollTop <= heightDiff + 50) { // Tolerância para scroll rápido
+        container.scrollTop = container.scrollTop + heightDiff;
+      } 
+      // Se estávamos perto da base (nova mensagem recebida)
+      else if (container.scrollHeight - container.scrollTop - container.clientHeight - heightDiff < 150) {
+        container.scrollTo({ top: currentScrollHeight, behavior: 'smooth' });
+      }
+    }
+
+    lastScrollHeight.current = currentScrollHeight;
   }, [messages]);
 
   const formatTime = (dateStr: string) => {
@@ -37,7 +80,17 @@ export function MessageList({ messages }: MessageListProps) {
       ref={scrollRef}
       className="flex flex-col space-y-4 p-4 overflow-y-auto scrollbar-thin h-full bg-surface-container-lowest"
     >
-      {messages.length === 0 ? (
+      {/* Gatilho do Infinite Scroll */}
+      <div ref={observerTarget} className="h-4 w-full shrink-0" />
+      
+      {/* Loader visual ao buscar histórico */}
+      {isLoadingMore && (
+        <div className="flex justify-center items-center py-2 shrink-0">
+          <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      {messages.length === 0 && !isLoadingMore ? (
         <div className="flex-1 flex items-center justify-center text-text-secondary italic text-sm">
           Nenhuma mensagem nesta conversa ainda.
         </div>

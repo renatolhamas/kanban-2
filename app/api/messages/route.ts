@@ -23,19 +23,32 @@ export async function GET(request: NextRequest) {
     }
 
     // 2. Fetch messages
-    // Note: tenant isolation is handled via RLS or implicitly by conversation_id check
-    const { data, error } = await supabase
+    const cursor = searchParams.get('cursor');
+    const limit = parseInt(searchParams.get('limit') || '50', 10);
+
+    let query = supabase
       .from('messages')
       .select('*')
       .eq('conversation_id', conversationId)
-      .order('created_at', { ascending: true });
+      .eq('service', 'ttcx')
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (cursor) {
+      query = query.lt('created_at', cursor);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error('[API] Error fetching messages:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data || []);
+    // Return chronological order (oldest to newest)
+    const chronologicalData = data ? [...data].reverse() : [];
+
+    return NextResponse.json(chronologicalData);
   } catch (error) {
     console.error('[API] Unexpected error in messages route:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

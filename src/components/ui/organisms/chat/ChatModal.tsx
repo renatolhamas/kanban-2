@@ -9,7 +9,15 @@ import { MessageInput } from '@/components/ui/molecules/chat/MessageInput';
 import { useChat } from '@/context/ChatContext';
 
 export function ChatModal() {
-  const { isModalOpen, closeChat, messages } = useChat();
+  const { 
+    isModalOpen, 
+    closeChat, 
+    messages, 
+    activeConversationId, 
+    loadMoreMessages, 
+    isLoadingMore, 
+    hasMore 
+  } = useChat();
 
   // Placeholder contact info - Story 6.2 focuses on Send Message Logic
   // Contact details will be integrated in Story 6.3/6.4
@@ -83,7 +91,12 @@ export function ChatModal() {
 
         {/* Messages Section */}
         <div className="flex-1 overflow-hidden bg-surface-container-lowest">
-          <MessageList messages={messages} />
+          <MessageList 
+            messages={messages} 
+            onLoadMore={() => activeConversationId && loadMoreMessages(activeConversationId)}
+            isLoadingMore={isLoadingMore}
+            hasMore={hasMore}
+          />
         </div>
 
         {/* Input Section */}

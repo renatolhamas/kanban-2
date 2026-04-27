@@ -30,7 +30,6 @@ export async function GET(request: NextRequest) {
       .from('messages')
       .select('*')
       .eq('conversation_id', conversationId)
-      .eq('service', 'ttcx')
       .order('created_at', { ascending: false })
       .limit(limit);
 

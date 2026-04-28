@@ -99,16 +99,27 @@ export function useConversations(kanbanId: string) {
     fetchData()
 
     // 3. Realtime Subscriptions
-    // We listen to the 'messages' table as per Story 5.4.1 requirements
+    // We listen to multiple tables to trigger a debounced refetch when any board data changes
     const channel = supabase
-      .channel(`kanban-messages-realtime-${kanbanId}`)
+      .channel(`public:conversations:${tenantId}`)
       .on(
         'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages'
-        },
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        () => debouncedFetch()
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'conversations' },
+        () => debouncedFetch()
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'kanbans' },
+        () => debouncedFetch()
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'columns' },
         () => debouncedFetch()
       )
       .subscribe()

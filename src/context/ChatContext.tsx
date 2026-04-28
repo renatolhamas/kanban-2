@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, ReactNode, useCallback, use
 import { createClient } from '@/lib/supabase/client';
 import { apiSendMessage } from '@/lib/api/messages';
 import { useToast } from '@/components/ui/molecules/toast';
-import { useMessagePagination } from '@/hooks/useMessagePagination';
+import { useMessages } from '@/hooks/useMessages';
 
 export interface Message {
   id: string;
@@ -29,6 +29,8 @@ interface ChatContextValue {
   isLoadingMore: boolean;
   hasMore: boolean;
   loadMoreMessages: (conversationId: string) => Promise<void>;
+  realtimeStatus: 'connected' | 'reconnecting' | 'offline';
+  isRealtimeActive: boolean;
 }
 
 const ChatContext = createContext<ChatContextValue | undefined>(undefined);
@@ -44,8 +46,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     hasMore,
     loadInitialMessages,
     loadMoreMessages,
-    resetPagination
-  } = useMessagePagination();
+    resetPagination,
+    realtimeStatus,
+    isRealtimeActive
+  } = useMessages(activeConversationId);
 
   const [sendingCount, setSendingCount] = useState(0);
   const isSending = sendingCount > 0;
@@ -97,63 +101,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     processNext();
   }, [sendQueue, isProcessingQueue, showToastError, showToastSuccess]);
 
-  // Story 6.3: Real-time updates subscription (INSERT & UPDATE)
-  useEffect(() => {
-    if (!activeConversationId) return;
-
-    const supabase = createClient();
-    
-    const channel = supabase
-      .channel(`chat_realtime_${activeConversationId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Listen to INSERT, UPDATE, etc.
-          schema: 'public',
-          table: 'messages',
-          filter: `conversation_id=eq.${activeConversationId}`
-        },
-        (payload) => {
-          if (payload.eventType === 'INSERT') {
-            const newMsg = payload.new as Message;
-            console.log('[ChatContext] Real-time message received:', newMsg.id);
-            
-            setMessages(prev => {
-              // Avoid duplicates (e.g. if we just sent it optimistically)
-              const exists = prev.some(m => m.id === newMsg.id || (m.evolution_message_id && m.evolution_message_id === newMsg.evolution_message_id));
-              if (exists) return prev;
-
-              const updatedList = [...prev, newMsg];
-              // Sort to ensure correct order regardless of network latency
-              return updatedList.sort((a, b) => 
-                new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-              );
-            });
-          } 
-          else if (payload.eventType === 'UPDATE') {
-            const updatedMsg = payload.new as Message;
-            console.log('[ChatContext] Real-time status update received:', updatedMsg.id, updatedMsg.status);
-            
-            setMessages(prev => {
-              const updatedList = prev.map(msg => 
-                msg.id === updatedMsg.id 
-                  ? { ...msg, status: updatedMsg.status, status_updated_at: updatedMsg.status_updated_at } 
-                  : msg
-              );
-              // Re-sort just in case (though update usually doesn't change order)
-              return updatedList.sort((a, b) => 
-                new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-              );
-            });
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [activeConversationId]);
+  // Realtime updates (INSERT & UPDATE) are now handled internally by useMessages hook.
 
 
   const openChat = useCallback((conversationId: string) => {
@@ -205,7 +153,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     loadMessages: loadInitialMessages,
     isLoadingMore,
     hasMore,
-    loadMoreMessages
+    loadMoreMessages,
+    realtimeStatus,
+    isRealtimeActive
   };
 
   return (

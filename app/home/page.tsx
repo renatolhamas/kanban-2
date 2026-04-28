@@ -11,6 +11,7 @@ import { ConversationCard } from "@/components/ui/molecules/ConversationCard"
 import { KanbanSelector } from "@/components/ui/molecules/KanbanSelector"
 import { ChatProvider, useChat } from "@/context/ChatContext"
 import { ChatModal } from "@/components/ui/organisms/chat/ChatModal"
+import { ConnectionStatusIndicator } from "@/components/ui/ConnectionStatusIndicator"
 
 export default function HomePage() {
   return (
@@ -93,7 +94,10 @@ function HomeContent() {
     <div className="flex flex-col h-full bg-surface-container-lowest animate-in fade-in duration-500">
       <header className="p-6 border-b border-outline-variant bg-surface-container-lowest flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-display-sm font-bold text-text-primary leading-tight">Painel de Atendimento</h1>
+          <div className="flex items-center gap-3 mb-1">
+            <h1 className="text-display-sm font-bold text-text-primary leading-tight">Painel de Atendimento</h1>
+            <ConnectionStatusIndicator />
+          </div>
           <p className="text-body-md text-text-secondary">Visualize e organize suas conversas WhatsApp</p>
         </div>
         

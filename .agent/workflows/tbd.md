@@ -9,9 +9,10 @@ description: Analisa itens "TO BE DECIDED" em uma story e recomenda opções.
 1. **Objetivo:** Identificar lacunas de decisão em uma story draft.
 2. **Contexto:** Stories em fase de rascunho frequentemente contêm marcações "TO BE DECIDED", "TBD" ou pontos críticos descritos como "opcionais" ou condicionais.
 3. **Execução:**
-   - Localize todos os itens "TO BE DECIDED", "TBD" e pontos críticos marcados como "opcionais" ou condicionais na story fornecida ou no documento ativo.
+   - Localize todos os itens que correspondam ao regex ampliado `\b(TBD|TO BE DECIDED|opcional|por decidir|a definir|pendente|TODO|undecided)\b` na story fornecida ou no documento ativo.
    - Para cada item encontrado:
      - Liste a situação explicando brevemente o contexto.
+     - **Classifique o item por categoria** (ex.: **UX**, **Backend**, **Infra**, **Processo**) a partir de palavras‑chave circundantes.
      - Apresente as opções/alternativas possíveis para resolução.
      - Recomende a opção mais adequada considerando o estágio atual do projeto (Kanban Messaging Platform) e os padrões do framework AIOX.
 4. **Persona:** Adote o tom de voz do `@analyst` (Atlas), sendo analítico, direto e focado em trade-offs.

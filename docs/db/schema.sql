@@ -3,8 +3,9 @@
 > Status: ✅ Atualizado
 
 -- DDL Completo do Schema Public
--- 10 tabelas | 38 índices | 1 sequence | 4 funções | 27 migrações
+-- 10 tabelas | 37 índices | 1 sequence | 5 funções | 2 triggers | 6 extensões | 33 migrações
 -- Multi-tenant isolado por tenant_id via RLS
+-- Última atualização: 2026-04-28
 -- ============================================================================
 
 -- ============================================================================
@@ -100,7 +101,9 @@ CREATE TABLE IF NOT EXISTS messages (
     media_type text,
     created_at timestamp with time zone NOT NULL DEFAULT now(),
     evolution_message_id text UNIQUE,
-    sender_jid text
+    sender_jid text,
+    status text NOT NULL DEFAULT 'sent'::text,
+    status_updated_at timestamp with time zone NOT NULL DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS automatic_messages (
@@ -204,6 +207,25 @@ CREATE INDEX IF NOT EXISTS idx_conversations_active_by_tenant ON conversations U
 COMMENT ON COLUMN conversations.evolution_message_id IS 'ID da última mensagem recebida da Evolution GO (key.id) para idempotência de upsert';
 COMMENT ON COLUMN messages.evolution_message_id IS 'ID único da mensagem na Evolution GO (key.id) para evitar duplicidade';
 COMMENT ON COLUMN messages.sender_jid IS 'JID completo do remetente (ex: 5511999999999@s.whatsapp.net)';
+COMMENT ON COLUMN messages.status IS 'Status do envio: sent, error, delivered, read';
+COMMENT ON COLUMN messages.status_updated_at IS 'Timestamp atualizado quando status muda (via trigger)';
 COMMENT ON COLUMN tenants.qr_code IS 'WhatsApp QR code for pairing, received from Evo GO webhook QRCODE_UPDATED';
 COMMENT ON COLUMN tenants.qr_code_expires_at IS 'Timestamp when the QR code expires (typically 5 minutes after generation)';
 COMMENT ON COLUMN tenants.evolution_instance_token IS 'Instance-specific token for Evo GO API calls';
+COMMENT ON TABLE debug_auth_logs IS 'Internal audit table for JWT authentication hook events. RLS disabled as this is system-internal, not exposed via API.';
+
+-- ============================================================================
+-- TRIGGERS
+-- ============================================================================
+
+-- Trigger para atualizar status_updated_at quando status muda
+CREATE TRIGGER IF NOT EXISTS tr_messages_status_update
+BEFORE UPDATE ON messages
+FOR EACH ROW
+EXECUTE FUNCTION handle_message_status_update();
+
+-- Trigger para chamar webhook de polling quando mensagem é inserida
+CREATE TRIGGER IF NOT EXISTS tr_poll_message_status
+AFTER INSERT ON messages
+FOR EACH ROW
+EXECUTE FUNCTION trigger_poll_message_status();

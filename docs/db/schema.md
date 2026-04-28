@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-25 às 00:00 UTC
+> 📅 Extraído em: 2026-04-28
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Schema Documentation — Sistema Kanban + WhatsApp
+# Schema Documentation — Sistema Kanban + WhatsApp Integration
 
-**10 tabelas | 38 índices | 31 políticas RLS | 4 funções | 27 migrações | 0 triggers customizados | 1 event trigger**
+**10 tabelas | 37 índices | 31 políticas RLS | 5 funções | 33 migrações | 2 triggers | 6 extensões | 7.5K records**
 
 ## Estrutura Geral
 
@@ -210,9 +210,48 @@ tenants (raiz)
 
 ---
 
+## 📊 Messages Table Extended
+
+| Coluna | Tipo | Nullable | Padrão | Descrição |
+|--------|------|----------|--------|-----------|
+| `status` | text | NO | 'sent' | **NEW:** sent \| error \| delivered \| read |
+| `status_updated_at` | timestamptz | NO | now() | **NEW:** Atualizado por trigger quando status muda |
+
+**Triggers on messages:**
+- `tr_messages_status_update` (BEFORE UPDATE) — atualiza status_updated_at automaticamente
+- `tr_poll_message_status` (AFTER INSERT) — chama webhook para polling de status
+
 ## 🔴 Issues Encontrados
 
-1. **3 FKs sem índices cobrindo:** automatic_messages.scheduled_kanban_id, conversations.contact_id, conversations.column_id
-2. **13 índices nunca usados:** Candidatos para remoção após monitoramento
-3. **RLS desabilitado em failed_registrations:** Por design (pré-auth)
+1. **3 FKs sem índices cobrindo (INFO - performance):**
+   - automatic_messages.scheduled_kanban_id
+   - conversations.contact_id
+   - conversations.column_id
+   - Recomendação: Criar índices se queries frequentes
+
+2. **13 índices nunca usados (INFO - monitorar):**
+   - failed_registrations: 3 (created_at, email, resolved_at)
+   - tenants: 1 (subscription)
+   - kanbans: 1 (main_tenant)
+   - contacts: 1 (phone_tenant)
+   - conversations: 6 (last_message, wa_phone_tenant, evolution_id, active_by_tenant)
+   - messages: 1 (evolution_id)
+   
+   Monitorar por 2-3 semanas antes de remover.
+
+3. **RLS desabilitado em 2 tabelas (por design):**
+   - `failed_registrations` — tabela pré-autenticação
+   - `debug_auth_logs` — logs internos (RLS habilitado mas sem policies)
+
+4. **4 Functions com search_path mutable (WARN - security):**
+   - `upsert_contact`
+   - `handle_message_status_update`
+   - `trigger_poll_message_status`
+   - `get_conversations_with_last_message`
+   
+   Remediação: Adicionar `SET search_path = public;` nas definições
+
+5. **4 SECURITY DEFINER functions acessíveis (WARN):**
+   - Mesmas 4 acima podem ser executadas por `anon` e `authenticated` roles
+   - Recomendação: Revisar intencionalidade ou revocar access
 

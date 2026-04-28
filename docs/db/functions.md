@@ -1,10 +1,10 @@
-> 📅 Extraído em: 2026-04-25 às 00:00 UTC
+> 📅 Extraído em: 2026-04-28
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Custom Functions
+# Database Functions & Triggers
 
-**Total: 4 funções PL/pgSQL**
+**Total: 5 funções PL/pgSQL + 2 triggers | 6 extensões | Última migration: 2026-04-25**
 
 ---
 
@@ -161,12 +161,43 @@ Retornar todas as conversas ATIVAS de um kanban, enriquecidas com última mensag
 
 ---
 
-## Resumo
+## Summary (5 Functions)
 
-| Função | Tipo | Retorno | Propósito |
-|--------|------|---------|-----------|
-| `custom_access_token_hook()` | Auth Hook | jsonb | Enriquecer JWT |
-| `rls_auto_enable()` | Event Trigger | trigger | Auto-habilitar RLS |
-| `upsert_contact()` | RPC | uuid | Upsert idempotente |
-| `get_conversations_with_last_message()` | RPC | TABLE | Dashboard — conversas com última msg |
+| # | Função | Tipo | Return | Propósito |
+|---|--------|------|--------|-----------|
+| 1 | `custom_access_token_hook()` | Auth Hook | jsonb | JWT enrichment — injeta tenant_id + role |
+| 2 | `rls_auto_enable()` | Event Trigger | event_trigger | Auto-enable RLS em novas tabelas |
+| 3 | `upsert_contact()` | RPC | uuid | Upsert idempotente de contatos WhatsApp |
+| 4 | `get_conversations_with_last_message()` | RPC | TABLE | RPC — conversas com última msg + media |
+| 5 | `trigger_poll_message_status()` | Trigger Function | trigger | AFTER INSERT — chama webhook polling |
+
+## Triggers (2)
+
+| # | Trigger | Event | Table | Action |
+|---|---------|-------|-------|--------|
+| 1 | `tr_messages_status_update` | BEFORE UPDATE | messages | `EXECUTE FUNCTION handle_message_status_update()` |
+| 2 | `tr_poll_message_status` | AFTER INSERT | messages | `EXECUTE FUNCTION trigger_poll_message_status()` |
+
+---
+
+## Additional: Message Status Tracking
+
+**New in messages table (v2026-04-25):**
+- `status` column (sent \| error \| delivered \| read)
+- `status_updated_at` timestamp (auto-updated by trigger)
+- Triggers handle status transitions automatically
+
+---
+
+## Security & Performance Notes
+
+✅ **Good:**
+- JWT hook properly validates before returning
+- Idempotency via unique constraints
+- RLS auto-enable prevents accidental exposure
+
+⚠️ **Warnings (from Advisors):**
+- 4 functions have mutable search_path → add `SET search_path = public;`
+- 4 functions are SECURITY DEFINER accessible to anon/authenticated
+- RPC polling may timeout on high-volume (fallback is safe)
 

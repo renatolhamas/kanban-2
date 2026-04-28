@@ -1,16 +1,58 @@
-> 📅 Extraído em: 2026-04-25 às 00:00 UTC
+> 📅 Extraído em: 2026-04-28
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Triggers
+# Triggers & Event Triggers
 
-**Total: 0 triggers operacionais | 1 event trigger (rls_auto_enable)**
+**Total: 2 triggers operacionais + 1 event trigger (rls_auto_enable)**
 
 ---
 
-## Status Atual
+## Triggers on messages (2)
 
-Não há triggers customizados no schema `public`. 
+### 1. `tr_messages_status_update` (BEFORE UPDATE)
+
+**Event:** BEFORE UPDATE on messages  
+**Function:** handle_message_status_update()  
+**Purpose:** Auto-update `status_updated_at` when `status` changes
+
+```sql
+TRIGGER tr_messages_status_update
+BEFORE UPDATE ON messages
+FOR EACH ROW
+EXECUTE FUNCTION handle_message_status_update()
+```
+
+**Logic:**
+```sql
+IF OLD.status IS DISTINCT FROM NEW.status THEN
+  NEW.status_updated_at = now();
+END IF;
+RETURN NEW;
+```
+
+**Use Case:** Track quando mensagem foi marcada como delivered, read, error, etc.
+
+---
+
+### 2. `tr_poll_message_status` (AFTER INSERT)
+
+**Event:** AFTER INSERT on messages  
+**Function:** trigger_poll_message_status()  
+**Purpose:** Trigger webhook para polling de status de msg na Evolution GO
+
+```sql
+TRIGGER tr_poll_message_status
+AFTER INSERT ON messages
+FOR EACH ROW
+EXECUTE FUNCTION trigger_poll_message_status()
+```
+
+**Flow:**
+1. Lê settings: `app.supabase_project_ref`, `app.supabase_service_role_key`
+2. HTTP POST para `/functions/v1/poll-message-status`
+3. Body: `{ "record": {...} }`
+4. Se settings ausentes → retorna silenciosamente (SAFE FALLBACK) 
 
 ### Triggers Disponíveis via Extensões
 

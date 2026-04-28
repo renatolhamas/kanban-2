@@ -120,7 +120,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const sendMessage = async (text: string) => {
     if (!activeConversationId || !text.trim()) return;
 
-    const optimisticId = `opt-${Math.random().toString(36).substring(7)}`;
+    const optimisticId = crypto.randomUUID();
     const optimisticMessage: Message = {
       id: optimisticId,
       conversation_id: activeConversationId,

@@ -8,7 +8,7 @@ import { evolutionService } from '@/lib/services/evolution';
  */
 export async function POST(request: NextRequest) {
   try {
-    const { conversationId, text } = await request.json();
+    const { conversationId, text, id } = await request.json();
 
     if (!conversationId || !text) {
       return NextResponse.json({ error: 'Missing conversationId or text' }, { status: 400 });
@@ -61,14 +61,21 @@ export async function POST(request: NextRequest) {
     }
 
     // 6. Save message to DB first (Optimistic approach)
+    const messageInsertData: any = {
+      conversation_id: conversationId,
+      sender_type: 'agent',
+      content: text,
+      status: 'sending'
+    };
+    
+    // Use client-provided UUID to avoid realtime duplicate UI issues
+    if (id) {
+      messageInsertData.id = id;
+    }
+
     const { data: message, error: insertError } = await supabase
       .from('messages')
-      .insert({
-        conversation_id: conversationId,
-        sender_type: 'agent',
-        content: text,
-        status: 'sending'
-      })
+      .insert(messageInsertData)
       .select()
       .single();
 

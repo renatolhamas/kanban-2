@@ -5,6 +5,7 @@
 export interface SendMessagePayload {
   conversationId: string;
   text: string;
+  id?: string;
 }
 
 export interface SendMessageResponse {

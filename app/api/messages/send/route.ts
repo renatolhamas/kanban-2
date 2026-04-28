@@ -61,17 +61,20 @@ export async function POST(request: NextRequest) {
     }
 
     // 6. Save message to DB first (Optimistic approach)
-    const messageInsertData: any = {
+    interface MessageInsert {
+      id?: string;
+      conversation_id: string;
+      sender_type: string;
+      content: string;
+      status: string;
+    }
+    const messageInsertData: MessageInsert = {
       conversation_id: conversationId,
       sender_type: 'agent',
       content: text,
-      status: 'sending'
+      status: 'sending',
+      ...(id && { id }),
     };
-    
-    // Use client-provided UUID to avoid realtime duplicate UI issues
-    if (id) {
-      messageInsertData.id = id;
-    }
 
     const { data: message, error: insertError } = await supabase
       .from('messages')

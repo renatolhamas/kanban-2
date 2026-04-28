@@ -48,8 +48,8 @@ function HomeContent() {
     }
   }, [kanbans, selectedKanbanId])
 
-  // Hook para buscar as conversas do quadro selecionado (kanbanId é o único parâmetro necessário agora)
-  const { conversations, columns, isLoading: conversationsLoading, error } = useConversations(
+  // Hook para buscar as conversas do quadro selecionado
+  const { conversations, columns, isLoading: conversationsLoading, error, realtimeStatus } = useConversations(
     selectedKanbanId || ""
   )
 
@@ -96,7 +96,7 @@ function HomeContent() {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-display-sm font-bold text-text-primary leading-tight">Painel de Atendimento</h1>
-            <ConnectionStatusIndicator />
+            <ConnectionStatusIndicator status={realtimeStatus} />
           </div>
           <p className="text-body-md text-text-secondary">Visualize e organize suas conversas WhatsApp</p>
         </div>

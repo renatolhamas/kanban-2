@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAuth } from './useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { debounce } from '@/lib/utils'
+import { useRealtimeStatus } from './useRealtimeStatus'
 
 export interface Conversation {
   id: string
@@ -30,15 +31,17 @@ export function useConversations(kanbanId: string) {
   const [columns, setColumns] = useState<KanbanColumnData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
+  
+  const { status: realtimeStatus, updateStatus } = useRealtimeStatus()
 
   const supabase = createClient()
   const tenantId = user?.app_metadata?.tenant_id
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (background = false) => {
     if (!kanbanId || !tenantId || !isAuthenticated) return
 
     try {
-      setIsLoading(true)
+      if (!background) setIsLoading(true)
 
       // 1. Fetch Columns via Supabase SDK
       const { data: colsData, error: colsError } = await supabase
@@ -51,7 +54,7 @@ export function useConversations(kanbanId: string) {
       setColumns(colsData || [])
 
       // 2. Fetch Conversations via internal API (Optimized SQL Subquery)
-      const response = await fetch(`/api/conversations?kanbanId=${kanbanId}`)
+      const response = await fetch(`/api/conversations?kanbanId=${kanbanId}&_t=${Date.now()}`)
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to fetch conversations')
@@ -79,13 +82,14 @@ export function useConversations(kanbanId: string) {
       setError(err)
       console.error('Error fetching conversations:', err)
     } finally {
-      setIsLoading(false)
+      if (!background) setIsLoading(false)
     }
   }, [kanbanId, tenantId, isAuthenticated, supabase])
 
   // Debounced fetch to avoid multiple rapid reloads during busy periods
+  // We pass 'true' to fetchData so it updates in the background without triggering the loading spinner
   const debouncedFetch = useMemo(
-    () => debounce(fetchData, 500),
+    () => debounce(() => fetchData(true), 500),
     [fetchData]
   )
 
@@ -105,29 +109,48 @@ export function useConversations(kanbanId: string) {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'messages' },
-        () => debouncedFetch()
+        (payload) => {
+          console.log('[useConversations] Received message INSERT', payload)
+          debouncedFetch()
+        }
       )
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'conversations' },
-        () => debouncedFetch()
+        (payload) => {
+          console.log('[useConversations] Received conversation UPDATE', payload)
+          debouncedFetch()
+        }
       )
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'kanbans' },
-        () => debouncedFetch()
+        (payload) => {
+          console.log('[useConversations] Received kanban UPDATE', payload)
+          debouncedFetch()
+        }
       )
       .on(
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'columns' },
-        () => debouncedFetch()
+        (payload) => {
+          console.log('[useConversations] Received column UPDATE', payload)
+          debouncedFetch()
+        }
       )
-      .subscribe()
+      .subscribe((status, err) => {
+        if (status === 'SUBSCRIBED') {
+          updateStatus('connected')
+        } else if (status === 'TIMED_OUT' || status === 'CHANNEL_ERROR') {
+          console.error('[useConversations] Realtime channel error:', err)
+          updateStatus('offline')
+        }
+      })
 
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [kanbanId, tenantId, isAuthenticated, fetchData, debouncedFetch, supabase])
+  }, [kanbanId, tenantId, isAuthenticated, fetchData, debouncedFetch, supabase, updateStatus])
 
-  return { conversations, columns, isLoading, error, refetch: fetchData }
+  return { conversations, columns, isLoading, error, refetch: fetchData, realtimeStatus }
 }

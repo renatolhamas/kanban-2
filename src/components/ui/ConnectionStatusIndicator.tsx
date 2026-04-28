@@ -1,9 +1,15 @@
 import React from 'react';
 import { Wifi, WifiOff, RefreshCw } from 'lucide-react';
 import { useChat } from '@/context/ChatContext';
+import { RealtimeStatus } from '@/hooks/useRealtimeStatus';
 
-export function ConnectionStatusIndicator() {
-  const { realtimeStatus } = useChat();
+interface Props {
+  status?: RealtimeStatus;
+}
+
+export function ConnectionStatusIndicator({ status }: Props) {
+  const chat = useChat();
+  const realtimeStatus = status || chat.realtimeStatus;
 
   if (realtimeStatus === 'connected') {
     return (

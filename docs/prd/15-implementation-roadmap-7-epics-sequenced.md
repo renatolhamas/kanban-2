@@ -112,7 +112,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 - ✅ Story 6.3: Message delivery validation — Status da mensagem (Enviado/Entregue/Lido).
 - ✅ Story 6.4: Message history pagination — Carregamento sob demanda de mensagens antigas.
 - ✅ Story 6.5: Real-time subscriptions (WebSocket) — Atualização instantânea sem refresh.
-- ⬜ Story 6.6: Kanban/column selector in chat — Mudar status do contato dentro do chat.
+- ✅ Story 6.6: Kanban/column selector in chat — Mudar status do contato dentro do chat.
 - ⬜ Story 6.7: Archive conversation — Remover da visualização ativa.
 - ⬜ Story 6.8: Loading + error states — Refinamento de UX e estados de falha.
 

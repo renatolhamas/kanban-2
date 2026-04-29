@@ -13,10 +13,10 @@ describe('MessageInput', () => {
   
   beforeEach(() => {
     vi.clearAllMocks();
-    (useChat as any).mockReturnValue({
+    vi.mocked(useChat).mockReturnValue({
       sendMessage: mockSendMessage,
       isSending: false,
-    });
+    } as any);
   });
 
   it('renders input and send button', () => {

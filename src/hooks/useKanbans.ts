@@ -30,9 +30,10 @@ export function useKanbans() {
 
       if (fetchError) throw fetchError
       setKanbans(data || [])
-    } catch (err: any) {
-      setError(err)
-      console.error('Error fetching kanbans:', err)
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      setError(error)
+      console.error('Error fetching kanbans:', error)
     } finally {
       setIsLoading(false)
     }

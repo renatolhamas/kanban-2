@@ -70,7 +70,7 @@ export function MessageList({ messages, onLoadMore, isLoadingMore = false, hasMo
         hour: '2-digit',
         minute: '2-digit',
       }).format(new Date(dateStr));
-    } catch (e) {
+    } catch (_e) {
       return '--:--';
     }
   };

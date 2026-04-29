@@ -1,4 +1,4 @@
-﻿import { jwtVerify, SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 import type { JWTPayload } from "@/lib/types";
 
 /**
@@ -56,7 +56,7 @@ export async function verifyJWT(token: string): Promise<JWTPayload | null> {
       tenant_id: payload.app_metadata?.tenant_id || payload.tenant_id,
       role: payload.app_metadata?.role || payload.role,
     } as JWTPayload;
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }

@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { ChatModal } from '@/components/ui/organisms/chat/ChatModal';
 import { ChatProvider, useChat } from '@/context/ChatContext';
 import { ToastProvider } from '@/components/ui/molecules/toast';
-import { useAuth } from '@/hooks/useAuth';
 
 // Mock useAuth
 vi.mock('@/hooks/useAuth', () => ({

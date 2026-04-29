@@ -62,7 +62,7 @@ export const evolutionService = {
         
         try {
           errorData = JSON.parse(rawBody);
-        } catch (e) {
+        } catch (_e) {
           errorData = { message: rawBody || `HTTP Error ${response.status}` };
         }
         

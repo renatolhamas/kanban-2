@@ -1,12 +1,10 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { apiSendMessage } from '@/lib/api/messages';
 import { useToast } from '@/components/ui/molecules/toast';
 import { useMessages } from '@/hooks/useMessages';
 import { useConversationDetails, EnrichedConversation } from '@/hooks/useConversationDetails';
-import { Conversation } from '@/hooks/useConversations';
 
 export interface Message {
   id: string;

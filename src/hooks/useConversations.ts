@@ -62,7 +62,7 @@ export function useConversations(kanbanId: string) {
       const convData = await response.json()
 
       // Transform data (already optimized by the API)
-      const transformed: Conversation[] = (convData || []).map((c: any) => ({
+      const transformed: Conversation[] = (convData || []).map((c: Record<string, any>) => ({
         id: c.id,
         wa_phone: c.wa_phone,
         status: c.status,
@@ -78,9 +78,10 @@ export function useConversations(kanbanId: string) {
       }))
 
       setConversations(transformed)
-    } catch (err: any) {
-      setError(err)
-      console.error('Error fetching conversations:', err)
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      setError(error)
+      console.error('Error fetching conversations:', error)
     } finally {
       if (!background) setIsLoading(false)
     }
@@ -148,6 +149,7 @@ export function useConversations(kanbanId: string) {
       })
 
     return () => {
+      channel.unsubscribe()
       supabase.removeChannel(channel)
     }
   }, [kanbanId, tenantId, isAuthenticated, fetchData, debouncedFetch, supabase, updateStatus])

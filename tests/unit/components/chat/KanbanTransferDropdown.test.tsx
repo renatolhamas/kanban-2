@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { KanbanTransferDropdown } from '@/components/ui/organisms/chat/KanbanTransferDropdown';
 import { useChat } from '@/context/ChatContext';
@@ -39,14 +39,18 @@ describe('KanbanTransferDropdown', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useChat as any).mockReturnValue({
-      activeConversation: mockActiveConversation,
+    vi.mocked(useChat).mockReturnValue({
+      activeConversation: mockActiveConversation as any,
       isLoadingConversation: false,
-    });
-    (useConversations as any).mockReturnValue({
+    } as any);
+    vi.mocked(useConversations).mockReturnValue({
       columns: mockColumns,
       isLoading: false,
-    });
+      conversations: [],
+      error: null,
+      refetch: vi.fn(),
+      realtimeStatus: 'connected'
+    } as any);
   });
 
   it('renders correctly with current column selected', () => {
@@ -67,10 +71,10 @@ describe('KanbanTransferDropdown', () => {
   });
 
   it('triggers API call when column is changed', async () => {
-    (global.fetch as any).mockResolvedValue({
+    vi.mocked(global.fetch).mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ success: true }),
-    });
+    } as Response);
 
     render(
       <ToastProvider>
@@ -91,7 +95,7 @@ describe('KanbanTransferDropdown', () => {
   });
 
   it('shows loading state while updating', async () => {
-    (global.fetch as any).mockReturnValue(new Promise(() => {})); // Never resolves
+    vi.mocked(global.fetch).mockReturnValue(new Promise(() => {})); // Never resolves
 
     render(
       <ToastProvider>

@@ -75,7 +75,7 @@ describe('ThemeToggle', () => {
   });
 
   it('displays loading state during hydration', () => {
-    const { rerender } = render(<ThemeToggle />);
+    render(<ThemeToggle />);
 
     // Component should render without error
     expect(screen.getByRole('button')).toBeInTheDocument();

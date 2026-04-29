@@ -49,9 +49,10 @@ export function useConversationDetails(conversationId: string | null) {
 
         if (fetchError) throw fetchError;
         setConversation(data as unknown as EnrichedConversation);
-      } catch (err: any) {
-        console.error('[useConversationDetails] Error fetching conversation:', err);
-        setError(err);
+      } catch (err: unknown) {
+        const error = err instanceof Error ? err : new Error('Unknown error');
+        console.error('[useConversationDetails] Error fetching conversation:', error);
+        setError(error);
       } finally {
         setIsLoading(false);
       }

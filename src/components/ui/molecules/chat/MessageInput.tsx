@@ -23,7 +23,7 @@ export function MessageInput() {
     try {
       await sendMessage(messageText);
       // No need to clear here as it's already done
-    } catch (err) {
+    } catch (err: unknown) {
       // Restore text on error so user doesn't lose it
       setText(prev => prev ? `${messageText}\n${prev}` : messageText);
       console.error('Failed to send message in UI:', err);

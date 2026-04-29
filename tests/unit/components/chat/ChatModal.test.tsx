@@ -3,6 +3,25 @@ import { describe, it, expect, vi } from 'vitest';
 import { ChatModal } from '@/components/ui/organisms/chat/ChatModal';
 import { ChatProvider, useChat } from '@/context/ChatContext';
 import { ToastProvider } from '@/components/ui/molecules/toast';
+import { useAuth } from '@/hooks/useAuth';
+
+// Mock useAuth
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: 'user-123', app_metadata: { tenant_id: 'tenant-123' } },
+    isAuthenticated: true,
+  })),
+}));
+
+// Mock useConversations used by KanbanTransferDropdown
+vi.mock('@/hooks/useConversations', () => ({
+  useConversations: vi.fn(() => ({
+    columns: [{ id: 'col-1', name: 'Column 1' }],
+    isLoading: false,
+    error: null,
+    realtimeStatus: 'connected',
+  })),
+}));
 
 // Mock Supabase client to avoid env var issues in CI
 vi.mock('@/lib/supabase/client', () => ({

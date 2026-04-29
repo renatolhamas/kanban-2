@@ -5,6 +5,8 @@ import { createClient } from '@/lib/supabase/client';
 import { apiSendMessage } from '@/lib/api/messages';
 import { useToast } from '@/components/ui/molecules/toast';
 import { useMessages } from '@/hooks/useMessages';
+import { useConversationDetails, EnrichedConversation } from '@/hooks/useConversationDetails';
+import { Conversation } from '@/hooks/useConversations';
 
 export interface Message {
   id: string;
@@ -19,6 +21,7 @@ export interface Message {
 
 interface ChatContextValue {
   activeConversationId: string | null;
+  activeConversation: EnrichedConversation | null;
   isModalOpen: boolean;
   messages: Message[];
   isSending: boolean;
@@ -31,6 +34,7 @@ interface ChatContextValue {
   loadMoreMessages: (conversationId: string) => Promise<void>;
   realtimeStatus: 'connected' | 'reconnecting' | 'offline';
   isRealtimeActive: boolean;
+  isLoadingConversation: boolean;
 }
 
 const ChatContext = createContext<ChatContextValue | undefined>(undefined);
@@ -50,6 +54,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     realtimeStatus,
     isRealtimeActive
   } = useMessages(activeConversationId);
+
+  const {
+    conversation: activeConversation,
+    isLoading: isLoadingConversation
+  } = useConversationDetails(activeConversationId);
 
   const [sendingCount, setSendingCount] = useState(0);
   const isSending = sendingCount > 0;
@@ -144,6 +153,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const value: ChatContextValue = {
     activeConversationId,
+    activeConversation,
     isModalOpen,
     messages,
     isSending,
@@ -155,7 +165,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     hasMore,
     loadMoreMessages,
     realtimeStatus,
-    isRealtimeActive
+    isRealtimeActive,
+    isLoadingConversation
   };
 
   return (

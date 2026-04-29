@@ -7,11 +7,15 @@ interface Toast {
   id: string;
   message: string;
   type: 'success' | 'error' | 'info' | 'warning';
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 interface ToastContextType {
   toasts: Toast[];
-  addToast: (message: string, type: Toast['type']) => void;
+  addToast: (message: string, type: Toast['type'], action?: Toast['action']) => void;
   removeToast: (id: string) => void;
 }
 
@@ -20,14 +24,15 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = (message: string, type: Toast['type']) => {
+  const addToast = (message: string, type: Toast['type'], action?: Toast['action']) => {
     const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, message, type }]);
+    setToasts((prev) => [...prev, { id, message, type, action }]);
     
-    // Auto-remove after 3 seconds
+    // Auto-remove after 3 seconds (unless it has an action, maybe keep longer?)
+    const duration = action ? 6000 : 3000;
     setTimeout(() => {
       removeToast(id);
-    }, 3000);
+    }, duration);
   };
 
   const removeToast = (id: string) => {
@@ -49,10 +54,10 @@ export function useToast() {
   }
   return {
     addToast: context.addToast,
-    success: (message: string) => context.addToast(message, 'success'),
-    error: (message: string) => context.addToast(message, 'error'),
-    info: (message: string) => context.addToast(message, 'info'),
-    warning: (message: string) => context.addToast(message, 'warning'),
+    success: (message: string, action?: Toast['action']) => context.addToast(message, 'success', action),
+    error: (message: string, action?: Toast['action']) => context.addToast(message, 'error', action),
+    info: (message: string, action?: Toast['action']) => context.addToast(message, 'info', action),
+    warning: (message: string, action?: Toast['action']) => context.addToast(message, 'warning', action),
   };
 }
 
@@ -69,7 +74,7 @@ function ToastList() {
   );
 }
 
-function ToastItem({ message, type, onRemove }: Toast & { onRemove: () => void }) {
+function ToastItem({ message, type, action, onRemove }: Toast & { onRemove: () => void }) {
   const bgColors = {
     success: 'bg-token-success',
     error: 'bg-token-danger',
@@ -80,6 +85,17 @@ function ToastItem({ message, type, onRemove }: Toast & { onRemove: () => void }
   return (
     <div className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-ambient text-white min-w-[280px] animate-in fade-in slide-in-from-right-5 ${bgColors[type]}`}>
       <span className="flex-1 font-medium">{message}</span>
+      {action && (
+        <button
+          onClick={() => {
+            action.onClick();
+            onRemove();
+          }}
+          className="px-2 py-1 bg-white/20 hover:bg-white/30 rounded text-xs font-bold transition-colors"
+        >
+          {action.label}
+        </button>
+      )}
       <button onClick={onRemove} className="hover:opacity-70 transition-opacity">
         <X size={18} />
       </button>

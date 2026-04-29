@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/atoms/button';
 import { MessageList } from '@/components/ui/molecules/chat/MessageList';
 import { MessageInput } from '@/components/ui/molecules/chat/MessageInput';
 import { useChat } from '@/context/ChatContext';
+import { KanbanTransferDropdown } from './KanbanTransferDropdown';
 
 export function ChatModal() {
   const { 
@@ -50,15 +51,7 @@ export function ChatModal() {
           </div>
 
           <div className="flex items-center gap-1">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="text-text-secondary disabled:opacity-50"
-              disabled
-              title="Transferir Conversa (em breve)"
-            >
-              <ArrowRightLeft size={20} />
-            </Button>
+            <KanbanTransferDropdown />
             <Button 
               variant="ghost" 
               size="icon" 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"
 import { useConversations } from "@/hooks/useConversations"
@@ -12,6 +12,8 @@ import { KanbanSelector } from "@/components/ui/molecules/KanbanSelector"
 import { ChatProvider, useChat } from "@/context/ChatContext"
 import { ChatModal } from "@/components/ui/organisms/chat/ChatModal"
 import { ConnectionStatusIndicator } from "@/components/ui/ConnectionStatusIndicator"
+import { DragStartEvent, DragEndEvent } from "@dnd-kit/core"
+import { useToast } from "@/components/ui/molecules/toast"
 
 export default function HomePage() {
   return (
@@ -25,7 +27,9 @@ function HomeContent() {
   const router = useRouter()
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const [selectedKanbanId, setSelectedKanbanId] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<string | null>(null)
   const { openChat } = useChat()
+  const toast = useToast()
   
   // tenantId extraído do metadata do usuário
   const tenantId = user?.app_metadata?.tenant_id
@@ -37,10 +41,10 @@ function HomeContent() {
     }
   }, [authLoading, isAuthenticated, router])
 
-  // Hook para buscar todos os quadros do tenant (obté m o tenantId internamente, mas aqui usamos para controle de exibição)
+  // Hook para buscar todos os quadros do tenant
   const { kanbans, isLoading: kanbansLoading } = useKanbans()
 
-  // Efeito para definir o quadro inicial (Main ou o primeiro da lista)
+  // Efeito para definir o quadro inicial
   useEffect(() => {
     if (kanbans.length > 0 && !selectedKanbanId) {
       const mainKanban = kanbans.find(k => k.is_main) || kanbans[0]
@@ -49,9 +53,73 @@ function HomeContent() {
   }, [kanbans, selectedKanbanId])
 
   // Hook para buscar as conversas do quadro selecionado
-  const { conversations, columns, isLoading: conversationsLoading, error, realtimeStatus } = useConversations(
-    selectedKanbanId || ""
+  const { 
+    conversations, 
+    columns, 
+    isLoading: conversationsLoading, 
+    error, 
+    realtimeStatus,
+    optimisticUpdate,
+    clearPendingUpdate,
+    refetch
+  } = useConversations(selectedKanbanId || "")
+
+  const activeConversation = useMemo(
+    () => conversations.find((c) => c.id === activeId),
+    [activeId, conversations]
   )
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string)
+  }
+
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event
+    setActiveId(null)
+
+    if (!over) return
+
+    const conversationId = active.id as string
+    const newColumnId = over.id as string
+    const conversation = conversations.find((c) => c.id === conversationId)
+
+    if (!conversation || conversation.column_id === newColumnId) return
+
+    // [Dex] Store original state for rollback
+    const originalColumnId = conversation.column_id
+
+    // [Dex] Step 1: Optimistic Update
+    optimisticUpdate(conversationId, newColumnId)
+    const columnName = columns.find(c => c.id === newColumnId)?.name || "nova coluna"
+    toast.success(`Movendo para ${columnName}...`)
+
+    try {
+      // [Dex] Step 2: API Call
+      const response = await fetch("/api/conversations/update-column", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation_id: conversationId,
+          column_id: newColumnId,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Falha ao atualizar coluna no servidor")
+      }
+
+      // [Dex] Step 3: Success
+      toast.success(`Movido para ${columnName}`)
+    } catch (err) {
+      // [Dex] Step 4: Rollback on Error
+      console.error("[Dex] Drag and drop failed:", err)
+      optimisticUpdate(conversationId, originalColumnId)
+      toast.error("Erro ao mover conversa. Revertendo...")
+    } finally {
+      // [Dex] Step 5: Cleanup guard after a small delay to allow real-time to catch up
+      setTimeout(() => clearPendingUpdate(conversationId), 1000)
+    }
+  }
 
   const isGlobalLoading = authLoading || kanbansLoading || (selectedKanbanId && conversationsLoading)
 
@@ -123,7 +191,24 @@ function HomeContent() {
 
       <div className="flex-1 overflow-hidden relative">
         <h2 className="sr-only">Colunas do Quadro Kanban</h2>
-        <KanbanBoard>
+        <KanbanBoard
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          activeOverlay={activeConversation ? (
+            <ConversationCard
+              id={activeConversation.id}
+              name={activeConversation.contact_name || activeConversation.wa_phone}
+              phone={activeConversation.wa_phone}
+              lastMessage={activeConversation.last_message_content}
+              senderType={activeConversation.last_sender_type}
+              mediaUrl={activeConversation.last_media_url}
+              mediaType={activeConversation.last_media_type}
+              timestamp={activeConversation.last_message_at}
+              unreadCount={activeConversation.unread_count}
+              isOverlay
+            />
+          ) : null}
+        >
           {columns.length === 0 && !conversationsLoading && (
             <div className="flex flex-1 items-center justify-center h-full">
               <div className="text-center p-8">
@@ -135,6 +220,7 @@ function HomeContent() {
           {columns.map((column) => (
             <KanbanColumn 
               key={column.id} 
+              id={column.id}
               title={column.name}
               count={conversations.filter(c => c.column_id === column.id).length}
             >
@@ -143,6 +229,7 @@ function HomeContent() {
                 .map((conv) => (
                   <ConversationCard
                     key={conv.id}
+                    id={conv.id}
                     name={conv.contact_name || conv.wa_phone}
                     phone={conv.wa_phone}
                     lastMessage={conv.last_message_content}

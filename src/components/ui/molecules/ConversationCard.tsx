@@ -4,8 +4,11 @@ import { Card } from "@/components/ui/molecules/card"
 import { Badge } from "@/components/ui/molecules/badge"
 import { formatRelativeTime, getMediaLabel, truncate } from "@/lib/format-utils"
 import { Image as ImageIcon, Video, Mic, FileText } from "lucide-react"
+import { useDraggable } from "@dnd-kit/core"
+import { CSS } from "@dnd-kit/utilities"
 
 export interface ConversationCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  id: string
   name: string
   phone: string
   lastMessage: string | null
@@ -16,10 +19,12 @@ export interface ConversationCardProps extends React.HTMLAttributes<HTMLDivEleme
   unreadCount?: number
   isSelected?: boolean
   isGroup?: boolean
+  isOverlay?: boolean
 }
 
 export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCardProps>(
   ({ 
+    id,
     name, 
     phone, 
     lastMessage, 
@@ -30,10 +35,17 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
     unreadCount, 
     isSelected, 
     isGroup, 
+    isOverlay,
     className, 
     onClick, 
+    style: styleProp,
     ...props 
   }, ref) => {
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+      id: id,
+      disabled: isOverlay,
+    })
+
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
@@ -57,26 +69,46 @@ export const ConversationCard = React.forwardRef<HTMLDivElement, ConversationCar
       }
     }, [mediaType]);
 
+    const style: React.CSSProperties = {
+      ...styleProp,
+      transform: CSS.Translate.toString(transform),
+      opacity: isDragging ? 0.3 : undefined,
+    }
+
+    const overlayStyles: React.CSSProperties = isOverlay ? {
+      opacity: 0.8,
+      cursor: "grabbing",
+      zIndex: 1000,
+    } : {}
+
     return (
       <Card
-        ref={ref}
+        ref={(node) => {
+          setNodeRef(node)
+          if (typeof ref === 'function') ref(node)
+          else if (ref) ref.current = node
+        }}
+        style={{ ...style, ...overlayStyles }}
+        className={cn(
+          "cursor-pointer transition-all duration-200 border-l-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+          "p-4 flex flex-col space-y-2 select-none", 
+          isSelected
+            ? "bg-surface-container-low border-primary-container shadow-active scale-[1.02]"
+            : "hover:bg-surface-container-lowest border-transparent hover:border-outline-variant",
+          isOverlay && "cursor-grabbing ring-2 ring-primary border-primary shadow-ambient",
+          className
+        )}
+        {...attributes}
+        {...listeners}
+        {...props}
         role="button"
         tabIndex={0}
         aria-label={`Conversa com ${name}. Telefone: ${phone}. Última mensagem: ${contentPreview}. ${timestamp}`}
         aria-pressed={isSelected}
         onClick={onClick}
         onKeyDown={handleKeyDown}
-        className={cn(
-          "cursor-pointer transition-all duration-200 border-l-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-          "p-4 flex flex-col space-y-2", // Standardized padding
-          isSelected
-            ? "bg-surface-container-low border-primary-container shadow-active scale-[1.02]"
-            : "hover:bg-surface-container-lowest border-transparent hover:border-outline-variant",
-          className
-        )}
-        {...props}
       >
-        <div className="flex flex-col space-y-1.5">
+        <div className="flex flex-col space-y-1.5 pointer-events-none">
           {/* Header: Name and Time */}
           <div className="flex justify-between items-center gap-2">
             <span className="flex items-center gap-1.5 truncate flex-1">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useAuth } from './useAuth'
 import { createClient } from '@/lib/supabase/client'
 import { debounce } from '@/lib/utils'
@@ -37,6 +37,21 @@ export function useConversations(kanbanId: string) {
   const supabase = createClient()
   const tenantId = user?.app_metadata?.tenant_id
 
+  // [Dex] Track IDs currently being updated to prevent flickering from real-time sync
+  // Using ref to avoid re-subscriptions in useEffect
+  const pendingIdsRef = useRef<Set<string>>(new Set())
+
+  const optimisticUpdate = useCallback((conversationId: string, newColumnId: string) => {
+    pendingIdsRef.current.add(conversationId)
+    setConversations(prev => prev.map(c => 
+      c.id === conversationId ? { ...c, column_id: newColumnId } : c
+    ))
+  }, [])
+
+  const clearPendingUpdate = useCallback((conversationId: string) => {
+    pendingIdsRef.current.delete(conversationId)
+  }, [])
+
   const fetchData = useCallback(async (background = false) => {
     if (!kanbanId || !tenantId || !isAuthenticated) return
 
@@ -61,8 +76,22 @@ export function useConversations(kanbanId: string) {
       }
       const convData = await response.json()
 
+      interface RawConversation {
+        id: string;
+        wa_phone: string;
+        status: string;
+        last_message_at: string;
+        column_id: string;
+        contact_name?: string;
+        last_message_content?: string;
+        last_sender_type?: string;
+        last_media_url?: string;
+        last_media_type?: string;
+        unread_count?: number;
+      }
+
       // Transform data (already optimized by the API)
-      const transformed: Conversation[] = (convData || []).map((c: Record<string, any>) => ({
+      const transformed: Conversation[] = (convData || []).map((c: RawConversation) => ({
         id: c.id,
         wa_phone: c.wa_phone,
         status: c.status,
@@ -88,7 +117,6 @@ export function useConversations(kanbanId: string) {
   }, [kanbanId, tenantId, isAuthenticated, supabase])
 
   // Debounced fetch to avoid multiple rapid reloads during busy periods
-  // We pass 'true' to fetchData so it updates in the background without triggering the loading spinner
   const debouncedFetch = useMemo(
     () => debounce(() => fetchData(true), 500),
     [fetchData]
@@ -104,7 +132,6 @@ export function useConversations(kanbanId: string) {
     fetchData()
 
     // 3. Realtime Subscriptions
-    // We listen to multiple tables to trigger a debounced refetch when any board data changes
     const channel = supabase
       .channel(`conversations-board-${kanbanId}-${Math.random().toString(36).slice(2, 7)}`)
       .on(
@@ -119,6 +146,11 @@ export function useConversations(kanbanId: string) {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'conversations' },
         (payload) => {
+          // [Dex] Ignore update if the conversation is in pending status (avoid flickering)
+          if (pendingIdsRef.current.has(payload.new.id)) {
+            console.log('[useConversations] Ignoring update for pending ID', payload.new.id)
+            return
+          }
           console.log('[useConversations] Received conversation UPDATE', payload)
           debouncedFetch()
         }
@@ -154,5 +186,14 @@ export function useConversations(kanbanId: string) {
     }
   }, [kanbanId, tenantId, isAuthenticated, fetchData, debouncedFetch, supabase, updateStatus])
 
-  return { conversations, columns, isLoading, error, refetch: fetchData, realtimeStatus }
+  return { 
+    conversations, 
+    columns, 
+    isLoading, 
+    error, 
+    refetch: fetchData, 
+    realtimeStatus,
+    optimisticUpdate, // [Dex] Exposed for Story 4.3
+    clearPendingUpdate // [Dex] Exposed for Story 4.3
+  }
 }

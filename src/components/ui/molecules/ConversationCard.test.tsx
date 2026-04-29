@@ -5,6 +5,7 @@ import { vi } from 'vitest'
 import { ConversationCard } from './ConversationCard'
 
 const defaultProps = {
+  id: 'conv-123',
   name: 'João Silva',
   phone: '5511999999999',
   lastMessage: 'Olá, tudo bem?',

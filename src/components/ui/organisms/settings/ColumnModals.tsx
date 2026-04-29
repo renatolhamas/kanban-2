@@ -215,7 +215,7 @@ export function DeleteColumnConfirm({
             Cancelar
           </Button>
           <Button
-            variant="error"
+            variant="destructive"
             loading={isLoading}
             onClick={() => onConfirm(column.id)}
           >

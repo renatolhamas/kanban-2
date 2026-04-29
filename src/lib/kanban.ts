@@ -6,34 +6,40 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  */
 const DEFAULT_COLUMNS = [
   { name: "Novo", order_position: 1 },
-  { name: "Qualificado", order_position: 2 },
-  { name: "Em Negociação", order_position: 3 },
-  { name: "Fechado", order_position: 4 },
+  { name: "Em Andamento", order_position: 2 },
+  { name: "Resolvido", order_position: 3 },
 ];
 
 /**
- * Create default kanban "Main" with 4 standard columns
- * Atomic operation: if any part fails, nothing is created
- *
- * @param supabase - Supabase client instance
- * @param tenantId - Tenant UUID to associate kanban with
- * @returns kanban_id if successful
- * @throws Error if kanban or column creation fails
+ * Create default kanban "Main"
  */
 export async function createDefaultKanban(
   supabase: SupabaseClient,
   tenantId: string,
 ): Promise<string> {
+  return createKanbanWithColumns(supabase, tenantId, "Main", true, 1);
+}
+
+/**
+ * Create a new kanban with default columns
+ * Atomic operation with manual cleanup on failure
+ */
+export async function createKanbanWithColumns(
+  supabase: SupabaseClient,
+  tenantId: string,
+  name: string,
+  isMain: boolean = false,
+  orderPosition: number = 0
+): Promise<string> {
   try {
-    // Create kanban "Main" with is_main=true and order_position=1
     const { data: kanbanData, error: kanbanError } = await supabase
       .from("kanbans")
       .insert([
         {
           tenant_id: tenantId,
-          name: "Main",
-          is_main: true,
-          order_position: 1,
+          name: name,
+          is_main: isMain,
+          order_position: orderPosition,
         },
       ])
       .select("id")
@@ -48,7 +54,6 @@ export async function createDefaultKanban(
 
     const kanbanId = kanbanData.id;
 
-    // Create 4 default columns
     const columnInserts = DEFAULT_COLUMNS.map((col) => ({
       kanban_id: kanbanId,
       name: col.name,
@@ -61,19 +66,16 @@ export async function createDefaultKanban(
 
     if (columnsError) {
       console.error("Columns creation error:", columnsError);
-      // If columns fail, delete the kanban (cascade will handle this)
+      // Rollback: delete the kanban
       await supabase.from("kanbans").delete().eq("id", kanbanId);
       throw new Error(
         `Failed to create columns: ${columnsError.message || "Unknown error"}`,
       );
     }
 
-    console.log(
-      `Default kanban created successfully: kanban_id=${kanbanId}, tenant_id=${tenantId}`,
-    );
     return kanbanId;
   } catch (error) {
-    console.error("createDefaultKanban error:", error);
+    console.error("createKanbanWithColumns error:", error);
     throw error;
   }
 }

@@ -6,6 +6,8 @@ export interface KanbanData {
   id: string
   name: string
   is_main: boolean
+  order_position: number
+  created_at: string
 }
 
 export function useKanbans() {
@@ -24,7 +26,7 @@ export function useKanbans() {
       setIsLoading(true)
       const { data, error: fetchError } = await supabase
         .from('kanbans')
-        .select('id, name, is_main')
+        .select('id, name, is_main, order_position, created_at')
         .eq('tenant_id', tenantId)
         .order('order_position', { ascending: true })
 

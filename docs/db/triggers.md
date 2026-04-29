@@ -1,8 +1,8 @@
-> 📅 Extraído em: 2026-04-28
+> 📅 Extraído em: 2026-04-29 (Dara — @data-engineer)
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Triggers & Event Triggers
+# Database Triggers
 
 **Total: 2 triggers operacionais + 1 event trigger (rls_auto_enable)**
 

@@ -1,8 +1,8 @@
-> 📅 Extraído em: 2026-04-28
+> 📅 Extraído em: 2026-04-29 (Dara — @data-engineer)
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Database Functions & Triggers
+# Custom Database Functions
 
 **Total: 5 funções PL/pgSQL + 2 triggers | 6 extensões | Última migration: 2026-04-25**
 

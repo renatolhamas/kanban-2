@@ -1,4 +1,4 @@
-> 📅 Extraído em: 2026-04-28
+> 📅 Extraído em: 2026-04-29 (Dara — @data-engineer)
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 

@@ -1,8 +1,8 @@
-> 📅 Extraído em: 2026-04-28
+> 📅 Extraído em: 2026-04-29 (Dara — @data-engineer)
 > Fonte: Supabase (ujcjucgylwkjrdpsqffs) — dados em tempo real
 > Status: ✅ Atualizado
 
-# Schema Documentation — Sistema Kanban + WhatsApp Integration
+# Database Schema — Kanban & Conversations System
 
 **10 tabelas | 37 índices | 31 políticas RLS | 5 funções | 33 migrações | 2 triggers | 6 extensões | 7.5K records**
 

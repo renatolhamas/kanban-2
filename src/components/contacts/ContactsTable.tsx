@@ -34,7 +34,7 @@ export function ContactsTable({
   }
 
   return (
-    <div className="relative overflow-x-auto shadow-sm border rounded-lg">
+    <div className="relative overflow-x-auto shadow-ambient border rounded-lg">
       <table className="w-full text-sm text-left text-text-primary">
         <thead className="text-xs uppercase bg-surface-container-low border-b">
           <tr>

@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { KanbanTransferDropdown } from '@/components/ui/organisms/chat/KanbanTransferDropdown';
 import { useChat } from '@/context/ChatContext';
-import { useConversations } from '@/hooks/useConversations';
+import { useKanbanStructure } from '@/hooks/useKanbanStructure';
 import { ToastProvider } from '@/components/ui/molecules/toast';
 
 // Mock hooks
@@ -10,8 +10,8 @@ vi.mock('@/context/ChatContext', () => ({
   useChat: vi.fn(),
 }));
 
-vi.mock('@/hooks/useConversations', () => ({
-  useConversations: vi.fn(),
+vi.mock('@/hooks/useKanbanStructure', () => ({
+  useKanbanStructure: vi.fn(),
 }));
 
 // Mock fetch
@@ -21,20 +21,18 @@ describe('KanbanTransferDropdown', () => {
   const mockActiveConversation = {
     id: 'conv-1',
     column_id: 'col-1',
-    column: {
-      id: 'col-1',
-      name: 'Novo',
-      kanban: {
-        id: 'kanban-1',
-        name: 'Quadro Principal',
-      },
-    },
   };
 
-  const mockColumns = [
-    { id: 'col-1', name: 'Novo' },
-    { id: 'col-2', name: 'Em Atendimento' },
-    { id: 'col-3', name: 'Finalizado' },
+  const mockKanbans = [
+    {
+      id: 'kanban-1',
+      name: 'Quadro Principal',
+      columns: [
+        { id: 'col-1', name: 'Novo' },
+        { id: 'col-2', name: 'Em Atendimento' },
+        { id: 'col-3', name: 'Finalizado' },
+      ]
+    }
   ];
 
   beforeEach(() => {
@@ -43,15 +41,16 @@ describe('KanbanTransferDropdown', () => {
       activeConversation: mockActiveConversation as any,
       isLoadingConversation: false,
     } as any);
-    vi.mocked(useConversations).mockReturnValue({
-      columns: mockColumns,
+    
+    vi.mocked(useKanbanStructure).mockReturnValue({
+      kanbans: mockKanbans,
       isLoading: false,
-      conversations: [],
       error: null,
       refetch: vi.fn(),
-      realtimeStatus: 'connected'
     } as any);
   });
+
+  const SELECT_LABEL = 'Selecionar destino da conversa (Quadro e Coluna)';
 
   it('renders correctly with current column selected', () => {
     render(
@@ -60,7 +59,7 @@ describe('KanbanTransferDropdown', () => {
       </ToastProvider>
     );
 
-    const select = screen.getByLabelText('Selecionar coluna do Kanban') as HTMLSelectElement;
+    const select = screen.getByLabelText(SELECT_LABEL) as HTMLSelectElement;
     expect(select.value).toBe('col-1');
     
     const optgroup = select.querySelector('optgroup');
@@ -82,7 +81,7 @@ describe('KanbanTransferDropdown', () => {
       </ToastProvider>
     );
 
-    const select = screen.getByLabelText('Selecionar coluna do Kanban');
+    const select = screen.getByLabelText(SELECT_LABEL);
     fireEvent.change(select, { target: { value: 'col-2' } });
 
     expect(global.fetch).toHaveBeenCalledWith('/api/conversations/update-column', expect.objectContaining({
@@ -103,9 +102,27 @@ describe('KanbanTransferDropdown', () => {
       </ToastProvider>
     );
 
-    const select = screen.getByLabelText('Selecionar coluna do Kanban');
+    const select = screen.getByLabelText(SELECT_LABEL);
     fireEvent.change(select, { target: { value: 'col-2' } });
 
     expect(select).toBeDisabled();
   });
+
+  it('shows error state when structure fails to load', () => {
+    vi.mocked(useKanbanStructure).mockReturnValue({
+      kanbans: [],
+      isLoading: false,
+      error: new Error('Fetch failed'),
+      refetch: vi.fn(),
+    } as any);
+
+    render(
+      <ToastProvider>
+        <KanbanTransferDropdown />
+      </ToastProvider>
+    );
+
+    expect(screen.getByText('Erro ao carregar')).toBeDefined();
+  });
 });
+

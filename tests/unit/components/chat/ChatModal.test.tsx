@@ -3,6 +3,16 @@ import { describe, it, expect, vi } from 'vitest';
 import { ChatModal } from '@/components/ui/organisms/chat/ChatModal';
 import { ChatProvider, useChat } from '@/context/ChatContext';
 import { ToastProvider } from '@/components/ui/molecules/toast';
+import { useKanbanStructure } from '@/hooks/useKanbanStructure';
+
+// Mock fetch
+global.fetch = vi.fn(() => 
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve([]),
+  })
+) as any;
+
 
 // Mock useAuth
 vi.mock('@/hooks/useAuth', () => ({
@@ -21,6 +31,24 @@ vi.mock('@/hooks/useConversations', () => ({
     realtimeStatus: 'connected',
   })),
 }));
+
+vi.mock('@/hooks/useKanbanStructure', () => ({
+  useKanbanStructure: vi.fn(() => ({
+    kanbans: [
+      {
+        id: 'kanban-1',
+        name: 'Quadro Principal',
+        columns: [
+          { id: 'col-1', name: 'Novo' },
+          { id: 'col-2', name: 'Em Atendimento' },
+        ]
+      }
+    ],
+    isLoading: false,
+    error: null
+  })),
+}));
+
 
 // Mock Supabase client to avoid env var issues in CI
 vi.mock('@/lib/supabase/client', () => ({

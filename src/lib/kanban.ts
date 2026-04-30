@@ -6,8 +6,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  */
 const DEFAULT_COLUMNS = [
   { name: "Novo", order_position: 1 },
-  { name: "Em Andamento", order_position: 2 },
-  { name: "Resolvido", order_position: 3 },
+  { name: "Qualificado", order_position: 2 },
+  { name: "Em Negociação", order_position: 3 },
+  { name: "Fechado", order_position: 4 },
 ];
 
 /**

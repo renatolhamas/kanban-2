@@ -10,7 +10,9 @@ describe('phone-utils', () => {
     });
 
     it('should return empty string for null or undefined', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(normalizePhone(null as any)).toBe('');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(normalizePhone(undefined as any)).toBe('');
       expect(normalizePhone('')).toBe('');
     });

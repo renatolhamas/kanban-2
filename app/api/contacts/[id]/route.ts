@@ -26,7 +26,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Tenant context missing' }, { status: 403 })
     }
 
-    const updateData: any = {}
+    const updateData: Record<string, string> = {}
     if (name) updateData.name = name
     if (phone) updateData.phone = normalizePhone(phone)
 

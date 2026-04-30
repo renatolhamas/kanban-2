@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRightLeft, Loader2 } from 'lucide-react';
 import { useChat } from '@/context/ChatContext';
-import { useConversations } from '@/hooks/useConversations';
+import { useKanbanStructure } from '@/hooks/useKanbanStructure';
 import { useToast } from '@/components/ui/molecules/toast';
 import { cn } from '@/lib/utils';
 
@@ -14,13 +14,14 @@ export function KanbanTransferDropdown() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<string>('');
 
-  // Get current kanban ID from the enriched conversation object
-  const currentKanbanId = activeConversation?.column?.kanban?.id;
-  const currentKanbanName = activeConversation?.column?.kanban?.name || 'Quadro';
+  // Fetch all available kanbans and columns for the tenant
+  const { 
+    kanbans, 
+    isLoading: isLoadingStructure, 
+    error: structureError, 
+    refetch: refetchStructure 
+  } = useKanbanStructure();
   
-  // Use existing hook to fetch columns for this kanban
-  const { columns, isLoading: isLoadingColumns } = useConversations(currentKanbanId || '');
-
   // Sync internal state with conversation's current column
   useEffect(() => {
     if (activeConversation?.column_id) {
@@ -52,11 +53,11 @@ export function KanbanTransferDropdown() {
       const errorMessage = err instanceof Error ? err.message : 'Falha ao mover conversa. Tente novamente.';
       console.error('[KanbanTransferDropdown] Error updating column:', err);
       showToastError(errorMessage, {
-        label: 'REtentar',
+        label: 'Tentar novamente',
         onClick: () => handleColumnChange(newColumnId),
       });
       // Revert selection on error
-      setSelectedColumnId(activeConversation.column_id);
+      setSelectedColumnId(activeConversation.column_id || '');
     } finally {
       setIsUpdating(false);
     }
@@ -71,7 +72,21 @@ export function KanbanTransferDropdown() {
     );
   }
 
-  const isLoading = isUpdating || isLoadingColumns;
+  // Handle case where structure fails to load
+  if (structureError) {
+    return (
+      <button 
+        onClick={() => refetchStructure()}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-error-container text-on-error-container border border-error/20 hover:bg-error-container/80 transition-colors"
+        title="Clique para tentar carregar os quadros novamente"
+      >
+        <ArrowRightLeft className="w-4 h-4" />
+        <span className="text-label-md font-medium">Erro ao carregar</span>
+      </button>
+    );
+  }
+
+  const isLoading = isUpdating || isLoadingStructure;
 
   return (
     <div className="relative inline-block group">
@@ -89,21 +104,19 @@ export function KanbanTransferDropdown() {
           value={selectedColumnId}
           onChange={(e) => handleColumnChange(e.target.value)}
           disabled={isLoading}
-          aria-label="Selecionar coluna do Kanban"
-          title={`Coluna atual: ${selectedColumnId}`}
+          aria-label="Selecionar destino da conversa (Quadro e Coluna)"
           className="appearance-none bg-transparent text-label-md font-medium text-text-primary focus:outline-none cursor-pointer pr-4"
         >
-          <optgroup label={currentKanbanName}>
-            {columns.map((col) => (
-              <option key={col.id} value={col.id}>
-                {col.name}
-              </option>
-            ))}
-          </optgroup>
-          {/* Outros quadros seriam adicionados aqui na Fase 2 */}
+          {kanbans.map((kanban) => (
+            <optgroup key={kanban.id} label={kanban.name}>
+              {kanban.columns.map((col) => (
+                <option key={col.id} value={col.id}>
+                  {col.name}
+                </option>
+              ))}
+            </optgroup>
+          ))}
         </select>
-        
-        {/* Chevron icon could be added here for better affordance */}
       </div>
     </div>
   );

@@ -34,6 +34,7 @@ export async function PUT(request: NextRequest) {
       .from('columns')
       .select(`
         id,
+        kanban_id,
         kanban:kanbans (
           tenant_id
         )
@@ -56,10 +57,14 @@ export async function PUT(request: NextRequest) {
     }
 
     // 4. Update the conversation
+    // We update BOTH column_id and kanban_id to maintain referential integrity
     // We include tenant_id in the eq filter for defense-in-depth
     const { data: updatedConversation, error: updateError } = await supabase
       .from('conversations')
-      .update({ column_id: column_id })
+      .update({ 
+        column_id: column_id,
+        kanban_id: columnData.kanban_id
+      })
       .eq('id', conversation_id)
       .eq('tenant_id', tenantId)
       .select()

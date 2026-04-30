@@ -90,7 +90,8 @@
       "Bash(powershell.exe -Command \"./run.ps1\")",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --limit 3)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run view 24681607563 --log-failed)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run view 24682733384 --log-failed)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run view 24682733384 --log-failed)",
+      "Bash(ls -la c:\\\\\\\\git\\\\\\\\kanban.2\\\\\\\\docs\\\\\\\\stories)"
     ]
   },
   "enableAllProjectMcpServers": true,

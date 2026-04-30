@@ -43,10 +43,18 @@ export function Modal({
     onClose?.();
   };
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = title ? 'modal-title' : undefined;
 
   useEffect(() => {
     if (isModalOpen) {
       dialogRef.current?.showModal();
+      // Focus management: focus on first focusable element
+      setTimeout(() => {
+        const firstFocusable = dialogRef.current?.querySelector(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        ) as HTMLElement;
+        firstFocusable?.focus();
+      }, 0);
     } else {
       dialogRef.current?.close();
     }
@@ -58,11 +66,21 @@ export function Modal({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Ensure Esc key closes the modal (native dialog behavior, but explicit for clarity)
+    if (e.key === 'Escape') {
+      handleClose();
+    }
+  };
+
   return (
     <dialog
       ref={dialogRef}
       onClose={onClose}
       onClick={handleBackdropClick}
+      onKeyDown={handleKeyDown}
+      aria-modal="true"
+      aria-labelledby={titleId}
       className={cn(
         "backdrop:bg-black/50 rounded-lg bg-surface-bright dark:bg-surface-container-highest border border-surface-container-low shadow-ambient w-full",
         fullScreenMobile && "max-sm:fixed max-sm:inset-0 max-sm:rounded-none max-sm:h-screen max-sm:w-screen max-sm:max-w-none"
@@ -71,7 +89,7 @@ export function Modal({
       <div className={cn(sizeClasses[size], "mx-auto h-full flex flex-col")}>
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-surface-container-low">
-            <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
+            <h2 id={titleId} className="text-lg font-semibold text-text-primary">{title}</h2>
             <button
               onClick={handleClose}
               className="p-1 hover:bg-surface-container-low rounded transition-colors"

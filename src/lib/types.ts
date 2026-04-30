@@ -44,3 +44,18 @@ export interface PasswordValidationResult {
   valid: boolean;
   errors: string[];
 }
+
+/**
+ * Database Entity Types
+ */
+
+export interface Contact {
+  id: string;
+  tenant_id: string;
+  name: string;
+  phone: string;
+  wa_name?: string;
+  is_group?: boolean;
+  created_at: string;
+  updated_at: string;
+}

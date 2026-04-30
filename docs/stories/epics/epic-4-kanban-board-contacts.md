@@ -28,11 +28,12 @@ Implementar a visualização interativa do kanban com drag-and-drop e criar o si
 
 **O que está sendo adicionado:**
 
-1. **Kanban Visualization** — Home page exibe kanban com colunas (Novo, Em Andamento, Resolvido, etc.)
-2. **Drag-and-Drop** — Usuários movem conversas entre colunas usando dnd-kit
-3. **Kanban CRUD** — Settings permite criar/editar/deletar kanbans customizados
-4. **Contacts Management** — Página de contatos com CRUD de telefones (E.164 format)
-5. **Contact Validation** — Validação de formato de telefone antes de salvar
+1. **Real Tenant Isolation** — Fix the multi-tenant isolation by migrating RLS policies from `user_metadata` (user-editable) to `app_metadata` (immutable)
+2. **Kanban Visualization** — Home page exibe kanban com colunas (Novo, Em Andamento, Resolvido, etc.)
+3. **Drag-and-Drop** — Usuários movem conversas entre colunas usando dnd-kit
+4. **Kanban CRUD** — Settings permite criar/editar/deletar kanbans customizados
+5. **Contacts Management** — Página de contatos com CRUD de telefones (E.164 format)
+6. **Contact Validation** — Validação de formato de telefone antes de salvar
 
 **Como se integra:**
 
@@ -66,7 +67,7 @@ Implementar a visualização interativa do kanban com drag-and-drop e criar o si
 
 ## Stories with Dynamic Executor Assignment
 
-### Story 4.1: Home Page Kanban Board
+### Story 4.2: Home Page Kanban Board
 
 **Description:** Exibir kanban board na home page com colunas do tenant e conversas renderizadas por coluna. Cada coluna mostra conversas associadas, prontas para drag-and-drop na história 4.2.
 
@@ -103,7 +104,7 @@ And: Acessibilidade WCAG AA (focus states, keyboard nav)
 
 ---
 
-### Story 4.2: Drag-and-Drop with dnd-kit
+### Story 4.3: Drag-and-Drop with dnd-kit
 
 **Description:** Integrar dnd-kit v8.0.0 para permitir drag-and-drop de conversas entre colunas. Atualizar conversation.kanban_column_id no Supabase ao soltar.
 
@@ -140,7 +141,7 @@ And: Erro ao salvar reverte UI para estado anterior
 
 ---
 
-### Story 4.3: Kanban CRUD in Settings
+### Story 4.4: Kanban CRUD in Settings
 
 **Description:** Adicionar subsection "Kanbans" em Settings onde usuário pode criar, editar, deletar e reordenar kanbans customizados (usando setas ↑↓).
 
@@ -179,7 +180,7 @@ And: Setas ↑↓ reordenam kanbans (atualiza kanban.order_index)
 
 ---
 
-### Story 4.4: Contacts Page CRUD
+### Story 4.5: Contacts Page CRUD
 
 **Description:** Criar página /contacts com lista de contatos do tenant e interface CRUD (criar, editar, deletar contatos).
 
@@ -219,7 +220,7 @@ And: Usuário pode deletar contato (soft delete)
 
 ---
 
-### Story 4.5: Contact Validation (E.164 Format)
+### Story 4.6: Contact Validation (E.164 Format)
 
 **Description:** Implementar validação de formato E.164 para números de telefone. Rejeitar números inválidos ao criar/editar contato com mensagem de erro clara.
 

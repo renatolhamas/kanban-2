@@ -1,0 +1,133 @@
+schema: 1
+story: '4.5'
+title: 'Contacts page CRUD'
+gate: FAIL
+status_reason: 'Critical issues block completion: integration tests failing to run (Vitest config error), form validation incomplete per AC requirements, and RLS database policies not implemented.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-04-30T08:45:00Z'
+
+top_issues:
+  - id: 'TEST-001'
+    severity: high
+    category: 'tests'
+    finding: 'Integration tests failing with Vitest configuration error: "Cannot read properties of undefined (reading ''config'')"'
+    file: 'tests/api/contacts.integration.test.ts:31'
+    impact: 'Test suite does not execute; test coverage cannot be verified; AC coverage unclear'
+    suggested_action: 'Fix Vitest mock configuration in test file. Ensure mockSupabase is properly initialized before tests run.'
+    blocking: true
+
+  - id: 'REQ-001'
+    severity: high
+    category: 'requirements'
+    finding: 'Form validation incomplete vs AC requirements. Story AC mentions "Zod + React Hook Form" but implemented with basic inline validation only.'
+    file: 'src/components/contacts/ContactModals.tsx'
+    impact: 'Missing validations: (1) phone length/pattern validation (2) name length bounds (1-100 chars per AC #3) (3) frontend uniqueness check before API call'
+    suggested_action: 'Implement Zod schema for contact form. Add validation for: phone (non-empty, pattern), name (1-100 chars). Add frontend check against existing contacts before submit.'
+    examples:
+      - 'Expected: name validation catches >100 char input. Actual: only trim() check.'
+      - 'Expected: phone pattern validation (E.164 or flexible). Actual: only normalizePhone (removes non-digits).'
+
+  - id: 'SEC-001'
+    severity: high
+    category: 'security'
+    finding: 'RLS database policies not implemented. Story AC #6 requires "RLS multi-tenant isolation enforcement" but only backend validation present.'
+    file: 'No migration file found; RLS policy not in codebase'
+    impact: 'Security defense-in-depth incomplete. Relying solely on application layer isolation (JWT + .eq(''tenant_id'')) without database-layer RLS.'
+    suggested_action: 'Create migration file: `supabase/migrations/contacts-rls.sql`. Add RLS policy: CREATE POLICY contacts_tenant_isolation ON contacts USING (tenant_id = auth.jwt() ->> ''tenant_id'');'
+    related_ac: '#6 - Multi-tenant isolation (RLS)'
+
+  - id: 'ACC-001'
+    severity: medium
+    category: 'accessibility'
+    finding: 'WCAG AA focus management not verified. Story AC #8 requires "focus trap" and "focus management when modal opens/closes".'
+    file: 'src/components/ui/molecules/modal.tsx (not provided) / ContactModals.tsx'
+    impact: 'Modal accessibility may not meet WCAG AA. Tab focus may escape modal; Esc key handling unclear.'
+    suggested_action: 'Verify Modal component implements: (1) focus trap (Tab cycles within modal) (2) focus on first input when modal opens (3) Esc key closes modal (4) role="dialog" and aria-modal="true".'
+    verification: 'Manually test: Tab through modal fields, verify cannot tab to background; Press Esc, verify modal closes.'
+
+  - id: 'REQ-002'
+    severity: medium
+    category: 'requirements'
+    finding: 'Empty state handling not visible. Story AC #12 requires "No contacts found" message with CTA.'
+    file: 'src/components/contacts/ContactsTable.tsx (not fully visible)'
+    impact: 'AC #12 may not be implemented.'
+    suggested_action: 'Verify ContactsTable renders empty state message when contacts.length === 0 with "Create your first contact" CTA.'
+
+  - id: 'REQ-003'
+    severity: medium
+    category: 'requirements'
+    finding: 'Frontend uniqueness validation for phone numbers incomplete. AC #4 mentions "Editable with uniqueness validation against other contacts".'
+    file: 'src/components/contacts/ContactModals.tsx'
+    impact: 'User can submit duplicate phone, receives 409 error from API instead of immediate feedback.'
+    suggested_action: 'Add frontend validation in EditContactModal: check if phone already exists in contacts list (excluding current contact being edited). Show error before API call.'
+
+  - id: 'DOC-001'
+    severity: low
+    category: 'documentation'
+    finding: 'formatPhoneForDisplay() is a stub function. Story roadmap defers E.164 formatting to Story 4.6, but AC #2 mentions "E.164 format or raw input".'
+    file: 'src/lib/phone-utils.ts:15'
+    impact: 'Display formatting unclear. Phone numbers shown as raw digits (e.g., "5511999999999") without user-friendly formatting.'
+    suggested_action: 'Keep as-is for Story 4.5 (documented in comment). Implement full E.164/localized formatting in Story 4.6 per roadmap.'
+
+acceptance_criteria_status:
+  '1': '✅ PASS - Contacts Page accessible from Sidebar'
+  '2': '⚠️  PARTIAL - Table displays contacts but without E.164 format and empty state'
+  '3': '⚠️  PARTIAL - Create modal exists but form validation incomplete'
+  '4': '⚠️  PARTIAL - Edit modal exists but uniqueness validation missing'
+  '5': '⚠️  PARTIAL - Delete confirmation exists but error handling not fully tested'
+  '6': '⚠️  PARTIAL - Backend tenant isolation working but RLS policy missing'
+  '7': '✅ PASS - Server-side pagination implemented'
+  '8': '❌ FAIL - WCAG AA focus management not verified'
+  '9': '✅ PASS - Loading states implemented'
+  '10': '✅ PASS - Error handling with toasts'
+  '11': '⚠️  UNCHECKED - No regressions (tests not running)'
+  '12': '❌ FAIL - Empty state handling not visible'
+
+code_review_findings:
+  strengths:
+    - API endpoints well-structured with appropriate error handling
+    - Tenant isolation enforced via JWT + SQL where clause (defense in depth at app layer)
+    - Component modularity and separation of concerns (Page → Table → Modals)
+    - Phone normalization centralized and reusable
+    - Loading and error states properly managed
+    - Pagination logic correct (0-indexed offset)
+
+  concerns:
+    - Tests not executable (blocking issue)
+    - Form validation relies on inline HTML5 validation instead of schema library (Zod/RHF)
+    - Modal implementation details not fully visible (focus trap status unknown)
+    - No migration files for RLS policies
+    - ContactsTable empty state not visible in provided code
+
+test_coverage:
+  status: 'UNCHECKED'
+  reason: 'Tests fail to run due to Vitest configuration error'
+  estimated_coverage: 'Unknown'
+  minimum_required: '≥80% per Criteria of Done'
+  recommendation: 'Fix test configuration before proceeding; cannot approve without passing test suite'
+
+security_assessment:
+  status: 'CONCERNS'
+  backend_auth: '✅ Verified - JWT + app-level tenant_id validation'
+  database_rls: '❌ Missing - RLS policy not implemented'
+  input_validation: '⚠️  Partial - normalizePhone works, but form validation incomplete'
+  verdict: 'Implement RLS policy and complete form validation before merge'
+
+next_actions:
+  - '@dev: Fix Vitest configuration error in tests/api/contacts.integration.test.ts'
+  - '@dev: Run tests and verify ≥80% coverage'
+  - '@dev: Implement Zod schema for form validation (name 1-100 chars, phone required + pattern)'
+  - '@dev: Add frontend uniqueness check in EditContactModal'
+  - '@dev: Verify empty state rendering in ContactsTable'
+  - '@dev: Create supabase/migrations/contacts-rls.sql with RLS policy'
+  - '@dev: Verify WCAG AA focus management (focus trap, Esc key, aria-modal)'
+  - '@qa: Re-run gate after fixes with *gate 4.5'
+
+waiver:
+  active: false
+
+gate_history:
+  - verdict: FAIL
+    date: '2026-04-30T08:45:00Z'
+    reviewer: Quinn
+    reason: 'Integration tests failing (TEST-001), incomplete form validation (REQ-001), missing RLS (SEC-001), WCAG focus management unverified (ACC-001)'

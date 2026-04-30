@@ -4,7 +4,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useKanbanStructure } from '@/hooks/useKanbanStructure';
-import { createClient } from '@/lib/supabase/client';
 
 const mockSupabase = vi.hoisted(() => ({
   from: vi.fn(() => ({
@@ -62,6 +61,7 @@ describe('useKanbanStructure', () => {
 
   it('deve lidar com erros de carregamento', async () => {
     // Mock de erro
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (mockSupabase.from as any).mockImplementationOnce(() => ({
       select: vi.fn(() => ({
         order: vi.fn(() => ({

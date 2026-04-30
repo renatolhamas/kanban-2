@@ -44,6 +44,7 @@ describe('PUT /api/conversations/update-column', () => {
     mockSingle.mockReset();
     mockSelect.mockClear();
     mockUpdate.mockClear();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (createClient as any).mockResolvedValue(mockSupabase);
   });
 
@@ -84,7 +85,6 @@ describe('PUT /api/conversations/update-column', () => {
     expect(body.success).toBe(true);
     expect(mockSupabase.from).toHaveBeenCalledWith('conversations');
     // Verify atomic update
-    const updateCall = vi.mocked(mockSupabase.from).mock.results.find(r => r.value.update);
     expect(mockUpdate).toHaveBeenCalledWith({
       column_id: 'col-456',
       kanban_id: 'kanban-789'

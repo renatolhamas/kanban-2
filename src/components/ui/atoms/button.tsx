@@ -91,7 +91,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </span>
         )}
         {icon && <span className="flex-shrink-0">{icon}</span>}
-        {children && <span>{children}</span>}
+        {children}
       </button>
     )
   }

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Contact } from '@/lib/types';
 import { Edit2, Trash2 } from 'lucide-react';
+import { formatPhoneForDisplay } from '@/lib/phone-utils'; // [Dex Update]
 
 interface ContactsTableProps {
   contacts: Contact[];
@@ -28,7 +29,7 @@ export function ContactsTable({
   if (contacts.length === 0) {
     return (
       <div className="p-12 text-center border rounded-lg bg-card">
-        <p className="text-muted-foreground">No contacts found.</p>
+        <p className="text-muted-foreground">Nenhum contato encontrado.</p>
       </div>
     );
   }
@@ -38,28 +39,28 @@ export function ContactsTable({
       <table className="w-full text-sm text-left text-text-primary">
         <thead className="text-xs uppercase bg-surface-container-low border-b">
           <tr>
-            <th scope="col" className="px-6 py-4 font-semibold">Name</th>
-            <th scope="col" className="px-6 py-4 font-semibold">Phone</th>
-            <th scope="col" className="px-6 py-4 font-semibold text-right">Actions</th>
+            <th scope="col" className="px-6 py-4 font-semibold">Nome</th>
+            <th scope="col" className="px-6 py-4 font-semibold">Telefone</th>
+            <th scope="col" className="px-6 py-4 font-semibold text-right">Ações</th>
           </tr>
         </thead>
         <tbody className="divide-y">
           {contacts.map((contact) => (
             <tr key={contact.id} className="bg-surface hover:bg-surface-container-lowest transition-colors">
               <td className="px-6 py-4 font-medium whitespace-nowrap">{contact.name}</td>
-              <td className="px-6 py-4">{contact.phone}</td>
+              <td className="px-6 py-4">{formatPhoneForDisplay(contact.phone)}</td>
               <td className="px-6 py-4 text-right space-x-2">
                 <button
                   onClick={() => onEdit(contact)}
                   className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-surface-container-low hover:text-primary transition-colors"
-                  aria-label={`Edit ${contact.name}`}
+                  aria-label={`Editar ${contact.name}`}
                 >
                   <Edit2 size={16} />
                 </button>
                 <button
                   onClick={() => onDelete(contact)}
                   className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-surface-container-low hover:text-destructive transition-colors"
-                  aria-label={`Delete ${contact.name}`}
+                  aria-label={`Excluir ${contact.name}`}
                 >
                   <Trash2 size={16} />
                 </button>

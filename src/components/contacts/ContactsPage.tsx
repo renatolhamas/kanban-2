@@ -65,9 +65,8 @@ export function ContactsPage() {
         </div>
         <Button 
           onClick={() => setIsCreateOpen(true)}
-          className="flex items-center gap-2"
+          icon={<Plus size={18} />}
         >
-          <Plus size={18} />
           Add Contact
         </Button>
       </div>

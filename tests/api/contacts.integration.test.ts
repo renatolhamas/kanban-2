@@ -47,7 +47,7 @@ vi.mock('@/lib/supabase/server', () => ({
 }));
 
 vi.mock('@/lib/phone-utils', () => ({
-  normalizePhone: (phone: string) => phone.replace(/\D/g, ''),
+  normalizePhone: (phone: string) => phone.replace(/[^\d+]/g, ''),
 }));
 
 describe('Contacts API Integration', () => {
@@ -101,7 +101,7 @@ describe('Contacts API Integration', () => {
       });
 
       mockQueryBuilder.single.mockResolvedValueOnce({ 
-        data: { id: '1', name: 'John Doe', phone: '5511999998888' }, 
+        data: { id: '1', name: 'John Doe', phone: '+5511999998888' }, 
         error: null 
       });
 
@@ -109,9 +109,9 @@ describe('Contacts API Integration', () => {
       const data = await res.json();
 
       expect(res.status).toBe(201);
-      expect(data.phone).toBe('5511999998888');
+      expect(data.phone).toBe('+5511999998888');
       expect(mockQueryBuilder.insert).toHaveBeenCalledWith(expect.objectContaining({
-        phone: '5511999998888',
+        phone: '+5511999998888',
         tenant_id: 'tenant-123'
       }));
     });

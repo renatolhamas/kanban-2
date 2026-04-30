@@ -1,10 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { normalizePhone, validateE164, formatPhoneForDisplay } from '@/lib/phone-utils'; // [Dex Update]
+import { normalizePhone, validateE164, formatPhoneForDisplay } from '../phone-utils';
 
 describe('phone-utils', () => {
   describe('normalizePhone', () => {
     it('should remove non-digit characters except +', () => {
-      // [Dex Decision: Preserve + for E.164]
       expect(normalizePhone('+55 (11) 98765-4321')).toBe('+5511987654321');
       expect(normalizePhone('55 11 98765 4321')).toBe('5511987654321');
     });
@@ -44,9 +43,8 @@ describe('phone-utils', () => {
 
   describe('formatPhoneForDisplay', () => {
     it('should format a normalized number for international display', () => {
-      // [Dex Update: libphonenumber-js usa espaços como separadores no formato internacional]
-      expect(formatPhoneForDisplay('+5511987654321')).toBe('+55 11 98765 4321');
-      expect(formatPhoneForDisplay('+12015550123')).toBe('+1 201 555 0123');
+      expect(formatPhoneForDisplay('+5511987654321')).toBe('+55 11 98765-4321');
+      expect(formatPhoneForDisplay('+12015550123')).toBe('+1 201-555-0123');
     });
 
     it('should return original if format is invalid', () => {

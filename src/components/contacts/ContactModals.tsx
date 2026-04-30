@@ -34,6 +34,8 @@ export function ContactModal({
     setError
   } = useForm<ContactFormData>({
     resolver: zodResolver(ContactSchema),
+    mode: 'onBlur', // [Dex Decision: Graceful Validation]
+    reValidateMode: 'onBlur',
     defaultValues: {
       name: initialData?.name || '',
       phone: initialData?.phone || ''
@@ -50,11 +52,11 @@ export function ContactModal({
   }, [isOpen, initialData, reset]);
 
   const onSubmit = async (data: ContactFormData) => {
-    // Check for phone uniqueness in edit mode
-    if (initialData && !validatePhoneUniqueness(data.phone, existingContacts, initialData.id)) {
+    // Check for phone uniqueness
+    if (!validatePhoneUniqueness(data.phone, existingContacts, initialData?.id)) {
       setError('phone', {
         type: 'manual',
-        message: 'This phone number is already in use'
+        message: 'Este número de telefone já está em uso'
       });
       return;
     }
@@ -63,7 +65,7 @@ export function ContactModal({
       await onSave(data.name, data.phone);
       onClose();
     } catch (err: any) {
-      const errorMessage = err.message || 'Something went wrong';
+      const errorMessage = err.message || 'Ocorreu um erro ao salvar';
       setError('phone', { type: 'manual', message: errorMessage });
     }
   };
@@ -73,11 +75,11 @@ export function ContactModal({
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="space-y-2">
           <label htmlFor="contact-name" className="text-sm font-medium">
-            Name *
+            Nome *
           </label>
           <Input
             id="contact-name"
-            placeholder="e.g. John Doe"
+            placeholder="Ex: João Silva"
             {...register('name')}
             disabled={isSubmitting}
             aria-invalid={!!errors.name}
@@ -90,18 +92,20 @@ export function ContactModal({
 
         <div className="space-y-2">
           <label htmlFor="contact-phone" className="text-sm font-medium">
-            Phone Number * <span className="text-xs text-muted-foreground">(digits only)</span>
+            Telefone * <span className="text-xs text-muted-foreground">(incluir DDI, ex: +55)</span>
           </label>
           <Input
             id="contact-phone"
-            placeholder="e.g. +55 11 99999-9999"
+            placeholder="Ex: +55 11 98765-4321"
             {...register('phone')}
             disabled={isSubmitting}
             aria-invalid={!!errors.phone}
             aria-describedby={errors.phone ? 'phone-error' : undefined}
           />
           {errors.phone && (
-            <p id="phone-error" className="text-sm text-destructive">{errors.phone.message}</p>
+            <div id="phone-error" className="space-y-1">
+              <p className="text-sm text-destructive font-medium">{errors.phone.message}</p>
+            </div>
           )}
         </div>
 
@@ -112,10 +116,10 @@ export function ContactModal({
             onClick={onClose}
             disabled={isSubmitting}
           >
-            Cancel
+            Cancelar
           </Button>
           <Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
-            {isSubmitting ? 'Saving...' : 'Save Contact'}
+            {isSubmitting ? 'Salvando...' : 'Salvar Contato'}
           </Button>
         </div>
       </form>
@@ -135,7 +139,7 @@ export function CreateContactModal({
       onClose={onClose}
       onSave={onSave}
       existingContacts={existingContacts}
-      title="Add New Contact"
+      title="Adicionar Novo Contato"
     />
   );
 }
@@ -154,7 +158,7 @@ export function EditContactModal({
       onSave={onSave}
       initialData={contact || undefined}
       existingContacts={existingContacts}
-      title="Edit Contact"
+      title="Editar Contato"
     />
   );
 }

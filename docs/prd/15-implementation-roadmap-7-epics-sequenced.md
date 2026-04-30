@@ -79,7 +79,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 - ✅ Story 4.2: Home page (Kanban board)
 - ✅ Story 4.3: Drag-and-drop (dnd-kit v8.0.0)
 - ✅ Story 4.4: Kanban CRUD em Settings
-- ⬜ Story 4.5: Contacts page CRUD
+- ✅ Story 4.5: Contacts page CRUD
 - ⬜ Story 4.6: Contact validation (E.164 format)
 
 **Outputs:** Kanban visível, contacts gerenciáveis

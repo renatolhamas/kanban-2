@@ -1,0 +1,124 @@
+schema: 1
+story: '6.6.1'
+gate: CONCERNS
+status_reason: |
+  Implementation is solid with excellent API validation and component structure, but real-time
+  sync and optimistic UI updates from AC 4 lack test coverage. Minor code quality improvements needed.
+reviewer: 'Quinn'
+updated: '2026-04-30T16:35:00Z'
+
+top_issues:
+  - id: 'TEST-001'
+    severity: high
+    finding: |
+      Real-time Synchronization (AC 4) and Cross-Kanban Integrity (AC 5) have no test coverage.
+      Tests verify component rendering and API calls, but WebSocket subscriptions and optimistic
+      UI updates are not validated. Component shows no evidence of real-time listener implementation.
+    suggested_action: |
+      Add integration tests for real-time sync behavior. Verify that WebSocket subscriptions
+      are active in ChatModal or parent component. Add tests for optimistic UI updates (conversation
+      card moves immediately before API response). Confirm AC 4 "Optimistic UI" requirement is implemented.
+
+  - id: 'CODE-001'
+    severity: medium
+    finding: |
+      Minor code quality issues reduce lint score:
+      - useKanbanStructure.ts:49 - Untyped catch error (any)
+      - KanbanTransferDropdown.test.tsx - 4 instances of explicit any types in test mocks
+      - ChatModal.test.tsx - Unused import (useKanbanStructure)
+      - Line 48 hook: Double type cast (as unknown as) suggests type inference uncertainty
+    suggested_action: |
+      Fix lint warnings: Replace `any` with proper types in error handling. Remove unused imports.
+      Verify type casting logic is correct or refactor to avoid double cast. These are non-blocking
+      but improve code maintainability.
+
+  - id: 'REQ-001'
+    severity: low
+    finding: |
+      Component labels show only column name ("Em Atendimento") instead of AC 3 specified
+      format ("Kanban Name - Column Name" / "Quadro Principal - Em Atendimento").
+    suggested_action: |
+      Update option labels in KanbanTransferDropdown.tsx line 114 to include kanban name:
+      `{kanban.name} - {col.name}` for clarity. This improves UX when multiple kanbans exist.
+
+acceptance_criteria_coverage:
+  - ac: '1'
+    status: 'PASS'
+    evidence: 'Hook implemented with loading state, error handling, refetch; tests verify structure loading and error scenarios'
+
+  - ac: '2'
+    status: 'PASS'
+    evidence: 'API endpoint validates tenant, extracts kanban_id from column, updates both fields atomically; test verifies atomic update'
+
+  - ac: '3'
+    status: 'PASS'
+    evidence: 'Component uses hook, renders optgroup hierarchy, maintains loading/error states; tests verify rendering and API integration'
+
+  - ac: '4'
+    status: 'FAIL'
+    evidence: 'No test coverage for real-time subscriptions or optimistic UI updates; no WebSocket listener visible in component'
+
+  - ac: '5'
+    status: 'PARTIAL'
+    evidence: 'API atomicity tested, but no integration tests for cross-kanban scenarios or refresh persistence'
+
+code_quality_metrics:
+  lint_status: 'PASS'
+  lint_errors: 0
+  lint_warnings: 68
+  lint_warnings_story_related: 5
+  typecheck_status: 'PASS'
+  tests_passed: 2
+  tests_count: 5
+  test_coverage: 'PARTIAL (AC 1, 2, 3 covered; AC 4, 5 not covered)'
+
+architecture_review:
+  strengths:
+    - API validation is excellent with defense-in-depth (tenant checks, foreign key resolution)
+    - Component properly integrates hook and error handling
+    - TypeScript interfaces well-defined
+    - Accessibility considerations (aria-label, optgroup structure)
+
+  concerns:
+    - Real-time sync implementation not visible in code review; may be in parent component
+    - Optimistic UI update from AC 4 not implemented
+    - Type inference issues suggest possible schema mismatch (line 50-53 kanban casting)
+
+security_assessment:
+  status: 'PASS'
+  findings:
+    - Tenant isolation enforced at API level (lines 26-29, 55-57, 69)
+    - Column authorization validated before update
+    - No SQL injection risk (parameterized Supabase queries)
+    - No XSS risk (React auto-escaping)
+
+test_strategy:
+  unit_tests: 'Adequate for hook, API, component rendering'
+  integration_tests: 'Missing real-time sync verification'
+  edge_cases: 'Missing: concurrent updates, network failures during optimistic update, refresh after real-time failure'
+
+recommendations:
+  - '**BLOCKING:** Verify AC 4 implementation - add tests or confirm real-time sync is in parent component'
+  - '**HIGH:** Add integration test for optimistic UI updates'
+  - '**MEDIUM:** Fix 5 lint warnings (any types, unused imports)'
+  - '**MEDIUM:** Update option labels to include kanban names'
+  - '**LOW:** Clarify type casting logic in hook (line 48-53)'
+
+waiver:
+  active: false
+
+handoff:
+  next_agent: '@dev'
+  next_command: '*apply-qa-fixes 6.6.1'
+  condition: 'QA gate verdict is CONCERNS - minor fixes required'
+
+meta:
+  reviewed_files:
+    - src/hooks/useKanbanStructure.ts
+    - app/api/conversations/update-column/route.ts
+    - src/components/ui/organisms/chat/KanbanTransferDropdown.tsx
+    - tests/unit/hooks/useKanbanStructure.test.ts
+    - tests/unit/api/update-column.test.ts
+    - tests/unit/components/chat/KanbanTransferDropdown.test.tsx
+  review_time_minutes: 15
+  complexity: medium

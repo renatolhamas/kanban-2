@@ -32,7 +32,11 @@ export function KanbanTransferDropdown() {
   const handleColumnChange = async (newColumnId: string) => {
     if (!activeConversation || !newColumnId || newColumnId === activeConversation.column_id) return;
 
+    // Optimistic UI Update (Adjusted by @dev)
+    const previousColumnId = selectedColumnId;
+    setSelectedColumnId(newColumnId);
     setIsUpdating(true);
+
     try {
       const response = await fetch('/api/conversations/update-column', {
         method: 'PUT',
@@ -56,8 +60,8 @@ export function KanbanTransferDropdown() {
         label: 'Tentar novamente',
         onClick: () => handleColumnChange(newColumnId),
       });
-      // Revert selection on error
-      setSelectedColumnId(activeConversation.column_id || '');
+      // Revert selection on error (Adjusted by @dev)
+      setSelectedColumnId(previousColumnId);
     } finally {
       setIsUpdating(false);
     }
@@ -111,7 +115,7 @@ export function KanbanTransferDropdown() {
             <optgroup key={kanban.id} label={kanban.name}>
               {kanban.columns.map((col) => (
                 <option key={col.id} value={col.id}>
-                  {col.name}
+                  {kanban.name} - {col.name}
                 </option>
               ))}
             </optgroup>

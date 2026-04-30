@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { KanbanTransferDropdown } from '@/components/ui/organisms/chat/KanbanTransferDropdown';
 import { useChat } from '@/context/ChatContext';
@@ -38,16 +38,16 @@ describe('KanbanTransferDropdown', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useChat).mockReturnValue({
-      activeConversation: mockActiveConversation as any,
+      activeConversation: mockActiveConversation,
       isLoadingConversation: false,
-    } as any);
+    } as unknown as ReturnType<typeof useChat>);
     
     vi.mocked(useKanbanStructure).mockReturnValue({
       kanbans: mockKanbans,
       isLoading: false,
       error: null,
       refetch: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useKanbanStructure>);
   });
 
   const SELECT_LABEL = 'Selecionar destino da conversa (Quadro e Coluna)';
@@ -65,8 +65,8 @@ describe('KanbanTransferDropdown', () => {
     const optgroup = select.querySelector('optgroup');
     expect(optgroup?.label).toBe('Quadro Principal');
 
-    expect(screen.getByText('Novo')).toBeDefined();
-    expect(screen.getByText('Em Atendimento')).toBeDefined();
+    expect(screen.getByText('Quadro Principal - Novo')).toBeDefined();
+    expect(screen.getByText('Quadro Principal - Em Atendimento')).toBeDefined();
   });
 
   it('triggers API call when column is changed', async () => {
@@ -114,7 +114,7 @@ describe('KanbanTransferDropdown', () => {
       isLoading: false,
       error: new Error('Fetch failed'),
       refetch: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useKanbanStructure>);
 
     render(
       <ToastProvider>
@@ -123,6 +123,61 @@ describe('KanbanTransferDropdown', () => {
     );
 
     expect(screen.getByText('Erro ao carregar')).toBeDefined();
+  });
+
+  it('updates UI immediately before API call (Optimistic Update)', async () => {
+    vi.mocked(global.fetch).mockReturnValue(new Promise(() => {})); // Hangs
+
+    render(
+      <ToastProvider>
+        <KanbanTransferDropdown />
+      </ToastProvider>
+    );
+
+    const select = screen.getByLabelText(SELECT_LABEL) as HTMLSelectElement;
+    fireEvent.change(select, { target: { value: 'col-2' } });
+
+    // UI should show new value immediately
+    expect(select.value).toBe('col-2');
+    expect(select).toBeDisabled(); // Also should be disabled during update
+  });
+
+  it('reverts UI to previous value on API error', async () => {
+    vi.mocked(global.fetch).mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: () => Promise.resolve({ error: 'Internal Server Error' }),
+    } as Response);
+
+    render(
+      <ToastProvider>
+        <KanbanTransferDropdown />
+      </ToastProvider>
+    );
+
+    const select = screen.getByLabelText(SELECT_LABEL) as HTMLSelectElement;
+    
+    // Initial value is col-1
+    expect(select.value).toBe('col-1');
+
+    // Change to col-2
+    fireEvent.change(select, { target: { value: 'col-2' } });
+    
+    // UI should revert to col-1 after failure
+    await waitFor(() => {
+      expect(select.value).toBe('col-1');
+    });
+  });
+
+  it('renders option labels in "Kanban - Column" format', () => {
+    render(
+      <ToastProvider>
+        <KanbanTransferDropdown />
+      </ToastProvider>
+    );
+
+    expect(screen.getByText('Quadro Principal - Novo')).toBeDefined();
+    expect(screen.getByText('Quadro Principal - Em Atendimento')).toBeDefined();
   });
 });
 

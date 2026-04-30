@@ -3,7 +3,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { ChatModal } from '@/components/ui/organisms/chat/ChatModal';
 import { ChatProvider, useChat } from '@/context/ChatContext';
 import { ToastProvider } from '@/components/ui/molecules/toast';
-import { useKanbanStructure } from '@/hooks/useKanbanStructure';
 
 // Mock fetch
 global.fetch = vi.fn(() => 

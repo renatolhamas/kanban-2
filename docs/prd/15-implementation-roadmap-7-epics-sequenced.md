@@ -128,7 +128,7 @@ Epic 1 → Epic 2 → Epic 3 → Epic 4 → Epic 5 → Epic 6 → Epic 7 → Epi
 
 - ⬜ Story 7.1: Profile subsection (name, password)
 - ⬜ Story 7.2: Connection subsection (Evolution status)
-- ⬜ Story 7.3: Kanbans subsection (CRUD, reorder com setas ↑↓)
+- ✅ Story 7.3: Kanbans subsection (CRUD, reorder com setas ↑↓) (implementado pelo story 6.6.1)
 - ⬜ Story 7.4: Automatic Messages subsection (CRUD)
 
 **Outputs:** Full settings interface

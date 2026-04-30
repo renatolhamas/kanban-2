@@ -118,4 +118,65 @@ describe('PUT /api/conversations/update-column', () => {
     expect(response.status).toBe(403);
     expect(body.error).toBe('Unauthorized column access');
   });
+
+  it('deve garantir a persistência após a atualização (Refresh Simulation)', async () => {
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: { app_metadata: { tenant_id: 'tenant-123' } } },
+      error: null
+    });
+
+    mockSingle.mockResolvedValueOnce({
+      data: { id: 'col-456', kanban_id: 'kanban-789', kanban: { tenant_id: 'tenant-123' } },
+      error: null
+    });
+
+    mockSingle.mockResolvedValueOnce({
+      data: { id: 'conv-1', column_id: 'col-456', kanban_id: 'kanban-789' },
+      error: null
+    });
+
+    const req = new NextRequest('http://localhost/api/conversations/update-column', {
+      method: 'PUT',
+      body: JSON.stringify({ conversation_id: 'conv-1', column_id: 'col-456' })
+    });
+
+    const response = await PUT(req);
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.conversation.kanban_id).toBe('kanban-789');
+    expect(body.conversation.column_id).toBe('col-456');
+  });
+
+  it('deve remover a conversa do quadro original ao trocar (Implicit by Atomic Update)', async () => {
+    // No Postgres, como o kanban_id é um campo único na tabela conversations, 
+    // ao atualizar para um novo valor, ele deixa de existir no anterior automaticamente.
+    // Este teste valida que o payload enviado contém a troca completa.
+    mockSupabase.auth.getUser.mockResolvedValue({
+      data: { user: { app_metadata: { tenant_id: 'tenant-123' } } },
+      error: null
+    });
+
+    mockSingle.mockResolvedValueOnce({
+      data: { id: 'col-new', kanban_id: 'kanban-new', kanban: { tenant_id: 'tenant-123' } },
+      error: null
+    });
+
+    mockSingle.mockResolvedValueOnce({
+      data: { id: 'conv-1', column_id: 'col-new', kanban_id: 'kanban-new' },
+      error: null
+    });
+
+    const req = new NextRequest('http://localhost/api/conversations/update-column', {
+      method: 'PUT',
+      body: JSON.stringify({ conversation_id: 'conv-1', column_id: 'col-new' })
+    });
+
+    await PUT(req);
+
+    expect(mockUpdate).toHaveBeenCalledWith({
+      column_id: 'col-new',
+      kanban_id: 'kanban-new'
+    });
+  });
 });

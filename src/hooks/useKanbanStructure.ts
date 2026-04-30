@@ -46,9 +46,17 @@ export function useKanbanStructure() {
       if (fetchError) throw fetchError;
 
       setKanbans(data as unknown as KanbanStructure[]);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching kanban structure:', err);
-      setError(err.message || 'Falha ao carregar a estrutura do Kanban');
+      let errorMessage = 'Falha ao carregar a estrutura do Kanban';
+      
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        errorMessage = String((err as { message: unknown }).message);
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
